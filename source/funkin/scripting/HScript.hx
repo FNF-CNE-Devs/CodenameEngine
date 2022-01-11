@@ -71,6 +71,11 @@ class HScript extends Script {
         }
         var oldParent = interp.scriptObject;
         onCreate(path);
+
+        for(k=>e in Script.getDefaultVariables()) {
+            set(k, e);
+        }
+
         load();
         setParent(oldParent);
         for(k=>e in savedVariables) {
