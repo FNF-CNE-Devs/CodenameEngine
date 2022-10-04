@@ -1,4 +1,4 @@
-package;
+package funkin.menus;
 
 #if desktop
 import Discord.DiscordClient;

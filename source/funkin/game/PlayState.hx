@@ -42,6 +42,8 @@ import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
 
+import funkin.menus.*;
+
 using StringTools;
 
 class PlayState extends MusicBeatState
