@@ -32,6 +32,8 @@ import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
 
+import funkin.game.Note;
+
 using StringTools;
 
 class ChartingState extends MusicBeatState

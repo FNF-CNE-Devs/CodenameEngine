@@ -1,4 +1,4 @@
-package;
+package funkin.game;
 
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -20,6 +20,13 @@ class Note extends FlxSprite
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
 	public var prevNote:Note;
+
+	public var strumID(get, never):Int;
+	private function get_strumID() {
+		var id = noteData % 4;
+		if (id < 0) id = 0;
+		return id;
+	}
 
 	public var sustainLength:Float = 0;
 	public var isSustainNote:Bool = false;
