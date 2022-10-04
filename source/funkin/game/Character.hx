@@ -1,5 +1,6 @@
-package;
+package funkin.game;
 
+import funkin.system.IBeatReceiver;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
@@ -7,15 +8,18 @@ import flixel.graphics.frames.FlxAtlasFrames;
 
 using StringTools;
 
-class Character extends FlxSprite
+class Character extends FlxSprite implements IBeatReceiver
 {
+	public var stunned:Bool = false;
+
 	public var animOffsets:Map<String, Array<Dynamic>>;
 	public var debugMode:Bool = false;
 
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = 'bf';
 
-	public var holdTimer:Float = 0;
+	public var lastHit:Float = -5000;
+	public var dadVar:Float = 4;
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -137,6 +141,8 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", 0, 27);
 				addOffset("singLEFT", -10, 10);
 				addOffset("singDOWN", 0, -30);
+
+				dadVar = 6.1;
 
 				playAnim('idle');
 			case 'spooky':
@@ -526,24 +532,6 @@ class Character extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		if (!curCharacter.startsWith('bf'))
-		{
-			if (animation.curAnim.name.startsWith('sing'))
-			{
-				holdTimer += elapsed;
-			}
-
-			var dadVar:Float = 4;
-
-			if (curCharacter == 'dad')
-				dadVar = 6.1;
-			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
-			{
-				dance();
-				holdTimer = 0;
-			}
-		}
-
 		switch (curCharacter)
 		{
 			case 'gf':
@@ -555,7 +543,7 @@ class Character extends FlxSprite
 	}
 
 	private var danced:Bool = false;
-
+	
 	/**
 	 * FOR GF DANCING SHIT
 	 */
@@ -621,6 +609,14 @@ class Character extends FlxSprite
 		}
 	}
 
+	public function beatHit(curBeat:Int) {
+		if ((lastHit + (Conductor.stepCrochet * dadVar) < Conductor.songPosition) || animation.curAnim == null || (!animation.curAnim.name.startsWith("sing") && animation.curAnim.finished))
+			dance();
+	}
+	public function stepHit(curStep:Int) {
+		// nothing
+	}
+
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		animation.play(AnimName, Force, Reversed, Frame);
@@ -633,6 +629,9 @@ class Character extends FlxSprite
 		else
 			offset.set(0, 0);
 
+		if (AnimName.startsWith("sing"))
+			lastHit = Conductor.songPosition;
+		
 		if (curCharacter == 'gf')
 		{
 			if (AnimName == 'singLEFT')

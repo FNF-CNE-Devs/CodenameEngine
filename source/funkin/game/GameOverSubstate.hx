@@ -1,4 +1,4 @@
-package;
+package funkin.game;
 
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -9,13 +9,23 @@ import flixel.util.FlxTimer;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
-	var bf:Boyfriend;
+	var bf:Character;
 	var camFollow:FlxObject;
 
 	var stageSuffix:String = "";
 
-	public function new(x:Float, y:Float)
+	var x:Float = 0;
+	var y:Float = 0;
+
+	public function new(x:Float, y:Float) {
+		super();
+		this.x = x;
+		this.y = y;
+	}
+
+	public override function create()
 	{
+		super.create();
 		var daStage = PlayState.curStage;
 		var daBf:String = '';
 		switch (daStage)
@@ -30,11 +40,9 @@ class GameOverSubstate extends MusicBeatSubstate
 				daBf = 'bf';
 		}
 
-		super();
-
 		Conductor.songPosition = 0;
 
-		bf = new Boyfriend(x, y, daBf);
+		bf = new Character(x, y, daBf, true);
 		add(bf);
 
 		camFollow = new FlxObject(bf.getGraphicMidpoint().x, bf.getGraphicMidpoint().y, 1, 1);

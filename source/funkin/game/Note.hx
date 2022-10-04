@@ -4,6 +4,7 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
+import flixel.math.FlxRect;
 #if polymod
 import polymod.format.ParseRules.TargetSignatureElement;
 #end
@@ -34,10 +35,6 @@ class Note extends FlxSprite
 	public var noteScore:Float = 1;
 
 	public static var swagWidth:Float = 160 * 0.7;
-	public static var PURP_NOTE:Int = 0;
-	public static var GREEN_NOTE:Int = 2;
-	public static var BLUE_NOTE:Int = 1;
-	public static var RED_NOTE:Int = 3;
 
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false)
 	{
@@ -191,17 +188,25 @@ class Note extends FlxSprite
 				tooLate = true;
 		}
 		else
-		{
 			canBeHit = false;
-
-			if (strumTime <= Conductor.songPosition)
-				wasGoodHit = true;
-		}
+		
 
 		if (tooLate)
 		{
 			if (alpha > 0.3)
 				alpha = 0.3;
 		}
+	}
+
+	public function updateClipRect(strum:Strum) {
+		var t = FlxMath.bound((Conductor.songPosition - strumTime) / (height / (0.45 * FlxMath.roundDecimal(strum.getScrollSpeed(), 2))), 0, 1);
+		var swagRect = new FlxRect(0, t * frameHeight, frameWidth, frameHeight);
+
+		setClipRect(swagRect);
+	}
+
+	public function setClipRect(rect:FlxRect) {
+		// TODO: Shader ClipRect like in Yoshi Engine for smoother sustains
+		this.clipRect = rect;
 	}
 }
