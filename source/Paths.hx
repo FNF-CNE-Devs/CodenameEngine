@@ -4,7 +4,7 @@ import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
-import modsfolder.ModsFolder;
+import funkin.mods.ModsFolder;
 
 using StringTools;
 

@@ -1,4 +1,4 @@
-package modsfolder;
+package funkin.mods;
 
 import openfl.utils.AssetManifest;
 import openfl.utils.AssetLibrary;

@@ -1,5 +1,6 @@
 package;
 
+import funkin.game.Character;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -14,7 +15,7 @@ import flixel.util.FlxColor;
  */
 class AnimationDebug extends FlxState
 {
-	var bf:Boyfriend;
+	var bf:Character;
 	var dad:Character;
 	var char:Character;
 	var textAnim:FlxText;
@@ -54,7 +55,7 @@ class AnimationDebug extends FlxState
 		}
 		else
 		{
-			bf = new Boyfriend(0, 0);
+			bf = new Character(0, 0, daAnim, true);
 			bf.screenCenter();
 			bf.debugMode = true;
 			add(bf);

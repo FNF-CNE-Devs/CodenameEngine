@@ -17,7 +17,7 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 
 // TODO: REMOVE TEST
-import modsfolder.ModsFolder;
+import funkin.mods.ModsFolder;
 
 @:build(funkin.macros.BuildCounterMacro.build())
 class Main extends Sprite
@@ -94,8 +94,8 @@ class Main extends Sprite
 		FlxG.save.bind('Save');
 		Highscore.load();
 
-		ModsFolder.loadMod("B-Sides");
-		ModsFolder.currentModFolder = "B-Sides";
+		// ModsFolder.loadMod("B-Sides");
+		// ModsFolder.currentModFolder = "B-Sides";
 		
 		FlxG.fixedTimestep = false;
 		FlxG.autoPause = false;
