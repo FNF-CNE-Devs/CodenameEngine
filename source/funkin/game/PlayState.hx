@@ -173,7 +173,7 @@ class PlayState extends MusicBeatState
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 
 
-		boyfriend = new Character(770, 450, SONG.player1, true);
+		boyfriend = new Character(770, 100, SONG.player1, true);
 
 
 		add(gf);
@@ -798,7 +798,7 @@ class PlayState extends MusicBeatState
 				// trace(PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection);
 			}
 
-			if (camFollow.x != dad.getMidpoint().x + 150 && !PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
+			if (camFollow.x != dad.getMidpoint().x + 150 + dad.globalOffset.x && !PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
 			{
 				camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
 				// camFollow.setPosition(lucky.getMidpoint().x - 120, lucky.getMidpoint().y + 210);
@@ -815,6 +815,10 @@ class PlayState extends MusicBeatState
 						camFollow.x = dad.getMidpoint().x - 100;
 				}
 
+				
+				camFollow.x += dad.globalOffset.x;
+				camFollow.y += dad.globalOffset.y;
+
 				if (dad.curCharacter == 'mom')
 					vocals.volume = 1;
 
@@ -824,7 +828,9 @@ class PlayState extends MusicBeatState
 				}
 			}
 
-			if (PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection && camFollow.x != boyfriend.getMidpoint().x - 100)
+			// TODO: redo this god forsaken system
+
+			if (PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection && camFollow.x != boyfriend.getMidpoint().x - 100 + boyfriend.globalOffset.x)
 			{
 				camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 
@@ -841,6 +847,9 @@ class PlayState extends MusicBeatState
 						camFollow.x = boyfriend.getMidpoint().x - 200;
 						camFollow.y = boyfriend.getMidpoint().y - 200;
 				}
+
+				camFollow.x += boyfriend.globalOffset.x;
+				camFollow.y += boyfriend.globalOffset.y;
 
 				if (SONG.song.toLowerCase() == 'tutorial')
 				{

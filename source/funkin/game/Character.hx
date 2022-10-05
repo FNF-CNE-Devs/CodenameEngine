@@ -1,8 +1,12 @@
 package funkin.game;
 
-import funkin.system.IBeatReceiver;
+import flixel.math.FlxPoint;
+import funkin.interfaces.IBeatReceiver;
+import funkin.interfaces.IOffsetCompatible;
+
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxCamera;
 import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
 
@@ -12,7 +16,7 @@ import haxe.Exception;
 
 using StringTools;
 
-class Character extends FlxSprite implements IBeatReceiver
+class Character extends FlxSprite implements IBeatReceiver implements IOffsetCompatible
 {
 	public var stunned:Bool = false;
 
@@ -20,12 +24,15 @@ class Character extends FlxSprite implements IBeatReceiver
 	public var debugMode:Bool = false;
 
 	public var isPlayer:Bool = false;
+	public var isGF:Bool = false;
 	public var curCharacter:String = 'bf';
 
 	public var lastHit:Float = -5000;
 	public var dadVar:Float = 4;
 
 	public var playerOffsets:Bool = false;
+
+	public var globalOffset:FlxPoint = new FlxPoint(0, 0);
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -63,32 +70,14 @@ class Character extends FlxSprite implements IBeatReceiver
 					}
 
 					if (character.has.isPlayer) playerOffsets = (character.att.isPlayer == "true");
+					if (character.has.isGF) isGF = (character.att.isGF == "true");
+					if (character.has.x) globalOffset.x = Std.parseFloat(character.att.x);
+					if (character.has.x) globalOffset.y = Std.parseFloat(character.att.y);
 					if (character.has.flipX) flipX = (character.att.flipX == "true");
 
 					frames = Paths.getSparrowAtlas('characters/$curCharacter');
 					for(anim in character.nodes.anim) {
-						// TODO: Add indices
-						var animData:AnimData = {
-							name: null,
-							anim: null,
-							fps: 24,
-							loop: false,
-							x: 0,
-							y: 0
-						};
-
-						if (anim.has.name) animData.name = anim.att.name;
-						if (anim.has.anim) animData.anim = anim.att.anim;
-						if (anim.has.fps) animData.fps = Std.parseInt(anim.att.fps);
-						if (anim.has.x) animData.x = Std.parseFloat(anim.att.x);
-						if (anim.has.y) animData.y = Std.parseFloat(anim.att.y);
-
-						if (animData.name != null && animData.anim != null) {
-							if (animData.fps <= 0 #if web || animData.fps == null #end) animData.fps = 24;
-
-							animation.addByPrefix(animData.name, animData.anim, animData.fps, animData.loop);
-							addOffset(animData.name, animData.x, animData.y);
-						}
+						CoolUtil.addXMLAnimation(this, anim);
 					}
 			}
 			break;
@@ -566,6 +555,9 @@ class Character extends FlxSprite implements IBeatReceiver
 
 		dance();
 
+
+		isDanceLeftDanceRight = (animation.getByName("danceLeft") != null && animation.getByName("danceRight") != null);
+		
 		// alternative to xor operator
 		// for people who dont believe it, heres the truth table
 		// [   a   ][   b   ][ a!= b ]
@@ -573,7 +565,6 @@ class Character extends FlxSprite implements IBeatReceiver
 		// [ true  ][ false ][ true  ]
 		// [ false ][ true  ][ true  ]
 		// [ true  ][ true  ][ false ]
-
 		if (isPlayer != playerOffsets)
 		{
 			// character is flipped
@@ -582,9 +573,11 @@ class Character extends FlxSprite implements IBeatReceiver
 			
 			switchOffset('singLEFT', 'singRIGHT');
 			switchOffset('singLEFTmiss', 'singRIGHTmiss');
-		} else
-			flipX = !flipX;
+		}
+		if (isPlayer) flipX = !flipX;
 	}
+
+	var isDanceLeftDanceRight:Bool = false;
 
 	public function switchOffset(anim1:String, anim2:String) {
 		var old = animOffsets[anim1];
@@ -594,13 +587,6 @@ class Character extends FlxSprite implements IBeatReceiver
 
 	override function update(elapsed:Float)
 	{
-		switch (curCharacter)
-		{
-			case 'gf':
-				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-					playAnim('danceRight');
-		}
-
 		super.update(elapsed);
 	}
 
@@ -615,49 +601,7 @@ class Character extends FlxSprite implements IBeatReceiver
 		{
 			switch (curCharacter)
 			{
-				case 'gf':
-					if (!animation.curAnim.name.startsWith('hair'))
-					{
-						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight');
-						else
-							playAnim('danceLeft');
-					}
-
-				case 'gf-christmas':
-					if (!animation.curAnim.name.startsWith('hair'))
-					{
-						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight');
-						else
-							playAnim('danceLeft');
-					}
-
-				case 'gf-car':
-					if (!animation.curAnim.name.startsWith('hair'))
-					{
-						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight');
-						else
-							playAnim('danceLeft');
-					}
-				case 'gf-pixel':
-					if (!animation.curAnim.name.startsWith('hair'))
-					{
-						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight');
-						else
-							playAnim('danceLeft');
-					}
-
+				// hardcode custom dance animations here
 				case 'spooky':
 					danced = !danced;
 
@@ -666,7 +610,10 @@ class Character extends FlxSprite implements IBeatReceiver
 					else
 						playAnim('danceLeft');
 				default:
-					playAnim('idle');
+					if (isDanceLeftDanceRight) {
+						playAnim((danced != danced) ? 'danceLeft' : 'danceRight');
+					} else
+						playAnim('idle');
 			}
 		}
 	}
@@ -679,6 +626,56 @@ class Character extends FlxSprite implements IBeatReceiver
 		// nothing
 	}
 
+	// /**
+	//  * DO NOT TOUCH!! FOR DRAWING STUFF
+	//  */
+	// public override function isOnScreen() {
+	// 	if (flipX) {
+	// 		return super.isOnScreen();	
+	// 	} else {
+	// 		return super.isOnScreen();
+	// 	}
+	// }
+	// public override function draw() {
+	// 	// doing this cause flixel have a bug with frameX not being applied correctly when sprite is flipped
+	// 	if (flipX) {
+	// 		isOnScreen
+	// 		// setting up variables
+	// 		flipX = false;
+	// 		scale.x = -scale.x;
+
+	// 		// drawing
+	// 		super.draw();
+
+	// 		// resetting variables
+	// 		scale.x = -scale.x;
+	// 		flipX = true;
+	// 	} else
+	// 		super.draw();
+	// }
+
+	public override function isOnScreen(?Camera:FlxCamera):Bool
+	{
+		if (Camera == null)
+			Camera = FlxG.camera;
+
+		getScreenPosition(_point, Camera);
+		return Camera.containsPoint(_point, width, height);
+	}
+
+	public override function draw() {
+		if (flipX) {
+			dirty = true;
+
+			flipX = false;
+			scale.x *= -1;
+			super.draw();
+			flipX = true;
+			scale.x *= -1;
+		} else
+			super.draw();
+	}
+
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		animation.play(AnimName, Force, Reversed, Frame);
@@ -689,15 +686,17 @@ class Character extends FlxSprite implements IBeatReceiver
 			if (isPlayer != playerOffsets) {
 				offset.set(-daOffset[0], daOffset[1]);
 				var anim = animation.getByName(AnimName);
-				if (anim != null) {
-					offset.x -= frames.frames[anim.frames[0]].offset.x * 3;
-				}
+				// if (anim != null && anim.frames.length > 0) {
+				// 	offset.x -= frames.frames[anim.frames[0]].offset.x * 2;
+				// }
 			} else {
 				offset.set(daOffset[0], daOffset[1]);
 			}
 		}
 		else
 			offset.set(0, 0);
+		offset.x -= globalOffset.x;
+		offset.y -= globalOffset.y;
 
 		if (AnimName.startsWith("sing"))
 			lastHit = Conductor.songPosition;
@@ -724,13 +723,4 @@ class Character extends FlxSprite implements IBeatReceiver
 	{
 		animOffsets[name] = [x, y];
 	}
-}
-
-typedef AnimData = {
-	var name:String;
-	var anim:String;
-	var fps:Int;
-	var loop:Bool;
-	var x:Float;
-	var y:Float;
 }
