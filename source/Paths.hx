@@ -23,12 +23,12 @@ class Paths
 		currentLevel = name.toLowerCase();
 	}
 
-	static function getPath(file:String, type:AssetType, library:Null<String>)
+	static function getPath(file:String, type:AssetType, library:Null<String>, skipModsVerification:Bool = false)
 	{
 		if (library != null && library.startsWith("mods/")) {
 			file = file.toLowerCase();
 			library = library.toLowerCase();
-		} else if (ModsFolder.currentModFolder != null) {
+		} else if (!skipModsVerification && ModsFolder.currentModFolder != null) {
 			var modPath = getPath(file, type, 'mods/${ModsFolder.currentModFolder}');
 			if (OpenFlAssets.exists(modPath)) return modPath;
 		}
@@ -115,6 +115,27 @@ class Paths
 		return getPath('images/$key.png', IMAGE, library);
 	}
 
+	static public function chart(song:String, ?difficulty:String = "normal"):String {
+		difficulty = difficulty.toLowerCase();
+		song = song.toLowerCase();
+
+		var difficultyEnd = (difficulty == "normal") ? "" : '-$difficulty';
+
+		// charts/your-song/hard.json
+		var p = getPath('charts/$song/$difficulty.json', TEXT, null);
+		if (OpenFlAssets.exists(p)) return p;
+
+		// charts/your-song/your-song-hard.json
+		var p2 = getPath('charts/$song/$song$difficultyEnd.json', TEXT, null);
+		if (OpenFlAssets.exists(p2)) return p2;
+
+		// data/your-song/your-song-hard.json (default old format)
+		p2 = json('$song/$song$difficultyEnd');
+		if (OpenFlAssets.exists(p2)) return p2;
+
+		return p; // returns the normal one so that it shows the correct path in the error message.
+	}
+
 	inline static public function font(key:String)
 	{
 		return 'assets/fonts/$key';
@@ -128,5 +149,25 @@ class Paths
 	inline static public function getPackerAtlas(key:String, ?library:String)
 	{
 		return FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library));
+	}
+
+	inline static public function getFolderContent(key:String, includeSource:Bool = false, ?library:String):Array<String> {
+		// designed to work both on windows and web
+		
+		while(key.charAt(key.length-1) == "/") key.substr(0, key.length-1);
+		var path = getPath('$key/.foldercontent', TEXT, library);
+		var content:Array<String> = [];
+		if (OpenFlAssets.exists(path)) {
+			var text = OpenFlAssets.getText(path);
+			for(e in text.split("\n")) content.push(e.trim());
+		}
+		if (includeSource) {
+			var path = getPath('$key/.foldercontent', TEXT, library, true);
+			if (OpenFlAssets.exists(path)) {
+				var text = OpenFlAssets.getText(path);
+				for(e in text.split("\n")) content.push(e.trim());
+			}
+		}
+		return content;
 	}
 }

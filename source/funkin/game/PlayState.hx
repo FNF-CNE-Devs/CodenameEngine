@@ -48,12 +48,16 @@ using StringTools;
 
 class PlayState extends MusicBeatState
 {
+	/**
+	 * SONG METADATA
+	 */
 	public static var curStage:String = '';
 	public static var SONG:SwagSong;
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
+	public static var fromMods:Bool = false;
 
 	var halloweenLevel:Bool = false;
 
@@ -133,7 +137,7 @@ class PlayState extends MusicBeatState
 		persistentDraw = true;
 
 		if (SONG == null)
-			SONG = Song.loadFromJson('tutorial');
+			SONG = Song.loadFromJson('tutorial', 'normal');
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -920,12 +924,9 @@ class PlayState extends MusicBeatState
 			#end
 		}
 
-		var addedNote:Bool = false;
-		while(unspawnNotes[0] != null && unspawnNotes[0].strumTime - Conductor.songPosition < 1500) {
-			addedNote = true;
+		while(unspawnNotes[0] != null && unspawnNotes[0].strumTime - Conductor.songPosition < 1500)
 			notes.add(unspawnNotes.shift());
-		}
-		if (addedNote) notes.sort(function(i, p1, p2) {return sortByShit(p1, p2);});
+		
 
 		if (generatedMusic)
 		{
@@ -1001,13 +1002,8 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				var difficulty:String = "";
-
-				if (storyDifficulty == 0)
-					difficulty = '-easy';
-
-				if (storyDifficulty == 2)
-					difficulty = '-hard';
+				// TODO: NOT INT DIFFICULTIES
+				var difficulty:String = CoolUtil.difficultyString();
 
 				trace('LOADING NEXT SONG');
 				trace(PlayState.storyPlaylist[0].toLowerCase() + difficulty);
@@ -1027,7 +1023,7 @@ class PlayState extends MusicBeatState
 				FlxTransitionableState.skipNextTransOut = true;
 				prevCamFollow = camFollow;
 
-				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
+				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase(), difficulty);
 				FlxG.sound.music.stop();
 
 				LoadingState.loadAndSwitchState(new PlayState());

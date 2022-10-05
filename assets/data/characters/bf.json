@@ -1,0 +1,94 @@
+{
+    "isPlayer": true,
+    "flipX": true,
+    "anims": [
+        {
+            "name": "idle",
+            "animation": "BF idle dance",
+            "fps": 24,
+            "loop": false,
+            "x": 0,
+            "y": -5
+        },
+        {
+            "name": "singUP",
+            "animation": "BF NOTE UP0",
+            "fps": 24,
+            "loop": false,
+            "x": -29,
+            "y": 27
+        },
+        {
+            "name": "singLEFT",
+            "animation": "BF NOTE LEFT0",
+            "fps": 24,
+            "loop": false,
+            "x": 12,
+            "y": -6
+        },
+        {
+            "name": "singRIGHT",
+            "animation": "BF NOTE RIGHT0",
+            "fps": 24,
+            "loop": false,
+            "x": -38,
+            "y": -7
+        },
+        {
+            "name": "singDOWN",
+            "animation": "BF NOTE DOWN0",
+            "fps": 24,
+            "loop": false,
+            "x": -10,
+            "y": -50
+        },
+        {
+            "name": "singUPmiss",
+            "animation": "BF NOTE UP MISS",
+            "fps": 24,
+            "loop": false,
+            "x": -29,
+            "y": 27
+        },
+        {
+            "name": "singLEFTmiss",
+            "animation": "BF NOTE LEFT MISS",
+            "fps": 24,
+            "loop": false,
+            "x": 12,
+            "y": 24
+        },
+        {
+            "name": "singRIGHTmiss",
+            "animation": "BF NOTE RIGHT MISS",
+            "fps": 24,
+            "loop": false,
+            "x": -30,
+            "y": 21
+        },
+        {
+            "name": "singDOWNmiss",
+            "animation": "BF NOTE DOWN MISS",
+            "fps": 24,
+            "loop": false,
+            "x": -11,
+            "y": -19
+        },
+        {
+            "name": "hey",
+            "animation": "BF HEY",
+            "fps": 24,
+            "loop": false,
+            "x": 7,
+            "y": 4
+        },
+        {
+            "name": "scared",
+            "animation": "BF idle shaking",
+            "fps": 24,
+            "loop": true,
+            "x": -4,
+            "y": 0
+        }
+    ]
+}
