@@ -1,3 +1,6 @@
+
+// REDO THIS FOR FILE SUPPORT KINDA LIKE PSYCH BUT NOT MESSY
+
 package funkin.mods;
 
 import sys.FileStat;
