@@ -1,10 +1,11 @@
-package;
+package funkin.system;
 
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import funkin.mods.ModsFolder;
+import funkin.scripting.Script;
 
 using StringTools;
 
@@ -95,6 +96,19 @@ class Paths
 	inline static public function image(key:String, ?library:String)
 	{
 		return getPath('images/$key.png', IMAGE, library);
+	}
+
+	inline static public function script(key:String, ?library:String) {
+		var scriptPath = getPath(key, TEXT, library);
+		var p:String;
+		for(ex in Script.scriptExtensions) {
+			p = getPath('$key.$ex', TEXT, library);
+			if (OpenFlAssets.exists(p)) {
+				scriptPath = p;
+				break;
+			}
+		}
+		return scriptPath;
 	}
 
 	static public function chart(song:String, ?difficulty:String = "normal"):String {

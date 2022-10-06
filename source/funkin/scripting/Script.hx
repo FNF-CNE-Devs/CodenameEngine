@@ -1,29 +1,43 @@
 package funkin.scripting;
 
 import haxe.io.Path;
+import openfl.utils.Assets;
 
 /**
  * Class used for scripting.
  */
 class Script {
     /**
+     * [Description] All available script extensions
+     */
+    public static var scriptExtensions:Array<String> = [
+        "hx", "hscript", "hsc"
+    ];
+
+    /**
      * [Description] Currently executing script.
      */
     public static var curScript:Script = null;
 
     /**
+     * [Description] Script name (with extension)
+     */
+    public var fileName:String;
+
+    /**
      * [Description] Creates a script from the specified asset path. The language is automatically determined.
-     * @param path 
+     * @param path Path in assets
      */
     public static function create(path:String):Script {
-        if (Assets.exists(file)) {
+        if (Assets.exists(path)) {
             return switch(Path.extension(path).toLowerCase()) {
-                case "hx" | "hscript" | "hsc":  new HScript(path);
-                default:                        new DummyScript();
+                case "hx" | "hscript" | "hsc":
+                    new HScript(path);
+                default:
+                    new DummyScript(path);
             }
-        } else {
-            return new DummyScript(path);
         }
+        return new DummyScript(path);
     }
 
     /**
@@ -31,9 +45,10 @@ class Script {
      * @param path 
      */
     public function new(path:String) {
+        fileName = Path.withoutDirectory(path);
         var oldScript = curScript;
         curScript = this;
-        create(path);
+        onCreate(path);
         curScript = oldScript;
     }
 
@@ -42,21 +57,21 @@ class Script {
      * [Description] Internal. Creates the script.
      * @param path Path to the script.
      */
-    public function create(path:String) {}
+    public function onCreate(path:String) {}
     /**
      * [Description] Calls the function `func` defined in the script.
      * @param func Name of the function
      * @param parameters (Optional) Parameters of the function.
      * @return Dynamic Result (if void, then null)
      */
-    public function call(func:String, ?parameters:Array<Dynamic>):Dynamic {}
+    public function call(func:String, ?parameters:Array<Dynamic>):Dynamic {return null;}
 
     /**
      * [Description] Gets the variable `variable` from the script's variables.
      * @param variable Name of the variable.
      * @return Dynamic Variable (or null if it doesn't exists)
      */
-    public function get(variable:String):Dynamic {}
+    public function get(variable:String):Dynamic {return null;}
 
     /**
      * [Description] Gets the variable `variable` from the script's variables.
@@ -70,5 +85,8 @@ class Script {
      * @param text Text of the error (ex: Null Object Reference).
      * @param additionalInfo Additional information you could provide.
      */
-    public function error(text:String, additionalInfo:Dynamic):Void {}
+    public function error(text:String, additionalInfo:Dynamic):Void {
+        // TODO: Logs (like on YCE)
+        trace('$text');
+    }
 }
