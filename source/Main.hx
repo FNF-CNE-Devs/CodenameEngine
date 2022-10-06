@@ -16,10 +16,12 @@ import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 
+#if sys
+import sys.io.File;
+#end
 // TODO: REMOVE TEST
 import funkin.mods.ModsFolder;
 
-@:build(funkin.macros.BuildCounterMacro.build())
 class Main extends Sprite
 {
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
@@ -97,6 +99,19 @@ class Main extends Sprite
 		ModsFolder.init();
 		ModsFolder.loadMod("introMod");
 		ModsFolder.currentModFolder = "introMod";
+
+		#if sys
+		if (Sys.args().contains("-livereload")) {
+			trace("Used lime test windows. Switching into source assets.");
+			ModsFolder.loadLibraryFromFolder('sourceassets', './../../../../assets/');
+			@:privateAccess
+			Paths.__useSourceAssets = true;
+
+			var buildNum:Int = Std.parseInt(File.getContent("./../../../../buildnumber.txt"));
+			buildNum++;
+			File.saveContent("./../../../../buildnumber.txt", Std.string(buildNum));
+		}
+		#end
 		
 		FlxG.fixedTimestep = false;
 		FlxG.autoPause = false;

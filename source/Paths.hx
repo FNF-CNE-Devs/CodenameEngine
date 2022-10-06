@@ -15,18 +15,11 @@ class Paths
 	 * Currently is set to `mp3` for web targets, and `ogg` for other targets.
 	 */
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
-
-	static var currentLevel:String;
-
-	static public function setCurrentLevel(name:String)
-	{
-		currentLevel = name.toLowerCase();
-	}
+	private static var __useSourceAssets = false;
 
 	static function getPath(file:String, type:AssetType, library:Null<String>, skipModsVerification:Bool = false)
 	{
 		if (library != null && library.startsWith("mods/")) {
-			file = file.toLowerCase();
 			library = library.toLowerCase();
 		} else if (!skipModsVerification && ModsFolder.currentModFolder != null) {
 			var modPath = getPath(file, type, 'mods/${ModsFolder.currentModFolder}');
@@ -35,17 +28,6 @@ class Paths
 
 		if (library != null)
 			return getLibraryPath(file, library);
-
-		if (currentLevel != null)
-		{
-			var levelPath = getLibraryPathForce(file, currentLevel);
-			if (OpenFlAssets.exists(levelPath, type))
-				return levelPath;
-
-			levelPath = getLibraryPathForce(file, "shared");
-			if (OpenFlAssets.exists(levelPath, type))
-				return levelPath;
-		}
 
 		return getPreloadPath(file);
 	}
@@ -62,7 +44,7 @@ class Paths
 
 	inline static function getPreloadPath(file:String)
 	{
-		return 'assets/$file';
+		return (__useSourceAssets) ? getLibraryPathForce(file, 'sourceassets') : 'assets/$file';
 	}
 
 	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)

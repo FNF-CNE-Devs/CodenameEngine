@@ -3,6 +3,7 @@ package funkin.mods;
 import openfl.utils.Assets;
 import openfl.utils.AssetManifest;
 import openfl.utils.AssetLibrary;
+import flixel.graphics.FlxGraphic;
 import sys.FileSystem;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -43,28 +44,33 @@ class ModsFolder {
      * @param modName Name of the mod
      * @param force Whenever the mod should be reloaded if it has already been loaded
      */
-    public static function loadMod(mod:String, ?force:Bool = false) {
-        var libName = 'mods/$mod'.toLowerCase();
+    public static function loadMod(mod:String, force:Bool = false) {
+        var e = loadLibraryFromFolder('mods/$mod'.toLowerCase(), '${modsPath}$mod', force);
+        loadedMods.push(mod);
+        return e;
+    }
 
+    public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false) {
         if (Assets.hasLibrary(libName)) {
             if (force)
                 Assets.unloadLibrary(libName);
             else
-                checkForOutdatedAssets(cast Assets.getLibrary(libName));
+                return null;
         }
         
         var assets:AssetManifest = new AssetManifest();
-        assets.name = libName;// for case sensitive shit & correct linux support
+        assets.name = libName;
         assets.libraryType = 'funkin.mods.ModsAssetLibrary';
         assets.version = 2;
         assets.libraryArgs = [];
-        assets.rootPath = '${modsPath}/$mod/';
+        assets.rootPath = folder;
         assets.assets = [];
-        getAssetFiles(assets.assets, '${modsPath}/$mod/', '', libName);
 
         var lib = AssetLibrary.fromManifest(assets);
-        openfl.utils.Assets.registerLibrary(libName, lib);
-        loadedMods.push(mod);
+        @:privateAccess
+        lib.__proxy = new ModsAssetLibrary(assets.rootPath, assets.name);
+        Assets.registerLibrary(libName, lib);
+        return lib;
     }
 
     /**
@@ -137,7 +143,50 @@ class ModsFolder {
 
         if (currentModFolder == null) return;
         #if sys
-            loadMod(currentModFolder, false); // hot reloading 🔥
+            var bmapsToRemove:Array<FlxGraphic> = [];
+            @:privateAccess
+            for(bmap in FlxG.bitmap._cache) {
+                if (bmap.assetsKey != null) {
+                    var e = new LibrarySymbol(bmap.assetsKey);
+                    trace(bmap.assetsKey);
+                    if (e.library is openfl.utils.AssetLibrary) {
+                        @:privateAccess
+                        e.library = cast(e.library, openfl.utils.AssetLibrary).__proxy;
+                    }
+                    if (e.library is ModsAssetLibrary) {
+                        var lib = cast(e.library, ModsAssetLibrary);
+                        if (!lib.__parseAsset(e.symbolName)) continue;
+                        if (!lib.__isCacheValid(lib.cachedImages, lib._parsedAsset)) {
+                            lib.cachedImages.remove(lib._parsedAsset);
+                            bmapsToRemove.push(bmap);
+                        }
+                    }
+                }
+            }
+            for(e in bmapsToRemove)
+                FlxG.bitmap.remove(e);
+            
         #end
     }
+}
+
+class LibrarySymbol
+{
+	public var library:lime.utils.AssetLibrary;
+	public var libraryName:String;
+	public var symbolName:String;
+
+	public inline function new(id:String)
+	{
+		var colonIndex = id.indexOf(":");
+		libraryName = id.substring(0, colonIndex);
+		symbolName = id.substring(colonIndex + 1);
+		library = lime.utils.Assets.getLibrary(libraryName);
+	}
+
+	public inline function isLocal(?type)
+		return library.isLocal(symbolName, type);
+
+	public inline function exists(?type)
+		return library.exists(symbolName, type);
 }
