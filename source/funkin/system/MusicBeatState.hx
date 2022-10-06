@@ -1,7 +1,8 @@
 package funkin.system;
 
 import funkin.interfaces.IBeatReceiver;
-import Conductor.BPMChangeEvent;
+import funkin.system.Conductor.BPMChangeEvent;
+import funkin.system.Conductor;
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.FlxUIState;

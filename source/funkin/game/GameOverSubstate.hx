@@ -8,6 +8,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import funkin.menus.StoryMenuState;
 import funkin.menus.FreeplayState;
+import funkin.system.Conductor;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
@@ -28,7 +29,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	public override function create()
 	{
 		super.create();
-		var daStage = PlayState.curStage;
+		var daStage = PlayState.instance.curStage;
 		var daBf:String = '';
 		switch (daStage)
 		{

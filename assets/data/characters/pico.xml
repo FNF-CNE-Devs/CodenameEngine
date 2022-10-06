@@ -4,7 +4,7 @@
 
     <!-- Sing Animations -->
     <anim name="singLEFT" anim="Pico Note Right0" fps="24" loop="false" x="65" y="9" />
-    <anim name="singDOWN" anim="Pico Down Note0" fps="24" loop="false" x="0" y="-70" />
+    <anim name="singDOWN" anim="Pico Down Note0" fps="24" loop="false" x="-86" y="-80" />
     <anim name="singUP" anim="pico Up note0" fps="24" loop="false" x="-29" y="27" />
     <anim name="singRIGHT" anim="Pico NOTE LEFT0" fps="24" loop="false" x="-68" y="-7" />
 

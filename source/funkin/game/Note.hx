@@ -5,6 +5,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.math.FlxRect;
+import funkin.system.Conductor;
 #if polymod
 import polymod.format.ParseRules.TargetSignatureElement;
 #end
@@ -53,7 +54,7 @@ class Note extends FlxSprite
 
 		this.noteData = noteData;
 
-		var daStage:String = PlayState.curStage;
+		var daStage:String = PlayState.instance.curStage;
 
 		switch (daStage)
 		{
@@ -147,7 +148,7 @@ class Note extends FlxSprite
 
 			x -= width / 2;
 
-			if (PlayState.curStage.startsWith('school'))
+			if (PlayState.instance.curStage.startsWith('school'))
 				x += 30;
 
 			if (prevNote.isSustainNote)
@@ -164,7 +165,7 @@ class Note extends FlxSprite
 						prevNote.animation.play('redhold');
 				}
 
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.SONG.speed;
+				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.instance.scrollSpeed;
 				prevNote.updateHitbox();
 				// prevNote.setGraphicSize();
 			}

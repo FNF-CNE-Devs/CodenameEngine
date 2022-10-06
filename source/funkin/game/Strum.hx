@@ -3,6 +3,7 @@ package funkin.game;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import funkin.system.Conductor;
 
 class Strum extends FlxSprite {
     public var cpu = false;
@@ -12,7 +13,7 @@ class Strum extends FlxSprite {
     
     public function getScrollSpeed() {
         if (scrollSpeed != null) return scrollSpeed;
-        if (PlayState.SONG != null) return PlayState.SONG.speed;
+        if (PlayState.instance != null) return PlayState.instance.scrollSpeed;
         return 1;
     }
 
@@ -26,7 +27,7 @@ class Strum extends FlxSprite {
     }
 
     public function updateNotePosition(daNote:Note) {
-        var offset = FlxPoint.get(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(PlayState.SONG.speed, 2)));
+        var offset = FlxPoint.get(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(PlayState.instance.scrollSpeed, 2)));
         if (daNote.isSustainNote) offset.y -= Note.swagWidth / 2;
         // TODO: angle stuff
         daNote.x = x + offset.x;

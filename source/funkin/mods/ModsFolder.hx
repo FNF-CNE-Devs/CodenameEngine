@@ -148,7 +148,6 @@ class ModsFolder {
             for(bmap in FlxG.bitmap._cache) {
                 if (bmap.assetsKey != null) {
                     var e = new LibrarySymbol(bmap.assetsKey);
-                    trace(bmap.assetsKey);
                     if (e.library is openfl.utils.AssetLibrary) {
                         @:privateAccess
                         e.library = cast(e.library, openfl.utils.AssetLibrary).__proxy;

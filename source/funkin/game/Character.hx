@@ -13,6 +13,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.Assets;
 import haxe.xml.Access;
 import haxe.Exception;
+import funkin.system.Conductor;
 
 using StringTools;
 

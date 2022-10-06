@@ -1,4 +1,4 @@
-package;
+package funkin.system;
 
 import Section.SwagSection;
 import haxe.Json;
@@ -14,6 +14,7 @@ typedef SwagSong =
 	var bpm:Int;
 	var needsVoices:Bool;
 	var speed:Float;
+	var stage:String;
 
 	var player1:String;
 	var player2:String;
@@ -22,22 +23,6 @@ typedef SwagSong =
 
 class Song
 {
-	public var song:String;
-	public var notes:Array<SwagSection>;
-	public var bpm:Int;
-	public var needsVoices:Bool = true;
-	public var speed:Float = 1;
-
-	public var player1:String = 'bf';
-	public var player2:String = 'dad';
-
-	public function new(song, notes, bpm)
-	{
-		this.song = song;
-		this.notes = notes;
-		this.bpm = bpm;
-	}
-
 	public static function loadFromJson(songName:String, ?difficulty:String = "normal"):SwagSong
 	{
 		var assetPath = Paths.chart(songName, difficulty);

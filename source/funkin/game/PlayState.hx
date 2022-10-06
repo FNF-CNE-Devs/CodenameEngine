@@ -4,7 +4,7 @@ package funkin.game;
 import Discord.DiscordClient;
 #end
 import Section.SwagSection;
-import Song.SwagSong;
+import funkin.system.Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -41,6 +41,8 @@ import lime.utils.Assets;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
+import funkin.system.Conductor;
+import funkin.system.Song;
 
 import funkin.menus.*;
 
@@ -48,10 +50,11 @@ using StringTools;
 
 class PlayState extends MusicBeatState
 {
+	public static var instance:PlayState = null;
+
 	/**
 	 * SONG METADATA
 	 */
-	public static var curStage:String = '';
 	public static var SONG:SwagSong;
 	public static var isStoryMode:Bool = false;
 	public static var storyWeek:Int = 0;
@@ -59,70 +62,75 @@ class PlayState extends MusicBeatState
 	public static var storyDifficulty:Int = 1;
 	public static var fromMods:Bool = false;
 
-	var halloweenLevel:Bool = false;
+	public var halloweenLevel:Bool = false;
 
-	private var vocals:FlxSound;
+	public var stage:Stage;
+	public var scrollSpeed:Float = 0;
 
-	private var dad:Character;
-	private var gf:Character;
-	private var boyfriend:Character;
+	public var vocals:FlxSound;
 
-	private var notes:FlxTypedGroup<Note>;
-	private var unspawnNotes:Array<Note> = [];
+	public var dad:Character;
+	public var gf:Character;
+	public var boyfriend:Character;
 
-	private var strumLine:FlxSprite;
-	private var curSection:Int = 0;
+	public var notes:FlxTypedGroup<Note>;
+	public var unspawnNotes:Array<Note> = [];
 
-	private var camFollow:FlxObject;
+	public var strumLine:FlxSprite;
+	public var curSection:Int = 0;
+
+	public var camFollow:FlxObject;
 
 	private static var prevCamFollow:FlxObject;
 
-	private var strumLineNotes:FlxTypedGroup<Strum>;
-	private var playerStrums:FlxTypedGroup<Strum>;
-	private var cpuStrums:FlxTypedGroup<Strum>;
+	public var strumLineNotes:FlxTypedGroup<Strum>;
+	public var playerStrums:FlxTypedGroup<Strum>;
+	public var cpuStrums:FlxTypedGroup<Strum>;
 
-	private var camZooming:Bool = false;
-	private var curSong:String = "";
+	public var camZooming:Bool = false;
+	public var curSong:String = "";
+	public var curStage:String = "";
 
-	private var gfSpeed:Int = 1;
-	private var health:Float = 1;
-	private var combo:Int = 0;
+	public var gfSpeed:Int = 1;
+	public var health:Float = 1;
+	public var combo:Int = 0;
 
-	private var healthBarBG:FlxSprite;
-	private var healthBar:FlxBar;
+	public var healthBarBG:FlxSprite;
+	public var healthBar:FlxBar;
 
-	private var generatedMusic:Bool = false;
-	private var startingSong:Bool = false;
+	public var generatedMusic:Bool = false;
+	public var startingSong:Bool = false;
 
-	private var iconP1:HealthIcon;
-	private var iconP2:HealthIcon;
-	private var camHUD:FlxCamera;
-	private var camGame:FlxCamera;
+	public var iconP1:HealthIcon;
+	public var iconP2:HealthIcon;
+	public var camHUD:FlxCamera;
+	public var camGame:FlxCamera;
 
 	
-	var songScore:Int = 0;
-	var scoreTxt:FlxText;
+	public var songScore:Int = 0;
+	public var scoreTxt:FlxText;
 
 	public static var campaignScore:Int = 0;
 
-	var defaultCamZoom:Float = 1.05;
+	public var defaultCamZoom:Float = 1.05;
 
 	// how big to stretch the pixel art assets
 	public static var daPixelZoom:Float = 6;
 
-	var inCutscene:Bool = false;
+	public var inCutscene:Bool = false;
 
 	#if desktop
 	// Discord RPC variables
-	var storyDifficultyText:String = "";
-	var iconRPC:String = "";
-	var songLength:Float = 0;
-	var detailsText:String = "";
-	var detailsPausedText:String = "";
+	public var storyDifficultyText:String = "";
+	public var iconRPC:String = "";
+	public var songLength:Float = 0;
+	public var detailsText:String = "";
+	public var detailsPausedText:String = "";
 	#end
 
 	override public function create()
 	{
+		instance = this;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
@@ -138,6 +146,8 @@ class PlayState extends MusicBeatState
 
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial', 'normal');
+
+		scrollSpeed = SONG.speed;
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -176,9 +186,11 @@ class PlayState extends MusicBeatState
 		boyfriend = new Character(770, 100, SONG.player1, true);
 
 
-		add(gf);
+		if (SONG.stage == null || SONG.stage.trim() == "") SONG.stage = "stage";
+		// TODO: Custom Stage Loading
+		add(new Stage(SONG.stage));
 
-		// TODO: cool layering 🔥
+		add(gf);
 
 		add(dad);
 		add(boyfriend);
@@ -253,8 +265,8 @@ class PlayState extends MusicBeatState
 		startCountdown();
 	}
 
-	var startTimer:FlxTimer;
-	var perfectMode:Bool = false;
+	public var startTimer:FlxTimer;
+	public var perfectMode:Bool = false;
 
 	function startCountdown():Void
 	{
@@ -359,9 +371,9 @@ class PlayState extends MusicBeatState
 		}, 5);
 	}
 
-	var previousFrameTime:Int = 0;
-	var lastReportedPlayheadPosition:Int = 0;
-	var songTime:Float = 0;
+	public var previousFrameTime:Int = 0;
+	public var lastReportedPlayheadPosition:Int = 0;
+	public var songTime:Float = 0;
 
 	function startSong():Void
 	{
@@ -378,7 +390,12 @@ class PlayState extends MusicBeatState
 		updateDiscordStatus();
 	}
 
-	var debugNum:Int = 0;
+	public override function destroy() {
+		super.destroy();
+		instance = null;
+	}
+
+	public var debugNum:Int = 0;
 
 	private function generateSong(dataPath:String):Void
 	{
@@ -670,9 +687,9 @@ class PlayState extends MusicBeatState
 		vocals.play();
 	}
 
-	private var paused:Bool = false;
-	var startedCountdown:Bool = false;
-	var canPause:Bool = true;
+	public var paused:Bool = false;
+	public var startedCountdown:Bool = false;
+	public var canPause:Bool = true;
 
 
 	public function pauseGame() {
@@ -1043,7 +1060,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	var endingSong:Bool = false;
+	public var endingSong:Bool = false;
 
 	private function popUpScore(strumtime:Float):Void
 	{
@@ -1355,8 +1372,8 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	var lightningStrikeBeat:Int = 0;
-	var lightningOffset:Int = 8;
+	public var lightningStrikeBeat:Int = 0;
+	public var lightningOffset:Int = 8;
 
 	override function beatHit()
 	{
@@ -1396,5 +1413,5 @@ class PlayState extends MusicBeatState
 		// }
 	}
 
-	var curLight:Int = 0;
+	public var curLight:Int = 0;
 }

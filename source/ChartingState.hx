@@ -1,8 +1,10 @@
 package;
 
-import Conductor.BPMChangeEvent;
+import funkin.system.Conductor.BPMChangeEvent;
 import Section.SwagSection;
-import Song.SwagSong;
+import funkin.system.Conductor;
+import funkin.system.Song.SwagSong;
+import funkin.system.Song;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
@@ -31,6 +33,7 @@ import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
+import funkin.system.Conductor;
 
 import funkin.game.Note;
 
@@ -122,7 +125,8 @@ class ChartingState extends MusicBeatState
 				player1: 'bf',
 				player2: 'dad',
 				speed: 1,
-				validScore: false
+				validScore: false,
+				stage: 'stage'
 			};
 		}
 

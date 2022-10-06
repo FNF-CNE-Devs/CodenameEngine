@@ -1,6 +1,7 @@
 package funkin.system;
 
-import Conductor.BPMChangeEvent;
+import funkin.system.Conductor.BPMChangeEvent;
+import funkin.system.Conductor;
 import flixel.FlxG;
 import flixel.FlxSubState;
 
