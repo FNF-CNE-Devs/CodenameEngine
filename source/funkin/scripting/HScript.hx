@@ -16,7 +16,7 @@ class HScript extends Script {
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
         var expr:Expr;
         try {
-            expr = parser.parseString(code, filename);
+            expr = parser.parseString(code, fileName);
         } catch(e) {
             return;
         }
@@ -24,10 +24,12 @@ class HScript extends Script {
     }
 
     private function _errorHandler(error:Error) {
-        error('$fileName:${error.line}: ${Std.string(error.e)}');
+        this.error('$fileName:${error.line}: ${error.toString()}');
     }
 
-    public override function call(func:String, parameters:Array<Dynamic>) {
+    public override function call(func:String, ?parameters:Array<Dynamic>):Dynamic {
         // TODO: call
+        super.call(func, parameters);
+        return null;
     }
 }

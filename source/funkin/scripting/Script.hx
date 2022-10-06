@@ -85,7 +85,7 @@ class Script {
      * @param text Text of the error (ex: Null Object Reference).
      * @param additionalInfo Additional information you could provide.
      */
-    public function error(text:String, additionalInfo:Dynamic):Void {
+    public function error(text:String, ?additionalInfo:Dynamic):Void {
         // TODO: Logs (like on YCE)
         trace('$text');
     }
