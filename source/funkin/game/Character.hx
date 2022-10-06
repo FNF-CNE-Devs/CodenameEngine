@@ -611,7 +611,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 						playAnim('danceLeft');
 				default:
 					if (isDanceLeftDanceRight) {
-						playAnim((danced != danced) ? 'danceLeft' : 'danceRight');
+						playAnim((danced = !danced) ? 'danceLeft' : 'danceRight');
 					} else
 						playAnim('idle');
 			}

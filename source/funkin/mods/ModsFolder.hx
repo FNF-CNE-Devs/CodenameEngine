@@ -1,14 +1,23 @@
 package funkin.mods;
 
+import openfl.utils.Assets;
 import openfl.utils.AssetManifest;
 import openfl.utils.AssetLibrary;
 import sys.FileSystem;
 import flixel.FlxG;
+import flixel.FlxState;
 import haxe.io.Path;
 
 using StringTools;
 
 class ModsFolder {
+    #if sys
+    /**
+     * Last time the folder was modified.
+     */
+    public static var lastFolderEditTime:Date = null;
+    #end
+
     /**
      * Current mod folder. Will affect `Paths`.
      */
@@ -23,6 +32,13 @@ class ModsFolder {
     public static var modsPath:String = "./mods/";
 
     /**
+     * [Description] Initialises `mods` folder by adding callbacks and such.
+     */
+    public static function init() {
+        FlxG.signals.preStateCreate.add(onStateSwitch);
+    }
+
+    /**
      * [Description] Loads a mod with the specified name.
      * @param modName Name of the mod
      * @param force Whenever the mod should be reloaded if it has already been loaded
@@ -30,27 +46,36 @@ class ModsFolder {
     public static function loadMod(mod:String, ?force:Bool = false) {
         var libName = 'mods/$mod'.toLowerCase();
 
-        if (openfl.utils.Assets.hasLibrary(libName)) {
+        if (Assets.hasLibrary(libName)) {
             if (force)
-                openfl.utils.Assets.unloadLibrary(libName);
+                Assets.unloadLibrary(libName);
             else
-                return;
+                checkForOutdatedAssets(cast Assets.getLibrary(libName));
         }
         
         var assets:AssetManifest = new AssetManifest();
         assets.name = libName;// for case sensitive shit & correct linux support
-        assets.libraryType = null;
+        assets.libraryType = 'funkin.mods.ModsAssetLibrary';
         assets.version = 2;
         assets.libraryArgs = [];
         assets.rootPath = '${modsPath}/$mod/';
         assets.assets = [];
         getAssetFiles(assets.assets, '${modsPath}/$mod/', '', libName);
-        checkForOutdatedAssets(assets);
 
-        openfl.utils.Assets.registerLibrary(libName, AssetLibrary.fromManifest(assets));
+        var lib = AssetLibrary.fromManifest(assets);
+        openfl.utils.Assets.registerLibrary(libName, lib);
         loadedMods.push(mod);
     }
 
+    /**
+     * [Description] Gets all assets in folders and put them in the `assets` array.
+     * @param assets Array of assets
+     * @param rootPath Root path
+     * @param path Path inside of the rootPath (ex: `root path/path/path2/`)
+     * @param libraryName Name of the library (ex: `mods/my mod/`)
+     * @param prefix Prefix for the asset names (ex: `assets/mods/my mod/`)
+     * @param addRoot Whenever the root should be added to the paths. Defaults to false
+     */
     public static function getAssetFiles(assets:Array<Dynamic>, rootPath:String, path:String, libraryName:String, prefix:String = "", addRoot:Bool = false) {
         for(f in FileSystem.readDirectory('$rootPath$path')) {
             if (FileSystem.isDirectory('$rootPath$path$f')) {
@@ -84,19 +109,35 @@ class ModsFolder {
         }
     }
 
-    public static function checkForOutdatedAssets(assets:AssetManifest) {
+    public static function checkForOutdatedAssets(assets:ModsAssetLibrary) {
         // TODO: Fix this
-        // for(e in assets.assets) {
-        //     if (e == null) continue;
-        //     if (Reflect.hasField(e, "id") && Reflect.hasField(e, "edited")) {
-        //         var id = '${assets.name}:${e.id}';
-        //         if (getEditedTime(id) < e.edited) {
-        //             Assets.cache.clear(id);
-        //             @:privateAccess
-        //             FlxG.bitmap.removeKey(id);
-        //         }
-        //         assetEditTimes[id] = e.edited;
-        //     }
-        // }
+        #if sys
+        @:privateAccess
+        for(asset=>path in assets.paths) {
+            if (asset == null || path == null) continue;
+            var editedTime:Null<Float> = assets.getEditedTime(asset);
+            if (editedTime == null) continue;
+            try {
+                var stat = FileSystem.stat(path);
+                if (stat.mtime.getTime() > editedTime) {
+                    // refresh
+                    trace('Refreshing ${asset}');
+                    Assets.cache.clear(asset);
+                    @:privateAccess
+                    FlxG.bitmap.removeKey(asset);
+                }
+            }
+        }
+        #end
+    }
+
+    private static function onStateSwitch(newState:FlxState) {
+        // TODO: assets reloading
+        Assets.cache.clear();
+
+        if (currentModFolder == null) return;
+        #if sys
+            loadMod(currentModFolder, false); // hot reloading 🔥
+        #end
     }
 }

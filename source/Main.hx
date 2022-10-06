@@ -94,6 +94,7 @@ class Main extends Sprite
 		FlxG.save.bind('Save');
 		Highscore.load();
 
+		ModsFolder.init();
 		ModsFolder.loadMod("introMod");
 		ModsFolder.currentModFolder = "introMod";
 		
