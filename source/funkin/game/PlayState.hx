@@ -91,6 +91,7 @@ class PlayState extends MusicBeatState
 	public var cpuStrums:FlxTypedGroup<Strum>;
 
 	public var camZooming:Bool = false;
+	public var camZoomingInterval:Int = 4;
 	public var curSong:String = "";
 	public var curStage:String = "";
 
@@ -777,8 +778,9 @@ class PlayState extends MusicBeatState
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
-		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.50)));
-		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.50)));
+		// TODO: FPS-compatible lerping
+		iconP1.scale.set(FlxMath.lerp(iconP1.scale.x, 1, 0.33), FlxMath.lerp(iconP1.scale.y, 1, 0.33));
+		iconP2.scale.set(FlxMath.lerp(iconP2.scale.x, 1, 0.33), FlxMath.lerp(iconP2.scale.y, 1, 0.33));
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
@@ -1336,6 +1338,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!note.wasGoodHit)
 		{
+			camZooming = true;
 			if (note.mustPress) {
 				// TODO: See TODO above
 				scripts.call("onPlayerHit", [note]);
@@ -1434,20 +1437,21 @@ class PlayState extends MusicBeatState
 		}
 		
 		// HARDCODING FOR MILF ZOOMS!
-		if (curSong.toLowerCase() == 'milf' && curBeat >= 168 && curBeat < 200 && camZooming && FlxG.camera.zoom < 1.35)
+		// if (curSong.toLowerCase() == 'milf' && curBeat >= 168 && curBeat < 200 && camZooming && FlxG.camera.zoom < 1.35)
+		// {
+		// 	FlxG.camera.zoom += 0.015;
+		// 	camHUD.zoom += 0.03;
+		// }
+
+		if (camZoomingInterval < 1) camZoomingInterval = 1;
+		if (camZooming && FlxG.camera.zoom < 1.35 && curBeat % camZoomingInterval == 0)
 		{
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;
 		}
 
-		if (camZooming && FlxG.camera.zoom < 1.35 && curBeat % 4 == 0)
-		{
-			FlxG.camera.zoom += 0.015;
-			camHUD.zoom += 0.03;
-		}
-
-		iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-		iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+		iconP1.scale.set(1.2, 1.2);
+		iconP2.scale.set(1.2, 1.2);
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
