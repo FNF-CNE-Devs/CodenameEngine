@@ -41,7 +41,7 @@ class Script {
     }
 
     /**
-     * [Description] 
+     * [Description] Creates a new instance of the script class.
      * @param path 
      */
     public function new(path:String) {
@@ -58,13 +58,28 @@ class Script {
      * @param path Path to the script.
      */
     public function onCreate(path:String) {}
+
     /**
      * [Description] Calls the function `func` defined in the script.
      * @param func Name of the function
      * @param parameters (Optional) Parameters of the function.
      * @return Dynamic Result (if void, then null)
      */
-    public function call(func:String, ?parameters:Array<Dynamic>):Dynamic {return null;}
+    public function call(func:String, ?parameters:Array<Dynamic>):Dynamic {
+        var oldScript = curScript;
+        curScript = this;
+
+        var result = onCall(func, parameters == null ? [] : parameters);
+        
+        curScript = oldScript;
+        return result;
+    }
+
+    /**
+     * [Description] Sets a script's parent object so that its properties can be accessed easily. Ex: Passing `PlayState.instace` will allow `boyfriend` to be typed instead of `PlayState.instance.boyfriend`.
+     * @param variable Parent variable.
+     */
+    public function setParent(variable:Dynamic) {}
 
     /**
      * [Description] Gets the variable `variable` from the script's variables.
@@ -88,5 +103,12 @@ class Script {
     public function error(text:String, ?additionalInfo:Dynamic):Void {
         // TODO: Logs (like on YCE)
         trace('$text');
+    }
+
+    /**
+     * PRIVATE HANDLERS - DO NOT TOUCH
+     */
+    private function onCall(func:String, parameters:Array<Dynamic>):Dynamic {
+        return null;
     }
 }

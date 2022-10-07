@@ -21,15 +21,32 @@ class HScript extends Script {
             return;
         }
         interp.errorHandler = _errorHandler;
+        interp.execute(expr);
     }
 
     private function _errorHandler(error:Error) {
         this.error('$fileName:${error.line}: ${error.toString()}');
     }
 
-    public override function call(func:String, ?parameters:Array<Dynamic>):Dynamic {
-        // TODO: call
-        super.call(func, parameters);
+    public override function setParent(parent:Dynamic) {
+        interp.scriptObject = parent;
+    }
+
+    private override function onCall(funcName:String, parameters:Array<Dynamic>):Dynamic {
+        if (interp == null) return null;
+
+        var func = interp.variables.get(funcName);
+        if (Reflect.isFunction(func))
+            return (parameters != null && parameters.length > 0) ? Reflect.callMethod(null, func, parameters) : func();
+
         return null;
+    }
+
+    public override function get(val:String):Dynamic {
+        return interp.variables.get(val);
+    }
+
+    public override function set(val:String, value:Dynamic) {
+        interp.variables.set(val, value);
     }
 }

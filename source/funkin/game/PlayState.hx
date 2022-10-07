@@ -849,19 +849,19 @@ class PlayState extends MusicBeatState
 			{
 				camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 
-				switch (curStage)
-				{
-					case 'limo':
-						camFollow.x = boyfriend.getMidpoint().x - 300;
-					case 'mall':
-						camFollow.y = boyfriend.getMidpoint().y - 200;
-					case 'school':
-						camFollow.x = boyfriend.getMidpoint().x - 200;
-						camFollow.y = boyfriend.getMidpoint().y - 200;
-					case 'schoolEvil':
-						camFollow.x = boyfriend.getMidpoint().x - 200;
-						camFollow.y = boyfriend.getMidpoint().y - 200;
-				}
+				// switch (curStage)
+				// {
+				// 	case 'limo':
+				// 		camFollow.x = boyfriend.getMidpoint().x - 300;
+				// 	case 'mall':
+				// 		camFollow.y = boyfriend.getMidpoint().y - 200;
+				// 	case 'school':
+				// 		camFollow.x = boyfriend.getMidpoint().x - 200;
+				// 		camFollow.y = boyfriend.getMidpoint().y - 200;
+				// 	case 'schoolEvil':
+				// 		camFollow.x = boyfriend.getMidpoint().x - 200;
+				// 		camFollow.y = boyfriend.getMidpoint().y - 200;
+				// }
 
 				camFollow.x += boyfriend.globalOffset.x;
 				camFollow.y += boyfriend.globalOffset.y;

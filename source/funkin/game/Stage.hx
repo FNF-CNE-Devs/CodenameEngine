@@ -9,7 +9,12 @@ import funkin.interfaces.IBeatReceiver;
 class Stage extends FlxBasic implements IBeatReceiver {
     public var stageXML:Access;
     public var stageSprites:Map<String, FlxSprite> = [];
+    public var stageScript:Script;
     
+    public function getSprite(name:String) {
+        return stageSprites[name];
+    }
+
     public function new(stage:String) {
         super();
         if (PlayState.instance == null) return;
@@ -51,6 +56,12 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         var scroll:Null<Float> = Std.parseFloat(node.att.scroll);
                         if (scroll != null) spr.scrollFactor.set(scroll, scroll);
                     }
+                    if (node.has.scale) {
+                        var scale:Null<Float> = Std.parseFloat(node.att.scale);
+                        if (scale != null) spr.scale.set(scale, scale);
+                    }
+                    if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
+                    
                     for(anim in node.nodes.anim) CoolUtil.addXMLAnimation(spr, anim);
 
                     stageSprites.set(node.att.name, spr);
