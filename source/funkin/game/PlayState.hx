@@ -1,10 +1,12 @@
 package funkin.game;
 
+import flixel.util.FlxDestroyUtil;
 #if desktop
 import Discord.DiscordClient;
 #end
 import Section.SwagSection;
 import funkin.system.Song.SwagSong;
+import funkin.scripting.ScriptPack;
 import WiggleEffect.WiggleEffectType;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
@@ -62,6 +64,7 @@ class PlayState extends MusicBeatState
 	public static var storyDifficulty:Int = 1;
 	public static var fromMods:Bool = false;
 
+	public var scripts:ScriptPack;
 	public var halloweenLevel:Bool = false;
 
 	public var stage:Stage;
@@ -134,6 +137,9 @@ class PlayState extends MusicBeatState
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
+		scripts = new ScriptPack("PlayState");
+		scripts.setParent(this);
+
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
@@ -190,10 +196,14 @@ class PlayState extends MusicBeatState
 		// TODO: Custom Stage Loading
 		add(new Stage(SONG.stage));
 
+		scripts.load();
+		scripts.call("create");
+
 		add(gf);
 
 		add(dad);
 		add(boyfriend);
+
 
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
@@ -240,6 +250,9 @@ class PlayState extends MusicBeatState
 
 		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
+		scoreTxt.borderStyle = OUTLINE;
+		scoreTxt.borderSize = 1;
+		scoreTxt.borderColor = 0xFF000000;
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
 
@@ -263,21 +276,25 @@ class PlayState extends MusicBeatState
 	public override function createPost() {
 		super.createPost();
 		startCountdown();
+		scripts.call("createPost");
 	}
 
 	public var startTimer:FlxTimer;
 	public var perfectMode:Bool = false;
+	public var introLength:Int = 5;
 
 	function startCountdown():Void
 	{
+
 		inCutscene = false;
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
+		scripts.call("onStartCountdown");
 
 		startedCountdown = true;
 		Conductor.songPosition = 0;
-		Conductor.songPosition -= Conductor.crochet * 5;
+		Conductor.songPosition -= Conductor.crochet * introLength;
 
 		var swagCounter:Int = 0;
 
@@ -303,6 +320,9 @@ class PlayState extends MusicBeatState
 					altSuffix = '-pixel';
 				}
 			}
+
+			// TODO: Cancelable countdown
+			scripts.call("onCountdown", [swagCounter]);
 
 			switch (swagCounter)
 
@@ -368,7 +388,7 @@ class PlayState extends MusicBeatState
 
 			swagCounter += 1;
 			// generateSong('fresh');
-		}, 5);
+		}, introLength);
 	}
 
 	public var previousFrameTime:Int = 0;
@@ -391,7 +411,9 @@ class PlayState extends MusicBeatState
 	}
 
 	public override function destroy() {
+		scripts.call("destroy");
 		super.destroy();
+		FlxDestroyUtil.destroy(scripts);
 		instance = null;
 	}
 
@@ -603,6 +625,8 @@ class PlayState extends MusicBeatState
 
 	override function openSubState(SubState:FlxSubState)
 	{
+		// TODO: Cancellable substate opening.
+		scripts.call("onSubstateOpen", [SubState]);
 		if (paused)
 		{
 			if (FlxG.sound.music != null)
@@ -620,6 +644,7 @@ class PlayState extends MusicBeatState
 
 	override function closeSubState()
 	{
+		scripts.call("onSubstateClose");
 		if (paused)
 		{
 			if (FlxG.sound.music != null && !startingSong)
@@ -648,6 +673,7 @@ class PlayState extends MusicBeatState
 
 	override public function onFocus():Void
 	{
+		scripts.call("onFocus");
 		#if desktop
 		if (health > 0 && !paused)
 		{
@@ -667,6 +693,7 @@ class PlayState extends MusicBeatState
 	
 	override public function onFocusLost():Void
 	{
+		scripts.call("onFocusLost");
 		#if desktop
 		if (health > 0 && !paused)
 		{
@@ -685,6 +712,7 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = FlxG.sound.music.time;
 		vocals.time = Conductor.songPosition;
 		vocals.play();
+		scripts.call("onVocalsResync");
 	}
 
 	public var paused:Bool = false;
@@ -693,6 +721,8 @@ class PlayState extends MusicBeatState
 
 
 	public function pauseGame() {
+		// TODO: Cancellable game pause
+		scripts.call("onGamePause");
 		persistentUpdate = false;
 		persistentDraw = true;
 		paused = true;
@@ -711,6 +741,7 @@ class PlayState extends MusicBeatState
 
 	// TODO: Update Discord Status
 	public function updateDiscordStatus() {
+		// TODO: Cancellable Discord Update Presence
 		#if desktop
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
@@ -718,6 +749,7 @@ class PlayState extends MusicBeatState
 		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC, true, songLength);
 		#end
+		scripts.call("onDiscordPresenceUpdate");
 	}
 	override public function update(elapsed:Float)
 	{
@@ -726,6 +758,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		super.update(elapsed);
+		scripts.call("update", [elapsed]);
 
 		scoreTxt.text = "Score:" + songScore;
 
@@ -988,6 +1021,7 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
+		scripts.call("onSongEnd");
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
@@ -1223,6 +1257,8 @@ class PlayState extends MusicBeatState
 		var justPressed = [controls.LEFT_P, controls.DOWN_P, controls.UP_P, controls.RIGHT_P];
 		var justReleased = [controls.LEFT_R, controls.DOWN_R, controls.UP_R, controls.RIGHT_R];
 
+		// TODO: Events like param:OnKeyEvent for better compatibility
+		scripts.call("onKeyShit", [pressed, justPressed, justReleased]);
 		var funcsToExec:Array<Note->Void> = [];
 		if (pressed.contains(true)) {
 			funcsToExec.push(function(note:Note) {
@@ -1254,6 +1290,7 @@ class PlayState extends MusicBeatState
 		playerStrums.forEach(function(str:Strum) {
 			str.updatePlayerInput(pressed[str.ID], justPressed[str.ID], justReleased[str.ID]);
 		});
+		scripts.call("onKeyShitPost");
 	}
 
 	function noteMiss(direction:Int = 1):Void
@@ -1300,6 +1337,8 @@ class PlayState extends MusicBeatState
 		if (!note.wasGoodHit)
 		{
 			if (note.mustPress) {
+				// TODO: See TODO above
+				scripts.call("onPlayerHit", [note]);
 				if (!note.isSustainNote)
 				{
 					popUpScore(note.strumTime);
@@ -1330,6 +1369,8 @@ class PlayState extends MusicBeatState
 					}
 				});
 			} else {
+				// TODO: See TODO above the todo above
+				scripts.call("onDadHit", [note]);
 				// TODO: NOTE PRESSED HANDLER FOR DAD
 				switch (note.noteData)
 				{
@@ -1358,6 +1399,8 @@ class PlayState extends MusicBeatState
 	}
 
 	public function deleteNote(note:Note) {
+		// TODO: See TODO above the TODO above the one that says TODO note pressed handler for dad
+		scripts.call("onNoteDelete", [note]);
 		note.kill();
 		notes.remove(note, true);
 		note.destroy();
@@ -1366,6 +1409,7 @@ class PlayState extends MusicBeatState
 	override function stepHit()
 	{
 		super.stepHit();
+		scripts.call("stepHit", [curStep]);
 		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 		{
 			resyncVocals();
@@ -1378,6 +1422,7 @@ class PlayState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
+		scripts.call("beatHit", [curBeat]);
 
 		if (SONG.notes[Math.floor(curStep / 16)] != null)
 		{

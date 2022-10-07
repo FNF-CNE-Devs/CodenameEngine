@@ -5,9 +5,12 @@ import openfl.utils.Assets;
 import haxe.xml.Access;
 import flixel.FlxBasic;
 import funkin.interfaces.IBeatReceiver;
+import funkin.scripting.Script;
+import haxe.io.Path;
 
 class Stage extends FlxBasic implements IBeatReceiver {
     public var stageXML:Access;
+    public var stagePath:String;
     public var stageSprites:Map<String, FlxSprite> = [];
     public var stageScript:Script;
     
@@ -18,8 +21,9 @@ class Stage extends FlxBasic implements IBeatReceiver {
     public function new(stage:String) {
         super();
         if (PlayState.instance == null) return;
+        stagePath = Paths.xml('stages/$stage');
         try {
-            stageXML = new Access(Xml.parse(Assets.getText(Paths.xml('stages/$stage'))).firstElement());
+            stageXML = new Access(Xml.parse(Assets.getText(stagePath)).firstElement());
         } catch(e) {
             // TODO: handler
             trace(e.details());
@@ -98,6 +102,11 @@ class Stage extends FlxBasic implements IBeatReceiver {
                     PlayState.instance.add(PlayState.instance.dad);
             }
         }
+        stageScript = Script.create(Paths.script('data/stages/$stage'));
+        for(k=>e in stageSprites) {
+            stageScript.set(k, e);
+        }
+        PlayState.instance.scripts.add(stageScript);
     }
 
     public function beatHit(curBeat:Int) {}

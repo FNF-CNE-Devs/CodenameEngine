@@ -6,6 +6,8 @@ import hscript.*;
 
 class HScript extends Script {
     var interp:Interp;
+    var expr:Expr;
+
     public override function onCreate(path:String) {
         super.onCreate(path);
 
@@ -14,14 +16,12 @@ class HScript extends Script {
         var code:String = Assets.getText(path);
         var parser = new hscript.Parser();
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
-        var expr:Expr;
         try {
             expr = parser.parseString(code, fileName);
         } catch(e) {
             return;
         }
         interp.errorHandler = _errorHandler;
-        interp.execute(expr);
     }
 
     private function _errorHandler(error:Error) {
@@ -30,6 +30,10 @@ class HScript extends Script {
 
     public override function setParent(parent:Dynamic) {
         interp.scriptObject = parent;
+    }
+
+    public override function onLoad() {
+        interp.execute(expr);
     }
 
     private override function onCall(funcName:String, parameters:Array<Dynamic>):Dynamic {

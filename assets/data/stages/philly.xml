@@ -2,7 +2,7 @@
 <stage zoom="1.05" name="spooky" folder="stages/philly/">
     <sprite name="bg" x="-100" y="0" sprite="sky" scroll="0.1"/>
     <sprite name="city" x="-10" y="0" sprite="city" scroll="0.3" scale="0.85" updateHitbox="true"/>
-    <sprite name="light" x="-10" y="0" sprite="win0" scroll="0.3" scale="0.85" updateHitbox="true"/>
+    <sprite name="light" x="-10" y="0" sprite="win" scroll="0.3" scale="0.85" updateHitbox="true"/>
     <sprite name="streetBehind" x="-40" y="50" sprite="behindTrain" />
     <sprite name="phillyTrain" x="2000" y="360" sprite="train" />
     <sprite name="street" x="-40" y="50" sprite="street" />

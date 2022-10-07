@@ -33,14 +33,14 @@ class ModsFolder {
     public static var modsPath:String = "./mods/";
 
     /**
-     * [Description] Initialises `mods` folder by adding callbacks and such.
+     * Initialises `mods` folder by adding callbacks and such.
      */
     public static function init() {
         FlxG.signals.preStateCreate.add(onStateSwitch);
     }
 
     /**
-     * [Description] Loads a mod with the specified name.
+     * Loads a mod with the specified name.
      * @param modName Name of the mod
      * @param force Whenever the mod should be reloaded if it has already been loaded
      */
@@ -74,7 +74,7 @@ class ModsFolder {
     }
 
     /**
-     * [Description] Gets all assets in folders and put them in the `assets` array.
+     * Gets all assets in folders and put them in the `assets` array.
      * @param assets Array of assets
      * @param rootPath Root path
      * @param path Path inside of the rootPath (ex: `root path/path/path2/`)
@@ -138,7 +138,6 @@ class ModsFolder {
     }
 
     private static function onStateSwitch(newState:FlxState) {
-        // TODO: assets reloading
         Assets.cache.clear();
 
         if (currentModFolder == null) return;
