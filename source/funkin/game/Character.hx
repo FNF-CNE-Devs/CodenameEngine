@@ -40,6 +40,8 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 	public var playerOffsets:Bool = false;
 
+	public var icon:String = null;
+
 	public var cameraOffset:FlxPoint = new FlxPoint(0, 0);
 	public var globalOffset:FlxPoint = new FlxPoint(0, 0);
 
@@ -68,9 +70,8 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 					// load xml
 					if (!Assets.exists(Paths.xml('characters/$curCharacter'))) {
 						curCharacter = "bf";
-						continue; // load bf instead
+						continue;
 					}
-						
 
 					var plainXML = Assets.getText(Paths.xml('characters/$curCharacter'));
 					var character:Access;
@@ -80,7 +81,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 						character = new Access(charXML);
 					} catch(e) {
 						trace(e);
-						curCharacter = "bf"; // load fallback
+						curCharacter = "bf";
 						continue;
 					}
 
@@ -91,6 +92,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 					if (character.has.camx) cameraOffset.x = Std.parseFloat(character.att.camx);
 					if (character.has.camy) cameraOffset.y = Std.parseFloat(character.att.camy);
 					if (character.has.flipX) flipX = (character.att.flipX == "true");
+					if (character.has.icon) icon = character.att.icon;
 
 					frames = Paths.getSparrowAtlas('characters/$curCharacter');
 					for(anim in character.nodes.anim) {
@@ -683,7 +685,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 			offset.set(daOffset.x * (isPlayer != playerOffsets ? -1 : 1), daOffset.y);
 		else
 			offset.set(0, 0);
-		
+
 		offset.x += globalOffset.x - (isPlayer != playerOffsets ? 1 : -1);
 		offset.y -= globalOffset.y;
 
@@ -710,6 +712,10 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 	public override function destroy() {
 		super.destroy();
+	}
+
+	public inline function getIcon() {
+		return (icon != null) ? icon : curCharacter;
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)

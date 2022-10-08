@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxSprite;
+import openfl.utils.Assets;
 
 class HealthIcon extends FlxSprite
 {
@@ -9,34 +10,51 @@ class HealthIcon extends FlxSprite
 	 */
 	public var sprTracker:FlxSprite;
 
+	/**
+	 * Health steps in this format:
+	 * Min Percentage => Frame Index
+	 */
+	public var healthSteps:Map<Int, Int> = [
+		0  => 1, // losing icon
+		20 => 0, // normal icon
+	];
+
+	/**
+	 * Helper for HScript who can't make maps
+	 * @param steps Something like this: `[[0, 1], [20, 0]]`
+	 */
+	public function setHealthSteps(steps:Array<Array<Int>>) { // helper for hscript that can't do maps
+		if (steps == null) return;
+		healthSteps = [];
+		for(s in steps)
+			if (s.length > 1)
+				healthSteps[s[0]] = s[1];
+		var am = 0;
+		for(k=>e in healthSteps) am++;
+
+		if (am <= 0) healthSteps = [
+			0  => 1, // losing icon
+			20 => 0, // normal icon
+		];
+	}
+
 	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
 		super();
-		loadGraphic(Paths.image('iconGrid'), true, 150, 150);
+		health = 0.5;
+		var path = Paths.image('icons/$char');
+		if (!Assets.exists(path)) path = Paths.image('icons/face');
 
+		// TODO: Icon Jsons?? (maybe not not to mess with sparrows but perhaps)
+		loadGraphic(path, true, 150, 150);
+
+		animation.add(char, [for(i in 0...frames.frames.length) i], 0, false, isPlayer);
 		antialiasing = true;
-		animation.add('bf', [0, 1], 0, false, isPlayer);
-		animation.add('bf-car', [0, 1], 0, false, isPlayer);
-		animation.add('bf-christmas', [0, 1], 0, false, isPlayer);
-		animation.add('bf-pixel', [21, 21], 0, false, isPlayer);
-		animation.add('spooky', [2, 3], 0, false, isPlayer);
-		animation.add('pico', [4, 5], 0, false, isPlayer);
-		animation.add('mom', [6, 7], 0, false, isPlayer);
-		animation.add('mom-car', [6, 7], 0, false, isPlayer);
-		animation.add('tankman', [8, 9], 0, false, isPlayer);
-		animation.add('face', [10, 11], 0, false, isPlayer);
-		animation.add('dad', [12, 13], 0, false, isPlayer);
-		animation.add('senpai', [22, 22], 0, false, isPlayer);
-		animation.add('senpai-angry', [22, 22], 0, false, isPlayer);
-		animation.add('spirit', [23, 23], 0, false, isPlayer);
-		animation.add('bf-old', [14, 15], 0, false, isPlayer);
-		animation.add('gf', [16], 0, false, isPlayer);
-		animation.add('parents-christmas', [17], 0, false, isPlayer);
-		animation.add('monster', [19, 20], 0, false, isPlayer);
-		animation.add('monster-christmas', [19, 20], 0, false, isPlayer);
 		animation.play(char);
-		if (animation.curAnim == null)
-			animation.play("face");
+
+		if (frames.frames.length >= 3)
+			healthSteps[80] = 2; // winning icon
+
 		scrollFactor.set();
 	}
 
@@ -46,5 +64,17 @@ class HealthIcon extends FlxSprite
 
 		if (sprTracker != null)
 			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
+
+		if (animation.curAnim != null) {
+			var i:Int = -1;
+			var oldKey:Int = -1;
+			for(k=>icon in healthSteps) {
+				if (k > oldKey && k < health * 100) {
+					oldKey = k;
+					i = icon;
+				}
+			}
+			if (i >= 0) animation.curAnim.curFrame = i;
+		}
 	}
 }
