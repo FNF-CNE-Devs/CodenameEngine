@@ -64,7 +64,7 @@ class FreeplayState extends MusicBeatState
 
 		addWeek(['Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
 		addWeek(['Spookeez', 'South', 'Monster'], 2, ['spooky']);
-		addWeek(['Pico', 'Philly', 'Blammed'], 3, ['pico']);
+		addWeek(['Pico', 'Philly Nice', 'Blammed'], 3, ['pico']);
 		addWeek(['Satin Panties', 'High', 'Milf'], 4, ['mom']);
 		addWeek(['Cocoa', 'Eggnog', 'Winter Horrorland'], 5, ['parents-christmas', 'parents-christmas', 'monster']);
 		addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);

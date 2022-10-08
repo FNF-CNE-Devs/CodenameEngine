@@ -1,12 +1,16 @@
 package funkin.game;
 
+import funkin.system.XMLUtil;
 import flixel.FlxSprite;
 import openfl.utils.Assets;
 import haxe.xml.Access;
 import flixel.FlxBasic;
+import flixel.math.FlxMath;
 import funkin.interfaces.IBeatReceiver;
 import funkin.scripting.Script;
 import haxe.io.Path;
+
+using StringTools;
 
 class Stage extends FlxBasic implements IBeatReceiver {
     public var stageXML:Access;
@@ -42,13 +46,13 @@ class Stage extends FlxBasic implements IBeatReceiver {
             if (stageXML.has.name) PlayState.instance.curStage = stageXML.att.name;
         
             for(node in stageXML.elements) {
-                switch(node.name) {
+                var sprite:Dynamic = switch(node.name) {
                     case "sprite" | "spr" | "sparrow":
-                        var spr = new FlxSprite();
+                        var spr = new StageSprite();
                         spr.antialiasing = true;
                         if (!node.has.sprite || !node.has.name || !node.has.x || !node.has.y) continue;
     
-                        if (Assets.exists(Paths.file('images/$spritesParentFolder${node.att.sprite}', TEXT))) {
+                        if (Assets.exists(Paths.file('images/$spritesParentFolder${node.att.sprite}.xml', TEXT))) {
                             spr.frames = Paths.getSparrowAtlas('$spritesParentFolder${node.att.sprite}');
                         } else {
                             spr.loadGraphic(Paths.image('$spritesParentFolder${node.att.sprite}'));
@@ -66,11 +70,17 @@ class Stage extends FlxBasic implements IBeatReceiver {
                             if (scale != null) spr.scale.set(scale, scale);
                         }
                         if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
+
+                        for(anim in node.nodes.anim) {
+                            if (anim.has.name) spr.beatAnims.push(anim.att.name);
+                            XMLUtil.addXMLAnimation(spr, anim);
+                        }
+                        if (node.has.beatAnim && node.att.beatAnim.trim() != "") spr.beatAnims = [for(e in node.att.beatAnim.split(",")) e.trim()];
                         
-                        for(anim in node.nodes.anim) CoolUtil.addXMLAnimation(spr, anim);
     
                         stageSprites.set(node.att.name, spr);
                         PlayState.instance.add(spr);
+                        spr;
                     case "boyfriend" | "bf":
                         if (node.has.x) {
                             var x:Null<Float> = Std.parseFloat(node.att.x);
@@ -81,6 +91,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
                             if (y != null) PlayState.instance.boyfriend.y = y;
                         }
                         PlayState.instance.add(PlayState.instance.boyfriend);
+                        PlayState.instance.boyfriend;
                     case "girlfriend" | "gf":
                         if (node.has.x) {
                             var x:Null<Float> = Std.parseFloat(node.att.x);
@@ -91,6 +102,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
                             if (y != null) PlayState.instance.gf.y = y;
                         }
                         PlayState.instance.add(PlayState.instance.gf);
+                        PlayState.instance.gf;
                     case "dad" | "opponent":
                         if (node.has.x) {
                             var x:Null<Float> = Std.parseFloat(node.att.x);
@@ -101,6 +113,13 @@ class Stage extends FlxBasic implements IBeatReceiver {
                             if (y != null) PlayState.instance.dad.y = y;
                         }
                         PlayState.instance.add(PlayState.instance.dad);
+                        PlayState.instance.dad;
+                    default: null;
+                }
+                if (sprite != null) {
+                    for(e in node.nodes.property) {
+                        trace(XMLUtil.applyXMLProperty(sprite, e));
+                    }
                 }
             }
         }
@@ -114,4 +133,19 @@ class Stage extends FlxBasic implements IBeatReceiver {
     public function beatHit(curBeat:Int) {}
 
     public function stepHit(curStep:Int) {}
+}
+
+class StageSprite extends FlxSprite implements IBeatReceiver {
+    public var beatAnims:Array<String> = [];
+
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+    }
+
+    public function beatHit(curBeat:Int) {
+        if (beatAnims.length > 0)
+            animation.play(beatAnims[FlxMath.wrap(curBeat, 0, beatAnims.length-1)]);
+        
+    }
+    public function stepHit(curBeat:Int) {}
 }

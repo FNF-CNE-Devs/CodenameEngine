@@ -3,6 +3,7 @@ package funkin.game;
 import flixel.math.FlxPoint;
 import funkin.interfaces.IBeatReceiver;
 import funkin.interfaces.IOffsetCompatible;
+import funkin.system.XMLUtil;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -96,7 +97,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 					frames = Paths.getSparrowAtlas('characters/$curCharacter');
 					for(anim in character.nodes.anim) {
-						CoolUtil.addXMLAnimation(this, anim);
+						XMLUtil.addXMLAnimation(this, anim);
 					}
 			}
 			break;
@@ -686,7 +687,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		else
 			offset.set(0, 0);
 
-		offset.x += globalOffset.x - (isPlayer != playerOffsets ? 1 : -1);
+		offset.x += globalOffset.x * (isPlayer != playerOffsets ? 1 : -1);
 		offset.y -= globalOffset.y;
 
 		if (AnimName.startsWith("sing"))

@@ -33,7 +33,7 @@ class HScript extends Script {
     }
 
     public override function onLoad() {
-        interp.execute(expr);
+        if (expr != null) interp.execute(expr);
     }
 
     private override function onCall(funcName:String, parameters:Array<Dynamic>):Dynamic {
