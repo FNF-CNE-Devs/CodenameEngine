@@ -12,7 +12,9 @@
     <anim name="scared" anim="GF FEAR" fps="24" loop="true" x="-2" y="-17" />
 </character>
 
-<!-- if (!animation.curAnim.name.startsWith('hair'))
+<!--
+	// TODO:
+	if (!animation.curAnim.name.startsWith('hair'))
 					{
 						danced = !danced;
 

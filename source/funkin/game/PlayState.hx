@@ -184,9 +184,9 @@ class PlayState extends MusicBeatState
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
 		#end
 
-
-		// TODO: Chart GF version
-		gf = new Character(400, 130, "gf");
+		var gfVersion = SONG.gf;
+		if (gfVersion == null) gfVersion = "gf";
+		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
 
 		dad = new Character(100, 100, SONG.player2);

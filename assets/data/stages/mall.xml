@@ -1,0 +1,10 @@
+<!DOCTYPE codename-engine-stage>
+<stage zoom="0.9" name="mall" folder="stages/mall/">
+    <!-- BG LIMOS !-->
+    <sprite name="skyBG" x="-120" y="-50" sprite="limoSunset" scroll="0.1"/>
+    <sprite name="bgLimo" x="-200" y="480" sprite="bgLimo" scroll="0.4" />
+
+    <girlfriend />
+    <dad />
+    <boyfriend />
+</stage>

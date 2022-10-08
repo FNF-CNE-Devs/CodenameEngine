@@ -2,7 +2,7 @@
 <stage zoom="0.9" name="limo" folder="stages/limo/">
     <!-- BG LIMOS !-->
     <sprite name="skyBG" x="-120" y="-50" sprite="limoSunset" scroll="0.1"/>
-    <sprite name="bgLimo" x="-200" y="480" sprite="bgLimo" scroll="0.4"/>
+    <sprite name="bgLimo" x="-200" y="480" sprite="bgLimo" scroll="0.4" />
 
     <!-- DANCERS !-->
     <sprite name="dancer1" x="130" y="80" sprite="limoDancer" scroll="0.4">
@@ -30,13 +30,10 @@
     <sprite name="fastCar" x="-300" y="160" sprite="fastCarLol" />
 
     <!-- MORE LIMO STUFF !-->
+    <girlfriend />
+    <sprite name="limo" x="-120" y="550" sprite="limoDrive" />
+    <boyfriend x="1030" y="-120" camxoffset="-300"/>
     <sprite name="overlayShit" x="-500" y="480" sprite="limoOverlay" scroll="0">
         <property name="alpha" type="float" value="0.5" />
-        <property name="blend" type="string" value="multiply" />
     </sprite>
-    <girlfriend />
-    <sprite name="limo" x="-120" y="550" sprite="limoDrive" anim="drive">
-        <anim name="drive" anim="Limo stage"/>
-    </sprite>
-    <boyfriend x="1030" y="-120" />
 </stage>
