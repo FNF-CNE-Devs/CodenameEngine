@@ -9,6 +9,7 @@ import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.math.FlxRect;
 
 import openfl.utils.Assets;
 import haxe.xml.Access;
@@ -19,9 +20,15 @@ using StringTools;
 
 class Character extends FlxSprite implements IBeatReceiver implements IOffsetCompatible
 {
-	public var stunned:Bool = false;
+	private var __stunnedTime:Float = 0;
+	public var stunned(default, set):Bool = false;
 
-	public var animOffsets:Map<String, Array<Dynamic>>;
+	private function set_stunned(b:Bool) {
+		__stunnedTime = 0;
+		return stunned = b;
+	}
+
+	public var animOffsets:Map<String, FlxPoint>;
 	public var debugMode:Bool = false;
 
 	public var isPlayer:Bool = false;
@@ -33,13 +40,20 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 	public var playerOffsets:Bool = false;
 
+	public var cameraOffset:FlxPoint = new FlxPoint(0, 0);
 	public var globalOffset:FlxPoint = new FlxPoint(0, 0);
 
+	public inline function getCameraPosition() {
+		var midpoint = getMidpoint();
+		return FlxPoint.get(
+			midpoint.x + (isPlayer ? -100 : 150) + globalOffset.x + cameraOffset.x,
+			midpoint.y - 100 + globalOffset.y + cameraOffset.y);
+	}
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
 		super(x, y);
 
-		animOffsets = new Map<String, Array<Dynamic>>();
+		animOffsets = new Map<String, FlxPoint>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 
@@ -73,7 +87,9 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 					if (character.has.isPlayer) playerOffsets = (character.att.isPlayer == "true");
 					if (character.has.isGF) isGF = (character.att.isGF == "true");
 					if (character.has.x) globalOffset.x = Std.parseFloat(character.att.x);
-					if (character.has.x) globalOffset.y = Std.parseFloat(character.att.y);
+					if (character.has.y) globalOffset.y = Std.parseFloat(character.att.y);
+					if (character.has.camx) cameraOffset.x = Std.parseFloat(character.att.camx);
+					if (character.has.camy) cameraOffset.y = Std.parseFloat(character.att.camy);
 					if (character.has.flipX) flipX = (character.att.flipX == "true");
 
 					frames = Paths.getSparrowAtlas('characters/$curCharacter');
@@ -589,6 +605,11 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		if (stunned) {
+			__stunnedTime += elapsed;
+			if (__stunnedTime > 5 / 60)
+				stunned = false;
+		}
 	}
 
 	private var danced:Bool = false;
@@ -627,52 +648,28 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		// nothing
 	}
 
-	// /**
-	//  * DO NOT TOUCH!! FOR DRAWING STUFF
-	//  */
-	// public override function isOnScreen() {
-	// 	if (flipX) {
-	// 		return super.isOnScreen();	
-	// 	} else {
-	// 		return super.isOnScreen();
-	// 	}
-	// }
-	// public override function draw() {
-	// 	// doing this cause flixel have a bug with frameX not being applied correctly when sprite is flipped
-	// 	if (flipX) {
-	// 		isOnScreen
-	// 		// setting up variables
-	// 		flipX = false;
-	// 		scale.x = -scale.x;
-
-	// 		// drawing
-	// 		super.draw();
-
-	// 		// resetting variables
-	// 		scale.x = -scale.x;
-	// 		flipX = true;
-	// 	} else
-	// 		super.draw();
-	// }
-
-	public override function isOnScreen(?Camera:FlxCamera):Bool
-	{
-		if (Camera == null)
-			Camera = FlxG.camera;
-
-		getScreenPosition(_point, Camera);
-		return Camera.containsPoint(_point, width, height);
+	var __reverseDrawProcedure:Bool = false;
+	public override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect {
+		if (__reverseDrawProcedure) {
+			scale.x *= -1;
+			var bounds = super.getScreenBounds(newRect, camera);
+			scale.x *= -1;
+			return bounds;
+		}
+		return super.getScreenBounds(newRect, camera);
 	}
-
+	
 	public override function draw() {
 		if (flipX) {
-			dirty = true;
+			__reverseDrawProcedure = true;
 
 			flipX = false;
 			scale.x *= -1;
 			super.draw();
 			flipX = true;
 			scale.x *= -1;
+
+			__reverseDrawProcedure = false;
 		} else
 			super.draw();
 	}
@@ -682,21 +679,12 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		animation.play(AnimName, Force, Reversed, Frame);
 
 		var daOffset = animOffsets.get(AnimName);
-		if (animOffsets.exists(AnimName))
-		{
-			if (isPlayer != playerOffsets) {
-				offset.set(-daOffset[0], daOffset[1]);
-				var anim = animation.getByName(AnimName);
-				// if (anim != null && anim.frames.length > 0) {
-				// 	offset.x -= frames.frames[anim.frames[0]].offset.x * 2;
-				// }
-			} else {
-				offset.set(daOffset[0], daOffset[1]);
-			}
-		}
+		if (daOffset != null)
+			offset.set(daOffset.x * (isPlayer != playerOffsets ? -1 : 1), daOffset.y);
 		else
 			offset.set(0, 0);
-		offset.x -= globalOffset.x;
+		
+		offset.x += globalOffset.x - (isPlayer != playerOffsets ? 1 : -1);
 		offset.y -= globalOffset.y;
 
 		if (AnimName.startsWith("sing"))
@@ -720,8 +708,12 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		}
 	}
 
+	public override function destroy() {
+		super.destroy();
+	}
+
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
 	{
-		animOffsets[name] = [x, y];
+		animOffsets[name] = new FlxPoint(x, y);
 	}
 }

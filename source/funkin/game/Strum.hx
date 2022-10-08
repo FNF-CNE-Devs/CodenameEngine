@@ -32,10 +32,12 @@ class Strum extends FlxSprite {
         // TODO: angle stuff
         daNote.x = x + offset.x;
         daNote.y = y - offset.y;
+        
+        offset.put();
     }
 
     public function updateClipRect(daNote:Note) {
-        if (!daNote.isSustainNote) return;
+        if (!daNote.isSustainNote || !daNote.wasGoodHit) return;
         daNote.updateClipRect(this);
     }
 

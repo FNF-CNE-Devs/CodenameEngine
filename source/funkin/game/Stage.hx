@@ -23,7 +23,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
         if (PlayState.instance == null) return;
         stagePath = Paths.xml('stages/$stage');
         try {
-            stageXML = new Access(Xml.parse(Assets.getText(stagePath)).firstElement());
+            if (Assets.exists(stagePath)) stageXML = new Access(Xml.parse(Assets.getText(stagePath)).firstElement());
         } catch(e) {
             // TODO: handler
             trace(e.details());

@@ -90,6 +90,8 @@ class PlayState extends MusicBeatState
 	public var playerStrums:FlxTypedGroup<Strum>;
 	public var cpuStrums:FlxTypedGroup<Strum>;
 
+	public var muteVocalsOnMiss:Bool = true;
+
 	public var camZooming:Bool = false;
 	public var camZoomingInterval:Int = 4;
 	public var curSong:String = "";
@@ -843,46 +845,10 @@ class PlayState extends MusicBeatState
 
 		if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
 		{
-			if (curBeat % 4 == 0)
+			if (PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
 			{
-				// trace(PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection);
-			}
-
-			if (camFollow.x != dad.getMidpoint().x + 150 + dad.globalOffset.x && !PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
-			{
-				camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
-				// camFollow.setPosition(lucky.getMidpoint().x - 120, lucky.getMidpoint().y + 210);
-
-				switch (dad.curCharacter)
-				{
-					case 'mom':
-						camFollow.y = dad.getMidpoint().y;
-					case 'senpai':
-						camFollow.y = dad.getMidpoint().y - 430;
-						camFollow.x = dad.getMidpoint().x - 100;
-					case 'senpai-angry':
-						camFollow.y = dad.getMidpoint().y - 430;
-						camFollow.x = dad.getMidpoint().x - 100;
-				}
-
-				
-				camFollow.x += dad.globalOffset.x;
-				camFollow.y += dad.globalOffset.y;
-
-				if (dad.curCharacter == 'mom')
-					vocals.volume = 1;
-
-				if (SONG.song.toLowerCase() == 'tutorial')
-				{
-					tweenCamIn();
-				}
-			}
-
-			// TODO: redo this god forsaken system
-
-			if (PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection && camFollow.x != boyfriend.getMidpoint().x - 100 + boyfriend.globalOffset.x)
-			{
-				camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
+				var pos = boyfriend.getCameraPosition();
+				camFollow.setPosition(pos.x, pos.y);
 
 				// switch (curStage)
 				// {
@@ -897,13 +863,36 @@ class PlayState extends MusicBeatState
 				// 		camFollow.x = boyfriend.getMidpoint().x - 200;
 				// 		camFollow.y = boyfriend.getMidpoint().y - 200;
 				// }
-
-				camFollow.x += boyfriend.globalOffset.x;
-				camFollow.y += boyfriend.globalOffset.y;
-
+				
 				if (SONG.song.toLowerCase() == 'tutorial')
 				{
 					FlxTween.tween(FlxG.camera, {zoom: 1}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
+				}
+			} else {
+				var pos = dad.getCameraPosition();
+				camFollow.setPosition(pos.x, pos.y);
+
+				// camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
+				// camFollow.setPosition(lucky.getMidpoint().x - 120, lucky.getMidpoint().y + 210);
+
+				// switch (dad.curCharacter)
+				// {
+				// 	case 'mom':
+				// 		camFollow.y = dad.getMidpoint().y;
+				// 	case 'senpai':
+				// 		camFollow.y = dad.getMidpoint().y - 430;
+				// 		camFollow.x = dad.getMidpoint().x - 100;
+				// 	case 'senpai-angry':
+				// 		camFollow.y = dad.getMidpoint().y - 430;
+				// 		camFollow.x = dad.getMidpoint().x - 100;
+				// }
+
+				if (dad.curCharacter == 'mom')
+					vocals.volume = 1;
+
+				if (SONG.song.toLowerCase() == 'tutorial')
+				{
+					tweenCamIn();
 				}
 			}
 		}
@@ -996,7 +985,11 @@ class PlayState extends MusicBeatState
 				if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (Conductor.stepCrochet) < Conductor.songPosition) {
 					deleteNote(daNote);
 					return;
-				} 
+				}
+				if (daNote.tooLate) {
+					noteMiss(daNote);
+					return;
+				}
 
 				var strum:Strum = null;
 				for(e in (daNote.mustPress ? playerStrums : cpuStrums).members) {
@@ -1019,6 +1012,8 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.ONE)
 			endSong();
 		#end
+		
+		scripts.call("updatePost", [elapsed]);
 	}
 
 	function endSong():Void
@@ -1295,7 +1290,7 @@ class PlayState extends MusicBeatState
 		scripts.call("onKeyShitPost");
 	}
 
-	function noteMiss(direction:Int = 1):Void
+	function noteMiss(note:Note):Void
 	{
 		if (!boyfriend.stunned)
 		{
@@ -1312,15 +1307,10 @@ class PlayState extends MusicBeatState
 			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
 			// FlxG.log.add('played imss note');
 
+			if (muteVocalsOnMiss) vocals.volume = 0;
 			boyfriend.stunned = true;
 
-			// get stunned for 5 seconds
-			new FlxTimer().start(5 / 60, function(tmr:FlxTimer)
-			{
-				boyfriend.stunned = false;
-			});
-
-			switch (direction)
+			switch (note.strumID)
 			{
 				case 0:
 					boyfriend.playAnim('singLEFTmiss', true);
@@ -1331,6 +1321,7 @@ class PlayState extends MusicBeatState
 				case 3:
 					boyfriend.playAnim('singRIGHTmiss', true);
 			}
+			deleteNote(note);
 		}
 	}
 
