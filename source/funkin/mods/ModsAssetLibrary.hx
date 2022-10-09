@@ -121,6 +121,8 @@ class ModsAssetLibrary extends AssetLibrary {
                 if (!FileSystem.isDirectory('$path$e'))
                     result.push(e);
             return result;
+        } catch(e) {
+            // woops!!
         }
         return [];
     }

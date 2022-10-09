@@ -27,4 +27,10 @@ class CancellableEvent {
     public function new(continueCalls:Bool) {
         __continueCalls = continueCalls;
     }
+
+    public function toString():String {
+        var rep = '[CancellableEvent ${cancelled ? "(Cancelled)" : ""} - ]';
+        // TODO: List all fields
+        return rep;
+    }
 }

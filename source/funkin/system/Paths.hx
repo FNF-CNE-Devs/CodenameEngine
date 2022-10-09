@@ -148,15 +148,16 @@ class Paths
 		return FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library));
 	}
 
-	inline static public function getFolderContent(key:String, includeSource:Bool = true, scanSource:Bool = false):Array<String> {
+	inline static public function getFolderContent(key:String, includeSource:Bool = true, addPath:Bool = false, scanSource:Bool = false):Array<String> {
 		// designed to work both on windows and web
 		
 		if (!key.endsWith("/")) key = key + "/";
 
 		if (ModsFolder.currentModFolder == null)
-			return getFolderContent(key, false, true);
+			return getFolderContent(key, false, addPath, true);
 
-		var libThing = new LimeLibrarySymbol(scanSource ? getPreloadPath(key) : getLibraryPathForce(key, 'mods/${ModsFolder.currentModFolder}'));
+		var folderPath:String = scanSource ? getPreloadPath(key) : getLibraryPathForce(key, 'mods/${ModsFolder.currentModFolder}');
+		var libThing = new LimeLibrarySymbol(folderPath);
 		var library = libThing.library;
 
 		if (library is openfl.utils.AssetLibrary) {
@@ -171,22 +172,30 @@ class Paths
 			// easy task, can immediatly scan for files!
 			var lib = cast(library, funkin.mods.ModsAssetLibrary);
 			content = lib.getFiles(libThing.symbolName);
-		} else 
-		#end
-		if (library is lime.utils.AssetLibrary) {
+			if (addPath) 
+				for(i in 0...content.length)
+					content[i] = '$folderPath${content[i]}';
+		} else #end
+		  if (library is lime.utils.AssetLibrary) {
 			var lib = cast(library, lime.utils.AssetLibrary);
 			@:privateAccess
 			for(k=>e in lib.paths) {
 				if (k.startsWith(libThing.symbolName)) {
-					var barebonesFileName = k.substr(libThing.symbolName.length);
-					if (!barebonesFileName.contains("/"))
-						content.push(barebonesFileName);
+					if (addPath) {
+						content.push('${libThing.libraryName}:$k');
+					} else {
+						var barebonesFileName = k.substr(libThing.symbolName.length);
+						if (!barebonesFileName.contains("/"))
+							content.push(barebonesFileName);
+					}
 				}
 			}
 		}
 
+
+
 		if (includeSource) {
-			var sourceResult = getFolderContent(key, false, true);
+			var sourceResult = getFolderContent(key, false, addPath, true);
 			for(e in sourceResult)
 				if (!content.contains(e))
 					content.push(e);

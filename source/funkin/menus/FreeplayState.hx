@@ -149,7 +149,7 @@ class FreeplayState extends MusicBeatState
 
 	#if PRELOAD_ALL
 	var autoplayElapsed:Float = 0;
-	var songInstPlaying:Bool = false;
+	var songInstPlaying:Bool = true;
 	var curPlayingInst:String = null;
 	#end
 

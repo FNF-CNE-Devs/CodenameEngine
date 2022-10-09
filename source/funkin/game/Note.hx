@@ -34,6 +34,12 @@ class Note extends FlxSprite
 	public var isSustainNote:Bool = false;
 
 	public var noteScore:Float = 1;
+	public var noteTypeID:Int = 0;
+
+	public var noteType(get, null):String;
+	private function get_noteType() {
+		return PlayState.instance.getNoteType(noteTypeID);
+	}
 
 	public static var swagWidth:Float = 160 * 0.7;
 

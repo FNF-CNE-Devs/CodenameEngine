@@ -2,6 +2,7 @@ package funkin.scripting;
 
 import funkin.scripting.events.CancellableEvent;
 
+@:access(CancellableEvent)
 class ScriptPack extends Script {
     public var scripts:Array<Script> = [];
     public var additionalDefaultVariables:Map<String, Dynamic> = [];
@@ -28,6 +29,7 @@ class ScriptPack extends Script {
     public function event<T:CancellableEvent>(func:String, event:T):T {
         for(e in scripts) {
             e.call(func, [event]);
+            @:privateAccess
             if (event.cancelled && event.__continueCalls) break;
         }
         return event;

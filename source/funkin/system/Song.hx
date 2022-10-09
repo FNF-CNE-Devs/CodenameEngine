@@ -27,7 +27,7 @@ class Song
 	public static function loadFromJson(songName:String, ?difficulty:String = "normal"):SwagSong
 	{
 		var assetPath = Paths.chart(songName, difficulty);
-		PlayState.fromMods = !assetPath.startsWith("mods");
+		PlayState.fromMods = assetPath.startsWith("mods");
 		var rawJson = Assets.getText(assetPath).trim();
 
 		while (!rawJson.endsWith("}"))

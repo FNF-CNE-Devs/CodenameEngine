@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.scripting.Script;
 import flixel.util.FlxDestroyUtil;
 #if desktop
 import Discord.DiscordClient;
@@ -39,6 +40,7 @@ import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import haxe.Json;
+import haxe.io.Path;
 import lime.utils.Assets;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
@@ -47,6 +49,7 @@ import funkin.system.Conductor;
 import funkin.system.Song;
 
 import funkin.menus.*;
+import funkin.scripting.events.*;
 
 using StringTools;
 
@@ -200,6 +203,21 @@ class PlayState extends MusicBeatState
 		if (SONG.stage == null || SONG.stage.trim() == "") SONG.stage = "stage";
 		// TODO: Custom Stage Loading
 		add(new Stage(SONG.stage));
+
+		
+		switch(SONG.song) {
+			// case "":
+				// ADD YOUR HARDCODED SCRIPTS HERE!
+			default:
+				var content = Paths.getFolderContent('charts/${SONG.song.toLowerCase()}/', false, true, !fromMods);
+				trace(content);
+				for(file in content) {
+					var ext = Path.extension(file).toLowerCase();
+					if (Script.scriptExtensions.contains(ext)) {
+						scripts.add(Script.create(file));
+					}
+				}
+		}
 
 		scripts.load();
 		scripts.call("create");
@@ -1091,7 +1109,6 @@ class PlayState extends MusicBeatState
 	private function popUpScore(strumtime:Float):Void
 	{
 		var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
-		// boyfriend.playAnim('hey');
 		vocals.volume = 1;
 
 		var placement:String = Std.string(combo);
@@ -1320,6 +1337,11 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	public function getNoteType(id:Int) {
+		// TODO: Note Types
+		return null;
+	}
+
 	function goodNoteHit(note:Note):Void
 	{
 		if (!note.wasGoodHit)
@@ -1327,11 +1349,11 @@ class PlayState extends MusicBeatState
 			camZooming = true;
 			if (note.mustPress) {
 				// TODO: See TODO above
-				scripts.call("onPlayerHit", [note]);
+				scripts.event("onPlayerHit", new NoteHitEvent(note, note.mustPress ? boyfriend : dad, note.mustPress, note.noteType));
 				if (!note.isSustainNote)
 				{
-					popUpScore(note.strumTime);
 					combo++;
+					popUpScore(note.strumTime);
 				}
 	
 				if (note.noteData >= 0)
