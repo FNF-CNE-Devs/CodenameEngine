@@ -41,6 +41,7 @@ class Paths
 
 	inline static function getLibraryPathForce(file:String, library:String)
 	{
+		if (library.startsWith("mods")) library = library.toLowerCase();
 		return '$library:assets/$library/$file';
 	}
 
@@ -148,7 +149,7 @@ class Paths
 		return FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library));
 	}
 
-	inline static public function getFolderContent(key:String, includeSource:Bool = true, addPath:Bool = false, scanSource:Bool = false):Array<String> {
+	static public function getFolderContent(key:String, includeSource:Bool = true, addPath:Bool = false, scanSource:Bool = false):Array<String> {
 		// designed to work both on windows and web
 		
 		if (!key.endsWith("/")) key = key + "/";
@@ -160,11 +161,13 @@ class Paths
 		var libThing = new LimeLibrarySymbol(folderPath);
 		var library = libThing.library;
 
+		trace(library);
 		if (library is openfl.utils.AssetLibrary) {
 			var lib = cast(libThing.library, openfl.utils.AssetLibrary);
 			@:privateAccess
 			if (lib.__proxy != null) library = lib.__proxy;
 		}
+		trace(library);
 		
 		var content:Array<String> = [];
 		#if sys
@@ -175,14 +178,15 @@ class Paths
 			if (addPath) 
 				for(i in 0...content.length)
 					content[i] = '$folderPath${content[i]}';
-		} else #end
-		  if (library is lime.utils.AssetLibrary) {
-			var lib = cast(library, lime.utils.AssetLibrary);
+		} else #end {
 			@:privateAccess
-			for(k=>e in lib.paths) {
-				if (k.startsWith(libThing.symbolName)) {
+			for(k=>e in library.paths) {
+				if (k.toLowerCase().startsWith(libThing.symbolName.toLowerCase())) {
 					if (addPath) {
-						content.push('${libThing.libraryName}:$k');
+						if (libThing.libraryName != "")
+							content.push('${libThing.libraryName}:$k');
+						else
+							content.push(k);
 					} else {
 						var barebonesFileName = k.substr(libThing.symbolName.length);
 						if (!barebonesFileName.contains("/"))

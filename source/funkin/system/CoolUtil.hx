@@ -46,7 +46,7 @@ class CoolUtil
 
 		if (Math.abs(h1-h2) > 180) h1 += 360;
 
-		if (Math.abs(h1 - h2) > 90 || s2 < 0.125 || s1 < 0.125) {
+		if (Math.abs(h1 - h2) > 180 || (s2 < 0.125 || s1 < 0.125)) {
 			// classic r,g,b lerp
 			var r1 = color1.redFloat;
 			var g1 = color1.greenFloat;

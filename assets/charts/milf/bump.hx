@@ -6,3 +6,7 @@ function beatHit(curBeat:Int) {
             camZoomingInterval = 4;
     }
 }
+
+function onPlayerHit(event:NoteHitEvent) {
+    event.direction = 3 - event.direction;
+}

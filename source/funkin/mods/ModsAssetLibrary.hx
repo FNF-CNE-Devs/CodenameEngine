@@ -114,7 +114,7 @@ class ModsAssetLibrary extends AssetLibrary {
         if (!folder.endsWith("/")) folder = folder + "/";
         if (!__parseAsset(folder)) return [];
         var path = getAssetPath();
-
+        trace(path);
         try {
             var result:Array<String> = [];
             for(e in FileSystem.readDirectory(path))

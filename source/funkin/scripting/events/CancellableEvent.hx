@@ -5,7 +5,7 @@ import funkin.scripting.ScriptPack;
 @:allow(ScriptPack)
 class CancellableEvent {
     @:dox(hide) public var cancelled:Bool = false;
-    @:dox(hide) private var __continueCalls:Bool = false;
+    @:dox(hide) private var __continueCalls:Bool = true;
 
     /**
      * Additional data if used in scripts
@@ -14,19 +14,21 @@ class CancellableEvent {
 
     /**
      * Prevents default action from occuring.
+     * @param c Whenever the scripts following this one should be called or not. (Defaults to `true`)
      */
-    public function cancel() {
+    public function preventDefault(c:Bool = true) {
         cancelled = true;
+        __continueCalls = c;
     }
+
+    @:dox(hide)
+    public function cancel(c:Bool = true) {preventDefault(c);}
 
     /**
      * Creates a new cancellable event.
      * This allows scripts to call `cancel()` to cancel the event.
-     * @param continueCalls Whenever the `ScriptPack` should continue calling functions from other scripts after a script cancelled the event.
      */
-    public function new(continueCalls:Bool) {
-        __continueCalls = continueCalls;
-    }
+    public function new() {}
 
     public function toString():String {
         var rep = '[CancellableEvent ${cancelled ? "(Cancelled)" : ""} - ]';
