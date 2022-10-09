@@ -1,8 +1,6 @@
 package funkin.mods;
 
 import lime.utils.Log;
-import sys.FileStat;
-import sys.FileSystem;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 
@@ -16,6 +14,11 @@ import lime.net.HTTPRequest;
 import lime.text.Font;
 import lime.utils.AssetType;
 import lime.utils.Bytes;
+
+#if sys
+import sys.FileStat;
+import sys.FileSystem;
+#end
 
 using StringTools;
 

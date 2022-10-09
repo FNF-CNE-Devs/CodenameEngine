@@ -87,6 +87,7 @@ class ModsFolder {
      * @param addRoot Whenever the root should be added to the paths. Defaults to false
      */
     public static function getAssetFiles(assets:Array<Dynamic>, rootPath:String, path:String, libraryName:String, prefix:String = "", addRoot:Bool = false) {
+        #if sys
         for(f in FileSystem.readDirectory('$rootPath$path')) {
             if (FileSystem.isDirectory('$rootPath$path$f')) {
                 // fuck you git
@@ -117,6 +118,7 @@ class ModsFolder {
                 });
             }
         }
+        #end
     }
 
     public static function checkForOutdatedAssets(assets:ModsAssetLibrary) {

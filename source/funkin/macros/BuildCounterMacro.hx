@@ -2,7 +2,9 @@ package funkin.macros;
 
 import haxe.macro.Expr.Field;
 import haxe.macro.Context;
+#if sys
 import sys.io.File;
+#end
 
 class BuildCounterMacro {
     // non functional

@@ -27,6 +27,7 @@ import flixel.ui.FlxButton;
 import flixel.ui.FlxSpriteButton;
 import flixel.util.FlxColor;
 import haxe.Json;
+import haxe.io.Path;
 import lime.utils.Assets;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
@@ -79,6 +80,8 @@ class ChartingState extends MusicBeatState
 	**/
 	var curSelectedNote:Array<Dynamic>;
 
+	var characterList:Array<String>;
+
 	var tempBpm:Int = 0;
 
 	var vocals:FlxSound;
@@ -89,6 +92,7 @@ class ChartingState extends MusicBeatState
 	override function create()
 	{
 		curSection = lastSection;
+		characterList = [for(e in Paths.getFolderContent('data/characters/')) if (Path.extension(e).toLowerCase() == "xml") e.substr(0, e.length-4)];
 
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);
 		add(gridBG);
@@ -176,7 +180,7 @@ class ChartingState extends MusicBeatState
 		add(curRenderedNotes);
 		add(curRenderedSustains);
 
-		trace(Paths.getFolderContent('data/characters/'));
+		
 		super.create();
 	}
 
@@ -231,17 +235,15 @@ class ChartingState extends MusicBeatState
 		stepperBPM.value = Conductor.bpm;
 		stepperBPM.name = 'song_bpm';
 
-		var characters:Array<String> = CoolUtil.coolTextFile(Paths.txt('characterList'));
-
-		var player1DropDown = new FlxUIDropDownMenu(10, 100, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
+		var player1DropDown = new FlxUIDropDownMenu(10, 100, FlxUIDropDownMenu.makeStrIdLabelArray(characterList, true), function(character:String)
 		{
-			_song.player1 = characters[Std.parseInt(character)];
+			_song.player1 = characterList[Std.parseInt(character)];
 		});
 		player1DropDown.selectedLabel = _song.player1;
 
-		var player2DropDown = new FlxUIDropDownMenu(140, 100, FlxUIDropDownMenu.makeStrIdLabelArray(characters, true), function(character:String)
+		var player2DropDown = new FlxUIDropDownMenu(140, 100, FlxUIDropDownMenu.makeStrIdLabelArray(characterList, true), function(character:String)
 		{
-			_song.player2 = characters[Std.parseInt(character)];
+			_song.player2 = characterList[Std.parseInt(character)];
 		});
 
 		player2DropDown.selectedLabel = _song.player2;

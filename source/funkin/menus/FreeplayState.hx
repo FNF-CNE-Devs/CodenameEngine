@@ -220,7 +220,7 @@ class FreeplayState extends MusicBeatState
 
 			// PlayState.storyWeek = songs[curSelected].week;
 			trace('CUR WEEK' + PlayState.storyWeek);
-			LoadingState.loadAndSwitchState(new PlayState());
+			FlxG.switchState(new PlayState());
 		}
 	}
 
@@ -277,7 +277,7 @@ class FreeplayState extends MusicBeatState
 
 		for (i in 0...iconArray.length)
 		{
-			iconArray[i].alpha = lerp(iconArray[i].alpha, songInstPlaying ? 0.45 : 0.6, 0.25);
+			iconArray[i].alpha = lerp(iconArray[i].alpha, #if PRELOAD_ALL songInstPlaying ? 0.45 : #end 0.6, 0.25);
 		}
 
 		iconArray[curSelected].alpha = 1;
@@ -287,7 +287,7 @@ class FreeplayState extends MusicBeatState
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			item.alpha = lerp(item.alpha, songInstPlaying ? 0.45 : 0.6, 0.25);
+			item.alpha = lerp(item.alpha, #if PRELOAD_ALL songInstPlaying ? 0.45 : #end 0.6, 0.25);
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
 			if (item.targetY == 0)

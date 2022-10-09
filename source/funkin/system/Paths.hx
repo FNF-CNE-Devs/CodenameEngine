@@ -86,12 +86,12 @@ class Paths
 
 	inline static public function voices(song:String)
 	{
-		return getPath('songs/${song.toLowerCase()}/Voices.ogg', MUSIC, null);
+		return getPath('songs/${song.toLowerCase()}/Voices.$SOUND_EXT', MUSIC, null);
 	}
 
 	inline static public function inst(song:String)
 	{
-		return getPath('songs/${song.toLowerCase()}/Inst.ogg', MUSIC, null);
+		return getPath('songs/${song.toLowerCase()}/Inst.$SOUND_EXT', MUSIC, null);
 	}
 
 	inline static public function image(key:String, ?library:String)
@@ -166,12 +166,23 @@ class Paths
 		}
 		
 		var content:Array<String> = [];
+		#if sys
 		if (library is funkin.mods.ModsAssetLibrary) {
 			// easy task, can immediatly scan for files!
 			var lib = cast(library, funkin.mods.ModsAssetLibrary);
 			content = lib.getFiles(libThing.symbolName);
-		} else {
-			// TODO!!
+		} else 
+		#end
+		if (library is lime.utils.AssetLibrary) {
+			var lib = cast(library, lime.utils.AssetLibrary);
+			@:privateAccess
+			for(k=>e in lib.paths) {
+				if (k.startsWith(libThing.symbolName)) {
+					var barebonesFileName = k.substr(libThing.symbolName.length);
+					if (!barebonesFileName.contains("/"))
+						content.push(barebonesFileName);
+				}
+			}
 		}
 
 		if (includeSource) {
