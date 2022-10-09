@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.mods.LimeLibrarySymbol;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.AssetType;
@@ -147,23 +148,40 @@ class Paths
 		return FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library));
 	}
 
-	inline static public function getFolderContent(key:String, includeSource:Bool = false, ?library:String):Array<String> {
+	inline static public function getFolderContent(key:String, includeSource:Bool = true, scanSource:Bool = false):Array<String> {
 		// designed to work both on windows and web
 		
-		while(key.charAt(key.length-1) == "/") key.substr(0, key.length-1);
-		var path = getPath('$key/.foldercontent', TEXT, library);
+		if (!key.endsWith("/")) key = key + "/";
+
+		if (ModsFolder.currentModFolder == null)
+			return getFolderContent(key, false, true);
+
+		var libThing = new LimeLibrarySymbol(scanSource ? getPreloadPath(key) : getLibraryPathForce(key, 'mods/${ModsFolder.currentModFolder}'));
+		var library = libThing.library;
+
+		if (library is openfl.utils.AssetLibrary) {
+			var lib = cast(libThing.library, openfl.utils.AssetLibrary);
+			@:privateAccess
+			if (lib.__proxy != null) library = lib.__proxy;
+		}
+		
 		var content:Array<String> = [];
-		if (OpenFlAssets.exists(path)) {
-			var text = OpenFlAssets.getText(path);
-			for(e in text.split("\n")) content.push(e.trim());
+		if (library is funkin.mods.ModsAssetLibrary) {
+			// easy task, can immediatly scan for files!
+			var lib = cast(library, funkin.mods.ModsAssetLibrary);
+			content = lib.getFiles(libThing.symbolName);
+		} else {
+			// TODO!!
 		}
+
 		if (includeSource) {
-			var path = getPath('$key/.foldercontent', TEXT, library, true);
-			if (OpenFlAssets.exists(path)) {
-				var text = OpenFlAssets.getText(path);
-				for(e in text.split("\n")) content.push(e.trim());
-			}
+			var sourceResult = getFolderContent(key, false, true);
+			for(e in sourceResult)
+				if (!content.contains(e))
+					content.push(e);
 		}
+
+
 		return content;
 	}
 }

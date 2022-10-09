@@ -107,6 +107,21 @@ class ModsAssetLibrary extends AssetLibrary {
         return getAssetPath();
     }
 
+    public function getFiles(folder:String):Array<String> {
+        if (!folder.endsWith("/")) folder = folder + "/";
+        if (!__parseAsset(folder)) return [];
+        var path = getAssetPath();
+
+        try {
+            var result:Array<String> = [];
+            for(e in FileSystem.readDirectory(path))
+                if (!FileSystem.isDirectory('$path$e'))
+                    result.push(e);
+            return result;
+        }
+        return [];
+    }
+
     public override function exists(asset:String, type:String):Bool { 
         if(!__parseAsset(asset)) return false;
 

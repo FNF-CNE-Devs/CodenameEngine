@@ -4,7 +4,11 @@ import openfl.utils.Assets;
 import openfl.utils.AssetManifest;
 import openfl.utils.AssetLibrary;
 import flixel.graphics.FlxGraphic;
+
+#if sys
 import sys.FileSystem;
+#end
+
 import flixel.FlxG;
 import flixel.FlxState;
 import haxe.io.Path;
@@ -139,6 +143,7 @@ class ModsFolder {
 
     private static function onStateSwitch(newState:FlxState) {
         Assets.cache.clear();
+        lime.utils.Assets.cache.clear();
 
         if (currentModFolder == null) return;
         #if sys
@@ -146,7 +151,7 @@ class ModsFolder {
             @:privateAccess
             for(bmap in FlxG.bitmap._cache) {
                 if (bmap.assetsKey != null) {
-                    var e = new LibrarySymbol(bmap.assetsKey);
+                    var e = new LimeLibrarySymbol(bmap.assetsKey);
                     if (e.library is openfl.utils.AssetLibrary) {
                         @:privateAccess
                         e.library = cast(e.library, openfl.utils.AssetLibrary).__proxy;
@@ -166,25 +171,4 @@ class ModsFolder {
             
         #end
     }
-}
-
-class LibrarySymbol
-{
-	public var library:lime.utils.AssetLibrary;
-	public var libraryName:String;
-	public var symbolName:String;
-
-	public inline function new(id:String)
-	{
-		var colonIndex = id.indexOf(":");
-		libraryName = id.substring(0, colonIndex);
-		symbolName = id.substring(colonIndex + 1);
-		library = lime.utils.Assets.getLibrary(libraryName);
-	}
-
-	public inline function isLocal(?type)
-		return library.isLocal(symbolName, type);
-
-	public inline function exists(?type)
-		return library.exists(symbolName, type);
 }

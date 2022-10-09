@@ -176,6 +176,7 @@ class ChartingState extends MusicBeatState
 		add(curRenderedNotes);
 		add(curRenderedSustains);
 
+		trace(Paths.getFolderContent('data/characters/'));
 		super.create();
 	}
 
