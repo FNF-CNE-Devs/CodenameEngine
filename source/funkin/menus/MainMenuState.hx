@@ -6,6 +6,7 @@ import Discord.DiscordClient;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -156,39 +157,27 @@ class MainMenuState extends MusicBeatState
 
 					menuItems.forEach(function(spr:FlxSprite)
 					{
-						if (curSelected != spr.ID)
+						if (spr.ID != curSelected) return;
+						FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
 						{
-							FlxTween.tween(spr, {alpha: 0}, 0.4, {
-								ease: FlxEase.quadOut,
-								onComplete: function(twn:FlxTween)
-								{
-									spr.kill();
-								}
-							});
-						}
-						else
-						{
-							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
+							var daChoice:String = optionShit[curSelected];
+
+							switch (daChoice)
 							{
-								var daChoice:String = optionShit[curSelected];
+								case 'story mode':
+									FlxG.switchState(new StoryMenuState());
+									trace("Story Menu Selected");
+								case 'freeplay':
+									FlxG.switchState(new FreeplayState());
 
-								switch (daChoice)
-								{
-									case 'story mode':
-										FlxG.switchState(new StoryMenuState());
-										trace("Story Menu Selected");
-									case 'freeplay':
-										FlxG.switchState(new FreeplayState());
+									trace("Freeplay Menu Selected");
 
-										trace("Freeplay Menu Selected");
-
-									case 'options':
-										FlxTransitionableState.skipNextTransIn = true;
-										FlxTransitionableState.skipNextTransOut = true;
-										// FlxG.switchState(new OptionsMenu());
-								}
-							});
-						}
+								case 'options':
+									FlxTransitionableState.skipNextTransIn = true;
+									FlxTransitionableState.skipNextTransOut = true;
+									// FlxG.switchState(new OptionsMenu());
+							}
+						});
 					});
 				}
 			}
@@ -202,6 +191,15 @@ class MainMenuState extends MusicBeatState
 		});
 	}
 
+	
+	public override function switchTo(nextState:FlxState):Bool {
+		try {
+			menuItems.forEach(function(spr:FlxSprite) {
+				FlxTween.tween(spr, {alpha: 0}, 0.5, {ease: FlxEase.quintOut});
+			});
+		}
+		return super.switchTo(nextState);
+	}
 	function changeItem(huh:Int = 0)
 	{
 		curSelected += huh;

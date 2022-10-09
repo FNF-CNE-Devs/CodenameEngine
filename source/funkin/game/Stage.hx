@@ -67,6 +67,15 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         if (node.has.scroll) {
                             var scroll:Null<Float> = Std.parseFloat(node.att.scroll);
                             if (scroll != null) spr.scrollFactor.set(scroll, scroll);
+                        } else {
+                            if (node.has.scrollx) {
+                                var scroll:Null<Float> = Std.parseFloat(node.att.scrollx);
+                                if (scroll != null) spr.scrollFactor.x = scroll;
+                            } 
+                            if (node.has.scrolly) {
+                                var scroll:Null<Float> = Std.parseFloat(node.att.scrolly);
+                                if (scroll != null) spr.scrollFactor.y = scroll;
+                            } 
                         }
                         if (node.has.scale) {
                             var scale:Null<Float> = Std.parseFloat(node.att.scale);

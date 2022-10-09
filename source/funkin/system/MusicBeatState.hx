@@ -7,6 +7,7 @@ import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.FlxUIState;
 import flixel.math.FlxRect;
+import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 
 class MusicBeatState extends FlxUIState
@@ -77,5 +78,12 @@ class MusicBeatState extends FlxUIState
 	public function beatHit():Void
 	{
 		for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).beatHit(curBeat);
+	}
+
+	public function lerp(v1:Float, v2:Float, ratio:Float, fpsSensitive:Bool = false) {
+		if (fpsSensitive)
+			return FlxMath.lerp(v1, v2, ratio);
+		else
+			return CoolUtil.fpsLerp(v1, v2, ratio);
 	}
 }

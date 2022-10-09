@@ -18,7 +18,7 @@ class Paths
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 	private static var __useSourceAssets = false;
 
-	static function getPath(file:String, type:AssetType, library:Null<String>, skipModsVerification:Bool = false)
+	public static function getPath(file:String, type:AssetType, library:Null<String>, skipModsVerification:Bool = false)
 	{
 		if (library != null && library.startsWith("mods/")) {
 			library = library.toLowerCase();

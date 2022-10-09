@@ -783,8 +783,8 @@ class PlayState extends MusicBeatState
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
 		// TODO: FPS-compatible lerping
-		iconP1.scale.set(FlxMath.lerp(iconP1.scale.x, 1, 0.33), FlxMath.lerp(iconP1.scale.y, 1, 0.33));
-		iconP2.scale.set(FlxMath.lerp(iconP2.scale.x, 1, 0.33), FlxMath.lerp(iconP2.scale.y, 1, 0.33));
+		iconP1.scale.set(lerp(iconP1.scale.x, 1, 0.33), lerp(iconP1.scale.y, 1, 0.33));
+		iconP2.scale.set(lerp(iconP2.scale.x, 1, 0.33), lerp(iconP2.scale.y, 1, 0.33));
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
@@ -894,8 +894,8 @@ class PlayState extends MusicBeatState
 
 		if (camZooming)
 		{
-			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, 0.95);
-			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, 0.95);
+			FlxG.camera.zoom = lerp(defaultCamZoom, FlxG.camera.zoom, 0.95);
+			camHUD.zoom = lerp(1, camHUD.zoom, 0.95);
 		}
 
 		FlxG.watch.addQuick("beatShit", curBeat);

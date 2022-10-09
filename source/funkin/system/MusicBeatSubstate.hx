@@ -4,6 +4,7 @@ import funkin.system.Conductor.BPMChangeEvent;
 import funkin.system.Conductor;
 import flixel.FlxG;
 import flixel.FlxSubState;
+import flixel.math.FlxMath;
 
 class MusicBeatSubstate extends FlxSubState
 {
@@ -62,5 +63,12 @@ class MusicBeatSubstate extends FlxSubState
 	public function beatHit():Void
 	{
 		//do literally nothing dumbass
+	}
+
+	public function lerp(v1:Float, v2:Float, ratio:Float, fpsSensitive:Bool = false) {
+		if (fpsSensitive)
+			return FlxMath.lerp(v1, v2, ratio);
+		else
+			return CoolUtil.fpsLerp(v1, v2, ratio);
 	}
 }
