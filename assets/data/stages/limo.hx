@@ -1,3 +1,5 @@
+var fastCarCanDrive:Bool = true;
+
 function create() {
     resetFastCar();
 }

@@ -1,5 +1,7 @@
 package funkin.scripting;
 
+import funkin.scripting.events.CancellableEvent;
+
 class ScriptPack extends Script {
     public var scripts:Array<Script> = [];
     public var additionalDefaultVariables:Map<String, Dynamic> = [];
@@ -15,6 +17,20 @@ class ScriptPack extends Script {
         for(e in scripts)
             e.call(func, parameters);
         return null;
+    }
+
+    /**
+     * Sends an event to every single script, and returns the event.
+     * @param func Function to call
+     * @param event Event (will be the first parameter of the function)
+     * @return Event (modified by scripts)
+     */
+    public function event<T:CancellableEvent>(func:String, event:T):T {
+        for(e in scripts) {
+            e.call(func, [event]);
+            if (event.cancelled && event.__continueCalls) break;
+        }
+        return event;
     }
 
     public override function get(val:String):Dynamic {

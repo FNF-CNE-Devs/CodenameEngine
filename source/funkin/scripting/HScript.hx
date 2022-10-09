@@ -16,12 +16,12 @@ class HScript extends Script {
         var code:String = Assets.getText(path);
         var parser = new hscript.Parser();
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
+        // interp.errorHandler = _errorHandler;
         try {
             expr = parser.parseString(code, fileName);
         } catch(e) {
             return;
         }
-        interp.errorHandler = _errorHandler;
     }
 
     private function _errorHandler(error:Error) {
