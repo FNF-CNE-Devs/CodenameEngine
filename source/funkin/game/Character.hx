@@ -17,6 +17,8 @@ import haxe.xml.Access;
 import haxe.Exception;
 import funkin.system.Conductor;
 
+import funkin.events.PlayAnimEvent;
+import funkin.events.PlayAnimEvent.PlayAnimContext;
 using StringTools;
 
 class Character extends FlxSprite implements IBeatReceiver implements IOffsetCompatible
@@ -346,11 +348,17 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 			super.draw();
 	}
 
-	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
+	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0, Context:PlayAnimContext = NONE):Void
 	{
-		animation.play(AnimName, Force, Reversed, Frame);
+		var event = new PlayAnimEvent(AnimName, Force, Reversed, Frame);
+		
+		// TODO: Character Scripts
 
-		var daOffset = animOffsets.get(AnimName);
+		if (event.cancelled || event.animName == null) return;
+
+		animation.play(event.animName, event.force, event.reversed, event.startingFrame);
+
+		var daOffset = animOffsets.get(event.animName);
 		if (daOffset != null)
 			offset.set(daOffset.x * (isPlayer != playerOffsets ? -1 : 1), daOffset.y);
 		else
@@ -359,21 +367,21 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		offset.x += globalOffset.x * (isPlayer != playerOffsets ? 1 : -1);
 		offset.y -= globalOffset.y;
 
-		if (AnimName.startsWith("sing"))
+		if (event.animName.startsWith("sing"))
 			lastHit = Conductor.songPosition;
 		
 		if (curCharacter == 'gf')
 		{
-			if (AnimName == 'singLEFT')
+			if (event.animName == 'singLEFT')
 			{
 				danced = true;
 			}
-			else if (AnimName == 'singRIGHT')
+			else if (event.animName == 'singRIGHT')
 			{
 				danced = false;
 			}
 
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
+			if (event.animName == 'singUP' || event.animName == 'singDOWN')
 			{
 				danced = !danced;
 			}
