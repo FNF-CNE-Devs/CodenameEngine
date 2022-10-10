@@ -52,6 +52,13 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 			midpoint.x + (isPlayer ? -100 : 150) + globalOffset.x + cameraOffset.x,
 			midpoint.y - 100 + globalOffset.y + cameraOffset.y);
 	}
+
+	public function playSingAnim(direction:Int, suffix:String = "") {
+		// TODO: Script Events
+		var anims = ["singLEFT", "singDOWN", "singUP", "singRIGHT"];
+		playAnim('${anims[direction]}$suffix', true);
+	}
+
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
 		super(x, y);

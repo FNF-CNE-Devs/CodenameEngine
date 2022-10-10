@@ -30,9 +30,16 @@ class CancellableEvent {
      */
     public function new() {}
 
+    /**
+     * Returns a string representation of the event, in this format:
+     * `[CancellableEvent]`
+     * `[CancellableEvent (Cancelled)]`
+     * @return String
+     */
     public function toString():String {
-        var rep = '[CancellableEvent ${cancelled ? "(Cancelled)" : ""} - ]';
-        // TODO: List all fields
+        var fields = Reflect.fields(this);
+        var claName = Type.getClassName(Type.getClass(this)).split(".");
+        var rep = '[${claName[claName.length-1]}${cancelled ? " (Cancelled)" : ""}]';
         return rep;
     }
 }

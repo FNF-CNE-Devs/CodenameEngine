@@ -209,7 +209,7 @@ class PlayState extends MusicBeatState
 				// ADD YOUR HARDCODED SCRIPTS HERE!
 			default:
 				trace('charts/${SONG.song}/');
-				var content = Paths.getFolderContent('charts/${SONG.song}/', false, true, false);
+				var content = Paths.getFolderContent('charts/${SONG.song}/', false, true, !fromMods);
 				
 				trace(content);
 				for(file in content) {
@@ -1351,72 +1351,38 @@ class PlayState extends MusicBeatState
 	{
 		if (!note.wasGoodHit)
 		{
-			camZooming = true;
-			if (note.mustPress) {
-				// TODO: See TODO above
-				var event = scripts.event("onPlayerHit", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID));
-				if (!event.cancelled) {
-					if (!note.isSustainNote)
-					{
-						combo++;
-						popUpScore(note.strumTime);
-					}
-		
-					if (note.noteData >= 0)
-						health += 0.023;
-					else
-						health += 0.004;
-		
-					if (!event.animCancelled) {
-						switch (event.direction)
-						{
-							case 0:
-								boyfriend.playAnim('singLEFT', true);
-							case 1:
-								boyfriend.playAnim('singDOWN', true);
-							case 2:
-								boyfriend.playAnim('singUP', true);
-							case 3:
-								boyfriend.playAnim('singRIGHT', true);
-						}
-					}
-		
-					playerStrums.forEach(function(str:Strum) {
-						if (str.ID == Math.abs(note.noteData % 4)) {
-							str.press(note.strumTime);
-						}
-					});
-				}
-			} else {
-				// TODO: See TODO above the todo above
-				var event = scripts.event("onDadHit", new NoteHitEvent(note, dad, false, note.noteType, note.strumID));
-				if (!event.cancelled) {
-					if (!event.animCancelled) {
-						switch (event.direction)
-						{
-							case 0:
-								dad.playAnim('singLEFT', true);
-							case 1:
-								dad.playAnim('singDOWN', true);
-							case 2:
-								dad.playAnim('singUP', true);
-							case 3:
-								dad.playAnim('singRIGHT', true);
-						}
-					}
+			note.wasGoodHit = true;
 
-					cpuStrums.forEach(function(str:Strum) {
-						if (str.ID == Math.abs(note.noteData % 4)) {
-							str.press(note.strumTime);
-						}
-					});
+			var event:NoteHitEvent;
+			if (note.mustPress)
+				event = scripts.event("onPlayerHit", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004));
+			else
+				event = scripts.event("onDadHit", new NoteHitEvent(note, dad, false, note.noteType, note.strumID, 0));
+			
+			if (!event.cancelled) {
+				if (event.player && !note.isSustainNote)
+				{
+					combo++;
+					popUpScore(note.strumTime);
 				}
+
+				health += event.healthGain;
+	
+				if (!event.animCancelled) {
+					event.character.playSingAnim(event.direction);
+				}
+	
+				(event.player ? playerStrums : cpuStrums).forEach(function(str:Strum) {
+					if (str.ID == Math.abs(note.strumID)) {
+						str.press(note.strumTime);
+					}
+				});
 			}
 
-			note.wasGoodHit = true;
-			vocals.volume = 1;
+			if (event.unmuteVocals) vocals.volume = 1;
+			if (event.enableCamZooming) camZooming = true;
 
-			if (!note.isSustainNote) deleteNote(note);
+			if (event.deleteNote && !note.isSustainNote) deleteNote(note);
 		}
 	}
 

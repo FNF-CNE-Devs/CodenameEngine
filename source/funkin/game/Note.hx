@@ -60,7 +60,7 @@ class Note extends FlxSprite
 
 		this.noteData = noteData;
 
-		var daStage:String = PlayState.instance.curStage;
+		var daStage:String = PlayState.instance == null ? "stage" : PlayState.instance.curStage;
 
 		switch (daStage)
 		{
@@ -154,7 +154,7 @@ class Note extends FlxSprite
 
 			x -= width / 2;
 
-			if (PlayState.instance.curStage.startsWith('school'))
+			if (daStage.startsWith('school'))
 				x += 30;
 
 			if (prevNote.isSustainNote)
