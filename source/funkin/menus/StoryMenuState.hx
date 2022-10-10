@@ -1,7 +1,7 @@
 package funkin.menus;
 
 #if desktop
-import Discord.DiscordClient;
+import funkin.system.Discord.DiscordClient;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -16,6 +16,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.net.curl.CURLCode;
 import funkin.system.Song;
+import funkin.game.Highscore;
 
 using StringTools;
 

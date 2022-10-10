@@ -1,4 +1,4 @@
-package;
+package funkin.system;
 
 import Sys.sleep;
 import discord_rpc.DiscordRpc;

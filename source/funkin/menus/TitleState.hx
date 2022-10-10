@@ -1,7 +1,7 @@
 package funkin.menus;
 
 #if desktop
-import Discord.DiscordClient;
+import funkin.system.Discord.DiscordClient;
 import sys.thread.Thread;
 #end
 import flixel.FlxG;
@@ -26,6 +26,7 @@ import flixel.util.FlxTimer;
 import funkin.system.Conductor;
 import lime.app.Application;
 import openfl.Assets;
+import funkin.ui.Alphabet;
 
 using StringTools;
 

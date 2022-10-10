@@ -1,4 +1,4 @@
-package;
+package funkin.editors;
 
 import funkin.system.Conductor.BPMChangeEvent;
 import Section.SwagSection;
@@ -35,6 +35,7 @@ import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
 import funkin.system.Conductor;
+import funkin.game.HealthIcon;
 
 import funkin.game.Note;
 

@@ -3,7 +3,7 @@ package funkin.game;
 import funkin.scripting.Script;
 import flixel.util.FlxDestroyUtil;
 #if desktop
-import Discord.DiscordClient;
+import funkin.system.Discord.DiscordClient;
 #end
 import Section.SwagSection;
 import funkin.system.Song.SwagSong;
@@ -47,6 +47,8 @@ import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
 import funkin.system.Conductor;
 import funkin.system.Song;
+import funkin.editors.ChartingState;
+import funkin.debug.AnimationDebug;
 
 import funkin.menus.*;
 import funkin.scripting.events.*;

@@ -1,7 +1,7 @@
 package funkin.menus;
 
 #if desktop
-import Discord.DiscordClient;
+import funkin.system.Discord.DiscordClient;
 #end
 import flash.text.TextField;
 import flixel.FlxG;
@@ -15,6 +15,9 @@ import flixel.util.FlxColor;
 import lime.utils.Assets;
 import funkin.system.Song;
 import funkin.data.FreeplaySonglist;
+import funkin.ui.Alphabet;
+import funkin.game.HealthIcon;
+import funkin.game.Highscore;
 
 using StringTools;
 

@@ -1,6 +1,7 @@
 package;
 
 import funkin.menus.TitleState;
+import funkin.game.Highscore;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;

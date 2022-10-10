@@ -1,6 +1,5 @@
 package funkin.menus;
 
-import Controls.Control;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -12,6 +11,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import funkin.ui.Alphabet;
 
 class PauseSubState extends MusicBeatSubstate
 {
