@@ -39,7 +39,7 @@ class PlayAnimEvent extends CancellableEvent {
     Contains all contexts possible for `PlayAnimEvent`.
 **/
 @:enum
-abstract PlayAnimContext(String) = {
+abstract PlayAnimContext(String) {
     /**
         No context was given for the animation
     **/

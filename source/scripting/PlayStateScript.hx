@@ -5,7 +5,10 @@ import funkin.scripting.events.*;
 /**
  * Contains all callbacks you can add in modcharts and stage scripts.
  * 
+ * 
+ * 
  * NOTE: In case you're scripting a stage, all sprites of that stage are directly accessible via their name.
+ * 
  * Ex: If you added a `superCoolBG` element in your stage XML, you'll be able to access it via scripts by using `superCoolBG`.
  */
 interface PlayStateScript {

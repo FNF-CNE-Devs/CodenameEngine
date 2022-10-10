@@ -17,8 +17,8 @@ import haxe.xml.Access;
 import haxe.Exception;
 import funkin.system.Conductor;
 
-import funkin.events.PlayAnimEvent;
-import funkin.events.PlayAnimEvent.PlayAnimContext;
+import funkin.scripting.events.PlayAnimEvent;
+import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
 using StringTools;
 
 class Character extends FlxSprite implements IBeatReceiver implements IOffsetCompatible
@@ -356,7 +356,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 		if (event.cancelled || event.animName == null) return;
 
-		animation.play(event.animName, event.force, event.reversed, event.startingFrame);
+		animation.play(event.animName, event.force, event.reverse, event.startingFrame);
 
 		var daOffset = animOffsets.get(event.animName);
 		if (daOffset != null)
