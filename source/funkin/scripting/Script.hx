@@ -130,7 +130,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
      * Calls the function `func` defined in the script.
      * @param func Name of the function
      * @param parameters (Optional) Parameters of the function.
-     * @return Dynamic Result (if void, then null)
+     * @return Result (if void, then null)
      */
     public function call(func:String, ?parameters:Array<Dynamic>):Dynamic {
         var oldScript = curScript;
@@ -151,14 +151,14 @@ class Script extends FlxBasic implements IFlxDestroyable {
     /**
      * Gets the variable `variable` from the script's variables.
      * @param variable Name of the variable.
-     * @return Dynamic Variable (or null if it doesn't exists)
+     * @return Variable (or null if it doesn't exists)
      */
     public function get(variable:String):Dynamic {return null;}
 
     /**
      * Gets the variable `variable` from the script's variables.
      * @param variable Name of the variable.
-     * @return Dynamic Variable (or null if it doesn't exists)
+     * @return Variable (or null if it doesn't exists)
      */
     public function set(variable:String, value:Dynamic):Void {}
 

@@ -16,22 +16,44 @@ typedef BPMChangeEvent =
 
 class Conductor
 {
+	/**
+	 * Current BPM
+	 */
 	public static var bpm:Int = 100;
+
+	/**
+	 * Current Crochet (time per beat), in milliseconds.
+	 */
 	public static var crochet:Float = ((60 / bpm) * 1000); // beats in milliseconds
+	
+	/**
+	 * Current StepCrochet (time per step), in milliseconds.
+	 */
 	public static var stepCrochet:Float = crochet / 4; // steps in milliseconds
+
+	
+	/**
+	 * Current position of the song, in milliseconds.
+	 */
 	public static var songPosition:Float;
-	public static var lastSongPos:Float;
-	public static var offset:Float = 0;
+	
+	@:dox(hide) public static var lastSongPos:Float;
+	@:dox(hide) public static var offset:Float = 0;
 
-	public static var safeFrames:Int = 10;
-	public static var safeZoneOffset:Float = (safeFrames / 60) * 1000; // is calculated in create(), is safeFrames in milliseconds
+	@:dox(hide) public static var safeFrames:Int = 10;
+	@:dox(hide) public static var safeZoneOffset:Float = (safeFrames / 60) * 1000; // is calculated in create(), is safeFrames in milliseconds
 
+	/**
+	 * Array of all BPM changes that have been mapped.
+	 */
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
 
-	public function new()
-	{
-	}
+	@:dox(hide) public function new() {}
 
+	/**
+	 * Maps BPM changes from a song.
+	 * @param song Song to map BPM changes from.
+	 */
 	public static function mapBPMChanges(song:SwagSong)
 	{
 		bpmChangeMap = [];

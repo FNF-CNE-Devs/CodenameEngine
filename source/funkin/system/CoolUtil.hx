@@ -16,7 +16,7 @@ class CoolUtil
 	 * Returns `v` if not null, `defaultValue` otherwise.
 	 * @param v The value
 	 * @param defaultValue The default value
-	 * @return T The return value
+	 * @return The return value
 	 */
 	public static function getDefault<T>(v:T, defaultValue:T):T {
 		return v == null ? defaultValue : v;
@@ -72,15 +72,15 @@ class CoolUtil
 	/**
 	 * Modifies a lerp ratio based on current FPS to keep a stable speed on higher framerate.
 	 * @param ratio Ratio
-	 * @return Float FPS-Modified Ratio
+	 * @return FPS-Modified Ratio
 	 */
-	public static function getFPSRatio(ratio:Float) {
+	public static function getFPSRatio(ratio:Float):Float {
 		return FlxMath.bound(ratio * 60 * FlxG.elapsed, 0, 1);
 	}
 	/**
 	 * Tries to get a color from a `Dynamic` variable.
 	 * @param c `Dynamic` color.
-	 * @return Null<FlxColor> The result color
+	 * @return The result color, or `null` if invalid.
 	 */
 	public static function getColorFromDynamic(c:Dynamic):Null<FlxColor> {
 		// -1

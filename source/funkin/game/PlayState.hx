@@ -1267,8 +1267,12 @@ class PlayState extends MusicBeatState
 		var justPressed = [controls.LEFT_P, controls.DOWN_P, controls.UP_P, controls.RIGHT_P];
 		var justReleased = [controls.LEFT_R, controls.DOWN_R, controls.UP_R, controls.RIGHT_R];
 
-		// TODO: Events like param:OnKeyEvent for better compatibility
-		scripts.call("onKeyShit", [pressed, justPressed, justReleased]);
+		var event = scripts.event("onKeyShit", new InputSystemEvent([controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT], [controls.LEFT_P, controls.DOWN_P, controls.UP_P, controls.RIGHT_P], [controls.LEFT_R, controls.DOWN_R, controls.UP_R, controls.RIGHT_R]));
+		if (event.cancelled) return;
+		justReleased = CoolUtil.getDefault(event.pressed, []);
+		justReleased = CoolUtil.getDefault(event.justPressed, []);
+		justReleased = CoolUtil.getDefault(event.justReleased, []);
+
 		var funcsToExec:Array<Note->Void> = [];
 		if (pressed.contains(true)) {
 			funcsToExec.push(function(note:Note) {

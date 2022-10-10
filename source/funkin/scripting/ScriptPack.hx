@@ -24,7 +24,7 @@ class ScriptPack extends Script {
      * Sends an event to every single script, and returns the event.
      * @param func Function to call
      * @param event Event (will be the first parameter of the function)
-     * @return Event (modified by scripts)
+     * @return (modified by scripts)
      */
     public function event<T:CancellableEvent>(func:String, event:T):T {
         for(e in scripts) {
