@@ -210,8 +210,6 @@ class PlayState extends MusicBeatState
 			default:
 				trace('charts/${SONG.song}/');
 				var content = Paths.getFolderContent('charts/${SONG.song}/', false, true, !fromMods);
-				
-				trace(content);
 				for(file in content) {
 					var ext = Path.extension(file).toLowerCase();
 					if (Script.scriptExtensions.contains(ext)) {
