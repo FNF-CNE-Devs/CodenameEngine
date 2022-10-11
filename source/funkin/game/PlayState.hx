@@ -188,13 +188,19 @@ class PlayState extends MusicBeatState
 		// Updating Discord Rich Presence.
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
 		#end
-
-		var gfVersion = SONG.gf;
-		if (gfVersion == null) gfVersion = "gf";
-		gf = new Character(400, 130, gfVersion);
-		gf.scrollFactor.set(0.95, 0.95);
-
 		dad = new Character(100, 100, SONG.player2);
+
+
+		if (dad != null && dad.isGF) {
+			dad.setPosition(400, 130);
+			gf = dad;
+			dad.scrollFactor.set(0.95, 0.95);
+		} else {
+			var gfVersion = SONG.gf;
+			if (gfVersion == null) gfVersion = "gf";
+			gf = new Character(400, 130, gfVersion);
+			gf.scrollFactor.set(0.95, 0.95);
+		}
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 
@@ -210,7 +216,6 @@ class PlayState extends MusicBeatState
 			// case "":
 				// ADD YOUR HARDCODED SCRIPTS HERE!
 			default:
-				trace('charts/${SONG.song}/');
 				var content = Paths.getFolderContent('charts/${SONG.song}/', false, true, !fromMods);
 				for(file in content) {
 					var ext = Path.extension(file).toLowerCase();

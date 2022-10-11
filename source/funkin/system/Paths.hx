@@ -100,11 +100,11 @@ class Paths
 		return getPath('images/$key.png', IMAGE, library);
 	}
 
-	inline static public function script(key:String, ?library:String) {
-		var scriptPath = getPath(key, TEXT, library);
+	inline static public function script(key:String, ?library:String, isAssetsPath:Bool = false) {
+		var scriptPath = isAssetsPath ? key : getPath(key, TEXT, library);
 		var p:String;
 		for(ex in Script.scriptExtensions) {
-			p = getPath('$key.$ex', TEXT, library);
+			p = isAssetsPath ? '$key.$ex' : getPath('$key.$ex', TEXT, library);
 			if (OpenFlAssets.exists(p)) {
 				scriptPath = p;
 				break;
@@ -161,13 +161,11 @@ class Paths
 		var libThing = new LimeLibrarySymbol(folderPath);
 		var library = libThing.library;
 
-		trace(library);
 		if (library is openfl.utils.AssetLibrary) {
 			var lib = cast(libThing.library, openfl.utils.AssetLibrary);
 			@:privateAccess
 			if (lib.__proxy != null) library = lib.__proxy;
 		}
-		trace(library);
 		
 		var content:Array<String> = [];
 		#if sys

@@ -15,9 +15,12 @@ import flixel.math.FlxRect;
 import openfl.utils.Assets;
 import haxe.xml.Access;
 import haxe.Exception;
+import haxe.io.Path;
 import funkin.system.Conductor;
 
-import funkin.scripting.events.PlayAnimEvent;
+import funkin.scripting.DummyScript;
+import funkin.scripting.Script;
+import funkin.scripting.events.*;
 import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
 using StringTools;
 
@@ -48,17 +51,26 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	public var cameraOffset:FlxPoint = new FlxPoint(0, 0);
 	public var globalOffset:FlxPoint = new FlxPoint(0, 0);
 
+	public var script:Script;
+
 	public inline function getCameraPosition() {
 		var midpoint = getMidpoint();
-		return FlxPoint.get(
+		var event = new PointEvent(
 			midpoint.x + (isPlayer ? -100 : 150) + globalOffset.x + cameraOffset.x,
 			midpoint.y - 100 + globalOffset.y + cameraOffset.y);
+		script.call("onGetCamPos", [event]);
+		// this event cannot be cancelled
+		return new FlxPoint(event.x, event.y);
+		
 	}
 
-	public function playSingAnim(direction:Int, suffix:String = "") {
+	public function playSingAnim(direction:Int, suffix:String = "", Reversed:Bool = false, Frame:Int = 0) {
 		// TODO: Script Events
 		var anims = ["singLEFT", "singDOWN", "singUP", "singRIGHT"];
-		playAnim('${anims[direction]}$suffix', true);
+
+		var event = new DirectionAnimEvent('${anims[direction]}$suffix', direction, suffix, Reversed, Frame);
+		script.call("onPlaySingAnim", [event]);
+		if (!event.cancelled) playAnim(event.animName, event.force, event.reversed, event.frame, SING);
 	}
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
@@ -78,12 +90,13 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 				// case 'your-char': // To hardcode characters
 				default:
 					// load xml
-					if (!Assets.exists(Paths.xml('characters/$curCharacter'))) {
+					var xmlPath = Paths.xml('characters/$curCharacter');
+					if (!Assets.exists(xmlPath)) {
 						curCharacter = "bf";
 						continue;
 					}
 
-					var plainXML = Assets.getText(Paths.xml('characters/$curCharacter'));
+					var plainXML = Assets.getText(xmlPath);
 					var character:Access;
 					try {
 						var charXML = Xml.parse(plainXML).firstElement();
@@ -109,9 +122,16 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 					for(anim in character.nodes.anim) {
 						XMLUtil.addXMLAnimation(this, anim);
 					}
+
+					// Loads the script and calls it's "create" function
+					script = Script.create(Paths.script(Path.withoutExtension(xmlPath), null, true));
+					script.setParent(this);
+					script.load();
+					script.call("create");
 			}
 			break;
 		}
+		if (script == null) script = new DummyScript(curCharacter);
 
 		/**
 			NON CONVERTED CHARACTERS - DO NOT REMOVE
@@ -244,7 +264,6 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		// 		playAnim('idle');
 
 		// 		antialiasing = false;
-		dance();
 
 
 		isDanceLeftDanceRight = (animation.getByName("danceLeft") != null && animation.getByName("danceRight") != null);
@@ -266,6 +285,8 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 			switchOffset('singLEFTmiss', 'singRIGHTmiss');
 		}
 		if (isPlayer) flipX = !flipX;
+		dance();
+		script.call("createPost");
 	}
 
 	var isDanceLeftDanceRight:Bool = false;
@@ -279,6 +300,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		script.call("update", [elapsed]);
 		if (stunned) {
 			__stunnedTime += elapsed;
 			if (__stunnedTime > 5 / 60)
@@ -295,6 +317,10 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	{
 		if (!debugMode)
 		{
+			var event = new DanceEvent(danced);
+			script.call("onDance", [event]);
+			if (event.cancelled) return;
+
 			switch (curCharacter)
 			{
 				// hardcode custom dance animations here
@@ -315,10 +341,12 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	}
 
 	public function beatHit(curBeat:Int) {
+		script.call("beatHit", [curBeat]);
 		if ((lastHit + (Conductor.stepCrochet * holdTime) < Conductor.songPosition) || animation.curAnim == null || (!animation.curAnim.name.startsWith("sing") && animation.curAnim.finished))
 			dance();
 	}
 	public function stepHit(curStep:Int) {
+		script.call("stepHit", [curStep]);
 		// nothing
 	}
 
@@ -352,6 +380,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	{
 		var event = new PlayAnimEvent(AnimName, Force, Reversed, Frame);
 		
+		script.call("onPlayAnim", [event]);
 		// TODO: Character Scripts
 
 		if (event.cancelled || event.animName == null) return;
