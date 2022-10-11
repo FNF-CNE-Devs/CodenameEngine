@@ -1,11 +1,11 @@
 trace("Hello, World!");
 
 function createPost() {
-    // globalOffset.y -= 150;
+    globalOffset.y -= 150;
 }
 
 function update(elapsed:Float) {
-    // y = y + Math.sin(Conductor.songPosition / 1000 * Math.PI) * 125 * elapsed;
+    y = y + Math.sin(Conductor.songPosition / 1000 * Math.PI) * 125 * elapsed;
 }
 
 function onGetCamPos(deezNuts:Dynamic) {
