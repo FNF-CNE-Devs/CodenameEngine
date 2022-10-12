@@ -1,10 +1,12 @@
 package funkin.options;
 
+import funkin.system.Controls;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import funkin.ui.Alphabet;
 import flixel.util.FlxColor;
+import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -59,7 +61,7 @@ class KeybindsOptions extends MusicBeatState {
     ];
 
     public var curSelected:Int = -1;
-    public var alphabets:FlxTypedGroup<FlxSprite>;
+    public var alphabets:FlxTypedGroup<KeybindSetting>;
     public var bg:FlxSprite;
     public var coloredBG:FlxSprite;
     public var noteColors:Array<FlxColor> = [
@@ -73,7 +75,7 @@ class KeybindsOptions extends MusicBeatState {
     public override function create() {
         super.create();
 
-        alphabets = new FlxTypedGroup<FlxSprite>();
+        alphabets = new FlxTypedGroup<KeybindSetting>();
 		bg = new FlxSprite(-80).loadGraphic(Paths.image('menuBGBlue'));
 		coloredBG = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
         for(bg in [bg, coloredBG]) {
@@ -97,32 +99,24 @@ class KeybindsOptions extends MusicBeatState {
             for(e in category.settings) {
                 // TODO!!
                 var xOffset:Float = 200;
+                var sparrowIcon:String = null;
+                var sparrowAnim:String = null;
                 if (e.name.startsWith('{note')) {// is actually a note!!
-                    var note:FlxSprite = new FlxSprite(100, k * 75);
-                    note.frames = Paths.getSparrowAtlas('NOTE_assets');
-                    var animName = '${switch(e.name) {
+                    sparrowIcon = "NOTE_assets";
+                    sparrowAnim = switch(e.name) {
                         case '{noteLeft}':
-                            "purple";
+                            "purple0";
                         case '{noteDown}':
-                            "blue";
+                            "blue0";
                         case '{noteUp}':
-                            "green";
+                            "green0";
                         default:
-                            "red";
-                    }}0';
+                            "red0";
+                    };
                     e.name = e.name.substring(5, e.name.length - 1);
-                    note.antialiasing = true;
-                    note.animation.addByPrefix('note', animName, 24, true);
-                    note.animation.play('note');
-                    note.setGraphicSize(75, 75);
-                    note.updateHitbox();
-                    var min = Math.min(note.scale.x, note.scale.y);
-                    note.scale.set(min, min);
-                    add(note);
                 }
                         
-                var text = new Alphabet(0, k * 75, e.name, true);
-                text.x = xOffset;
+                var text = new KeybindSetting(100, k * 75, e.name, e.control, sparrowIcon, sparrowAnim);
                 alphabets.add(text);
                 k++;
             }
@@ -176,25 +170,48 @@ class KeybindsOptions extends MusicBeatState {
     }
 }
 
-class KeybindSetting extends FlxTypedGroup<FlxSprite> {
+class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
     public var title:Alphabet;
     public var bind1:Alphabet;
+    public var bind2:Alphabet;
+    public var icon:FlxSprite;
     public function new(x:Float, y:Float, name:String, value:String, ?sparrowIcon:String, ?sparrowAnim:String) {
         super();
         title = new Alphabet(0, 0, name, true);
         title.setPosition(100, 0);
         add(title);
 
-        for(i in 1...2) {
+
+        for(i in 1...3) {
             var b = null;
             if (i == 1)
                 b = bind1 = new Alphabet(0, 0, "", false);
             else
                 b = bind2 = new Alphabet(0, 0, "", false);
-            b.text = "test";
-            b.x = FlxG.width * (0.25 * (i+1));
+            // TODO: Fix Alphabet!!
+
+            var controlArrayP1:Array<FlxKey> = Reflect.field(Options, 'P1_${value}');
+            var controlArrayP2:Array<FlxKey> = Reflect.field(Options, 'P2_${value}');
+            @:privateAccess
+            b._finalText = '${(i == 1 ? controlArrayP1 : controlArrayP2)[0]}';
+            b.addText();
+            b.setPosition(FlxG.width * (0.25 * (i+1)) - x, -60);
             add(b);
         }
+
+        if (sparrowIcon != null) {
+            icon = new FlxSprite();
+            icon.frames = Paths.getSparrowAtlas(sparrowIcon);
+            icon.antialiasing = true;
+            icon.animation.addByPrefix('icon', sparrowAnim, 24, true);
+            icon.animation.play('icon');
+            icon.setGraphicSize(75, 75);
+            icon.updateHitbox();
+            var min = Math.min(icon.scale.x, icon.scale.y);
+            icon.scale.set(min, min);
+            add(icon);
+        }
+        
         setPosition(x, y);
     }
 }
