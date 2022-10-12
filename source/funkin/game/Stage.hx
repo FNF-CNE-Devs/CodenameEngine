@@ -117,7 +117,8 @@ class Stage extends FlxBasic implements IBeatReceiver {
                 }
                 if (sprite != null) {
                     for(e in node.nodes.property) {
-                        trace(XMLUtil.applyXMLProperty(sprite, e));
+                        // TODO: Proper logging system
+                        XMLUtil.applyXMLProperty(sprite, e);
                     }
                 }
             }

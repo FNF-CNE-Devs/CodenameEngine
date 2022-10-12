@@ -106,6 +106,7 @@ class PlayState extends MusicBeatState
 	public var health:Float = 1;
 	public var combo:Int = 0;
 
+	public var comboBreaks:Bool = false;
 	public var healthBarBG:FlxSprite;
 	public var healthBar:FlxBar;
 
@@ -119,6 +120,7 @@ class PlayState extends MusicBeatState
 
 	
 	public var songScore:Int = 0;
+	public var misses:Int = 0;
 	public var scoreTxt:FlxText;
 
 	public static var campaignScore:Int = 0;
@@ -789,7 +791,7 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 		scripts.call("update", [elapsed]);
 
-		scoreTxt.text = "Score:" + songScore;
+		scoreTxt.text = 'Score:$songScore\n${comboBreaks ? "Combo Breaks" : "Misses"}:$misses';
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 			pauseGame();
@@ -1324,6 +1326,7 @@ class PlayState extends MusicBeatState
 			combo = 0;
 
 			songScore -= 10;
+			misses++;
 
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);

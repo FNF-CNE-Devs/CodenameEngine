@@ -26,47 +26,16 @@ class CoolUtil
 		return FlxMath.lerp(v1, v2, getFPSRatio(ratio));
 	}
 	/**
-	 * Lerps from color1 into color2 in a cool way 😎
+	 * Lerps from color1 into color2 (Shortcut to `FlxColor.interpolate`)
 	 * @param color1 Color 1
 	 * @param color2 Color 2
 	 * @param ratio Ratio
 	 * @param fpsSensitive Whenever the ratio should be case sentivive (adapted when game is running at 120 instead of 60)
 	 */
 	public static function lerpColor(color1:FlxColor, color2:FlxColor, ratio:Float, fpsSensitive:Bool = false) {
-		var h1 = color1.hue;
-		var s1 = color1.saturation;
-		var b1 = color1.brightness;
-
-		var h2 = color2.hue;
-		var s2 = color2.saturation;
-		var b2 = color2.brightness;
-
 		if (!fpsSensitive)
 			ratio = getFPSRatio(ratio);
-
-		if (Math.abs(h1-h2) > 180) h1 += 360;
-
-		if (Math.abs(h1 - h2) > 180 || (s2 < 0.125 || s1 < 0.125)) {
-			// classic r,g,b lerp
-			var r1 = color1.redFloat;
-			var g1 = color1.greenFloat;
-			var b1 = color1.blueFloat;
-
-			var r2 = color2.redFloat;
-			var g2 = color2.greenFloat;
-			var b2 = color2.blueFloat;
-
-			return FlxColor.fromRGBFloat(
-				FlxMath.lerp(r1, r2, ratio),
-				FlxMath.lerp(g1, g2, ratio),
-				FlxMath.lerp(b1, b2, ratio));
-		}
-
-
-		return FlxColor.fromHSB(
-			FlxMath.lerp(h1, h2, ratio),
-			FlxMath.lerp(s1, s2, ratio),
-			FlxMath.lerp(b1, b2, ratio));
+		return FlxColor.interpolate(color1, color2, ratio);
 	}
 
 	/**

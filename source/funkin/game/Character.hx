@@ -52,6 +52,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	public var globalOffset:FlxPoint = new FlxPoint(0, 0);
 
 	public var script:Script;
+	public var xml:Access;
 
 	public inline function getCameraPosition() {
 		var midpoint = getMidpoint();
@@ -97,29 +98,28 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 					}
 
 					var plainXML = Assets.getText(xmlPath);
-					var character:Access;
 					try {
 						var charXML = Xml.parse(plainXML).firstElement();
 						if (charXML == null) throw new Exception("Missing \"character\" node in XML.");
-						character = new Access(charXML);
+						xml = new Access(charXML);
 					} catch(e) {
 						trace(e);
 						curCharacter = "bf";
 						continue;
 					}
 
-					if (character.has.isPlayer) playerOffsets = (character.att.isPlayer == "true");
-					if (character.has.isGF) isGF = (character.att.isGF == "true");
-					if (character.has.x) globalOffset.x = Std.parseFloat(character.att.x);
-					if (character.has.y) globalOffset.y = Std.parseFloat(character.att.y);
-					if (character.has.camx) cameraOffset.x = Std.parseFloat(character.att.camx);
-					if (character.has.camy) cameraOffset.y = Std.parseFloat(character.att.camy);
-					if (character.has.holdTime) holdTime = CoolUtil.getDefault(Std.parseFloat(character.att.holdTime), 4);
-					if (character.has.flipX) flipX = (character.att.flipX == "true");
-					if (character.has.icon) icon = character.att.icon;
+					if (xml.has.isPlayer) playerOffsets = (xml.att.isPlayer == "true");
+					if (xml.has.isGF) isGF = (xml.att.isGF == "true");
+					if (xml.has.x) globalOffset.x = Std.parseFloat(xml.att.x);
+					if (xml.has.y) globalOffset.y = Std.parseFloat(xml.att.y);
+					if (xml.has.camx) cameraOffset.x = Std.parseFloat(xml.att.camx);
+					if (xml.has.camy) cameraOffset.y = Std.parseFloat(xml.att.camy);
+					if (xml.has.holdTime) holdTime = CoolUtil.getDefault(Std.parseFloat(xml.att.holdTime), 4);
+					if (xml.has.flipX) flipX = (xml.att.flipX == "true");
+					if (xml.has.icon) icon = xml.att.icon;
 
 					frames = Paths.getSparrowAtlas('characters/$curCharacter');
-					for(anim in character.nodes.anim) {
+					for(anim in xml.nodes.anim) {
 						XMLUtil.addXMLAnimation(this, anim);
 					}
 
