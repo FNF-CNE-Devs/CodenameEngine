@@ -122,6 +122,8 @@ class PlayState extends MusicBeatState
 	public var songScore:Int = 0;
 	public var misses:Int = 0;
 	public var scoreTxt:FlxText;
+	public var missesTxt:FlxText;
+	public var accuracyTxt:FlxText;
 
 	public static var campaignScore:Int = 0;
 
@@ -279,13 +281,6 @@ class PlayState extends MusicBeatState
 		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		add(healthBar);
 
-		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
-		scoreTxt.borderStyle = OUTLINE;
-		scoreTxt.borderSize = 1;
-		scoreTxt.borderColor = 0xFF000000;
-		scoreTxt.scrollFactor.set();
-		add(scoreTxt);
 
 		iconP1 = new HealthIcon(boyfriend.getIcon(), true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
@@ -295,7 +290,22 @@ class PlayState extends MusicBeatState
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
-		for(e in [strumLineNotes, notes, healthBar, healthBarBG, iconP1, iconP2, scoreTxt]) {
+		scoreTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "", 20);
+		missesTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "", 20);
+		accuracyTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy: TODO", 20);
+		for(text in [scoreTxt, missesTxt, accuracyTxt]) {
+			text.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE);
+			text.borderStyle = OUTLINE;
+			text.borderSize = 1;
+			text.borderColor = 0xFF000000;
+			text.scrollFactor.set();
+			add(text);
+		}
+		scoreTxt.alignment = RIGHT;
+		missesTxt.alignment = CENTER;
+		accuracyTxt.alignment = LEFT;
+
+		for(e in [strumLineNotes, notes, healthBar, healthBarBG, iconP1, iconP2, scoreTxt, missesTxt, accuracyTxt]) {
 			e.cameras = [camHUD];
 		}
 
@@ -791,7 +801,8 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 		scripts.call("update", [elapsed]);
 
-		scoreTxt.text = 'Score:$songScore\n${comboBreaks ? "Combo Breaks" : "Misses"}:$misses';
+		scoreTxt.text = 'Score:$songScore';
+		missesTxt.text = '${comboBreaks ? "Combo Breaks" : "Misses"}:$misses';
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 			pauseGame();
