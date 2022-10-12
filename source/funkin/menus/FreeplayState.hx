@@ -212,6 +212,7 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
+			CoolUtil.playMenuSFX(2, 0.4);
 			FlxG.switchState(new MainMenuState());
 		}
 
@@ -253,7 +254,7 @@ class FreeplayState extends MusicBeatState
 
 	function changeSelection(change:Int = 0)
 	{
-		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+        CoolUtil.playMenuSFX(0, 0.4);
 
 		curSelected += change;
 

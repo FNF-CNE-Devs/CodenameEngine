@@ -83,6 +83,14 @@ class CoolUtil
 		return null;
 	}
 
+	public static function playMenuSFX(menuSFX:Int = 0, volume:Float = 1) {
+		FlxG.sound.play(Paths.sound(switch(menuSFX) {
+			case 1:		'confirmMenu';
+			case 2:		'cancelMenu';
+			default: 	'scrollMenu';
+		}), volume);
+	}
+
 	public static function difficultyString():String
 	{
 		return difficultyArray[PlayState.storyDifficulty];

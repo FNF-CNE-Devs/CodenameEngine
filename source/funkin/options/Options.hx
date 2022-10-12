@@ -1,0 +1,125 @@
+package funkin.options;
+
+import flixel.util.FlxSave;
+import flixel.input.keyboard.FlxKey;
+
+class Options
+{
+	@:dox(hide) public static var __save:FlxSave;
+	
+	/**
+	 * GAMEPLAY SETTINGS
+	 */
+	public static var naughtyness:Bool = true;
+	public static var downscroll:Bool = false;
+	public static var flashingMenu:Bool = true;
+	public static var camZoomOnBeat:Bool = true;
+	public static var fpsCounter:Bool = true;
+	public static var autoPause:Bool = true;
+
+	/**
+	 * PLAYER 1 CONTROLS
+	 */
+	public static var P1_LEFT:Array<FlxKey> = [A];
+	public static var P1_DOWN:Array<FlxKey> = [S];
+	public static var P1_UP:Array<FlxKey> = [W];
+	public static var P1_RIGHT:Array<FlxKey> = [D];
+	public static var P1_ACCEPT:Array<FlxKey> = [Z, SPACE, ENTER];
+	public static var P1_BACK:Array<FlxKey> = [BACKSPACE, ESCAPE];
+	public static var P1_PAUSE:Array<FlxKey> = [ESCAPE, ENTER, P];
+	public static var P1_RESET:Array<FlxKey> = [R];
+
+	/**
+	 * PLAYER 2 CONTROLS (ALT)
+	 */
+	public static var P2_LEFT:Array<FlxKey> = [LEFT];
+	public static var P2_DOWN:Array<FlxKey> = [DOWN];
+	public static var P2_UP:Array<FlxKey> = [UP];
+	public static var P2_RIGHT:Array<FlxKey> = [RIGHT];
+	public static var P2_ACCEPT:Array<FlxKey> = [];
+	public static var P2_BACK:Array<FlxKey> = [];
+	public static var P2_PAUSE:Array<FlxKey> = [];
+	public static var P2_RESET:Array<FlxKey> = [];
+
+	/**
+	 * SOLO GETTERS & SETTERS
+	 */
+	public static var SOLO_LEFT(get, null):Array<FlxKey>;
+	public static var SOLO_DOWN(get, null):Array<FlxKey>;
+	public static var SOLO_UP(get, null):Array<FlxKey>;
+	public static var SOLO_RIGHT(get, null):Array<FlxKey>;
+	public static var SOLO_ACCEPT(get, null):Array<FlxKey>;
+	public static var SOLO_BACK(get, null):Array<FlxKey>;
+	public static var SOLO_PAUSE(get, null):Array<FlxKey>;
+	public static var SOLO_RESET(get, null):Array<FlxKey>;
+
+	// GETTERS REGION
+	#if REGION
+	private static function get_SOLO_LEFT() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_LEFT) a.push(e);
+		for(e in P2_LEFT) a.push(e);
+		return a;
+	}
+	private static function get_SOLO_DOWN() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_DOWN) a.push(e);
+		for(e in P2_DOWN) a.push(e);
+		return a;
+	}
+	private static function get_SOLO_UP() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_UP) a.push(e);
+		for(e in P2_UP) a.push(e);
+		return a;
+	}
+	private static function get_SOLO_RIGHT() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_RIGHT) a.push(e);
+		for(e in P2_RIGHT) a.push(e);
+		return a;
+	}
+	private static function get_SOLO_ACCEPT() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_ACCEPT) a.push(e);
+		for(e in P2_ACCEPT) a.push(e);
+		return a;
+	}
+	private static function get_SOLO_BACK() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_BACK) a.push(e);
+		for(e in P2_BACK) a.push(e);
+		return a;
+	}
+	private static function get_SOLO_PAUSE() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_PAUSE) a.push(e);
+		for(e in P2_PAUSE) a.push(e);
+		return a;
+	}
+	private static function get_SOLO_RESET() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_RESET) a.push(e);
+		for(e in P2_RESET) a.push(e);
+		return a;
+	}
+	#end
+
+	public static function load() {
+		__save = new FlxSave();
+		__save.bind("options");
+		for(field in Reflect.fields(__save.data)) {
+			var obj = Reflect.field(__save.data, field);
+			Reflect.setProperty(Options, field, obj);
+		}
+	}
+
+	public static function save() {
+		for(field in Reflect.fields(Options)) {
+			var obj = Reflect.field(Options, field);
+			if (Reflect.isFunction(obj) || obj is FlxSave) continue;
+			Reflect.setField(__save.data, field, obj);
+		}
+		__save.flush();
+	}
+}

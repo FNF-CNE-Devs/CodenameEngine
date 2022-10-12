@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.options.Options;
 import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.input.actions.FlxAction;
@@ -494,73 +495,38 @@ class Controls extends FlxActionSet
 
 		keyboardScheme = scheme;
 		
-		#if (haxe >= "4.0.0")
 		switch (scheme)
 		{
 			case Solo:
-				inline bindKeys(Control.UP, [W, FlxKey.UP]);
-				inline bindKeys(Control.DOWN, [S, FlxKey.DOWN]);
-				inline bindKeys(Control.LEFT, [A, FlxKey.LEFT]);
-				inline bindKeys(Control.RIGHT, [D, FlxKey.RIGHT]);
-				inline bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
-				inline bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
-				inline bindKeys(Control.PAUSE, [P, ENTER, ESCAPE]);
-				inline bindKeys(Control.RESET, [R]);
+				inline bindKeys(Control.UP, Options.SOLO_UP);
+				inline bindKeys(Control.DOWN, Options.SOLO_DOWN);
+				inline bindKeys(Control.LEFT, Options.SOLO_LEFT);
+				inline bindKeys(Control.RIGHT, Options.SOLO_RIGHT);
+				inline bindKeys(Control.ACCEPT, Options.SOLO_ACCEPT);
+				inline bindKeys(Control.BACK, Options.SOLO_BACK);
+				inline bindKeys(Control.PAUSE, Options.SOLO_PAUSE);
+				inline bindKeys(Control.RESET, Options.SOLO_RESET);
 			case Duo(true):
-				inline bindKeys(Control.UP, [W]);
-				inline bindKeys(Control.DOWN, [S]);
-				inline bindKeys(Control.LEFT, [A]);
-				inline bindKeys(Control.RIGHT, [D]);
-				inline bindKeys(Control.ACCEPT, [G, Z]);
-				inline bindKeys(Control.BACK, [H, X]);
-				inline bindKeys(Control.PAUSE, [ONE]);
-				inline bindKeys(Control.RESET, [R]);
+				inline bindKeys(Control.UP, Options.P1_UP);
+				inline bindKeys(Control.DOWN, Options.P1_DOWN);
+				inline bindKeys(Control.LEFT, Options.P1_LEFT);
+				inline bindKeys(Control.RIGHT, Options.P1_RIGHT);
+				inline bindKeys(Control.ACCEPT, Options.P1_ACCEPT);
+				inline bindKeys(Control.BACK, Options.P1_BACK);
+				inline bindKeys(Control.PAUSE, Options.P1_PAUSE);
+				inline bindKeys(Control.RESET, Options.P1_RESET);
 			case Duo(false):
-				inline bindKeys(Control.UP, [FlxKey.UP]);
-				inline bindKeys(Control.DOWN, [FlxKey.DOWN]);
-				inline bindKeys(Control.LEFT, [FlxKey.LEFT]);
-				inline bindKeys(Control.RIGHT, [FlxKey.RIGHT]);
-				inline bindKeys(Control.ACCEPT, [O]);
-				inline bindKeys(Control.BACK, [P]);
-				inline bindKeys(Control.PAUSE, [ENTER]);
-				inline bindKeys(Control.RESET, [BACKSPACE]);
+				inline bindKeys(Control.UP, Options.P2_UP);
+				inline bindKeys(Control.DOWN, Options.P2_DOWN);
+				inline bindKeys(Control.LEFT, Options.P2_LEFT);
+				inline bindKeys(Control.RIGHT, Options.P2_RIGHT);
+				inline bindKeys(Control.ACCEPT, Options.P2_ACCEPT);
+				inline bindKeys(Control.BACK, Options.P2_BACK);
+				inline bindKeys(Control.PAUSE, Options.P2_PAUSE);
+				inline bindKeys(Control.RESET, Options.P2_RESET);
 			case None: // nothing
 			case Custom: // nothing
 		}
-		#else
-		switch (scheme)
-		{
-			case Solo:
-				bindKeys(Control.UP, [W, FlxKey.UP]);
-				bindKeys(Control.DOWN, [S, FlxKey.DOWN]);
-				bindKeys(Control.LEFT, [A, FlxKey.LEFT]);
-				bindKeys(Control.RIGHT, [D, FlxKey.RIGHT]);
-				bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
-				bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
-				bindKeys(Control.PAUSE, [P, ENTER, ESCAPE]);
-				bindKeys(Control.RESET, [R]);
-			case Duo(true):
-				bindKeys(Control.UP, [W]);
-				bindKeys(Control.DOWN, [S]);
-				bindKeys(Control.LEFT, [A]);
-				bindKeys(Control.RIGHT, [D]);
-				bindKeys(Control.ACCEPT, [G, Z]);
-				bindKeys(Control.BACK, [H, X]);
-				bindKeys(Control.PAUSE, [ONE]);
-				bindKeys(Control.RESET, [R]);
-			case Duo(false):
-				bindKeys(Control.UP, [FlxKey.UP]);
-				bindKeys(Control.DOWN, [FlxKey.DOWN]);
-				bindKeys(Control.LEFT, [FlxKey.LEFT]);
-				bindKeys(Control.RIGHT, [FlxKey.RIGHT]);
-				bindKeys(Control.ACCEPT, [O]);
-				bindKeys(Control.BACK, [P]);
-				bindKeys(Control.PAUSE, [ENTER]);
-				bindKeys(Control.RESET, [BACKSPACE]);
-			case None: // nothing
-			case Custom: // nothing
-		}
-		#end
 	}
 
 	function removeKeyboard()

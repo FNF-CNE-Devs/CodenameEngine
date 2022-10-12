@@ -146,4 +146,7 @@
 	<haxedef name="HXCPP_STACK_LINE" if="release" />
 	<haxedef name="HXCPP_DEBUG_LINK" if="release" />
 	<haxedef name="hscriptPos" /> <!-- for logging -->
+
+	<!-- DO NOT REMOVE!! ALLOWS ME TO DO REGIONS LIKE IN C# AND KEEP CODE ORGANIZED. REMOVING IT WOULD BREAK THE ENGINE -->
+	<haxedef name="REGION" />
 </project>

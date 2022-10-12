@@ -2,6 +2,7 @@ package;
 
 import funkin.menus.TitleState;
 import funkin.game.Highscore;
+import funkin.options.Options;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;
@@ -116,6 +117,8 @@ class Main extends Sprite
 		
 		FlxG.fixedTimestep = false;
 		FlxG.autoPause = false;
+
+		Options.load();
 
 		var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
 		diamond.persist = true;

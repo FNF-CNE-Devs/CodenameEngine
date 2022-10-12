@@ -17,6 +17,8 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
 
+import funkin.options.OptionsMenu;
+
 using StringTools;
 
 class MainMenuState extends MusicBeatState
@@ -54,7 +56,7 @@ class MainMenuState extends MusicBeatState
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
 		bg.scrollFactor.x = 0;
 		bg.scrollFactor.y = 0.18;
-		bg.setGraphicSize(Std.int(bg.width * 1.1));
+		bg.scale.set(1.15, 1.15);
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.antialiasing = true;
@@ -66,7 +68,7 @@ class MainMenuState extends MusicBeatState
 		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
 		magenta.scrollFactor.x = 0;
 		magenta.scrollFactor.y = 0.18;
-		magenta.setGraphicSize(Std.int(magenta.width * 1.1));
+		magenta.scale.set(1.15, 1.15);
 		magenta.updateHitbox();
 		magenta.screenCenter();
 		magenta.visible = false;
@@ -123,13 +125,13 @@ class MainMenuState extends MusicBeatState
 		{
 			if (controls.UP_P)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				CoolUtil.playMenuSFX(0);
 				changeItem(-1);
 			}
 
 			if (controls.DOWN_P)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				CoolUtil.playMenuSFX(0);
 				changeItem(1);
 			}
 
@@ -151,7 +153,7 @@ class MainMenuState extends MusicBeatState
 				else
 				{
 					selectedSomethin = true;
-					FlxG.sound.play(Paths.sound('confirmMenu'));
+					CoolUtil.playMenuSFX(1);
 
 					FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
@@ -173,9 +175,7 @@ class MainMenuState extends MusicBeatState
 									trace("Freeplay Menu Selected");
 
 								case 'options':
-									FlxTransitionableState.skipNextTransIn = true;
-									FlxTransitionableState.skipNextTransOut = true;
-									// FlxG.switchState(new OptionsMenu());
+									FlxG.switchState(new OptionsMenu());
 							}
 						});
 					});
