@@ -22,6 +22,10 @@ class Options
 	/**
 	 * PLAYER 1 CONTROLS
 	 */
+	public static var P1_NOTE_LEFT:Array<FlxKey> = [A];
+	public static var P1_NOTE_DOWN:Array<FlxKey> = [S];
+	public static var P1_NOTE_UP:Array<FlxKey> = [W];
+	public static var P1_NOTE_RIGHT:Array<FlxKey> = [D];
 	public static var P1_LEFT:Array<FlxKey> = [A];
 	public static var P1_DOWN:Array<FlxKey> = [S];
 	public static var P1_UP:Array<FlxKey> = [W];
@@ -34,6 +38,10 @@ class Options
 	/**
 	 * PLAYER 2 CONTROLS (ALT)
 	 */
+	public static var P2_NOTE_LEFT:Array<FlxKey> = [LEFT];
+	public static var P2_NOTE_DOWN:Array<FlxKey> = [DOWN];
+	public static var P2_NOTE_UP:Array<FlxKey> = [UP];
+	public static var P2_NOTE_RIGHT:Array<FlxKey> = [RIGHT];
 	public static var P2_LEFT:Array<FlxKey> = [LEFT];
 	public static var P2_DOWN:Array<FlxKey> = [DOWN];
 	public static var P2_UP:Array<FlxKey> = [UP];
@@ -46,6 +54,10 @@ class Options
 	/**
 	 * SOLO GETTERS & SETTERS
 	 */
+	public static var SOLO_NOTE_LEFT(get, null):Array<FlxKey>;
+	public static var SOLO_NOTE_DOWN(get, null):Array<FlxKey>;
+	public static var SOLO_NOTE_UP(get, null):Array<FlxKey>;
+	public static var SOLO_NOTE_RIGHT(get, null):Array<FlxKey>;
 	public static var SOLO_LEFT(get, null):Array<FlxKey>;
 	public static var SOLO_DOWN(get, null):Array<FlxKey>;
 	public static var SOLO_UP(get, null):Array<FlxKey>;
@@ -79,6 +91,30 @@ class Options
 		var a:Array<FlxKey> = [];
 		for(e in P1_RIGHT) a.push(e);
 		for(e in P2_RIGHT) a.push(e);
+		return a;
+	}
+	private static function get_SOLO_NOTE_LEFT() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_NOTE_LEFT) a.push(e);
+		for(e in P2_NOTE_LEFT) a.push(e);
+		return a;
+	}
+	private static function get_SOLO_NOTE_DOWN() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_NOTE_DOWN) a.push(e);
+		for(e in P2_NOTE_DOWN) a.push(e);
+		return a;
+	}
+	private static function get_SOLO_NOTE_UP() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_NOTE_UP) a.push(e);
+		for(e in P2_NOTE_UP) a.push(e);
+		return a;
+	}
+	private static function get_SOLO_NOTE_RIGHT() {
+		var a:Array<FlxKey> = [];
+		for(e in P1_NOTE_RIGHT) a.push(e);
+		for(e in P2_NOTE_RIGHT) a.push(e);
 		return a;
 	}
 	private static function get_SOLO_ACCEPT() {

@@ -130,6 +130,66 @@ class Controls extends FlxActionSet
 	public var gamepadsAdded:Array<Int> = [];
 	public var keyboardScheme = KeyboardScheme.None;
 
+	public var UP(get, never):Bool;
+
+	inline function get_UP()
+		return _up.check();
+
+	public var LEFT(get, never):Bool;
+
+	inline function get_LEFT()
+		return _left.check();
+
+	public var RIGHT(get, never):Bool;
+
+	inline function get_RIGHT()
+		return _right.check();
+
+	public var DOWN(get, never):Bool;
+
+	inline function get_DOWN()
+		return _down.check();
+
+	public var UP_P(get, never):Bool;
+
+	inline function get_UP_P()
+		return _upP.check();
+
+	public var LEFT_P(get, never):Bool;
+
+	inline function get_LEFT_P()
+		return _leftP.check();
+
+	public var RIGHT_P(get, never):Bool;
+
+	inline function get_RIGHT_P()
+		return _rightP.check();
+
+	public var DOWN_P(get, never):Bool;
+
+	inline function get_DOWN_P()
+		return _downP.check();
+
+	public var UP_R(get, never):Bool;
+
+	inline function get_UP_R()
+		return _upR.check();
+
+	public var LEFT_R(get, never):Bool;
+
+	inline function get_LEFT_R()
+		return _leftR.check();
+
+	public var RIGHT_R(get, never):Bool;
+
+	inline function get_RIGHT_R()
+		return _rightR.check();
+
+	public var DOWN_R(get, never):Bool;
+
+	inline function get_DOWN_R()
+		return _downR.check();
+
 	public var NOTE_UP(get, never):Bool;
 
 	inline function get_NOTE_UP()
@@ -512,6 +572,10 @@ class Controls extends FlxActionSet
 				inline bindKeys(Control.DOWN, Options.SOLO_DOWN);
 				inline bindKeys(Control.LEFT, Options.SOLO_LEFT);
 				inline bindKeys(Control.RIGHT, Options.SOLO_RIGHT);
+				inline bindKeys(Control.NOTE_UP, Options.SOLO_NOTE_UP);
+				inline bindKeys(Control.NOTE_DOWN, Options.SOLO_NOTE_DOWN);
+				inline bindKeys(Control.NOTE_LEFT, Options.SOLO_NOTE_LEFT);
+				inline bindKeys(Control.NOTE_RIGHT, Options.SOLO_NOTE_RIGHT);
 				inline bindKeys(Control.ACCEPT, Options.SOLO_ACCEPT);
 				inline bindKeys(Control.BACK, Options.SOLO_BACK);
 				inline bindKeys(Control.PAUSE, Options.SOLO_PAUSE);
@@ -521,6 +585,10 @@ class Controls extends FlxActionSet
 				inline bindKeys(Control.DOWN, Options.P1_DOWN);
 				inline bindKeys(Control.LEFT, Options.P1_LEFT);
 				inline bindKeys(Control.RIGHT, Options.P1_RIGHT);
+				inline bindKeys(Control.NOTE_UP, Options.P1_NOTE_UP);
+				inline bindKeys(Control.NOTE_DOWN, Options.P1_NOTE_DOWN);
+				inline bindKeys(Control.NOTE_LEFT, Options.P1_NOTE_LEFT);
+				inline bindKeys(Control.NOTE_RIGHT, Options.P1_NOTE_RIGHT);
 				inline bindKeys(Control.ACCEPT, Options.P1_ACCEPT);
 				inline bindKeys(Control.BACK, Options.P1_BACK);
 				inline bindKeys(Control.PAUSE, Options.P1_PAUSE);
@@ -530,6 +598,10 @@ class Controls extends FlxActionSet
 				inline bindKeys(Control.DOWN, Options.P2_DOWN);
 				inline bindKeys(Control.LEFT, Options.P2_LEFT);
 				inline bindKeys(Control.RIGHT, Options.P2_RIGHT);
+				inline bindKeys(Control.NOTE_UP, Options.P2_NOTE_UP);
+				inline bindKeys(Control.NOTE_DOWN, Options.P2_NOTE_DOWN);
+				inline bindKeys(Control.NOTE_LEFT, Options.P2_NOTE_LEFT);
+				inline bindKeys(Control.NOTE_RIGHT, Options.P2_NOTE_RIGHT);
 				inline bindKeys(Control.ACCEPT, Options.P2_ACCEPT);
 				inline bindKeys(Control.BACK, Options.P2_BACK);
 				inline bindKeys(Control.PAUSE, Options.P2_PAUSE);
