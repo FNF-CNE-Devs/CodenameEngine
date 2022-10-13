@@ -71,8 +71,7 @@ class Alphabet extends FlxSpriteGroup
 	{
 		super(x, y);
 
-		_finalText = text;
-		this.text = text;
+		_finalText = this.text = text;
 		isBold = bold;
 
 		var alphabetPath = Paths.xml("alphabet");
@@ -117,17 +116,10 @@ class Alphabet extends FlxSpriteGroup
 		var xPos:Float = 0;
 		for (character in splitWords)
 		{
-			if (character == " " || character == "-")
-				lastWasSpace = true;
+			lastWasSpace = character == " ";
 
 			if (lastSprite != null)
 				xPos = lastSprite.x + lastSprite.width - x;
-
-			if (lastWasSpace)
-			{
-				xPos += 40;
-				lastWasSpace = false;
-			}
 
 			var letter:AlphaCharacter = new AlphaCharacter(xPos, 0);
 			if (isBold)
@@ -135,6 +127,9 @@ class Alphabet extends FlxSpriteGroup
 			else
 				letter.createLetter(character);
 
+			// anim not found
+			if (!letter.visible) 
+				xPos += 40;
 			add(letter);
 
 			lastSprite = letter;
@@ -251,6 +246,8 @@ class Alphabet extends FlxSpriteGroup
 
 	override function update(elapsed:Float)
 	{
+		super.update(elapsed);
+		
 		if (isMenuItem)
 		{
 			var scaledY = FlxMath.remapToRange(targetY, 0, 1, 0, 1.3);
@@ -259,7 +256,15 @@ class Alphabet extends FlxSpriteGroup
 			x = CoolUtil.fpsLerp(x, (targetY * 20) + 90, 0.16);
 		}
 
-		super.update(elapsed);
+		if (text != _finalText) {
+			_finalText = text;
+			for(e in members)
+				e.destroy();
+			@:privateAccess
+			group.members = [];
+			lastSprite = null;
+			addText();
+		}
 	}
 }
 

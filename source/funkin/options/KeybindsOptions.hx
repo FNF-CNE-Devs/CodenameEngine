@@ -1,6 +1,8 @@
 package funkin.options;
 
+import flixel.effects.FlxFlicker;
 import funkin.system.Controls;
+import funkin.options.Options;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -61,6 +63,7 @@ class KeybindsOptions extends MusicBeatState {
     ];
 
     public var curSelected:Int = -1;
+    public var canSelect:Bool = true;
     public var alphabets:FlxTypedGroup<KeybindSetting>;
     public var bg:FlxSprite;
     public var coloredBG:FlxSprite;
@@ -141,13 +144,32 @@ class KeybindsOptions extends MusicBeatState {
         } else
             coloredBG.alpha = lerp(coloredBG.alpha, 0, 0.0625);
 
-        changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
+            
+        super.update(elapsed);
+        if (canSelect) {
+            changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
+            if (controls.BACK) {
+                FlxTransitionableState.skipNextTransIn = true;
+                FlxTransitionableState.skipNextTransOut = true;
+                FlxG.switchState(new OptionsMenu());
+                controls.setKeyboardScheme(Solo);
+                return;
+            }
 
-        if (controls.BACK) {
-            FlxTransitionableState.skipNextTransIn = true;
-            FlxTransitionableState.skipNextTransOut = true;
-            FlxG.switchState(new OptionsMenu());
+            if (controls.ACCEPT) {
+                if (alphabets.members[curSelected] != null) {
+                    canSelect = false;
+                    CoolUtil.playMenuSFX(1);
+                    FlxFlicker.flicker(alphabets.members[curSelected], 0.4, 0.1, true, false, function(t) {
+                        alphabets.members[curSelected].changeKeybind(false);
+                    });
+                }
+            }
+        } else {
+            if (alphabets.members[curSelected].changingKeybind < 0)
+                canSelect = true;
         }
+
     }
     
     public function changeSelection(change:Int) {
@@ -176,10 +198,14 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
     public var bind2:Alphabet;
     public var icon:FlxSprite;
 
+    public var changingKeybind:Int = -1;
+    public var value:String;
+
     public var option1:Null<FlxKey>;
     public var option2:Null<FlxKey>;
     public function new(x:Float, y:Float, name:String, value:String, ?sparrowIcon:String, ?sparrowAnim:String) {
         super();
+        this.value = value;
         title = new Alphabet(0, 0, name, true);
         title.setPosition(100, 0);
         add(title);
@@ -219,13 +245,37 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
         setPosition(x, y);
     }
 
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+        if (changingKeybind >= 0) {
+            var key:FlxKey = FlxG.keys.firstJustReleased();
+            if (cast(key, Int) <= 0) return;
+            if (key == ESCAPE && !FlxG.keys.pressed.SHIFT) {
+                changingKeybind = -1;
+                return;
+            }
+            if (changingKeybind == 0) {
+                option1 = key;
+                Reflect.setField(Options, 'P1_$value', [option1]);
+            } else {
+                option2 = key;
+                Reflect.setField(Options, 'P2_$value', [option2]);
+            }
+            changingKeybind = -1;
+            updateText();
+            return;
+        }
+    }
+
+    public function changeKeybind(p2:Bool = false) {
+        FlxG.state.persistentDraw = true;
+        FlxG.state.persistentUpdate = true;
+        
+        changingKeybind = p2 ? 1 : 0;
+    }
+
     public function updateText() {
-        // TODO: Fix Alphabet!!
-        @:privateAccess
-        bind1._finalText = '${CoolUtil.keyToString(option1)}';
-        @:privateAccess
-        bind2._finalText = '${CoolUtil.keyToString(option2)}';
-        bind1.addText();
-        bind2.addText();
+        bind1.text = '${CoolUtil.keyToString(option1)}';
+        bind2.text = '${CoolUtil.keyToString(option2)}';
     }
 }
