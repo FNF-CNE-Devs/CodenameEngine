@@ -163,7 +163,7 @@ class KeybindsOptions extends MusicBeatState {
             var minH = FlxG.height / 2;
             var maxH = alphabets.members[alphabets.length-1].y + alphabets.members[alphabets.length-1].height - (FlxG.height / 2);
             if (minH < maxH)
-                camFollow.setPosition(FlxG.width / 2, FlxMath.bound(alphabet.y + (alphabet.height / 2) + 75, minH, maxH));
+                camFollow.setPosition(FlxG.width / 2, FlxMath.bound(alphabet.y + (alphabet.height / 2) - (35), minH, maxH));
             else
                 camFollow.setPosition(FlxG.width / 2, FlxG.height / 2);
         }
@@ -175,6 +175,9 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
     public var bind1:Alphabet;
     public var bind2:Alphabet;
     public var icon:FlxSprite;
+
+    public var option1:Null<FlxKey>;
+    public var option2:Null<FlxKey>;
     public function new(x:Float, y:Float, name:String, value:String, ?sparrowIcon:String, ?sparrowAnim:String) {
         super();
         title = new Alphabet(0, 0, name, true);
@@ -182,22 +185,23 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
         add(title);
 
 
+        var controlArrayP1:Array<FlxKey> = Reflect.field(Options, 'P1_${value}');
+        var controlArrayP2:Array<FlxKey> = Reflect.field(Options, 'P2_${value}');
+
+        option1 = controlArrayP1[0];
+        option2 = controlArrayP2[0];
+
         for(i in 1...3) {
             var b = null;
             if (i == 1)
                 b = bind1 = new Alphabet(0, 0, "", false);
             else
                 b = bind2 = new Alphabet(0, 0, "", false);
-            // TODO: Fix Alphabet!!
 
-            var controlArrayP1:Array<FlxKey> = Reflect.field(Options, 'P1_${value}');
-            var controlArrayP2:Array<FlxKey> = Reflect.field(Options, 'P2_${value}');
-            @:privateAccess
-            b._finalText = '${(i == 1 ? controlArrayP1 : controlArrayP2)[0]}';
-            b.addText();
             b.setPosition(FlxG.width * (0.25 * (i+1)) - x, -60);
             add(b);
         }
+        updateText();
 
         if (sparrowIcon != null) {
             icon = new FlxSprite();
@@ -213,5 +217,15 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
         }
         
         setPosition(x, y);
+    }
+
+    public function updateText() {
+        // TODO: Fix Alphabet!!
+        @:privateAccess
+        bind1._finalText = '${CoolUtil.keyToString(option1)}';
+        @:privateAccess
+        bind2._finalText = '${CoolUtil.keyToString(option2)}';
+        bind1.addText();
+        bind2.addText();
     }
 }

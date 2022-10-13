@@ -1,5 +1,6 @@
 package funkin.system;
 
+import flixel.input.keyboard.FlxKey;
 import lime.utils.Assets;
 import flixel.animation.FlxAnimation;
 import flixel.util.FlxColor;
@@ -83,6 +84,11 @@ class CoolUtil
 		return null;
 	}
 
+	/**
+	 * Plays a specified Menu SFX.
+	 * @param menuSFX Menu SFX to play
+	 * @param volume At which volume it should play
+	 */
 	public static function playMenuSFX(menuSFX:Int = 0, volume:Float = 1) {
 		FlxG.sound.play(Paths.sound(switch(menuSFX) {
 			case 1:		'confirmMenu';
@@ -111,5 +117,42 @@ class CoolUtil
 		var old = anim1.frames;
 		anim1.frames = anim2.frames;
 		anim2.frames = old;
+	}
+
+	public static function keyToString(key:Null<FlxKey>):String {
+		return switch(key) {
+			case null | 0 | NONE:	"---";
+			case LEFT: 				"←";
+			case DOWN: 				"↓";
+			case UP: 				"↑";
+			case RIGHT:				"→";
+			case ESCAPE:			"ESC";
+			case BACKSPACE:			"[←]";
+			case NUMPADZERO:		"#0";
+			case NUMPADONE:			"#1";
+			case NUMPADTWO:			"#2";
+			case NUMPADTHREE:		"#3";
+			case NUMPADFOUR:		"#4";
+			case NUMPADFIVE:		"#5";
+			case NUMPADSIX:			"#6";
+			case NUMPADSEVEN:		"#7";
+			case NUMPADEIGHT:		"#8";
+			case NUMPADNINE:		"#9";
+			case NUMPADPLUS:		"#+";
+			case NUMPADMINUS:		"#-";
+			case NUMPADPERIOD:		"#.";
+			case ZERO:				"0";
+			case ONE:				"1";
+			case TWO:				"2";
+			case THREE:				"3";
+			case FOUR:				"4";
+			case FIVE:				"5";
+			case SIX:				"6";
+			case SEVEN:				"7";
+			case EIGHT:				"8";
+			case NINE:				"9";
+			case PERIOD:			".";
+			default:				key.toString();
+		}
 	}
 }

@@ -7,8 +7,10 @@ import flixel.math.FlxMath;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.effects.FlxFlicker;
+import funkin.menus.MainMenuState;
 
 class OptionsMenu extends MusicBeatState {
+    public static var fromPlayState:Bool = false;
     public var options = [
         {
             name: 'Controls',
@@ -25,6 +27,11 @@ class OptionsMenu extends MusicBeatState {
     public var curSelected:Int = -1;
     public var canSelect:Bool = true;
     public var alphabets:FlxTypedGroup<Alphabet>;
+
+    public function new(?fromPlayState:Bool) {
+        super();
+        if (fromPlayState != null) OptionsMenu.fromPlayState = fromPlayState;
+    }
     public override function create() {
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBGBlue'));
         bg.scrollFactor.set();
@@ -57,6 +64,11 @@ class OptionsMenu extends MusicBeatState {
                 FlxTransitionableState.skipNextTransOut = true;
                 FlxG.switchState(Type.createInstance(options[curSelected].state, []));
             });
+        } else if (controls.BACK) {
+            if (fromPlayState)
+                FlxG.switchState(new PlayState());
+            else
+                FlxG.switchState(new MainMenuState());
         }
     }
     

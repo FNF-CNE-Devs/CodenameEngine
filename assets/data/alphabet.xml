@@ -58,6 +58,8 @@
         <letter char="@"        anim="@" />
         <letter char="|"        anim="|" />
         <letter char="~"        anim="~" />
+        <letter char="["        anim="[" />
+        <letter char="]"        anim="]" />
         <letter char="→"        anim="right arrow"  center="middle" />
         <letter char="←"        anim="left arrow"   center="middle" />
         <letter char="↓"        anim="down arrow"   center="middle" />
