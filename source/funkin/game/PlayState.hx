@@ -1280,15 +1280,14 @@ class PlayState extends MusicBeatState
 
 	private function keyShit():Void
 	{
-		// HOLDING
 		var pressed = [controls.NOTE_LEFT, controls.NOTE_DOWN, controls.NOTE_UP, controls.NOTE_RIGHT];
 		var justPressed = [controls.NOTE_LEFT_P, controls.NOTE_DOWN_P, controls.NOTE_UP_P, controls.NOTE_RIGHT_P];
 		var justReleased = [controls.NOTE_LEFT_R, controls.NOTE_DOWN_R, controls.NOTE_UP_R, controls.NOTE_RIGHT_R];
 
-		var event = scripts.event("onKeyShit", new InputSystemEvent([controls.LEFT, controls.DOWN, controls.UP, controls.RIGHT], [controls.LEFT_P, controls.DOWN_P, controls.UP_P, controls.RIGHT_P], [controls.LEFT_R, controls.DOWN_R, controls.UP_R, controls.RIGHT_R]));
+		var event = scripts.event("onKeyShit", new InputSystemEvent(pressed, justPressed, justReleased));
 		if (event.cancelled) return;
-		justReleased = CoolUtil.getDefault(event.pressed, []);
-		justReleased = CoolUtil.getDefault(event.justPressed, []);
+		pressed = CoolUtil.getDefault(event.pressed, []);
+		justPressed = CoolUtil.getDefault(event.justPressed, []);
 		justReleased = CoolUtil.getDefault(event.justReleased, []);
 
 		var funcsToExec:Array<Note->Void> = [];
