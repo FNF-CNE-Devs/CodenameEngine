@@ -26,19 +26,48 @@ class KeybindsOptions extends MusicBeatSubstate {
             settings: [
                 {
                     name: '{noteLeft}',
-                    control: 'LEFT'
+                    control: 'NOTE_LEFT'
                 },
                 {
                     name: '{noteDown}',
-                    control: 'DOWN'
+                    control: 'NOTE_DOWN'
                 },
                 {
                     name: '{noteUp}',
-                    control: 'UP'
+                    control: 'NOTE_UP'
                 },
                 {
                     name: '{noteRight}',
+                    control: 'NOTE_RIGHT'
+                },
+            ]
+        },
+        {
+            name: 'UI',
+            settings: [
+                {
+                    name: 'Left',
+                    control: 'LEFT'
+                },
+                {
+                    name: 'Down',
+                    control: 'DOWN'
+                },
+                {
+                    name: 'Up',
+                    control: 'UP'
+                },
+                {
+                    name: 'Right',
                     control: 'RIGHT'
+                },
+                {
+                    name: 'Accept',
+                    control: 'ACCEPT'
+                },
+                {
+                    name: 'Back',
+                    control: 'BACK'
                 },
                 {
                     name: 'Reset',
@@ -48,19 +77,6 @@ class KeybindsOptions extends MusicBeatSubstate {
                     name: 'Pause',
                     control: 'PAUSE'
                 },
-            ]
-        },
-        {
-            name: 'UI',
-            settings: [
-                {
-                    name: 'Accept',
-                    control: 'ACCEPT'
-                },
-                {
-                    name: 'Back',
-                    control: 'BACK'
-                }
             ]
         }
     ];
@@ -188,7 +204,6 @@ class KeybindsOptions extends MusicBeatSubstate {
             changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
             if (controls.BACK) {
                 FlxTransitionableState.skipNextTransIn = true;
-                FlxTransitionableState.skipNextTransOut = true;
                 if (isSubState) 
                     close();
                 else
@@ -228,7 +243,7 @@ class KeybindsOptions extends MusicBeatSubstate {
         CoolUtil.playMenuSFX(0, 0.4);
         curSelected = FlxMath.wrap(curSelected + change, 0, alphabets.length-1);
         alphabets.forEach(function(e) {
-            e.alpha = 0.6;
+            e.alpha = 0.55;
         });
         if (alphabets.members[curSelected] != null) {
             var alphabet = alphabets.members[curSelected];

@@ -25,7 +25,6 @@ class ChangeKeybindSubState extends MusicBeatSubstate {
     }
     public override function create() {
         super.create();
-
     }
 
     public override function update(elapsed:Float) {

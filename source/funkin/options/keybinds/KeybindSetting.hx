@@ -72,8 +72,8 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
-        bind1.alpha = (p2Selected ? 0.6 : 1) / alpha;
-        bind2.alpha = (p2Selected ? 1 : 0.6) / alpha;
+        bind1.alpha = (p2Selected ? 0.55 : 1) / alpha;
+        bind2.alpha = (p2Selected ? 1 : 0.55) / alpha;
         bind1.alpha *= alpha;
         bind2.alpha *= alpha;
     }
@@ -94,6 +94,7 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
                 Reflect.setField(Options, 'P2_$value', [option2 = 0]);
             else
                 Reflect.setField(Options, 'P1_$value', [option1 = 0]);
+            cancelCallback();
         }));
     }
 

@@ -1,11 +1,13 @@
 package funkin.options;
 
+import openfl.Lib;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 
 class Options
 {
 	@:dox(hide) public static var __save:FlxSave;
+	@:dox(hide) private static var __eventAdded = false;
 	
 	/**
 	 * GAMEPLAY SETTINGS
@@ -24,9 +26,9 @@ class Options
 	public static var P1_DOWN:Array<FlxKey> = [S];
 	public static var P1_UP:Array<FlxKey> = [W];
 	public static var P1_RIGHT:Array<FlxKey> = [D];
-	public static var P1_ACCEPT:Array<FlxKey> = [Z, SPACE, ENTER];
-	public static var P1_BACK:Array<FlxKey> = [BACKSPACE, ESCAPE];
-	public static var P1_PAUSE:Array<FlxKey> = [ESCAPE, ENTER, P];
+	public static var P1_ACCEPT:Array<FlxKey> = [ENTER];
+	public static var P1_BACK:Array<FlxKey> = [BACKSPACE];
+	public static var P1_PAUSE:Array<FlxKey> = [ENTER];
 	public static var P1_RESET:Array<FlxKey> = [R];
 
 	/**
@@ -36,9 +38,9 @@ class Options
 	public static var P2_DOWN:Array<FlxKey> = [DOWN];
 	public static var P2_UP:Array<FlxKey> = [UP];
 	public static var P2_RIGHT:Array<FlxKey> = [RIGHT];
-	public static var P2_ACCEPT:Array<FlxKey> = [];
-	public static var P2_BACK:Array<FlxKey> = [];
-	public static var P2_PAUSE:Array<FlxKey> = [];
+	public static var P2_ACCEPT:Array<FlxKey> = [SPACE];
+	public static var P2_BACK:Array<FlxKey> = [ESCAPE];
+	public static var P2_PAUSE:Array<FlxKey> = [ESCAPE];
 	public static var P2_RESET:Array<FlxKey> = [];
 
 	/**
@@ -104,13 +106,19 @@ class Options
 		return a;
 	}
 	#end
-
 	public static function load() {
 		__save = new FlxSave();
 		__save.bind("options");
 		for(field in Reflect.fields(__save.data)) {
 			var obj = Reflect.field(__save.data, field);
 			Reflect.setProperty(Options, field, obj);
+		}
+
+		if (!__eventAdded) {
+			Lib.application.onExit.add(function(i:Int) {
+				save();
+			});
+			__eventAdded = true;
 		}
 	}
 

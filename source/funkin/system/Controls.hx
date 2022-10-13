@@ -12,9 +12,7 @@ import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 
-#if (haxe >= "4.0.0")
-enum abstract Action(String) to String from String
-{
+enum abstract Action(String) to String from String {
 	var UP = "up";
 	var LEFT = "left";
 	var RIGHT = "right";
@@ -27,35 +25,27 @@ enum abstract Action(String) to String from String
 	var LEFT_R = "left-release";
 	var RIGHT_R = "right-release";
 	var DOWN_R = "down-release";
+
+	
+	var NOTE_UP = "note-up";
+	var NOTE_LEFT = "note-left";
+	var NOTE_RIGHT = "note-right";
+	var NOTE_DOWN = "note-down";
+	var NOTE_UP_P = "note-up-press";
+	var NOTE_LEFT_P = "note-left-press";
+	var NOTE_RIGHT_P = "note-right-press";
+	var NOTE_DOWN_P = "note-down-press";
+	var NOTE_UP_R = "note-up-release";
+	var NOTE_LEFT_R = "note-left-release";
+	var NOTE_RIGHT_R = "note-right-release";
+	var NOTE_DOWN_R = "note-down-release";
+
 	var ACCEPT = "accept";
 	var BACK = "back";
 	var PAUSE = "pause";
 	var RESET = "reset";
 	var CHEAT = "cheat";
 }
-#else
-@:enum
-abstract Action(String) to String from String
-{
-	var UP = "up";
-	var LEFT = "left";
-	var RIGHT = "right";
-	var DOWN = "down";
-	var UP_P = "up-press";
-	var LEFT_P = "left-press";
-	var RIGHT_P = "right-press";
-	var DOWN_P = "down-press";
-	var UP_R = "up-release";
-	var LEFT_R = "left-release";
-	var RIGHT_R = "right-release";
-	var DOWN_R = "down-release";
-	var ACCEPT = "accept";
-	var BACK = "back";
-	var PAUSE = "pause";
-	var RESET = "reset";
-	var CHEAT = "cheat";
-}
-#end
 
 enum Device
 {
@@ -74,6 +64,10 @@ enum Control
 	LEFT;
 	RIGHT;
 	DOWN;
+	NOTE_UP;
+	NOTE_LEFT;
+	NOTE_RIGHT;
+	NOTE_DOWN;
 	RESET;
 	ACCEPT;
 	BACK;
@@ -107,6 +101,20 @@ class Controls extends FlxActionSet
 	var _leftR = new FlxActionDigital(Action.LEFT_R);
 	var _rightR = new FlxActionDigital(Action.RIGHT_R);
 	var _downR = new FlxActionDigital(Action.DOWN_R);
+
+	var _noteUp = new FlxActionDigital(Action.NOTE_UP);
+	var _noteLeft = new FlxActionDigital(Action.NOTE_LEFT);
+	var _noteRight = new FlxActionDigital(Action.NOTE_RIGHT);
+	var _noteDown = new FlxActionDigital(Action.NOTE_DOWN);
+	var _noteUpP = new FlxActionDigital(Action.NOTE_UP_P);
+	var _noteLeftP = new FlxActionDigital(Action.NOTE_LEFT_P);
+	var _noteRightP = new FlxActionDigital(Action.NOTE_RIGHT_P);
+	var _noteDownP = new FlxActionDigital(Action.NOTE_DOWN_P);
+	var _noteUpR = new FlxActionDigital(Action.NOTE_UP_R);
+	var _noteLeftR = new FlxActionDigital(Action.NOTE_LEFT_R);
+	var _noteRightR = new FlxActionDigital(Action.NOTE_RIGHT_R);
+	var _noteDownR = new FlxActionDigital(Action.NOTE_DOWN_R);
+
 	var _accept = new FlxActionDigital(Action.ACCEPT);
 	var _back = new FlxActionDigital(Action.BACK);
 	var _pause = new FlxActionDigital(Action.PAUSE);
@@ -122,65 +130,65 @@ class Controls extends FlxActionSet
 	public var gamepadsAdded:Array<Int> = [];
 	public var keyboardScheme = KeyboardScheme.None;
 
-	public var UP(get, never):Bool;
+	public var NOTE_UP(get, never):Bool;
 
-	inline function get_UP()
-		return _up.check();
+	inline function get_NOTE_UP()
+		return _noteUp.check();
 
-	public var LEFT(get, never):Bool;
+	public var NOTE_LEFT(get, never):Bool;
 
-	inline function get_LEFT()
-		return _left.check();
+	inline function get_NOTE_LEFT()
+		return _noteLeft.check();
 
-	public var RIGHT(get, never):Bool;
+	public var NOTE_RIGHT(get, never):Bool;
 
-	inline function get_RIGHT()
-		return _right.check();
+	inline function get_NOTE_RIGHT()
+		return _noteRight.check();
 
-	public var DOWN(get, never):Bool;
+	public var NOTE_DOWN(get, never):Bool;
 
-	inline function get_DOWN()
-		return _down.check();
+	inline function get_NOTE_DOWN()
+		return _noteDown.check();
 
-	public var UP_P(get, never):Bool;
+	public var NOTE_UP_P(get, never):Bool;
 
-	inline function get_UP_P()
-		return _upP.check();
+	inline function get_NOTE_UP_P()
+		return _noteUpP.check();
 
-	public var LEFT_P(get, never):Bool;
+	public var NOTE_LEFT_P(get, never):Bool;
 
-	inline function get_LEFT_P()
-		return _leftP.check();
+	inline function get_NOTE_LEFT_P()
+		return _noteLeftP.check();
 
-	public var RIGHT_P(get, never):Bool;
+	public var NOTE_RIGHT_P(get, never):Bool;
 
-	inline function get_RIGHT_P()
-		return _rightP.check();
+	inline function get_NOTE_RIGHT_P()
+		return _noteRightP.check();
 
-	public var DOWN_P(get, never):Bool;
+	public var NOTE_DOWN_P(get, never):Bool;
 
-	inline function get_DOWN_P()
-		return _downP.check();
+	inline function get_NOTE_DOWN_P()
+		return _noteDownP.check();
 
-	public var UP_R(get, never):Bool;
+	public var NOTE_UP_R(get, never):Bool;
 
-	inline function get_UP_R()
-		return _upR.check();
+	inline function get_NOTE_UP_R()
+		return _noteUpR.check();
 
-	public var LEFT_R(get, never):Bool;
+	public var NOTE_LEFT_R(get, never):Bool;
 
-	inline function get_LEFT_R()
-		return _leftR.check();
+	inline function get_NOTE_LEFT_R()
+		return _noteLeftR.check();
 
-	public var RIGHT_R(get, never):Bool;
+	public var NOTE_RIGHT_R(get, never):Bool;
 
-	inline function get_RIGHT_R()
-		return _rightR.check();
+	inline function get_NOTE_RIGHT_R()
+		return _noteRightR.check();
 
-	public var DOWN_R(get, never):Bool;
+	public var NOTE_DOWN_R(get, never):Bool;
 
-	inline function get_DOWN_R()
-		return _downR.check();
+	inline function get_NOTE_DOWN_R()
+		return _noteDownR.check();
 
 	public var ACCEPT(get, never):Bool;
 
@@ -207,7 +215,6 @@ class Controls extends FlxActionSet
 	inline function get_CHEAT()
 		return _cheat.check();
 
-	#if (haxe >= "4.0.0")
 	public function new(name, scheme = None)
 	{
 		super(name);
@@ -224,6 +231,20 @@ class Controls extends FlxActionSet
 		add(_leftR);
 		add(_rightR);
 		add(_downR);
+
+		add(_noteUp);
+		add(_noteLeft);
+		add(_noteRight);
+		add(_noteDown);
+		add(_noteUpP);
+		add(_noteLeftP);
+		add(_noteRightP);
+		add(_noteDownP);
+		add(_noteUpR);
+		add(_noteLeftR);
+		add(_noteRightR);
+		add(_noteDownR);
+
 		add(_accept);
 		add(_back);
 		add(_pause);
@@ -235,37 +256,6 @@ class Controls extends FlxActionSet
 
 		setKeyboardScheme(scheme, false);
 	}
-	#else
-	public function new(name, scheme:KeyboardScheme = null)
-	{
-		super(name);
-
-		add(_up);
-		add(_left);
-		add(_right);
-		add(_down);
-		add(_upP);
-		add(_leftP);
-		add(_rightP);
-		add(_downP);
-		add(_upR);
-		add(_leftR);
-		add(_rightR);
-		add(_downR);
-		add(_accept);
-		add(_back);
-		add(_pause);
-		add(_reset);
-		add(_cheat);
-
-		for (action in digitalActions)
-			byName[action.name] = action;
-			
-		if (scheme == null)
-			scheme = None;
-		setKeyboardScheme(scheme, false);
-	}
-	#end
 
 	override function update()
 	{
@@ -306,6 +296,10 @@ class Controls extends FlxActionSet
 			case DOWN: _down;
 			case LEFT: _left;
 			case RIGHT: _right;
+			case NOTE_UP: _noteUp;
+			case NOTE_DOWN: _noteDown;
+			case NOTE_LEFT: _noteLeft;
+			case NOTE_RIGHT: _noteRight;
 			case ACCEPT: _accept;
 			case BACK: _back;
 			case PAUSE: _pause;
@@ -330,6 +324,22 @@ class Controls extends FlxActionSet
 	{
 		switch (control)
 		{
+			case NOTE_UP:
+				func(_noteUp, PRESSED);
+				func(_noteUpP, JUST_PRESSED);
+				func(_noteUpR, JUST_RELEASED);
+			case NOTE_LEFT:
+				func(_noteLeft, PRESSED);
+				func(_noteLeftP, JUST_PRESSED);
+				func(_noteLeftR, JUST_RELEASED);
+			case NOTE_RIGHT:
+				func(_noteRight, PRESSED);
+				func(_noteRightP, JUST_PRESSED);
+				func(_noteRightR, JUST_RELEASED);
+			case NOTE_DOWN:
+				func(_noteDown, PRESSED);
+				func(_noteDownP, JUST_PRESSED);
+				func(_noteDownR, JUST_RELEASED);
 			case UP:
 				func(_up, PRESSED);
 				func(_upP, JUST_PRESSED);
