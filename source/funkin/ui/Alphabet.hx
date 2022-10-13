@@ -11,6 +11,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
+import flixel.util.FlxColor;
 
 using StringTools;
 
@@ -44,6 +45,16 @@ class Alphabet extends FlxSpriteGroup
 	var splitWords:Array<String> = [];
 
 	var isBold:Bool = false;
+
+	private override function set_color(c:Int):Int {
+		for(e in group.members) {
+			if (e is AlphaCharacter) {
+				var char = cast(e, AlphaCharacter);
+				char.setColor(c, isBold);
+			}
+		}
+		return super.set_color(c);
+	}
 
 	public function refreshAlphabetXML(path:String) {
 		trace("Needs refresh!!");
@@ -130,6 +141,8 @@ class Alphabet extends FlxSpriteGroup
 			// anim not found
 			if (!letter.visible) 
 				xPos += 40;
+
+			letter.setColor(color, isBold);
 			add(letter);
 
 			lastSprite = letter;
@@ -262,6 +275,7 @@ class Alphabet extends FlxSpriteGroup
 				e.destroy();
 			@:privateAccess
 			group.members = [];
+			_sprites = cast group.members;
 			lastSprite = null;
 			addText();
 		}
@@ -276,6 +290,17 @@ class AlphaCharacter extends FlxSprite
 
 	public var row:Int = 0;
 
+	public function setColor(c:FlxColor, isBold:Bool) {
+		if (isBold) {
+			colorTransform.redMultiplier = c.redFloat;
+			colorTransform.greenMultiplier = c.greenFloat;
+			colorTransform.blueMultiplier = c.blueFloat;
+		} else {
+			colorTransform.redOffset = c.red;
+			colorTransform.greenOffset = c.green;
+			colorTransform.blueOffset = c.blue;
+		}
+	}
 	public function new(x:Float, y:Float)
 	{
 		super(x, y);

@@ -1,5 +1,6 @@
-package funkin.options;
+package funkin.options.keybinds;
 
+import flixel.FlxCamera;
 import flixel.effects.FlxFlicker;
 import funkin.system.Controls;
 import funkin.options.Options;
@@ -16,7 +17,9 @@ import flixel.FlxG;
 
 using StringTools;
 
-class KeybindsOptions extends MusicBeatState {
+class KeybindsOptions extends MusicBeatSubstate {
+    public static var instance:KeybindsOptions;
+
     public var categories = [
         {
             name: 'Notes',
@@ -62,6 +65,9 @@ class KeybindsOptions extends MusicBeatState {
         }
     ];
 
+    public var settingCam:FlxCamera;
+
+    public var p2Selected:Bool = false;
     public var curSelected:Int = -1;
     public var canSelect:Bool = true;
     public var alphabets:FlxTypedGroup<KeybindSetting>;
@@ -75,11 +81,16 @@ class KeybindsOptions extends MusicBeatState {
     ];
     public var camFollow:FlxObject = new FlxObject(0, 0, 2, 2);
 
+    var isSubState:Bool = false;
+
     public override function create() {
         super.create();
+        instance = this;
 
+
+        isSubState = FlxG.state != this;
         alphabets = new FlxTypedGroup<KeybindSetting>();
-		bg = new FlxSprite(-80).loadGraphic(Paths.image('menuBGBlue'));
+		bg = new FlxSprite(-80).loadGraphic(Paths.image(isSubState ? 'menuTransparent' : 'menuBGBlue'));
 		coloredBG = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
         for(bg in [bg, coloredBG]) {
             bg.scrollFactor.set();
@@ -90,6 +101,20 @@ class KeybindsOptions extends MusicBeatState {
             add(bg);
         }
         coloredBG.alpha = 0;
+
+        if (isSubState) {
+            // is substate, opened from pause menu
+            if (settingCam == null) {
+                settingCam = new FlxCamera();
+                settingCam.bgColor = 0xAA000000;
+                FlxG.cameras.add(settingCam, false);
+            }
+            cameras = [settingCam];
+            bg.alpha = 0;
+            settingCam.follow(camFollow, LOCKON, 0.125);
+        } else {
+            FlxG.camera.follow(camFollow, LOCKON, 0.125);
+        }
 
         var k:Int = 0;
         for(category in categories) {
@@ -120,6 +145,8 @@ class KeybindsOptions extends MusicBeatState {
                 }
                         
                 var text = new KeybindSetting(100, k * 75, e.name, e.control, sparrowIcon, sparrowAnim);
+                if (!isSubState)
+                    text.bind1.color = text.bind2.color = FlxColor.BLACK;
                 alphabets.add(text);
                 k++;
             }
@@ -127,48 +154,72 @@ class KeybindsOptions extends MusicBeatState {
         add(alphabets);
         changeSelection(1);
 
-        FlxG.camera.follow(camFollow, LOCKON, 0.125);
         add(camFollow);
     }
+
+    public override function destroy() {
+        super.destroy();
+        if (settingCam != null) FlxG.cameras.remove(settingCam);
+        instance = null;
+    }
+
+    var skipThisFrame:Bool = true;
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
 
-        if (curSelected < 4) {
-            if (coloredBG.alpha == 0)
-                coloredBG.color = noteColors[curSelected];
-            else
-                coloredBG.color = CoolUtil.lerpColor(coloredBG.color, noteColors[curSelected], 0.0625);
 
-            coloredBG.alpha = lerp(coloredBG.alpha, 1, 0.0625);
-        } else
-            coloredBG.alpha = lerp(coloredBG.alpha, 0, 0.0625);
+        if (isSubState) {
+            bg.alpha = lerp(bg.alpha, 0.1, 0.125);
+        } else {
+            if (curSelected < 4) {
+                if (coloredBG.alpha == 0)
+                    coloredBG.color = noteColors[curSelected];
+                else
+                    coloredBG.color = CoolUtil.lerpColor(coloredBG.color, noteColors[curSelected], 0.0625);
+    
+                coloredBG.alpha = lerp(coloredBG.alpha, 1, 0.0625);
+            } else
+                coloredBG.alpha = lerp(coloredBG.alpha, 0, 0.0625);
+        }
 
             
-        super.update(elapsed);
         if (canSelect) {
             changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
             if (controls.BACK) {
                 FlxTransitionableState.skipNextTransIn = true;
                 FlxTransitionableState.skipNextTransOut = true;
-                FlxG.switchState(new OptionsMenu());
+                if (isSubState) 
+                    close();
+                else
+                    FlxG.switchState(new OptionsMenu());
                 controls.setKeyboardScheme(Solo);
                 return;
             }
 
-            if (controls.ACCEPT) {
+            if (controls.ACCEPT && !skipThisFrame) {
                 if (alphabets.members[curSelected] != null) {
                     canSelect = false;
                     CoolUtil.playMenuSFX(1);
                     FlxFlicker.flicker(alphabets.members[curSelected], 0.4, 0.1, true, false, function(t) {
-                        alphabets.members[curSelected].changeKeybind(false);
+                        alphabets.members[curSelected].changeKeybind(function() {
+                            canSelect = true;
+                        }, function() {
+                            canSelect = true;
+                        }, p2Selected);
                     });
                 }
             }
-        } else {
-            if (alphabets.members[curSelected].changingKeybind < 0)
-                canSelect = true;
+    
+            if (controls.LEFT_P || controls.RIGHT_P) {
+                if (alphabets.members[curSelected] != null) {
+                    CoolUtil.playMenuSFX(0);
+                    alphabets.members[curSelected].p2Selected = (p2Selected = !p2Selected);
+                }
+            }
         }
+        super.update(elapsed);
+        skipThisFrame = false;
 
     }
     
@@ -181,6 +232,7 @@ class KeybindsOptions extends MusicBeatState {
         });
         if (alphabets.members[curSelected] != null) {
             var alphabet = alphabets.members[curSelected];
+            alphabet.p2Selected = p2Selected;
             alphabet.alpha = 1;
             var minH = FlxG.height / 2;
             var maxH = alphabets.members[alphabets.length-1].y + alphabets.members[alphabets.length-1].height - (FlxG.height / 2);
@@ -189,93 +241,5 @@ class KeybindsOptions extends MusicBeatState {
             else
                 camFollow.setPosition(FlxG.width / 2, FlxG.height / 2);
         }
-    }
-}
-
-class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
-    public var title:Alphabet;
-    public var bind1:Alphabet;
-    public var bind2:Alphabet;
-    public var icon:FlxSprite;
-
-    public var changingKeybind:Int = -1;
-    public var value:String;
-
-    public var option1:Null<FlxKey>;
-    public var option2:Null<FlxKey>;
-    public function new(x:Float, y:Float, name:String, value:String, ?sparrowIcon:String, ?sparrowAnim:String) {
-        super();
-        this.value = value;
-        title = new Alphabet(0, 0, name, true);
-        title.setPosition(100, 0);
-        add(title);
-
-
-        var controlArrayP1:Array<FlxKey> = Reflect.field(Options, 'P1_${value}');
-        var controlArrayP2:Array<FlxKey> = Reflect.field(Options, 'P2_${value}');
-
-        option1 = controlArrayP1[0];
-        option2 = controlArrayP2[0];
-
-        for(i in 1...3) {
-            var b = null;
-            if (i == 1)
-                b = bind1 = new Alphabet(0, 0, "", false);
-            else
-                b = bind2 = new Alphabet(0, 0, "", false);
-
-            b.setPosition(FlxG.width * (0.25 * (i+1)) - x, -60);
-            add(b);
-        }
-        updateText();
-
-        if (sparrowIcon != null) {
-            icon = new FlxSprite();
-            icon.frames = Paths.getSparrowAtlas(sparrowIcon);
-            icon.antialiasing = true;
-            icon.animation.addByPrefix('icon', sparrowAnim, 24, true);
-            icon.animation.play('icon');
-            icon.setGraphicSize(75, 75);
-            icon.updateHitbox();
-            var min = Math.min(icon.scale.x, icon.scale.y);
-            icon.scale.set(min, min);
-            add(icon);
-        }
-        
-        setPosition(x, y);
-    }
-
-    public override function update(elapsed:Float) {
-        super.update(elapsed);
-        if (changingKeybind >= 0) {
-            var key:FlxKey = FlxG.keys.firstJustReleased();
-            if (cast(key, Int) <= 0) return;
-            if (key == ESCAPE && !FlxG.keys.pressed.SHIFT) {
-                changingKeybind = -1;
-                return;
-            }
-            if (changingKeybind == 0) {
-                option1 = key;
-                Reflect.setField(Options, 'P1_$value', [option1]);
-            } else {
-                option2 = key;
-                Reflect.setField(Options, 'P2_$value', [option2]);
-            }
-            changingKeybind = -1;
-            updateText();
-            return;
-        }
-    }
-
-    public function changeKeybind(p2:Bool = false) {
-        FlxG.state.persistentDraw = true;
-        FlxG.state.persistentUpdate = true;
-        
-        changingKeybind = p2 ? 1 : 0;
-    }
-
-    public function updateText() {
-        bind1.text = '${CoolUtil.keyToString(option1)}';
-        bind2.text = '${CoolUtil.keyToString(option2)}';
     }
 }

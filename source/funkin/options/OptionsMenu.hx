@@ -15,7 +15,7 @@ class OptionsMenu extends MusicBeatState {
         {
             name: 'Controls',
             desc: 'Change Controls for Player 1 and Player 2!',
-            state: funkin.options.KeybindsOptions
+            state: funkin.options.keybinds.KeybindsOptions
         },
         {
             name: 'Visuals',

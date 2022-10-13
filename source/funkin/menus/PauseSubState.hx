@@ -12,12 +12,13 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import funkin.ui.Alphabet;
+import funkin.options.keybinds.KeybindsOptions;
 
 class PauseSubState extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Exit to menu'];
+	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Change Controls', 'Options','Exit to menu'];
 	var curSelected:Int = 0;
 
 	var pauseMusic:FlxSound;
@@ -107,6 +108,9 @@ class PauseSubState extends MusicBeatSubstate
 					close();
 				case "Restart Song":
 					FlxG.resetState();
+				case "Change Controls":
+					persistentDraw = false;
+					openSubState(new KeybindsOptions());
 				case "Exit to menu":
 					FlxG.switchState(new MainMenuState());
 			}
