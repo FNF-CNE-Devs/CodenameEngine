@@ -2,6 +2,7 @@ package funkin.system;
 
 import funkin.system.Conductor.BPMChangeEvent;
 import funkin.system.Conductor;
+import funkin.options.PlayerSettings;
 import flixel.FlxG;
 import flixel.FlxSubState;
 import flixel.math.FlxMath;

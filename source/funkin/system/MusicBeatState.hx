@@ -9,6 +9,7 @@ import flixel.addons.ui.FlxUIState;
 import flixel.math.FlxRect;
 import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
+import funkin.options.PlayerSettings;
 
 class MusicBeatState extends FlxUIState
 {

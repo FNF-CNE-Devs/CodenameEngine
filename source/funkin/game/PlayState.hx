@@ -5,10 +5,10 @@ import flixel.util.FlxDestroyUtil;
 #if desktop
 import funkin.system.Discord.DiscordClient;
 #end
-import Section.SwagSection;
+import funkin.system.Section.SwagSection;
 import funkin.system.Song.SwagSong;
 import funkin.scripting.ScriptPack;
-import WiggleEffect.WiggleEffectType;
+import funkin.shaders.WiggleEffect.WiggleEffectType;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;

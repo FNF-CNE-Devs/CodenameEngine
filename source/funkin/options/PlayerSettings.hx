@@ -1,4 +1,4 @@
-package;
+package funkin.options;
 
 import funkin.system.Controls;
 import flixel.FlxCamera;

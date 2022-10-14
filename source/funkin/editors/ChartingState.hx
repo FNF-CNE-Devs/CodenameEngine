@@ -1,7 +1,7 @@
 package funkin.editors;
 
 import funkin.system.Conductor.BPMChangeEvent;
-import Section.SwagSection;
+import funkin.system.Section.SwagSection;
 import funkin.system.Conductor;
 import funkin.system.Song.SwagSong;
 import funkin.system.Song;

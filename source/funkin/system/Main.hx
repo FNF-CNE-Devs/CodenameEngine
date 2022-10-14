@@ -1,5 +1,6 @@
-package;
+package funkin.system;
 
+import funkin.windows.WindowsAPI;
 import funkin.menus.TitleState;
 import funkin.game.Highscore;
 import funkin.options.Options;
@@ -93,8 +94,31 @@ class Main extends Sprite
 		#end
 	}
 
+	@:dox(hide)
+	public static var audioDisconnected:Bool = false;
+	
+	@:dox(hide)
+	@:noCompletion
+	private #if !flash override #end function __enterFrame(deltaTime:Int):Void {
+		super.__enterFrame(deltaTime);
+		#if windows
+			if (audioDisconnected) {
+				lime.media.AudioManager.suspend();
+				audioDisconnected = false;
+				lime.media.AudioManager.init();
+				// @:privateAccess
+				// for(e in openfl.media.SoundMixer.__soundChannels) {
+				// 	@:privateAccess
+				// 	e.__source.__backend.parent.buffer.__srcBuffer = null;
+				// 	@:privateAccess
+				// 	e.__source.__backend.init();
+				// }
+			}
+		#end
+	}
+
 	public function loadGameSettings() {
-		PlayerSettings.init();
+		funkin.options.PlayerSettings.init();
 		FlxG.save.bind('Save');
 		Highscore.load();
 
@@ -119,6 +143,11 @@ class Main extends Sprite
 		FlxG.autoPause = false;
 
 		Options.load();
+
+		WindowsAPI.registerAudio();
+		// WindowsAPI.setAudioChangeCallback(function() {
+		// 	trace("test");
+		// });
 
 		var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
 		diamond.persist = true;
