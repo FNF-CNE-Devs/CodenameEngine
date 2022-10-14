@@ -23,9 +23,6 @@ class ChangeKeybindSubState extends MusicBeatSubstate {
         this.cancelCallback = cancelCallback;
         super();
     }
-    public override function create() {
-        super.create();
-    }
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
