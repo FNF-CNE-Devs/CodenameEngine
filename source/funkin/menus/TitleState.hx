@@ -67,6 +67,8 @@ class TitleState extends MusicBeatState
 		Conductor.changeBPM(102);
 		persistentUpdate = true;
 
+		loadXML();
+
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
@@ -223,7 +225,7 @@ class TitleState extends MusicBeatState
 			gfDance.animation.play('danceLeft');
 
 		#if TITLESCREEN_XML
-		if (curBeat >= 16 || skippedIntro) {
+		if (curBeat >= titleLength || skippedIntro) {
 			if (!skippedIntro) skipIntro();
 			return;
 		}
@@ -274,10 +276,10 @@ class TitleState extends MusicBeatState
 
 	public function loadXML() {
 		try {
-			xml = new Access(Xml.parse(Assets.getText('data/titlescreen.xml')).firstElement());
-			if (xml.has.length) titleLength = CoolUtil.getDefault(Std.parseInt(xml.att.length), 16);
+			xml = new Access(Xml.parse(Assets.getText(Paths.xml('titlescreen/titlescreen'))).firstElement());
 			if (xml.hasNode.intro) {
 				titleLines = [];
+				if (xml.node.intro.has.length) titleLength = CoolUtil.getDefault(Std.parseInt(xml.node.intro.att.length), 16);
 				for(text in xml.node.intro.nodes.text) {
 					var beat:Int = CoolUtil.getDefault(text.has.beat ? Std.parseInt(text.att.beat) : null, 0);
 					var texts:Array<OneOfTwo<String, TitleStateImage>> = [];

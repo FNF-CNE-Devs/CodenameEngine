@@ -134,7 +134,7 @@
 
 	<!-- so that everything within flixel gets compiled which means hscript super powaaah -->
 	<haxeflag name="--macro" value="include('flixel')" />
-	<haxeflag name="--macro" value="include('sys')" />
+	<haxeflag name="--macro" value="include('sys')" if="sys"/>
 
 	<!-- HAXE STUFF !-->
 	<haxeflag name="--macro" value="include('DateTools')" />
@@ -157,4 +157,7 @@
 
 	<!-- Comment this out to disable titlescreen.xml !-->
 	<haxedef name="TITLESCREEN_XML" />
+
+	<!-- Comment this out to disable mods folder !-->
+	<haxedef name="MOD_SUPPORT" unless="web"/>
 </project>

@@ -15,7 +15,7 @@ import lime.text.Font;
 import lime.utils.AssetType;
 import lime.utils.Bytes;
 
-#if sys
+#if MOD_SUPPORT
 import sys.FileStat;
 import sys.FileSystem;
 #end
@@ -32,7 +32,7 @@ class ModsAssetLibrary extends AssetLibrary {
         super();
     }
 
-    #if sys
+    #if MOD_SUPPORT
     private var editedTimes:Map<String, Float> = [];
     var _parsedAsset:String = null;
 

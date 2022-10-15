@@ -90,9 +90,9 @@ class Main extends Sprite
 		#end
 
 
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
-
+		addChild(new FlxGame(gameWidth, gameHeight, null, zoom, framerate, framerate, skipSplash, startFullscreen));
 		loadGameSettings();
+		FlxG.switchState(new TitleState());
 		
 		#if !mobile
 		addChild(new FramerateField(10, 3, 0xFFFFFF));
@@ -129,7 +129,7 @@ class Main extends Sprite
 		#end
 		
 		FlxG.fixedTimestep = false;
-		FlxG.autoPause = false;
+		// FlxG.autoPause = false;
 
 		Options.load();
 

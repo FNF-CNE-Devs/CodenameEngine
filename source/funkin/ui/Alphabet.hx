@@ -98,6 +98,7 @@ class Alphabet extends FlxSpriteGroup
 					@:privateAccess
 					library = cast(library.__proxy, AssetLibrary);
 				}
+				#if MOD_SUPPORT
 				if (library is ModsAssetLibrary) {
 					var modLib = cast(library, ModsAssetLibrary);
 					@:privateAccess
@@ -105,6 +106,7 @@ class Alphabet extends FlxSpriteGroup
 						refreshAlphabetXML(alphabetPath);
 					}
 				}
+				#end
 			}
 		}
 

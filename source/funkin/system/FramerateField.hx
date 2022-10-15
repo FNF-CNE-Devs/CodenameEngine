@@ -45,7 +45,7 @@ class FramerateField extends TextField {
 
         FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, function(e:KeyboardEvent) {
             switch(e.keyCode) {
-                case 114: // F3
+                case #if web Keyboard.NUMBER_3 #else Keyboard.F3 #end: // 3 on web or F3 on windows, linux and other things that runs code
                     debugMode = !debugMode;
             }
         });
@@ -57,6 +57,7 @@ class FramerateField extends TextField {
             lastFPS = CoolUtil.fpsLerp(lastFPS, FlxG.elapsed == 0 ? 0 : (1 / FlxG.elapsed), 0.25);
             text.push('FPS: ${Std.int(lastFPS)}');
         }
+        #if !web
         if (showMemory || debugMode) {
             text.push('RAM: ${CoolUtil.getSizeString(System.totalMemory)}');
         }
@@ -65,6 +66,7 @@ class FramerateField extends TextField {
                 peak = System.totalMemory;
             text.push('RAM PEAK: (${CoolUtil.getSizeString(peak)})');
         }
+        #end
         #if !release
         text.push('CODENAME ENGINE ALPHA - BUILD ${funkin.macros.BuildCounterMacro.getBuildNumber()}');
         #end

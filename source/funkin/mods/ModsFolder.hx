@@ -5,7 +5,7 @@ import openfl.utils.AssetManifest;
 import openfl.utils.AssetLibrary;
 import flixel.graphics.FlxGraphic;
 
-#if sys
+#if MOD_SUPPORT
 import sys.FileSystem;
 #end
 
@@ -16,7 +16,7 @@ import haxe.io.Path;
 using StringTools;
 
 class ModsFolder {
-    #if sys
+    #if MOD_SUPPORT
     /**
      * Last time the folder was modified.
      */
@@ -148,7 +148,7 @@ class ModsFolder {
         lime.utils.Assets.cache.clear();
 
         if (currentModFolder == null) return;
-        #if sys
+        #if MOD_SUPPORT
             var bmapsToRemove:Array<FlxGraphic> = [];
             @:privateAccess
             for(bmap in FlxG.bitmap._cache) {

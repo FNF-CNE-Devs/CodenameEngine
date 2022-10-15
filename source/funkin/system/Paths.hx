@@ -119,12 +119,12 @@ class Paths
 
 		var difficultyEnd = (difficulty == "normal") ? "" : '-$difficulty';
 
-		// charts/your-song/hard.json
-		var p = getPath('charts/$song/$difficulty.json', TEXT, null);
+		// data/charts/your-song/hard.json
+		var p = json('charts/$song/$difficulty');
 		if (OpenFlAssets.exists(p)) return p;
 
-		// charts/your-song/your-song-hard.json
-		var p2 = getPath('charts/$song/$song$difficultyEnd.json', TEXT, null);
+		// data/charts/your-song/your-song-hard.json
+		var p2 = json('charts/$song/$song$difficultyEnd');
 		if (OpenFlAssets.exists(p2)) return p2;
 
 		// data/your-song/your-song-hard.json (default old format)
@@ -168,7 +168,7 @@ class Paths
 		}
 		
 		var content:Array<String> = [];
-		#if sys
+		#if MOD_SUPPORT
 		if (library is funkin.mods.ModsAssetLibrary) {
 			// easy task, can immediatly scan for files!
 			var lib = cast(library, funkin.mods.ModsAssetLibrary);
