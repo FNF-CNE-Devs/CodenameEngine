@@ -2,10 +2,6 @@ package funkin.menus;
 
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
-#if desktop
-import funkin.system.Discord.DiscordClient;
-import sys.thread.Thread;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -26,7 +22,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import funkin.system.Conductor;
-import lime.app.Application;
 import openfl.Assets;
 import funkin.ui.Alphabet;
 import haxe.xml.Access;
@@ -54,14 +49,6 @@ class TitleState extends MusicBeatState
 		super.create();
 
 		startIntro();
-
-		#if desktop
-		DiscordClient.initialize();
-		
-		Application.current.onExit.add (function (exitCode) {
-			DiscordClient.shutdown();
-		 });
-		#end
 	}
 
 	var logoBl:FlxSprite;
@@ -236,7 +223,7 @@ class TitleState extends MusicBeatState
 			gfDance.animation.play('danceLeft');
 
 		#if TITLESCREEN_XML
-		if (curBeat >= 16) {
+		if (curBeat >= 16 || skippedIntro) {
 			if (!skippedIntro) skipIntro();
 			return;
 		}
@@ -273,7 +260,7 @@ class TitleState extends MusicBeatState
 		5 => new IntroText(['In association', 'with']),
 		7 => new IntroText(['In association', 'with', 'newgrounds', {
 			name: "newgroundsLogo",
-			sprite: "titlescreen/newgrounds_logo",
+			path: "titlescreen/newgrounds_logo",
 			scale: 0.8
 		}]),
 		8 => new IntroText(),
@@ -288,8 +275,39 @@ class TitleState extends MusicBeatState
 	public function loadXML() {
 		try {
 			xml = new Access(Xml.parse(Assets.getText('data/titlescreen.xml')).firstElement());
-
-			// for(e in xml.)
+			if (xml.has.length) titleLength = CoolUtil.getDefault(Std.parseInt(xml.att.length), 16);
+			if (xml.hasNode.intro) {
+				titleLines = [];
+				for(text in xml.node.intro.nodes.text) {
+					var beat:Int = CoolUtil.getDefault(text.has.beat ? Std.parseInt(text.att.beat) : null, 0);
+					var texts:Array<OneOfTwo<String, TitleStateImage>> = [];
+					for(e in text.elements) {
+						switch(e.name) {
+							case "line":
+								if (!e.has.text) continue;
+								texts.push(e.att.text);
+							case "introtext":
+								if (!e.has.line) continue;
+								texts.push('{introText${e.att.line}}');
+							case "sprite":
+								if (!e.has.path) continue;
+								var name:String = e.has.name ? e.att.name : null;
+								var path:String = e.att.path;
+								var flipX:Bool = e.has.flipX ? e.att.flipX == "true" : false;
+								var flipY:Bool = e.has.flipY ? e.att.flipY == "true" : false;
+								var scale:Float = e.has.scale ? CoolUtil.getDefault(Std.parseFloat(e.att.scale), 1) : 1;
+								texts.push({
+									name: name,
+									path: path,
+									flipX: flipX,
+									flipY: flipY,
+									scale: scale
+								});
+						}
+					}
+					titleLines[beat] = new IntroText(texts);
+				}
+			}
 		} catch(e) {
 			// TODO: Logging!!
 			trace(e.details());
@@ -332,11 +350,11 @@ class IntroText {
 				state.addMoreText(text);
 			} else if (e is Dynamic) {
 				var image:TitleStateImage = e;
-				if (image.sprite == null) continue;
+				if (image.path == null) continue;
 
 				var scale:Float = CoolUtil.getDefault(image.scale, 1);
 
-				var sprite = new FlxSprite(0, 200, Paths.image(image.sprite));
+				var sprite = new FlxSprite(0, 200, Paths.image(image.path));
 				sprite.flipX = CoolUtil.getDefault(image.flipX, false);
 				sprite.flipY = CoolUtil.getDefault(image.flipY, false);
 				sprite.scale.set(scale, scale);
@@ -350,7 +368,7 @@ class IntroText {
 
 typedef TitleStateImage = {
 	var name:String;
-	var sprite:String;
+	var path:String;
 	@:optional var scale:Null<Float>;
 	@:optional var flipX:Null<Bool>;
 	@:optional var flipY:Null<Bool>;

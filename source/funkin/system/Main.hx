@@ -18,6 +18,11 @@ import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+#if desktop
+import funkin.system.Discord.DiscordClient;
+import sys.thread.Thread;
+#end
+import lime.app.Application;
 
 #if sys
 import sys.io.File;
@@ -105,6 +110,7 @@ class Main extends Sprite
 		FlxG.save.bind('Save');
 		Highscore.load();
 
+		// TODO: Mod switching
 		ModsFolder.init();
 		ModsFolder.loadMod("introMod");
 		ModsFolder.currentModFolder = "introMod";
@@ -129,10 +135,6 @@ class Main extends Sprite
 
 		AudioSwitchFix.init();
 
-		// WindowsAPI.setAudioChangeCallback(function() {
-		// 	trace("test");
-		// });
-
 		var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
 		diamond.persist = true;
 		diamond.destroyOnNoUse = false;
@@ -141,5 +143,13 @@ class Main extends Sprite
 			new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, 0.7, new FlxPoint(0, 1),
 			{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
+
+		#if desktop
+		DiscordClient.initialize();
+		
+		Application.current.onExit.add (function (exitCode) {
+			DiscordClient.shutdown();
+		 });
+		#end
 	}
 }
