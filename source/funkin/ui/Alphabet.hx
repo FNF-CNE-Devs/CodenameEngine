@@ -56,6 +56,7 @@ class Alphabet extends FlxSpriteGroup
 		return super.set_color(c);
 	}
 
+	// TODO: fix this shit refreshing
 	public function refreshAlphabetXML(path:String) {
 		trace("Needs refresh!!");
 		AlphaCharacter.__alphaPath = path;

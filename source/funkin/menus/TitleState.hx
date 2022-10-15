@@ -1,5 +1,7 @@
 package funkin.menus;
 
+import flixel.util.typeLimit.OneOfThree;
+import flixel.util.typeLimit.OneOfTwo;
 #if desktop
 import funkin.system.Discord.DiscordClient;
 import sys.thread.Thread;
@@ -27,6 +29,7 @@ import funkin.system.Conductor;
 import lime.app.Application;
 import openfl.Assets;
 import funkin.ui.Alphabet;
+import haxe.xml.Access;
 
 using StringTools;
 
@@ -34,13 +37,13 @@ class TitleState extends MusicBeatState
 {
 	static var initialized:Bool = false;
 
-	var blackScreen:FlxSprite;
-	var textGroup:FlxGroup;
-	var ngSpr:FlxSprite;
+	public var curWacky:Array<String> = [];
 
-	var curWacky:Array<String> = [];
+	public var blackScreen:FlxSprite;
+	public var textGroup:FlxGroup;
+	public var ngSpr:FlxSprite;
 
-	var wackyImage:FlxSprite;
+	public var wackyImage:FlxSprite;
 
 	override public function create():Void
 	{
@@ -123,9 +126,11 @@ class TitleState extends MusicBeatState
 			skipIntro();
 		else
 			initialized = true;
+
+		add(textGroup);
 	}
 
-	function getIntroTextShit():Array<Array<String>>
+	public function getIntroTextShit():Array<Array<String>>
 	{
 		var fullText:String = Assets.getText(Paths.txt('titlescreen/introText'));
 
@@ -195,7 +200,7 @@ class TitleState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	function createCoolText(textArray:Array<String>)
+	public function createCoolText(textArray:Array<String>)
 	{
 		for (i=>text in textArray)
 		{
@@ -206,14 +211,14 @@ class TitleState extends MusicBeatState
 		}
 	}
 
-	function addMoreText(text:String)
+	public function addMoreText(text:String)
 	{
 		var coolText:Alphabet = new Alphabet(0, (textGroup.length * 60) + 200, text, true, false);
 		coolText.screenCenter(X);
 		textGroup.add(coolText);
 	}
 
-	function deleteCoolText()
+	public function deleteCoolText()
 	{
 		while (textGroup.members.length > 0) textGroup.remove(textGroup.members[0], true);
 	}
@@ -231,7 +236,13 @@ class TitleState extends MusicBeatState
 			gfDance.animation.play('danceLeft');
 
 		#if TITLESCREEN_XML
-
+		if (curBeat >= 16) {
+			if (!skippedIntro) skipIntro();
+			return;
+		}
+		var introText = titleLines[curBeat];
+		if (introText != null)
+			introText.show();
 		#else
 		switch (curBeat)
 		{
@@ -252,9 +263,43 @@ class TitleState extends MusicBeatState
 		#end
 	}
 
+	#if TITLESCREEN_XML
+	public var xml:Access;
+	public var titleLength:Int = 16;
+	public var titleLines:Map<Int, IntroText> = [
+		1 => new IntroText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']),
+		3 => new IntroText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er', 'present']),
+		4 => new IntroText(),
+		5 => new IntroText(['In association', 'with']),
+		7 => new IntroText(['In association', 'with', 'newgrounds', {
+			name: "newgroundsLogo",
+			sprite: "titlescreen/newgrounds_logo",
+			scale: 0.8
+		}]),
+		8 => new IntroText(),
+		9 => new IntroText(["{introText1}"]),
+		11 => new IntroText(["{introText1}", "{introText2}"]),
+		12 => new IntroText(),
+		13 => new IntroText(['Friday']),
+		14 => new IntroText(['Friday', 'Night']),
+		15 => new IntroText(['Friday', 'Night', "Funkin'"]),
+	];
+
+	public function loadXML() {
+		try {
+			xml = new Access(Xml.parse(Assets.getText('data/titlescreen.xml')).firstElement());
+
+			// for(e in xml.)
+		} catch(e) {
+			// TODO: Logging!!
+			trace(e.details());
+		}
+	}
+	#end
+
 	var skippedIntro:Bool = false;
 
-	function skipIntro():Void
+	public function skipIntro():Void
 	{
 		if (!skippedIntro)
 		{
@@ -263,7 +308,50 @@ class TitleState extends MusicBeatState
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(blackScreen);
 			blackScreen.destroy();
+			remove(textGroup);
 			skippedIntro = true;
 		}
 	}
+}
+
+class IntroText {
+	public var lines:Array<OneOfTwo<String, TitleStateImage>> = [];
+
+	public function new(?lines:Array<OneOfTwo<String, TitleStateImage>>) {
+		this.lines = lines;
+	}
+
+	public function show() {
+		var state = cast(FlxG.state, TitleState);
+		state.deleteCoolText();
+		if (lines == null) return;
+		for(e in lines) {
+			if (e is String) {
+				var text = cast(e, String);
+				for(k=>e in state.curWacky) text = text.replace('{introText${k+1}', e);
+				state.addMoreText(text);
+			} else if (e is Dynamic) {
+				var image:TitleStateImage = e;
+				if (image.sprite == null) continue;
+
+				var scale:Float = CoolUtil.getDefault(image.scale, 1);
+
+				var sprite = new FlxSprite(0, 200, Paths.image(image.sprite));
+				sprite.flipX = CoolUtil.getDefault(image.flipX, false);
+				sprite.flipY = CoolUtil.getDefault(image.flipY, false);
+				sprite.scale.set(scale, scale);
+				sprite.updateHitbox();
+				sprite.screenCenter(X);
+				state.textGroup.add(sprite);
+			}
+		}
+	}
+}
+
+typedef TitleStateImage = {
+	var name:String;
+	var sprite:String;
+	@:optional var scale:Null<Float>;
+	@:optional var flipX:Null<Bool>;
+	@:optional var flipY:Null<Bool>;
 }
