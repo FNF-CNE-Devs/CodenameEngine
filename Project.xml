@@ -80,7 +80,9 @@
 
 	<!--In case you want to use the ui package-->
 	<!-- <haxelib name="discord_rpc_yce" if="desktop"/> -->
-	<haxelib name="discord_rpc" if="desktop"/>
+
+	<!-- haxelib git linc_discord-rpc https://github.com/Aidan63/linc_discord-rpc !-->
+	<haxelib name="linc_discord-rpc" if="desktop"/>
 
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
 
