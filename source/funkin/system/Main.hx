@@ -90,7 +90,7 @@ class Main extends Sprite
 		loadGameSettings();
 		
 		#if !mobile
-		addChild(new FPS(10, 3, 0xFFFFFF));
+		addChild(new FramerateField(10, 3, 0xFFFFFF));
 		#end
 	}
 
@@ -98,47 +98,7 @@ class Main extends Sprite
 	public static var audioDisconnected:Bool = false;
 	
 	public static var changeID:Int = 0;
-	@:dox(hide)
-	@:noCompletion
-	private function onStateSwitch(state:FlxState):Void {
-		#if windows
-			if (audioDisconnected) {
-				// for(e in lime.media.openal.AL.buffers) {
-				// 	lime.media.openal.AL.deleteBuffer(e);
-				// }
-				// lime.media.openal.AL.buffers = [];
-				// var buffers = [for(e in lime._internal.backend.native.NativeAudioSource.initBuffers) e];
-				// trace(buffers.length);
-
-				for(e in FlxG.sound.list) {
-					e.stop();
-				}
-				if (FlxG.sound.music != null)
-					FlxG.sound.music.stop();
-				
-				#if !lime_doc_gen
-				if (lime.media.AudioManager.context.type == OPENAL)
-				{
-					var alc = lime.media.AudioManager.context.openal;
-
-					var device = alc.openDevice();
-					var ctx = alc.createContext(device);
-					alc.makeContextCurrent(ctx);
-					alc.processContext(ctx);
-				}
-				#end
-				changeID++;
-				
-				// for(e in buffers) {
-				// 	@:privateAccess
-				// 	e.init();
-				// }
-
-				// lime._internal.backend.native.NativeAudioSource.initBuffers = [];
-				audioDisconnected = false;
-			}
-		#end
-	}
+	
 
 	public function loadGameSettings() {
 		funkin.options.PlayerSettings.init();
@@ -165,11 +125,10 @@ class Main extends Sprite
 		FlxG.fixedTimestep = false;
 		FlxG.autoPause = false;
 
-        FlxG.signals.preStateCreate.add(onStateSwitch);
-
 		Options.load();
 
-		WindowsAPI.registerAudio();
+		AudioSwitchFix.init();
+
 		// WindowsAPI.setAudioChangeCallback(function() {
 		// 	trace("test");
 		// });

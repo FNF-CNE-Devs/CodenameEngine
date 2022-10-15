@@ -23,6 +23,17 @@ class CoolUtil
 		return v == null ? defaultValue : v;
 	}
 
+	public static function getSizeString(size:UInt):String {
+		var labels = ["B", "KB", "MB", "GB", "TB"];
+		var rSize:Float = size;
+		var label:Int = 0;
+		while(rSize > 1024 && label < labels.length-1) {
+			label++;
+			rSize /= 1024;
+		}
+		return '${FlxMath.roundDecimal(rSize, 2)}${labels[label]}';
+	}
+
 	public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {
 		return FlxMath.lerp(v1, v2, getFPSRatio(ratio));
 	}

@@ -48,6 +48,8 @@ class TitleState extends MusicBeatState
 	{
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
+		FlxTransitionableState.skipNextTransIn = true;
+		
 		super.create();
 
 		startIntro();
@@ -73,7 +75,6 @@ class TitleState extends MusicBeatState
 			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		}
-		FlxTransitionableState.skipNextTransIn = true;
 
 		Conductor.changeBPM(102);
 		persistentUpdate = true;
