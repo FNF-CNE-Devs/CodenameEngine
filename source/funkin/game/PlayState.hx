@@ -81,8 +81,7 @@ class PlayState extends MusicBeatState
 	public var gf:Character;
 	public var boyfriend:Character;
 
-	public var notes:FlxTypedGroup<Note>;
-	public var unspawnNotes:Array<Note> = [];
+	public var notes:NoteGroup;
 
 	public var strumLine:FlxSprite;
 	public var curSection:Int = 0;
@@ -476,7 +475,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.sound.list.add(vocals);
 
-		notes = new FlxTypedGroup<Note>();
+		notes = new NoteGroup();
 		add(notes);
 
 		var noteData:Array<SwagSection>;
@@ -504,8 +503,8 @@ class PlayState extends MusicBeatState
 				}
 
 				var oldNote:Note;
-				if (unspawnNotes.length > 0)
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+				if (notes.length > 0)
+					oldNote = notes.members[Std.int(notes.members.length - 1)];
 				else
 					oldNote = null;
 
@@ -516,16 +515,16 @@ class PlayState extends MusicBeatState
 				var susLength:Float = swagNote.sustainLength;
 
 				susLength = susLength / Conductor.stepCrochet;
-				unspawnNotes.push(swagNote);
+				notes.add(swagNote);
 				if (susLength > 0.75) susLength++;
 
 				for (susNote in 0...Math.floor(susLength))
 				{
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+					oldNote = notes.members[Std.int(notes.length - 1)];
 
 					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote), daNoteData, oldNote, true);
 					sustainNote.scrollFactor.set();
-					unspawnNotes.push(sustainNote);
+					notes.add(sustainNote);
 
 					sustainNote.mustPress = gottaHitNote;
 
@@ -545,11 +544,7 @@ class PlayState extends MusicBeatState
 			}
 			daBeats += 1;
 		}
-
-		// trace(unspawnNotes.length);
-		// playerCounter += 1;
-
-		unspawnNotes.sort(sortByShit);
+		notes.sort(function(i, n1, n2) {return sortByShit(n1, n2);});
 
 		generatedMusic = true;
 	}
@@ -1004,8 +999,8 @@ class PlayState extends MusicBeatState
 			#end
 		}
 
-		while(unspawnNotes[0] != null && unspawnNotes[0].strumTime - Conductor.songPosition < 1500)
-			notes.add(unspawnNotes.shift());
+		// while(unspawnNotes[0] != null && unspawnNotes[0].strumTime - Conductor.songPosition < 1500)
+		// 	notes.add(unspawnNotes.shift());
 		
 
 		if (generatedMusic)
