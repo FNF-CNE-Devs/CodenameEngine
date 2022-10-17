@@ -849,7 +849,6 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			// Conductor.songPosition = FlxG.sound.music.time;
 			Conductor.songPosition += FlxG.elapsed * 1000;
 
 			if (!paused)
@@ -857,13 +856,9 @@ class PlayState extends MusicBeatState
 				songTime += FlxG.game.ticks - previousFrameTime;
 				previousFrameTime = FlxG.game.ticks;
 
-				// Interpolation type beat
-				if (Conductor.lastSongPos != Conductor.songPosition)
+				if (Math.abs(FlxG.sound.music.time - Conductor.songPosition) > 20)
 				{
-					songTime = (songTime + Conductor.songPosition) / 2;
-					Conductor.lastSongPos = Conductor.songPosition;
-					// Conductor.songPosition += FlxG.elapsed * 1000;
-					// trace('MISSED FRAME');
+					resyncVocals();
 				}
 			}
 
@@ -1411,10 +1406,6 @@ class PlayState extends MusicBeatState
 	{
 		super.stepHit();
 		scripts.call("stepHit", [curStep]);
-		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
-		{
-			resyncVocals();
-		}
 	}
 
 	public var lightningStrikeBeat:Int = 0;

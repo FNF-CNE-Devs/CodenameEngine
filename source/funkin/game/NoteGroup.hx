@@ -20,6 +20,10 @@ class NoteGroup extends FlxTypedGroup<Note> {
         }
     }
 
+    // public override function sort() {
+
+    // }
+
     public override function draw() {
         @:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
