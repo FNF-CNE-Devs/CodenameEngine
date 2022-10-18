@@ -241,16 +241,11 @@ class PlayState extends MusicBeatState
 		strumLine.scrollFactor.set();
 
 		strumLineNotes = new FlxTypedGroup<Strum>();
-		add(strumLineNotes);
-
 		playerStrums = new FlxTypedGroup<Strum>();
 		cpuStrums = new FlxTypedGroup<Strum>();
-
-		// startCountdown();
+		add(strumLineNotes);
 
 		generateSong(SONG.song);
-
-		// add(strumLine);
 
 		if (prevCamFollow != null)
 		{
@@ -282,16 +277,16 @@ class PlayState extends MusicBeatState
 
 
 		iconP1 = new HealthIcon(boyfriend.getIcon(), true);
-		iconP1.y = healthBar.y - (iconP1.height / 2);
-		add(iconP1);
+		iconP2 = new HealthIcon(boyfriend.getIcon(), true);
+		for(icon in [iconP1, iconP2]) {
+			icon.y = healthBar.y - (icon.height / 2);
+			add(iconP1);
+		}
 
-		iconP2 = new HealthIcon(dad.getIcon(), false);
-		iconP2.y = healthBar.y - (iconP2.height / 2);
-		add(iconP2);
+		scoreTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Score:0", 20);
+		missesTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Misses:0", 20);
+		accuracyTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy:-%", 20);
 
-		scoreTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "", 20);
-		missesTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "", 20);
-		accuracyTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy: TODO", 20);
 		for(text in [scoreTxt, missesTxt, accuracyTxt]) {
 			text.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE);
 			text.borderStyle = OUTLINE;
@@ -304,9 +299,8 @@ class PlayState extends MusicBeatState
 		missesTxt.alignment = CENTER;
 		accuracyTxt.alignment = LEFT;
 
-		for(e in [strumLineNotes, notes, healthBar, healthBarBG, iconP1, iconP2, scoreTxt, missesTxt, accuracyTxt]) {
+		for(e in [strumLineNotes, notes, healthBar, healthBarBG, iconP1, iconP2, scoreTxt, missesTxt, accuracyTxt])
 			e.cameras = [camHUD];
-		}
 
 		startingSong = true;
 
@@ -1056,7 +1050,7 @@ class PlayState extends MusicBeatState
 
 	public var endingSong:Bool = false;
 
-	private function popUpScore(strumtime:Float):Void
+	private function popUpScore(strumtime:Float, score:Int = 350):Void
 	{
 		var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
 		vocals.volume = 1;
@@ -1069,7 +1063,6 @@ class PlayState extends MusicBeatState
 		//
 
 		var rating:FlxSprite = new FlxSprite();
-		var score:Int = 350;
 
 		var daRating:String = "sick";
 
@@ -1259,7 +1252,11 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned)
 		{
-			health -= 0.04;
+			var event:NoteHitEvent = scripts.event("onNoteMiss", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, -0.04, false, -10));
+
+			if (event.cancelled) return;
+			
+			health += event.healthGain;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');
@@ -1270,8 +1267,6 @@ class PlayState extends MusicBeatState
 			misses++;
 
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
-			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
-			// FlxG.log.add('played imss note');
 
 			if (muteVocalsOnMiss) vocals.volume = 0;
 			boyfriend.stunned = true;
@@ -1312,7 +1307,7 @@ class PlayState extends MusicBeatState
 				if (event.player && !note.isSustainNote)
 				{
 					combo++;
-					popUpScore(note.strumTime);
+					popUpScore(note.strumTime, event.score);
 				}
 
 				health += event.healthGain;
@@ -1336,11 +1331,13 @@ class PlayState extends MusicBeatState
 	}
 
 	public function deleteNote(note:Note) {
-		// TODO: See TODO above the TODO above the one that says TODO note pressed handler for dad
-		scripts.call("onNoteDelete", [note]);
-		note.kill();
-		notes.remove(note, true);
-		note.destroy();
+		var event:SimpleNoteEvent = scripts.event("onNoteDelete", new SimpleNoteEvent(note));
+		if (!event.cancelled) {
+			scripts.call("onNoteDelete", [note]);
+			note.kill();
+			notes.remove(note, true);
+			note.destroy();
+		}
 	}
 
 	override function stepHit()
@@ -1349,30 +1346,14 @@ class PlayState extends MusicBeatState
 		scripts.call("stepHit", [curStep]);
 	}
 
-	public var lightningStrikeBeat:Int = 0;
-	public var lightningOffset:Int = 8;
-
 	override function beatHit()
 	{
 		super.beatHit();
 		scripts.call("beatHit", [curBeat]);
 
-		if (SONG.notes[Math.floor(curStep / 16)] != null)
-		{
-			if (SONG.notes[Math.floor(curStep / 16)].changeBPM)
-			{
-				Conductor.changeBPM(SONG.notes[Math.floor(curStep / 16)].bpm);
-				FlxG.log.add('CHANGED BPM!');
-			}
-		}
+		if (SONG.notes[Math.floor(curStep / 16)] != null && SONG.notes[Math.floor(curStep / 16)].changeBPM)
+			Conductor.changeBPM(SONG.notes[Math.floor(curStep / 16)].bpm);
 		
-		// HARDCODING FOR MILF ZOOMS!
-		// if (curSong.toLowerCase() == 'milf' && curBeat >= 168 && curBeat < 200 && camZooming && FlxG.camera.zoom < 1.35)
-		// {
-		// 	FlxG.camera.zoom += 0.015;
-		// 	camHUD.zoom += 0.03;
-		// }
-
 		if (camZoomingInterval < 1) camZoomingInterval = 1;
 		if (camZooming && FlxG.camera.zoom < 1.35 && curBeat % camZoomingInterval == 0)
 		{
@@ -1386,10 +1367,10 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		// if (curBeat % gfSpeed == 0)
-		// {
-		// 	gf.dance();
-		// }
+		if (curBeat % gfSpeed == 0)
+		{
+			gf.dance();
+		}
 	}
 
 	public var curLight:Int = 0;

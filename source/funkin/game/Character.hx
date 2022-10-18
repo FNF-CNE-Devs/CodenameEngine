@@ -323,13 +323,6 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 			switch (curCharacter)
 			{
 				// hardcode custom dance animations here
-				case 'spooky':
-					danced = !danced;
-
-					if (danced)
-						playAnim('danceRight');
-					else
-						playAnim('danceLeft');
 				default:
 					if (isDanceLeftDanceRight) {
 						playAnim((danced = !danced) ? 'danceLeft' : 'danceRight');

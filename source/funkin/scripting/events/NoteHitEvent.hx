@@ -10,6 +10,10 @@ class NoteHitEvent extends CancellableEvent {
     @:dox(hide) public var enableCamZooming:Bool = true;
 
     /**
+        Whenever a miss should be added.
+    **/
+    public var misses:Bool = true;
+    /**
      * Note that has been pressed
      */
     public var note:Note;
@@ -30,22 +34,28 @@ class NoteHitEvent extends CancellableEvent {
      */
     public var direction:Int;
     /**
-     * The amount of health that'll be gained from pressing that note.
+     * Score gained after note press.
+     */
+    public var score:Int;
+    /**
+     * The amount of health that'll be gained from pressing that note. If called from `onNoteMiss`, the value will be negative.
      */
     public var healthGain:Float;
 
     /**
      * Creates a new NoteHitEvent.
      */
-    public function new(note:Note, character:Character, player:Bool, noteType:String, direction:Int, healthGain:Float) {
+    public function new(note:Note, character:Character, player:Bool, noteType:String, direction:Int, healthGain:Float, unmuteVocals:Bool = true, score:Int = 350) {
         super();
 
         this.note = note;
         this.character = character;
         this.player = player;
         this.noteType = noteType;
-        this.direction = cast direction;
+        this.direction = direction;
         this.healthGain = healthGain;
+        this.unmuteVocals = unmuteVocals;
+        this.score = score;
     }
 
     /**
@@ -75,6 +85,15 @@ class NoteHitEvent extends CancellableEvent {
     }
     @:dox(hide)
     public function cancelVocalsUnmute() {preventVocalsUnmute();}
+
+    /**
+     * Prevents the vocals volume from being muted in case its a parameter of `onNoteMiss`
+     */
+    public function preventVocalsMute() {
+        unmuteVocals = true;
+    }
+    @:dox(hide)
+    public function cancelVocalsMute() {preventVocalsMute();}
 
     /**
      * Prevents the camera zoom every 4 beats from enabling.
