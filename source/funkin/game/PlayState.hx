@@ -280,7 +280,7 @@ class PlayState extends MusicBeatState
 		iconP2 = new HealthIcon(boyfriend.getIcon(), true);
 		for(icon in [iconP1, iconP2]) {
 			icon.y = healthBar.y - (icon.height / 2);
-			add(iconP1);
+			add(icon);
 		}
 
 		scoreTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Score:0", 20);
@@ -441,9 +441,9 @@ class PlayState extends MusicBeatState
 			{
 				if (songNotes == null) continue;
 				var daStrumTime:Float = songNotes[0];
-				var daNoteData:Int = Std.int(songNotes[1] % 4);
-				var daNoteType:Int = Std.int(songNotes[1] / 4);
-				var gottaHitNote:Bool = songNotes[1] >= 4 ? !section.mustHitSection : section.mustHitSection;
+				var daNoteData:Int = Std.int(songNotes[1] % 8);
+				var daNoteType:Int = Std.int(songNotes[1] / 8);
+				var gottaHitNote:Bool = songNotes[1] >= 4 ? section.mustHitSection : !section.mustHitSection;
 
 				if (songNotes.length > 2) {
 					if (songNotes[3] is Int)
