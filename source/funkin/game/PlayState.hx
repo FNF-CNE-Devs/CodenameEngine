@@ -277,7 +277,7 @@ class PlayState extends MusicBeatState
 
 
 		iconP1 = new HealthIcon(boyfriend.getIcon(), true);
-		iconP2 = new HealthIcon(boyfriend.getIcon(), true);
+		iconP2 = new HealthIcon(dad.getIcon(), false);
 		for(icon in [iconP1, iconP2]) {
 			icon.y = healthBar.y - (icon.height / 2);
 			add(icon);
@@ -443,7 +443,7 @@ class PlayState extends MusicBeatState
 				var daStrumTime:Float = songNotes[0];
 				var daNoteData:Int = Std.int(songNotes[1] % 8);
 				var daNoteType:Int = Std.int(songNotes[1] / 8);
-				var gottaHitNote:Bool = songNotes[1] >= 4 ? !section.mustHitSection : section.mustHitSection;
+				var gottaHitNote:Bool = daNoteData >= 4 ? !section.mustHitSection : section.mustHitSection;
 
 				if (songNotes.length > 2) {
 					if (songNotes[3] is Int)
@@ -458,7 +458,7 @@ class PlayState extends MusicBeatState
 				else
 					swagNote = null;
 
-				swagNote = new Note(daStrumTime, daNoteData, daNoteType, gottaHitNote, swagNote);
+				swagNote = new Note(daStrumTime, daNoteData % 4, daNoteType, gottaHitNote, swagNote);
 				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
 				notes.add(swagNote);
@@ -470,7 +470,7 @@ class PlayState extends MusicBeatState
 				// create sustains
 				for (susNote in 0...Math.floor(susLength))
 				{
-					swagNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote), daNoteData, daNoteType, gottaHitNote, swagNote, true);
+					swagNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote), daNoteData % 4, daNoteType, gottaHitNote, swagNote, true);
 					swagNote.scrollFactor.set();
 					notes.add(swagNote);
 				}

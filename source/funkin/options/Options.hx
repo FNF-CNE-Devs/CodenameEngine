@@ -152,6 +152,7 @@ class Options
 
 		if (!__eventAdded) {
 			Lib.application.onExit.add(function(i:Int) {
+				trace("saving settings...");
 				save();
 			});
 			__eventAdded = true;
@@ -159,7 +160,7 @@ class Options
 	}
 
 	public static function save() {
-		for(field in Reflect.fields(Options)) {
+		for(field in Type.getClassFields(Options)) {
 			var obj = Reflect.field(Options, field);
 			if (Reflect.isFunction(obj) || obj is FlxSave) continue;
 			Reflect.setField(__save.data, field, obj);

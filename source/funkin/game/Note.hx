@@ -51,6 +51,8 @@ class Note extends FlxSprite
 			prevNote = this;
 
 		this.prevNote = prevNote;
+		this.mustPress = mustPress;
+		this.noteTypeID = noteType;
 		isSustainNote = sustainNote;
 
 		x += 50;
