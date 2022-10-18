@@ -443,7 +443,7 @@ class PlayState extends MusicBeatState
 				var daStrumTime:Float = songNotes[0];
 				var daNoteData:Int = Std.int(songNotes[1] % 8);
 				var daNoteType:Int = Std.int(songNotes[1] / 8);
-				var gottaHitNote:Bool = songNotes[1] >= 4 ? section.mustHitSection : !section.mustHitSection;
+				var gottaHitNote:Bool = songNotes[1] >= 4 ? !section.mustHitSection : section.mustHitSection;
 
 				if (songNotes.length > 2) {
 					if (songNotes[3] is Int)
