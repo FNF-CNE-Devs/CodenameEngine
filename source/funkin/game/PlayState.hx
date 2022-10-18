@@ -338,18 +338,18 @@ class PlayState extends MusicBeatState
 
 		var swagCounter:Int = 0;
 
+		introAssets.set('school', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
+		introAssets.set('schoolEvil', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
+
+		var introSprites:Array<String> = [null, 'ready', "set", "go"];
+		var introSounds:Array<String> = ['intro3', 'intro2', "intro1", "introGo"];
+
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
 			dad.dance();
 			gf.dance();
 			boyfriend.playAnim('idle');
 
-			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
-			introAssets.set('default', ['ready', "set", "go"]);
-			introAssets.set('school', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
-			introAssets.set('schoolEvil', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
-
-			var introAlts:Array<String> = introAssets.get('default');
 			var altSuffix:String = "";
 
 			for (value in introAssets.keys())
@@ -361,73 +361,46 @@ class PlayState extends MusicBeatState
 				}
 			}
 
-			// TODO: Cancelable countdown
-			scripts.call("onCountdown", [swagCounter]);
+			var event:CountdownEvent = scripts.event("onCountdown", new CountdownEvent(
+				introSprites[swagCounter],
+				introSounds[swagCounter],
+				1, 0.6, true));
 
-			switch (swagCounter)
+			var sprite:FlxSprite;
+			var sound:FlxSound;
+			var tween:FlxTween;
 
-			{
-				case 0:
-					FlxG.sound.play(Paths.sound('intro3'), 0.6);
-				case 1:
-					var ready:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
-					ready.scrollFactor.set();
-					ready.updateHitbox();
+			if (!event.cancelled) {
+				if (event.spritePath != null) {
+					var spr = event.spritePath;
+					if (!Assets.exists(spr)) spr = Paths.image(spr);
 
-					if (curStage.startsWith('school'))
-						ready.setGraphicSize(Std.int(ready.width * daPixelZoom));
-
-					ready.screenCenter();
-					add(ready);
-					FlxTween.tween(ready, {y: ready.y += 100, alpha: 0}, Conductor.crochet / 1000, {
+					sprite = new FlxSprite().loadGraphic(spr);
+					sprite.scrollFactor.set();
+					sprite.updateHitbox();
+					sprite.screenCenter();
+					add(sprite);
+					tween = FlxTween.tween(sprite, {y: sprite.y + 100, alpha: 0}, Conductor.crochet / 1000, {
 						ease: FlxEase.cubeInOut,
 						onComplete: function(twn:FlxTween)
 						{
-							ready.destroy();
+							sprite.destroy();
 						}
 					});
-					FlxG.sound.play(Paths.sound('intro2'), 0.6);
-				case 2:
-					var set:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
-					set.scrollFactor.set();
-
-					if (curStage.startsWith('school'))
-						set.setGraphicSize(Std.int(set.width * daPixelZoom));
-
-					set.screenCenter();
-					add(set);
-					FlxTween.tween(set, {y: set.y += 100, alpha: 0}, Conductor.crochet / 1000, {
-						ease: FlxEase.cubeInOut,
-						onComplete: function(twn:FlxTween)
-						{
-							set.destroy();
-						}
-					});
-					FlxG.sound.play(Paths.sound('intro1'), 0.6);
-				case 3:
-					var go:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
-					go.scrollFactor.set();
-
-					if (curStage.startsWith('school'))
-						go.setGraphicSize(Std.int(go.width * daPixelZoom));
-
-					go.updateHitbox();
-
-					go.screenCenter();
-					add(go);
-					FlxTween.tween(go, {y: go.y += 100, alpha: 0}, Conductor.crochet / 1000, {
-						ease: FlxEase.cubeInOut,
-						onComplete: function(twn:FlxTween)
-						{
-							go.destroy();
-						}
-					});
-					FlxG.sound.play(Paths.sound('introGo'), 0.6);
-				case 4:
+				}
+				if (event.soundPath != null) {
+					var sfx = event.soundPath;
+					if (!Assets.exists(sfx)) sfx = Paths.sound(sfx);
+					sound = FlxG.sound.play(sfx, event.volume);
+				}
 			}
-
+			event.sprite = sprite;
+			event.sound = sound;
+			event.spriteTween = tween;
+			event.cancelled = false;
+			
+			scripts.event("onCountdownPost", event);
 			swagCounter += 1;
-			// generateSong('fresh');
 		}, introLength);
 	}
 
@@ -459,96 +432,80 @@ class PlayState extends MusicBeatState
 
 	public var debugNum:Int = 0;
 
-	private function generateSong(dataPath:String):Void
+	private function generateSong(dataPath:String, ?songData:SwagSong):Void
 	{
-		// FlxG.log.add(ChartParser.parse());
-
-		var songData = SONG;
+		if (songData == null) songData = SONG;
 		Conductor.changeBPM(songData.bpm);
 
 		curSong = songData.song;
 
+		vocals = new FlxSound();
 		if (SONG.needsVoices)
-			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
-		else
-			vocals = new FlxSound();
-
+			vocals.loadEmbedded(Paths.voices(PlayState.SONG.song));
 		FlxG.sound.list.add(vocals);
 
 		notes = new NoteGroup();
 		add(notes);
 
-		var noteData:Array<SwagSection>;
-
-		// NEW SHIT
-		noteData = songData.notes;
-
+		var noteData:Array<SwagSection> = songData.notes;
 		var playerCounter:Int = 0;
-
 		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
+
 		for (section in noteData)
 		{
-			var coolSection:Int = Std.int(section.lengthInSteps / 4);
+			if (section == null || section.sectionNotes == null) continue;
+
+			// var coolSection:Int = Std.int(section.lengthInSteps / 4);
 
 			for (songNotes in section.sectionNotes)
 			{
+				if (songNotes == null) continue;
 				var daStrumTime:Float = songNotes[0];
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
+				var daNoteType:Int = Std.int(songNotes[1] / 4);
+				var gottaHitNote:Bool = songNotes[1] >= 4 ? !section.mustHitSection : section.mustHitSection;
 
-				var gottaHitNote:Bool = section.mustHitSection;
-
-				if (songNotes[1] > 3)
-				{
-					gottaHitNote = !section.mustHitSection;
+				if (songNotes.length > 2) {
+					if (songNotes[3] is Int)
+						daNoteType = songNotes[3];
+					else if (songNotes[3] is String)
+						daNoteType = addNoteType(songNotes[3]);
 				}
 
-				var oldNote:Note;
+				var swagNote:Note;
 				if (notes.length > 0)
-					oldNote = notes.members[Std.int(notes.members.length - 1)];
+					swagNote = notes.members[Std.int(notes.members.length - 1)];
 				else
-					oldNote = null;
+					swagNote = null;
 
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
+				swagNote = new Note(daStrumTime, daNoteData, daNoteType, gottaHitNote, swagNote);
 				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
-
-				var susLength:Float = swagNote.sustainLength;
-
-				susLength = susLength / Conductor.stepCrochet;
 				notes.add(swagNote);
+				
+				// calculate sustain length and fix
+				var susLength:Float = swagNote.sustainLength / Conductor.stepCrochet;
 				if (susLength > 0.75) susLength++;
 
+				// create sustains
 				for (susNote in 0...Math.floor(susLength))
 				{
-					oldNote = notes.members[Std.int(notes.length - 1)];
-
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote), daNoteData, oldNote, true);
-					sustainNote.scrollFactor.set();
-					notes.add(sustainNote);
-
-					sustainNote.mustPress = gottaHitNote;
-
-					if (sustainNote.mustPress)
-					{
-						sustainNote.x += FlxG.width / 2; // general offset
-					}
+					swagNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote), daNoteData, daNoteType, gottaHitNote, swagNote, true);
+					swagNote.scrollFactor.set();
+					notes.add(swagNote);
 				}
-
-				swagNote.mustPress = gottaHitNote;
-
-				if (swagNote.mustPress)
-				{
-					swagNote.x += FlxG.width / 2; // general offset
-				}
-				else {}
 			}
 			daBeats += 1;
 		}
-		notes.sort(function(i, n1, n2) {return sortByShit(n1, n2);});
+		notes.sortNotes();
 
 		generatedMusic = true;
 	}
 
+	public function addNoteType(name:String) {
+		// TODO: add note type by string
+		return 0;
+	}
 	function sortByShit(Obj1:Note, Obj2:Note):Int
 	{
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
@@ -857,9 +814,7 @@ class PlayState extends MusicBeatState
 				previousFrameTime = FlxG.game.ticks;
 
 				if (Math.abs(FlxG.sound.music.time - Conductor.songPosition) > 20)
-				{
 					resyncVocals();
-				}
 			}
 
 			// Conductor.lastSongPos = FlxG.sound.music.time;

@@ -47,6 +47,18 @@ interface PlayStateScript {
     public function beatHit(curBeat:Int):Void;
 
     /**
+     * Triggered every countdown.
+     * @param event Countdown event.
+     */
+    public function onCountdown(event:CountdownEvent):Void;
+
+    /**
+     * Triggered after every countdown.
+     * @param event Countdown event.
+     */
+    public function onCountdownPost(event:CountdownEvent):Void;
+
+    /**
      * Triggered whenever the player hits a note.
      * @param note Event object with the note being pressed, the character who pressed it, and functions to alter or cancel the default behaviour.
      */
