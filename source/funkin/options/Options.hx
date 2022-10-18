@@ -143,7 +143,7 @@ class Options
 	}
 	#end
 	public static function load() {
-		__save = new FlxSave();
+		if (__save == null) __save = new FlxSave();
 		__save.bind("options");
 		for(field in Reflect.fields(__save.data)) {
 			var obj = Reflect.field(__save.data, field);

@@ -1,5 +1,8 @@
 package funkin.options;
 
+import flixel.util.FlxColor;
+import flixel.FlxSprite;
+import flixel.FlxG;
 /**
  * Direct replica from Week 7 lol
  */
@@ -11,6 +14,7 @@ class OptionsScreen extends MusicBeatState {
 
     public override function create() {
         super.create();
+        
         
     }
 }

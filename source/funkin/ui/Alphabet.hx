@@ -89,7 +89,8 @@ class Alphabet extends FlxSpriteGroup
 		var alphabetPath = Paths.xml("alphabet");
 		if (alphabetPath != AlphaCharacter.__alphaPath) {
 			refreshAlphabetXML(alphabetPath);
-		} else {
+		}
+		#if MOD_SUPPORT else {
 			var libThing = new LimeLibrarySymbol(alphabetPath);
 			if (libThing.library is AssetLibrary) {
 				var library = cast(libThing.library, AssetLibrary);
@@ -98,7 +99,6 @@ class Alphabet extends FlxSpriteGroup
 					@:privateAccess
 					library = cast(library.__proxy, AssetLibrary);
 				}
-				#if MOD_SUPPORT
 				if (library is ModsAssetLibrary) {
 					var modLib = cast(library, ModsAssetLibrary);
 					@:privateAccess
@@ -106,9 +106,9 @@ class Alphabet extends FlxSpriteGroup
 						refreshAlphabetXML(alphabetPath);
 					}
 				}
-				#end
 			}
 		}
+		#end
 
 		if (text != "")
 		{

@@ -40,8 +40,7 @@ class Conductor
 	@:dox(hide) public static var lastSongPos:Float;
 	@:dox(hide) public static var offset:Float = 0;
 
-	@:dox(hide) public static var safeFrames:Int = 10;
-	@:dox(hide) public static var safeZoneOffset:Float = (safeFrames / 60) * 1000; // is calculated in create(), is safeFrames in milliseconds
+	@:dox(hide) public static var safeZoneOffset:Float = 175; // is calculated in create(), is safeFrames in milliseconds
 
 	/**
 	 * Array of all BPM changes that have been mapped.

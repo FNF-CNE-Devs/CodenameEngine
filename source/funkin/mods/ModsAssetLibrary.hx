@@ -139,9 +139,7 @@ class ModsAssetLibrary extends AssetLibrary {
     private function __isCacheValid(cache:Map<String, Dynamic>, asset:String) {
         if (!editedTimes.exists(asset))
             return false;
-        
-        
-        if (editedTimes[asset] == null) return true;
+        if (editedTimes[asset] == null) return false;
         if (editedTimes[asset] < FileSystem.stat(getPath(asset)).mtime.getTime()) return false;
         return true;
     }
