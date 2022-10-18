@@ -6,6 +6,7 @@ import flixel.animation.FlxAnimation;
 import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.FlxG;
+import flixel.FlxSprite;
 
 using StringTools;
 
@@ -128,6 +129,13 @@ class CoolUtil
 		var old = anim1.frames;
 		anim1.frames = anim2.frames;
 		anim2.frames = old;
+	}
+
+	public static function setUnstretchedGraphicSize(sprite:FlxSprite, width:Int, height:Int, fill:Bool = true) {
+		sprite.setGraphicSize(width, height);
+		sprite.updateHitbox();
+		var nScale = (fill ? Math.max : Math.min)(sprite.scale.x, sprite.scale.y);
+		sprite.scale.set(nScale, nScale);
 	}
 
 	public static function keyToString(key:Null<FlxKey>):String {

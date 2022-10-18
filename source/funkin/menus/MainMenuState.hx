@@ -122,6 +122,9 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
+			if (FlxG.keys.justPressed.SEVEN)
+				FlxG.switchState(new funkin.desktop.DesktopMain());
+
 			if (controls.UP_P)
 			{
 				CoolUtil.playMenuSFX(0);
