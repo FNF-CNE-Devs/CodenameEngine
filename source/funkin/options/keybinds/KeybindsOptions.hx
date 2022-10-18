@@ -209,6 +209,7 @@ class KeybindsOptions extends MusicBeatSubstate {
                 else
                     FlxG.switchState(new OptionsMenu());
                 controls.setKeyboardScheme(Solo);
+                Options.save();
                 return;
             }
 

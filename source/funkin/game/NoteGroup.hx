@@ -1,5 +1,6 @@
 package funkin.game;
 
+import flixel.util.FlxSort;
 import flixel.FlxCamera;
 import funkin.system.Conductor;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -7,6 +8,17 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 class NoteGroup extends FlxTypedGroup<Note> {
     var __loopSprite:Note;
     var i:Int = 0;
+
+    public function addNotes(notes:Array<Note>) {
+        for(e in notes) add(e);
+        sortNotes();
+    }
+
+    public function sortNotes() {
+        sort(function(i, n1, n2) {
+            return FlxSort.byValues(FlxSort.ASCENDING, n1.strumTime, n2.strumTime);
+        });
+    }
     public override function update(elapsed:Float) {
         i = 0;
         __loopSprite = null;
@@ -19,10 +31,6 @@ class NoteGroup extends FlxTypedGroup<Note> {
             i++;
         }
     }
-
-    // public override function sort() {
-
-    // }
 
     public override function draw() {
         @:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
