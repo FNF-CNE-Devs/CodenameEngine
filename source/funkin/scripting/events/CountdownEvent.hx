@@ -1,6 +1,8 @@
 package funkin.scripting.events;
 
 import flixel.tweens.FlxTween;
+import flixel.FlxSprite;
+import flixel.system.FlxSound;
 
 class CountdownEvent extends CancellableEvent {
     /**
@@ -34,13 +36,13 @@ class CountdownEvent extends CancellableEvent {
      */
     public var sprite:FlxSprite;
     /**
+     * Created tween for the sprite, only available in `onCountdownPost`
+     */
+    public var spriteTween:FlxTween;
+    /**
      * Created sound, only available in `onCountdownPost`
      */
     public var sound:FlxSound;
-    /**
-     * Created tween, only available in `onCountdownPost`
-     */
-    public var tween:FlxTween;
 
     public function new(spritePath:String, soundPath:String, scale:Float = 1, volume:Float = 1, antialiasing:Bool = true) {
         super();

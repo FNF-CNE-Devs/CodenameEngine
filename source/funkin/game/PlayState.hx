@@ -338,9 +338,6 @@ class PlayState extends MusicBeatState
 
 		var swagCounter:Int = 0;
 
-		introAssets.set('school', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
-		introAssets.set('schoolEvil', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
-
 		var introSprites:Array<String> = [null, 'ready', "set", "go"];
 		var introSounds:Array<String> = ['intro3', 'intro2', "intro1", "introGo"];
 
@@ -348,27 +345,16 @@ class PlayState extends MusicBeatState
 		{
 			dad.dance();
 			gf.dance();
-			boyfriend.playAnim('idle');
-
-			var altSuffix:String = "";
-
-			for (value in introAssets.keys())
-			{
-				if (value == curStage)
-				{
-					introAlts = introAssets.get(value);
-					altSuffix = '-pixel';
-				}
-			}
+			boyfriend.dance();
 
 			var event:CountdownEvent = scripts.event("onCountdown", new CountdownEvent(
 				introSprites[swagCounter],
 				introSounds[swagCounter],
 				1, 0.6, true));
 
-			var sprite:FlxSprite;
-			var sound:FlxSound;
-			var tween:FlxTween;
+			var sprite:FlxSprite = null;
+			var sound:FlxSound = null;
+			var tween:FlxTween = null;
 
 			if (!event.cancelled) {
 				if (event.spritePath != null) {
@@ -398,7 +384,7 @@ class PlayState extends MusicBeatState
 			event.sound = sound;
 			event.spriteTween = tween;
 			event.cancelled = false;
-			
+
 			scripts.event("onCountdownPost", event);
 			swagCounter += 1;
 		}, introLength);
