@@ -1,0 +1,7 @@
+<!DOCTYPE codename-config >
+<mod name="Codename Engine" desc="New FNF engine designed to make mod making easier, both in source and via softcoding!">
+    <!-- This line is ignored if in source assets. Use the project.xml to change settings. !-->
+    <window icon="icon.ico" title="Friday Night Funkin' - Codename Engine" width="1280" height="720" />
+
+    
+</mod>

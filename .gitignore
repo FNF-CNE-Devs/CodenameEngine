@@ -1,3 +1,5 @@
 export/
+latest/windows/haxe
+latest/windows/obj
 .vscode/
 APIStuff.hx

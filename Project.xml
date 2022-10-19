@@ -40,6 +40,7 @@
 	<set name="BUILD_DIR" value="export/debug" if="debug" />
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
 	<set name="BUILD_DIR" value="export/32bit" if="32bit" />
+	<set name="BUILD_DIR" value="latest/" if="beta" />
 
 	<classpath name="source" />
 	
@@ -75,7 +76,6 @@
 	<haxelib name="flixel-yc29" rename="flixel" />
 	<haxedev set='webgl' />
 
-	<!--In case you want to use the addons package-->
 	<haxelib name="hscript-yoshiengine" />
 
 	<!--In case you want to use the ui package-->
