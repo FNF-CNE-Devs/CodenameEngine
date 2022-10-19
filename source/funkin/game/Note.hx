@@ -5,6 +5,7 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.math.FlxRect;
+import flixel.math.FlxPoint;
 import funkin.system.Conductor;
 #if polymod
 import polymod.format.ParseRules.TargetSignatureElement;
@@ -178,6 +179,32 @@ class Note extends FlxSprite
 				// prevNote.setGraphicSize();
 			}
 		}
+	}
+
+	public var angleOffsets:Bool = true;
+
+	override function draw() {
+		if (angleOffsets && Std.int(angle % 360) != 0) {
+			var oldOffset = FlxPoint.get(offset.x, offset.y);
+			// var oldOrigin = FlxPoint.get(origin.x, origin.y);
+
+			offset.set(
+				(Math.cos(angle / 180 * Math.PI) * offset.x) + (Math.sin(angle / 180 * Math.PI) * offset.y),
+				(Math.sin(angle / 180 * Math.PI) * offset.x) + (Math.cos(angle / 180 * Math.PI) * offset.y));
+			// origin.set(
+			// 	(-Math.cos(angle / 180 * Math.PI) * origin.x) + (-Math.sin(angle / 180 * Math.PI) * origin.y),
+			// 	(-Math.sin(angle / 180 * Math.PI) * origin.x) + (-Math.cos(angle / 180 * Math.PI) * origin.y));
+
+			super.draw();
+
+			offset.set(oldOffset.x, oldOffset.y);
+			// origin.set(oldOrigin.x, oldOrigin.y);
+
+			oldOffset.put();
+			// oldOrigin.put();
+			return;
+		}
+		super.draw();
 	}
 
 	override function update(elapsed:Float)

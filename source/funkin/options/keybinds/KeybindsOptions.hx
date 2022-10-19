@@ -141,7 +141,7 @@ class KeybindsOptions extends MusicBeatSubstate {
             
             k++;
             for(e in category.settings) {
-                // TODO!!
+                
                 var xOffset:Float = 200;
                 var sparrowIcon:String = null;
                 var sparrowAnim:String = null;

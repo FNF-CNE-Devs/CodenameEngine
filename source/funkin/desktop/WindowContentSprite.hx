@@ -20,7 +20,7 @@ class WindowContentSprite extends FlxSprite {
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
-        cam.render()
+        // cam.render()
     }
     public override function draw() {
         super.draw();

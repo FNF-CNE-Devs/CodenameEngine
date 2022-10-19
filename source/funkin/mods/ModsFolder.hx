@@ -121,28 +121,6 @@ class ModsFolder {
         #end
     }
 
-    public static function checkForOutdatedAssets(assets:ModsAssetLibrary) {
-        // TODO: Fix this
-        #if sys
-        @:privateAccess
-        for(asset=>path in assets.paths) {
-            if (asset == null || path == null) continue;
-            var editedTime:Null<Float> = assets.getEditedTime(asset);
-            if (editedTime == null) continue;
-            try {
-                var stat = FileSystem.stat(path);
-                if (stat.mtime.getTime() > editedTime) {
-                    // refresh
-                    trace('Refreshing ${asset}');
-                    Assets.cache.clear(asset);
-                    @:privateAccess
-                    FlxG.bitmap.removeKey(asset);
-                }
-            }
-        }
-        #end
-    }
-
     private static function onStateSwitch(newState:FlxState) {
         Assets.cache.clear();
         lime.utils.Assets.cache.clear();

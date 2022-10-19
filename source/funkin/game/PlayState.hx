@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.options.Options;
 import funkin.scripting.Script;
 import flixel.util.FlxDestroyUtil;
 #if desktop
@@ -119,6 +120,7 @@ class PlayState extends MusicBeatState
 
 	
 	public var songScore:Int = 0;
+	public var downscroll:Bool = Options.downscroll;
 	public var misses:Int = 0;
 	public var scoreTxt:FlxText;
 	public var missesTxt:FlxText;

@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.options.Options;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
@@ -10,11 +11,24 @@ class Strum extends FlxSprite {
     public var lastHit:Float = -5000;
 
     public var scrollSpeed:Null<Float> = null; // custom scroll speed per strum
+    public var noteAngle:Null<Float> = null; // custom scroll speed per strum
+    public var downscroll:Null<Bool> = false; // custom downscroll per strum
     
     public function getScrollSpeed() {
         if (scrollSpeed != null) return scrollSpeed;
         if (PlayState.instance != null) return PlayState.instance.scrollSpeed;
         return 1;
+    }
+    
+    public function getNotesAngle() {
+        if (noteAngle != null) return noteAngle;
+        return angle;
+    }
+    
+    public function getDownscroll() {
+        if (downscroll != null) return downscroll;
+        if (PlayState.instance != null) return PlayState.instance.downscroll;
+        return Options.downscroll;
     }
 
     public override function update(elapsed:Float) {
@@ -28,12 +42,24 @@ class Strum extends FlxSprite {
 
     public function updateNotePosition(daNote:Note) {
         var offset = FlxPoint.get(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(PlayState.instance.scrollSpeed, 2)));
+        var realOffset = FlxPoint.get(0, 0);
         if (daNote.isSustainNote) offset.y -= Note.swagWidth / 2;
-        // TODO: angle stuff
-        daNote.x = x + offset.x;
-        daNote.y = y - offset.y;
+        
+        var noteAngle = getNotesAngle();
+        daNote.angle = daNote.isSustainNote ? noteAngle : angle;
+        if (Std.int(noteAngle % 360) != 0) {
+            realOffset.x = (Math.cos(noteAngle / 180 * Math.PI) * offset.x) + (Math.sin(noteAngle / 180 * Math.PI) * offset.y);
+            realOffset.y = (Math.sin(noteAngle / 180 * Math.PI) * offset.x) + (Math.cos(noteAngle / 180 * Math.PI) * offset.y);
+        } else {
+            realOffset.x = offset.x;
+            realOffset.y = offset.y;
+        }
+        if (!downscroll)
+            realOffset.y *= -1;
+        daNote.setPosition(x + realOffset.x, y + realOffset.y);
         
         offset.put();
+        realOffset.put();
     }
 
     public function updateClipRect(daNote:Note) {
