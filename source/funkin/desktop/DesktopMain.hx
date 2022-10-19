@@ -9,20 +9,19 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 
 class DesktopMain extends MusicBeatState {
-    var oldScaleMode:BaseScaleMode;
-    var wallpaper:FlxSprite;
-    var screenSize:FlxPoint;
+    public var oldScaleMode:BaseScaleMode;
+    public var wallpaper:FlxSprite;
+    public var screenSize:FlxPoint;
 
-    var windows:WindowGroup;
+    public var windows:WindowGroup;
 
-    public var instance:DesktopMain;
+    public static var instance:DesktopMain;
 
     public override function create() {
         super.create();
         instance = this;
         
-        FlxG.mouse.visible = true;
-        FlxG.mouse.load(Paths.image('desktop/cursor'));
+        FlxG.mouse.useSystemCursor = FlxG.mouse.visible = true;
         oldScaleMode = FlxG.scaleMode;
         FlxG.scaleMode = new FixedScaleAdjustSizeScaleMode(false, false);
 
@@ -34,7 +33,7 @@ class DesktopMain extends MusicBeatState {
         wallpaper.scrollFactor.set(0, 0); // anchor at top left
         add(wallpaper);
 
-        screenSize = new FlxPoint(FlxG.width, FlxG.height);
+        screenSize = new FlxPoint(-1, -1);
 
         windows = new WindowGroup();
         add(windows);
@@ -43,8 +42,6 @@ class DesktopMain extends MusicBeatState {
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
-        
-        // trace(FlxG.width, FlxG.height);
 
         if (screenSize.x != FlxG.width || screenSize.y != FlxG.height) {
             screenSize.set(FlxG.width, FlxG.height);
@@ -60,6 +57,7 @@ class DesktopMain extends MusicBeatState {
     public override function destroy() {
         super.destroy();
         FlxG.scaleMode = oldScaleMode;
+        FlxG.mouse.useSystemCursor = FlxG.mouse.visible = false;
 
         // TODO: switch back while using config
         FlxG.resizeGame(1280, 720);

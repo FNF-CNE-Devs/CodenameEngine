@@ -9,8 +9,8 @@ class WindowCaptionButton extends FlxUIButton {
     public function new(window:Window, i:Int) {
         super(0, 0, "", function() {
             switch(i) {
-                default:
-                    trace(i);
+                case 0:
+                    window.close();
             }
         });
         ID = i;
