@@ -185,23 +185,35 @@ class Note extends FlxSprite
 
 	override function draw() {
 		if (angleOffsets && Std.int(angle % 360) != 0) {
+			// get default values
 			var oldOffset = FlxPoint.get(offset.x, offset.y);
-			// var oldOrigin = FlxPoint.get(origin.x, origin.y);
 
-			offset.set(
-				(Math.cos(angle / 180 * Math.PI) * offset.x) + (Math.sin(angle / 180 * Math.PI) * offset.y),
-				(Math.sin(angle / 180 * Math.PI) * offset.x) + (Math.cos(angle / 180 * Math.PI) * offset.y));
-			// origin.set(
-			// 	(-Math.cos(angle / 180 * Math.PI) * origin.x) + (-Math.sin(angle / 180 * Math.PI) * origin.y),
-			// 	(-Math.sin(angle / 180 * Math.PI) * origin.x) + (-Math.cos(angle / 180 * Math.PI) * origin.y));
+			// get offset pos without origin
+			var pos = FlxPoint.get(offset.x - origin.x, offset.y - origin.y);
 
+			// updates sin and cos values for angle
+			updateTrig();
+			var anglePos = FlxPoint.get(
+				(_cosAngle * pos.x) + (-_sinAngle * pos.y),
+				(-_sinAngle * pos.x) + (_cosAngle * pos.y));
+
+			// applies new values
+			x -= anglePos.x;
+			y -= anglePos.y;
+			offset.set(origin.x, origin.y);
+
+			// draw
 			super.draw();
 
+			// reset values
 			offset.set(oldOffset.x, oldOffset.y);
-			// origin.set(oldOrigin.x, oldOrigin.y);
+			x += anglePos.x;
+			y += anglePos.y;
 
+			// put flxpoints back in the recycling pool
 			oldOffset.put();
-			// oldOrigin.put();
+			pos.put();
+			anglePos.put();
 			return;
 		}
 		super.draw();

@@ -40,7 +40,10 @@ class Strum extends FlxSprite {
         }
     }
 
+
     public function updateNotePosition(daNote:Note) {
+        if (!daNote.exists) return;
+        
         var offset = FlxPoint.get(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(PlayState.instance.scrollSpeed, 2)));
         var realOffset = FlxPoint.get(0, 0);
         if (daNote.isSustainNote) offset.y -= Note.swagWidth / 2;
@@ -48,8 +51,10 @@ class Strum extends FlxSprite {
         var noteAngle = getNotesAngle();
         daNote.angle = daNote.isSustainNote ? noteAngle : angle;
         if (Std.int(noteAngle % 360) != 0) {
-            realOffset.x = (Math.cos(noteAngle / 180 * Math.PI) * offset.x) + (Math.sin(noteAngle / 180 * Math.PI) * offset.y);
-            realOffset.y = (Math.sin(noteAngle / 180 * Math.PI) * offset.x) + (Math.cos(noteAngle / 180 * Math.PI) * offset.y);
+            var noteAngleCos = Math.cos(noteAngle / 180 * Math.PI);
+            var noteAngleSin = Math.sin(noteAngle / 180 * Math.PI);
+            realOffset.x = (noteAngleCos * offset.x) + (noteAngleSin * offset.y);
+            realOffset.y = (noteAngleSin * offset.x) + (noteAngleCos * offset.y);
         } else {
             realOffset.x = offset.x;
             realOffset.y = offset.y;
