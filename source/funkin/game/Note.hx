@@ -184,22 +184,22 @@ class Note extends FlxSprite
 	public var angleOffsets:Bool = true;
 
 	override function draw() {
-		if (angleOffsets && Std.int(angle % 360) != 0) {
+		if (angleOffsets) {
 			// get default values
 			var oldOffset = FlxPoint.get(offset.x, offset.y);
 
 			// get offset pos without origin
-			var pos = FlxPoint.get(offset.x - origin.x, offset.y - origin.y);
+			var pos = FlxPoint.get(origin.x - offset.x, origin.y - offset.y);
 
 			// updates sin and cos values for angle
 			updateTrig();
 			var anglePos = FlxPoint.get(
-				(_cosAngle * pos.x) + (-_sinAngle * pos.y),
-				(-_sinAngle * pos.x) + (_cosAngle * pos.y));
+				(-_cosAngle * pos.x) + (_sinAngle * pos.y),
+				(_sinAngle * pos.x) + (-_cosAngle * pos.y));
 
 			// applies new values
-			x -= anglePos.x;
-			y -= anglePos.y;
+			x -= anglePos.x * -_sinAngle;
+			y -= anglePos.y * _cosAngle;
 			offset.set(origin.x, origin.y);
 
 			// draw
@@ -207,8 +207,8 @@ class Note extends FlxSprite
 
 			// reset values
 			offset.set(oldOffset.x, oldOffset.y);
-			x += anglePos.x;
-			y += anglePos.y;
+			x += anglePos.x * -_sinAngle;
+			y += anglePos.y * _cosAngle;
 
 			// put flxpoints back in the recycling pool
 			oldOffset.put();
