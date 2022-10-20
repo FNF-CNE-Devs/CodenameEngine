@@ -125,8 +125,8 @@ class ModsFolder {
         Assets.cache.clear();
         lime.utils.Assets.cache.clear();
 
-        if (currentModFolder == null) return;
         #if MOD_SUPPORT
+            if (currentModFolder == null) return;
             var bmapsToRemove:Array<FlxGraphic> = [];
             @:privateAccess
             for(bmap in FlxG.bitmap._cache) {
@@ -146,9 +146,28 @@ class ModsFolder {
                     }
                 }
             }
+
+            // TODO: add setting for cache clearing
+            @:privateAccess
+            for(libName=>lib in lime.utils.Assets.libraries) {
+                var library = lib;
+                if (library is openfl.utils.AssetLibrary) {
+                    var flLib = cast(library, openfl.utils.AssetLibrary);
+                    @:privateAccess
+                    if (flLib.__proxy != null) library = flLib.__proxy;
+                }
+                if (library is ModsAssetLibrary) {
+                    var modLib = cast(library, ModsAssetLibrary);
+                    @:privateAccess
+                    modLib.cachedBytes = [];
+                    @:privateAccess
+                    for(sound in modLib.cachedAudioBuffers)
+                        sound.dispose();
+                    
+                }
+            }
             for(e in bmapsToRemove)
                 FlxG.bitmap.remove(e);
-            
         #end
     }
 }

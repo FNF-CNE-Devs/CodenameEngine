@@ -25,6 +25,7 @@ using StringTools;
 class ModsAssetLibrary extends AssetLibrary {
     public var folderPath:String;
     public var libName:String;
+    public var useImageCache:Bool = false;
 
     public function new(folderPath:String, libName:String) {
         this.folderPath = folderPath;
@@ -89,7 +90,7 @@ class ModsAssetLibrary extends AssetLibrary {
     }
 
     public override function getImage(id:String):Image {
-        if (__isCacheValid(cachedImages, id))
+        if (useImageCache && __isCacheValid(cachedImages, id))
             return cachedImages.get(id);
         else {
             if (!exists(id, "IMAGE")) {
@@ -141,7 +142,7 @@ class ModsAssetLibrary extends AssetLibrary {
             return false;
         if (editedTimes[asset] == null) return false;
         if (editedTimes[asset] < FileSystem.stat(getPath(asset)).mtime.getTime()) return false;
-        return true;
+        return cache.exists(asset) && cache[asset] != null;
     }
 
     private function __parseAsset(asset:String):Bool {

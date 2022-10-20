@@ -1,4 +1,4 @@
-package funkin.desktop;
+package funkin.desktop.windows;
 
 import flixel.addons.ui.FlxUIButton;
 import flixel.FlxSprite;

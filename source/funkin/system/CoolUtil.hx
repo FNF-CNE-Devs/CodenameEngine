@@ -7,6 +7,9 @@ import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxObject;
+import flixel.FlxCamera;
+import flixel.util.FlxAxes;
 
 using StringTools;
 
@@ -172,6 +175,17 @@ class CoolUtil
 			case NINE:				"9";
 			case PERIOD:			".";
 			default:				key.toString();
+		}
+	}
+
+	public static function cameraCenter(obj:FlxObject, cam:FlxCamera, axes:FlxAxes = XY) {
+		switch(axes) {
+			case XY:
+				obj.setPosition((cam.width - obj.width) / 2, (cam.height - obj.height) / 2);
+			case X:
+				obj.x = (cam.width - obj.width) / 2;
+			case Y:
+				obj.y = (cam.height - obj.height) / 2;
 		}
 	}
 }
