@@ -795,8 +795,8 @@ class PlayState extends MusicBeatState
 				songTime += FlxG.game.ticks - previousFrameTime;
 				previousFrameTime = FlxG.game.ticks;
 
-				if (Math.abs(FlxG.sound.music.time - Conductor.songPosition) > 20)
-					resyncVocals();
+				// if (Math.abs(FlxG.sound.music.time - Conductor.songPosition) > 20)
+					// resyncVocals();
 			}
 
 			// Conductor.lastSongPos = FlxG.sound.music.time;
