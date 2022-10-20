@@ -193,14 +193,20 @@ class Note extends FlxSprite
 
 			// updates sin and cos values for angle
 			updateTrig();
+
+			// var sin = _sinAngle * _sinAngle * (_sinAngle > 0 ? 1 : -1);
+			// var cos = _cosAngle * _cosAngle * (_cosAngle > 0 ? 1 : -1);
+			var sin = _sinAngle;
+			var cos = _cosAngle;
+			
 			var anglePos = FlxPoint.get(
-				(-_cosAngle * pos.x) + (_sinAngle * pos.y),
-				(_sinAngle * pos.x) + (-_cosAngle * pos.y));
+				(-cos * pos.x) + (-sin * pos.y),
+				(-sin * pos.x) + (-cos * pos.y));
 
 			// applies new values
 			x -= anglePos.x;
 			y -= anglePos.y;
-			offset.set(origin.x, origin.y);
+			offset.set((cos * origin.x) + (sin * origin.y), (sin * origin.x) + (cos * origin.y));
 
 			// draw
 			super.draw();
