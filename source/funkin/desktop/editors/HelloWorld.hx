@@ -5,7 +5,7 @@ import flixel.addons.ui.FlxUIText;
 
 class HelloWorld extends WindowContent {
     public override function new() {
-        super("Test Window", 0, 0, 640, 480);
+        super("Test Window", 250, 250, 640, 480);
     }
 
     public override function create() {
