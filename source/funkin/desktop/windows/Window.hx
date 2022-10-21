@@ -14,6 +14,13 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 
+
+typedef WindowCam = {
+    var camera:FlxCamera;
+    var resizeScroll:Bool;
+    var width:Int;
+    var height:Int;
+}
 class Window extends FlxTypedGroup<FlxBasic> {
     public var windowFrame:FlxUI9SliceSprite;
     public var captionButtons:FlxTypedSpriteGroup<WindowCaptionButton>;
@@ -22,20 +29,25 @@ class Window extends FlxTypedGroup<FlxBasic> {
     public var windowHeight:Int = 0;
 
     public var windowCaptionCamera:FlxCamera;
-    public var windowCameras:Array<FlxCamera> = [];
+    public var windowCameras:Array<WindowCam> = [];
 
     private var __captionTweens:Array<FlxTween> = [];
 
     public var content:WindowContent;
 
     public var caption:FlxUIText;
+    public var icon:FlxSprite;
 
+    public function loadIcon(path:String) {
+        icon.loadGraphic(path);
+        icon.setUnstretchedGraphicSize(16, 16, false);
+    }
     public function new(content:WindowContent) {
         super();
         windowFrame = new FlxUI9SliceSprite(0, 0, Paths.image('desktop/windowFrame'), new Rectangle(10, 10), [3, 3, 6, 6]);
         add(windowFrame);
 
-        caption = new FlxUIText(4, 4, 0, content.title);
+        caption = new FlxUIText(24, 4, 0, content.title);
         captionButtons = new FlxTypedSpriteGroup<WindowCaptionButton>();
         for(i in 0...3) {
             var btn = new WindowCaptionButton(this, i);
@@ -43,6 +55,11 @@ class Window extends FlxTypedGroup<FlxBasic> {
             captionButtons.add(btn);
         }
         add(caption);
+
+        icon = new FlxSprite(4, 4);
+        add(icon);
+        loadIcon(content.icon);
+
         add(captionButtons);
 
         this.content = content;
@@ -65,21 +82,28 @@ class Window extends FlxTypedGroup<FlxBasic> {
         }
         content.cameras = [content.windowCamera];
         content.parent = this;
+        addCamera(content.windowCamera);
         content.create();
         add(content);
 
         windowWidth = content.width;
         windowHeight = content.height;
 
-        FlxG.cameras.add(content.windowCamera, false);
-        windowCameras.push(content.windowCamera);
-
-
         popupCamera(windowCaptionCamera);
-        for(e in windowCameras) popupCamera(e);
+        for(e in windowCameras) popupCamera(e.camera);
 
         resize(content.width, content.height);
         move(content.winX, content.winY);
+    }
+
+    public function addCamera(camera:FlxCamera, useResizeTechnique:Bool = true) {
+        FlxG.cameras.add(camera, false);
+        windowCameras.push({
+            camera: camera,
+            resizeScroll: useResizeTechnique,
+            width: camera.width,
+            height: camera.height
+        });
     }
 
     public function changeCaption(text:String) {
@@ -98,7 +122,12 @@ class Window extends FlxTypedGroup<FlxBasic> {
         super.destroy();
         for(e in __captionTweens) e.cancel();
         FlxG.cameras.remove(windowCaptionCamera, true);
-        for(cam in windowCameras) FlxG.cameras.remove(cam, true);
+        for(cam in windowCameras) {
+            FlxG.cameras.remove(cam.camera, true);
+        }
+        windowCameras = null;
+        windowCaptionCamera = null;
+        __captionTweens = null;
     }
 
     public function resize(width:Int, height:Int) {
@@ -111,8 +140,8 @@ class Window extends FlxTypedGroup<FlxBasic> {
         windowCaptionCamera.x = x;
         windowCaptionCamera.y = y;
         for(e in windowCameras) {
-            e.x = x + 4;
-            e.y = y + 23;
+            e.camera.x = x + 4;
+            e.camera.y = y + 23;
         }
     }
 
@@ -126,7 +155,10 @@ class Window extends FlxTypedGroup<FlxBasic> {
         windowCaptionCamera.setSize(windowWidth + 4 + 4, windowHeight + 23 + 4);
         captionButtons.setPosition(windowWidth + 4, 4);
         for(e in windowCameras) {
-            e.setSize(windowWidth, windowHeight);
+            e.camera.setSize(windowWidth, windowHeight);
+            if (e.resizeScroll) {
+                e.camera.scroll.set(-Std.int(e.camera.width - e.width), -Std.int(e.camera.height - e.height));
+            }
         }
     }
 }

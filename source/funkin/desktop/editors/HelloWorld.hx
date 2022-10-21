@@ -5,7 +5,7 @@ import flixel.addons.ui.FlxUIText;
 
 class HelloWorld extends WindowContent {
     public override function new() {
-        super("Test Window", 250, 250, 640, 480);
+        super("Test Window", 100, 100, 640, 480);
     }
 
     public override function create() {
@@ -16,5 +16,20 @@ class HelloWorld extends WindowContent {
         helloWorldText.scrollFactor.set(0.5, 0.5);
         helloWorldText.cameraCenter(camera);
         add(helloWorldText);
+
+        var t = new FlxUIText(0, 0, 0, "Bottom right text!");
+        t.color = 0xFF000000;
+        t.setPosition(630 - t.width, 470 - t.height);
+        t.scrollFactor.set(1, 1);
+        add(t);
+    }
+
+    public var time:Float = 0;
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+        time += elapsed;
+        width = 500 + Std.int(Math.cos(time * Math.PI) * 250);
+        height = 500 + Std.int(Math.sin(time * Math.PI) * 250);
+        parent.updateWindowFrame();
     }
 }
