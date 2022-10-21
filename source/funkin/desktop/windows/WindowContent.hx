@@ -19,7 +19,7 @@ class WindowContent extends FlxTypedGroup<FlxSprite> {
     private var __noParentUpdate:Bool = false;
     private function set_width(w:Int):Int {
         width = w;
-        if (parent != null) {
+        if (parent != null && !__noParentUpdate) {
             parent.windowWidth = w;
             if (!__noParentUpdate)
                 parent.updateWindowFrame();
@@ -28,7 +28,7 @@ class WindowContent extends FlxTypedGroup<FlxSprite> {
     }
     private function set_height(h:Int):Int {
         height = h;
-        if (parent != null) {
+        if (parent != null && !__noParentUpdate) {
             parent.windowHeight = h;
             if (!__noParentUpdate)
                 parent.updateWindowFrame();
@@ -37,24 +37,24 @@ class WindowContent extends FlxTypedGroup<FlxSprite> {
     }
     private function set_winX(v:Float):Float {
         winX = v;
-        if (parent != null) parent.move(winX, winY);
+        if (parent != null && !__noParentUpdate) parent.move(winX, winY);
         return winX;
     }
 
     private function set_title(text:String):String {
         title = text;
-        if (parent != null) parent.changeCaption(title);
+        if (parent != null && !__noParentUpdate) parent.changeCaption(title);
         return title;
     }
 
     private function set_icon(text:String):String {
         icon = text;
-        if (parent != null) parent.loadIcon(icon);
+        if (parent != null && !__noParentUpdate) parent.loadIcon(icon);
         return icon;
     }
     private function set_winY(v:Float):Float {
         winY = v;
-        if (parent != null) parent.move(winX, winY);
+        if (parent != null && !__noParentUpdate) parent.move(winX, winY);
         return winY;
     }
 

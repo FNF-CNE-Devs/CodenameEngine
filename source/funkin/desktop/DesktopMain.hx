@@ -1,11 +1,15 @@
 package funkin.desktop;
 
+import openfl.geom.Rectangle;
+import flixel.FlxObject;
 import lime.app.Application;
 import openfl.display.BitmapData;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.FixedScaleAdjustSizeScaleMode;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxBasic;
+import flixel.FlxCamera;
 import flixel.math.FlxPoint;
 import funkin.desktop.editors.HelloWorld;
 import funkin.desktop.windows.*;
@@ -78,9 +82,11 @@ class MouseInput {
     public var pressed:Bool = false;
     public var justPressed:Bool = false;
     public var justReleased:Bool = false;
+    private var __cancelled:Bool = false;
 
     public function cancel() {
         pressed = justPressed = justReleased = false;
+        __cancelled = true;
     }
 
     public function new() {}
@@ -89,5 +95,19 @@ class MouseInput {
         this.pressed = pressed;
         this.justPressed = justPressed;
         this.justReleased = justReleased;
+        this.__cancelled = false;
+    }
+
+    public function overlaps(spr:FlxObject, ?camera:FlxCamera) {
+        return overlapsRect(spr, new Rectangle(spr.x, spr.y, spr.width, spr.height), camera);
+        // return FlxG.mouse.overlaps(spr, camera);
+    }
+
+    public function overlapsRect(spr:FlxBasic, rect:Rectangle, ?camera:FlxCamera) {
+        if (__cancelled) return false;
+        if (camera == null) camera = FlxG.camera;
+        var pos = FlxG.mouse.getScreenPosition(camera);
+        
+        return ((pos.x > rect.x) && (pos.x < rect.x + rect.width)) && ((pos.y > rect.y) && (pos.y < rect.y + rect.height));
     }
 }

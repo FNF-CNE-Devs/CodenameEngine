@@ -37,6 +37,7 @@ class Window extends FlxTypedGroup<FlxBasic> {
 
     public var caption:FlxUIText;
     public var icon:FlxSprite;
+    public var dragHitbox:WindowDragHitbox;
 
     public var draggable:Bool = true;
     public var resizeable:Bool = true;
@@ -59,6 +60,10 @@ class Window extends FlxTypedGroup<FlxBasic> {
         }
         add(caption);
 
+        dragHitbox = new WindowDragHitbox(4, 4, 4, 18);
+        dragHitbox.parent = this;
+        add(dragHitbox);
+
         icon = new FlxSprite(4, 4);
         add(icon);
         loadIcon(content.icon);
@@ -74,6 +79,7 @@ class Window extends FlxTypedGroup<FlxBasic> {
         windowCaptionCamera.bgColor = 0;
         FlxG.cameras.add(windowCaptionCamera, false);
         cameras = [windowCaptionCamera];
+        dragHitbox.cameras = [windowCaptionCamera];
         
         for(btn in captionButtons.members)
             btn.cameras = cameras; // so that buttons detects on the right camera
@@ -140,12 +146,29 @@ class Window extends FlxTypedGroup<FlxBasic> {
     }
 
     public function move(x:Float, y:Float) {
-        windowCaptionCamera.x = x;
-        windowCaptionCamera.y = y;
+        @:privateAccess content.__noParentUpdate = true;
+        content.winX = windowCaptionCamera.x = x;
+        content.winY = windowCaptionCamera.y = y;
+        @:privateAccess content.__noParentUpdate = false;
         for(e in windowCameras) {
             e.camera.x = x + 4;
             e.camera.y = y + 23;
         }
+    }
+
+    public override function update(elapsed:Float) {
+        var i = members.length;
+        
+        var shouldCancel = DesktopMain.instance.mouseInput.overlapsRect(this, new Rectangle(0, 0, windowCaptionCamera.width, windowCaptionCamera.height), windowCaptionCamera);
+        // updates them backwards!!
+        while(i > 0) {
+            i--;
+            var spr = members[i];
+            if (spr == null || !spr.exists) continue;
+            spr.update(elapsed);
+        }
+
+        if (shouldCancel) DesktopMain.instance.mouseInput.cancel();
     }
 
     public function close() {

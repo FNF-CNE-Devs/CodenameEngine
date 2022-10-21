@@ -2,6 +2,7 @@ package funkin.desktop.editors;
 
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.addons.ui.FlxUIText;
+import flixel.FlxG;
 
 class HelloWorld extends WindowContent {
     public override function new() {
@@ -25,11 +26,17 @@ class HelloWorld extends WindowContent {
     }
 
     public var time:Float = 0;
+    public var coolAssMode:Bool = false;
     public override function update(elapsed:Float) {
         super.update(elapsed);
         time += elapsed;
-        width = 500 + Std.int(Math.cos(time * Math.PI) * 250);
-        height = 500 + Std.int(Math.sin(time * Math.PI) * 250);
+
+        if (FlxG.keys.justPressed.M) coolAssMode = !coolAssMode;
+
+        if (coolAssMode) {
+            width = 500 + Std.int(Math.cos(time * Math.PI) * 250);
+            height = 500 + Std.int(Math.sin(time * Math.PI) * 250);
+        }
         parent.updateWindowFrame();
     }
 }
