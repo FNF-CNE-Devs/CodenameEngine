@@ -38,6 +38,9 @@ class Window extends FlxTypedGroup<FlxBasic> {
     public var caption:FlxUIText;
     public var icon:FlxSprite;
 
+    public var draggable:Bool = true;
+    public var resizeable:Bool = true;
+
     public function loadIcon(path:String) {
         icon.loadGraphic(path);
         icon.setUnstretchedGraphicSize(16, 16, false);

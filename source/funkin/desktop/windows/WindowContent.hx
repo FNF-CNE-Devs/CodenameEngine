@@ -47,7 +47,7 @@ class WindowContent extends FlxTypedGroup<FlxSprite> {
         return title;
     }
 
-    private function set_title(text:String):String {
+    private function set_icon(text:String):String {
         icon = text;
         if (parent != null) parent.loadIcon(icon);
         return icon;
