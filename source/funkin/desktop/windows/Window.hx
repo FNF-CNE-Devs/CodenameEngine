@@ -32,6 +32,7 @@ class Window extends FlxTypedGroup<FlxBasic> {
     public var windowCameras:Array<WindowCam> = [];
 
     private var __captionTweens:Array<FlxTween> = [];
+    private var __closing:Bool = false;
 
     public var content:WindowContent;
 
@@ -39,8 +40,14 @@ class Window extends FlxTypedGroup<FlxBasic> {
     public var icon:FlxSprite;
     public var dragHitbox:WindowDragHitbox;
 
-    public var draggable:Bool = true;
+    public var moveable:Bool = true;
     public var resizeable:Bool = true;
+
+    public var focused(get, null):Bool;
+
+    private function get_focused() {
+        return DesktopMain.instance.windows.members.last() == this;
+    }
 
     public function loadIcon(path:String) {
         icon.loadGraphic(path);
@@ -160,6 +167,10 @@ class Window extends FlxTypedGroup<FlxBasic> {
         var i = members.length;
         
         var shouldCancel = DesktopMain.instance.mouseInput.overlapsRect(this, new Rectangle(0, 0, windowCaptionCamera.width, windowCaptionCamera.height), windowCaptionCamera);
+
+        if (shouldCancel && DesktopMain.instance.mouseInput.justPressed)
+            DesktopMain.instance.focusWindow(this);
+
         // updates them backwards!!
         while(i > 0) {
             i--;
@@ -172,6 +183,7 @@ class Window extends FlxTypedGroup<FlxBasic> {
     }
 
     public function close() {
+        __closing = true;
         DesktopMain.instance.windows.remove(this, true);
         destroy();
     }

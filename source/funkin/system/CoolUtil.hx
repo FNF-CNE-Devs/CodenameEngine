@@ -188,4 +188,11 @@ class CoolUtil
 				obj.y = (cam.height - obj.height) / 2;
 		}
 	}
+
+	/**
+	 * Returns last member of array
+	 */
+	public static function last<T>(array:Array<T>):T {
+		return array[array.length-1];
+	}
 }

@@ -19,7 +19,7 @@ class DesktopMain extends MusicBeatState {
     public var wallpaper:FlxSprite;
     public var screenSize:FlxPoint;
 
-    public var windows:WindowGroup;
+    public var windows:WindowGroup<Window>;
 
     public static var instance:DesktopMain;
 
@@ -44,7 +44,7 @@ class DesktopMain extends MusicBeatState {
 
         screenSize = new FlxPoint(-1, -1);
 
-        windows = new WindowGroup();
+        windows = new WindowGroup<Window>();
         add(windows);
     }
 
@@ -75,6 +75,23 @@ class DesktopMain extends MusicBeatState {
 
         // TODO: switch back while using config
         FlxG.resizeGame(1280, 720);
+    }
+
+    public function focusWindow(window:Window) {
+        windows.remove(window, true);
+        windows.add(window);
+        layerCameras();
+    }
+
+    public function layerCameras() {
+        for(win in windows.members) {
+            FlxG.cameras.remove(win.windowCaptionCamera, false);
+            for(e in win.windowCameras) FlxG.cameras.remove(e.camera, false);
+        }
+        for(win in windows.members) {
+            FlxG.cameras.add(win.windowCaptionCamera, false);
+            for(e in win.windowCameras) FlxG.cameras.add(e.camera, false);
+        }
     }
 }
 
