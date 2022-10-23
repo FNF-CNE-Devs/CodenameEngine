@@ -6,6 +6,8 @@ class WindowCaptionButton extends FlxSprite {
     public var icon:FlxSprite;
     public var window:Window;
 
+    public static var anims:Array<String> = ["minimize", "maximize", "close", "restore", "help"];
+
     public function new(window:Window, i:Int) {
         // super(0, 0, "", function() {
         //     switch(i) {
@@ -18,8 +20,11 @@ class WindowCaptionButton extends FlxSprite {
         ID = i;
 
         loadGraphic(Paths.image(DesktopMain.theme.captionButtons.sprite), true, Std.int(DesktopMain.theme.captionButtons.size.x), Std.int(DesktopMain.theme.captionButtons.size.y));
-        animation.add("button", [for(l in 0...6) i+(l*3)], 0, true);
-        animation.play("button");
+
+        for(k=>e in anims) {
+            animation.add(e, [for(l in 0...6) k + (l * anims.length)], 0, true);
+        }
+        animation.play(anims[ID]);
 
         // resize(18, 18);
         // color = (i > 0) ? 0xFF8888FF : 0xFFFF0000;
@@ -40,6 +45,8 @@ class WindowCaptionButton extends FlxSprite {
                 switch(ID) {
                     case 0:
                         window.close();
+                    case 1:
+                        
                 }
                 mouseInput.cancel();
                 return;

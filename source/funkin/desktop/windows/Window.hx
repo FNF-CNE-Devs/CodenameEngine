@@ -77,7 +77,7 @@ class Window extends FlxTypedGroup<FlxBasic> {
 
         caption = new FlxUIText(24, 4, 0, content.title);
         captionButtons = new FlxTypedSpriteGroup<WindowCaptionButton>();
-        for(i in 0...3) {
+        for(i in 0...4) {
             var btn = new WindowCaptionButton(this, i);
             btn.x = (i+1) * -(DesktopMain.theme.captionButtons.size.x + DesktopMain.theme.captionButtons.margin.x);
             captionButtons.add(btn);

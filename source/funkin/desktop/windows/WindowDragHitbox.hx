@@ -2,6 +2,7 @@ package funkin.desktop.windows;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 
 class WindowDragHitbox extends FlxObject {
@@ -34,6 +35,9 @@ class WindowDragHitbox extends FlxObject {
         if (!parent.moveable) return;
         if (dragging) {
             var screenPos = FlxG.mouse.getScreenPosition(FlxG.camera);
+            screenPos.x = FlxMath.bound(screenPos.x, 0, FlxG.camera.width);
+            screenPos.y = FlxMath.bound(screenPos.y, 0, FlxG.camera.height);
+
             if (DesktopMain.instance.mouseInput.justReleased) {
                 dragging = false;
                 offset.put();
