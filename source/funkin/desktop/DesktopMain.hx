@@ -11,7 +11,7 @@ import flixel.FlxSprite;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.math.FlxPoint;
-import funkin.desktop.editors.HelloWorld;
+import funkin.desktop.editors.*;
 import funkin.desktop.windows.*;
 import funkin.desktop.theme.Theme;
 
@@ -66,6 +66,8 @@ class DesktopMain extends MusicBeatState {
         // debug window
         if (FlxG.keys.justPressed.SPACE)
             windows.add(new Window(new HelloWorld()));
+        if (FlxG.keys.justPressed.F1)
+            windows.add(new Window(new CharacterEditor('dad')));
     }
 
     public function updateScreenRes() {

@@ -23,6 +23,7 @@ typedef WindowCam = {
 }
 class Window extends FlxTypedGroup<FlxBasic> {
     public var windowFrame:FlxUI9SliceSprite;
+    public var windowInactiveFrame:FlxUI9SliceSprite;
     public var captionButtons:FlxTypedSpriteGroup<WindowCaptionButton>;
 
     public var windowWidth:Int = 0;
@@ -63,7 +64,16 @@ class Window extends FlxTypedGroup<FlxBasic> {
                 Std.int(DesktopMain.theme.captionActive.right),
                 Std.int(DesktopMain.theme.captionActive.bottom)
             ]);
+        windowInactiveFrame = new FlxUI9SliceSprite(0, 0,
+            Paths.image(DesktopMain.theme.captionInactive.sprite),
+            new Rectangle(10, 10), [
+                Std.int(DesktopMain.theme.captionInactive.left),
+                Std.int(DesktopMain.theme.captionInactive.top),
+                Std.int(DesktopMain.theme.captionInactive.right),
+                Std.int(DesktopMain.theme.captionInactive.bottom)
+            ]);
         add(windowFrame);
+        add(windowInactiveFrame);
 
         caption = new FlxUIText(24, 4, 0, content.title);
         captionButtons = new FlxTypedSpriteGroup<WindowCaptionButton>();
@@ -176,6 +186,7 @@ class Window extends FlxTypedGroup<FlxBasic> {
             destroy();
             return;
         }
+        windowInactiveFrame.visible = !(windowFrame.visible = focused);
         var i = members.length;
         
         var shouldCancel = DesktopMain.instance.mouseInput.overlapsRect(this, new Rectangle(0, 0, windowCaptionCamera.width, windowCaptionCamera.height), windowCaptionCamera);
@@ -199,7 +210,8 @@ class Window extends FlxTypedGroup<FlxBasic> {
     }
 
     public function updateWindowFrame() {
-        windowFrame.resize(windowWidth + Std.int(DesktopMain.theme.captionActive.left * 2), windowHeight + Std.int(DesktopMain.theme.captionActive.top) + Std.int(DesktopMain.theme.captionActive.left));
+        for(frame in [windowInactiveFrame, windowFrame])
+            frame.resize(windowWidth + Std.int(DesktopMain.theme.captionActive.left * 2), windowHeight + Std.int(DesktopMain.theme.captionActive.top) + Std.int(DesktopMain.theme.captionActive.left));
         windowCaptionCamera.setSize(windowWidth + Std.int(DesktopMain.theme.captionActive.left * 2), windowHeight + Std.int(DesktopMain.theme.captionActive.top) + Std.int(DesktopMain.theme.captionActive.left));
         captionButtons.setPosition(windowWidth + Std.int((DesktopMain.theme.captionActive.left * 2) - DesktopMain.theme.captionButtons.offset.x), Std.int(DesktopMain.theme.captionButtons.offset.y));
         for(e in windowCameras) {

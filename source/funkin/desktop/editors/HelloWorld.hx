@@ -23,6 +23,12 @@ class HelloWorld extends WindowContent {
         t.setPosition(630 - t.width, 470 - t.height);
         t.scrollFactor.set(1, 1);
         add(t);
+
+        var t = new FlxUIText(0, 0, 0, "Top right text!");
+        t.color = 0xFF000000;
+        t.setPosition(630 - t.width, 10);
+        t.scrollFactor.set(1, 0);
+        add(t);
     }
 
     public var time:Float = 0;
