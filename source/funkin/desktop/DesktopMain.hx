@@ -13,6 +13,7 @@ import flixel.FlxCamera;
 import flixel.math.FlxPoint;
 import funkin.desktop.editors.HelloWorld;
 import funkin.desktop.windows.*;
+import funkin.desktop.theme.Theme;
 
 class DesktopMain extends MusicBeatState {
     public var oldScaleMode:BaseScaleMode;
@@ -25,8 +26,12 @@ class DesktopMain extends MusicBeatState {
 
     public var mouseInput:MouseInput = new MouseInput();
 
+    public static var theme:Theme = null;
+
     public override function create() {
         super.create();
+
+        theme = Theme.loadFromAssets(Paths.getPath('images/desktop/ui.xml', TEXT, null));
         instance = this;
         
         FlxG.mouse.useSystemCursor = FlxG.mouse.visible = true;

@@ -55,19 +55,26 @@ class Window extends FlxTypedGroup<FlxBasic> {
     }
     public function new(content:WindowContent) {
         super();
-        windowFrame = new FlxUI9SliceSprite(0, 0, Paths.image('desktop/windowFrame'), new Rectangle(10, 10), [3, 3, 6, 6]);
+        windowFrame = new FlxUI9SliceSprite(0, 0,
+            Paths.image(DesktopMain.theme.captionActive.sprite),
+            new Rectangle(10, 10), [
+                Std.int(DesktopMain.theme.captionActive.left),
+                Std.int(DesktopMain.theme.captionActive.top),
+                Std.int(DesktopMain.theme.captionActive.right),
+                Std.int(DesktopMain.theme.captionActive.bottom)
+            ]);
         add(windowFrame);
 
         caption = new FlxUIText(24, 4, 0, content.title);
         captionButtons = new FlxTypedSpriteGroup<WindowCaptionButton>();
         for(i in 0...3) {
             var btn = new WindowCaptionButton(this, i);
-            btn.x = (i+1) * -18;
+            btn.x = (i+1) * -(DesktopMain.theme.captionButtons.size.x + DesktopMain.theme.captionButtons.margin.x);
             captionButtons.add(btn);
         }
         add(caption);
 
-        dragHitbox = new WindowDragHitbox(4, 4, 4, 18);
+        dragHitbox = new WindowDragHitbox(DesktopMain.theme.captionActive.left, DesktopMain.theme.captionActive.left, DesktopMain.theme.captionActive.left, DesktopMain.theme.captionActive.top);
         dragHitbox.parent = this;
         add(dragHitbox);
 
@@ -158,12 +165,17 @@ class Window extends FlxTypedGroup<FlxBasic> {
         content.winY = windowCaptionCamera.y = y;
         @:privateAccess content.__noParentUpdate = false;
         for(e in windowCameras) {
-            e.camera.x = x + 4;
-            e.camera.y = y + 23;
+            e.camera.x = x + Std.int(DesktopMain.theme.captionActive.left);
+            e.camera.y = y + Std.int(DesktopMain.theme.captionActive.top);
         }
     }
 
     public override function update(elapsed:Float) {
+        if (__closing) {
+            DesktopMain.instance.windows.remove(this, true);
+            destroy();
+            return;
+        }
         var i = members.length;
         
         var shouldCancel = DesktopMain.instance.mouseInput.overlapsRect(this, new Rectangle(0, 0, windowCaptionCamera.width, windowCaptionCamera.height), windowCaptionCamera);
@@ -184,14 +196,12 @@ class Window extends FlxTypedGroup<FlxBasic> {
 
     public function close() {
         __closing = true;
-        DesktopMain.instance.windows.remove(this, true);
-        destroy();
     }
 
     public function updateWindowFrame() {
-        windowFrame.resize(windowWidth + 4 + 4, windowHeight + 23 + 4);
-        windowCaptionCamera.setSize(windowWidth + 4 + 4, windowHeight + 23 + 4);
-        captionButtons.setPosition(windowWidth + 4, 4);
+        windowFrame.resize(windowWidth + Std.int(DesktopMain.theme.captionActive.left * 2), windowHeight + Std.int(DesktopMain.theme.captionActive.top) + Std.int(DesktopMain.theme.captionActive.left));
+        windowCaptionCamera.setSize(windowWidth + Std.int(DesktopMain.theme.captionActive.left * 2), windowHeight + Std.int(DesktopMain.theme.captionActive.top) + Std.int(DesktopMain.theme.captionActive.left));
+        captionButtons.setPosition(windowWidth + Std.int((DesktopMain.theme.captionActive.left * 2) - DesktopMain.theme.captionButtons.offset.x), Std.int(DesktopMain.theme.captionButtons.offset.y));
         for(e in windowCameras) {
             e.camera.setSize(windowWidth, windowHeight);
             if (e.resizeScroll) {

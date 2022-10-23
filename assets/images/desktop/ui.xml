@@ -1,5 +1,8 @@
-<settings folder="desktop/ui/">
-    <captionActive path="caption" left="5" top="29" right="5" bottom="5" />
-    <captionInactive path="captionInactive" left="5" top="29" right="5" bottom="5" />
-    <captionButtons path="captionButtons" size="21,21" margin="2,0" offset="5,5" />
-</settings>
+<theme folder="desktop/ui/">
+    <!-- WINDOW!! !-->
+    <captionActive      path="caption"          textColor="255,255,255" left="5" top="30" right="61" bottom="53" />
+    <captionInactive    path="captionInactive"  textColor="216,228,248" left="5" top="30" right="61" bottom="53" />
+    <captionButtons     path="captionButtons"   size="21,21" margin="2,0" offset="4,6" />
+
+    <!-- BUTTONS !-->
+</theme>
