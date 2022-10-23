@@ -189,6 +189,11 @@ class CoolUtil
 		}
 	}
 
+	public static function setSpriteSize(sprite:FlxSprite, width:Float, height:Float) {
+		sprite.scale.set(width / sprite.frameWidth, height / sprite.frameHeight);
+		sprite.updateHitbox();
+	}
+
 	/**
 	 * Returns last member of array
 	 */

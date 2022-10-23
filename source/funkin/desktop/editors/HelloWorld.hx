@@ -3,6 +3,7 @@ package funkin.desktop.editors;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.addons.ui.FlxUIText;
 import flixel.FlxG;
+import funkin.desktop.sprites.*;
 
 class HelloWorld extends WindowContent {
     public override function new() {
@@ -29,6 +30,12 @@ class HelloWorld extends WindowContent {
         t.setPosition(630 - t.width, 10);
         t.scrollFactor.set(1, 0);
         add(t);
+
+        var butt = new Button(10, 10, "Test", function() {
+            trace("help");
+        });
+        butt.scrollFactor.set();
+        add(butt);
     }
 
     public var time:Float = 0;

@@ -23,9 +23,20 @@ class Theme {
         return new Theme(content);
     }
 
+    /**
+     * CAPTION
+     */
     public var captionActive:ThemeData = new ThemeData();
     public var captionInactive:ThemeData = new ThemeData();
     public var captionButtons:ThemeData = new ThemeData();
+
+    /**
+     * BUTTON
+     */
+    public var normalButton:ThemeData = new ThemeData();
+    public var hoverButton:ThemeData = new ThemeData();
+    public var pressedButton:ThemeData = new ThemeData();
+    public var disabledButton:ThemeData = new ThemeData();
 
     public function new(content:String) {
         try {

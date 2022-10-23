@@ -5,7 +5,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxCamera;
 
-class WindowContent extends FlxTypedGroup<FlxBasic> {
+class WindowContent extends WindowGroup<FlxBasic> {
     public var winX(default, set):Float = 0;
     public var winY(default, set):Float = 0;
     public var title(default, set):String = "Window";

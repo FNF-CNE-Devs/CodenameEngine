@@ -13,6 +13,7 @@ import flixel.FlxG;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import funkin.desktop.sprites.*;
 
 
 typedef WindowCam = {
@@ -22,8 +23,8 @@ typedef WindowCam = {
     var height:Int;
 }
 class Window extends FlxTypedGroup<FlxBasic> {
-    public var windowFrame:FlxUI9SliceSprite;
-    public var windowInactiveFrame:FlxUI9SliceSprite;
+    public var windowFrame:SpliceSprite;
+    public var windowInactiveFrame:SpliceSprite;
     public var captionButtons:FlxTypedSpriteGroup<WindowCaptionButton>;
 
     public var windowWidth:Int = 0;
@@ -56,22 +57,16 @@ class Window extends FlxTypedGroup<FlxBasic> {
     }
     public function new(content:WindowContent) {
         super();
-        windowFrame = new FlxUI9SliceSprite(0, 0,
-            Paths.image(DesktopMain.theme.captionActive.sprite),
-            new Rectangle(10, 10), [
-                Std.int(DesktopMain.theme.captionActive.left),
-                Std.int(DesktopMain.theme.captionActive.top),
-                Std.int(DesktopMain.theme.captionActive.right),
-                Std.int(DesktopMain.theme.captionActive.bottom)
-            ]);
-        windowInactiveFrame = new FlxUI9SliceSprite(0, 0,
-            Paths.image(DesktopMain.theme.captionInactive.sprite),
-            new Rectangle(10, 10), [
-                Std.int(DesktopMain.theme.captionInactive.left),
-                Std.int(DesktopMain.theme.captionInactive.top),
-                Std.int(DesktopMain.theme.captionInactive.right),
-                Std.int(DesktopMain.theme.captionInactive.bottom)
-            ]);
+        windowFrame = new SpliceSprite(Paths.image(DesktopMain.theme.captionActive.sprite), 0, 0, 10, 10,
+            Std.int(DesktopMain.theme.captionActive.left),
+            Std.int(DesktopMain.theme.captionActive.top),
+            Std.int(DesktopMain.theme.captionActive.right),
+            Std.int(DesktopMain.theme.captionActive.bottom));
+        windowInactiveFrame = new SpliceSprite(Paths.image(DesktopMain.theme.captionInactive.sprite), 0, 0, 10, 10,
+            Std.int(DesktopMain.theme.captionInactive.left),
+            Std.int(DesktopMain.theme.captionInactive.top),
+            Std.int(DesktopMain.theme.captionInactive.right),
+            Std.int(DesktopMain.theme.captionInactive.bottom));
         add(windowFrame);
         add(windowInactiveFrame);
 
