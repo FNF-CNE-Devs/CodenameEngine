@@ -62,23 +62,29 @@ interface PlayStateScript {
      * Triggered whenever the player hits a note.
      * @param note Event object with the note being pressed, the character who pressed it, and functions to alter or cancel the default behaviour.
      */
-    public function onPlayerHit(note:NoteHitEvent):Void;
+    public function onPlayerHit(event:NoteHitEvent):Void;
 
     /**
      * Triggered whenever the opponent hits a note.
      * @param note Event object with the note being pressed, the character who pressed it, and functions to alter or cancel the default behaviour.
      */
-    public function onDadHit(note:NoteHitEvent):Void;
+    public function onDadHit(event:NoteHitEvent):Void;
 
     /**
      * Triggered whenever the input system updates.
      * @param note Event object with the pressed notes, which allows you to alter which notes are being pressed during this frame, or simply cancel the input update.
      */
-    public function inputUpdate(note:InputSystemEvent):Void;
+    public function inputUpdate(event:InputSystemEvent):Void;
 
     /**
      * Triggered after the input system updates.
      * @param note Event object with the pressed, justPressed and justReleased notes.
      */
-    public function inputUpdatePost(note:InputSystemEvent):Void;
+    public function inputUpdatePost(event:InputSystemEvent):Void;
+
+    /**
+     * Triggered on each note creation
+     * @param event Event object containing information about the note.
+     */
+    public function onNoteCreation(event:NoteCreationEvent):Void;
 }

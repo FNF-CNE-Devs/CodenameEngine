@@ -1,5 +1,6 @@
 package funkin.options;
 
+import funkin.system.Controls;
 import openfl.Lib;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
@@ -157,6 +158,7 @@ class Options
 			});
 			__eventAdded = true;
 		}
+		PlayerSettings.player1.setKeyboardScheme(Solo);
 	}
 
 	public static function save() {

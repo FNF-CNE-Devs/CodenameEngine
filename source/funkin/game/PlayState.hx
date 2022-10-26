@@ -484,9 +484,11 @@ class PlayState extends MusicBeatState
 		generatedMusic = true;
 	}
 
-	public function addNoteType(name:String) {
-		// TODO: add note type by string
-		return 0;
+	public function addNoteType(name:String):Int {
+		for(k=>e in noteTypesArray)
+			if (e == name) return k;
+		noteTypesArray.push(name);
+		return noteTypesArray.length-1;
 	}
 	function sortByShit(Obj1:Note, Obj2:Note):Int
 	{
@@ -1288,9 +1290,9 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function getNoteType(id:Int) {
-		// TODO: Note Types
-		return null;
+	public var noteTypesArray:Array<String> = [null];
+	public function getNoteType(id:Int):String {
+		return noteTypesArray[id];
 	}
 
 	function goodNoteHit(note:Note):Void
