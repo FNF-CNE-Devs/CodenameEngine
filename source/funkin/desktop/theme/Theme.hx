@@ -45,7 +45,6 @@ class Theme {
             if (access.has.folder) prefix = access.att.folder.trim();
             for(element in access.elements) {
                 var name:String = element.name.trim();
-                trace(name);
                 if (!Type.getInstanceFields(Theme).contains(name)) continue;
                 var field = Reflect.field(this, name);
                 if (!(field is ThemeData)) continue;

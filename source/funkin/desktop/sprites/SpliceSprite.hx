@@ -16,6 +16,7 @@ class SpliceSprite extends FlxObject {
     public var right:FlxSprite = new FlxSprite();
     public var topRight:FlxSprite = new FlxSprite();
     public var top:FlxSprite = new FlxSprite();
+    public var middle:FlxSprite = new FlxSprite();
 
     public var __internalSprite:FlxSprite;
     public var slice:Array<Int> = [0, 0, 0, 0];
@@ -53,6 +54,7 @@ class SpliceSprite extends FlxObject {
         right.pixels = new BitmapData(_right, _height - _up - _down, true, 0);
         topRight.pixels = new BitmapData(_right, _up, true, 0);
         top.pixels = new BitmapData(_width - _left - _right, _up, true, 0);
+        middle.pixels = new BitmapData(_width - _left - _right, _height - _up - _down, true, 0);
 
 
         for(e in parts) e.pixels.lock();
@@ -66,6 +68,7 @@ class SpliceSprite extends FlxObject {
         right.pixels.copyPixels(__internalSprite.pixels, new Rectangle(_width - _right, _up, _right, _height - _down - _up), pos);
         topRight.pixels.copyPixels(__internalSprite.pixels, new Rectangle(_width - _right, 0, _right, _up), pos);
         top.pixels.copyPixels(__internalSprite.pixels, new Rectangle(_left, 0, _width - _left - _right, _up), pos);
+        middle.pixels.copyPixels(__internalSprite.pixels, new Rectangle(_left, _up, _width - _left - _right, _height - _up - _down), pos);
 
         for(e in parts) e.pixels.unlock();
     }
@@ -84,7 +87,7 @@ class SpliceSprite extends FlxObject {
     public override function draw() {
         if (!visible) return;
         super.draw();
-        var parts = [topLeft, left, bottomLeft, bottom, bottomRight, right, topRight, top];
+        var parts = [topLeft, left, bottomLeft, bottom, bottomRight, right, topRight, top, middle];
 
         var _left:Int = slice[0];
         var _down:Int = slice[1];
@@ -110,6 +113,10 @@ class SpliceSprite extends FlxObject {
         right.setPosition(x + (width - _right), y + _up);
         right.setSpriteSize(_right, height - _up - _down);
         bottomRight.setPosition(x + (width - _right), y + height - _down);
+
+        // middle by dj snake
+        middle.setPosition(x + _left, y + _up);
+        middle.setSpriteSize(width - _left - _right, height - _up - _down);
 
         for(e in parts) {
             e.cameras = cameras;

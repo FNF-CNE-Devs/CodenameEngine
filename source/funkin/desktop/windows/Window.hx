@@ -47,6 +47,12 @@ class Window extends FlxTypedGroup<FlxBasic> {
 
     public var focused(get, null):Bool;
 
+    public var curDialog:Window = null;
+
+    public function openDialog(window:Window) {
+        curDialog = window;
+        if (focused) DesktopMain.instance.focusWindow(curDialog);
+    }
     private function get_focused() {
         return DesktopMain.instance.windows.members.last() == this;
     }
@@ -138,13 +144,18 @@ class Window extends FlxTypedGroup<FlxBasic> {
         caption.text = text;
     }
 
-    public function popupCamera(cam:FlxCamera) {
-        cam.flashSprite.scaleX = 0.85;
-        cam.flashSprite.scaleY = 0.85;
-        cam.alpha = 0;
-
-        __captionTweens.push(FlxTween.tween(cam.flashSprite, {scaleX: 1, scaleY: 1}, 1/3, {ease: FlxEase.cubeOut}));
-        __captionTweens.push(FlxTween.tween(cam, {alpha: 1}, 1/3, {ease: FlxEase.cubeOut}));
+    public function popupCamera(cam:FlxCamera, popout:Bool = false, ?onFinish:FlxTween->Void) {
+        if (popout) {
+            __captionTweens.push(FlxTween.tween(cam.flashSprite, {scaleX: 0.85, scaleY: 0.85}, 1/5, {ease: FlxEase.quintOut}));
+            __captionTweens.push(FlxTween.tween(cam, {alpha: 0}, 1/5, {ease: FlxEase.quintOut, onComplete: onFinish}));
+        } else {
+            cam.flashSprite.scaleX = 0.85;
+            cam.flashSprite.scaleY = 0.85;
+            cam.alpha = 0;
+    
+            __captionTweens.push(FlxTween.tween(cam.flashSprite, {scaleX: 1, scaleY: 1}, 1/3, {ease: FlxEase.cubeOut}));
+            __captionTweens.push(FlxTween.tween(cam, {alpha: 1}, 1/3, {ease: FlxEase.cubeOut, onComplete: onFinish}));
+        }
     }
     public override function destroy() {
         super.destroy();
@@ -177,8 +188,8 @@ class Window extends FlxTypedGroup<FlxBasic> {
 
     public override function update(elapsed:Float) {
         if (__closing) {
-            DesktopMain.instance.windows.remove(this, true);
-            destroy();
+            // DesktopMain.instance.windows.remove(this, true);
+            // destroy();
             return;
         }
         windowInactiveFrame.visible = !(windowFrame.visible = focused);
@@ -189,6 +200,16 @@ class Window extends FlxTypedGroup<FlxBasic> {
         if (shouldCancel && DesktopMain.instance.mouseInput.justPressed)
             DesktopMain.instance.focusWindow(this);
 
+        if (curDialog != null && curDialog.exists) {
+            if (shouldCancel) {
+                DesktopMain.instance.mouseInput.cancel();
+                if (DesktopMain.instance.mouseInput.justPressed) {
+                    // TODO: sounds
+                    DesktopMain.instance.focusWindow(curDialog);
+                }
+            }
+            return;
+        }
         // updates them backwards!!
         while(i > 0) {
             i--;
@@ -202,6 +223,11 @@ class Window extends FlxTypedGroup<FlxBasic> {
 
     public function close() {
         __closing = true;
+        popupCamera(windowCaptionCamera, true, function(t) {
+            DesktopMain.instance.windows.remove(this, true);
+            destroy();
+        });
+        for(e in windowCameras) popupCamera(e.camera, true);
     }
 
     public function updateWindowFrame() {

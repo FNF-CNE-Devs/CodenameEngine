@@ -33,10 +33,10 @@ class Button extends FlxObject {
         var pressedButton = DesktopMain.theme.pressedButton;
         var disabledButton = DesktopMain.theme.disabledButton;
 
-        normalSprite = new SpliceSprite(normalButton.sprite, x, y, 75, 24, normalButton.left, normalButton.top, normalButton.bottom, normalButton.right);
-        hoverSprite = new SpliceSprite(hoverButton.sprite, x, y, 75, 24, hoverButton.left, hoverButton.top, hoverButton.bottom, hoverButton.right);
-        pressedSprite = new SpliceSprite(pressedButton.sprite, x, y, 75, 24, pressedButton.left, pressedButton.top, pressedButton.bottom, pressedButton.right);
-        disabledSprite = new SpliceSprite(disabledButton.sprite, x, y, 75, 24, disabledButton.left, disabledButton.top, disabledButton.bottom, disabledButton.right);
+        normalSprite = new SpliceSprite(Paths.image(normalButton.sprite), x, y, 75, 24, normalButton.left, normalButton.top, normalButton.bottom, normalButton.right);
+        hoverSprite = new SpliceSprite(Paths.image(hoverButton.sprite), x, y, 75, 24, hoverButton.left, hoverButton.top, hoverButton.bottom, hoverButton.right);
+        pressedSprite = new SpliceSprite(Paths.image(pressedButton.sprite), x, y, 75, 24, pressedButton.left, pressedButton.top, pressedButton.bottom, pressedButton.right);
+        disabledSprite = new SpliceSprite(Paths.image(disabledButton.sprite), x, y, 75, 24, disabledButton.left, disabledButton.top, disabledButton.bottom, disabledButton.right);
 
         label = new FlxUIText(0, 0, 75, text);
     }
@@ -62,6 +62,13 @@ class Button extends FlxObject {
 
         for(e in [normalSprite, hoverSprite, pressedSprite, disabledSprite])
             e.update(elapsed);
+
+        label.color = switch(frame) {
+            case 1:     DesktopMain.theme.hoverButton.textColor;
+            case 2:     DesktopMain.theme.pressedButton.textColor;
+            case 3:     DesktopMain.theme.disabledButton.textColor;
+            default:    DesktopMain.theme.normalButton.textColor;
+        }
     }
 
     public override function destroy() {
