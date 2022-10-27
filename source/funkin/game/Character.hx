@@ -332,9 +332,14 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		}
 	}
 
+	/**
+	 * Whenever the character should dance on beat or not. Set to false for `gf`, since the dance animation is automatically handled by PlayState.
+	 */
+	public var danceOnBeat:Bool = true;
+
 	public function beatHit(curBeat:Int) {
 		script.call("beatHit", [curBeat]);
-		if ((lastHit + (Conductor.stepCrochet * holdTime) < Conductor.songPosition) || animation.curAnim == null || (!animation.curAnim.name.startsWith("sing") && animation.curAnim.finished))
+		if (danceOnBeat && (lastHit + (Conductor.stepCrochet * holdTime) < Conductor.songPosition) || animation.curAnim == null || (!animation.curAnim.name.startsWith("sing") && animation.curAnim.finished))
 			dance();
 	}
 	public function stepHit(curStep:Int) {

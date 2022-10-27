@@ -233,10 +233,13 @@ class PlayState extends MusicBeatState
 		scripts.load();
 		scripts.call("create");
 
-		add(gf);
+		if (gf != null) {
+			gf.danceOnBeat = false;
+			add(gf);
+		}
 
-		add(dad);
-		add(boyfriend);
+		if (dad != null) add(dad);
+		if (boyfriend != null) add(boyfriend);
 
 
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
@@ -951,7 +954,7 @@ class PlayState extends MusicBeatState
 						daNote.tooLate = true;
 				}
 				else
-					canBeHit = false;
+					daNote.canBeHit = false;
 					
 				if (!daNote.mustPress && !daNote.wasGoodHit && daNote.strumTime <= Conductor.songPosition) goodNoteHit(daNote);
 				// TODO: FIXED STEP CROCHET PER NOTES FOR BPM CHANGES
