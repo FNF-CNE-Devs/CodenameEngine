@@ -1,5 +1,6 @@
 package funkin.desktop.sprites;
 
+import funkin.desktop.theme.Theme;
 import flixel.FlxObject;
 import flixel.addons.ui.FlxUIText;
 import flixel.FlxSprite;
@@ -18,7 +19,15 @@ class Button extends FlxObject {
     public var pressedSprite:SpliceSprite;
     public var disabledSprite:SpliceSprite;
 
-    public var label:FlxUIText;
+    public var label:WindowText;
+
+    private override function get_width() {
+        return normalSprite.width;
+    }
+
+    private override function get_height() {
+        return normalSprite.height;
+    }
     
     public function new(x:Float, y:Float, text:String = "", callback:Void->Void) {
         super();
@@ -38,7 +47,8 @@ class Button extends FlxObject {
         pressedSprite = new SpliceSprite(Paths.image(pressedButton.sprite), x, y, 75, 24, pressedButton.left, pressedButton.top, pressedButton.bottom, pressedButton.right);
         disabledSprite = new SpliceSprite(Paths.image(disabledButton.sprite), x, y, 75, 24, disabledButton.left, disabledButton.top, disabledButton.bottom, disabledButton.right);
 
-        label = new FlxUIText(0, 0, 75, text);
+        label = new WindowText(0, 0, 75, text);
+        label.alignment = CENTER;
     }
 
     public override function update(elapsed:Float) {
@@ -97,7 +107,9 @@ class Button extends FlxObject {
             sprite.cameras = cameras;
             sprite.setPosition(x, y);
             sprite.scrollFactor.set(scrollFactor.x, scrollFactor.y);
-            sprite.draw();
         }
+        spr.draw();
+        label.y += (height - label.height) / 2;
+        label.draw();
     }
 }

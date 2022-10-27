@@ -24,8 +24,9 @@ class Theme {
     }
 
     /**
-     * CAPTION
+     * CAPTION & WINDOW
      */
+    public var window:ThemeData = new ThemeData();
     public var captionActive:ThemeData = new ThemeData();
     public var captionInactive:ThemeData = new ThemeData();
     public var captionButtons:ThemeData = new ThemeData();
@@ -52,6 +53,9 @@ class Theme {
 
                 if (element.has.path) data.sprite = '$prefix${element.att.path.trim()}';
                 if (element.has.textColor) data.textColor = element.att.textColor.getColorFromDynamic();
+                if (element.has.font) data.font = element.att.font;
+                if (element.has.color) data.color = element.att.color.getColorFromDynamic();
+                if (element.has.fontSize) data.fontSize = Std.parseFloat(element.att.fontSize).getDefault(0);
                 if (element.has.left) data.left = Std.parseFloat(element.att.left).getDefault(0);
                 if (element.has.right) data.right = Std.parseFloat(element.att.right).getDefault(0);
                 if (element.has.top) data.top = Std.parseFloat(element.att.top).getDefault(0);
@@ -86,7 +90,11 @@ class Theme {
 class ThemeData implements IFlxDestroyable {
     public var sprite:String = "";
 
-    public var textColor:FlxColor = FlxColor.WHITE;
+    public var font:String = "";
+    public var fontSize:Float = 12;
+
+    public var textColor:FlxColor = FlxColor.BLACK;
+    public var color:FlxColor = FlxColor.WHITE;
 
     public var left:Float = 4;
     public var bottom:Float = 4;

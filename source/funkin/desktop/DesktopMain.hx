@@ -70,9 +70,16 @@ class DesktopMain extends MusicBeatState {
             windows.add(new Window(new CharacterEditor('dad')));
     }
 
+    public function openWindow(content:WindowContent) {
+        return windows.add(new Window(content));
+    }
+
     public function updateScreenRes() {
         // update wallpaper
         wallpaper.setUnstretchedGraphicSize(FlxG.width, FlxG.height);
+        for(e in windows) {
+            e.onDesktopSizeChange(FlxG.width, FlxG.height);
+        }
     }
 
     public override function destroy() {
@@ -130,6 +137,11 @@ class MouseInput {
     public function overlapsRect(spr:FlxBasic, rect:Rectangle, ?camera:FlxCamera) {
         if (__cancelled) return false;
         if (camera == null) camera = FlxG.camera;
+        if (spr is FlxObject) {
+            var obj = cast(spr, FlxObject);
+            rect.x -= camera.scroll.x * obj.scrollFactor.x;
+            rect.y -= camera.scroll.y * obj.scrollFactor.y;
+        }
         var pos = FlxG.mouse.getScreenPosition(camera);
         
         return ((pos.x > rect.x) && (pos.x < rect.x + rect.width)) && ((pos.y > rect.y) && (pos.y < rect.y + rect.height));

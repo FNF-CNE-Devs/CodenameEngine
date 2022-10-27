@@ -69,6 +69,7 @@ class WindowContent extends WindowGroup<FlxBasic> {
 
     public function new(caption:String, x:Float, y:Float, width:Int, height:Int) {
         super();
+        this.title = caption;
         this.width = width;
         this.height = height;
         this.winX = x;
@@ -77,5 +78,10 @@ class WindowContent extends WindowGroup<FlxBasic> {
 
     public function create() {
 
+    }
+
+    
+    public function onDesktopSizeChange(width:Int, height:Int) {
+        
     }
 }

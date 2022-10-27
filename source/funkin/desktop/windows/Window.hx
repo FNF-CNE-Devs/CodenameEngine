@@ -14,6 +14,8 @@ import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import funkin.desktop.sprites.*;
+import funkin.desktop.editors.MessageBox.MessageBoxIcon;
+import funkin.desktop.editors.MessageBox;
 
 
 typedef WindowCam = {
@@ -44,6 +46,11 @@ class Window extends FlxTypedGroup<FlxBasic> {
 
     public var moveable:Bool = true;
     public var resizeable:Bool = true;
+    public var canClose:Bool = true;
+    public var canMinimize:Bool = true;
+    public var canHelp:Bool = false;
+
+    public var maximized:Bool = false;
 
     public var focused(get, null):Bool;
 
@@ -55,6 +62,14 @@ class Window extends FlxTypedGroup<FlxBasic> {
     }
     private function get_focused() {
         return DesktopMain.instance.windows.members.last() == this;
+    }
+
+    public function showMessage(caption:String, message:String, icon:MessageBoxIcon) {
+        var win = DesktopMain.instance.openWindow(new MessageBox(caption, message, icon));
+        curDialog = win;
+        win.move(
+            windowCaptionCamera.x + ((windowCaptionCamera.width - win.windowCaptionCamera.width) / 2),
+            windowCaptionCamera.y + ((windowCaptionCamera.height - win.windowCaptionCamera.height) / 2));
     }
 
     public function loadIcon(path:String) {
@@ -112,7 +127,7 @@ class Window extends FlxTypedGroup<FlxBasic> {
         if (content.windowCamera == null) {
             content.windowCamera = new FlxCamera(Std.int(content.winX + 4), Std.int(content.winY + 23), Std.int(content.width), Std.int(content.height), 1);
             content.windowCamera.pixelPerfectRender = true;
-            content.windowCamera.bgColor = -1; // walter white
+            content.windowCamera.bgColor = DesktopMain.theme.window.color;
         }
         content.cameras = [content.windowCamera];
         content.parent = this;
@@ -138,6 +153,41 @@ class Window extends FlxTypedGroup<FlxBasic> {
             width: camera.width,
             height: camera.height
         });
+    }
+
+    public function onDesktopSizeChange(width:Int, height:Int) {
+        if (maximized) {
+            resize(width, height);
+        }
+        content.onDesktopSizeChange(width, height);
+    }
+
+    public function maximize() {
+        if (maximized != (maximized = true)) {
+            // maximizing!!
+            captionButtons.members[1].animation.play("restore", true);
+            move(-DesktopMain.theme.window.left, -DesktopMain.theme.window.left);
+            resize(FlxG.width, FlxG.height); // TODO: taskbar stuff
+        }
+    }
+
+    public function minimize() {
+
+    }
+
+    public function restore() {
+        if (maximized != (maximized = false)) {
+            // maximizing!!
+            captionButtons.members[1].animation.play("maximize", true);
+            move(100, 100);
+            var w:Int = 320;
+            var h:Int = 320;
+            if (windowCameras[0] != null) {
+                w = windowCameras[0].width;
+                h = windowCameras[0].height;
+            }
+            resize(w, h); // TODO: taskbar stuff
+        }
     }
 
     public function changeCaption(text:String) {
@@ -197,19 +247,19 @@ class Window extends FlxTypedGroup<FlxBasic> {
         
         var shouldCancel = DesktopMain.instance.mouseInput.overlapsRect(this, new Rectangle(0, 0, windowCaptionCamera.width, windowCaptionCamera.height), windowCaptionCamera);
 
-        if (shouldCancel && DesktopMain.instance.mouseInput.justPressed)
-            DesktopMain.instance.focusWindow(this);
+        
 
         if (curDialog != null && curDialog.exists) {
             if (shouldCancel) {
-                DesktopMain.instance.mouseInput.cancel();
                 if (DesktopMain.instance.mouseInput.justPressed) {
                     // TODO: sounds
                     DesktopMain.instance.focusWindow(curDialog);
                 }
+                DesktopMain.instance.mouseInput.cancel();
             }
             return;
-        }
+        } else if (shouldCancel && DesktopMain.instance.mouseInput.justPressed)
+            DesktopMain.instance.focusWindow(this);
         // updates them backwards!!
         while(i > 0) {
             i--;

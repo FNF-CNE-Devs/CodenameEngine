@@ -767,14 +767,14 @@ class PlayState extends MusicBeatState
 
 		var iconOffset:Int = 26;
 
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0)) - iconOffset);
+		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0))) - (iconP2.width - iconOffset);
 
 		if (health > 2)
 			health = 2;
 
-		iconP1.health = healthBar.percent;
-		iconP2.health = 1 - (healthBar.percent);
+		iconP1.health = healthBar.percent / 100;
+		iconP2.health = 1 - (healthBar.percent / 100);
 		
 		/* if (FlxG.keys.justPressed.NINE)
 			FlxG.switchState(new Charting()); */
