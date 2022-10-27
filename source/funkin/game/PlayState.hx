@@ -773,8 +773,8 @@ class PlayState extends MusicBeatState
 		if (health > 2)
 			health = 2;
 
-		iconP1.health = health / 2;
-		iconP2.health = 1 - (health / 2);
+		iconP1.health = healthBar.percent;
+		iconP2.health = 1 - (healthBar.percent);
 		
 		/* if (FlxG.keys.justPressed.NINE)
 			FlxG.switchState(new Charting()); */
@@ -945,29 +945,6 @@ class PlayState extends MusicBeatState
 			var toDelete:Array<Note> = [];
 			notes.forEachAlive(function(daNote:Note)
 			{
-				if (daNote.mustPress)
-				{
-					daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * daNote.latePressWindow)
-						&& daNote.strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * daNote.earlyPressWindow));
-
-					if (daNote.strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !daNote.wasGoodHit)
-						daNote.tooLate = true;
-				}
-				else
-					daNote.canBeHit = false;
-					
-				if (!daNote.mustPress && !daNote.wasGoodHit && daNote.strumTime <= Conductor.songPosition) goodNoteHit(daNote);
-				// TODO: FIXED STEP CROCHET PER NOTES FOR BPM CHANGES
-				if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (Conductor.stepCrochet) < Conductor.songPosition) {
-					deleteNote(daNote);
-					return;
-				}
-
-				if (daNote.tooLate) {
-					noteMiss(daNote);
-					return;
-				}
-
 				var strum:Strum = null;
 				for(e in (daNote.mustPress ? playerStrums : cpuStrums).members) {
 					if (e.ID == daNote.noteData % 4) {
@@ -975,10 +952,44 @@ class PlayState extends MusicBeatState
 						break;
 					}
 				}
-				if (strum == null) return;
+				
+				var event = PlayState.instance.scripts.event("onNoteUpdate", new NoteUpdateEvent(daNote, elapsed, strum));
+				if (!event.cancelled) {
+					if (event.__updateHitWindow) {
+						if (daNote.mustPress)
+						{
+							daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * daNote.latePressWindow)
+								&& daNote.strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * daNote.earlyPressWindow));
+		
+							if (daNote.strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !daNote.wasGoodHit)
+								daNote.tooLate = true;
+						}
+						else
+							daNote.canBeHit = false;
+					}
+						
+					if (event.__autoCPUHit && !daNote.mustPress && !daNote.wasGoodHit && daNote.strumTime <= Conductor.songPosition) goodNoteHit(daNote);
+					// TODO: FIXED STEP CROCHET PER NOTES FOR BPM CHANGES
 
-				strum.updateNotePosition(daNote);
-				strum.updateClipRect(daNote);
+					if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (Conductor.stepCrochet) < Conductor.songPosition) {
+						deleteNote(daNote);
+						return;
+					}
+	
+					if (daNote.tooLate) {
+						noteMiss(daNote);
+						return;
+					}
+	
+					
+					if (event.strum == null) return;
+
+					if (event.__reposNote) event.strum.updateNotePosition(daNote);
+					event.strum.updateClipRect(daNote);
+
+					PlayState.instance.scripts.event("onNoteUpdatePost", event);
+				}
+				
 			});
 		}
 
