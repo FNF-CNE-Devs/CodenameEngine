@@ -170,17 +170,6 @@ class Note extends FlxSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
-		if (mustPress)
-		{
-			canBeHit = (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * latePressWindow)
-				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyPressWindow));
-
-			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
-				tooLate = true;
-		}
-		else
-			canBeHit = false;
 	}
 
 	public function updateClipRect(strum:Strum) {

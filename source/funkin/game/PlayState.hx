@@ -939,14 +939,27 @@ class PlayState extends MusicBeatState
 
 		if (generatedMusic)
 		{
+			var toDelete:Array<Note> = [];
 			notes.forEachAlive(function(daNote:Note)
 			{
+				if (daNote.mustPress)
+				{
+					daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * daNote.latePressWindow)
+						&& daNote.strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * daNote.earlyPressWindow));
+
+					if (daNote.strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !daNote.wasGoodHit)
+						daNote.tooLate = true;
+				}
+				else
+					canBeHit = false;
+					
 				if (!daNote.mustPress && !daNote.wasGoodHit && daNote.strumTime <= Conductor.songPosition) goodNoteHit(daNote);
 				// TODO: FIXED STEP CROCHET PER NOTES FOR BPM CHANGES
 				if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (Conductor.stepCrochet) < Conductor.songPosition) {
 					deleteNote(daNote);
 					return;
 				}
+
 				if (daNote.tooLate) {
 					noteMiss(daNote);
 					return;
