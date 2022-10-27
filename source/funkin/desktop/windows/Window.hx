@@ -157,7 +157,7 @@ class Window extends FlxTypedGroup<FlxBasic> {
 
     public function onDesktopSizeChange(width:Int, height:Int) {
         if (maximized) {
-            resize(width, height);
+            resize(width, Std.int(height - DesktopMain.theme.captionActive.top + DesktopMain.theme.captionActive.left));
         }
         content.onDesktopSizeChange(width, height);
     }
@@ -166,8 +166,8 @@ class Window extends FlxTypedGroup<FlxBasic> {
         if (maximized != (maximized = true)) {
             // maximizing!!
             captionButtons.members[1].animation.play("restore", true);
-            move(-DesktopMain.theme.window.left, -DesktopMain.theme.window.left);
-            resize(FlxG.width, FlxG.height); // TODO: taskbar stuff
+            move(-DesktopMain.theme.captionActive.left, -DesktopMain.theme.captionActive.left);
+            resize(FlxG.width, Std.int(FlxG.height - DesktopMain.theme.captionActive.top + DesktopMain.theme.captionActive.left)); // TODO: taskbar stuff
         }
     }
 
