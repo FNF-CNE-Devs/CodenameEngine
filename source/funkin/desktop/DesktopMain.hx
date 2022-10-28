@@ -68,6 +68,8 @@ class DesktopMain extends MusicBeatState {
             windows.add(new Window(new HelloWorld()));
         if (FlxG.keys.justPressed.F1)
             windows.add(new Window(new CharacterEditor('dad')));
+        if (FlxG.keys.justPressed.F2)
+            windows.add(new Window(new EditorPlayState()));
     }
 
     public function openWindow(content:WindowContent) {

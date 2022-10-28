@@ -49,6 +49,11 @@ class Conductor
 
 	@:dox(hide) public function new() {}
 
+	public static function reset() {
+		songPosition = lastSongPos = 0;
+		bpmChangeMap = [];
+		changeBPM(100);
+	}
 	/**
 	 * Maps BPM changes from a song.
 	 * @param song Song to map BPM changes from.

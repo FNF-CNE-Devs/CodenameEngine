@@ -153,11 +153,10 @@ class PlayState extends MusicBeatState
 		scripts = new ScriptPack("PlayState");
 		scripts.setParent(this);
 
-		camGame = new FlxCamera();
+		camGame = camera;
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
 
-		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD, false);
 
 		// camGame.widescreen = true;
@@ -170,6 +169,7 @@ class PlayState extends MusicBeatState
 
 		scrollSpeed = SONG.speed;
 
+		Conductor.reset();
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
@@ -413,6 +413,9 @@ class PlayState extends MusicBeatState
 		super.destroy();
 		FlxDestroyUtil.destroy(scripts);
 		instance = null;
+		if (vocals != null) {
+			vocals.destroy();
+		}
 	}
 
 	public var debugNum:Int = 0;
@@ -800,8 +803,8 @@ class PlayState extends MusicBeatState
 				songTime += FlxG.game.ticks - previousFrameTime;
 				previousFrameTime = FlxG.game.ticks;
 
-				// if (Math.abs(FlxG.sound.music.time - Conductor.songPosition) > 20)
-					// resyncVocals();
+				if (Math.abs(FlxG.sound.music.time - Conductor.songPosition) > 25)
+					resyncVocals();
 			}
 
 			// Conductor.lastSongPos = FlxG.sound.music.time;

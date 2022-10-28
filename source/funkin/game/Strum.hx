@@ -44,7 +44,7 @@ class Strum extends FlxSprite {
     public function updateNotePosition(daNote:Note) {
         if (!daNote.exists) return;
         
-        var offset = FlxPoint.get(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(PlayState.instance.scrollSpeed, 2)));
+        var offset = FlxPoint.get(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(), 2)));
         var realOffset = FlxPoint.get(0, 0);
         if (daNote.isSustainNote) offset.y -= Note.swagWidth / 2;
         
