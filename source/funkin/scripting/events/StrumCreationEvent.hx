@@ -1,5 +1,7 @@
 package funkin.scripting.events;
 
+import funkin.game.Strum;
+
 class StrumCreationEvent extends CancellableEvent {
     @:dox(hide) public var __doAnimation = !PlayState.isStoryMode;
 
@@ -20,6 +22,7 @@ class StrumCreationEvent extends CancellableEvent {
     public var strumID:Int;
 
     public function new(strum:Strum, player:Int, strumID:Int) {
+        super();
         this.strum = strum;
         this.player = player;
         this.strumID = strumID;
