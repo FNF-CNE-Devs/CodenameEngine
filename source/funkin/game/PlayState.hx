@@ -75,6 +75,10 @@ class PlayState extends MusicBeatState
 
 	public var stage:Stage;
 	public var scrollSpeed:Float = 0;
+	public var downscroll(get, set):Bool;
+
+	@:dox(hide) private function set_downscroll(v:Bool) {return camHUD.downscroll = v;}
+	@:dox(hide) private function get_downscroll():Bool  {return camHUD.downscroll;}
 
 	public var vocals:FlxSound;
 
@@ -115,12 +119,11 @@ class PlayState extends MusicBeatState
 
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
-	public var camHUD:FlxCamera;
+	public var camHUD:HudCamera;
 	public var camGame:FlxCamera;
 
 	
 	public var songScore:Int = 0;
-	public var downscroll:Bool = Options.downscroll;
 	public var misses:Int = 0;
 	public var scoreTxt:FlxText;
 	public var missesTxt:FlxText;
@@ -154,11 +157,12 @@ class PlayState extends MusicBeatState
 		scripts.setParent(this);
 
 		camGame = camera;
-		camHUD = new FlxCamera();
+		camHUD = new HudCamera();
 		camHUD.bgColor.alpha = 0;
 
 		FlxG.cameras.add(camHUD, false);
 
+		downscroll = Options.downscroll;
 		// camGame.widescreen = true;
 
 		persistentUpdate = true;
@@ -988,7 +992,7 @@ class PlayState extends MusicBeatState
 					if (event.strum == null) return;
 
 					if (event.__reposNote) event.strum.updateNotePosition(daNote);
-					event.strum.updateClipRect(daNote);
+					event.strum.updateSustain(daNote);
 
 					PlayState.instance.scripts.event("onNoteUpdatePost", event);
 				}

@@ -14,13 +14,15 @@ class Strum extends FlxSprite {
     public var noteAngle:Null<Float> = null; // custom scroll speed per strum
     public var downscroll:Null<Bool> = false; // custom downscroll per strum
     
-    public function getScrollSpeed() {
+    public function getScrollSpeed(?note:Note) {
+        if (note != null && note.scrollSpeed != null) return note.scrollSpeed;
         if (scrollSpeed != null) return scrollSpeed;
         if (PlayState.instance != null) return PlayState.instance.scrollSpeed;
         return 1;
     }
     
-    public function getNotesAngle() {
+    public function getNotesAngle(?note:Note) {
+        if (note != null && note.noteAngle != null) return note.noteAngle;
         if (noteAngle != null) return noteAngle;
         return angle;
     }
@@ -44,11 +46,11 @@ class Strum extends FlxSprite {
     public function updateNotePosition(daNote:Note) {
         if (!daNote.exists) return;
         
-        var offset = FlxPoint.get(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(), 2)));
+        var offset = FlxPoint.get(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
         var realOffset = FlxPoint.get(0, 0);
         if (daNote.isSustainNote) offset.y -= Note.swagWidth / 2;
         
-        var noteAngle = getNotesAngle();
+        var noteAngle = getNotesAngle(daNote);
         daNote.angle = daNote.isSustainNote ? noteAngle : angle;
         if (Std.int(noteAngle % 360) != 0) {
             var noteAngleCos = Math.cos(noteAngle / 180 * Math.PI);
@@ -67,8 +69,10 @@ class Strum extends FlxSprite {
         realOffset.put();
     }
 
-    public function updateClipRect(daNote:Note) {
-        if (!daNote.isSustainNote || !daNote.wasGoodHit) return;
+    public function updateSustain(daNote:Note) {
+        if (!daNote.isSustainNote) return;
+        daNote.flipY = PlayState.instance.downscroll != (getScrollSpeed(daNote) < 0);
+        if (!daNote.wasGoodHit) return;
         daNote.updateClipRect(this);
     }
 

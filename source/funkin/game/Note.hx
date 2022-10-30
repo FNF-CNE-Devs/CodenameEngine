@@ -37,6 +37,10 @@ class Note extends FlxSprite
 
 	public var noteTypeID:Int = 0;
 
+	// TO APPLY THOSE ON A SINGLE NOTE
+	public var scrollSpeed:Null<Float> = null;
+	public var noteAngle:Null<Float> = null;
+
 	public var noteType(get, null):String;
 	private function get_noteType() {
 		return PlayState.instance.getNoteType(noteTypeID);
