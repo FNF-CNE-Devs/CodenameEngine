@@ -87,4 +87,22 @@ interface PlayStateScript {
      * @param event Event object containing information about the note.
      */
     public function onNoteCreation(event:NoteCreationEvent):Void;
+
+    /**
+     * Triggered on each strum creation
+     * @param event Event object containing information about the strum.
+     */
+    public function onStrumCreation(event:StrumCreationEvent):Void;
+
+    /**
+     * Triggered on substate open.
+     * @param event Event object containing the substate, which is cancellable.
+     */
+    public function onSubstateOpen(event:SubstateEvent):Void;
+
+    /**
+     * Triggered on substate close.
+     * @param event Event object containing the substate, which is cancellable.
+     */
+    public function onSubstateClose(event:SubstateEvent):Void;
 }
