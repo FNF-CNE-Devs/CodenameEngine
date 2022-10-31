@@ -1154,7 +1154,7 @@ class PlayState extends MusicBeatState
 
 			var e = separatedScore.charAt(i);
 
-			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image('game/${prefix}num$e$suffix'));
+			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image('game/${prefix}score/num$e$suffix'));
 			numScore.screenCenter();
 			numScore.x = comboPos.x + (43 * i) - 90;
 			numScore.y += 80;
