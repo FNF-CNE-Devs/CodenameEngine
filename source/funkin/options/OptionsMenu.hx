@@ -1,5 +1,6 @@
 package funkin.options;
 
+import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import funkin.ui.Alphabet;
@@ -9,9 +10,16 @@ import flixel.FlxG;
 import flixel.effects.FlxFlicker;
 import funkin.menus.MainMenuState;
 
+import funkin.options.categories.*;
+
+typedef OptionCategory = {
+    var name:String;
+    var desc:String;
+    var state:Class<FlxState>;
+}
 class OptionsMenu extends MusicBeatState {
     public static var fromPlayState:Bool = false;
-    public var options = [
+    public var options:Array<OptionCategory> = [
         {
             name: 'Controls',
             desc: 'Change Controls for Player 1 and Player 2!',
@@ -20,7 +28,17 @@ class OptionsMenu extends MusicBeatState {
         {
             name: 'Gameplay',
             desc: 'Change Gameplay options such as Downscroll, Scroll Speed...',
-            state: null
+            state: GameplayOptions
+        },
+        {
+            name: 'Behaviour',
+            desc: 'Change Behaviour options such as Naughtyness, Flashing lights...',
+            state: BehaviourOptions
+        },
+        {
+            name: 'Save Data',
+            desc: 'Use this menu to reset save data or engine settings.',
+            state: SaveDataOptions
         }
     ];
 
@@ -44,7 +62,7 @@ class OptionsMenu extends MusicBeatState {
         super.create();
         alphabets = new FlxTypedGroup<Alphabet>();
         for(k=>e in options) {
-            var alphabet = new Alphabet(0, (k+1) * 100, e.name, true, false);
+            var alphabet = new Alphabet(0, (k+1) * (100), e.name, true, false);
             alphabet.screenCenter(X);
             alphabets.add(alphabet);
         }

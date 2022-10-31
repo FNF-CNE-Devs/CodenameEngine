@@ -5,7 +5,6 @@ import flixel.addons.ui.FlxUIText;
 import funkin.desktop.theme.Theme.ThemeData;
 
 class WindowText extends FlxText {
-    // TODO: VISUAL STYLES SHIT
     public function new(x:Float, y:Float, w:Float, t:String) {
         super(x, y, w, t);
         color = 0xFF000000;

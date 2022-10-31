@@ -134,6 +134,7 @@ class Main extends Sprite
 		Options.load();
 
 		AudioSwitchFix.init();
+		WindowsAPI.setDarkMode(true);
 
 		var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
 		diamond.persist = true;
