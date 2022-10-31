@@ -67,7 +67,7 @@ class Note extends FlxSprite
 
 		this.noteData = noteData;
 
-		var event = new NoteCreationEvent(this, strumID, this.noteType, noteTypeID, mustPress, "NOTE_assets", 0.7);
+		var event = new NoteCreationEvent(this, strumID, this.noteType, noteTypeID, mustPress, "game/NOTE_assets", 0.7);
 
 		if (PlayState.instance != null)
 			event = PlayState.instance.scripts.event("onNoteCreation", event);

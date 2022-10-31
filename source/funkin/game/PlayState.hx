@@ -520,7 +520,7 @@ class PlayState extends MusicBeatState
 				{
 					// case "school":
 					default:
-						babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets');
+						babyArrow.frames = Paths.getSparrowAtlas('game/NOTE_assets');
 						babyArrow.animation.addByPrefix('green', 'arrowUP');
 						babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
 						babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
@@ -1110,7 +1110,7 @@ class PlayState extends MusicBeatState
 			suffix = '-pixel';
 		}
 
-		rating.loadGraphic(Paths.image('game/$prefix$daRating$suffix'));
+		rating.loadGraphic(Paths.image('game/score/$prefix$daRating$suffix'));
 		rating.screenCenter();
 		rating.x = comboPos.x - 40;
 		rating.y -= 60;
@@ -1118,7 +1118,7 @@ class PlayState extends MusicBeatState
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
 
-		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('game/${prefix}combo$suffix'));
+		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('game/score/${prefix}combo$suffix'));
 		comboSpr.screenCenter();
 		comboSpr.x = comboPos.x;
 		comboSpr.acceleration.y = 600;
