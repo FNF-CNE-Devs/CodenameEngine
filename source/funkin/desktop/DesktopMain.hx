@@ -42,7 +42,7 @@ class DesktopMain extends MusicBeatState {
         #if windows
         try {
             wallpaper.loadGraphic(BitmapData.fromFile('${Sys.getEnv("AppData")}\\Microsoft\\Windows\\Themes\\TranscodedWallpaper'));
-        } catch(e) #end wallpaper.loadGraphic(Paths.image("menuBG"));
+        } catch(e) #end wallpaper.loadGraphic(Paths.image("menus/menuBG"));
         wallpaper.scrollFactor.set(0, 0); // anchor at top left
         wallpaper.antialiasing = true;
         add(wallpaper);

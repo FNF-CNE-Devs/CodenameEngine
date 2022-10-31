@@ -18,7 +18,7 @@ class OptionsMenu extends MusicBeatState {
             state: funkin.options.keybinds.KeybindsOptions
         },
         {
-            name: 'Visuals',
+            name: 'Gameplay',
             desc: 'Change Gameplay options such as Downscroll, Scroll Speed...',
             state: null
         }
@@ -33,7 +33,7 @@ class OptionsMenu extends MusicBeatState {
         if (fromPlayState != null) OptionsMenu.fromPlayState = fromPlayState;
     }
     public override function create() {
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBGBlue'));
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menus/menuBGBlue'));
         bg.scrollFactor.set();
 		bg.scale.set(1.15, 1.15);
 		bg.updateHitbox();

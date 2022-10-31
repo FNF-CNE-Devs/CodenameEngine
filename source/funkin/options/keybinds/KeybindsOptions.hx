@@ -106,8 +106,8 @@ class KeybindsOptions extends MusicBeatSubstate {
 
         isSubState = FlxG.state != this;
         alphabets = new FlxTypedGroup<KeybindSetting>();
-		bg = new FlxSprite(-80).loadGraphic(Paths.image(isSubState ? 'menuTransparent' : 'menuBGBlue'));
-		coloredBG = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite(-80).loadGraphic(Paths.image(isSubState ? 'menus/menuTransparent' : 'menus/menuBGBlue'));
+		coloredBG = new FlxSprite(-80).loadGraphic(Paths.image('menus/menuDesat'));
         for(bg in [bg, coloredBG]) {
             bg.scrollFactor.set();
             bg.scale.set(1.15, 1.15);

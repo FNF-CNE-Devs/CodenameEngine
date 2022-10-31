@@ -15,6 +15,12 @@ class OptionsScreen extends MusicBeatState {
     public override function create() {
         super.create();
         
-        
+        bg = new FlxSprite(-80).loadGraphic(Paths.image('menus/menuBG'));
+        bg.scrollFactor.set();
+        bg.scale.set(1.15, 1.15);
+        bg.updateHitbox();
+        bg.screenCenter();
+        bg.antialiasing = true;
+        add(bg);
     }
 }

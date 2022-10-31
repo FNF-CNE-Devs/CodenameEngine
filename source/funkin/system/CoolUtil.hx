@@ -27,6 +27,11 @@ class CoolUtil
 		return v == null ? defaultValue : v;
 	}
 
+	public static function addZeros(str:String, num:Int) {
+		while(str.length < num) str = '0${str}';
+		return str;
+	}
+
 	public static function getSizeString(size:UInt):String {
 		var labels = ["B", "KB", "MB", "GB", "TB"];
 		var rSize:Float = size;

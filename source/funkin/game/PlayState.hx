@@ -273,7 +273,7 @@ class PlayState extends MusicBeatState
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
 		// TODO: cool healthbar
-		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
+		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('game/healthBar'));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
@@ -341,7 +341,7 @@ class PlayState extends MusicBeatState
 
 		var swagCounter:Int = 0;
 
-		var introSprites:Array<String> = [null, 'ready', "set", "go"];
+		var introSprites:Array<String> = [null, 'game/ready', "game/set", "game/go"];
 		var introSounds:Array<String> = ['intro3', 'intro2', "intro1", "introGo"];
 
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
@@ -362,7 +362,7 @@ class PlayState extends MusicBeatState
 			if (!event.cancelled) {
 				if (event.spritePath != null) {
 					var spr = event.spritePath;
-					if (!Assets.exists(spr)) spr = Paths.image(spr);
+					if (!Assets.exists(spr)) spr = Paths.image('$spr');
 
 					sprite = new FlxSprite().loadGraphic(spr);
 					sprite.scrollFactor.set();
@@ -511,7 +511,7 @@ class PlayState extends MusicBeatState
 		{
 			// FlxG.log.add(i);
 			var babyArrow:Strum = new Strum((FlxG.width * 0.25) + (Note.swagWidth * (i - 2)) + ((FlxG.width / 2) * player), strumLine.y);
-			babyArrow.ID = i + (player * 4);
+			babyArrow.ID = i;
 
 			var event = scripts.event("onStrumCreation", new StrumCreationEvent(babyArrow, player, i));
 
@@ -1061,6 +1061,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public var endingSong:Bool = false;
+	public var comboPos:FlxPoint = FlxPoint.get(FlxG.width * 0.55, -60);
 
 	private function popUpScore(strumtime:Float, score:Int = 350):Void
 	{
@@ -1068,10 +1069,6 @@ class PlayState extends MusicBeatState
 		vocals.volume = 1;
 
 		var placement:String = Std.string(combo);
-
-		var coolText:FlxText = new FlxText(0, 0, 0, placement, 32);
-		coolText.screenCenter();
-		coolText.x = FlxG.width * 0.55;
 		//
 
 		var rating:FlxSprite = new FlxSprite();
@@ -1104,37 +1101,38 @@ class PlayState extends MusicBeatState
 				daRating = 'bad';
 		 */
 
-		var pixelShitPart1:String = "";
-		var pixelShitPart2:String = '';
+		var prefix:String = "";
+		var suffix:String = '';
 
 		if (curStage.startsWith('school'))
 		{
-			pixelShitPart1 = 'weeb/pixelUI/';
-			pixelShitPart2 = '-pixel';
+			prefix = 'weeb/pixelUI/';
+			suffix = '-pixel';
 		}
 
-		rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
+		rating.loadGraphic(Paths.image('game/$prefix$daRating$suffix'));
 		rating.screenCenter();
-		rating.x = coolText.x - 40;
+		rating.x = comboPos.x - 40;
 		rating.y -= 60;
 		rating.acceleration.y = 550;
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
 
-		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
+		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('game/${prefix}combo$suffix'));
 		comboSpr.screenCenter();
-		comboSpr.x = coolText.x;
+		comboSpr.x = comboPos.x;
 		comboSpr.acceleration.y = 600;
 		comboSpr.velocity.y -= 150;
-
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
+
 		add(rating);
+		add(comboSpr);
 
 		if (!curStage.startsWith('school'))
 		{
-			rating.setGraphicSize(Std.int(rating.width * 0.7));
+			rating.scale.set(0.7, 0.7);
 			rating.antialiasing = true;
-			comboSpr.setGraphicSize(Std.int(comboSpr.width * 0.7));
+			comboSpr.scale.set(0.7, 0.7);
 			comboSpr.antialiasing = true;
 		}
 		else
@@ -1146,18 +1144,19 @@ class PlayState extends MusicBeatState
 		comboSpr.updateHitbox();
 		rating.updateHitbox();
 
-		var seperatedScore:Array<Int> = [];
+		var separatedScore:String = Std.string(combo).addZeros(3);
 
-		seperatedScore.push(Math.floor(combo / 100));
-		seperatedScore.push(Math.floor((combo - (seperatedScore[0] * 100)) / 10));
-		seperatedScore.push(combo % 10);
 
-		var daLoop:Int = 0;
-		for (i in seperatedScore)
+		for (i in 0...separatedScore.length)
 		{
-			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
+			if (combo < 10 && combo != 0)
+				break;
+
+			var e = separatedScore.charAt(i);
+
+			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image('game/${prefix}num$e$suffix'));
 			numScore.screenCenter();
-			numScore.x = coolText.x + (43 * daLoop) - 90;
+			numScore.x = comboPos.x + (43 * i) - 90;
 			numScore.y += 80;
 
 			if (!curStage.startsWith('school'))
@@ -1175,7 +1174,6 @@ class PlayState extends MusicBeatState
 			numScore.velocity.y -= FlxG.random.int(140, 160);
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 
-			if (combo >= 10 || combo == 0)
 				add(numScore);
 
 			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
@@ -1185,16 +1183,11 @@ class PlayState extends MusicBeatState
 				},
 				startDelay: Conductor.crochet * 0.002
 			});
-
-			daLoop++;
 		}
 		/* 
 			trace(combo);
-			trace(seperatedScore);
+			trace(separatedScore);
 		 */
-
-		coolText.text = Std.string(seperatedScore);
-		// add(coolText);
 
 		FlxTween.tween(rating, {alpha: 0}, 0.2, {
 			startDelay: Conductor.crochet * 0.001
@@ -1203,7 +1196,6 @@ class PlayState extends MusicBeatState
 		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
 			onComplete: function(tween:FlxTween)
 			{
-				coolText.destroy();
 				comboSpr.destroy();
 
 				rating.destroy();

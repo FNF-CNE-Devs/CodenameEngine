@@ -64,10 +64,17 @@ class Alphabet extends FlxSpriteGroup
 			var xml = new Access(Xml.parse(Assets.getText(path)).firstElement());
 			AlphaCharacter.boldAnims = [];
 			AlphaCharacter.letterAnims = [];
+			AlphaCharacter.boldAlphabetPath = AlphaCharacter.letterAlphabetPath = 'ui/alphabet';
 
 			for(e in xml.elements) {
 				var bold = e.name == "bold";
 				var list = bold ? AlphaCharacter.boldAnims : AlphaCharacter.letterAnims;
+				if (e.has.spritesheet) {
+					if (bold)
+						AlphaCharacter.boldAlphabetPath = e.att.spritesheet;
+					else
+						AlphaCharacter.letterAlphabetPath = e.att.spritesheet;
+				}
 				for(e in e.nodes.letter) {
 					if (!e.has.char || !e.has.anim) continue;
 					var name = e.att.char;
@@ -288,6 +295,10 @@ class Alphabet extends FlxSpriteGroup
 class AlphaCharacter extends FlxSprite
 {
 	@:dox(hide) @:noCompletion public static var __alphaPath:String = null;
+
+	public static var letterAlphabetPath:String;
+	public static var boldAlphabetPath:String;
+
 	public static var boldAnims:Map<String, String> = [];
 	public static var letterAnims:Map<String, String> = [];
 
@@ -307,8 +318,6 @@ class AlphaCharacter extends FlxSprite
 	public function new(x:Float, y:Float)
 	{
 		super(x, y);
-		var tex = Paths.getSparrowAtlas('alphabet');
-		frames = tex;
 
 		antialiasing = true;
 	}
@@ -319,7 +328,8 @@ class AlphaCharacter extends FlxSprite
 		if (boldAnims[letter] == null) {
 			visible = false;
 			return;
-		} 
+		}
+		frames = Paths.getSparrowAtlas(boldAlphabetPath);
 		animation.addByPrefix(letter, boldAnims[letter], 24);
 		animation.play(letter);
 		updateHitbox();
@@ -330,43 +340,13 @@ class AlphaCharacter extends FlxSprite
 		if (letterAnims[letter] == null) {
 			visible = false;
 			return;
-		} 
+		}
+		frames = Paths.getSparrowAtlas(letterAlphabetPath);
 		animation.addByPrefix(letter, letterAnims[letter], 24);
 		animation.play(letter);
 		updateHitbox();
 
 		y = (110 - height);
 		y += row * 60;
-	}
-
-	public function createNumber(letter:String):Void
-	{
-		animation.addByPrefix(letter, letter, 24);
-		animation.play(letter);
-
-		updateHitbox();
-	}
-
-	public function createSymbol(letter:String)
-	{
-		switch (letter)
-		{
-			case '.':
-				animation.addByPrefix(letter, 'period', 24);
-				animation.play(letter);
-				y += 50;
-			case "'":
-				animation.addByPrefix(letter, 'apostraphie', 24);
-				animation.play(letter);
-				y -= 0;
-			case "?":
-				animation.addByPrefix(letter, 'question mark', 24);
-				animation.play(letter);
-			case "!":
-				animation.addByPrefix(letter, 'exclamation point', 24);
-				animation.play(letter);
-		}
-
-		updateHitbox();
 	}
 }

@@ -100,7 +100,7 @@ class StoryMenuState extends MusicBeatState
 		rankText.size = scoreText.size;
 		rankText.screenCenter(X);
 
-		var ui_tex = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+		var ui_tex = Paths.getSparrowAtlas('menus/storymenu/assets');
 		var yellowBG:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 400, 0xFFF9CF51);
 
 		grpWeekText = new FlxTypedGroup<MenuItem>();
@@ -459,7 +459,7 @@ class MenuCharacter extends FlxSprite
 
 		this.character = character;
 
-		var tex = Paths.getSparrowAtlas('campaign_menu_UI_characters');
+		var tex = Paths.getSparrowAtlas('menus/storymenu/characters');
 		frames = tex;
 
 		animation.addByPrefix('bf', "BF idle dance white", 24);
@@ -487,7 +487,7 @@ class MenuItem extends FlxSpriteGroup
 	public function new(x:Float, y:Float, weekNum:Int = 0)
 	{
 		super(x, y);
-		week = new FlxSprite().loadGraphic(Paths.image('storymenu/week' + weekNum));
+		week = new FlxSprite().loadGraphic(Paths.image('menus/storymenu/week' + weekNum));
 		add(week);
 	}
 
