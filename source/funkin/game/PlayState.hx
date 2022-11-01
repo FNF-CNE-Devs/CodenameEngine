@@ -215,8 +215,7 @@ class PlayState extends MusicBeatState
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 
 
-		comboGroup = new FlxTypedGroup<FlxSprite>();
-		comboOffset = FlxPoint.get(FlxG.width * 0.55, -60);
+		comboGroup = new FlxSpriteGroup(FlxG.width * 0.55, (FlxG.height * 0.5) - 60);
 
 		boyfriend = new Character(770, 100, SONG.player1, true);
 
@@ -1074,8 +1073,7 @@ class PlayState extends MusicBeatState
 
 	public var endingSong:Bool = false;
 
-	public var comboGroup:FlxTypedGroup<FlxSprite>;
-	public var comboOffset:FlxPoint;
+	public var comboGroup:FlxSpriteGroup;
 
 	private function popUpScore(strumtime:Float, score:Int = 350):Void
 	{
@@ -1134,13 +1132,8 @@ class PlayState extends MusicBeatState
 		comboSpr.velocity.y -= 150;
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
 
-		rating.x += comboOffset.x;
-		rating.y += comboOffset.y;
-		comboGroup.add(rating);
-
-		comboSpr.x += comboOffset.x;
-		comboSpr.y += comboOffset.y;
 		comboGroup.add(comboSpr);
+		comboGroup.add(rating);
 
 		if (!curStage.startsWith('school'))
 		{
@@ -1185,8 +1178,6 @@ class PlayState extends MusicBeatState
 			numScore.velocity.y -= FlxG.random.int(140, 160);
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 
-			numScore.x += comboOffset.x;
-			numScore.y += comboOffset.y;
 			comboGroup.add(numScore);
 
 			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
