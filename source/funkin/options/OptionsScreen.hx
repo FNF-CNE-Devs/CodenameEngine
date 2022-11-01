@@ -14,6 +14,7 @@ class OptionsScreen extends MusicBeatState {
     public static inline var defaultBGColor:FlxColor = 0xFFFDE871;
 
     public static var instance:OptionsScreen;
+    public static var optionHeight:Float = 120;
 
     // public var bgColor:FlxColor = 0xFFFDE871;
     public var bg:FlxSprite;
@@ -39,7 +40,7 @@ class OptionsScreen extends MusicBeatState {
         add(bg);
 
         for(k=>option in options) {
-            option.setPosition(k * 20, 10 + (k * 120));
+            option.setPosition(k * 20, 10 + (k * optionHeight));
             add(option);
         }
         changeSelection(1);
@@ -58,6 +59,12 @@ class OptionsScreen extends MusicBeatState {
         }
         FlxG.camera.scroll.x = lerp(FlxG.camera.scroll.x, scrollDest.x, 0.25);
         FlxG.camera.scroll.y = lerp(FlxG.camera.scroll.y, scrollDest.y, 0.25);
+
+        for(option in options) {
+            var angle = Math.cos((option.y + (optionHeight / 2) - (FlxG.camera.scroll.y + (FlxG.height / 2))) / FlxG.height * Math.PI);
+
+            option.x = -50 + (Math.abs(angle) * 150);
+        }
     }
 
     public function exit() {
@@ -74,7 +81,7 @@ class OptionsScreen extends MusicBeatState {
             e.selected = false;
         options[curSelected].selected = true;
         CoolUtil.playMenuSFX(0);
-        scrollDest.set(-50 + ((curSelected-2) * 20), -(FlxG.height / 2) + ((curSelected + 0.5) * 120));
+        scrollDest.set(-50, -(FlxG.height / 2) + ((curSelected + 0.5) * optionHeight));
     }
 
     public override function destroy() {
