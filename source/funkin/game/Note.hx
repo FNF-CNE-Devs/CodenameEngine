@@ -23,7 +23,19 @@ class Note extends FlxSprite
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
+
+	/**
+	 * The note that comes before this one (sustain and not)
+	 */
 	public var prevNote:Note;
+	/**
+	 * The note that comes after this one (sustain and not)
+	 */
+	public var nextNote:Note;
+	/**
+	 * The next sustain after this one
+	 */
+	public var nextSustain:Note;
 
 	public var strumID(get, never):Int;
 	private function get_strumID() {
@@ -115,13 +127,13 @@ class Note extends FlxSprite
 
 			if (prevNote.isSustainNote)
 			{
+				prevNote.nextSustain = this;
 				prevNote.animation.play('hold');
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.instance.scrollSpeed;
-				prevNote.updateHitbox();
 			}
 		}
 	}
 
+	public var lastScrollSpeed:Null<Float> = null;
 	public var angleOffsets:Bool = true;
 
 	override function draw() {
@@ -176,8 +188,19 @@ class Note extends FlxSprite
 		super.update(elapsed);
 	}
 
-	public function updateClipRect(strum:Strum) {
-		var t = FlxMath.bound((Conductor.songPosition - strumTime) / (height / (0.45 * FlxMath.roundDecimal(strum.getScrollSpeed(), 2))), 0, 1);
+	public function updateSustain(strum:Strum) {
+		var scrollSpeed = strum.getScrollSpeed(this);
+
+		if (nextSustain != null && lastScrollSpeed != scrollSpeed) {
+			// is long sustain
+			lastScrollSpeed = scrollSpeed;
+			
+			scale.y = Conductor.stepCrochet / 100 * 1.5 * scrollSpeed * 0.7;
+			updateHitbox();
+		}
+
+		if (!wasGoodHit) return;
+		var t = FlxMath.bound((Conductor.songPosition - strumTime) / (height / (0.45 * FlxMath.roundDecimal(scrollSpeed, 2))), 0, 1);
 		var swagRect = new FlxRect(0, t * frameHeight, frameWidth, frameHeight);
 
 		setClipRect(swagRect);

@@ -1,4 +1,4 @@
-package;
+package funkin.shaders;
 
 import flixel.util.FlxColor;
 import openfl.display.ShaderParameter;

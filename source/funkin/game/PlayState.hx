@@ -470,7 +470,7 @@ class PlayState extends MusicBeatState
 				else
 					swagNote = null;
 
-				swagNote = new Note(daStrumTime, daNoteData % 4, daNoteType, gottaHitNote, swagNote);
+				swagNote.nextNote = (swagNote = new Note(daStrumTime, daNoteData % 4, daNoteType, gottaHitNote, swagNote));
 				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
 				notes.add(swagNote);
