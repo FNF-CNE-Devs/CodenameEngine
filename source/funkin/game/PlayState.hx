@@ -1,5 +1,6 @@
 package funkin.game;
 
+import flixel.group.FlxSpriteGroup;
 import funkin.options.Options;
 import funkin.scripting.Script;
 import flixel.util.FlxDestroyUtil;
@@ -214,6 +215,9 @@ class PlayState extends MusicBeatState
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 
 
+		comboGroup = new FlxTypedGroup<FlxSprite>();
+		comboOffset = FlxPoint.get(FlxG.width * 0.55, -60);
+
 		boyfriend = new Character(770, 100, SONG.player1, true);
 
 
@@ -242,8 +246,12 @@ class PlayState extends MusicBeatState
 			add(gf);
 		}
 
+		add(comboGroup);
+
 		if (dad != null) add(dad);
 		if (boyfriend != null) add(boyfriend);
+
+		
 
 
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
@@ -1065,7 +1073,9 @@ class PlayState extends MusicBeatState
 	}
 
 	public var endingSong:Bool = false;
-	public var comboPos:FlxPoint = FlxPoint.get(FlxG.width * 0.55, -60);
+
+	public var comboGroup:FlxTypedGroup<FlxSprite>;
+	public var comboOffset:FlxPoint;
 
 	private function popUpScore(strumtime:Float, score:Int = 350):Void
 	{
@@ -1075,7 +1085,7 @@ class PlayState extends MusicBeatState
 		var placement:String = Std.string(combo);
 		//
 
-		var rating:FlxSprite = new FlxSprite();
+		var rating:FlxSprite = new FlxSprite(-40, -60);
 
 		var daRating:String = "sick";
 
@@ -1115,22 +1125,22 @@ class PlayState extends MusicBeatState
 		}
 
 		rating.loadGraphic(Paths.image('game/score/$prefix$daRating$suffix'));
-		rating.screenCenter();
-		rating.x = comboPos.x - 40;
-		rating.y -= 60;
 		rating.acceleration.y = 550;
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
 
 		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('game/score/${prefix}combo$suffix'));
-		comboSpr.screenCenter();
-		comboSpr.x = comboPos.x;
 		comboSpr.acceleration.y = 600;
 		comboSpr.velocity.y -= 150;
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
 
-		add(rating);
-		add(comboSpr);
+		rating.x += comboOffset.x;
+		rating.y += comboOffset.y;
+		comboGroup.add(rating);
+
+		comboSpr.x += comboOffset.x;
+		comboSpr.y += comboOffset.y;
+		comboGroup.add(comboSpr);
 
 		if (!curStage.startsWith('school'))
 		{
@@ -1158,10 +1168,7 @@ class PlayState extends MusicBeatState
 
 			var e = separatedScore.charAt(i);
 
-			var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image('game/${prefix}score/num$e$suffix'));
-			numScore.screenCenter();
-			numScore.x = comboPos.x + (43 * i) - 90;
-			numScore.y += 80;
+			var numScore:FlxSprite = new FlxSprite((43 * i) - 90, 80).loadGraphic(Paths.image('game/${prefix}score/num$e$suffix'));
 
 			if (!curStage.startsWith('school'))
 			{
@@ -1178,11 +1185,14 @@ class PlayState extends MusicBeatState
 			numScore.velocity.y -= FlxG.random.int(140, 160);
 			numScore.velocity.x = FlxG.random.float(-5, 5);
 
-				add(numScore);
+			numScore.x += comboOffset.x;
+			numScore.y += comboOffset.y;
+			comboGroup.add(numScore);
 
 			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 				onComplete: function(tween:FlxTween)
 				{
+					comboGroup.remove(numScore, true);
 					numScore.destroy();
 				},
 				startDelay: Conductor.crochet * 0.002
@@ -1200,6 +1210,8 @@ class PlayState extends MusicBeatState
 		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
 			onComplete: function(tween:FlxTween)
 			{
+				comboGroup.remove(comboSpr, true);
+				comboGroup.remove(rating, true);
 				comboSpr.destroy();
 
 				rating.destroy();

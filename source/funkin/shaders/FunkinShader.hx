@@ -28,9 +28,6 @@ class FunkinShader extends FlxShader {
         this.glFragmentSource = frag.replace("#pragma header", ShaderTemplates.fragHeader).replace("#pragma body", ShaderTemplates.fragBody);
         this.glVertexSource = vert.replace("#pragma header", ShaderTemplates.vertHeader).replace("#pragma body", ShaderTemplates.vertBody);
 
-        trace(glFragmentSource);
-        trace(glVertexSource);
-
         this.glslVer = glslVer;
         super();
     }
