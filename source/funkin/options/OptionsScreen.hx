@@ -1,7 +1,9 @@
 package funkin.options;
 
 import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import flixel.addons.transition.FlxTransitionableState;
 import flixel.FlxSprite;
 import flixel.FlxG;
 import funkin.options.type.OptionType;
@@ -25,6 +27,7 @@ class OptionsScreen extends MusicBeatState {
     }
 
     public override function create() {
+        FlxTransitionableState.skipNextTransIn = true;
         super.create();
         
         bg = new FlxSprite(-80).loadGraphic(Paths.image('menus/menuBG'));
@@ -36,20 +39,32 @@ class OptionsScreen extends MusicBeatState {
         add(bg);
 
         for(k=>option in options) {
-            option.setPosition(0, 10 + (k * 120));
+            option.setPosition(k * 20, 10 + (k * 120));
             add(option);
         }
         changeSelection(1);
     }
 
+    public var scrollDest:FlxPoint = FlxPoint.get(0, 0);
     public override function update(elapsed:Float) {
         super.update(elapsed);
         changeSelection((controls.DOWN_P ? 1 : 0) + (controls.UP_P ? -1 : 0));
         if (controls.ACCEPT) {
             options[curSelected].onSelect();
         }
-        if (controls.BACK)
-            FlxG.switchState(new OptionsMenu(false));
+        if (controls.BACK) {
+            Options.applySettings();
+            exit();
+        }
+        FlxG.camera.scroll.x = lerp(FlxG.camera.scroll.x, scrollDest.x, 0.25);
+        FlxG.camera.scroll.y = lerp(FlxG.camera.scroll.y, scrollDest.y, 0.25);
+    }
+
+    public function exit() {
+        
+        FlxTransitionableState.skipNextTransOut = true;
+        FlxTransitionableState.skipNextTransIn = true;
+        FlxG.switchState(new OptionsMenu(false));
     }
 
     public function changeSelection(change:Int) {
@@ -59,6 +74,7 @@ class OptionsScreen extends MusicBeatState {
             e.selected = false;
         options[curSelected].selected = true;
         CoolUtil.playMenuSFX(0);
+        scrollDest.set(-50 + ((curSelected-2) * 20), -(FlxG.height / 2) + ((curSelected + 0.5) * 120));
     }
 
     public override function destroy() {

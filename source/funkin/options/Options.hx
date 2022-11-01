@@ -1,5 +1,6 @@
 package funkin.options;
 
+import flixel.FlxG;
 import funkin.system.Controls;
 import openfl.Lib;
 import flixel.util.FlxSave;
@@ -11,7 +12,7 @@ class Options
 	@:dox(hide) private static var __eventAdded = false;
 	
 	/**
-	 * GAMEPLAY SETTINGS
+	 * SETTINGS
 	 */
 	public static var naughtyness:Bool = true;
 	public static var downscroll:Bool = false;
@@ -19,6 +20,7 @@ class Options
 	public static var camZoomOnBeat:Bool = true;
 	public static var fpsCounter:Bool = true;
 	public static var autoPause:Bool = true;
+	public static var antialiasing:Bool = true;
 
 	/**
 	 * PLAYER 1 CONTROLS
@@ -158,7 +160,13 @@ class Options
 			});
 			__eventAdded = true;
 		}
+		applySettings();
+	}
+
+	public static function applySettings() {
 		PlayerSettings.player1.setKeyboardScheme(Solo);
+		FlxG.forceNoAntialiasing = !antialiasing;
+		FlxG.autoPause = autoPause;
 	}
 
 	public static function save() {
