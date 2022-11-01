@@ -137,6 +137,9 @@ class Note extends FlxSprite
 	public var angleOffsets:Bool = true;
 
 	override function draw() {
+		var negativeScroll = isSustainNote && nextSustain != null && lastScrollSpeed < 0;
+		if (negativeScroll)	offset.y *= -1;
+
 		if (angleOffsets && Std.int(angle % 360) != 0) {
 			// get default values
 			var oldOffset = FlxPoint.get(offset.x, offset.y);
@@ -178,6 +181,7 @@ class Note extends FlxSprite
 			return;
 		}
 		super.draw();
+		if (negativeScroll)	offset.y *= -1;
 	}
 
 	// The * 0.5 is so that it's easier to hit them too late, instead of too early
@@ -194,7 +198,7 @@ class Note extends FlxSprite
 		if (nextSustain != null && lastScrollSpeed != scrollSpeed) {
 			// is long sustain
 			lastScrollSpeed = scrollSpeed;
-			
+
 			scale.y = Conductor.stepCrochet / 100 * 1.5 * scrollSpeed * 0.7;
 			updateHitbox();
 		}
