@@ -108,7 +108,7 @@ class Alphabet extends FlxSpriteGroup
 				if (library is ModsAssetLibrary) {
 					var modLib = cast(library, ModsAssetLibrary);
 					@:privateAccess
-					if (!modLib.__isCacheValid(modLib.cachedBytes, libThing.symbolName)) {
+					if (!modLib.__isCacheValid(library.cachedBytes, libThing.symbolName)) {
 						refreshAlphabetXML(alphabetPath);
 					}
 				}

@@ -49,12 +49,18 @@ class ModsFolder {
      * @param force Whenever the mod should be reloaded if it has already been loaded
      */
     public static function loadMod(mod:String, force:Bool = false) {
-        var e = loadLibraryFromFolder('mods/$mod'.toLowerCase(), '${modsPath}$mod', force);
-        loadedMods.push(mod);
-        return e;
+        if (FileSystem.exists('${modsPath}$mod.zip')) {
+            var e = loadLibraryFromZip('mods/$mod'.toLowerCase(), '${modsPath}$mod.zip', force);
+            loadedMods.push(mod);
+            return e;
+        } else {
+            var e = loadLibraryFromFolder('mods/$mod'.toLowerCase(), '${modsPath}$mod', force);
+            loadedMods.push(mod);
+            return e;
+        }
     }
 
-    public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false) {
+    public static function prepareLibrary(libName:String, force:Bool = false) {
         if (Assets.hasLibrary(libName)) {
             if (force)
                 Assets.unloadLibrary(libName);
@@ -64,15 +70,25 @@ class ModsFolder {
         
         var assets:AssetManifest = new AssetManifest();
         assets.name = libName;
-        assets.libraryType = 'funkin.mods.ModsAssetLibrary';
         assets.version = 2;
         assets.libraryArgs = [];
-        assets.rootPath = folder;
         assets.assets = [];
 
-        var lib = AssetLibrary.fromManifest(assets);
+        return AssetLibrary.fromManifest(assets);
+    }
+
+    public static function loadLibraryFromZip(libName:String, zipPath:String, force:Bool = false) {
+        var lib = prepareLibrary(libName, force);
         @:privateAccess
-        lib.__proxy = new ModsAssetLibrary(assets.rootPath, assets.name);
+        lib.__proxy = new ZipFolderLibrary(zipPath, libName);
+        Assets.registerLibrary(libName, lib);
+        return lib;
+    }
+
+    public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false) {
+        var lib = prepareLibrary(libName, force);
+        @:privateAccess
+        lib.__proxy = new ModsFolderLibrary(folder, libName);
         Assets.registerLibrary(libName, lib);
         return lib;
     }
@@ -139,8 +155,8 @@ class ModsFolder {
                     if (e.library is ModsAssetLibrary) {
                         var lib = cast(e.library, ModsAssetLibrary);
                         if (!lib.__parseAsset(e.symbolName)) continue;
-                        if (!lib.__isCacheValid(lib.cachedImages, lib._parsedAsset)) {
-                            lib.cachedImages.remove(lib._parsedAsset);
+                        if (!lib.__isCacheValid(e.library.cachedImages, lib._parsedAsset)) {
+                            e.library.cachedImages.remove(lib._parsedAsset);
                             bmapsToRemove.push(bmap);
                         }
                     }
@@ -159,9 +175,9 @@ class ModsFolder {
                 if (library is ModsAssetLibrary) {
                     var modLib = cast(library, ModsAssetLibrary);
                     @:privateAccess
-                    modLib.cachedBytes = [];
+                    library.cachedBytes = [];
                     @:privateAccess
-                    for(sound in modLib.cachedAudioBuffers)
+                    for(sound in library.cachedAudioBuffers)
                         sound.dispose();
                     
                 }
