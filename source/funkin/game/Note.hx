@@ -45,6 +45,7 @@ class Note extends FlxSprite
 	}
 
 	public var sustainLength:Float = 0;
+	public var stepLength:Float = 0;
 	public var isSustainNote:Bool = false;
 
 	public var noteTypeID:Int = 0;
@@ -199,7 +200,7 @@ class Note extends FlxSprite
 			// is long sustain
 			lastScrollSpeed = scrollSpeed;
 
-			scale.y = Conductor.stepCrochet / 100 * 1.5 * scrollSpeed * 0.7;
+			scale.y = stepLength / 100 * 1.5 * scrollSpeed * 0.7;
 			updateHitbox();
 		}
 

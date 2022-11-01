@@ -442,12 +442,14 @@ class PlayState extends MusicBeatState
 		var noteData:Array<SwagSection> = songData.notes;
 		var playerCounter:Int = 0;
 		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
+		var stepCrochet = Conductor.stepCrochet;
 
 		for (section in noteData)
 		{
 			if (section == null || section.sectionNotes == null) continue;
 
-			// var coolSection:Int = Std.int(section.lengthInSteps / 4);
+			if (section.changeBPM && section.bpm > 0)
+				stepCrochet = ((60 / section.bpm) * 250);
 
 			for (songNotes in section.sectionNotes)
 			{
@@ -473,17 +475,19 @@ class PlayState extends MusicBeatState
 				swagNote.nextNote = (swagNote = new Note(daStrumTime, daNoteData % 4, daNoteType, gottaHitNote, swagNote));
 				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
+				swagNote.stepLength = stepCrochet;
 				notes.add(swagNote);
 				
 				// calculate sustain length and fix
-				var susLength:Float = swagNote.sustainLength / Conductor.stepCrochet;
+				var susLength:Float = swagNote.sustainLength / stepCrochet;
 				if (susLength > 0.75) susLength++;
 
 				// create sustains
 				for (susNote in 0...Math.floor(susLength))
 				{
-					swagNote = new Note(daStrumTime + (Conductor.stepCrochet * susNote), daNoteData % 4, daNoteType, gottaHitNote, swagNote, true);
+					swagNote = new Note(daStrumTime + (stepCrochet * susNote), daNoteData % 4, daNoteType, gottaHitNote, swagNote, true);
 					swagNote.scrollFactor.set();
+					swagNote.stepLength = stepCrochet;
 					notes.add(swagNote);
 				}
 			}
