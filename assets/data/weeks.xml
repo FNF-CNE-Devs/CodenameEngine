@@ -1,0 +1,93 @@
+<!DOCTYPE codename-engine-weeks>
+<config>
+    <characters>
+        <!-- BOYFRIEND -->
+        <char name="bf" scale="0.9">
+            <anim name="idle"       anim="BF idle dance white"  fps="24" />
+            <anim name="confirm"    anim="BF HEY!!"             fps="24"    loop="false"/>
+        </char>
+
+        <!-- DAD -->
+        <char name="dad" scale="0.5">
+            <anim name="idle" anim="Dad idle dance BLACK LINE"  fps="24" />
+        </char>
+
+        <!-- GIRLFRIEND -->
+        <char name="gf" scale="0.5">
+            <anim name="idle" anim="GF Dancing Beat WHITE"  fps="24" />
+        </char>
+
+        <!-- SKID & PUMP -->
+        <char name="spooky">
+            <anim name="idle" anim="spooky dance idle BLACK LINES"  fps="24" />
+        </char>
+
+        <!-- PICO -->
+        <char name="pico">
+            <anim name="idle" anim="Pico Idle Dance"  fps="24" />
+        </char>
+
+        <!-- MOMMY MUST MURDER -->
+        <char name="mom">
+            <anim name="idle" anim="Mom Idle BLACK LINES"  fps="24" />
+        </char>
+
+        <!-- CHRISTMAS DADDY DEAREST AND MOMMY MUST MURDER -->
+        <char name="parents-christmas" scale="0.9">
+            <anim name="idle" anim="Parent Christmas Idle"  fps="24" />
+        </char>
+
+        <!-- SENPAI -->
+        <char name="senpai">
+            <anim name="idle" anim="SENPAI idle Black Lines"  fps="24" />
+        </char>
+    </characters>
+    <weeks>
+        <!-- TUTORIAL -->
+        <week name="" chars="dad,bf,gf">
+            <song name="Tutorial" show="true" />
+        </week>
+
+        <!-- WEEK 1 -->
+        <week name="DADDY DEAREST" chars="dad,bf,gf">
+            <song name="Bopeebo" />
+            <song name="Fresh" />
+            <song name="Dadbattle" />
+        </week>
+
+        <!-- WEEK 2 -->
+        <week name="SPOOKY MONTH" chars="spooky,bf,gf">
+            <song name="Spookeez" />
+            <song name="South" />
+            <song name="Monster" hide="true" />
+        </week>
+
+        <!-- WEEK 3 -->
+        <week name="PICO" chars="pico,bf,gf">
+            <song name="Pico" />
+            <song name="Philly" />
+            <song name="Blammed" />
+        </week>
+
+        <!-- WEEK 4 -->
+        <week name="MOMMY MUST MURDER" chars="mom,bf,gf">
+            <song name="Satin Panties" />
+            <song name="High" />
+            <song name="MILF" />
+        </week>
+
+        <!-- WEEK 5 -->
+        <week name="RED SNOW" chars="parents-christmas,bf,gf">
+            <song name="Cocoa" />
+            <song name="Eggnog" />
+            <song name="Winter-Horrorland" hide="true" />
+        </week>
+
+        <!-- WEEK 6 -->
+        <week name="HATING SIMULATOR FT. MOAWLING" chars="senpai,bf,gf">
+            <song name="Senpai" />
+            <song name="Roses" />
+            <song name="Thorns" hide="true" />
+        </week>
+    </weeks>
+</config>
