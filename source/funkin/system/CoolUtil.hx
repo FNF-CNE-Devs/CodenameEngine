@@ -111,9 +111,9 @@ class CoolUtil
 	 */
 	public static function playMenuSFX(menuSFX:Int = 0, volume:Float = 1) {
 		FlxG.sound.play(Paths.sound(switch(menuSFX) {
-			case 1:		'confirmMenu';
-			case 2:		'cancelMenu';
-			default: 	'scrollMenu';
+			case 1:		'menu/confirm';
+			case 2:		'menu/cancel';
+			default: 	'menu/scroll';
 		}), volume);
 	}
 
