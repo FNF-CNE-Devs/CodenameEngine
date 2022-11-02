@@ -71,6 +71,10 @@ class FramerateField extends TextField {
         text.push('CODENAME ENGINE ALPHA - BUILD ${funkin.macros.BuildCounterMacro.getBuildNumber()}');
         #end
         if (debugMode) {
+            text.push('======');
+            text.push('Current Song Position: ${Conductor.songPosition} (${Conductor.curBeat} beats - ${Conductor.curStep} steps)');
+            text.push('Current BPM: ${Conductor.bpm}');
+            text.push('======');
             text.push('System: ${lime.system.System.platformLabel} ${lime.system.System.platformVersion}');
             text.push('Objs in state: ${FlxG.state.members.length}');
             text.push('Nb cameras: ${FlxG.cameras.list.length}');

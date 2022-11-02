@@ -133,6 +133,7 @@ class Main extends Sprite
 
 		Options.load();
 
+		Conductor.init();
 		AudioSwitchFix.init();
 		WindowsAPI.setDarkMode(true);
 

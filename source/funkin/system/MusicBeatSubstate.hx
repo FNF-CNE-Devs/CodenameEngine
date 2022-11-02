@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.interfaces.IBeatReceiver;
 import funkin.system.Conductor.BPMChangeEvent;
 import funkin.system.Conductor;
 import funkin.options.PlayerSettings;
@@ -7,7 +8,7 @@ import flixel.FlxG;
 import flixel.FlxSubState;
 import flixel.math.FlxMath;
 
-class MusicBeatSubstate extends FlxSubState
+class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 {
 	public function new()
 	{
@@ -43,42 +44,16 @@ class MusicBeatSubstate extends FlxSubState
 
 	override function update(elapsed:Float)
 	{
-		//everyStep();
-		var oldStep:Int = curStep;
-
-		updateCurStep();
-		curBeat = Math.floor(curStep / 4);
-
-		if (oldStep != curStep && curStep > 0)
-			stepHit();
-
-
 		super.update(elapsed);
 	}
 
-	private function updateCurStep():Void
-	{
-		var lastChange:BPMChangeEvent = {
-			stepTime: 0,
-			songTime: 0,
-			bpm: 0
-		}
-		for (i in 0...Conductor.bpmChangeMap.length)
-		{
-			if (Conductor.songPosition > Conductor.bpmChangeMap[i].songTime)
-				lastChange = Conductor.bpmChangeMap[i];
-		}
 
-		curStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
+	@:dox(hide) public function stepHit(curStep:Int):Void
+	{
+		//do literally nothing neither dumbass
 	}
 
-	@:dox(hide) public function stepHit():Void
-	{
-		if (curStep % 4 == 0)
-			beatHit();
-	}
-
-	@:dox(hide) public function beatHit():Void
+	@:dox(hide) public function beatHit(curBeat:Int):Void
 	{
 		//do literally nothing dumbass
 	}

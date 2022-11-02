@@ -723,6 +723,8 @@ class PlayState extends MusicBeatState
 		#end
 		scripts.call("onDiscordPresenceUpdate");
 	}
+
+	var __vocalOffsetViolation:Float = 0;
 	override public function update(elapsed:Float)
 	{
 		#if !debug
@@ -785,21 +787,12 @@ class PlayState extends MusicBeatState
 				if (Conductor.songPosition >= 0)
 					startSong();
 			}
-		}
-		else
-		{
-			Conductor.songPosition += FlxG.elapsed * 1000;
-
-			if (!paused)
-			{
-				songTime += FlxG.game.ticks - previousFrameTime;
-				previousFrameTime = FlxG.game.ticks;
-
-				if (Math.abs(FlxG.sound.music.time - Conductor.songPosition) > 25)
-					resyncVocals();
+		} else {
+			__vocalOffsetViolation = Math.max(0, __vocalOffsetViolation + (FlxG.sound.music.time != vocals.time ? elapsed * 2 : -elapsed));
+			if (__vocalOffsetViolation > 25) {
+				resyncVocals();
+				__vocalOffsetViolation = 0;
 			}
-
-			// Conductor.lastSongPos = FlxG.sound.music.time;
 		}
 
 		if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
@@ -1354,15 +1347,15 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	override function stepHit()
+	override function stepHit(curStep:Int)
 	{
-		super.stepHit();
+		super.stepHit(curStep);
 		scripts.call("stepHit", [curStep]);
 	}
 
-	override function beatHit()
+	override function beatHit(curBeat:Int)
 	{
-		super.beatHit();
+		super.beatHit(curBeat);
 		scripts.call("beatHit", [curBeat]);
 
 		if (SONG.notes[Math.floor(curStep / 16)] != null && SONG.notes[Math.floor(curStep / 16)].changeBPM)

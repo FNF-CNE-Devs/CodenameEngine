@@ -43,8 +43,6 @@ class GameOverSubstate extends MusicBeatSubstate
 				daBf = 'bf';
 		}
 
-		Conductor.songPosition = 0;
-
 		bf = new Character(x, y, daBf, true);
 		add(bf);
 
@@ -90,18 +88,11 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix));
 		}
-
-		if (FlxG.sound.music.playing)
-		{
-			Conductor.songPosition = FlxG.sound.music.time;
-		}
 	}
 
-	override function beatHit()
+	override function beatHit(curBeat:Int)
 	{
-		super.beatHit();
-
-		FlxG.log.add('beat');
+		super.beatHit(curBeat);
 	}
 
 	var isEnding:Bool = false;

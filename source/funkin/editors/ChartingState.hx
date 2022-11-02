@@ -480,8 +480,6 @@ class ChartingState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		curStep = recalculateSteps();
-
 		Conductor.songPosition = FlxG.sound.music.time;
 		_song.song = typingShit.text;
 
@@ -695,25 +693,6 @@ class ChartingState extends MusicBeatState
 		updateGrid();
 	}
 
-	function recalculateSteps():Int
-	{
-		var lastChange:BPMChangeEvent = {
-			stepTime: 0,
-			songTime: 0,
-			bpm: 0
-		}
-		for (i in 0...Conductor.bpmChangeMap.length)
-		{
-			if (FlxG.sound.music.time > Conductor.bpmChangeMap[i].songTime)
-				lastChange = Conductor.bpmChangeMap[i];
-		}
-
-		curStep = lastChange.stepTime + Math.floor((FlxG.sound.music.time - lastChange.songTime) / Conductor.stepCrochet);
-		updateBeat();
-
-		return curStep;
-	}
-
 	function resetSection(songBeginning:Bool = false):Void
 	{
 		updateGrid();
@@ -731,7 +710,6 @@ class ChartingState extends MusicBeatState
 		}
 
 		vocals.time = FlxG.sound.music.time;
-		updateCurStep();
 
 		updateGrid();
 		updateSectionUI();
@@ -762,7 +740,6 @@ class ChartingState extends MusicBeatState
 
 				FlxG.sound.music.time = sectionStartTime();
 				vocals.time = FlxG.sound.music.time;
-				updateCurStep();
 			}
 
 			updateGrid();

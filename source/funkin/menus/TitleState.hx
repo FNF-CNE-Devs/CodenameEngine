@@ -138,8 +138,6 @@ class TitleState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
-
 		if (FlxG.keys.justPressed.F)  FlxG.fullscreen = !FlxG.fullscreen;
 
 		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER;
@@ -172,7 +170,7 @@ class TitleState extends MusicBeatState
 			titleText.animation.play('press');
 
 			FlxG.camera.flash(FlxColor.WHITE, 1);
-			FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
+			CoolUtil.playMenuSFX(1, 0.7);
 
 			transitioning = true;
 			// FlxG.sound.music.stop();
@@ -212,9 +210,9 @@ class TitleState extends MusicBeatState
 		while (textGroup.members.length > 0) textGroup.remove(textGroup.members[0], true);
 	}
 
-	override function beatHit()
+	override function beatHit(curBeat:Int)
 	{
-		super.beatHit();
+		super.beatHit(curBeat);
 
 		logoBl.animation.play('bump');
 		danceLeft = !danceLeft;
