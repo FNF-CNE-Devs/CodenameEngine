@@ -743,7 +743,9 @@ class PlayState extends MusicBeatState
 			#end
 		}
 		if (FlxG.keys.justPressed.F5) {
+			Logs.trace('Reloading scripts...', WARNING, YELLOW);
 			scripts.reload();
+			Logs.trace('Song scripts successfully reloaded.', WARNING, GREEN);
 		}
 
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);

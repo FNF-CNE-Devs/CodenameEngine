@@ -32,6 +32,7 @@ class StoryMenuState extends MusicBeatState {
         
         persistentUpdate = persistentDraw = true;
 
+        // WEEK INFO
 		scoreText = new FunkinText(10, 10, 0, "SCORE: -", 36);
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32);
 
@@ -46,6 +47,25 @@ class StoryMenuState extends MusicBeatState {
 
         for(e in [scoreText, weekTitle, weekBG])
             add(e);
+
+        // DUMBASS ARROWS
+		var assets = Paths.getSparrowAtlas('menus/storymenu/assets');
+
+        var directions = ["left", "right"];
+
+        leftArrow = new FlxSprite((FlxG.width + 400) / 2, weekBG.y + weekBG.height + 10 + 10);
+        rightArrow = new FlxSprite(FlxG.width - 10, weekBG.y + weekBG.height + 10 + 10);
+        for(k=>arrow in [leftArrow, rightArrow]) {
+            var dir = directions[k];
+
+            arrow.frames = assets;
+            arrow.animation.addByPrefix('idle', 'arrow $dir');
+            arrow.animation.addByPrefix('press', 'arrow push $dir', 24, false);
+            arrow.animation.play('idle');
+            add(arrow);
+        }
+        rightArrow.x -= rightArrow.width;
+        
     }
 
     public function loadXMLs() {
@@ -110,9 +130,18 @@ class StoryMenuState extends MusicBeatState {
                         }
                 }
             }
-            trace(weeks);
         } catch(e) {
+            Logs.trace('Failed to parse data/weeks.xml: $e', ERROR);
+        }
+    }
 
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+        leftArrow.animation.play(controls.LEFT ? 'press' : 'idle');
+        rightArrow.animation.play(controls.RIGHT ? 'press' : 'idle');
+
+        if (controls.BACK) {
+            FlxG.switchState(new MainMenuState());
         }
     }
 }

@@ -1,7 +1,6 @@
 package funkin.options.keybinds;
 
 import flixel.FlxCamera;
-import flixel.effects.FlxFlicker;
 import funkin.system.Controls;
 import funkin.options.Options;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
@@ -217,13 +216,11 @@ class KeybindsOptions extends MusicBeatSubstate {
                 if (alphabets.members[curSelected] != null) {
                     canSelect = false;
                     CoolUtil.playMenuSFX(1);
-                    FlxFlicker.flicker(alphabets.members[curSelected], 0.4, Options.flashingMenu ? 0.06 : 0.15, true, false, function(t) {
-                        alphabets.members[curSelected].changeKeybind(function() {
-                            canSelect = true;
-                        }, function() {
-                            canSelect = true;
-                        }, p2Selected);
-                    });
+                    alphabets.members[curSelected].changeKeybind(function() {
+                        canSelect = true;
+                    }, function() {
+                        canSelect = true;
+                    }, p2Selected);
                 }
             }
     

@@ -79,10 +79,16 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
     }
 
     public function changeKeybind(callback:Void->Void, cancelCallback:Void->Void, p2:Bool = false) {
+        
+        var flicker = FlxFlicker.flicker(this, 0, Options.flashingMenu ? 0.06 : 0.15, true, false, function(t) {
+        });
+
         KeybindsOptions.instance.persistentDraw = true;
         KeybindsOptions.instance.persistentUpdate = false;
 
         KeybindsOptions.instance.openSubState(new ChangeKeybindSubState(function(key:FlxKey) {
+            flicker.stop();
+            flicker.destroy();
             if (p2)
                 Reflect.setField(Options, 'P2_$value', [option2 = key]);
             else
@@ -90,6 +96,8 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
             updateText();
             callback();
         }, function() {
+            flicker.stop();
+            flicker.destroy();
             if (p2)
                 Reflect.setField(Options, 'P2_$value', [option2 = 0]);
             else
