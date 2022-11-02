@@ -212,7 +212,6 @@ class Note extends FlxSprite
 	}
 
 	public function setClipRect(rect:FlxRect) {
-		// TODO: Shader ClipRect like in Yoshi Engine for smoother sustains
 		this.clipRect = rect;
 	}
 }

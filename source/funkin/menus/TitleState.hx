@@ -59,12 +59,8 @@ class TitleState extends MusicBeatState
 	function startIntro()
 	{
 		if (!initialized)
-		{
-			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-			FlxG.sound.music.fadeIn(4, 0, 0.7);
-		}
+			CoolUtil.playMenuSong(true);
 
-		Conductor.changeBPM(102);
 		persistentUpdate = true;
 
 		loadXML();

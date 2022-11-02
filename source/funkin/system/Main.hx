@@ -106,9 +106,6 @@ class Main extends Sprite
 	
 
 	public function loadGameSettings() {
-		funkin.options.PlayerSettings.init();
-		FlxG.save.bind('Save');
-		Highscore.load();
 
 		// TODO: Mod switching
 		ModsFolder.init();
@@ -127,16 +124,31 @@ class Main extends Sprite
 			File.saveContent("./../../../../buildnumber.txt", Std.string(buildNum));
 		}
 		#end
-		
-		FlxG.fixedTimestep = false;
-		// FlxG.autoPause = false;
 
+		funkin.options.PlayerSettings.init();
+		FlxG.save.bind('Save');
 		Options.load();
+		Highscore.load();
+
+		FlxG.fixedTimestep = false;
 
 		Conductor.init();
 		AudioSwitchFix.init();
 		WindowsAPI.setDarkMode(true);
 
+		
+		#if desktop
+		DiscordClient.initialize();
+		
+		Application.current.onExit.add (function (exitCode) {
+			DiscordClient.shutdown();
+		 });
+		#end
+		
+		initTransition();
+	}
+
+	public static function initTransition() {
 		var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
 		diamond.persist = true;
 		diamond.destroyOnNoUse = false;
@@ -146,12 +158,5 @@ class Main extends Sprite
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, 0.7, new FlxPoint(0, 1),
 			{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 
-		#if desktop
-		DiscordClient.initialize();
-		
-		Application.current.onExit.add (function (exitCode) {
-			DiscordClient.shutdown();
-		 });
-		#end
 	}
 }

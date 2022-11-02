@@ -279,7 +279,6 @@ class PlayState extends MusicBeatState
 
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
-		// TODO: cool healthbar
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('game/healthBar'));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
@@ -591,7 +590,6 @@ class PlayState extends MusicBeatState
 
 	override function openSubState(SubState:FlxSubState)
 	{
-		// TODO: Cancellable substate opening.
 		var event = scripts.event("onSubstateOpen", new SubstateEvent(SubState));
 
 		if (event.cancelled) return;
@@ -613,7 +611,6 @@ class PlayState extends MusicBeatState
 
 	override function closeSubState()
 	{
-		// TODO: Cancellable substate opening.
 		var event = scripts.event("onSubstateClose", new SubstateEvent(subState));
 		if (event.cancelled) return;
 
@@ -755,7 +752,6 @@ class PlayState extends MusicBeatState
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
 		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
 
-		// TODO: FPS-compatible lerping
 		iconP1.scale.set(lerp(iconP1.scale.x, 1, 0.33), lerp(iconP1.scale.y, 1, 0.33));
 		iconP2.scale.set(lerp(iconP2.scale.x, 1, 0.33), lerp(iconP2.scale.y, 1, 0.33));
 
@@ -957,9 +953,8 @@ class PlayState extends MusicBeatState
 					}
 						
 					if (event.__autoCPUHit && !daNote.mustPress && !daNote.wasGoodHit && daNote.strumTime <= Conductor.songPosition) goodNoteHit(daNote);
-					// TODO: FIXED STEP CROCHET PER NOTES FOR BPM CHANGES
 
-					if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (Conductor.stepCrochet) < Conductor.songPosition) {
+					if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.stepLength) < Conductor.songPosition) {
 						deleteNote(daNote);
 						return;
 					}
@@ -1013,7 +1008,6 @@ class PlayState extends MusicBeatState
 
 			if (storyPlaylist.length <= 0)
 			{
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;

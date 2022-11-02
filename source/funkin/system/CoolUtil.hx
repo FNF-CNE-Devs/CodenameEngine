@@ -104,6 +104,18 @@ class CoolUtil
 		return null;
 	}
 
+	public static function playMenuSong(fadeIn:Bool) {
+		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
+		{
+			Conductor.reset();
+
+			// TODO: bpm from config
+			Conductor.changeBPM(102);
+			FlxG.sound.playMusic(Paths.music('freakyMenu'), fadeIn ? 0 : 1);
+			if (fadeIn)
+				FlxG.sound.music.fadeIn(4, 0, 0.7);
+		}
+	}
 	/**
 	 * Plays a specified Menu SFX.
 	 * @param menuSFX Menu SFX to play

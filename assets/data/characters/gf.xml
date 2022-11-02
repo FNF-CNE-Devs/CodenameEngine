@@ -11,23 +11,3 @@
     <anim name="hairFall" anim="GF Dancing Beat Hair Landing" fps="24" loop="false" x="0" y="-9" indices="0,1,2,3,4,5,6,7,8,9,10,11" />
     <anim name="scared" anim="GF FEAR" fps="24" loop="true" x="-2" y="-17" />
 </character>
-
-<!--
-	// TODO:
-	if (!animation.curAnim.name.startsWith('hair'))
-					{
-						danced = !danced;
-
-						if (danced)
-							playAnim('danceRight');
-						else
-							playAnim('danceLeft');
-					} -->
-
-                    <!-- 
-		switch (curCharacter)
-		{
-			case 'gf':
-				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-					playAnim('danceRight');
-		} -->
