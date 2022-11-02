@@ -11,8 +11,8 @@ class TextOption extends OptionType {
     private function get_text() {return __text.text;}
     private function set_text(v:String) {return __text.text = v;}
 
-    public function new(text:String, selectCallback:Void->Void) {
-        super();
+    public function new(text:String, desc:String, selectCallback:Void->Void) {
+        super(desc);
         this.selectCallback = selectCallback;
         add(__text = new Alphabet(100, 20, text, true));
     }

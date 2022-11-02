@@ -7,6 +7,12 @@ import funkin.options.OptionsScreen;
 class OptionType extends FlxSpriteGroup {
     public var controls(get, null):Controls;
     public var selected:Bool = false;
+    public var desc:String;
+
+    public function new(desc:String) {
+        super();
+        this.desc = desc;
+    }
 
     private function get_controls() {return PlayerSettings.player1.controls;}
 

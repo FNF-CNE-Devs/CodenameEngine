@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.ui.FunkinText;
 import flixel.group.FlxSpriteGroup;
 import funkin.options.Options;
 import funkin.scripting.Script;
@@ -126,9 +127,9 @@ class PlayState extends MusicBeatState
 	
 	public var songScore:Int = 0;
 	public var misses:Int = 0;
-	public var scoreTxt:FlxText;
-	public var missesTxt:FlxText;
-	public var accuracyTxt:FlxText;
+	public var scoreTxt:FunkinText;
+	public var missesTxt:FunkinText;
+	public var accuracyTxt:FunkinText;
 
 	public static var campaignScore:Int = 0;
 
@@ -298,17 +299,12 @@ class PlayState extends MusicBeatState
 			add(icon);
 		}
 
-		scoreTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Score:0", 20);
-		missesTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Misses:0", 20);
-		accuracyTxt = new FlxText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy:-%", 20);
+		scoreTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Score:0", 20);
+		missesTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Misses:0", 20);
+		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy:-%", 20);
 
 		for(text in [scoreTxt, missesTxt, accuracyTxt]) {
-			text.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE);
-			text.borderStyle = OUTLINE;
-			text.borderSize = 1;
-			text.borderColor = 0xFF000000;
 			text.scrollFactor.set();
-			add(text);
 		}
 		scoreTxt.alignment = RIGHT;
 		missesTxt.alignment = CENTER;
@@ -433,6 +429,9 @@ class PlayState extends MusicBeatState
 	private function generateSong(dataPath:String, ?songData:SwagSong):Void
 	{
 		if (songData == null) songData = SONG;
+
+		Conductor.reset();
+
 		Conductor.changeBPM(songData.bpm);
 
 		curSong = songData.song;

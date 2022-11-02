@@ -104,7 +104,7 @@ class CoolUtil
 		return null;
 	}
 
-	public static function playMenuSong(fadeIn:Bool) {
+	public static function playMenuSong(fadeIn:Bool = false) {
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
 		{
 			Conductor.reset();

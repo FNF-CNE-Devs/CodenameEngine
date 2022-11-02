@@ -21,8 +21,8 @@ class Checkbox extends TextOption {
     ];
     private var baseCheckboxOffset:FlxPoint = FlxPoint.get();
 
-    public function new(text:String, optionName:String) {
-        super(text, null);
+    public function new(text:String, desc:String, optionName:String) {
+        super(text, desc, null);
 
         checkbox = new FlxSprite(10, -40);
         checkbox.frames = Paths.getSparrowAtlas('menus/options/checkboxThingie');

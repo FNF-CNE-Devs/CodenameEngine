@@ -42,17 +42,16 @@ class CustomShader extends FunkinShader implements IHScriptCustomBehaviour {
         }
         if (!Reflect.hasField(data, v)) return null;
         var field = Reflect.field(data, v);
-        if (field is ShaderInput) {
+        var cl = Std.string(Type.getClass(field));
+
+        // cant do "field is ShaderInput" for some reason
+        if (cl.startsWith("openfl.display.ShaderInput")) {
             var si = cast(field, ShaderInput<Dynamic>);
             return si.input;
         } else if (field is ShaderParameter) {
             var sp = cast(field, ShaderParameter<Dynamic>);
-            switch(sp.type) {
-                case BOOL, FLOAT, INT:
-                    return sp.value[0];
-                default:
-                    return sp.value;
-            }
+            @:privateAccess
+            return (sp.__length > 1) ? sp.value : sp.value[0];
         }
         return field;
     }
@@ -80,7 +79,7 @@ class CustomShader extends FunkinShader implements IHScriptCustomBehaviour {
                 field.input = cast val;
             } else if (cl.startsWith("openfl.display.ShaderParameter")) {
                 @:privateAccess
-                if (field.__arrayLength <= 1) {
+                if (field.__length <= 1) {
                     // that means we wait for a single number, instead of an array
                     @:privateAccess
                     if (field.__isInt && !(val is Int)) {
