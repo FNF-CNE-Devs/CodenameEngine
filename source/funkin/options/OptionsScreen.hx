@@ -1,5 +1,6 @@
 package funkin.options;
 
+import flixel.addons.display.FlxBackdrop;
 import funkin.ui.FunkinText;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
@@ -21,6 +22,7 @@ class OptionsScreen extends MusicBeatState {
     // public var bgColor:FlxColor = 0xFFFDE871;
     public var bg:FlxSprite;
 
+    public var descDrop:FlxBackdrop;
     public var descBG:FlxSprite;
     public var descText:FunkinText;
 
@@ -28,7 +30,6 @@ class OptionsScreen extends MusicBeatState {
 
     public var options:Array<OptionType> = [];
 
-    private var transparentFormat:FlxTextFormat;
     private var descLetters:Float = 0;
 
     public var descSpeed:Float = 35;
@@ -50,16 +51,23 @@ class OptionsScreen extends MusicBeatState {
         bg.antialiasing = true;
         add(bg);
 
-        descText = new FunkinText(10, 10, FlxG.width - 20);
+        descText = new FunkinText(0, 0);
         descText.alignment = CENTER;
-        add(descText);
+        descText.scrollFactor.set();
+        descText.y = FlxG.height - 50 - descText.height;
+
+        descBG = new FlxSprite(-1, 0).makeGraphic(1, 1, 0xFF000000);
+        descBG.scrollFactor.set();
+        add(descBG);
+        
+        descDrop = new FlxBackdrop(null, 1, 0, true, false, 0, 0);
+        descDrop.scrollFactor.set();
+        add(descDrop);
 
         for(k=>option in options) {
             option.setPosition(k * 20, 10 + (k * optionHeight));
             add(option);
         }
-
-        transparentFormat = new FlxTextFormat(FlxColor.TRANSPARENT);
         changeSelection(1);
     }
 
@@ -83,11 +91,9 @@ class OptionsScreen extends MusicBeatState {
 
             option.x = -50 + (Math.abs(angle) * 150);
         }
-    var offset:Int;
-        if (Std.int(descLetters) != (offset = Std.int(Math.min(descText.text.length, descLetters += elapsed * descSpeed)))) {
-            descText.clearFormats();
-            descText.addFormat(transparentFormat, offset, descText.text.length);
-        }
+
+        descBG.alpha = (descDrop.alpha = lerp(descDrop.alpha, 1, 0.25)) * 0.75;
+        descDrop.x -= elapsed * 200;
     }
 
     public function exit() {
@@ -110,10 +116,17 @@ class OptionsScreen extends MusicBeatState {
     }
 
     public function updateDesc() {
-        descLetters = 0;
-        descText.text = options[curSelected].desc;
-        descSpeed = descText.text.length;
-        descText.addFormat(transparentFormat, 0, descText.text.length);
+        descText.text = '/ ${options[curSelected].desc} /';
+        @:privateAccess descText.regenGraphic(); //updates the thing
+
+        descDrop.loadFrame(descText.frame);
+        descDrop.y = Std.int(FlxG.height - 10 - descText.height);
+
+        descBG.setGraphicSize(FlxG.width + 2, Std.int(descText.height + 20) + 1);
+        descBG.updateHitbox();
+
+        descBG.alpha = descDrop.alpha = 0;
+        descBG.y = FlxG.height - descBG.height + 1;
     }
 
     public override function destroy() {

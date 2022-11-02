@@ -429,9 +429,7 @@ class PlayState extends MusicBeatState
 	private function generateSong(dataPath:String, ?songData:SwagSong):Void
 	{
 		if (songData == null) songData = SONG;
-
-		Conductor.reset();
-
+		
 		Conductor.changeBPM(songData.bpm);
 
 		curSong = songData.song;
