@@ -27,7 +27,7 @@ class StoryMenuState extends MusicBeatState {
 
     public override function create() {
         super.create();
-        loadXML();
+        loadXMLs();
         
         persistentUpdate = persistentDraw = true;
 
@@ -47,13 +47,27 @@ class StoryMenuState extends MusicBeatState {
             add(e);
     }
 
-    public function loadXML() {
-        
+    public function loadXMLs() {
+        loadXML(Paths.xml('weeks'));
+    }
+
+    public function loadXML(xmlPath:String) {
+        // try {
+            
+        // }
     }
 }
 
 typedef WeekData = {
-    
+    var name:String;
+    var sprite:String;
+    var chars:Array<String>;
+    var songs:Array<WeekSong>;
+}
+
+typedef WeekSong = {
+    var name:String;
+    var hide:Bool;
 }
 
 class MenuCharacter extends FlxSprite {

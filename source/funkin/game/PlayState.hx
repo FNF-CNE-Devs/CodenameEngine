@@ -429,7 +429,7 @@ class PlayState extends MusicBeatState
 	private function generateSong(dataPath:String, ?songData:SwagSong):Void
 	{
 		if (songData == null) songData = SONG;
-		
+
 		Conductor.changeBPM(songData.bpm);
 
 		curSong = songData.song;
@@ -1011,15 +1011,10 @@ class PlayState extends MusicBeatState
 
 				FlxG.switchState(new StoryMenuState());
 
-				// if ()
-				StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
-
 				if (SONG.validScore)
 				{
 					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 				}
-
-				FlxG.save.data.weekUnlocked = StoryMenuState.weekUnlocked;
 				FlxG.save.flush();
 			}
 			else
