@@ -129,6 +129,13 @@ class Script extends FlxBasic implements IFlxDestroyable {
     }
 
     /**
+     * Hot-reloads the script, if possible
+     */
+    public function reload() {
+        
+    }
+
+    /**
      * Calls the function `func` defined in the script.
      * @param func Name of the function
      * @param parameters (Optional) Parameters of the function.

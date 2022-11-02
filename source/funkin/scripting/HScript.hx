@@ -36,6 +36,23 @@ class HScript extends Script {
         if (expr != null) interp.execute(expr);
     }
 
+    public override function reload() {
+        // save variables
+        var savedVariables:Map<String, Dynamic> = [];
+        for(k=>e in interp.variables) {
+            if (!Reflect.isFunction(e)) {
+                savedVariables[k] = e;
+            }
+        }
+        var oldParent = interp.scriptObject;
+        onCreate(path);
+        load();
+        setParent(oldParent);
+        for(k=>e in savedVariables) {
+            interp.variables.set(k, e);
+        }
+    }
+
     private override function onCall(funcName:String, parameters:Array<Dynamic>):Dynamic {
         if (interp == null) return null;
 

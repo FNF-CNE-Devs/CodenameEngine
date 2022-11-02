@@ -43,6 +43,10 @@ class ScriptPack extends Script {
         return null;
     }
 
+    public override function reload() {
+        for(e in scripts) e.reload();
+    }
+
     public override function set(val:String, value:Dynamic) {
         for(e in scripts) e.set(val, value);
     }
