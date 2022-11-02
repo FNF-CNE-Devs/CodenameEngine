@@ -18,22 +18,39 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 
+	
 	/**
 	 * Current step
 	 */
-	public var curStep:Int = 0;
+	 public var curStep(get, never):Int;
 	 /**
 	  * Current beat
 	  */
-	public var curBeat:Int = 0;	 
+	 public var curBeat(get, never):Int;
 	 /**
 	  * Current step, as a `Float` (ex: 4.94, instead of 4)
 	  */
-	public var curStepFloat:Float = 0;
+	 public var curStepFloat(get, never):Float;
 	 /**
 	  * Current beat, as a `Float` (ex: 1.24, instead of 1)
 	  */
-	public var curBeatFloat:Float = 0;
+	 public var curBeatFloat(get, never):Float;
+	 /**
+	  * Current song position (in milliseconds).
+	  */
+	 public var songPos(get, never):Float;
+ 
+	 inline function get_curStep():Int
+		 return Conductor.curStep;
+	 inline function get_curBeat():Int
+		 return Conductor.curBeat;
+	 inline function get_curStepFloat():Float
+		 return Conductor.curStepFloat;
+	 inline function get_curBeatFloat():Float
+		 return Conductor.curBeatFloat;
+	 inline function get_songPos():Float
+		 return Conductor.songPosition;
+	 
 	 /**
 	  * Game Controls.
 	  */
