@@ -1,5 +1,6 @@
 package funkin.system;
 
+import flixel.FlxState;
 import funkin.interfaces.IBeatReceiver;
 import flixel.FlxG;
 import funkin.system.Song.SwagSong;
@@ -107,14 +108,18 @@ class Conductor
 			totalSteps += deltaSteps;
 			totalPos += ((60 / curBPM) * 1000 / 4) * deltaSteps;
 		}
-		trace("new BPM map BUDDY " + bpmChangeMap);
 	}
 
 	public static function init() {
 		FlxG.signals.preUpdate.add(update);
+		FlxG.signals.preStateCreate.add(onStateSwitch);
 		reset();
 	}
 
+	private static function onStateSwitch(newState:FlxState) {
+		if (FlxG.sound.music == null)
+			reset();
+	}
 	private static function update() {
 		var elapsed = FlxG.elapsed;
 
@@ -140,6 +145,8 @@ class Conductor
 					lastChange = change;
 			}
 	
+			if (lastChange.bpm > 0 && bpm != lastChange.bpm) changeBPM(lastChange.bpm);
+
 			curStepFloat = lastChange.stepTime + ((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
 			curBeatFloat = curStepFloat / 4;
 

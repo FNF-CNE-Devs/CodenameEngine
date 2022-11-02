@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import funkin.options.Options;
 #if desktop
 import funkin.system.Discord.DiscordClient;
 #end
@@ -155,12 +156,12 @@ class MainMenuState extends MusicBeatState
 					selectedSomethin = true;
 					CoolUtil.playMenuSFX(1);
 
-					FlxFlicker.flicker(magenta, 1.1, 0.15, false);
+					if (Options.flashingMenu) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
 					menuItems.forEach(function(spr:FlxSprite)
 					{
 						if (spr.ID != curSelected) return;
-						FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
+						FlxFlicker.flicker(spr, 1, Options.flashingMenu ? 0.06 : 0.15, false, false, function(flick:FlxFlicker)
 						{
 							var daChoice:String = optionShit[curSelected];
 

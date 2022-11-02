@@ -77,7 +77,7 @@ class OptionsMenu extends MusicBeatState {
         if (controls.ACCEPT && alphabets.members[curSelected] != null) {
             CoolUtil.playMenuSFX(1);
             canSelect = false;
-            FlxFlicker.flicker(alphabets.members[curSelected], 1, 0.06, false, false, function(flick:FlxFlicker)
+            FlxFlicker.flicker(alphabets.members[curSelected], 1, Options.flashingMenu ? 0.06 : 0.15, false, false, function(flick:FlxFlicker)
             {
                 FlxTransitionableState.skipNextTransOut = true;
                 FlxG.switchState(Type.createInstance(options[curSelected].state, []));

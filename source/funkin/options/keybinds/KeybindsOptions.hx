@@ -217,7 +217,7 @@ class KeybindsOptions extends MusicBeatSubstate {
                 if (alphabets.members[curSelected] != null) {
                     canSelect = false;
                     CoolUtil.playMenuSFX(1);
-                    FlxFlicker.flicker(alphabets.members[curSelected], 0.4, 0.1, true, false, function(t) {
+                    FlxFlicker.flicker(alphabets.members[curSelected], 0.4, Options.flashingMenu ? 0.06 : 0.15, true, false, function(t) {
                         alphabets.members[curSelected].changeKeybind(function() {
                             canSelect = true;
                         }, function() {
