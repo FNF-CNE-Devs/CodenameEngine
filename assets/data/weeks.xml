@@ -22,7 +22,7 @@
         <!-- IF YOU WANT CUSTOM DIFFICULTIES, ADD THIS: difficulties="easy,normal,hard" -->
         <!-- DIFFICULTIES SPRITES IN "images/menus/storymenu/difficulties/" -->
 
-        <week name="" chars="dad,bf,gf" sprite="tutorial">
+        <week name="" chars="none,bf,gf" sprite="tutorial">
             <song name="Tutorial" show="true" />
         </week>
 

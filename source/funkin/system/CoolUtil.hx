@@ -1,5 +1,6 @@
 package funkin.system;
 
+import haxe.xml.Access;
 import flixel.input.keyboard.FlxKey;
 import lime.utils.Assets;
 import flixel.animation.FlxAnimation;
@@ -209,6 +210,11 @@ class CoolUtil
 	public static function setSpriteSize(sprite:FlxSprite, width:Float, height:Float) {
 		sprite.scale.set(width / sprite.frameWidth, height / sprite.frameHeight);
 		sprite.updateHitbox();
+	}
+
+	public static function getAtt(xml:Access, name:String) {
+		if (!xml.has.resolve(name)) return null;
+		return xml.att.resolve(name);
 	}
 
 	/**
