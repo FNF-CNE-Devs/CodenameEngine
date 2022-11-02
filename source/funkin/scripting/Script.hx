@@ -136,6 +136,17 @@ class Script extends FlxBasic implements IFlxDestroyable {
     }
 
     /**
+     * Traces something as this script.
+     */
+    public function trace(v:Dynamic) {
+        Logs.traceColored([
+            Logs.logText('${fileName}: ', GREEN),
+            Logs.logText(Std.string(v))
+        ], TRACE);
+    }
+
+    
+    /**
      * Calls the function `func` defined in the script.
      * @param func Name of the function
      * @param parameters (Optional) Parameters of the function.
@@ -177,8 +188,10 @@ class Script extends FlxBasic implements IFlxDestroyable {
      * @param additionalInfo Additional information you could provide.
      */
     public function error(text:String, ?additionalInfo:Dynamic):Void {
-        // TODO: Logs (like on YCE)
-        trace('$text');
+        Logs.traceColored([
+            Logs.logText(fileName, GREEN),
+            Logs.logText(text)
+        ], ERROR);
     }
 
     /**

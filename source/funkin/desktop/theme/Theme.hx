@@ -81,8 +81,7 @@ class Theme {
 
             }
         } catch(e) {
-            // TODO: logs system
-            trace(e.details());
+            Logs.trace('Failed to load Desktop Theme: $e', ERROR);
         }
     }
 }

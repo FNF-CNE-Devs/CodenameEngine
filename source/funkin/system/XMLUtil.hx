@@ -17,7 +17,7 @@ class XMLUtil {
      */
     public static function applyXMLProperty(object:Dynamic, property:Access):ErrorCode {
         if (!property.has.name || !property.has.type || !property.has.value) {
-            // TODO: show in logs
+            Logs.trace('Failed to apply XML property: XML Element misses name, type, or value attributes.', WARNING);
             return MISSING_PROPERTY;
         }
 
@@ -33,8 +33,7 @@ class XMLUtil {
         try {
             Reflect.setProperty(object, property.att.name, value);
         } catch(e) {
-            // TODO: Correct Logs
-            trace(e);
+            Logs.trace('Failed to apply XML property: $e on ${Type.getClass(object)}', WARNING);
             return REFLECT_ERROR;   
         }
         return OK;

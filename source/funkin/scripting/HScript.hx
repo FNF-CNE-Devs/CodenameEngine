@@ -17,6 +17,7 @@ class HScript extends Script {
         var parser = new hscript.Parser();
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
         interp.errorHandler = _errorHandler;
+        interp.variables.set("trace", this.trace);
         try {
             expr = parser.parseString(code, fileName);
         } catch(e) {
@@ -69,5 +70,13 @@ class HScript extends Script {
 
     public override function set(val:String, value:Dynamic) {
         interp.variables.set(val, value);
+    }
+
+    public override function trace(v:Dynamic) {
+        var posInfo = interp.posInfos();
+        Logs.traceColored([
+            Logs.logText('${fileName}:${posInfo.lineNumber}: ', GREEN),
+            Logs.logText(Std.string(v))
+        ], TRACE);
     }
 }

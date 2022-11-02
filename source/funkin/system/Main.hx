@@ -112,6 +112,8 @@ class Main extends Sprite
 		ModsFolder.loadMod("introMod");
 		ModsFolder.currentModFolder = "introMod";
 
+		Logs.init();
+		
 		#if sys
 		if (Sys.args().contains("-livereload")) {
 			trace("Used lime test windows. Switching into source assets.");
