@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.menus.StoryMenuState.WeekData;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.graphics.FlxGraphic;
@@ -225,6 +226,22 @@ class CoolUtil
 		}
 	}
 
+	public static function loadWeek(weekData:WeekData, difficulty:String = "normal") {
+        PlayState.storyWeek = weekData;
+        PlayState.storyPlaylist = [for(e in weekData.songs) e.name];
+        PlayState.isStoryMode = true;
+		PlayState.campaignScore = 0;
+		__loadSong(PlayState.storyPlaylist[0], difficulty);
+	}
+	public static function loadSong(name:String, difficulty:String = "normal") {
+		PlayState.campaignScore = 0;
+		PlayState.isStoryMode = false;
+		__loadSong(name, difficulty);
+	}
+	public static function __loadSong(name:String, difficulty:String) {
+		PlayState.difficulty = difficulty;
+		PlayState.SONG = Song.loadFromJson(name, difficulty);
+	}
 	public static function setSpriteSize(sprite:FlxSprite, width:Float, height:Float) {
 		sprite.scale.set(width / sprite.frameWidth, height / sprite.frameHeight);
 		sprite.updateHitbox();

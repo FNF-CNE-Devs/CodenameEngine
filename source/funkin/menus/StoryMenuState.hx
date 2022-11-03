@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
 import funkin.system.XMLUtil;
 import flixel.graphics.frames.FlxFramesCollection;
@@ -141,8 +142,8 @@ class StoryMenuState extends MusicBeatState {
             changeDifficulty((controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0));
             changeWeek((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
 
-            if (controls.ACCEPT) {
-            }
+            if (controls.ACCEPT)
+                selectWeek();
         } else {
             for(e in [leftArrow, rightArrow])
                 e.animation.play('idle');
@@ -186,9 +187,9 @@ class StoryMenuState extends MusicBeatState {
 
                 FlxTween.tween(diffSprite, {y: leftArrow.y, alpha: 1}, 0.07);
             }
-
-            intendedScore = Highscore.getWeekScore(weeks[curWeek].name, weeks[curWeek].difficulties[curDifficulty]).score;
         }
+        
+        intendedScore = Highscore.getWeekScore(weeks[curWeek].name, weeks[curWeek].difficulties[curDifficulty]).score;
     }
 
     public function loadXMLs() {
@@ -200,6 +201,24 @@ class StoryMenuState extends MusicBeatState {
         for(e in characters)
             if (e != null && e.offset != null)
                 e.offset.put();
+    }
+
+    public function selectWeek() {
+        canSelect = false;
+        CoolUtil.playMenuSFX(1);
+
+        for(char in characterSprites)
+            if (char.animation.exists("confirm"))
+                char.animation.play("confirm");
+
+        CoolUtil.loadWeek(weeks[curWeek], weeks[curWeek].difficulties[curDifficulty]);
+
+
+        new FlxTimer().start(1, function(tmr:FlxTimer)
+        {
+            FlxG.switchState(new PlayState());
+        });
+        weekSprites.members[curWeek].startFlashing();
     }
 
     public function loadXML(xmlPath:String) {

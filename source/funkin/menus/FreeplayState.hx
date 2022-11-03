@@ -206,11 +206,7 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.ACCEPT)
 		{
-			PlayState.SONG = Song.loadFromJson(songs[curSelected].songName, songs[curSelected].difficulties[curDifficulty]);
-			PlayState.isStoryMode = false;
-
-			// PlayState.storyWeek = songs[curSelected].week;
-			trace('CUR WEEK' + PlayState.storyWeek);
+			CoolUtil.loadSong(songs[curSelected].songName, songs[curSelected].difficulties[curDifficulty]);
 			FlxG.switchState(new PlayState());
 		}
 	}
