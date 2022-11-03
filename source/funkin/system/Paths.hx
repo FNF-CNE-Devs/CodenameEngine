@@ -155,10 +155,19 @@ class Paths
 	{
 		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
 	}
+	inline static public function getSparrowAtlasAlt(key:String)
+	{
+		return FlxAtlasFrames.fromSparrow('$key.png', '$key.xml');
+	}
 
 	inline static public function getPackerAtlas(key:String, ?library:String)
 	{
 		return FlxAtlasFrames.fromSpriteSheetPacker(image(key, library), file('images/$key.txt', library));
+	}
+
+	inline static public function getPackerAtlasAlt(key:String)
+	{
+		return FlxAtlasFrames.fromSpriteSheetPacker('$key.png', '$key.txt');
 	}
 
 	static public function getFolderContent(key:String, includeSource:Bool = true, addPath:Bool = false, scanSource:Bool = false):Array<String> {

@@ -1,5 +1,6 @@
 package funkin.system;
 
+import haxe.io.Path;
 import haxe.xml.Access;
 import flixel.input.keyboard.FlxKey;
 import lime.utils.Assets;
@@ -157,10 +158,11 @@ class CoolUtil
 		anim2.frames = old;
 	}
 
-	public static function setUnstretchedGraphicSize(sprite:FlxSprite, width:Int, height:Int, fill:Bool = true) {
+	public static function setUnstretchedGraphicSize(sprite:FlxSprite, width:Int, height:Int, fill:Bool = true, maxScale:Float = 0) {
 		sprite.setGraphicSize(width, height);
 		sprite.updateHitbox();
 		var nScale = (fill ? Math.max : Math.min)(sprite.scale.x, sprite.scale.y);
+		if (maxScale > 0 && nScale > maxScale) nScale = maxScale;
 		sprite.scale.set(nScale, nScale);
 	}
 
@@ -227,5 +229,14 @@ class CoolUtil
 	 */
 	public static function last<T>(array:Array<T>):T {
 		return array[array.length-1];
+	}
+
+	public static function loadAnimatedGraphic(spr:FlxSprite, path:String) {
+		var noExt = Path.withoutExtension(path);
+		if (Assets.exists('$noExt.xml')) {
+			spr.frames = Paths.getSparrowAtlasAlt(noExt);
+		} else {
+			spr.loadGraphic(path);
+		}
 	}
 }

@@ -84,11 +84,9 @@ class Highscore
 	}
 	public static function load():Void
 	{
-		if (FlxG.save.data.songScores != null)
-		{
-			songScores = FlxG.save.data.songScores;
-			weekScores = FlxG.save.data.weekScores;
-		}
+		songScores = FlxG.save.data.songScores.getDefault(new Map<String, SongScore>());
+		weekScores = FlxG.save.data.weekScores.getDefault(new Map<String, SongScore>());
+		
 		for(k=>e in songScores)
 			if (e is Int)
 				songScores.remove(k);
