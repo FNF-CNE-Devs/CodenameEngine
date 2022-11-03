@@ -30,6 +30,7 @@ class GlobalScript {
             call("postGameReset");
         });
         FlxG.signals.postGameStart.add(function() {
+            call("postGameStart");
         });
         FlxG.signals.postStateSwitch.add(function() {
             call("postStateSwitch");
