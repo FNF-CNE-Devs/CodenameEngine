@@ -106,13 +106,15 @@ class Main extends Sprite
 	
 
 	public function loadGameSettings() {
-
+		Logs.init();
+		
 		// TODO: Mod switching
 		ModsFolder.init();
-		ModsFolder.loadMod("introMod");
-		ModsFolder.currentModFolder = "introMod";
-
-		Logs.init();
+		ModsFolder.switchMod("introMod");
+		
+		#if GLOBAL_SCRIPT
+		funkin.scripting.GlobalScript.init();
+		#end
 		
 		#if sys
 		if (Sys.args().contains("-livereload")) {

@@ -1,9 +1,11 @@
 package funkin.mods;
 
+import flixel.util.FlxSignal.FlxTypedSignal;
 import openfl.utils.Assets;
 import openfl.utils.AssetManifest;
 import openfl.utils.AssetLibrary;
 import flixel.graphics.FlxGraphic;
+import flixel.util.FlxSignal.FlxTypedSignal;
 
 #if MOD_SUPPORT
 import sys.FileSystem;
@@ -16,13 +18,11 @@ import haxe.io.Path;
 using StringTools;
 
 class ModsFolder {
-    #if MOD_SUPPORT
     /**
-     * Last time the folder was modified.
+     * INTERNAL - Only use when editing source mods!!
      */
-    public static var lastFolderEditTime:Date = null;
-    #end
-
+    @:dox(hide) public static var onModSwitch:FlxTypedSignal<String->Void> = new FlxTypedSignal<String->Void>();
+    
     /**
      * Current mod folder. Will affect `Paths`.
      */
@@ -49,6 +49,8 @@ class ModsFolder {
      * @param force Whenever the mod should be reloaded if it has already been loaded
      */
     public static function loadMod(mod:String, force:Bool = false) {
+        if (mod == null) return null; // may be loading base game
+
         if (FileSystem.exists('${modsPath}$mod.zip')) {
             var e = loadLibraryFromZip('mods/$mod'.toLowerCase(), '${modsPath}$mod.zip', force);
             loadedMods.push(mod);
@@ -58,6 +60,23 @@ class ModsFolder {
             loadedMods.push(mod);
             return e;
         }
+    }
+
+    /**
+     * Switches mod - unloads all the other mods, then load this one.
+     * @param libName 
+     */
+    public static function switchMod(mod:String) {
+        for(m in loadedMods)
+            unloadMod(m);
+        
+        loadMod(ModsFolder.currentModFolder = mod);
+        onModSwitch.dispatch(ModsFolder.currentModFolder);
+        FlxG.resetState();
+    }
+
+    public static function unloadMod(mod:String) {
+        Assets.unloadLibrary('mods/$mod');
     }
 
     public static function prepareLibrary(libName:String, force:Bool = false) {

@@ -9,10 +9,6 @@ import funkin.windows.WindowsAPI.ConsoleColor;
 class Logs {
     private static var __showing:Bool = false;
     public static function init() {
-        __showInConsole([
-            logText("Hello, World! ", CYAN),
-            logText("I am..."),
-            logText("COLORED!!", RED)]);
 
         Log.trace = function(v : Dynamic, ?infos : Null<haxe.PosInfos>) {
             __showInConsole(prepareColoredTrace([
