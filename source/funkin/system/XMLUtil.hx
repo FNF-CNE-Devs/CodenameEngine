@@ -44,12 +44,12 @@ class XMLUtil {
 	 * @param sprite Destination sprite
 	 * @param anim Animation (Must be a `anim` XML node)
 	 */
-	public static function addXMLAnimation(sprite:FlxSprite, anim:Access):ErrorCode {
+	public static function addXMLAnimation(sprite:FlxSprite, anim:Access, loop:Bool = false):ErrorCode {
 		var animData:AnimData = {
 			name: null,
 			anim: null,
 			fps: 24,
-			loop: false,
+			loop: loop,
 			x: 0,
 			y: 0,
 			indices: []
@@ -60,6 +60,7 @@ class XMLUtil {
 		if (anim.has.fps) animData.fps = Std.parseInt(anim.att.fps);
 		if (anim.has.x) animData.x = Std.parseFloat(anim.att.x);
 		if (anim.has.y) animData.y = Std.parseFloat(anim.att.y);
+		if (anim.has.loop) animData.loop = anim.att.loop == "true";
 		if (anim.has.indices) {
 			var indicesSplit = anim.att.indices.split(",");
 			for(indice in indicesSplit) {

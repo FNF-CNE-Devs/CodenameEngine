@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import flixel.math.FlxPoint;
 import funkin.system.XMLUtil;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -93,6 +94,11 @@ class StoryMenuState extends MusicBeatState {
             e.scrollFactor.set();
             add(e);
         }
+
+        characterSprites = new FlxTypedGroup<MenuCharacterSprite>();
+        for(i in 0...3) {
+            characterSprites.add(new MenuCharacterSprite(i));
+        }
         add(characterSprites);
 
         for(i=>week in weeks) {
@@ -143,11 +149,27 @@ class StoryMenuState extends MusicBeatState {
         }
     }
 
+    public function changeWeek(change:Int, force:Bool = false) {
+        if (change == 0 && !force) return;
+
+        curWeek = FlxMath.wrap(curWeek + change, 0, weeks.length-1);
+        
+        if (!force) CoolUtil.playMenuSFX();
+        for(k=>e in weekSprites.members) {
+            e.targetY = k - curWeek;
+        }
+        tracklist.text = 'TRACKS\n\n${[for(e in weeks[curWeek].songs) if (!e.hide) e.name.toUpperCase()].join('\n')}';
+
+        for(i in 0...3)
+            characterSprites.members[i].changeCharacter(characters[weeks[curWeek].chars[i]]);
+
+        changeDifficulty(0, true);
+    }
+
     var __oldDiffName = null;
     public function changeDifficulty(change:Int, force:Bool = false) {
         if (change == 0 && !force) return;
 
-        CoolUtil.playMenuSFX(0, 0.7);
         curDifficulty = FlxMath.wrap(curDifficulty + change, 0, weeks[curWeek].difficulties.length-1);
 
         if (__oldDiffName != (__oldDiffName = weeks[curWeek].difficulties[curDifficulty].toLowerCase())) {
@@ -169,21 +191,15 @@ class StoryMenuState extends MusicBeatState {
         }
     }
 
-    public function changeWeek(change:Int, force:Bool = false) {
-        if (change == 0 && !force) return;
-
-        curWeek = FlxMath.wrap(curWeek + change, 0, weeks.length-1);
-        
-        CoolUtil.playMenuSFX();
-        for(k=>e in weekSprites.members) {
-            e.targetY = k - curWeek;
-        }
-        tracklist.text = 'TRACKS\n\n${[for(e in weeks[curWeek].songs) if (!e.hide) e.name.toUpperCase()].join('\n')}';
-        changeDifficulty(0, true);
-    }
-
     public function loadXMLs() {
         loadXML(Paths.xml('weeks'));
+    }
+
+    public override function destroy() {
+        super.destroy();
+        for(e in characters)
+            if (e != null && e.offset != null)
+                e.offset.put();
     }
 
     public function loadXML(xmlPath:String) {
@@ -202,7 +218,11 @@ class StoryMenuState extends MusicBeatState {
                             var charObj:MenuCharacter = {
                                 spritePath: Paths.image(char.getAtt('sprite').getDefault('menus/storymenu/characters/${char.att.name}')),
                                 scale: Std.parseFloat(char.getAtt('scale')).getDefault(1),
-                                xml: char
+                                xml: char,
+                                offset: FlxPoint.get(
+                                    Std.parseFloat(char.getAtt('x')).getDefault(0),
+                                    Std.parseFloat(char.getAtt('y')).getDefault(0)
+                                )
                             };
                             characters[char.att.name] = charObj;
                         }
@@ -279,6 +299,7 @@ typedef MenuCharacter = {
     var spritePath:String;
     var xml:Access;
     var scale:Float;
+    var offset:FlxPoint;
     // var frames:FlxFramesCollection;
 }
 
@@ -286,14 +307,38 @@ class MenuCharacterSprite extends FlxSprite
 {
     public var character:String;
 
-    public function new(pos:Int, path:String) {
-        super(FlxG.width * (0.25 * pos), 80);
+    var pos:Int;
+
+    public function new(pos:Int) {
+        super(0, 70);
+        this.pos = pos;
+        visible = false;
+        antialiasing = true;
     }
 
+    public var oldChar:MenuCharacter = null;
+
     public function changeCharacter(data:MenuCharacter) {
-        CoolUtil.loadAnimatedGraphic(this, Paths.image(data.spritePath));
-        for(e in data.xml.nodes.anim)
-            XMLUtil.addXMLAnimation(this, e);
+        visible = (data != null);
+        if (!visible)
+            return;
+
+        if (oldChar != (oldChar = data)) {
+            CoolUtil.loadAnimatedGraphic(this, data.spritePath);
+            for(e in data.xml.nodes.anim) {
+                if (e.getAtt("name") == "idle")
+                    animation.remove("idle");
+    
+                XMLUtil.addXMLAnimation(this, e);
+            }
+            animation.play("idle");
+            scale.set(data.scale, data.scale);
+            updateHitbox();
+            offset.x += data.offset.x;
+            offset.y += data.offset.y;
+    
+            x = (FlxG.width * 0.25) * (1 + pos) - 150;
+        }
     }
 }
 class MenuItem extends FlxSprite

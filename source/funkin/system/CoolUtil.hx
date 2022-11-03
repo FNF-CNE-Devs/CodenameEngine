@@ -31,7 +31,13 @@ class CoolUtil
 	 * @return The return value
 	 */
 	public static function getDefault<T>(v:T, defaultValue:T):T {
-		return v == null ? defaultValue : v;
+		return (v == null || isNaN(v)) ? defaultValue : v;
+	}
+
+	public static function isNaN(v:Dynamic) {
+		if (v is Float || v is Int)
+			return Math.isNaN(cast(v, Float));
+		return false;
 	}
 
 	public static function setFieldDefault<T>(v:Dynamic, name:String, defaultValue:T):T {
@@ -254,7 +260,9 @@ class CoolUtil
 	public static function loadAnimatedGraphic(spr:FlxSprite, path:String) {
 		spr.frames = loadFrames(path);
 		
-		spr.animation.add("idle", [for(i in 0...spr.frames.frames.length) i], 24, true);
-		spr.animation.play("idle");
+		if (spr.frames != null && spr.frames.frames != null) {
+			spr.animation.add("idle", [for(i in 0...spr.frames.frames.length) i], 24, true);
+			spr.animation.play("idle");
+		}
 	}
 }

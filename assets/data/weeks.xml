@@ -2,19 +2,19 @@
 <config>
     <characters>
         <!-- BOYFRIEND -->
-        <char name="bf" scale="0.9">
-            <anim name="idle"       anim="BF idle dance white"  fps="24" />
+        <char name="bf" scale="0.9" x="80">
+            <anim name="idle"       anim="BF idle dance white"  fps="24"    loop="true" />
             <anim name="confirm"    anim="BF HEY!!"             fps="24"    loop="false"/>
         </char>
 
         <!-- ANIMATION IS AUTOMATICALLY ADDED. IF YOU WANT TO SPECIFY A PREFIX, ADD AN IDLE ANIM LIKE ABOVE. -->
-        <char name="dad" scale="0.5" />
-        <char name="gf" scale="0.5" />
-        <char name="spooky" />
-        <char name="pico" />
-        <char name="mom" />
-        <char name="parents-christmas" scale="0.9" />
-        <char name="senpai" />
+        <char name="dad"                scale="0.5" x="50" />
+        <char name="gf"                 scale="0.5" />
+        <char name="spooky"             scale="0.7" x="125" />
+        <char name="pico"               scale="0.7" x="100" y="-30"     flip="true"/>
+        <char name="mom"                scale="0.5" x="50"  y="10"/>
+        <char name="parents-christmas"  scale="0.4" x="150" y="-20" />
+        <char name="senpai"                         x="130" y="-50"/>
     </characters>
     <weeks>
         <!-- SPRITE BUTTONS ARE LOCATED IN "images/menus/storymenu/weeks/" -->
@@ -60,6 +60,12 @@
             <song name="Senpai" />
             <song name="Roses" />
             <song name="Thorns" hide="true" />
+        </week>
+
+        <week name="TANKMAN" chars="tankman,bf,gf" sprite="week6">
+            <song name="Ugh" />
+            <song name="Guns" />
+            <song name="Stress" />
         </week>
     </weeks>
 </config>
