@@ -165,7 +165,7 @@ class Conductor
 				onStepHit.dispatch(curStep);
 				if (updateBeat)
 					onBeatHit.dispatch(curBeat);
-				
+
 				if (FlxG.state is IBeatReceiver) {
 					var state = FlxG.state;
 					while(state != null) {
@@ -189,5 +189,7 @@ class Conductor
 
 		crochet = ((60 / bpm) * 1000);
 		stepCrochet = crochet / 4;
+
+		onBPMChange.dispatch(bpm);
 	}
 }
