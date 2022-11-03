@@ -140,8 +140,6 @@ class KeybindsOptions extends MusicBeatSubstate {
             
             k++;
             for(e in category.settings) {
-                
-                var xOffset:Float = 200;
                 var sparrowIcon:String = null;
                 var sparrowAnim:String = null;
                 if (e.name.startsWith('{note')) {// is actually a note!!
@@ -222,6 +220,7 @@ class KeybindsOptions extends MusicBeatSubstate {
                         canSelect = true;
                     }, p2Selected);
                 }
+                return;
             }
     
             if (controls.LEFT_P || controls.RIGHT_P) {

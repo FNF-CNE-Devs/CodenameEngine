@@ -95,14 +95,16 @@ class Paths
 		return getPath('music/$key.$SOUND_EXT', MUSIC, library);
 	}
 
-	inline static public function voices(song:String)
+	inline static public function voices(song:String, difficulty:String = "normal")
 	{
-		return getPath('songs/${song.toLowerCase()}/Voices.$SOUND_EXT', MUSIC, null);
+		var diff = getPath('songs/${song.toLowerCase()}/Voices-$difficulty.$SOUND_EXT', MUSIC, null);
+		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/Voices.$SOUND_EXT', MUSIC, null);
 	}
 
-	inline static public function inst(song:String)
+	inline static public function inst(song:String, difficulty:String = "normal")
 	{
-		return getPath('songs/${song.toLowerCase()}/Inst.$SOUND_EXT', MUSIC, null);
+		var diff = getPath('songs/${song.toLowerCase()}/Inst-$difficulty.$SOUND_EXT', MUSIC, null);
+		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/Inst.$SOUND_EXT', MUSIC, null);
 	}
 
 	inline static public function image(key:String, ?library:String)

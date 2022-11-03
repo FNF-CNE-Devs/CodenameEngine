@@ -28,6 +28,16 @@ class CoolUtil
 		return v == null ? defaultValue : v;
 	}
 
+	public static function setFieldDefault<T>(v:Dynamic, name:String, defaultValue:T):T {
+		if (Reflect.hasField(v, name)) {
+			var f = Reflect.field(v, name);
+			if (f != null && Std.isOfType(f, T))
+				return cast f;
+		} 
+		Reflect.setField(v, name, defaultValue);
+		return defaultValue;
+	}
+
 	public static function addZeros(str:String, num:Int) {
 		while(str.length < num) str = '0${str}';
 		return str;
@@ -128,11 +138,6 @@ class CoolUtil
 			case 2:		'menu/cancel';
 			default: 	'menu/scroll';
 		}), volume);
-	}
-
-	public static function difficultyString():String
-	{
-		return difficultyArray[PlayState.storyDifficulty];
 	}
 
 	public static function coolTextFile(path:String):Array<String>

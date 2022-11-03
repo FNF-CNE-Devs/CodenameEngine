@@ -26,10 +26,10 @@ class Logs {
             var color:ConsoleColor = LIGHTGRAY;
             var level:Level = INFO;
             if (Style == LogStyle.CONSOLE)  {prefix = "> ";					color = WHITE;	level = INFO;   }
-            if (Style == LogStyle.ERROR)    {prefix = "[FLIXEL ERROR]";		color = RED;	level = ERROR;  }
+            if (Style == LogStyle.ERROR)    {prefix = "[FLIXEL]";		    color = RED;	level = ERROR;  }
             if (Style == LogStyle.NORMAL)   {prefix = "[FLIXEL]";			color = WHITE;	level = INFO;   }
-            if (Style == LogStyle.NOTICE)   {prefix = "[FLIXEL NOTICE]";	color = GREEN;	level = WARNING;}
-            if (Style == LogStyle.WARNING)  {prefix = "[FLIXEL WARNING]";	color = YELLOW;	level = WARNING;}
+            if (Style == LogStyle.NOTICE)   {prefix = "[FLIXEL]";	        color = GREEN;	level = WARNING;}
+            if (Style == LogStyle.WARNING)  {prefix = "[FLIXEL]";	        color = YELLOW;	level = WARNING;}
 
             var d:Dynamic = Data;
             if (!(d is Array))
@@ -45,9 +45,9 @@ class Logs {
     public static function prepareColoredTrace(text:Array<LogText>, level:Level = INFO) {
         var time = Date.now();
         var superCoolText = [
-            logText('[ '),
+            logText('[  '),
             logText('${Std.string(time.getHours()).addZeros(2)}:${Std.string(time.getMinutes()).addZeros(2)}:${Std.string(time.getSeconds()).addZeros(2)}', DARKMAGENTA),
-            logText(' |'),
+            logText('  |'),
             switch(level) {
                 case WARNING:   logText('   WARNING   ', DARKYELLOW);
                 case ERROR:     logText('    ERROR    ', DARKRED);

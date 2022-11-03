@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.menus.StoryMenuState.WeekData;
 import funkin.ui.FunkinText;
 import flixel.group.FlxSpriteGroup;
 import funkin.options.Options;
@@ -67,9 +68,9 @@ class PlayState extends MusicBeatState
 	 */
 	public static var SONG:SwagSong;
 	public static var isStoryMode:Bool = false;
-	public static var storyWeek:Int = 0;
+	public static var storyWeek:WeekData = null;
 	public static var storyPlaylist:Array<String> = [];
-	public static var storyDifficulty:Int = 1;
+	public static var difficulty:String = "normal";
 	public static var fromMods:Bool = false;
 
 	public var scripts:ScriptPack;
@@ -142,7 +143,7 @@ class PlayState extends MusicBeatState
 
 	#if desktop
 	// Discord RPC variables
-	public var storyDifficultyText:String = "";
+	public var difficultyText:String = "";
 	public var iconRPC:String = "";
 	public var songLength:Float = 0;
 	public var detailsText:String = "";
@@ -186,7 +187,7 @@ class PlayState extends MusicBeatState
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
 		if (isStoryMode)
 		{
-			detailsText = "Story Mode: Week " + storyWeek;
+			detailsText = "Story Mode: " + storyWeek.name;
 		}
 		else
 		{
@@ -197,7 +198,7 @@ class PlayState extends MusicBeatState
 		detailsPausedText = "Paused - " + detailsText;
 		
 		// Updating Discord Rich Presence.
-		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
+		DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC);
 		#end
 		dad = new Character(100, 100, SONG.player2);
 
@@ -625,11 +626,11 @@ class PlayState extends MusicBeatState
 			#if desktop
 			if (startTimer.finished)
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC, true, songLength - Conductor.songPosition);
+				DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC, true, songLength - Conductor.songPosition);
 			}
 			else
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
+				DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC);
 			}
 			#end
 		}
@@ -645,11 +646,11 @@ class PlayState extends MusicBeatState
 		{
 			if (Conductor.songPosition > 0.0)
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC, true, songLength - Conductor.songPosition);
+				DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC, true, songLength - Conductor.songPosition);
 			}
 			else
 			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
+				DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC);
 			}
 		}
 		#end
@@ -663,7 +664,7 @@ class PlayState extends MusicBeatState
 		#if desktop
 		if (health > 0 && !paused)
 		{
-			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
+			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + difficultyText + ")", iconRPC);
 		}
 		#end
 
@@ -713,7 +714,7 @@ class PlayState extends MusicBeatState
 		songLength = FlxG.sound.music.length;
 
 		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC, true, songLength);
+		DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC, true, songLength);
 		#end
 		scripts.call("onDiscordPresenceUpdate");
 	}
@@ -915,7 +916,7 @@ class PlayState extends MusicBeatState
 			
 			#if desktop
 			// Game Over doesn't get his own variable because it's only used here
-			DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
+			DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + difficultyText + ")", iconRPC);
 			#end
 		}
 
@@ -995,7 +996,11 @@ class PlayState extends MusicBeatState
 		if (SONG.validScore)
 		{
 			#if !switch
-			Highscore.saveScore(SONG.song, songScore, storyDifficulty);
+			// TODO: Accuracy stuff
+			Highscore.saveScore(SONG.song, {
+				score: songScore,
+				misses: misses
+			}, difficulty);
 			#end
 		}
 
@@ -1015,17 +1020,17 @@ class PlayState extends MusicBeatState
 
 				if (SONG.validScore)
 				{
-					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
+					// TODO: more week info saving
+					Highscore.saveWeekScore(storyWeek.name, {
+						score: campaignScore
+					}, difficulty);
 				}
 				FlxG.save.flush();
 			}
 			else
 			{
-				// TODO: NOT INT DIFFICULTIES
-				var difficulty:String = CoolUtil.difficultyString();
-
 				trace('LOADING NEXT SONG');
-				trace(PlayState.storyPlaylist[0].toLowerCase() + difficulty);
+				trace(PlayState.storyPlaylist[0].toLowerCase(), difficulty);
 
 				if (SONG.song.toLowerCase() == 'eggnog')
 				{
