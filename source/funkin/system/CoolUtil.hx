@@ -1,5 +1,8 @@
 package funkin.system;
 
+import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.graphics.FlxGraphic;
 import haxe.io.Path;
 import haxe.xml.Access;
 import flixel.input.keyboard.FlxKey;
@@ -12,6 +15,8 @@ import flixel.FlxSprite;
 import flixel.FlxObject;
 import flixel.FlxCamera;
 import flixel.util.FlxAxes;
+import flixel.graphics.frames.FlxFrame;
+import flixel.graphics.frames.FlxFramesCollection;
 
 using StringTools;
 
@@ -231,12 +236,25 @@ class CoolUtil
 		return array[array.length-1];
 	}
 
-	public static function loadAnimatedGraphic(spr:FlxSprite, path:String) {
+	public static function loadFrames(path:String, Unique:Bool = false, Key:String = null):FlxFramesCollection {
 		var noExt = Path.withoutExtension(path);
+
 		if (Assets.exists('$noExt.xml')) {
-			spr.frames = Paths.getSparrowAtlasAlt(noExt);
-		} else {
-			spr.loadGraphic(path);
+			return Paths.getSparrowAtlasAlt(noExt);
+		} else if (Assets.exists('$noExt.txt')) {
+			return Paths.getPackerAtlasAlt(noExt);
 		}
+
+		var graph:FlxGraphic = FlxG.bitmap.add(path, Unique, Key);
+		if (graph == null)
+			return null;
+		return graph.imageFrame;
+	}
+	
+	public static function loadAnimatedGraphic(spr:FlxSprite, path:String) {
+		spr.frames = loadFrames(path);
+		
+		spr.animation.add("idle", [for(i in 0...spr.frames.frames.length) i], 24, true);
+		spr.animation.play("idle");
 	}
 }

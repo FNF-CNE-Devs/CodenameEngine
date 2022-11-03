@@ -84,8 +84,8 @@ class Highscore
 	}
 	public static function load():Void
 	{
-		songScores = FlxG.save.data.songScores.getDefault(new Map<String, SongScore>());
-		weekScores = FlxG.save.data.weekScores.getDefault(new Map<String, SongScore>());
+		songScores = CoolUtil.getDefault(FlxG.save.data.songScores, new Map<String, SongScore>());
+		weekScores = CoolUtil.getDefault(FlxG.save.data.weekScores, new Map<String, SongScore>());
 		
 		for(k=>e in songScores)
 			if (e is Int)

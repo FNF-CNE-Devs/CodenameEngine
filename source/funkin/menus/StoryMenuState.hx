@@ -1,5 +1,8 @@
 package funkin.menus;
 
+import funkin.system.XMLUtil;
+import flixel.graphics.frames.FlxFramesCollection;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import funkin.game.Highscore;
 import flixel.tweens.FlxTween;
 import openfl.utils.Assets;
@@ -26,12 +29,18 @@ class StoryMenuState extends MusicBeatState {
     public var weekBG:FlxSprite;
     public var leftArrow:FlxSprite;
     public var rightArrow:FlxSprite;
+    public var blackBar:FlxSprite;
 
     public var lerpScore:Float = 0;
     public var intendedScore:Int = 0;
 
     public var canSelect:Bool = true;
 
+    public var weekSprites:FlxTypedGroup<MenuItem>;
+    public var characterSprites:FlxTypedGroup<MenuCharacterSprite>;
+
+    public var charFrames:Map<String, FlxFramesCollection> = [];
+ 
     public override function create() {
         super.create();
         loadXMLs();
@@ -39,6 +48,11 @@ class StoryMenuState extends MusicBeatState {
         persistentUpdate = persistentDraw = true;
 
         // WEEK INFO
+        blackBar = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFFFFFFFF);
+        blackBar.color = 0xFF000000;
+        blackBar.setGraphicSize(FlxG.width, 56);
+        blackBar.updateHitbox();
+
 		scoreText = new FunkinText(10, 10, 0, "SCORE: -", 36);
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32);
 
@@ -51,6 +65,7 @@ class StoryMenuState extends MusicBeatState {
         weekBG.setGraphicSize(FlxG.width, 400);
         weekBG.updateHitbox();
 
+        weekSprites = new FlxTypedGroup<MenuItem>();
 
         // DUMBASS ARROWS
 		var assets = Paths.getSparrowAtlas('menus/storymenu/assets');
@@ -69,14 +84,21 @@ class StoryMenuState extends MusicBeatState {
         }
         rightArrow.x -= rightArrow.width;
 
-        tracklist = new FunkinText(64, weekBG.y + weekBG.height + 44, Std.int(((FlxG.width - 400) / 2) - 128), "TRACKS", 32);
+        tracklist = new FunkinText(16, weekBG.y + weekBG.height + 44, Std.int(((FlxG.width - 400) / 2) - 80), "TRACKS", 32);
         tracklist.alignment = CENTER;
         tracklist.color = 0xFFE55777;
 
-        for(e in [scoreText, weekTitle, weekBG, tracklist])
+        add(weekSprites);
+        for(e in [blackBar, scoreText, weekTitle, weekBG, tracklist]) {
+            e.scrollFactor.set();
             add(e);
+        }
+        add(characterSprites);
 
-        for(week in weeks) {
+        for(i=>week in weeks) {
+            var spr:MenuItem = new MenuItem(0, (i * 120) + 480, 'menus/storymenu/weeks/${week.sprite}');
+            weekSprites.add(spr);
+
             for(e in week.difficulties) {
                 var le = e.toLowerCase();
                 if (difficultySprites[le] == null) {
@@ -84,12 +106,14 @@ class StoryMenuState extends MusicBeatState {
                     diffSprite.loadAnimatedGraphic(Paths.image('menus/storymenu/difficulties/${le}'));
                     diffSprite.setUnstretchedGraphicSize(Std.int(rightArrow.x - leftArrow.x - leftArrow.width), Std.int(leftArrow.height), false, 1);
                     diffSprite.antialiasing = true;
+                    diffSprite.scrollFactor.set();
                     add(diffSprite);
 
                     difficultySprites[le] = diffSprite;
                 }
             }
         }
+
         changeWeek(0, true);
     }
 
@@ -123,6 +147,7 @@ class StoryMenuState extends MusicBeatState {
     public function changeDifficulty(change:Int, force:Bool = false) {
         if (change == 0 && !force) return;
 
+        CoolUtil.playMenuSFX(0, 0.7);
         curDifficulty = FlxMath.wrap(curDifficulty + change, 0, weeks[curWeek].difficulties.length-1);
 
         if (__oldDiffName != (__oldDiffName = weeks[curWeek].difficulties[curDifficulty].toLowerCase())) {
@@ -137,7 +162,7 @@ class StoryMenuState extends MusicBeatState {
                 diffSprite.alpha = 0;
                 diffSprite.y = leftArrow.y - 15;
 
-                FlxTween.tween(diffSprite, {y: leftArrow.y + 15, alpha: 1}, 0.07);
+                FlxTween.tween(diffSprite, {y: leftArrow.y, alpha: 1}, 0.07);
             }
 
             intendedScore = Highscore.getWeekScore(weeks[curWeek].name, weeks[curWeek].difficulties[curDifficulty]).score;
@@ -147,6 +172,13 @@ class StoryMenuState extends MusicBeatState {
     public function changeWeek(change:Int, force:Bool = false) {
         if (change == 0 && !force) return;
 
+        curWeek = FlxMath.wrap(curWeek + change, 0, weeks.length-1);
+        
+        CoolUtil.playMenuSFX();
+        for(k=>e in weekSprites.members) {
+            e.targetY = k - curWeek;
+        }
+        tracklist.text = 'TRACKS\n\n${[for(e in weeks[curWeek].songs) if (!e.hide) e.name.toUpperCase()].join('\n')}';
         changeDifficulty(0, true);
     }
 
@@ -168,7 +200,7 @@ class StoryMenuState extends MusicBeatState {
                             }
                             if (characters[char.att.name] != null) continue;
                             var charObj:MenuCharacter = {
-                                spritePath: Paths.image(char.getAtt('scale').getDefault('menus/storymenu/characters/${char.att.name}')),
+                                spritePath: Paths.image(char.getAtt('sprite').getDefault('menus/storymenu/characters/${char.att.name}')),
                                 scale: Std.parseFloat(char.getAtt('scale')).getDefault(1),
                                 xml: char
                             };
@@ -187,6 +219,17 @@ class StoryMenuState extends MusicBeatState {
                                 songs: [],
                                 difficulties: ['easy', 'normal', 'hard']
                             };
+
+                            var diffNodes = week.nodes.difficulty;
+                            if (diffNodes.length > 0) {
+                                var diffs:Array<String> = [];
+                                for(e in diffNodes) {
+                                    if (e.has.name) diffs.push(e.att.name);
+                                }
+                                if (diffs.length > 0)
+                                    weekObj.difficulties = diffs;
+                            }
+
                             if (week.has.chars) {
                                 for(k=>e in week.att.chars.split(",")) {
                                     if (e.trim() == "" || e == "none" || e == "null")
@@ -202,7 +245,7 @@ class StoryMenuState extends MusicBeatState {
                                 }
                                 weekObj.songs.push({
                                     name: song.att.name,
-                                    hide: week.getAtt('hide').getDefault('false') == "true"
+                                    hide: song.getAtt('hide').getDefault('false') == "true"
                                 });
                             }
                             if (weekObj.songs.length <= 0) {
@@ -236,4 +279,61 @@ typedef MenuCharacter = {
     var spritePath:String;
     var xml:Access;
     var scale:Float;
+    // var frames:FlxFramesCollection;
+}
+
+class MenuCharacterSprite extends FlxSprite
+{
+    public var character:String;
+
+    public function new(pos:Int, path:String) {
+        super(FlxG.width * (0.25 * pos), 80);
+    }
+
+    public function changeCharacter(data:MenuCharacter) {
+        CoolUtil.loadAnimatedGraphic(this, Paths.image(data.spritePath));
+        for(e in data.xml.nodes.anim)
+            XMLUtil.addXMLAnimation(this, e);
+    }
+}
+class MenuItem extends FlxSprite
+{
+	public var targetY:Float = 0;
+
+	public function new(x:Float, y:Float, path:String)
+	{
+		super(x, y);
+		CoolUtil.loadAnimatedGraphic(this, Paths.image(path));
+        screenCenter(X);
+        antialiasing = true;
+	}
+
+	private var isFlashing:Bool = false;
+
+	public function startFlashing():Void
+	{
+		isFlashing = true;
+	}
+
+	// if it runs at 60fps, fake framerate will be 6
+	// if it runs at 144 fps, fake framerate will be like 14, and will update the graphic every 0.016666 * 3 seconds still???
+	// so it runs basically every so many seconds, not dependant on framerate??
+	// I'm still learning how math works thanks whoever is reading this lol
+	// var fakeFramerate:Int = Math.round((1 / FlxG.elapsed) / 10);
+
+    // hi ninja muffin
+    // i have found a more efficient way
+    // dw, judging by how week 7 looked you prob know how to do maths
+    // goodbye
+    var time:Float = 0;
+
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+        time += elapsed;
+		y = CoolUtil.fpsLerp(y, (targetY * 120) + 480, 0.17);
+
+        if (isFlashing)
+            color = (time % 0.1 > 0.05) ? FlxColor.WHITE : 0xFF33ffff;
+	}
 }

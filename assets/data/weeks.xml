@@ -23,7 +23,7 @@
         <!-- DIFFICULTIES SPRITES IN "images/menus/storymenu/difficulties/" -->
 
         <week name="" chars="none,bf,gf" sprite="tutorial">
-            <song name="Tutorial" show="true" />
+            <song name="Tutorial" />
         </week>
 
         <week name="DADDY DEAREST" chars="dad,bf,gf" sprite="week1">
@@ -35,7 +35,7 @@
         <week name="SPOOKY MONTH" chars="spooky,bf,gf" sprite="week2">
             <song name="Spookeez" />
             <song name="South" />
-            <song name="Monster" />
+            <song name="Monster" hide="true" />
         </week>
 
         <week name="PICO" chars="pico,bf,gf" sprite="week3">
