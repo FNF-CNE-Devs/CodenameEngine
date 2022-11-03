@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import haxe.io.Path;
 #if desktop
 import funkin.system.Discord.DiscordClient;
 #end
@@ -170,11 +171,15 @@ class FreeplayState extends MusicBeatState
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
 
+		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
+		changeDiff((controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0));
+
 		scoreText.text = "PERSONAL BEST:" + lerpScore;
-		scoreText.x = FlxG.width - scoreText.width - 4;
-		scoreBG.scale.set(scoreText.width + 8, 66);
+		scoreBG.scale.set(Math.max(diffText.width, scoreText.width) + 8, 66);
 		scoreBG.updateHitbox();
 		scoreBG.x = FlxG.width - scoreBG.width;
+
+		scoreText.x = scoreBG.x + 4;
 		diffText.x = Std.int(scoreBG.x + ((scoreBG.width - diffText.width) / 2));
 
 		bg.color = CoolUtil.lerpColor(bg.color, songs[curSelected].color, 0.0625);
@@ -192,8 +197,6 @@ class FreeplayState extends MusicBeatState
 		}
 		#end
 
-		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
-		changeDiff((controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0));
 
 		if (controls.BACK)
 		{
@@ -238,9 +241,6 @@ class FreeplayState extends MusicBeatState
 		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length-1);
 
 		changeDiff(0, true);
-		#if !switch
-		intendedScore = Highscore.getScore(songs[curSelected].songName, songs[curSelected].difficulties[curDifficulty]).score;
-		#end
 		
 		#if PRELOAD_ALL
 			autoplayElapsed = 0;
@@ -339,6 +339,23 @@ class SongMetadata
 		this.songCharacter = songCharacter;
 		if (difficulties != null && difficulties.length > 0) {
 			this.difficulties = difficulties;
+		} else {
+			this.difficulties = difficulties = [for(f in Paths.getFolderContent('data/charts/${song}/')) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
+			if (difficulties.length == 3) {
+				var hasHard = false, hasNormal = false, hasEasy = false;
+				for(d in difficulties) {
+					switch(d) {
+						case "EASY":	hasEasy = true;
+						case "NORMAL":	hasNormal = true;
+						case "HARD":	hasHard = true;
+					}
+				}
+				if (hasHard && hasNormal && hasEasy) {
+					difficulties[0] = "EASY";
+					difficulties[1] = "NORMAL";
+					difficulties[2] = "HARD";
+				}
+			}
 		}
 	}
 }

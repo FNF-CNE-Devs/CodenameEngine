@@ -47,7 +47,7 @@ class Highscore
 
 	public static function formatSong(song:String, diff:String):String
 	{
-		var daSong:String = song;
+		var daSong:String = song.toLowerCase();
 		diff = diff.toLowerCase();
 		if (diff != "normal")
 			daSong += '-$diff';
@@ -60,7 +60,7 @@ class Highscore
 		if (!songScores.exists(daSong))
 			setScore(daSong, {});
 
-		return prepareScore(songScores.get(formatSong(song, diff)));
+		return prepareScore(songScores.get(daSong));
 	}
 
 	public static function getWeekScore(week:String, diff:String):SongScore

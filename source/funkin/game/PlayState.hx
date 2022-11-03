@@ -306,6 +306,7 @@ class PlayState extends MusicBeatState
 
 		for(text in [scoreTxt, missesTxt, accuracyTxt]) {
 			text.scrollFactor.set();
+			add(text);
 		}
 		scoreTxt.alignment = RIGHT;
 		missesTxt.alignment = CENTER;

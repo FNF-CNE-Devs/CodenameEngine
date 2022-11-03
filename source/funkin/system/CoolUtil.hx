@@ -30,8 +30,8 @@ class CoolUtil
 
 	public static function setFieldDefault<T>(v:Dynamic, name:String, defaultValue:T):T {
 		if (Reflect.hasField(v, name)) {
-			var f = Reflect.field(v, name);
-			if (f != null && Std.isOfType(f, T))
+			var f:Null<Dynamic> = Reflect.field(v, name);
+			if (f != null)
 				return cast f;
 		} 
 		Reflect.setField(v, name, defaultValue);
