@@ -1,5 +1,6 @@
 package funkin.scripting;
 
+import funkin.system.Conductor;
 import flixel.FlxG;
 import flixel.FlxState;
 import funkin.mods.ModsFolder;
@@ -14,6 +15,10 @@ class GlobalScript {
         #if MOD_SUPPORT
         ModsFolder.onModSwitch.add(onModSwitch);
         #end
+
+        Conductor.onBeatHit.add(beatHit);
+        Conductor.onStepHit.add(stepHit);
+        
         FlxG.signals.focusGained.add(function() {
             call("focusGained");
         });

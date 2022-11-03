@@ -4,6 +4,7 @@ import flixel.FlxState;
 import funkin.interfaces.IBeatReceiver;
 import flixel.FlxG;
 import funkin.system.Song.SwagSong;
+import flixel.util.FlxSignal.FlxTypedSignal;
 
 /**
  * ...
@@ -19,6 +20,13 @@ typedef BPMChangeEvent =
 
 class Conductor
 {
+	/**
+	 * FlxSignals
+	 */
+	public static var onBeatHit:FlxTypedSignal<Int->Void> = new FlxTypedSignal();
+	public static var onStepHit:FlxTypedSignal<Int->Void> = new FlxTypedSignal();
+	public static var onBPMChange:FlxTypedSignal<Float->Void> = new FlxTypedSignal();
+
 	/**
 	 * Current BPM
 	 */
@@ -154,6 +162,10 @@ class Conductor
 				// updates step
 				var updateBeat = curBeat != (curBeat = Std.int(curBeatFloat));
 
+				onStepHit.dispatch(curStep);
+				if (updateBeat)
+					onBeatHit.dispatch(curBeat);
+				
 				if (FlxG.state is IBeatReceiver) {
 					var state = FlxG.state;
 					while(state != null) {
@@ -166,6 +178,7 @@ class Conductor
 						state = state.subState;
 					}
 				}
+
 			}
 		}
 	}
