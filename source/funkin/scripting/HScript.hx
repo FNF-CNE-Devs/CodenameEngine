@@ -18,6 +18,7 @@ class HScript extends Script {
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
         interp.errorHandler = _errorHandler;
         interp.staticVariables = Script.staticVariables;
+        interp.allowStaticVariables = interp.allowPublicVariables = true;
 
         interp.variables.set("trace", this.trace);
         try {
@@ -41,6 +42,8 @@ class HScript extends Script {
 
     public override function reload() {
         // save variables
+        
+        interp.allowStaticVariables = interp.allowPublicVariables = false;
         var savedVariables:Map<String, Dynamic> = [];
         for(k=>e in interp.variables) {
             if (!Reflect.isFunction(e)) {
@@ -54,6 +57,7 @@ class HScript extends Script {
         for(k=>e in savedVariables) {
             interp.variables.set(k, e);
         }
+        interp.allowStaticVariables = interp.allowPublicVariables = true;
     }
 
     private override function onCall(funcName:String, parameters:Array<Dynamic>):Dynamic {
