@@ -48,6 +48,7 @@ class Logs {
                 case WARNING:   logText('   WARNING   ', DARKYELLOW);
                 case ERROR:     logText('    ERROR    ', DARKRED);
                 case TRACE:     logText('    TRACE    ', GRAY);
+                case VERBOSE:   logText('   VERBOSE   ', DARKMAGENTA);
                 default:        logText(' INFORMATION ', CYAN);
             },
             logText('] ')
@@ -98,6 +99,7 @@ enum abstract Level(Int) {
     var WARNING = 1;
     var ERROR = 2;
     var TRACE = 3;
+    var VERBOSE = 4;
 }
 typedef LogText = {
     var text:String;

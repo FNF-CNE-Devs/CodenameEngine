@@ -1,0 +1,4 @@
+<!DOCTYPE codename-engine-stage>
+<stage zoom="1.05" name="spooky" folder="stages/school/">
+    <sprite name="bg" x="-200" y="-100" sprite="halloween_bg" />
+</stage>

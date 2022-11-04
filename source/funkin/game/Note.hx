@@ -1,5 +1,6 @@
 package funkin.game;
 
+import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
@@ -55,6 +56,9 @@ class Note extends FlxSprite
 	public var noteAngle:Null<Float> = null;
 
 	public var noteType(get, null):String;
+
+	@:dox(hide) public var __strumCameras:Array<FlxCamera> = null;
+
 	private function get_noteType() {
 		return PlayState.instance.getNoteType(noteTypeID);
 	}
@@ -117,7 +121,6 @@ class Note extends FlxSprite
 			}
 		}
 
-		animation.play("scroll");
 
 		if (isSustainNote && prevNote != null)
 		{
@@ -131,6 +134,8 @@ class Note extends FlxSprite
 				prevNote.nextSustain = this;
 				prevNote.animation.play('hold');
 			}
+		} else {
+			animation.play("scroll");
 		}
 	}
 
@@ -138,6 +143,9 @@ class Note extends FlxSprite
 	public var angleOffsets:Bool = true;
 
 	override function draw() {
+		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
+		@:privateAccess if (__strumCameras != null) FlxCamera._defaultCameras = __strumCameras;
+		
 		var negativeScroll = isSustainNote && nextSustain != null && lastScrollSpeed < 0;
 		if (negativeScroll)	offset.y *= -1;
 
@@ -183,6 +191,7 @@ class Note extends FlxSprite
 		}
 		super.draw();
 		if (negativeScroll)	offset.y *= -1;
+		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
 	}
 
 	// The * 0.5 is so that it's easier to hit them too late, instead of too early

@@ -14,6 +14,22 @@ class ScriptPack extends Script {
         }
     }
 
+    public function new(name:String) {
+        additionalDefaultVariables["importScript"] = importScript;
+        super(name);
+    }
+
+    public function importScript(path:String):Script {
+        var script = Script.create(Paths.script(path));
+        if (script is DummyScript) {
+            throw 'Script at ${path} does not exist.';
+            return null;
+        }
+        add(script);
+        script.load();
+        return script;
+    }
+
     public override function call(func:String, ?parameters:Array<Dynamic>):Dynamic {
         for(e in scripts)
             e.call(func, parameters);

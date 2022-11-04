@@ -300,9 +300,9 @@ class PlayState extends MusicBeatState
 			add(icon);
 		}
 
-		scoreTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Score:0", 20);
-		missesTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Misses:0", 20);
-		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy:-%", 20);
+		scoreTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Score:0", 16);
+		missesTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Misses:0", 16);
+		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy:-%", 16);
 
 		for(text in [scoreTxt, missesTxt, accuracyTxt]) {
 			text.scrollFactor.set();
@@ -1236,9 +1236,11 @@ class PlayState extends MusicBeatState
 			});
 		}
 
-		notes.forEachAlive(function(note:Note) {
-			for(e in funcsToExec) e(note);
-		});
+		if (funcsToExec.length > 0) {
+			notes.forEachAlive(function(note:Note) {
+				for(e in funcsToExec) e(note);
+			});
+		}
 
 		for(e in notePerStrum) if (e != null) goodNoteHit(e);
 		for(e in additionalNotes) goodNoteHit(e);
@@ -1326,6 +1328,12 @@ class PlayState extends MusicBeatState
 
 			if (event.unmuteVocals) vocals.volume = 1;
 			if (event.enableCamZooming) camZooming = true;
+			if (event.autoHitLastSustain) {
+				if (note.nextSustain != null && note.nextSustain.nextSustain == null) {
+					// its a tail!!
+					note.wasGoodHit = true;
+				}
+			}
 
 			if (event.deleteNote && !note.isSustainNote) deleteNote(note);
 		}

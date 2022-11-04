@@ -1,9 +1,10 @@
 package funkin.game;
 
-import funkin.options.Options;
 import flixel.FlxSprite;
+import flixel.FlxCamera;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import funkin.options.Options;
 import funkin.system.Conductor;
 
 class Strum extends FlxSprite {
@@ -12,8 +13,9 @@ class Strum extends FlxSprite {
 
     public var scrollSpeed:Null<Float> = null; // custom scroll speed per strum
     public var noteAngle:Null<Float> = null; // custom scroll speed per strum
-    public var downscroll:Null<Bool> = false; // custom downscroll per strum
     
+    public var lastDrawCameras(default, null):Array<FlxCamera> = [];
+
     public function getScrollSpeed(?note:Note) {
         if (note != null && note.scrollSpeed != null) return note.scrollSpeed;
         if (scrollSpeed != null) return scrollSpeed;
@@ -26,12 +28,6 @@ class Strum extends FlxSprite {
         if (noteAngle != null) return noteAngle;
         return angle;
     }
-    
-    public function getDownscroll() {
-        if (downscroll != null) return downscroll;
-        if (PlayState.instance != null) return PlayState.instance.downscroll;
-        return Options.downscroll;
-    }
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
@@ -42,13 +38,22 @@ class Strum extends FlxSprite {
         }
     }
 
+    public override function draw() {
+        lastDrawCameras = [for(c in cameras) c];
+        super.draw();
+    }
 
     public function updateNotePosition(daNote:Note) {
         if (!daNote.exists) return;
         
         var offset = FlxPoint.get(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
         var realOffset = FlxPoint.get(0, 0);
+
+        daNote.__strumCameras = lastDrawCameras;
+
         if (daNote.isSustainNote) offset.y -= Note.swagWidth / 2;
+        
+        daNote.scrollFactor.set(scrollFactor.x, scrollFactor.y);
         
         var noteAngle = getNotesAngle(daNote);
         daNote.angle = daNote.isSustainNote ? noteAngle : angle;
@@ -61,8 +66,8 @@ class Strum extends FlxSprite {
             realOffset.x = offset.x;
             realOffset.y = offset.y;
         }
-        if (!downscroll)
-            realOffset.y *= -1;
+        realOffset.y *= -1;
+
         daNote.setPosition(x + realOffset.x, y + realOffset.y);
         
         offset.put();
