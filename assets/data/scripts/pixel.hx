@@ -1,17 +1,12 @@
-import funkin.system.Paths;
+public var pixelNotesForBF = true;
+public var pixelNotesForDad = true;
 
 var daPixelZoom = 6;
-// function onStrumCreation(event) {
-//     event.cancel();
 
-//     var strum = event.strum;
-//     strum.loadGraphic(Paths.image('stages/school/arrows-pixels'), true, 17, 17);
-//     strum.animation.add("scroll", [6 + strum.ID]);
-// }
-
-var song = PlayState.SONG.song.toLowerCase();
 function onNoteCreation(event) {
-    if (song == "test" && event.note.mustPress) return;
+    if (event.note.mustPress && !pixelNotesForBF) return;
+    if (!event.note.mustPress && !pixelNotesForDad) return;
+    
     event.cancel();
 
     var note = event.note;
@@ -27,7 +22,9 @@ function onNoteCreation(event) {
     note.updateHitbox();
 }
 function onStrumCreation(event) {
-    if (song == "test" && event.player == 1) return;
+    if (event.player == 1 && !pixelNotesForBF) return;
+    if (event.player == 0 && !pixelNotesForDad) return;
+
     event.cancel();
 
     var strum = event.strum;

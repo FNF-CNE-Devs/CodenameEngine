@@ -17,6 +17,8 @@ class HScript extends Script {
         var parser = new hscript.Parser();
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
         interp.errorHandler = _errorHandler;
+        interp.staticVariables = Script.staticVariables;
+
         interp.variables.set("trace", this.trace);
         try {
             expr = parser.parseString(code, fileName);
@@ -78,5 +80,9 @@ class HScript extends Script {
             Logs.logText('${fileName}:${posInfo.lineNumber}: ', GREEN),
             Logs.logText(Std.string(v))
         ], TRACE);
+    }
+
+    public override function setPublicMap(map:Map<String, Dynamic>) {
+        this.interp.publicVariables = map;
     }
 }

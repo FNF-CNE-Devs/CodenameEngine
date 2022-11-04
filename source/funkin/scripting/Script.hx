@@ -9,6 +9,13 @@ import openfl.utils.Assets;
  * Class used for scripting.
  */
 class Script extends FlxBasic implements IFlxDestroyable {
+    /**
+     * Use "static var thing = true;" in hscript to use those!!
+     * are reset every mod switch so once youre done with them make sure to make them null!!
+     */
+    public static var staticVariables:Map<String, Dynamic> = [];
+
+
     public static function getDefaultVariables():Map<String, Dynamic> {
         return [
             // Haxe related stuff
@@ -126,6 +133,14 @@ class Script extends FlxBasic implements IFlxDestroyable {
         curScript = this;
         onLoad();
         curScript = oldScript;
+    }
+
+    /**
+     * HSCRIPT ONLY FOR NOW
+     * Sets the "public" variables map for ScriptPack
+     */
+    public function setPublicMap(map:Map<String, Dynamic>) {
+        
     }
 
     /**

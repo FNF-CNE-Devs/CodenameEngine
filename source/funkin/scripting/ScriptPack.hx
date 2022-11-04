@@ -6,6 +6,7 @@ import funkin.scripting.events.CancellableEvent;
 class ScriptPack extends Script {
     public var scripts:Array<Script> = [];
     public var additionalDefaultVariables:Map<String, Dynamic> = [];
+    public var publicVariables:Map<String, Dynamic> = [];
     public var parent:Dynamic = null;
 
     public override function load() {
@@ -94,6 +95,7 @@ class ScriptPack extends Script {
 
     private function __configureNewScript(script:Script) {
         if (parent != null) script.setParent(parent);
+        script.setPublicMap(publicVariables);
         for(k=>e in additionalDefaultVariables) script.set(k, e);
     }
 }
