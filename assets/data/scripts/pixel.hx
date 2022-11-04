@@ -9,7 +9,9 @@ var daPixelZoom = 6;
 //     strum.animation.add("scroll", [6 + strum.ID]);
 // }
 
+var song = PlayState.SONG.song.toLowerCase();
 function onNoteCreation(event) {
+    if (song == "test" && event.note.mustPress) return;
     event.cancel();
 
     var note = event.note;
@@ -25,6 +27,7 @@ function onNoteCreation(event) {
     note.updateHitbox();
 }
 function onStrumCreation(event) {
+    if (song == "test" && event.player == 1) return;
     event.cancel();
 
     var strum = event.strum;

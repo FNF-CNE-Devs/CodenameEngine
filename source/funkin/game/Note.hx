@@ -1,5 +1,6 @@
 package funkin.game;
 
+import flixel.FlxG;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -209,8 +210,13 @@ class Note extends FlxSprite
 			// is long sustain
 			lastScrollSpeed = scrollSpeed;
 
-			scale.y = stepLength / 100 * 1.5 * scrollSpeed * 0.7;
+			// scale.y = stepLength / 100 * 1.5 * scrollSpeed * 0.7;
+			scale.y = (stepLength * (0.45 * FlxMath.roundDecimal(scrollSpeed, 2))) / frameHeight;
 			updateHitbox();
+			if (antialiasing && !FlxG.forceNoAntialiasing) {
+				// dumbass antialiasing
+				scale.y += 3 / frameHeight;
+			}
 		}
 
 		if (!wasGoodHit) return;
