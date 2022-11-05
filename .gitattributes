@@ -2,4 +2,4 @@
 * text=auto
 
 # Don't count pages documentation as actual code
-pages/* linguist-vendored
+pages/* linguist-documentation
