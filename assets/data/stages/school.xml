@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-stage>
-<stage zoom="1" name="spooky" folder="stages/school/" >
+<stage zoom="1" folder="stages/school/" >
     <sprite name="bgSky" x="0" y="0" sprite="weebSky"
         antialiasing="false" scale="6" scroll="0.1" updateHitbox="true"/>
 

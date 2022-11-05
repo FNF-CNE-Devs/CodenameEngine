@@ -5,6 +5,7 @@ public var pixelNotesForDad = true;
 public var enablePixelUI = true;
 public var enableCameraHacks = true;
 public var enablePauseMenu = true;
+public var isSpooky = false;
 
 static var daPixelZoom = 6;
 

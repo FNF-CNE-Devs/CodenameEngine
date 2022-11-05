@@ -11,10 +11,13 @@ var hand:FlxSprite;
 
 var texts:Array<FlxText> = [];
 
+var isThorns = PlayState.SONG.song.toLowerCase() == "thorns";
+
 function create(event) {
     // cancel default pause menu!!
     event.cancel();
-    event.music = "pixel/Lunchbox";
+
+    event.music = isThorns ? "pixel/LunchboxScary" : "pixel/Lunchbox";
 
     cameras = [];
 
@@ -23,10 +26,13 @@ function create(event) {
 
     FlxG.cameras.add(pauseCam, false);
 
-    pauseCam.bgColor = 0x88FF99CC;
+    pauseCam.bgColor = isThorns ? 0x88000000 : 0x88FF99CC;
     pauseCam.alpha = 0;
 
-    bg = new FlxSprite(44 * 6, 14 * 6).loadGraphic(Paths.image('stages/school/pause/bg'));
+    bg = new FlxSprite(44 * 6, 14 * 6);
+    bg.loadGraphic(Paths.image('stages/school/pause/bg'));
+    if (isThorns)
+        bg.color = 0xFF000000;
     bg.scale.set(6, 6);
     bg.updateHitbox();
     bg.scale.y = 4;
@@ -55,7 +61,7 @@ function create(event) {
 
     cameras = [pauseCam];
 
-    FlxG.sound.play(Paths.sound('pixel/clickText'));
+    FlxG.sound.play(Paths.sound(isThorns ? 'pixel/ANGRY' : 'pixel/clickText'));
 }
 
 function confText(text) {
@@ -63,7 +69,7 @@ function confText(text) {
     text.updateHitbox();
     text.screenCenter(FlxAxes.X);
     text.borderStyle = FlxTextBorderStyle.OUTLINE;
-    text.borderColor = 0xFF953E3E;
+    if (!isThorns) text.borderColor = 0xFF953E3E;
 }
 
 function createPost() {
@@ -94,12 +100,12 @@ function update(elapsed) {
         changeSelection(-1);
 
     if (oldSec != curSelected) {
-        FlxG.sound.play(Paths.sound('pixel/pixelText'));
+        FlxG.sound.play(Paths.sound(isThorns ? 'pixel/type' : 'pixel/pixelText'));
     }
 
 
     if (controls.ACCEPT) {
-        FlxG.sound.play(Paths.sound('pixel/clickText'));
+        FlxG.sound.play(Paths.sound(isThorns ? 'pixel/ANGRY' : 'pixel/clickText'));
         var option = menuItems[curSelected];
         if (option == "Resume" || option == "Exit to menu") {
             canDoShit = false;

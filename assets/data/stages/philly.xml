@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-stage>
-<stage zoom="1.05" name="spooky" folder="stages/philly/">
+<stage zoom="1.05" name="philly" folder="stages/philly/">
     <sprite name="bg" x="-100" y="0" sprite="sky" scroll="0.1"/>
     <sprite name="city" x="-10" y="0" sprite="city" scroll="0.3" scale="0.85" updateHitbox="true"/>
     <sprite name="light" x="-10" y="0" sprite="win" scroll="0.3" scale="0.85" updateHitbox="true"/>
