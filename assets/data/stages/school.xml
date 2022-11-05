@@ -1,4 +1,7 @@
 <!DOCTYPE codename-engine-stage>
 <stage zoom="1.05" name="spooky" folder="stages/school/">
-    <sprite name="bg" x="-200" y="-100" sprite="halloween_bg" />
+    <sprite name="bgSky" x="0" y="0" antialiasing="false" scale="6" sprite="weebSky" scroll="0.1"/>
+    <sprite name="bgStreet" x="-200" y="0" antialiasing="false" scale="6" sprite="weebStreet" scroll="0.95" />
+    <sprite name="fgTrees" x="-30" y="130" antialiasing="false" scale="6" sprite="weebTreesBack" scroll="0.9" />
+    <sprite name="bgTrees" x="-30" y="130" antialiasing="false" scale="6" sprite="weebTreesBack" scroll="0.9" />
 </stage>
