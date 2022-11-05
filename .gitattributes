@@ -4,4 +4,7 @@
 # Don't count pages documentation as actual code
 pages/** linguist-vendored
 
-* linguist-language=Lua
+# Include HScript files as Haxe
+*.hxs linguist-language=Haxe
+*.hsc linguist-language=Haxe
+*.hscript linguist-language=Haxe
