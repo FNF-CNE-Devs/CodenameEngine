@@ -4,4 +4,4 @@
 # Don't count pages documentation as actual code
 # pages/* linguist-documentation
 # *.hx linguist-language=C++
-pages/** linguist-vendored=false
+pages/** linguist-vendored=true
