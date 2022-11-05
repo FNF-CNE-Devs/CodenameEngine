@@ -105,6 +105,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 						curCharacter = "bf";
 						continue;
 					}
+					var sprite:String = curCharacter;
 
 					if (xml.has.isPlayer) playerOffsets = (xml.att.isPlayer == "true");
 					if (xml.has.isGF) isGF = (xml.att.isGF == "true");
@@ -115,8 +116,15 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 					if (xml.has.holdTime) holdTime = CoolUtil.getDefault(Std.parseFloat(xml.att.holdTime), 4);
 					if (xml.has.flipX) flipX = (xml.att.flipX == "true");
 					if (xml.has.icon) icon = xml.att.icon;
+					if (xml.has.scale) {
+						var scale = Std.parseFloat(xml.att.scale).getDefault(1);
+						this.scale.set(scale, scale);
+						updateHitbox();
+					}
+					if (xml.has.antialiasing) antialiasing = (xml.att.antialiasing == "true");
+					if (xml.has.sprite) sprite = xml.att.sprite;
 
-					frames = CoolUtil.loadFrames(Paths.image('characters/$curCharacter'));
+					frames = CoolUtil.loadFrames(Paths.image('characters/$sprite'));
 					for(anim in xml.nodes.anim) {
 						XMLUtil.addXMLAnimation(this, anim);
 					}
@@ -283,10 +291,12 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 			switchOffset('singLEFTmiss', 'singRIGHTmiss');
 		}
 		if (isPlayer) flipX = !flipX;
+		__baseFlipped = flipX;
 		dance();
 		script.call("createPost");
 	}
 
+	var __baseFlipped:Bool = false;
 	var isDanceLeftDanceRight:Bool = false;
 
 	public function switchOffset(anim1:String, anim2:String) {
@@ -358,13 +368,13 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	}
 	
 	public override function draw() {
-		if (flipX) {
+		if ((isPlayer != playerOffsets) != (flipX != __baseFlipped)) {
 			__reverseDrawProcedure = true;
 
-			flipX = false;
+			flipX = !flipX;
 			scale.x *= -1;
 			super.draw();
-			flipX = true;
+			flipX = !flipX;
 			scale.x *= -1;
 
 			__reverseDrawProcedure = false;
