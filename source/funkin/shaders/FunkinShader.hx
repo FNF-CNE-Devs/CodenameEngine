@@ -1,5 +1,7 @@
 package funkin.shaders;
 
+import haxe.Exception;
+import hscript.IHScriptCustomBehaviour;
 import flixel.graphics.tile.FlxGraphicsShader;
 import openfl.display3D.Program3D;
 import flixel.system.FlxAssets.FlxShader;
@@ -12,7 +14,13 @@ import lime.utils.Float32Array;
 
 using StringTools;
 
-class FunkinShader extends FlxShader {
+import openfl.display.ShaderParameter;
+import openfl.display.BitmapData;
+import openfl.display.ShaderInput;
+
+class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
+    private static var __instanceFields = Type.getInstanceFields(FunkinShader);
+    
     public var glslVer:String = "120";
 
     /**
@@ -325,6 +333,82 @@ class FunkinShader extends FlxShader {
                 lastMatch = position.pos + position.len;
             }
         }
+
+        
+
+    public function hget(v:String):Dynamic {
+        if (__instanceFields.contains(v) || __instanceFields.contains('get_${v}')) {
+            return Reflect.getProperty(this, v);
+        }
+        if (!Reflect.hasField(data, v)) return null;
+        var field = Reflect.field(data, v);
+        var cl = Std.string(Type.getClass(field));
+
+        // cant do "field is ShaderInput" for some reason
+        if (cl.startsWith("openfl.display.ShaderInput")) {
+            var si = cast(field, ShaderInput<Dynamic>);
+            return si.input;
+        } else if (field is ShaderParameter) {
+            var sp = cast(field, ShaderParameter<Dynamic>);
+            @:privateAccess
+            return (sp.__length > 1) ? sp.value : sp.value[0];
+        }
+        return field;
+    }
+
+    public function hset(v:String, val:Dynamic):Dynamic {
+        if (__instanceFields.contains(v) || __instanceFields.contains('set_${v}')) {
+            Reflect.setProperty(this, v, val);
+            return val;
+        }
+
+        if (!Reflect.hasField(data, v)) {
+            Reflect.setField(data, v, val);
+            return val;
+        } else {
+            var field = Reflect.field(data, v);
+            var cl = Std.string(Type.getClass(field));
+
+            // cant do "field is ShaderInput" for some reason
+            if (cl.startsWith("openfl.display.ShaderInput")) {
+                // shader input!!
+                if (!(val is BitmapData)) {
+                    throw new ShaderTypeException(v, Type.getClass(val), BitmapData);
+                    return null;
+                }
+                field.input = cast val;
+            } else if (cl.startsWith("openfl.display.ShaderParameter")) {
+                @:privateAccess
+                if (field.__length <= 1) {
+                    // that means we wait for a single number, instead of an array
+                    @:privateAccess
+                    if (field.__isInt && !(val is Int)) {
+                        throw new ShaderTypeException(v, Type.getClass(val), 'Int');
+                        return null;
+                    } else 
+                    @:privateAccess
+                    if (field.__isBool && !(val is Bool)) {
+                        throw new ShaderTypeException(v, Type.getClass(val), 'Bool');
+                        return null;
+                    } else 
+                    @:privateAccess
+                    if (field.__isFloat && !(val is Float)) {
+                        throw new ShaderTypeException(v, Type.getClass(val), 'Float');
+                        return null;
+                    }
+                    return field.value = [val];
+                } else {
+                    if (!(val is Array)) {
+                        throw new ShaderTypeException(v, Type.getClass(val), Array);
+                        return null;
+                    }
+                    return field.value = val;
+                }
+            }
+        }
+
+        return val;
+    }
 }
 
 class ShaderTemplates {
@@ -476,4 +560,17 @@ class ShaderTemplates {
     {
         gl_FragColor = flixel_texture2D(bitmap, openfl_TextureCoordv);
     }";
+}
+
+class ShaderTypeException extends Exception {
+    var has:Class<Dynamic>;
+    var want:Class<Dynamic>;
+    var name:String;
+
+    public function new(name:String, has:Class<Dynamic>, want:Dynamic) {
+        this.has = has;
+        this.want = want;
+        this.name = name;
+        super('ShaderTypeException - Tried to set the shader uniform "${name}" as a ${Type.getClassName(has)}, but the shader uniform is a ${Std.string(want)}.');
+    }
 }
