@@ -2,6 +2,7 @@
 * text=auto
 
 # Don't count pages documentation as actual code
-# pages/* linguist-documentation
-# *.hx linguist-language=C++
 pages/** linguist-vendored
+
+
+*.hx linguist-language=Lua
