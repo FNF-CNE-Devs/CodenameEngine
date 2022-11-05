@@ -29,13 +29,13 @@ function create(event) {
     bg = new FlxSprite(44 * 6, 14 * 6).loadGraphic(Paths.image('stages/school/pause/bg'));
     bg.scale.set(6, 6);
     bg.updateHitbox();
-    bg.scale.y = 5;
+    bg.scale.y = 4;
     bg.cameras = [pauseCam];
     add(bg);
 
-    text = new FlxText(0, 22 * 6, 0, "Pause", 8, false);
-    confText(text);
-    add(text);
+    songText = new FlxText(0, 22 * 6, 0, "Pause", 8, false);
+    confText(songText);
+    add(songText);
 
     var i = 2;
     for(e in menuItems) {
@@ -73,11 +73,20 @@ function destroy() {
     FlxG.cameras.remove(pauseCam);
 }
 
+var canDoShit = true;
+var time:Float = 0;
 function update(elapsed) {
     pixelScript.call("updatePost", [elapsed]);
 
     pauseCam.alpha = lerp(pauseCam.alpha, 1, 0.25);
+    time += elapsed;
 
+    var curText = texts[curSelected];
+    hand.setPosition(curText.x - hand.width - 18 + (Math.sin(time * Math.PI * 2) * 12), curText.y + (text.height - hand.height) - 6);
+    hand.x -= hand.x % 6;
+    hand.y -= hand.y % 6;
+
+    if (!canDoShit) return;
     var oldSec = curSelected;
     if (controls.DOWN_P)
         changeSelection(1, false);
@@ -88,14 +97,20 @@ function update(elapsed) {
         FlxG.sound.play(Paths.sound('pixel/pixelText'));
     }
 
-    var curText = texts[curSelected];
-    hand.setPosition(curText.x - hand.width - 12, curText.y + (text.height - hand.height) - 6);
-    hand.x -= hand.x % 6;
-    hand.y -= hand.y % 6;
 
     if (controls.ACCEPT) {
         FlxG.sound.play(Paths.sound('pixel/clickText'));
-        selectOption();
+        var option = menuItems[curSelected]
+        if (option == "Resume" || option == "Exit to menu") {
+            canDoShit = false;
+            for(t in texts) t.visible = false;
+            songText.visible = false;
+            FlxTween.tween(bg, {"scale.y": 0}, 0.125, {ease: FlxEase.cubeOut, onComplete: function() {
+                selectOption();
+            }});
+        } else {
+            selectOption();
+        }
     }
 }
 

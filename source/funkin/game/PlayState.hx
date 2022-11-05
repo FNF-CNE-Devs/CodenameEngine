@@ -83,6 +83,7 @@ class PlayState extends MusicBeatState
 	@:dox(hide) private function set_downscroll(v:Bool) {return camHUD.downscroll = v;}
 	@:dox(hide) private function get_downscroll():Bool  {return camHUD.downscroll;}
 
+	public var inst:FlxSound;
 	public var vocals:FlxSound;
 
 	public var dad:Character;
@@ -412,8 +413,10 @@ class PlayState extends MusicBeatState
 		previousFrameTime = FlxG.game.ticks;
 		lastReportedPlayheadPosition = 0;
 
-		if (!paused)
-			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
+		if (!paused) {
+			FlxG.sound.music = inst;
+			FlxG.sound.music.play();
+		}
 		FlxG.sound.music.onComplete = endSong;
 		vocals.play();
 
@@ -440,6 +443,7 @@ class PlayState extends MusicBeatState
 
 		curSong = songData.song;
 
+		inst = FlxG.sound.load(Paths.inst(PlayState.SONG.song));
 		vocals = new FlxSound();
 		if (SONG.needsVoices)
 			vocals.loadEmbedded(Paths.voices(PlayState.SONG.song));
