@@ -51,15 +51,10 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         var spr = new StageSprite();
                         spr.antialiasing = true;
 
-                        var addDefAnim = true;
                         if (!node.has.sprite || !node.has.name || !node.has.x || !node.has.y) continue;
-    
-                        if (Assets.exists(Paths.file('images/$spritesParentFolder${node.att.sprite}.xml', TEXT))) {
-                            spr.frames = Paths.getSparrowAtlas('$spritesParentFolder${node.att.sprite}');
-                        } else {
-                            addDefAnim = false;
-                            spr.loadGraphic(Paths.image('$spritesParentFolder${node.att.sprite}'));
-                        }
+
+                        spr.loadAnimatedGraphic(Paths.image('$spritesParentFolder${node.att.sprite}'));
+
                         var x:Null<Float> = Std.parseFloat(node.att.x);
                         var y:Null<Float> = Std.parseFloat(node.att.y);
                         if (x != null) spr.x = x;
@@ -77,6 +72,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
                                 if (scroll != null) spr.scrollFactor.y = scroll;
                             } 
                         }
+                        if (node.has.antialiasing) spr.antialiasing = node.att.antialiasing == "true";
                         if (node.has.scale) {
                             var scale:Null<Float> = Std.parseFloat(node.att.scale);
                             if (scale != null) spr.scale.set(scale, scale);
@@ -84,7 +80,6 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
 
                         for(anim in node.nodes.anim) {
-                            addDefAnim = false;
                             if (anim.has.name) spr.beatAnims.push(anim.att.name);
                             XMLUtil.addXMLAnimation(spr, anim);
                         }
@@ -92,9 +87,6 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         
                         if (node.has.anim) {
                             spr.animation.play(node.att.anim);   
-                        } else if (addDefAnim) {
-                            spr.animation.addByPrefix("anim", "", 24, true);
-                            spr.animation.play("anim");
                         }
     
                         stageSprites.set(node.att.name, spr);

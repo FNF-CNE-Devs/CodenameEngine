@@ -355,6 +355,7 @@ class PlayState extends MusicBeatState
 			boyfriend.dance();
 
 			var event:CountdownEvent = scripts.event("onCountdown", new CountdownEvent(
+				swagCounter, 
 				introSprites[swagCounter],
 				introSounds[swagCounter],
 				1, 0.6, true));
@@ -370,6 +371,7 @@ class PlayState extends MusicBeatState
 
 					sprite = new FlxSprite().loadGraphic(spr);
 					sprite.scrollFactor.set();
+					sprite.scale.set(event.scale, event.scale);
 					sprite.updateHitbox();
 					sprite.screenCenter();
 					add(sprite);

@@ -1,5 +1,6 @@
 public var pixelNotesForBF = true;
 public var pixelNotesForDad = true;
+public var enablePixelUI = true;
 
 var daPixelZoom = 6;
 
@@ -21,6 +22,7 @@ function onNoteCreation(event) {
     note.scale.set(daPixelZoom, daPixelZoom);
     note.updateHitbox();
 }
+
 function onStrumCreation(event) {
     if (event.player == 1 && !pixelNotesForBF) return;
     if (event.player == 0 && !pixelNotesForDad) return;
@@ -35,4 +37,18 @@ function onStrumCreation(event) {
     
     strum.scale.set(daPixelZoom, daPixelZoom);
     strum.updateHitbox();
+}
+
+function onCountdown(event) {
+    if (!enablePixelUI) return;
+
+    if (event.soundPath != null) event.soundPath = 'pixel/' + event.soundPath;
+    event.antialiasing = false;
+    event.scale = 6;
+    event.spritePath = switch(event.swagCounter) {
+        case 0: null;
+        case 1: 'stages/school/ui/ready';
+        case 2: 'stages/school/ui/set';
+        case 3: 'stages/school/ui/go';
+    };
 }

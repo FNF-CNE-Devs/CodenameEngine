@@ -1,6 +1,7 @@
 function create() {
     importScript("data/scripts/pixel");
     pixelNotesForBF = false;
+    enablePixelUI = false;
 }
 
 function updatePost(elapsed) {
