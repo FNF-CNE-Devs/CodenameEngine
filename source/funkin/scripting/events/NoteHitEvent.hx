@@ -31,6 +31,10 @@ class NoteHitEvent extends CancellableEvent {
      */
     public var noteType:String;
     /**
+     * Suffix of the animation. "-alt" for alt notes, "" for normal ones.
+     */
+    public var animSuffix:String;
+    /**
      * Direction of the press (0 = Left, 1 = Down, 2 = Up, 3 = Right)
      */
     public var direction:Int;
@@ -46,7 +50,7 @@ class NoteHitEvent extends CancellableEvent {
     /**
      * Creates a new NoteHitEvent.
      */
-    public function new(note:Note, character:Character, player:Bool, noteType:String, direction:Int, healthGain:Float, unmuteVocals:Bool = true, score:Int = 350) {
+    public function new(note:Note, character:Character, player:Bool, noteType:String, direction:Int, healthGain:Float, unmuteVocals:Bool = true, score:Int = 350, animSuffix:String = "") {
         super();
 
         this.note = note;
@@ -57,6 +61,7 @@ class NoteHitEvent extends CancellableEvent {
         this.healthGain = healthGain;
         this.unmuteVocals = unmuteVocals;
         this.score = score;
+        this.animSuffix = animSuffix;
     }
 
     /**

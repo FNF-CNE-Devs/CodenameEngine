@@ -477,7 +477,7 @@ class PlayState extends MusicBeatState
 				else
 					swagNote = null;
 
-				swagNote.nextNote = (swagNote = new Note(daStrumTime, daNoteData % 4, daNoteType, gottaHitNote, swagNote));
+				swagNote.nextNote = (swagNote = new Note(daStrumTime, daNoteData % 4, daNoteType, gottaHitNote, swagNote, false, section.altAnim ? "-alt" : ""));
 				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
 				swagNote.stepLength = stepCrochet;
@@ -490,7 +490,7 @@ class PlayState extends MusicBeatState
 				// create sustains
 				for (susNote in 0...Math.floor(susLength))
 				{
-					swagNote = new Note(daStrumTime + (stepCrochet * susNote), daNoteData % 4, daNoteType, gottaHitNote, swagNote, true);
+					swagNote = new Note(daStrumTime + (stepCrochet * susNote), daNoteData % 4, daNoteType, gottaHitNote, swagNote, true, section.altAnim ? "-alt" : "");
 					swagNote.scrollFactor.set();
 					swagNote.stepLength = stepCrochet;
 					notes.add(swagNote);
@@ -1302,9 +1302,9 @@ class PlayState extends MusicBeatState
 
 			var event:NoteHitEvent;
 			if (note.mustPress)
-				event = scripts.event("onPlayerHit", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004));
+				event = scripts.event("onPlayerHit", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, note.animSuffix));
 			else
-				event = scripts.event("onDadHit", new NoteHitEvent(note, dad, false, note.noteType, note.strumID, 0));
+				event = scripts.event("onDadHit", new NoteHitEvent(note, dad, false, note.noteType, note.strumID, 0, note.animSuffix));
 			
 			if (!event.cancelled) {
 				if (event.player && !note.isSustainNote)
@@ -1316,7 +1316,7 @@ class PlayState extends MusicBeatState
 				health += event.healthGain;
 	
 				if (!event.animCancelled) {
-					event.character.playSingAnim(event.direction);
+					event.character.playSingAnim(event.direction, event.animSuffix);
 				}
 	
 				(event.player ? playerStrums : cpuStrums).forEach(function(str:Strum) {

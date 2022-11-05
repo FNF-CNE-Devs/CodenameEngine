@@ -81,7 +81,6 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 
-		var tex:FlxAtlasFrames;
 		antialiasing = true;
 
 		while(true) {
@@ -117,7 +116,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 					if (xml.has.flipX) flipX = (xml.att.flipX == "true");
 					if (xml.has.icon) icon = xml.att.icon;
 
-					frames = Paths.getSparrowAtlas('characters/$curCharacter');
+					frames = CoolUtil.loadFrames(Paths.image('characters/$curCharacter'));
 					for(anim in xml.nodes.anim) {
 						XMLUtil.addXMLAnimation(this, anim);
 					}
@@ -379,18 +378,17 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		
 		script.call("onPlayAnim", [event]);
 
-		if (event.cancelled || event.animName == null) return;
+		if (event.cancelled || event.animName == null || !animation.exists(event.animName)) return;
 
 		animation.play(event.animName, event.force, event.reverse, event.startingFrame);
 
 		var daOffset = animOffsets.get(event.animName);
 		if (daOffset != null)
-			offset.set(daOffset.x * (isPlayer != playerOffsets ? -1 : 1), daOffset.y);
+			rotOffset.set(daOffset.x * (isPlayer != playerOffsets ? -1 : 1), daOffset.y);
 		else
-			offset.set(0, 0);
+			rotOffset.set(0, 0);
 
-		offset.x += globalOffset.x * (isPlayer != playerOffsets ? 1 : -1);
-		offset.y -= globalOffset.y;
+		offset.set(globalOffset.x * (isPlayer != playerOffsets ? 1 : -1), -globalOffset.y);
 
 		if (event.animName.startsWith("sing"))
 			lastHit = Conductor.songPosition;

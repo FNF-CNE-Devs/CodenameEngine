@@ -66,7 +66,9 @@ class Note extends FlxSprite
 
 	public static var swagWidth:Float = 160 * 0.7;
 
-	public function new(strumTime:Float, noteData:Int, noteType:Int = 0, mustPress:Bool = true, ?prevNote:Note, ?sustainNote:Bool = false)
+	public var animSuffix:String = "";
+
+	public function new(strumTime:Float, noteData:Int, noteType:Int = 0, mustPress:Bool = true, ?prevNote:Note, ?sustainNote:Bool = false, animSuffix:String = "")
 	{
 		super();
 
@@ -85,11 +87,12 @@ class Note extends FlxSprite
 
 		this.noteData = noteData;
 
-		var event = new NoteCreationEvent(this, strumID, this.noteType, noteTypeID, mustPress, "game/NOTE_assets", 0.7);
+		var event = new NoteCreationEvent(this, strumID, this.noteType, noteTypeID, mustPress, "game/NOTE_assets", 0.7, animSuffix);
 
 		if (PlayState.instance != null)
 			event = PlayState.instance.scripts.event("onNoteCreation", event);
 
+		this.animSuffix = event.animSuffix;
 		if (!event.cancelled) {
 			switch (event.noteType)
 			{
