@@ -4,5 +4,4 @@
 # Don't count pages documentation as actual code
 pages/** linguist-vendored
 
-
-*.hx linguist-language=Lua
+* linguist-language=Lua
