@@ -59,6 +59,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "Strum"             => funkin.game.Strum,
             "Character"         => funkin.game.Character,
             "Boyfriend"         => funkin.game.Character, // for compatibility
+            "PauseSubstate"     => funkin.menus.PauseSubState,
             "FreeplayState"     => funkin.menus.FreeplayState,
             "MainMenuState"     => funkin.menus.MainMenuState,
             "PauseSubState"     => funkin.menus.PauseSubState,

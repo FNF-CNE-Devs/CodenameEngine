@@ -153,6 +153,8 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 		instance = this;
+		PauseSubState.script = "";
+
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 

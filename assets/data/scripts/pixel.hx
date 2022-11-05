@@ -1,9 +1,16 @@
+import flixel.FlxCamera.FlxCameraFollowStyle;
+
 public var pixelNotesForBF = true;
 public var pixelNotesForDad = true;
 public var enablePixelUI = true;
+public var enableCameraHacks = true;
+public var enablePauseMenu = true;
 
 var daPixelZoom = 6;
 
+/**
+ * UI
+ */
 function onNoteCreation(event) {
     if (event.note.mustPress && !pixelNotesForBF) return;
     if (!event.note.mustPress && !pixelNotesForDad) return;
@@ -51,4 +58,79 @@ function onCountdown(event) {
         case 2: 'stages/school/ui/set';
         case 3: 'stages/school/ui/go';
     };
+}
+
+/**
+ * CAMERA HACKS!!
+ */
+function createPost() {
+    if (enablePauseMenu) {
+        PauseSubState.script = 'data/scripts/week6-pause';
+    }
+    if (enableCameraHacks) {
+        FlxG.camera.antialiasing = false;
+        FlxG.camera.pixelPerfectRender = true;
+        FlxG.game.stage.quality = 2;
+    
+        var newNoteCamera = new FlxCamera();
+        newNoteCamera.bgColor = 0; // transparent
+        FlxG.cameras.add(newNoteCamera, false);
+    
+        var pixelSwagWidth = Note.swagWidth + (6 - (Note.swagWidth % 6));
+        // TODO: multikey support??
+        for(s in 0...4) {
+            var i = 0;
+            for(str in [cpuStrums.members[s], playerStrums.members[s]]) {
+                // TODO: middlescroll???
+                str.x = (FlxG.width * (0.25 + (0.5 * i))) + (pixelSwagWidth * (s - 2));
+                str.x -= str.x % 6;
+                str.cameras = [newNoteCamera];
+                i++;
+            }
+        }
+        
+        iconP1.antialiasing = false;
+        iconP2.antialiasing = false;
+    
+        makeCameraPixely(camGame);
+        makeCameraPixely(newNoteCamera);
+    }
+}
+
+/**
+ * Use this to make any camera pixelly (you wont be able to zoom with it anymore!)
+ */
+public function makeCameraPixely(cam) {
+    cam.pixelPerfectRender = true;
+    cam.zoom /= Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y) * 6;
+    defaultCamZoom /= 6;
+
+    var shad = new CustomShader('pixelZoomShader');
+    cam.addShader(shad);
+
+    pixellyCameras.push(cam);
+    pixellyShaders.push(shad);
+}
+
+function pixelCam(cam) {
+    makeCameraPixely(cam);
+}
+
+var pixellyCameras = [];
+var pixellyShaders = [];
+
+function updatePost(elapsed) {
+    for(e in pixellyCameras) {
+        if (!e.exists) continue;
+        e.zoom = 1 / 6 / Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y);
+    }
+    for(e in pixellyShaders) {
+        e.pixelZoom = 1 / 6 / Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y);
+    }
+
+    if (enableCameraHacks) {
+        notes.forEach(function(n) {
+            n.y -= n.y % 6;
+        });
+    }
 }

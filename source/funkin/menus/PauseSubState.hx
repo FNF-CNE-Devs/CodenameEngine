@@ -1,5 +1,8 @@
 package funkin.menus;
 
+import funkin.scripting.events.PauseCreationEvent;
+import funkin.scripting.events.PauseSelectOptionEvent;
+import funkin.scripting.Script;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -16,6 +19,8 @@ import funkin.options.keybinds.KeybindsOptions;
 
 class PauseSubState extends MusicBeatSubstate
 {
+	public static var script:String = "";
+
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Change Controls', 'Options','Exit to menu'];
@@ -23,15 +28,32 @@ class PauseSubState extends MusicBeatSubstate
 
 	var pauseMusic:FlxSound;
 
+	public var pauseScript:Script;
+
+	public var game:PlayState = PlayState.instance; // shortcut
+
+	private var __cancelDefault:Bool = false;
+
 	public function new(x:Float, y:Float)
 	{
 		super();
 
-		pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
+		pauseScript = Script.create(Paths.script(script));
+		pauseScript.setParent(this);
+        pauseScript.load();
+
+		var event = new PauseCreationEvent('breakfast', menuItems);
+		pauseScript.call('create', [event]);
+
+		menuItems = event.options;
+
+
+		pauseMusic = new FlxSound().loadEmbedded(Paths.music(event.music), true, true);
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
-
 		FlxG.sound.list.add(pauseMusic);
+
+		if (__cancelDefault = event.cancelled) return;
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
@@ -74,56 +96,58 @@ class PauseSubState extends MusicBeatSubstate
 		changeSelection();
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+
+		pauseScript.call("createPost");
 	}
 
 	override function update(elapsed:Float)
 	{
+		super.update(elapsed);
+
 		if (pauseMusic.volume < 0.5)
 			pauseMusic.volume += 0.01 * elapsed;
 
-		super.update(elapsed);
+		pauseScript.call("update", [elapsed]);
+
+		if (__cancelDefault) return;
 
 		var upP = controls.UP_P;
 		var downP = controls.DOWN_P;
 		var accepted = controls.ACCEPT;
 
 		if (upP)
-		{
 			changeSelection(-1);
-		}
 		if (downP)
-		{
 			changeSelection(1);
-		}
-
 		if (accepted)
-		{
-			var daSelected:String = menuItems[curSelected];
-
-			switch (daSelected)
-			{
-				case "Resume":
-					close();
-				case "Restart Song":
-					FlxG.resetState();
-				case "Change Controls":
-					persistentDraw = false;
-					openSubState(new KeybindsOptions());
-				case "Exit to menu":
-					FlxG.switchState(new MainMenuState());
-			}
-		}
-
-		if (FlxG.keys.justPressed.J)
-		{
-			// for reference later!
-			// PlayerSettings.player1.controls.replaceBinding(Control.LEFT, Keys, FlxKey.J, null);
-		}
+			selectOption();
 	}
 
+	public function selectOption() {
+		var event = new PauseSelectOptionEvent(menuItems[curSelected]);
+		pauseScript.call("onSelectOption", [event]);
+
+		if (event.cancelled) return;
+
+		var daSelected:String = event.name;
+
+		switch (daSelected)
+		{
+			case "Resume":
+				close();
+			case "Restart Song":
+				FlxG.resetState();
+			case "Change Controls":
+				persistentDraw = false;
+				openSubState(new KeybindsOptions());
+			case "Exit to menu":
+				FlxG.switchState(new MainMenuState());
+		}
+	}
 	override function destroy()
 	{
-		pauseMusic.destroy();
+		pauseScript.call("destroy");
+		if (pauseMusic != null) pauseMusic.destroy();
 
 		super.destroy();
 	}

@@ -20,6 +20,19 @@ class ScriptPack extends Script {
         super(name);
     }
 
+    public function getByPath(name:String) {
+        for(s in scripts)
+            if (s.path == name)
+                return s;
+        return null;
+    }
+
+    public function getByName(name:String) {
+        for(s in scripts)
+            if (s.fileName == name)
+                return s;
+        return null;
+    }
     public function importScript(path:String):Script {
         var script = Script.create(Paths.script(path));
         if (script is DummyScript) {
