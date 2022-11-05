@@ -110,7 +110,9 @@ class Main extends Sprite
 		
 		// TODO: Mod switching
 		ModsFolder.init();
+		#if MOD_SUPPORT
 		ModsFolder.switchMod("introMod");
+		#end
 		
 		#if GLOBAL_SCRIPT
 		funkin.scripting.GlobalScript.init();

@@ -49,6 +49,7 @@ class ModsFolder {
      * @param force Whenever the mod should be reloaded if it has already been loaded
      */
     public static function loadMod(mod:String, force:Bool = false) {
+        #if MOD_SUPPORT
         if (mod == null) return null; // may be loading base game
 
         if (FileSystem.exists('${modsPath}$mod.zip')) {
@@ -60,6 +61,9 @@ class ModsFolder {
             loadedMods.push(mod);
             return e;
         }
+        #else
+        return null;
+        #end
     }
 
     /**

@@ -8,6 +8,8 @@ import funkin.windows.WindowsAPI.ConsoleColor;
 
 class Logs {
     private static var __showing:Bool = false;
+
+    public static var nativeTrace = Log.trace;
     public static function init() {
 
         Log.trace = function(v : Dynamic, ?infos : Null<haxe.PosInfos>) {
@@ -79,7 +81,8 @@ class Logs {
         Sys.print("\r\n");
         __showing = false;
         #else
-        trace(text);
+        @:privateAccess
+        nativeTrace([for(t in text) t.text].join(""));
         #end
     }
 

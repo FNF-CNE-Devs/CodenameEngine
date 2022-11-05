@@ -175,7 +175,7 @@ class Paths
 		
 		if (!key.endsWith("/")) key = key + "/";
 
-		if (ModsFolder.currentModFolder == null)
+		if (ModsFolder.currentModFolder == null && !scanSource)
 			return getFolderContent(key, false, addPath, true);
 
 		var folderPath:String = scanSource ? getPreloadPath(key) : getLibraryPathForce(key, 'mods/${ModsFolder.currentModFolder}');
