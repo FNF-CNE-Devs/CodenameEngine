@@ -384,7 +384,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 		var daOffset = animOffsets.get(event.animName);
 		if (daOffset != null)
-			rotOffset.set(daOffset.x * (isPlayer != playerOffsets ? -1 : 1), daOffset.y);
+			rotOffset.set(daOffset.x, daOffset.y);
 		else
 			rotOffset.set(0, 0);
 
