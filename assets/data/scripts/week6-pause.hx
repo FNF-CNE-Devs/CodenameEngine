@@ -100,7 +100,7 @@ function update(elapsed) {
 
     if (controls.ACCEPT) {
         FlxG.sound.play(Paths.sound('pixel/clickText'));
-        var option = menuItems[curSelected]
+        var option = menuItems[curSelected];
         if (option == "Resume" || option == "Exit to menu") {
             canDoShit = false;
             for(t in texts) t.visible = false;

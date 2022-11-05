@@ -384,7 +384,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0, Context:PlayAnimContext = NONE):Void
 	{
-		var event = new PlayAnimEvent(AnimName, Force, Reversed, Frame);
+		var event = new PlayAnimEvent(AnimName, Force, Reversed, Frame, Context);
 		
 		script.call("onPlayAnim", [event]);
 
@@ -400,7 +400,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 		offset.set(globalOffset.x * (isPlayer != playerOffsets ? 1 : -1), -globalOffset.y);
 
-		if (event.animName.startsWith("sing"))
+		if (event.context != DANCE)
 			lastHit = Conductor.songPosition;
 		
 		if (curCharacter == 'gf')

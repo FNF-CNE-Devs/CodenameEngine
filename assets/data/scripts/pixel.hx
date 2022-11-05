@@ -1,5 +1,3 @@
-import flixel.FlxCamera.FlxCameraFollowStyle;
-
 public var pixelNotesForBF = true;
 public var pixelNotesForDad = true;
 public var enablePixelUI = true;

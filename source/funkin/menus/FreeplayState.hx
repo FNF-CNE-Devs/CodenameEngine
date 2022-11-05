@@ -161,7 +161,7 @@ class FreeplayState extends MusicBeatState
 	{
 		super.update(elapsed);
 
-		if (FlxG.sound.music.volume < 0.7)
+		if (FlxG.sound.music != null && FlxG.sound.music.volume < 0.7)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
@@ -336,7 +336,7 @@ class SongMetadata
 		if (difficulties != null && difficulties.length > 0) {
 			this.difficulties = difficulties;
 		} else {
-			this.difficulties = difficulties = [for(f in Paths.getFolderContent('data/charts/${song}/')) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
+			this.difficulties = difficulties = [for(f in Paths.getFolderContent('data/charts/${song}/', false)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
 			if (difficulties.length == 3) {
 				var hasHard = false, hasNormal = false, hasEasy = false;
 				for(d in difficulties) {

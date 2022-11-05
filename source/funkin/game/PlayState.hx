@@ -720,7 +720,7 @@ class PlayState extends MusicBeatState
 		// TODO: Cancellable Discord Update Presence
 		#if desktop
 		// Song duration in a float, useful for the time left feature
-		songLength = FlxG.sound.music.length;
+		songLength = inst.length;
 
 		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC, true, songLength);

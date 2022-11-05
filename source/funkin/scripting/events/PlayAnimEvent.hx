@@ -26,12 +26,13 @@ class PlayAnimEvent extends CancellableEvent {
     **/
     public var context:PlayAnimContext;
 
-    public function new(animName:String, force:Bool, reverse:Bool, startingFrame:Int) {
+    public function new(animName:String, force:Bool, reverse:Bool, startingFrame:Int, context:PlayAnimContext) {
         super();
         this.animName = animName;
         this.force = force;
         this.reverse = reverse;
         this.startingFrame = startingFrame;
+        this.context = context;
     }
 }
 
@@ -49,6 +50,11 @@ abstract PlayAnimContext(String) {
         Whenever a note is hit and a sing animation will be played.
     **/
     var SING = "SING";
+
+    /**
+        Whenever a dance animation is played.
+    **/
+    var DANCE = "DANCE";
 
     /**
         Whenever a note is missed and a miss animation will be played.
