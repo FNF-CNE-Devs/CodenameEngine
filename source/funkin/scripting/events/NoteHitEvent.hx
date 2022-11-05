@@ -15,6 +15,14 @@ class NoteHitEvent extends CancellableEvent {
     **/
     public var misses:Bool = true;
     /**
+        Whenever a miss should be added.
+    **/
+    public var countAsCombo:Bool = true;
+    /**
+        Whenever ratings should be shown or not.
+    **/
+    public var showRating:Null<Bool> = null;
+    /**
      * Note that has been pressed
      */
     public var note:Note;
@@ -23,7 +31,7 @@ class NoteHitEvent extends CancellableEvent {
      */
     public var character:Character;
     /**
-     * Whenever the Character is the player
+     * Whenever the Character is a player
      */
     public var player:Bool;
     /**
@@ -35,6 +43,14 @@ class NoteHitEvent extends CancellableEvent {
      */
     public var animSuffix:String;
     /**
+     * Prefix of the rating sprite path. Defaults to "game/score/"
+     */
+    public var ratingPrefix:String;
+    /**
+     * Suffix of the rating sprite path.
+     */
+    public var ratingSuffix:String;
+    /**
      * Direction of the press (0 = Left, 1 = Down, 2 = Up, 3 = Right)
      */
     public var direction:Int;
@@ -43,14 +59,41 @@ class NoteHitEvent extends CancellableEvent {
      */
     public var score:Int;
     /**
+     * Accuracy gained from pressing this note. From 0 to 1. null means no accuracy is gained.
+     */
+    public var accuracy:Null<Float>;
+    /**
      * The amount of health that'll be gained from pressing that note. If called from `onNoteMiss`, the value will be negative.
      */
     public var healthGain:Float;
+    /**
+     * Rating name. Defaults to "sick", "good", "bad" and "shit". Customisable.
+     */
+    public var rating:String = "sick";
+    /**
+     * Scale of ratings.
+     */
+    public var ratingScale:Float = 0.7;
+    /**
+     * Whenever antialiasing should be enabled on ratings.
+     */
+    public var ratingAntialiasing:Bool = true;
+    /**
+     * Scale of combo numbers.
+     */
+    public var numScale:Float = 0.5;
+    /**
+     * Whenever antialiasing should be enabled on combo number.
+     */
+    public var numAntialiasing:Bool = true;
 
     /**
      * Creates a new NoteHitEvent.
      */
-    public function new(note:Note, character:Character, player:Bool, noteType:String, direction:Int, healthGain:Float, unmuteVocals:Bool = true, score:Int = 350, animSuffix:String = "") {
+    public function new(note:Note, character:Character, player:Bool, noteType:String,
+        direction:Int, healthGain:Float, unmuteVocals:Bool = true, score:Int = 350,
+        animSuffix:String = "", rating:String = "sick", accuracy:Null<Float> = 1, ratingPrefix:String = "",
+        ratingSuffix:String = "") {
         super();
 
         this.note = note;
@@ -62,6 +105,11 @@ class NoteHitEvent extends CancellableEvent {
         this.unmuteVocals = unmuteVocals;
         this.score = score;
         this.animSuffix = animSuffix;
+        this.countAsCombo = !note.isSustainNote && note.mustPress;
+        this.rating = rating;
+        this.accuracy = accuracy;
+        this.ratingPrefix = ratingPrefix;
+        this.ratingSuffix = ratingSuffix;
     }
 
     /**

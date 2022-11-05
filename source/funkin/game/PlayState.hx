@@ -93,7 +93,7 @@ class PlayState extends MusicBeatState
 	public var notes:NoteGroup;
 
 	public var strumLine:FlxSprite;
-	public var curSection:Int = 0;
+	public var ratingNum:Int = 0;
 
 	public var camFollow:FlxObject;
 
@@ -1073,144 +1073,6 @@ class PlayState extends MusicBeatState
 
 	public var comboGroup:FlxSpriteGroup;
 
-	private function popUpScore(strumtime:Float, score:Int = 350):Void
-	{
-		var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
-		vocals.volume = 1;
-
-		var placement:String = Std.string(combo);
-		//
-
-		var rating:FlxSprite = new FlxSprite(-40, -60);
-
-		var daRating:String = "sick";
-
-		if (noteDiff > Conductor.safeZoneOffset * 0.9)
-		{
-			daRating = 'shit';
-			score = 50;
-		}
-		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
-		{
-			daRating = 'bad';
-			score = 100;
-		}
-		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
-		{
-			daRating = 'good';
-			score = 200;
-		}
-
-		songScore += score;
-
-		/* if (combo > 60)
-				daRating = 'sick';
-			else if (combo > 12)
-				daRating = 'good'
-			else if (combo > 4)
-				daRating = 'bad';
-		 */
-
-		var prefix:String = "";
-		var suffix:String = '';
-
-		if (curStage.startsWith('school'))
-		{
-			prefix = 'weeb/pixelUI/';
-			suffix = '-pixel';
-		}
-
-		rating.loadGraphic(Paths.image('game/score/$prefix$daRating$suffix'));
-		rating.acceleration.y = 550;
-		rating.velocity.y -= FlxG.random.int(140, 175);
-		rating.velocity.x -= FlxG.random.int(0, 10);
-
-		var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('game/score/${prefix}combo$suffix'));
-		comboSpr.acceleration.y = 600;
-		comboSpr.velocity.y -= 150;
-		comboSpr.velocity.x += FlxG.random.int(1, 10);
-
-		comboGroup.add(comboSpr);
-		comboGroup.add(rating);
-
-		if (!curStage.startsWith('school'))
-		{
-			rating.scale.set(0.7, 0.7);
-			rating.antialiasing = true;
-			comboSpr.scale.set(0.7, 0.7);
-			comboSpr.antialiasing = true;
-		}
-		else
-		{
-			rating.setGraphicSize(Std.int(rating.width * daPixelZoom * 0.7));
-			comboSpr.setGraphicSize(Std.int(comboSpr.width * daPixelZoom * 0.7));
-		}
-
-		comboSpr.updateHitbox();
-		rating.updateHitbox();
-
-		var separatedScore:String = Std.string(combo).addZeros(3);
-
-
-		for (i in 0...separatedScore.length)
-		{
-			if (combo < 10 && combo != 0)
-				break;
-
-			var e = separatedScore.charAt(i);
-
-			var numScore:FlxSprite = new FlxSprite((43 * i) - 90, 80).loadGraphic(Paths.image('game/${prefix}score/num$e$suffix'));
-
-			if (!curStage.startsWith('school'))
-			{
-				numScore.antialiasing = true;
-				numScore.setGraphicSize(Std.int(numScore.width * 0.5));
-			}
-			else
-			{
-				numScore.setGraphicSize(Std.int(numScore.width * daPixelZoom));
-			}
-			numScore.updateHitbox();
-
-			numScore.acceleration.y = FlxG.random.int(200, 300);
-			numScore.velocity.y -= FlxG.random.int(140, 160);
-			numScore.velocity.x = FlxG.random.float(-5, 5);
-
-			comboGroup.add(numScore);
-
-			FlxTween.tween(numScore, {alpha: 0}, 0.2, {
-				onComplete: function(tween:FlxTween)
-				{
-					comboGroup.remove(numScore, true);
-					numScore.destroy();
-				},
-				startDelay: Conductor.crochet * 0.002
-			});
-		}
-		/* 
-			trace(combo);
-			trace(separatedScore);
-		 */
-
-		FlxTween.tween(rating, {alpha: 0}, 0.2, {
-			startDelay: Conductor.crochet * 0.001
-		});
-
-		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
-			onComplete: function(tween:FlxTween)
-			{
-				comboGroup.remove(comboSpr, true);
-				comboGroup.remove(rating, true);
-				comboSpr.destroy();
-
-				rating.destroy();
-			},
-			startDelay: Conductor.crochet * 0.001
-		});
-
-		curSection += 1;
-	}
-
 	private function keyShit():Void
 	{
 		var pressed = [controls.NOTE_LEFT, controls.NOTE_DOWN, controls.NOTE_UP, controls.NOTE_RIGHT];
@@ -1307,18 +1169,118 @@ class PlayState extends MusicBeatState
 		if (!note.wasGoodHit)
 		{
 			note.wasGoodHit = true;
+			
+			/**
+			 * CALCULATES RATING
+			 */
+			var noteDiff = Math.abs(Conductor.songPosition - note.strumTime);
+			var daRating:String = "sick";
+			var score:Int = 300;
+			var accuracy:Float = 1;
+	
+			if (noteDiff > Conductor.safeZoneOffset * 0.9)
+			{
+				daRating = 'shit';
+				score = 50;
+				accuracy = 0.25;
+			}
+			else if (noteDiff > Conductor.safeZoneOffset * 0.75)
+			{
+				daRating = 'bad';
+				score = 100;
+				accuracy = 0.45;
+			}
+			else if (noteDiff > Conductor.safeZoneOffset * 0.2)
+			{
+				daRating = 'good';
+				score = 200;
+				accuracy = 0.75;
+			}
 
 			var event:NoteHitEvent;
 			if (note.mustPress)
-				event = scripts.event("onPlayerHit", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, note.animSuffix));
+				event = scripts.event("onPlayerHit", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, score, note.animSuffix, daRating, accuracy, "game/score/", ''));
 			else
-				event = scripts.event("onDadHit", new NoteHitEvent(note, dad, false, note.noteType, note.strumID, 0, note.animSuffix));
+				event = scripts.event("onDadHit", new NoteHitEvent(note, dad, false, note.noteType, note.strumID, 0, 0, note.animSuffix, daRating, null, "game/score/", ''));
 			
 			if (!event.cancelled) {
-				if (event.player && !note.isSustainNote)
+				if (event.countAsCombo) combo++;
+
+				if (event.showRating || (event.showRating == null && event.player && !note.isSustainNote))
 				{
-					combo++;
-					popUpScore(note.strumTime, event.score);
+					var rating:FlxSprite = new FlxSprite(-40, -60);
+			
+					songScore += score;
+			
+					rating.loadGraphic(Paths.image('${event.ratingPrefix}$daRating${event.ratingSuffix}'));
+					rating.acceleration.y = 550;
+					rating.velocity.y -= FlxG.random.int(140, 175);
+					rating.velocity.x -= FlxG.random.int(0, 10);
+			
+					var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('${event.ratingPrefix}combo${event.ratingSuffix}'));
+					comboSpr.acceleration.y = 600;
+					comboSpr.velocity.y -= 150;
+					comboSpr.velocity.x += FlxG.random.int(1, 10);
+			
+					comboGroup.add(comboSpr);
+					comboGroup.add(rating);
+			
+					rating.scale.set(event.ratingScale, event.ratingScale);
+					rating.antialiasing = event.ratingAntialiasing;
+					comboSpr.scale.set(event.ratingScale, event.ratingScale);
+					comboSpr.antialiasing = event.ratingAntialiasing;
+			
+					comboSpr.updateHitbox();
+					rating.updateHitbox();
+			
+					var separatedScore:String = Std.string(combo).addZeros(3);
+			
+			
+					for (i in 0...separatedScore.length)
+					{
+						if (combo < 10 && combo != 0)
+							break;
+			
+						var e = separatedScore.charAt(i);
+			
+						var numScore:FlxSprite = new FlxSprite((43 * i) - 90, 80).loadGraphic(Paths.image('${event.ratingPrefix}num$e${event.ratingSuffix}'));
+						numScore.antialiasing = event.numAntialiasing;
+						numScore.scale.set(event.numScale, event.numScale);
+						numScore.updateHitbox();
+			
+						numScore.acceleration.y = FlxG.random.int(200, 300);
+						numScore.velocity.y -= FlxG.random.int(140, 160);
+						numScore.velocity.x = FlxG.random.float(-5, 5);
+			
+						comboGroup.add(numScore);
+			
+						FlxTween.tween(numScore, {alpha: 0}, 0.2, {
+							onComplete: function(tween:FlxTween)
+							{
+								comboGroup.remove(numScore, true);
+								numScore.destroy();
+							},
+							startDelay: Conductor.crochet * 0.002
+						});
+					}
+			
+					FlxTween.tween(rating, {alpha: 0}, 0.2, {
+						startDelay: Conductor.crochet * 0.001
+					});
+			
+					FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
+						onComplete: function(tween:FlxTween)
+						{
+							comboGroup.remove(comboSpr, true);
+							comboGroup.remove(rating, true);
+							comboSpr.destroy();
+			
+							rating.destroy();
+						},
+						startDelay: Conductor.crochet * 0.001
+					});
+			
+					ratingNum += 1;
 				}
 
 				health += event.healthGain;

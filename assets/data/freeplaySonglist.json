@@ -2,6 +2,10 @@
     "addOGSongs": false,
     "songs": [
         {
+            "name": "test",
+            "icon": "bf"
+        },
+        {
             "name": "Tutorial",
             "icon": "gf",
             "color": "#9271FD"

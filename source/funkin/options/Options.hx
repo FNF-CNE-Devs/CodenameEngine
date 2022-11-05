@@ -21,6 +21,7 @@ class Options
 	public static var fpsCounter:Bool = true;
 	public static var autoPause:Bool = true;
 	public static var antialiasing:Bool = true;
+	public static var volume:Float = 1;
 
 	/**
 	 * PLAYER 1 CONTROLS
@@ -167,9 +168,11 @@ class Options
 		PlayerSettings.player1.setKeyboardScheme(Solo);
 		FlxG.forceNoAntialiasing = !antialiasing;
 		FlxG.autoPause = autoPause;
+		FlxG.sound.volume = volume;
 	}
 
 	public static function save() {
+		volume = FlxG.sound.volume;
 		for(field in Type.getClassFields(Options)) {
 			var obj = Reflect.field(Options, field);
 			if (Reflect.isFunction(obj) || obj is FlxSave) continue;

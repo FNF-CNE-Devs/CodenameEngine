@@ -1,10 +1,12 @@
+import funkin.scripting.events.NoteHitEvent;
+
 public var pixelNotesForBF = true;
 public var pixelNotesForDad = true;
 public var enablePixelUI = true;
 public var enableCameraHacks = true;
 public var enablePauseMenu = true;
 
-var daPixelZoom = 6;
+static var daPixelZoom = 6;
 
 /**
  * UI
@@ -49,13 +51,23 @@ function onCountdown(event) {
 
     if (event.soundPath != null) event.soundPath = 'pixel/' + event.soundPath;
     event.antialiasing = false;
-    event.scale = 6;
+    event.scale = daPixelZoom;
     event.spritePath = switch(event.swagCounter) {
         case 0: null;
         case 1: 'stages/school/ui/ready';
         case 2: 'stages/school/ui/set';
         case 3: 'stages/school/ui/go';
     };
+}
+
+function onPlayerHit(event:NoteHitEvent) {
+    if (!enablePixelUI) return;
+    event.ratingPrefix = "stages/school/ui/";
+    event.ratingScale = daPixelZoom * 0.7;
+    event.ratingAntialiasing = false;
+
+    event.numScale = daPixelZoom;
+    event.numAntialiasing = false;
 }
 
 /**
@@ -74,14 +86,14 @@ function createPost() {
         newNoteCamera.bgColor = 0; // transparent
         FlxG.cameras.add(newNoteCamera, false);
     
-        var pixelSwagWidth = Note.swagWidth + (6 - (Note.swagWidth % 6));
+        var pixelSwagWidth = Note.swagWidth + (daPixelZoom - (Note.swagWidth % daPixelZoom));
         // TODO: multikey support??
         for(s in 0...4) {
             var i = 0;
             for(str in [cpuStrums.members[s], playerStrums.members[s]]) {
                 // TODO: middlescroll???
                 str.x = (FlxG.width * (0.25 + (0.5 * i))) + (pixelSwagWidth * (s - 2));
-                str.x -= str.x % 6;
+                str.x -= str.x % daPixelZoom;
                 str.cameras = [newNoteCamera];
                 i++;
             }
@@ -92,6 +104,7 @@ function createPost() {
     
         makeCameraPixely(camGame);
         makeCameraPixely(newNoteCamera);
+        defaultCamZoom /= daPixelZoom;
     }
 }
 
@@ -100,8 +113,7 @@ function createPost() {
  */
 public function makeCameraPixely(cam) {
     cam.pixelPerfectRender = true;
-    cam.zoom /= Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y) * 6;
-    defaultCamZoom /= 6;
+    cam.zoom /= Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y) * daPixelZoom;
 
     var shad = new CustomShader('pixelZoomShader');
     cam.addShader(shad);
@@ -120,15 +132,15 @@ var pixellyShaders = [];
 function updatePost(elapsed) {
     for(e in pixellyCameras) {
         if (!e.exists) continue;
-        e.zoom = 1 / 6 / Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y);
+        e.zoom = 1 / daPixelZoom / Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y);
     }
     for(e in pixellyShaders) {
-        e.pixelZoom = 1 / 6 / Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y);
+        e.pixelZoom = 1 / daPixelZoom / Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y);
     }
 
     if (enableCameraHacks) {
         notes.forEach(function(n) {
-            n.y -= n.y % 6;
+            n.y -= n.y % daPixelZoom;
         });
     }
 }

@@ -273,7 +273,7 @@ class FreeplaySonglist {
 
     }
 
-    private function _addJSONSongs(songs:Array<FreeplaySong>) {
+    private function _addJSONSongs(songs:Array<FreeplaySong>, source:Bool = false) {
         if (songs != null && songs is Array) {
             for(e in songs) {
                 if (e is Dynamic) {
@@ -283,7 +283,7 @@ class FreeplaySonglist {
 
                     this.songs.push(new SongMetadata(e.name,
                         e.icon.getDefault("bf"),
-                        CoolUtil.getColorFromDynamic(e.color).getDefault(FreeplayState.defaultColor), e.difficulties));
+                        CoolUtil.getColorFromDynamic(e.color).getDefault(FreeplayState.defaultColor), e.difficulties, source));
                 }
             }
         }
@@ -298,10 +298,10 @@ class FreeplaySonglist {
         try {
             var json:FreeplayJSON = Json.parse(Assets.getText(jsonPath));
             var addOGSongs = CoolUtil.getDefault(json.addOGSongs, true);
-            songList._addJSONSongs(json.songs);
+            songList._addJSONSongs(json.songs, jsonPath == baseJsonPath);
             if (addOGSongs && (jsonPath != baseJsonPath)) {
                 var json:FreeplayJSON = Json.parse(Assets.getText(baseJsonPath));
-                songList._addJSONSongs(json.songs);
+                songList._addJSONSongs(json.songs, true);
             }
         }
 
@@ -328,7 +328,7 @@ class SongMetadata
 	public var songCharacter:String = "";
 	public var difficulties:Array<String> = ["EASY", "NORMAL", "HARD"];
 
-	public function new(song:String, songCharacter:String, color:FlxColor, ?difficulties:Array<String>)
+	public function new(song:String, songCharacter:String, color:FlxColor, ?difficulties:Array<String>, fromSource:Bool = false)
 	{
 		this.songName = song;
 		this.color = color;
@@ -336,7 +336,7 @@ class SongMetadata
 		if (difficulties != null && difficulties.length > 0) {
 			this.difficulties = difficulties;
 		} else {
-			this.difficulties = difficulties = [for(f in Paths.getFolderContent('data/charts/${song}/', false)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
+			this.difficulties = difficulties = [for(f in Paths.getFolderContent('data/charts/${song}/', false, false, fromSource)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
 			if (difficulties.length == 3) {
 				var hasHard = false, hasNormal = false, hasEasy = false;
 				for(d in difficulties) {
