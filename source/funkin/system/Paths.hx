@@ -34,6 +34,10 @@ class Paths
 		return getPreloadPath(file);
 	}
 
+	static public function video(key:String) {
+		return getPath('videos/$key.mp4', BINARY, null);
+	}
+
 	static public function getLibraryPath(file:String, library = "preload")
 	{
 		return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);

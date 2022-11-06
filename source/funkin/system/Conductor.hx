@@ -84,7 +84,7 @@ class Conductor
 	@:dox(hide) public function new() {}
 
 	public static function reset() {
-		songPosition = lastSongPos = 0;
+		songPosition = lastSongPos = curBeatFloat = curStepFloat = curBeat = curStep = 0;
 		bpmChangeMap = [];
 		changeBPM(0);
 	}
@@ -135,7 +135,7 @@ class Conductor
 		if (FlxG.state != null && FlxG.state is MusicBeatState && cast(FlxG.state, MusicBeatState).cancelConductorUpdate) return;
 		if (lastSongPos != (lastSongPos = FlxG.sound.music.time)) {
 			// update conductor
-			songPosition = FlxG.sound.music.time;
+			songPosition = lastSongPos;
 		} else {
 			songPosition += elapsed * 1000;
 		}

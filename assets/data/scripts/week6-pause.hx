@@ -110,7 +110,7 @@ function update(elapsed) {
         if (option == "Resume" || option == "Exit to menu") {
             canDoShit = false;
             for(t in texts) t.visible = false;
-            songText.visible = false;
+            hand.visible = songText.visible = false;
             FlxTween.tween(bg, {"scale.y": 0}, 0.125, {ease: FlxEase.cubeOut, onComplete: function() {
                 selectOption();
             }});

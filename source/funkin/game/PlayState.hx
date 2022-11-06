@@ -53,6 +53,7 @@ import funkin.system.Conductor;
 import funkin.system.Song;
 import funkin.editors.ChartingState;
 import funkin.debug.AnimationDebug;
+import funkin.cutscenes.*;
 
 import funkin.menus.*;
 import funkin.scripting.events.*;
@@ -323,9 +324,25 @@ class PlayState extends MusicBeatState
 		super.create();
 	}
 
+	// PATH TO STRING CUTSCENE
+	public var cutscene:String = null;
 	public override function createPost() {
+
+		var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-cutscene');
+		trace(videoCutscene);
+
+		FlxTransitionableState.skipNextTransIn = true;
+		if (cutscene != null) {
+			// TODO: Script cutscenes
+		} else if (Assets.exists(videoCutscene)) {
+			openSubState(new VideoCutscene(videoCutscene));
+			persistentUpdate = false;
+			persistentDraw = false;
+		} else {
+			FlxTransitionableState.skipNextTransIn = false;
+			startCountdown();
+		}
 		super.createPost();
-		startCountdown();
 		scripts.call("createPost");
 	}
 
@@ -333,7 +350,7 @@ class PlayState extends MusicBeatState
 	public var perfectMode:Bool = false;
 	public var introLength:Int = 5;
 
-	function startCountdown():Void
+	public function startCountdown():Void
 	{
 
 		inCutscene = false;

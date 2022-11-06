@@ -16,7 +16,7 @@
     <sprite name="tankGround" x="-420" y="-150" sprite="tankGround" scale="1.15" updateHitbox="true"/>
 
     <!-- CHARACTERS -->
-    <girlfriend x="370" y="-70"/>
+    <girlfriend x="230" y="55"/>
     <dad x="20" y="160"/>
     <boyfriend x="810"/>
 

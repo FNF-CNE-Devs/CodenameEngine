@@ -82,31 +82,33 @@ function createPost() {
         FlxG.camera.antialiasing = false;
         FlxG.camera.pixelPerfectRender = true;
         FlxG.game.stage.quality = 2;
-    
-        var newNoteCamera = new FlxCamera();
-        newNoteCamera.bgColor = 0; // transparent
-        FlxG.cameras.add(newNoteCamera, false);
-    
-        var pixelSwagWidth = Note.swagWidth + (daPixelZoom - (Note.swagWidth % daPixelZoom));
-        // TODO: multikey support??
-        for(s in 0...4) {
-            var i = 0;
-            for(str in [cpuStrums.members[s], playerStrums.members[s]]) {
-                // TODO: middlescroll???
-                str.x = (FlxG.width * (0.25 + (0.5 * i))) + (pixelSwagWidth * (s - 2));
-                str.x -= str.x % daPixelZoom;
-                str.cameras = [newNoteCamera];
-                i++;
-            }
-        }
         
         iconP1.antialiasing = false;
         iconP2.antialiasing = false;
     
         makeCameraPixely(camGame);
-        makeCameraPixely(newNoteCamera);
         defaultCamZoom /= daPixelZoom;
     }
+}
+
+function onStartCountdown() {
+    var newNoteCamera = new FlxCamera();
+    newNoteCamera.bgColor = 0; // transparent
+    FlxG.cameras.add(newNoteCamera, false);
+
+    var pixelSwagWidth = Note.swagWidth + (daPixelZoom - (Note.swagWidth % daPixelZoom));
+    // TODO: multikey support??
+    for(s in 0...4) {
+        var i = 0;
+        for(str in [cpuStrums.members[s], playerStrums.members[s]]) {
+            // TODO: middlescroll???
+            str.x = (FlxG.width * (0.25 + (0.5 * i))) + (pixelSwagWidth * (s - 2));
+            str.x -= str.x % daPixelZoom;
+            str.cameras = [newNoteCamera];
+            i++;
+        }
+    }
+    makeCameraPixely(newNoteCamera);
 }
 
 /**
@@ -131,17 +133,18 @@ var pixellyCameras = [];
 var pixellyShaders = [];
 
 function updatePost(elapsed) {
+
+    if (enableCameraHacks) {
+        notes.forEach(function(n) {
+            n.y -= n.y % daPixelZoom;
+        });
+    }
+    
     for(e in pixellyCameras) {
         if (!e.exists) continue;
         e.zoom = 1 / daPixelZoom / Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y);
     }
     for(e in pixellyShaders) {
         e.pixelZoom = 1 / daPixelZoom / Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y);
-    }
-
-    if (enableCameraHacks) {
-        notes.forEach(function(n) {
-            n.y -= n.y % daPixelZoom;
-        });
     }
 }
