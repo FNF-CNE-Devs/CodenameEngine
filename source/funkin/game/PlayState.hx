@@ -93,7 +93,7 @@ class PlayState extends MusicBeatState
 
 	public var notes:NoteGroup;
 
-	public var strumLine:FlxSprite;
+	public var strumLine:FlxObject;
 	public var ratingNum:Int = 0;
 
 	public var camFollow:FlxObject;
@@ -259,7 +259,7 @@ class PlayState extends MusicBeatState
 		
 
 
-		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
+		strumLine = new FlxObject(0, 50, FlxG.width, 10);
 		strumLine.scrollFactor.set();
 
 		strumLineNotes = new FlxTypedGroup<Strum>();
