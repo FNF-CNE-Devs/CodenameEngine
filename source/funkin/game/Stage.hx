@@ -86,7 +86,9 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         if (node.has.beatAnim && node.att.beatAnim.trim() != "") spr.beatAnims = [for(e in node.att.beatAnim.split(",")) e.trim()];
                         
                         if (node.has.anim) {
-                            spr.animation.play(node.att.anim);   
+                            spr.animation.play(node.att.anim, true);   
+                        } else if (spr.beatAnims.length > 0) {
+                            spr.animation.play(spr.beatAnims[0], true);
                         }
     
                         stageSprites.set(node.att.name, spr);

@@ -329,7 +329,6 @@ class PlayState extends MusicBeatState
 	public override function createPost() {
 
 		var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-cutscene');
-		trace(videoCutscene);
 
 		FlxTransitionableState.skipNextTransIn = true;
 		if (cutscene != null) {
