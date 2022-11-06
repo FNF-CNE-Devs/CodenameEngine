@@ -8,6 +8,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 class NoteGroup extends FlxTypedGroup<Note> {
     var __loopSprite:Note;
     var i:Int = 0;
+    var __currentlyLooping:Bool = false;
 
     public function addNotes(notes:Array<Note>) {
         for(e in notes) add(e);
@@ -39,6 +40,8 @@ class NoteGroup extends FlxTypedGroup<Note> {
         i = 0;
         __loopSprite = null;
 
+        var oldCur = __currentlyLooping;
+        __currentlyLooping = true;
         while(i < length) {
             __loopSprite = members[i];
             if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.visible) continue;
@@ -46,6 +49,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
             __loopSprite.draw();
             i++;
         }
+        __currentlyLooping = oldCur;
 
         @:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
     }
@@ -53,6 +57,9 @@ class NoteGroup extends FlxTypedGroup<Note> {
     public override function forEach(noteFunc:Note->Void, recursive:Bool = false) {
         i = 0;
         __loopSprite = null;
+        
+        var oldCur = __currentlyLooping;
+        __currentlyLooping = true;
 
         while(i < length) {
             __loopSprite = members[i];
@@ -61,6 +68,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
             noteFunc(__loopSprite);
             i++;
         }
+        __currentlyLooping = oldCur;
     }
     public override function forEachAlive(noteFunc:Note->Void, recursive:Bool = false) {
         forEach(function(note) {
@@ -68,4 +76,31 @@ class NoteGroup extends FlxTypedGroup<Note> {
         }, recursive);
     }
     
+    public override function remove(Object:Note, Splice:Bool = false):Note
+    {
+        if (members == null)
+            return null;
+
+        var index:Int = members.indexOf(Object);
+
+        if (index < 0)
+            return null;
+
+        // doesnt prevent looping from breaking
+        if (Splice && __currentlyLooping && i >= index)
+            i--;
+
+        if (Splice)
+        {
+            members.splice(index, 1);
+            length--;
+        }
+        else
+            members[index] = null;
+
+        if (_memberRemoved != null)
+            _memberRemoved.dispatch(Object);
+
+        return Object;
+    }
 }

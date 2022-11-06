@@ -952,7 +952,6 @@ class PlayState extends MusicBeatState
 
 		if (generatedMusic)
 		{
-			var toDelete:Array<Note> = [];
 			notes.forEachAlive(function(daNote:Note)
 			{
 				var strum:Strum = null;
