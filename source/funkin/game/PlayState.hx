@@ -198,6 +198,16 @@ class PlayState extends MusicBeatState
 			detailsText = "Freeplay";
 		}
 
+		// Checks if cutscene files exists
+		var cutscenePath = Paths.script('data/cutscenes/${SONG.song.toLowerCase()}');
+		var endCutscenePath = Paths.script('data/cutscenes/${SONG.song.toLowerCase()}-end');
+		trace(cutscenePath);
+		trace(endCutscenePath);
+		if (Assets.exists(cutscenePath))
+			cutscene = cutscenePath;
+		if (Assets.exists(endCutscenePath))
+			endCutscene = endCutscenePath;
+
 		// String for when the game is paused
 		detailsPausedText = "Paused - " + detailsText;
 		
@@ -324,25 +334,55 @@ class PlayState extends MusicBeatState
 		super.create();
 	}
 
-	// PATH TO STRING CUTSCENE
+	// PATH TO STRING CUTSCENE (Paths.script
+	public var playCutscenes:Bool = isStoryMode;
 	public var cutscene:String = null;
+	public var endCutscene:String = null;
 	public override function createPost() {
-
-		var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-cutscene');
-
-		FlxTransitionableState.skipNextTransIn = true;
-		if (cutscene != null) {
-			// TODO: Script cutscenes
-		} else if (Assets.exists(videoCutscene)) {
-			openSubState(new VideoCutscene(videoCutscene));
-			persistentUpdate = false;
-			persistentDraw = false;
-		} else {
-			FlxTransitionableState.skipNextTransIn = false;
-			startCountdown();
-		}
+		startCutscene();
 		super.createPost();
 		scripts.call("createPost");
+	}
+
+	public function startCutscene() {
+		if (playCutscenes) {
+			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-cutscene');
+			persistentUpdate = false;
+			if (cutscene != null) {
+				openSubState(new ScriptedCutscene(cutscene, function() {
+					nextSong();
+				}));
+			} else if (Assets.exists(videoCutscene)) {
+			FlxTransitionableState.skipNextTransIn = true;
+				openSubState(new VideoCutscene(videoCutscene, function() {
+					startCountdown();
+				}));
+				persistentDraw = false;
+			} else {
+				startCountdown();
+			}
+		} else
+			startCountdown();
+	}
+
+	public function startEndCutscene() {
+		if (playCutscenes) {
+			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-end-cutscene');
+			persistentUpdate = false;
+			if (endCutscene != null) {
+				openSubState(new ScriptedCutscene(endCutscene, function() {
+					nextSong();
+				}));
+			} else if (Assets.exists(videoCutscene)) {
+				openSubState(new VideoCutscene(videoCutscene, function() {
+					nextSong();
+				}));
+				persistentDraw = false;
+			} else {
+				nextSong();
+			}
+		} else
+			nextSong();
 	}
 
 	public var startTimer:FlxTimer;
@@ -1030,8 +1070,11 @@ class PlayState extends MusicBeatState
 	{
 		scripts.call("onSongEnd");
 		canPause = false;
-		FlxG.sound.music.volume = 0;
+		inst.volume = 0;
 		vocals.volume = 0;
+		inst.pause();
+		vocals.pause();
+
 		if (SONG.validScore)
 		{
 			#if !switch
@@ -1043,6 +1086,10 @@ class PlayState extends MusicBeatState
 			#end
 		}
 
+		startEndCutscene();
+	}
+
+	public function nextSong() {
 		if (isStoryMode)
 		{
 			campaignScore += songScore;

@@ -12,8 +12,9 @@ class VideoCutscene extends Cutscene {
     var video:MP4Handler;
     var videoSprite:FlxSprite;
     var cutsceneCamera:FlxCamera;
-    public function new(path:String) {
-        super();
+    
+    public function new(path:String, callback:Void->Void) {
+        super(callback);
         localPath = Assets.getPath(this.path = path);
     }
 
