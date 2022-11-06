@@ -15,6 +15,7 @@
         <char name="mom"                scale="0.5" x="50"  y="10"/>
         <char name="parents-christmas"  scale="0.4" x="150" y="-20" />
         <char name="senpai"                         x="130" y="-50"/>
+        <char name="tankman"                        x="75" y="-35"/>
     </characters>
     <weeks>
         <!-- SPRITE BUTTONS ARE LOCATED IN "images/menus/storymenu/weeks/" -->
@@ -62,7 +63,7 @@
             <song name="Thorns" hide="true" />
         </week>
 
-        <week name="TANKMAN" chars="tankman,bf,gf" sprite="week6">
+        <week name="TANKMAN" chars="tankman,bf,gf" sprite="week7">
             <song name="Ugh" />
             <song name="Guns" />
             <song name="Stress" />
