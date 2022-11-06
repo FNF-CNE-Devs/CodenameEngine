@@ -70,7 +70,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 		var event = new DirectionAnimEvent('${anims[direction]}$suffix', direction, suffix, Reversed, Frame);
 		script.call("onPlaySingAnim", [event]);
-		if (!event.cancelled) playAnim(event.animName, event.force, event.reversed, event.frame, SING);
+		if (!event.cancelled) playAnim(event.animName, event.force, SING, event.reversed, event.frame);
 	}
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
@@ -334,9 +334,9 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 				// hardcode custom dance animations here
 				default:
 					if (isDanceLeftDanceRight) {
-						playAnim((danced = !danced) ? 'danceLeft' : 'danceRight');
+						playAnim((danced = !danced) ? 'danceLeft' : 'danceRight', DANCE);
 					} else
-						playAnim('idle');
+						playAnim('idle', DANCE);
 			}
 		}
 	}
@@ -348,9 +348,20 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 	public function beatHit(curBeat:Int) {
 		script.call("beatHit", [curBeat]);
-		if (danceOnBeat && (lastHit + (Conductor.stepCrochet * holdTime) < Conductor.songPosition) || animation.curAnim == null || (!animation.curAnim.name.startsWith("sing") && animation.curAnim.finished))
-			dance();
+		if (danceOnBeat) {
+			switch(lastAnimContext) {
+				case SING | MISS:
+					if (lastHit + (Conductor.stepCrochet * holdTime) < Conductor.songPosition)
+						dance();
+				case DANCE:
+					dance();
+				default:
+					if (animation.curAnim == null || animation.curAnim.finished)
+						dance();
+			}
+		}
 	}
+	
 	public function stepHit(curStep:Int) {
 		script.call("stepHit", [curStep]);
 		// nothing
@@ -382,7 +393,8 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 			super.draw();
 	}
 
-	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0, Context:PlayAnimContext = NONE):Void
+	public var lastAnimContext:PlayAnimContext = DANCE;
+	public function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		var event = new PlayAnimEvent(AnimName, Force, Reversed, Frame, Context);
 		
@@ -400,25 +412,10 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 		offset.set(globalOffset.x * (isPlayer != playerOffsets ? 1 : -1), -globalOffset.y);
 
-		if (event.context != DANCE)
+		if (event.context == SING || event.context == MISS)
 			lastHit = Conductor.songPosition;
-		
-		if (curCharacter == 'gf')
-		{
-			if (event.animName == 'singLEFT')
-			{
-				danced = true;
-			}
-			else if (event.animName == 'singRIGHT')
-			{
-				danced = false;
-			}
 
-			if (event.animName == 'singUP' || event.animName == 'singDOWN')
-			{
-				danced = !danced;
-			}
-		}
+		lastAnimContext = event.context;
 	}
 
 	public override function destroy() {

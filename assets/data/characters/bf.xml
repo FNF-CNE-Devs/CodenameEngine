@@ -10,4 +10,5 @@
     <anim name="singRIGHTmiss"  anim="BF NOTE RIGHT MISS"   fps="24"    loop="false" x="-30" y="21"/>
     <anim name="singDOWNmiss"   anim="BF NOTE DOWN MISS"    fps="24"    loop="false" x="-11" y="-19"/>
     <anim name="hey"            anim="BF HEY"               fps="24"    loop="false" x="7" y="4"/>
+    <anim name="scared"         anim="BF idle shaking"      fps="24"    loop="true" x="-4" y="0"/>
 </character>

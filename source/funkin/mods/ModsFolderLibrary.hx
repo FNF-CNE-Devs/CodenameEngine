@@ -43,7 +43,6 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
     }
 
     public override function getAudioBuffer(id:String):AudioBuffer {
-        trace(id);
         if (__isCacheValid(LimeAssets.cache.audio, id)) {
             trace("CACHE FOUND!!");
             return LimeAssets.cache.audio.get('$libName:$id');

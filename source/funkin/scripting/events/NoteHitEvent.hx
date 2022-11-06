@@ -5,6 +5,7 @@ import funkin.game.Character;
 
 class NoteHitEvent extends CancellableEvent {
     @:dox(hide) public var animCancelled:Bool = false;
+    @:dox(hide) public var strumGlowCancelled:Bool = false;
     @:dox(hide) public var deleteNote:Bool = true;
     @:dox(hide) public var unmuteVocals:Bool = true;
     @:dox(hide) public var enableCamZooming:Bool = true;
@@ -166,4 +167,13 @@ class NoteHitEvent extends CancellableEvent {
     }
     @:dox(hide)
     public function cancelLastSustainHit() {preventLastSustainHit();}
+    
+    /**
+     * Prevents the strum from glowing after this note has been pressed.
+     */
+    public function preventStrumGlow() {
+        strumGlowCancelled = true;
+    }
+    @:dox(hide)
+    public function cancelStrumGlow() {preventStrumGlow();}
 }

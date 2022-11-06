@@ -267,7 +267,7 @@ class PlayState extends MusicBeatState
 		cpuStrums = new FlxTypedGroup<Strum>();
 		add(strumLineNotes);
 
-		generateSong(SONG.song);
+		generateSong(SONG);
 
 		if (prevCamFollow != null)
 		{
@@ -451,22 +451,9 @@ class PlayState extends MusicBeatState
 
 	public var debugNum:Int = 0;
 
-	private function generateSong(dataPath:String, ?songData:SwagSong):Void
-	{
-		if (songData == null) songData = SONG;
-
-		Conductor.changeBPM(songData.bpm);
-
-		curSong = songData.song;
-
-		inst = FlxG.sound.load(Paths.inst(PlayState.SONG.song));
-		vocals = new FlxSound();
-		if (SONG.needsVoices)
-			vocals.loadEmbedded(Paths.voices(PlayState.SONG.song));
-		FlxG.sound.list.add(vocals);
-
-		notes = new NoteGroup();
-		add(notes);
+	public function generateNotes(songData:SwagSong) {
+		if (songData == null) return;
+		if (songData.noteTypes == null) songData.noteTypes = [];
 
 		var noteData:Array<SwagSection> = songData.notes;
 		var playerCounter:Int = 0;
@@ -489,10 +476,12 @@ class PlayState extends MusicBeatState
 				var gottaHitNote:Bool = daNoteData >= 4 ? !section.mustHitSection : section.mustHitSection;
 
 				if (songNotes.length > 2) {
-					if (songNotes[3] is Int)
-						daNoteType = songNotes[3];
+					if (songNotes[3] is Int) 
+						daNoteType = addNoteType(songData.noteTypes[Std.int(songNotes[3])-1], songNotes[3] == 0);
 					else if (songNotes[3] is String)
 						daNoteType = addNoteType(songNotes[3]);
+				} else {
+					daNoteType = addNoteType(songData.noteTypes[daNoteType-1], daNoteType == 0);
 				}
 
 				var swagNote:Note;
@@ -523,11 +512,37 @@ class PlayState extends MusicBeatState
 			daBeats += 1;
 		}
 		notes.sortNotes();
+	}
+	private function generateSong(?songData:SwagSong):Void
+	{
+		if (songData == null) songData = SONG;
+
+		Conductor.changeBPM(songData.bpm);
+
+		curSong = songData.song;
+
+		inst = FlxG.sound.load(Paths.inst(PlayState.SONG.song));
+		vocals = new FlxSound();
+		if (SONG.needsVoices)
+			vocals.loadEmbedded(Paths.voices(PlayState.SONG.song));
+		FlxG.sound.list.add(vocals);
+
+		notes = new NoteGroup();
+		add(notes);
+
+		generateNotes(songData);
 
 		generatedMusic = true;
 	}
 
-	public function addNoteType(name:String):Int {
+	public function addNoteType(name:String, addAsDefaultIfUnknown:Bool = false):Int {
+		if (name == null) {
+			if (addAsDefaultIfUnknown)
+				return 0;
+			else
+				name = "Unknown";
+		}
+
 		for(k=>e in noteTypesArray)
 			if (e == name) return k;
 		noteTypesArray.push(name);
@@ -1162,13 +1177,13 @@ class PlayState extends MusicBeatState
 			switch (note.strumID)
 			{
 				case 0:
-					boyfriend.playAnim('singLEFTmiss', true);
+					boyfriend.playAnim('singLEFTmiss', true, MISS);
 				case 1:
-					boyfriend.playAnim('singDOWNmiss', true);
+					boyfriend.playAnim('singDOWNmiss', true, MISS);
 				case 2:
-					boyfriend.playAnim('singUPmiss', true);
+					boyfriend.playAnim('singUPmiss', true, MISS);
 				case 3:
-					boyfriend.playAnim('singRIGHTmiss', true);
+					boyfriend.playAnim('singRIGHTmiss', true, MISS);
 			}
 			deleteNote(note);
 		}
@@ -1304,7 +1319,7 @@ class PlayState extends MusicBeatState
 					event.character.playSingAnim(event.direction, event.animSuffix);
 				}
 	
-				(event.player ? playerStrums : cpuStrums).forEach(function(str:Strum) {
+				if (!event.strumGlowCancelled) (event.player ? playerStrums : cpuStrums).forEach(function(str:Strum) {
 					if (str.ID == Math.abs(note.strumID)) {
 						str.press(note.strumTime);
 					}

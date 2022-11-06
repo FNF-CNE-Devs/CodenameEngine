@@ -1,5 +1,6 @@
 package funkin.system;
 
+import haxe.Json;
 import funkin.menus.StoryMenuState.WeekData;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.system.FlxAssets.FlxGraphicAsset;
@@ -23,9 +24,7 @@ using StringTools;
 
 class CoolUtil
 {
-	public static var difficultyArray:Array<String> = ['EASY', "NORMAL", "HARD"];
-
-	/**
+	/*
 	 * Returns `v` if not null, `defaultValue` otherwise.
 	 * @param v The value
 	 * @param defaultValue The default value
@@ -34,6 +33,13 @@ class CoolUtil
 	public static function getDefault<T>(v:T, defaultValue:T):T {
 		return (v == null || isNaN(v)) ? defaultValue : v;
 	}
+
+	public static function parseJson(assetPath:String) {
+		return Json.parse(Assets.getText(assetPath));
+	}
+
+	public inline static function parseJsonString(str:String)
+		return Json.parse(str);
 
 	public static function isNaN(v:Dynamic) {
 		if (v is Float || v is Int)

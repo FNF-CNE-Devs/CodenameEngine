@@ -25,7 +25,10 @@ class NoteGroup extends FlxTypedGroup<Note> {
         __loopSprite = null;
         while(i < length) {
             __loopSprite = members[i];
-            if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.active) continue;
+            if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.active) {
+                i++;
+                continue;
+            }
             if (__loopSprite.strumTime - Conductor.songPosition > 1500)
                 break;
             __loopSprite.update(elapsed);
@@ -44,7 +47,10 @@ class NoteGroup extends FlxTypedGroup<Note> {
         __currentlyLooping = true;
         while(i < length) {
             __loopSprite = members[i];
-            if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.visible) continue;
+            if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.visible) {
+                i++;
+                continue;
+            }
             if (__loopSprite.strumTime - Conductor.songPosition > 1500) break;
             __loopSprite.draw();
             i++;
@@ -63,7 +69,10 @@ class NoteGroup extends FlxTypedGroup<Note> {
 
         while(i < length) {
             __loopSprite = members[i];
-            if (__loopSprite == null || !__loopSprite.exists) continue;
+            if (__loopSprite == null || !__loopSprite.exists) {
+                i++;
+                continue;
+            }
             if (__loopSprite.strumTime - Conductor.songPosition > 1500) break;
             noteFunc(__loopSprite);
             i++;

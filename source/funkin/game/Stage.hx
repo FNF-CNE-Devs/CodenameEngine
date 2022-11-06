@@ -156,8 +156,11 @@ class StageSprite extends FlxSprite implements IBeatReceiver {
     }
 
     public function beatHit(curBeat:Int) {
-        if (beatAnims.length > 0)
-            animation.play(beatAnims[FlxMath.wrap(curBeat, 0, beatAnims.length-1)]);
+        if (beatAnims.length > 0) {
+            var anim = beatAnims[FlxMath.wrap(curBeat, 0, beatAnims.length-1)];
+            if (anim != null && anim != "null" && anim != "none")
+                animation.play(anim);
+        }
         
     }
     public function stepHit(curBeat:Int) {}

@@ -8,6 +8,11 @@ function update(elapsed:Float) {
         resetFastCar();
         fastCarCanDrive = true;
     }
+
+    // back limo drive
+    for(e in [bgLimo, dancer1, dancer2, dancer3, dancer4, dancer5]) {
+        e.rotOffset.x = Math.sin(curBeatFloat / 4) * Math.cos(curBeatFloat / 16) * 85;
+    }
 }
 function beatHit(curBeat:Int) {
     if (FlxG.random.bool(10) && fastCarCanDrive)
