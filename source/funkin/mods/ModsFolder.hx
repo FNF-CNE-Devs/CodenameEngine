@@ -80,7 +80,7 @@ class ModsFolder {
     }
 
     public static function unloadMod(mod:String) {
-        Assets.unloadLibrary('mods/$mod');
+        Assets.unloadLibrary('mods/$mod'.toLowerCase());
     }
 
     public static function prepareLibrary(libName:String, force:Bool = false) {
@@ -161,52 +161,52 @@ class ModsFolder {
     }
 
     private static function onStateSwitch(newState:FlxState) {
-        Assets.cache.clear();
-        lime.utils.Assets.cache.clear();
+        // Assets.cache.clear();
+        // lime.utils.Assets.cache.clear();
 
-        #if MOD_SUPPORT
-            if (currentModFolder == null) return;
-            var bmapsToRemove:Array<FlxGraphic> = [];
-            @:privateAccess
-            for(bmap in FlxG.bitmap._cache) {
-                if (bmap.assetsKey != null) {
-                    var e = new LimeLibrarySymbol(bmap.assetsKey);
-                    if (e.library is openfl.utils.AssetLibrary) {
-                        @:privateAccess
-                        e.library = cast(e.library, openfl.utils.AssetLibrary).__proxy;
-                    }
-                    if (e.library is ModsAssetLibrary) {
-                        var lib = cast(e.library, ModsAssetLibrary);
-                        if (!lib.__parseAsset(e.symbolName)) continue;
-                        if (!lib.__isCacheValid(e.library.cachedImages, lib._parsedAsset)) {
-                            e.library.cachedImages.remove(lib._parsedAsset);
-                            bmapsToRemove.push(bmap);
-                        }
-                    }
-                }
-            }
+        // #if MOD_SUPPORT
+        //     if (currentModFolder == null) return;
+        //     var bmapsToRemove:Array<FlxGraphic> = [];
+        //     @:privateAccess
+        //     for(bmap in FlxG.bitmap._cache) {
+        //         if (bmap.assetsKey != null) {
+        //             var e = new LimeLibrarySymbol(bmap.assetsKey);
+        //             if (e.library is openfl.utils.AssetLibrary) {
+        //                 @:privateAccess
+        //                 e.library = cast(e.library, openfl.utils.AssetLibrary).__proxy;
+        //             }
+        //             if (e.library is ModsAssetLibrary) {
+        //                 var lib = cast(e.library, ModsAssetLibrary);
+        //                 if (!lib.__parseAsset(e.symbolName)) continue;
+        //                 if (!lib.__isCacheValid(e.library.cachedImages, lib._parsedAsset)) {
+        //                     e.library.cachedImages.remove(lib._parsedAsset);
+        //                     bmapsToRemove.push(bmap);
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            // TODO: add setting for cache clearing
-            @:privateAccess
-            for(libName=>lib in lime.utils.Assets.libraries) {
-                var library = lib;
-                if (library is openfl.utils.AssetLibrary) {
-                    var flLib = cast(library, openfl.utils.AssetLibrary);
-                    @:privateAccess
-                    if (flLib.__proxy != null) library = flLib.__proxy;
-                }
-                if (library is ModsAssetLibrary) {
-                    var modLib = cast(library, ModsAssetLibrary);
-                    @:privateAccess
-                    library.cachedBytes = [];
-                    @:privateAccess
-                    for(sound in library.cachedAudioBuffers)
-                        sound.dispose();
+        //     // TODO: add setting for cache clearing
+        //     @:privateAccess
+        //     for(libName=>lib in lime.utils.Assets.libraries) {
+        //         var library = lib;
+        //         if (library is openfl.utils.AssetLibrary) {
+        //             var flLib = cast(library, openfl.utils.AssetLibrary);
+        //             @:privateAccess
+        //             if (flLib.__proxy != null) library = flLib.__proxy;
+        //         }
+        //         if (library is ModsAssetLibrary) {
+        //             var modLib = cast(library, ModsAssetLibrary);
+        //             @:privateAccess
+        //             for(sound in library.cachedAudioBuffers)
+        //                 sound.dispose();
+        //             @:privateAccess
+        //             library.cachedBytes = [];
                     
-                }
-            }
-            for(e in bmapsToRemove)
-                FlxG.bitmap.remove(e);
-        #end
+        //         }
+        //     }
+        //     for(e in bmapsToRemove)
+        //         FlxG.bitmap.remove(e);
+        // #end
     }
 }

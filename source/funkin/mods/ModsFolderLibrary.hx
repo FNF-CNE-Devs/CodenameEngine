@@ -2,6 +2,7 @@ package funkin.mods;
 
 import lime.utils.Log;
 import lime.utils.AssetLibrary;
+import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetManifest;
 
 import haxe.io.Path;
@@ -42,8 +43,11 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
     }
 
     public override function getAudioBuffer(id:String):AudioBuffer {
-        if (__isCacheValid(cachedAudioBuffers, id))
-            return cachedAudioBuffers.get(id);
+        trace(id);
+        if (__isCacheValid(LimeAssets.cache.audio, id)) {
+            trace("CACHE FOUND!!");
+            return LimeAssets.cache.audio.get('$libName:$id');
+        }
         else {
             if (!exists(id, "SOUND")) {
                 Log.error('ModsAssetLibrary: Audio Buffer at $id does not exist.');
@@ -52,13 +56,13 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
             var path = getAssetPath();
             editedTimes[id] = FileSystem.stat(path).mtime.getTime();
             var e = AudioBuffer.fromFile(path);
-            cachedAudioBuffers.set(id, e);
+            // LimeAssets.cache.audio.set('$libName:$id', e);
             return e;
         }
     }
 
     public override function getBytes(id:String):Bytes {
-        if (__isCacheValid(cachedBytes, id))
+        if (__isCacheValid(cachedBytes, id, true))
             return cachedBytes.get(id);
         else {
             if (!exists(id, "BINARY")) {
@@ -74,8 +78,8 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
     }
 
     public override function getFont(id:String):Font {
-        if (__isCacheValid(cachedFonts, id))
-            return cachedFonts.get(id);
+        if (__isCacheValid(LimeAssets.cache.font, id))
+            return LimeAssets.cache.font.get(id);
         else {
             if (!exists(id, "FONT")) {
                 Log.error('ModsAssetLibrary: Font at $id does not exist.');
@@ -84,14 +88,13 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
             var path = getAssetPath();
             editedTimes[id] = FileSystem.stat(path).mtime.getTime();
             var e = Font.fromFile(path);
-            cachedFonts.set(id, e);
             return e;
         }
     }
 
     public override function getImage(id:String):Image {
-        if (useImageCache && __isCacheValid(cachedImages, id))
-            return cachedImages.get(id);
+        if (useImageCache && __isCacheValid(LimeAssets.cache.image, id))
+            return LimeAssets.cache.image.get('$libName:$id');
         else {
             if (!exists(id, "IMAGE")) {
                 Log.error('ModsAssetLibrary: Image at $id does not exist.');
@@ -101,7 +104,6 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
             editedTimes[id] = FileSystem.stat(path).mtime.getTime();
 
             var e = Image.fromFile(path);
-            if (useImageCache) cachedImages.set(id, e);
             return e;
         }
     }
@@ -137,11 +139,14 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
         return '$folderPath/$_parsedAsset';
     }
 
-    private function __isCacheValid(cache:Map<String, Dynamic>, asset:String) {
+    private function __isCacheValid(cache:Map<String, Dynamic>, asset:String, isLocalCache:Bool = false) {
         if (!editedTimes.exists(asset))
             return false;
         if (editedTimes[asset] == null) return false;
         if (editedTimes[asset] < FileSystem.stat(getPath(asset)).mtime.getTime()) return false;
+
+        if (!isLocalCache) asset = '$libName:$asset';
+
         return cache.exists(asset) && cache[asset] != null;
     }
 

@@ -28,7 +28,7 @@ interface ModsAssetLibrary {
 
     private function getAssetPath():String;
 
-    private function __isCacheValid(cache:Map<String, Dynamic>, asset:String):Bool;
+    private function __isCacheValid(cache:Map<String, Dynamic>, asset:String, isLocal:Bool = false):Bool;
 
     private function __parseAsset(asset:String):Bool;
 

@@ -14,6 +14,7 @@ import lime.net.HTTPRequest;
 import lime.text.Font;
 import lime.utils.AssetType;
 import lime.utils.Bytes;
+import lime.utils.Assets as LimeAssets;
 
 
 #if MOD_SUPPORT
@@ -53,21 +54,20 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
     public var _parsedAsset:String;
     
     public override function getAudioBuffer(id:String):AudioBuffer {
-        if (__isCacheValid(cachedAudioBuffers, id))
-            return cachedAudioBuffers.get(id);
+        if (__isCacheValid(LimeAssets.cache.audio, id))
+            return LimeAssets.cache.audio.get('$libName:$id');
         else {
             if (!exists(id, "SOUND")) {
                 Log.error('ZipFolderLibrary: Audio Buffer at $id does not exist.');
                 return null;
             }
             var e = AudioBuffer.fromBytes(unzip(assets[_parsedAsset]));
-            cachedAudioBuffers.set(id, e);
             return e;
         }
     }
 
     public override function getBytes(id:String):Bytes {
-        if (__isCacheValid(cachedBytes, id))
+        if (__isCacheValid(cachedBytes, id, true))
             return cachedBytes.get(id);
         else {
             if (!exists(id, "BINARY")) {
@@ -97,22 +97,21 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 	}
 
     public override function getFont(id:String):Font {
-        if (__isCacheValid(cachedFonts, id))
-            return cachedFonts.get(id);
+        if (__isCacheValid(LimeAssets.cache.font, id))
+            return LimeAssets.cache.font.get('$libName:$id');
         else {
             if (!exists(id, "FONT")) {
                 Log.error('ZipFolderLibrary: Font at $id does not exist.');
                 return null;
             }
             var e = Font.fromBytes(unzip(assets[_parsedAsset]));
-            cachedFonts.set(id, e);
             return e;
         }
     }
 
     public override function getImage(id:String):Image {
-        if (useImageCache && __isCacheValid(cachedImages, id))
-            return cachedImages.get(id);
+        if (useImageCache && __isCacheValid(LimeAssets.cache.image, id))
+            return LimeAssets.cache.image.get('$libName:$id');
         else {
             if (!exists(id, "IMAGE")) {
                 Log.error('ZipFolderLibrary: Image at $id does not exist.');
@@ -131,8 +130,8 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
         return true;
     }
 
-    public function __isCacheValid(cache:Map<String, Dynamic>, asset:String) {
-        if (cache.exists(asset)) return true;
+    public function __isCacheValid(cache:Map<String, Dynamic>, asset:String, isLocal:Bool = false) {
+        if (cache.exists(isLocal ? '$libName:$asset': asset)) return true;
         return false;
     }
     
