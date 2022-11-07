@@ -274,7 +274,7 @@ class CoolUtil
 		&& Assets.exists('$noExt/spritemap.png')) {
 			// TODO: Credit Smokey555!!
 			return AtlasFrameMaker.construct(noExt);
-		if (Assets.exists('$noExt.xml')) {
+		} else if (Assets.exists('$noExt.xml')) {
 			return Paths.getSparrowAtlasAlt(noExt);
 		} else if (Assets.exists('$noExt.txt')) {
 			return Paths.getPackerAtlasAlt(noExt);
