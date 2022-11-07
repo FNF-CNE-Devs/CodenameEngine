@@ -1295,7 +1295,7 @@ class PlayState extends MusicBeatState
 
 			var event:NoteHitEvent;
 			if (note.mustPress)
-				event = scripts.event("onPlayerHit", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, score, note.animSuffix, daRating, accuracy, "game/score/", ''));
+				event = scripts.event("onPlayerHit", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, score, note.animSuffix, daRating, note.isSustainNote ? null : accuracy, "game/score/", ''));
 			else
 				event = scripts.event("onDadHit", new NoteHitEvent(note, dad, false, note.noteType, note.strumID, 0, 0, note.animSuffix, daRating, null, "game/score/", ''));
 			
