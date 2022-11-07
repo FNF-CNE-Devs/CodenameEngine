@@ -1299,8 +1299,6 @@ class PlayState extends MusicBeatState
 					comboSpr.velocity.y -= 150;
 					comboSpr.velocity.x += FlxG.random.int(1, 10);
 			
-					comboGroup.add(comboSpr);
-					comboGroup.add(rating);
 			
 					rating.scale.set(event.ratingScale, event.ratingScale);
 					rating.antialiasing = event.ratingAntialiasing;
@@ -1313,33 +1311,36 @@ class PlayState extends MusicBeatState
 					var separatedScore:String = Std.string(combo).addZeros(3);
 			
 			
-					for (i in 0...separatedScore.length)
-					{
-						if (combo < 10 && combo != 0)
-							break;
-			
-						var e = separatedScore.charAt(i);
-			
-						var numScore:FlxSprite = new FlxSprite((43 * i) - 90, 80).loadGraphic(Paths.image('${event.ratingPrefix}num$e${event.ratingSuffix}'));
-						numScore.antialiasing = event.numAntialiasing;
-						numScore.scale.set(event.numScale, event.numScale);
-						numScore.updateHitbox();
-			
-						numScore.acceleration.y = FlxG.random.int(200, 300);
-						numScore.velocity.y -= FlxG.random.int(140, 160);
-						numScore.velocity.x = FlxG.random.float(-5, 5);
-			
-						comboGroup.add(numScore);
-			
-						FlxTween.tween(numScore, {alpha: 0}, 0.2, {
-							onComplete: function(tween:FlxTween)
+					if (combo == 0 || combo >= 10) {
+						comboGroup.add(comboSpr);
+						for (i in 0...separatedScore.length)
 							{
-								comboGroup.remove(numScore, true);
-								numScore.destroy();
-							},
-							startDelay: Conductor.crochet * 0.002
-						});
+									break;
+					
+								var e = separatedScore.charAt(i);
+					
+								var numScore:FlxSprite = new FlxSprite((43 * i) - 90, 80).loadGraphic(Paths.image('${event.ratingPrefix}num$e${event.ratingSuffix}'));
+								numScore.antialiasing = event.numAntialiasing;
+								numScore.scale.set(event.numScale, event.numScale);
+								numScore.updateHitbox();
+					
+								numScore.acceleration.y = FlxG.random.int(200, 300);
+								numScore.velocity.y -= FlxG.random.int(140, 160);
+								numScore.velocity.x = FlxG.random.float(-5, 5);
+					
+								comboGroup.add(numScore);
+					
+								FlxTween.tween(numScore, {alpha: 0}, 0.2, {
+									onComplete: function(tween:FlxTween)
+									{
+										comboGroup.remove(numScore, true);
+										numScore.destroy();
+									},
+									startDelay: Conductor.crochet * 0.002
+								});
+							}
 					}
+					comboGroup.add(rating);
 			
 					FlxTween.tween(rating, {alpha: 0}, 0.2, {
 						startDelay: Conductor.crochet * 0.001
