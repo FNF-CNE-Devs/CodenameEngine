@@ -77,7 +77,7 @@
 	<haxelib name="flixel-yc29" rename="flixel" />
 	<haxedev set='webgl' />
 
-	<haxelib name="hscript-yoshiengine" />
+	<haxelib name="hscript-improved" />
 
 	<!--In case you want to use the ui package-->
 	<!-- <haxelib name="discord_rpc_yce" if="desktop"/> -->
