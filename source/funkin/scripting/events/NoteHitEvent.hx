@@ -93,7 +93,7 @@ class NoteHitEvent extends CancellableEvent {
      */
     public function new(note:Note, character:Character, player:Bool, noteType:String,
         direction:Int, healthGain:Float, unmuteVocals:Bool = true, score:Int = 350,
-        animSuffix:String = "", rating:String = "sick", accuracy:Null<Float> = 1, ratingPrefix:String = "",
+        animSuffix:String = "", rating:String = "sick", ?accuracy:Null<Float>, ratingPrefix:String = "",
         ratingSuffix:String = "") {
         super();
 

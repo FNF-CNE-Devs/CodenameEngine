@@ -130,6 +130,20 @@ class PlayState extends MusicBeatState
 	
 	public var songScore:Int = 0;
 	public var misses:Int = 0;
+	public var accuracy(get, set):Float;
+
+	private function get_accuracy():Float {
+		if (accuracyPressedNotes <= 0) return -1;
+		return totalAccuracyAmount / accuracyPressedNotes;
+	}
+	private function set_accuracy(v:Float):Float {
+		if (accuracyPressedNotes <= 0)
+			accuracyPressedNotes = 1;
+		return totalAccuracyAmount = v * accuracyPressedNotes;
+	}
+	public var accuracyPressedNotes:Float = 0;
+	public var totalAccuracyAmount:Float = 0;
+
 	public var scoreTxt:FunkinText;
 	public var missesTxt:FunkinText;
 	public var accuracyTxt:FunkinText;
@@ -814,6 +828,8 @@ class PlayState extends MusicBeatState
 
 		scoreTxt.text = 'Score:$songScore';
 		missesTxt.text = '${comboBreaks ? "Combo Breaks" : "Misses"}:$misses';
+		var acc = accuracy;
+		accuracyTxt.text = 'Accuracy:${acc < 0 ? "N/A" : '${FlxMath.roundDecimal(acc * 100, 2)}%'}';
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 			pauseGame();
@@ -1034,7 +1050,7 @@ class PlayState extends MusicBeatState
 							daNote.canBeHit = false;
 					}
 						
-					if (event.__autoCPUHit && !daNote.mustPress && !daNote.wasGoodHit && daNote.strumTime <= Conductor.songPosition) goodNoteHit(daNote);
+					if (event.__autoCPUHit && !daNote.mustPress && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) goodNoteHit(daNote);
 
 					if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.stepLength) < Conductor.songPosition) {
 						deleteNote(daNote);
@@ -1284,6 +1300,10 @@ class PlayState extends MusicBeatState
 				event = scripts.event("onDadHit", new NoteHitEvent(note, dad, false, note.noteType, note.strumID, 0, 0, note.animSuffix, daRating, null, "game/score/", ''));
 			
 			if (!event.cancelled) {
+				if (event.accuracy != null) {
+					accuracyPressedNotes++;
+					totalAccuracyAmount += accuracy;
+				}
 				if (event.countAsCombo) combo++;
 
 				if (event.showRating || (event.showRating == null && event.player && !note.isSustainNote))
