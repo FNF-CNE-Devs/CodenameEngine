@@ -241,6 +241,7 @@ class SpriteSymbol extends Sprite {
 				_bitmap = new Bitmap(new BitmapData(1, 1), PixelSnapping.AUTO, smoothing);
 				addChild(_bitmap);
 			}
+			if (spriteData == null) return;
 
 			if (_tempRect.x != spriteData.x || _tempRect.y != spriteData.y || _tempRect.width != spriteData.w || _tempRect.height != spriteData.h) {
 				var clippedTexture = new BitmapData(spriteData.w, spriteData.h);

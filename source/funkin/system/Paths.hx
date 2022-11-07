@@ -111,9 +111,10 @@ class Paths
 		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/Inst.$SOUND_EXT', MUSIC, null);
 	}
 
-	inline static public function image(key:String, ?library:String)
+	inline static public function image(key:String, ?library:String, checkForAtlas:Bool = false)
 	{
-		return getPath('images/$key.png', IMAGE, library);
+		var atlasPath = checkForAtlas ? getPath('images/$key/spritemap.png', IMAGE, library) : null;
+		return (checkForAtlas && OpenFlAssets.exists(atlasPath)) ? atlasPath.substr(0, atlasPath.length - 14) : getPath('images/$key.png', IMAGE, library);
 	}
 
 	inline static public function script(key:String, ?library:String, isAssetsPath:Bool = false) {

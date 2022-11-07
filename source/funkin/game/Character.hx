@@ -124,7 +124,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 					if (xml.has.antialiasing) antialiasing = (xml.att.antialiasing == "true");
 					if (xml.has.sprite) sprite = xml.att.sprite;
 
-					frames = CoolUtil.loadFrames(Paths.image('characters/$sprite'));
+					frames = CoolUtil.loadFrames(Paths.image('characters/$sprite', null, true));
 					for(anim in xml.nodes.anim) {
 						XMLUtil.addXMLAnimation(this, anim);
 					}

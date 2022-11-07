@@ -1,14 +1,17 @@
 package funkin.cutscenes;
 
+import funkin.scripting.DummyScript;
+import flixel.addons.transition.FlxTransitionableState;
 import funkin.scripting.Script;
 
 class ScriptedCutscene extends Cutscene {
     var script:Script;
 
+    var scriptPath:String;
     public function new(scriptPath:String, callback:Void->Void) {
         super(callback);
 
-        script = Script.create(scriptPath);
+        script = Script.create(this.scriptPath = scriptPath);
         script.setPublicMap(PlayState.instance.scripts.publicVariables);
         script.setParent(this);
         script.load();
@@ -16,7 +19,12 @@ class ScriptedCutscene extends Cutscene {
 
     public override function create() {
         super.create();
+        trace("fuck");
         script.call("create");
+        if (Std.isOfType(script, DummyScript)) {
+            Logs.trace('Could not find script for scripted cutscene at ${scriptPath}', ERROR, RED);
+            close();
+        }
     }
 
     public override function update(elapsed:Float) {
@@ -41,6 +49,7 @@ class ScriptedCutscene extends Cutscene {
     }
 
     public function startVideo(path:String, ?callback:Void->Void) {
+        persistentDraw = false;
         openSubState(new VideoCutscene(path, function() {
             if (callback != null)
                 callback();

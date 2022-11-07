@@ -367,7 +367,7 @@ class MenuItem extends FlxSprite
 	public function new(x:Float, y:Float, path:String)
 	{
 		super(x, y);
-		CoolUtil.loadAnimatedGraphic(this, Paths.image(path));
+		CoolUtil.loadAnimatedGraphic(this, Paths.image(path, null, true));
         screenCenter(X);
         antialiasing = true;
 	}

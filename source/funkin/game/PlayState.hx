@@ -350,7 +350,7 @@ class PlayState extends MusicBeatState
 			persistentUpdate = false;
 			if (cutscene != null) {
 				openSubState(new ScriptedCutscene(cutscene, function() {
-					nextSong();
+					startCountdown();
 				}));
 			} else if (Assets.exists(videoCutscene)) {
 			FlxTransitionableState.skipNextTransIn = true;
@@ -669,6 +669,9 @@ class PlayState extends MusicBeatState
 	override function openSubState(SubState:FlxSubState)
 	{
 		var event = scripts.event("onSubstateOpen", new SubstateEvent(SubState));
+
+		if (!postCreated)
+			FlxTransitionableState.skipNextTransIn = true;
 
 		if (event.cancelled) return;
 
@@ -1314,31 +1317,29 @@ class PlayState extends MusicBeatState
 					if (combo == 0 || combo >= 10) {
 						comboGroup.add(comboSpr);
 						for (i in 0...separatedScore.length)
-							{
-									break;
-					
-								var e = separatedScore.charAt(i);
-					
-								var numScore:FlxSprite = new FlxSprite((43 * i) - 90, 80).loadGraphic(Paths.image('${event.ratingPrefix}num$e${event.ratingSuffix}'));
-								numScore.antialiasing = event.numAntialiasing;
-								numScore.scale.set(event.numScale, event.numScale);
-								numScore.updateHitbox();
-					
-								numScore.acceleration.y = FlxG.random.int(200, 300);
-								numScore.velocity.y -= FlxG.random.int(140, 160);
-								numScore.velocity.x = FlxG.random.float(-5, 5);
-					
-								comboGroup.add(numScore);
-					
-								FlxTween.tween(numScore, {alpha: 0}, 0.2, {
-									onComplete: function(tween:FlxTween)
-									{
-										comboGroup.remove(numScore, true);
-										numScore.destroy();
-									},
-									startDelay: Conductor.crochet * 0.002
-								});
-							}
+						{
+							var e = separatedScore.charAt(i);
+				
+							var numScore:FlxSprite = new FlxSprite((43 * i) - 90, 80).loadGraphic(Paths.image('${event.ratingPrefix}num$e${event.ratingSuffix}'));
+							numScore.antialiasing = event.numAntialiasing;
+							numScore.scale.set(event.numScale, event.numScale);
+							numScore.updateHitbox();
+				
+							numScore.acceleration.y = FlxG.random.int(200, 300);
+							numScore.velocity.y -= FlxG.random.int(140, 160);
+							numScore.velocity.x = FlxG.random.float(-5, 5);
+				
+							comboGroup.add(numScore);
+				
+							FlxTween.tween(numScore, {alpha: 0}, 0.2, {
+								onComplete: function(tween:FlxTween)
+								{
+									comboGroup.remove(numScore, true);
+									numScore.destroy();
+								},
+								startDelay: Conductor.crochet * 0.002
+							});
+						}
 					}
 					comboGroup.add(rating);
 			

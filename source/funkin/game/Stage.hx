@@ -53,7 +53,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 
                         if (!node.has.sprite || !node.has.name || !node.has.x || !node.has.y) continue;
 
-                        spr.loadAnimatedGraphic(Paths.image('$spritesParentFolder${node.att.sprite}'));
+                        spr.loadAnimatedGraphic(Paths.image('$spritesParentFolder${node.att.sprite}', null, true));
 
                         var x:Null<Float> = Std.parseFloat(node.att.x);
                         var y:Null<Float> = Std.parseFloat(node.att.y);
