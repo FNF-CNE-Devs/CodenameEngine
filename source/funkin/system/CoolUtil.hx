@@ -1,5 +1,6 @@
 package funkin.system;
 
+import animateatlas.AtlasFrameMaker;
 import haxe.Json;
 import funkin.menus.StoryMenuState.WeekData;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -268,6 +269,11 @@ class CoolUtil
 	public static function loadFrames(path:String, Unique:Bool = false, Key:String = null):FlxFramesCollection {
 		var noExt = Path.withoutExtension(path);
 
+		if (Assets.exists('$noExt/Animation.json')
+		&& Assets.exists('$noExt/spritemap.json')
+		&& Assets.exists('$noExt/spritemap.png')) {
+			// TODO: Credit Smokey555!!
+			return AtlasFrameMaker.construct(noExt);
 		if (Assets.exists('$noExt.xml')) {
 			return Paths.getSparrowAtlasAlt(noExt);
 		} else if (Assets.exists('$noExt.txt')) {
