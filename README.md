@@ -2,9 +2,10 @@
 ## PLEASE NOTE - THIS IS STILL IN AN ALPHA STATE
 
 Early alpha of Codename Engine, known issues:
+- Only the "introMod" folder works (no mod switching yet)
+	- Also works with "introMod.zip"
 - Titlescreen is broken (xml not implemented yet)
 - Some options are missing
-- Only the "introMod" folder works (no mod switching yet)
 - Week 4
 - Week 5 has no monster animation
 - Week 6 still have no dialogue
