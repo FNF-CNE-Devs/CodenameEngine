@@ -244,8 +244,6 @@ class PlayState extends MusicBeatState
 		// Checks if cutscene files exists
 		var cutscenePath = Paths.script('data/cutscenes/${SONG.song.toLowerCase()}');
 		var endCutscenePath = Paths.script('data/cutscenes/${SONG.song.toLowerCase()}-end');
-		trace(cutscenePath);
-		trace(endCutscenePath);
 		if (Assets.exists(cutscenePath))
 			cutscene = cutscenePath;
 		if (Assets.exists(endCutscenePath))
@@ -629,7 +627,7 @@ class PlayState extends MusicBeatState
 
 		for(k=>e in noteTypesArray)
 			if (e == name) return k;
-		
+
 		noteTypesArray.push(name);
 
 		// loads script
