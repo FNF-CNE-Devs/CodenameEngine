@@ -12,3 +12,8 @@ Early alpha of Codename Engine, known issues:
 
 ## CREDITS
 - Credits to Smokey555 for the fancy Animate Atlas code
+
+## HOW TO BUILD
+- Install the required libraries as told in the original Funkin' repo (with latest Haxe!)
+- Run `update.bat` to install all required additional libraries
+- Run `lime test windows` to compile the game (may take a long time)
