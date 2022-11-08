@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.scripting.DummyScript;
 import funkin.menus.StoryMenuState.WeekData;
 import funkin.ui.FunkinText;
 import flixel.group.FlxSpriteGroup;
@@ -159,13 +160,14 @@ class PlayState extends MusicBeatState
 	public var inCutscene:Bool = false;
 
 	public var comboRatings:Array<ComboRating> = [
-		new ComboRating(0, "[F]", 0xFFFF4444),
-		new ComboRating(0.1, "[E]", 0xFFFF8844),
-		new ComboRating(0.2, "[D]", 0xFFFFAA44),
-		new ComboRating(0.4, "[C]", 0xFFFFFF44),
-		new ComboRating(0.6, "[B]", 0xFFAAFF44),
-		new ComboRating(0.8, "[A]", 0xFF88FF44),
-		new ComboRating(0.9, "[S]", 0xFF44FFFF),
+		new ComboRating(0, "F", 0xFFFF4444),
+		new ComboRating(0.1, "E", 0xFFFF8844),
+		new ComboRating(0.2, "D", 0xFFFFAA44),
+		new ComboRating(0.4, "C", 0xFFFFFF44),
+		new ComboRating(0.6, "B", 0xFFAAFF44),
+		new ComboRating(0.8, "A", 0xFF88FF44),
+		new ComboRating(0.9, "S", 0xFF44FFFF),
+		new ComboRating(1, "S++", 0xFF44FFFF),
 	];
 
 	#if desktop
@@ -357,7 +359,7 @@ class PlayState extends MusicBeatState
 
 		scoreTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Score:0", 16);
 		missesTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Misses:0", 16);
-		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy:-%", 16);
+		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Acc:-% (N/A)", 16);
 		accuracyTxt.addFormat(accFormat, 0, 1);
 
 		for(text in [scoreTxt, missesTxt, accuracyTxt]) {
@@ -625,6 +627,16 @@ class PlayState extends MusicBeatState
 				name = "Unknown";
 		}
 
+		// loads script
+		var scriptPath = Paths.script('data/notes/${name}');
+		if (Assets.exists(scriptPath)) {
+			var script = Script.create(scriptPath);
+			if (!(script is DummyScript)) {
+				scripts.add(script);
+				script.load();
+			}
+		}
+
 		for(k=>e in noteTypesArray)
 			if (e == name) return k;
 		noteTypesArray.push(name);
@@ -862,7 +874,7 @@ class PlayState extends MusicBeatState
 		var rating:ComboRating = curRating == null ? new ComboRating(0, "[N/A]", 0xFF888888) : curRating;
 
 		@:privateAccess accFormat.format.color = rating.color;
-		accuracyTxt.text = 'Accuracy:${acc < 0 ? "N/A" : '${FlxMath.roundDecimal(acc * 100, 2)}%'} ${rating.rating}';
+		accuracyTxt.text = 'Accuracy:${acc < 0 ? "-%" : '${FlxMath.roundDecimal(acc * 100, 2)}%'} - ${rating.rating}';
 		
 		@:privateAccess
 		var format = accuracyTxt._formatRanges[0];

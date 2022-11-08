@@ -1,5 +1,6 @@
 package funkin.game;
 
+import openfl.utils.Assets;
 import flixel.FlxG;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
@@ -87,7 +88,8 @@ class Note extends FlxSprite
 
 		this.noteData = noteData;
 
-		var event = new NoteCreationEvent(this, strumID, this.noteType, noteTypeID, mustPress, "game/NOTE_assets", 0.7, animSuffix);
+		var customType = Paths.image('game/notes/${this.noteType}');
+		var event = new NoteCreationEvent(this, strumID, this.noteType, noteTypeID, mustPress, Assets.exists(customType) ? 'game/notes/${this.noteType}' : 'game/NOTE_assets', 0.7, animSuffix);
 
 		if (PlayState.instance != null)
 			event = PlayState.instance.scripts.event("onNoteCreation", event);
