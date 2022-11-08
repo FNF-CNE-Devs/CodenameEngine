@@ -15,6 +15,12 @@ class ScriptPack extends Script {
         }
     }
 
+    public function contains(path:String) {
+        for(e in scripts)
+            if (e.path == path)
+                return true;
+        return false;
+    }
     public function new(name:String) {
         additionalDefaultVariables["importScript"] = importScript;
         super(name);

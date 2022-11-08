@@ -627,19 +627,20 @@ class PlayState extends MusicBeatState
 				name = "Unknown";
 		}
 
+		for(k=>e in noteTypesArray)
+			if (e == name) return k;
+		
+		noteTypesArray.push(name);
+
 		// loads script
 		var scriptPath = Paths.script('data/notes/${name}');
-		if (Assets.exists(scriptPath)) {
+		if (Assets.exists(scriptPath) && !scripts.contains(scriptPath)) {
 			var script = Script.create(scriptPath);
 			if (!(script is DummyScript)) {
 				scripts.add(script);
 				script.load();
 			}
 		}
-
-		for(k=>e in noteTypesArray)
-			if (e == name) return k;
-		noteTypesArray.push(name);
 		return noteTypesArray.length-1;
 	}
 	function sortByShit(Obj1:Note, Obj2:Note):Int
