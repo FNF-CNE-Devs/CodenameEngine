@@ -16,5 +16,5 @@ Early alpha of Codename Engine, known issues:
 
 ## HOW TO BUILD
 - Install the required libraries as told in the original Funkin' repo (with latest Haxe!)
-- Run `update.bat` to install all required additional libraries
+- Run `update.bat` to install all required additional libraries (flixel fork, hscript fork...)
 - Run `lime test windows` to compile the game (may take a long time)
