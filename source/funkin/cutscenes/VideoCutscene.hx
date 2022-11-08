@@ -42,10 +42,6 @@ class VideoCutscene extends Cutscene {
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
-        // video.se
-        // video.setUnstretchedGraphicSize(FlxG.width, FlxG.height, false);
-        // trace(video);
-        // trace(video.getScreenBounds(null, cutsceneCamera));
     }
     public override function destroy() {
         FlxG.cameras.remove(camera, true);

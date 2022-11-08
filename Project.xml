@@ -74,7 +74,6 @@
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="hxCodec"/>
-	<haxelib name="Flixel-TextureAtlas"/>
 	<haxelib name="flixel-yc29" rename="flixel" />
 	<haxedev set='webgl' />
 

@@ -60,6 +60,7 @@ import funkin.scripting.events.*;
 
 using StringTools;
 
+@:access(flixel.text.FlxText.FlxTextFormatRange)
 class PlayState extends MusicBeatState
 {
 	public static var instance:PlayState = null;
@@ -157,6 +158,16 @@ class PlayState extends MusicBeatState
 
 	public var inCutscene:Bool = false;
 
+	public var comboRatings:Array<ComboRating> = [
+		new ComboRating(0, "[F]", 0xFFFF4444),
+		new ComboRating(0.1, "[E]", 0xFFFF8844),
+		new ComboRating(0.2, "[D]", 0xFFFFAA44),
+		new ComboRating(0.4, "[C]", 0xFFFFFF44),
+		new ComboRating(0.6, "[B]", 0xFFAAFF44),
+		new ComboRating(0.8, "[A]", 0xFF88FF44),
+		new ComboRating(0.9, "[S]", 0xFF44FFFF),
+	];
+
 	#if desktop
 	// Discord RPC variables
 	public var difficultyText:String = "";
@@ -165,6 +176,22 @@ class PlayState extends MusicBeatState
 	public var detailsText:String = "";
 	public var detailsPausedText:String = "";
 	#end
+
+	public var curRating:ComboRating;
+
+	public function updateRating() {
+		var rating = null;
+		var acc = get_accuracy();
+
+		for(e in comboRatings) {
+			if (e.percent <= acc && (rating == null || rating.percent < e.percent))
+				rating = e;
+		}
+
+		var event = scripts.event("onRatingUpdate", new RatingUpdateEvent(rating, curRating));
+		if (!event.cancelled)
+			curRating = event.rating;
+	}
 
 	override public function create()
 	{
@@ -331,6 +358,7 @@ class PlayState extends MusicBeatState
 		scoreTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Score:0", 16);
 		missesTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Misses:0", 16);
 		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy:-%", 16);
+		accuracyTxt.addFormat(accFormat, 0, 1);
 
 		for(text in [scoreTxt, missesTxt, accuracyTxt]) {
 			text.scrollFactor.set();
@@ -817,6 +845,7 @@ class PlayState extends MusicBeatState
 	}
 
 	var __vocalOffsetViolation:Float = 0;
+	public var accFormat:FlxTextFormat = new FlxTextFormat(0xFF888888, false, false, 0);
 	override public function update(elapsed:Float)
 	{
 		#if !debug
@@ -829,7 +858,18 @@ class PlayState extends MusicBeatState
 		scoreTxt.text = 'Score:$songScore';
 		missesTxt.text = '${comboBreaks ? "Combo Breaks" : "Misses"}:$misses';
 		var acc = accuracy;
-		accuracyTxt.text = 'Accuracy:${acc < 0 ? "N/A" : '${FlxMath.roundDecimal(acc * 100, 2)}%'}';
+		
+		var rating:ComboRating = curRating == null ? new ComboRating(0, "[N/A]", 0xFF888888) : curRating;
+
+		@:privateAccess accFormat.format.color = rating.color;
+		accuracyTxt.text = 'Accuracy:${acc < 0 ? "N/A" : '${FlxMath.roundDecimal(acc * 100, 2)}%'} ${rating.rating}';
+		
+		@:privateAccess
+		var format = accuracyTxt._formatRanges[0];
+		format.range.start = accuracyTxt.text.length - rating.rating.length;
+		format.range.end = accuracyTxt.text.length;
+		// accuracyTxt.addFormat(accFormat, accuracyTxt.text.length - rating.rating.length, accuracyTxt.text.length);
+
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 			pauseGame();
@@ -1303,6 +1343,8 @@ class PlayState extends MusicBeatState
 				if (event.accuracy != null) {
 					accuracyPressedNotes++;
 					totalAccuracyAmount += accuracy;
+
+					updateRating();
 				}
 				if (event.countAsCombo) combo++;
 
@@ -1449,4 +1491,16 @@ class PlayState extends MusicBeatState
 	}
 
 	public var curLight:Int = 0;
+}
+
+class ComboRating {
+	public var percent:Float;
+	public var rating:String;
+	public var color:FlxColor;
+
+	public function new(percent:Float, rating:String, color:FlxColor) {
+		this.percent = percent;
+		this.rating = rating;
+		this.color = color;
+	}
 }
