@@ -6,7 +6,6 @@ Early alpha of Codename Engine, known issues:
 	- Also works with "introMod.zip"
 - Titlescreen is broken (xml not implemented yet)
 - Some options are missing
-- Week 4
 - Week 5 has no monster animation
 - Week 6 still have no dialogue
 - Week 7 have no running tankman
