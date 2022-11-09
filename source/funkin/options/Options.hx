@@ -166,7 +166,7 @@ class Options
 
 	public static function applySettings() {
 		PlayerSettings.player1.setKeyboardScheme(Solo);
-		FlxG.forceNoAntialiasing = !antialiasing;
+		FlxG.game.stage.quality = (FlxG.forceNoAntialiasing = !antialiasing) ? 2 : 0;
 		FlxG.autoPause = autoPause;
 		FlxG.sound.volume = volume;
 	}

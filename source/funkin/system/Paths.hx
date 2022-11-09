@@ -220,15 +220,12 @@ class Paths
 			}
 		}
 
-
-
 		if (includeSource) {
 			var sourceResult = getFolderContent(key, false, addPath, true);
 			for(e in sourceResult)
 				if (!content.contains(e))
 					content.push(e);
 		}
-
 
 		return content;
 	}

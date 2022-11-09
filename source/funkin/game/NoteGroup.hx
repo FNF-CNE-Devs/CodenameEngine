@@ -17,6 +17,8 @@ class NoteGroup extends FlxTypedGroup<Note> {
 
     public function sortNotes() {
         sort(function(i, n1, n2) {
+            if (n1.strumTime == n2.strumTime)
+                return n1.isSustainNote ? -1 : 1;
             return FlxSort.byValues(FlxSort.ASCENDING, n1.strumTime, n2.strumTime);
         });
     }
