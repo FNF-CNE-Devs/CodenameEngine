@@ -156,7 +156,7 @@ class Options
 
 		if (!__eventAdded) {
 			Lib.application.onExit.add(function(i:Int) {
-				trace("saving settings...");
+				trace("Saving settings...");
 				save();
 			});
 			__eventAdded = true;
@@ -166,7 +166,7 @@ class Options
 
 	public static function applySettings() {
 		PlayerSettings.player1.setKeyboardScheme(Solo);
-		FlxG.game.stage.quality = (FlxG.forceNoAntialiasing = !antialiasing) ? 2 : 0;
+		FlxG.game.stage.quality = (FlxG.forceNoAntialiasing = !antialiasing) ? LOW : BEST;
 		FlxG.autoPause = autoPause;
 		FlxG.sound.volume = volume;
 	}

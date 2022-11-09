@@ -7,6 +7,7 @@ public var enableCameraHacks = true;
 public var enablePauseMenu = true;
 public var isSpooky = false;
 
+var oldStageQuality = FlxG.game.stage.quality;
 static var daPixelZoom = 6;
 
 /**
@@ -81,7 +82,7 @@ function createPost() {
     if (enableCameraHacks) {
         FlxG.camera.antialiasing = false;
         FlxG.camera.pixelPerfectRender = true;
-        FlxG.game.stage.quality = 2;
+        
         
         iconP1.antialiasing = false;
         iconP2.antialiasing = false;
@@ -123,6 +124,13 @@ public function makeCameraPixely(cam) {
 
     pixellyCameras.push(cam);
     pixellyShaders.push(shad);
+
+    FlxG.game.stage.quality = 2;
+}
+
+function destroy() {
+    // resets the stage quality
+    FlxG.game.stage.quality = oldStageQuality;
 }
 
 function pixelCam(cam) {
