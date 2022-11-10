@@ -1272,7 +1272,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned)
 		{
-			var event:NoteHitEvent = scripts.event("onNoteMiss", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, -0.04, false, -10));
+			var event:NoteHitEvent = scripts.event("onPlayerMiss", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, -0.04, false, -10));
 
 			if (event.cancelled) return;
 			

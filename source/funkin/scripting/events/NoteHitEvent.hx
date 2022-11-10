@@ -64,7 +64,7 @@ class NoteHitEvent extends CancellableEvent {
      */
     public var accuracy:Null<Float>;
     /**
-     * The amount of health that'll be gained from pressing that note. If called from `onNoteMiss`, the value will be negative.
+     * The amount of health that'll be gained from pressing that note. If called from `onPlayerMiss`, the value will be negative.
      */
     public var healthGain:Float;
     /**
@@ -142,7 +142,7 @@ class NoteHitEvent extends CancellableEvent {
     public function cancelVocalsUnmute() {preventVocalsUnmute();}
 
     /**
-     * Prevents the vocals volume from being muted in case its a parameter of `onNoteMiss`
+     * Prevents the vocals volume from being muted in case its a parameter of `onPlayerMiss`
      */
     public function preventVocalsMute() {
         unmuteVocals = true;
