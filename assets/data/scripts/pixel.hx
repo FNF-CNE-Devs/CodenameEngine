@@ -1,3 +1,4 @@
+import funkin.game.HudCamera;
 import funkin.scripting.events.NoteHitEvent;
 
 public var pixelNotesForBF = true;
@@ -93,7 +94,7 @@ function createPost() {
 }
 
 function onStartCountdown() {
-    var newNoteCamera = new FlxCamera();
+    var newNoteCamera = new HudCamera();
     newNoteCamera.bgColor = 0; // transparent
     FlxG.cameras.add(newNoteCamera, false);
 
@@ -140,11 +141,21 @@ function pixelCam(cam) {
 var pixellyCameras = [];
 var pixellyShaders = [];
 
+// function stepHit() {
+//     notes.forEach(function(n) {
+//         if (n.isSustainNote)
+//             n.offset.x -= 1;
+//     });
+// }
 function updatePost(elapsed) {
-
+    for(e in pixellyCameras) {
+        if (Std.isOfType(e, HudCamera))
+            e.downscroll = camHUD.downscroll;
+    }
     if (enableCameraHacks) {
         notes.forEach(function(n) {
             n.y -= n.y % daPixelZoom;
+            n.x -= n.x % daPixelZoom;
         });
     }
     
