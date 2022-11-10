@@ -1,5 +1,7 @@
 package funkin.system;
 
+import openfl.text.TextFormat;
+import flixel.system.ui.FlxSoundTray;
 import funkin.windows.WindowsAPI;
 import funkin.menus.TitleState;
 import funkin.game.Highscore;
@@ -140,6 +142,11 @@ class Main extends Sprite
 
 		FlxG.fixedTimestep = false;
 
+		refreshAssets();
+		if (FlxG.game.soundTray != null) {
+			FlxG.game.soundTray.text.setTextFormat(new TextFormat(Paths.font("vcr.ttf")));
+		}
+
 		Conductor.init();
 		AudioSwitchFix.init();
 		WindowsAPI.setDarkMode(true);
@@ -154,6 +161,10 @@ class Main extends Sprite
 		#end
 		
 		initTransition();
+	}
+
+	public static function refreshAssets() {
+		FlxSoundTray.volumeChangeSFX = Paths.sound('menu/volume');
 	}
 
 	public static function initTransition() {

@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.scripting.DummyScript;
 import flixel.FlxState;
 import flixel.FlxSubState;
 import funkin.scripting.events.*;
@@ -67,17 +68,18 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	 */
 	public var stateScript:Script;
 
-	public var scriptAllowed(get, null):Bool;
-
-	// OVERRIDE THIS TO DISABLE SCRIPTS!!
-	public function get_scriptAllowed() {return true;}
+	public var scriptsAllowed:Bool = true;
 
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
 	public function new(scriptsAllowed:Bool = true) {
 		super();
-		
+		this.scriptsAllowed = scriptsAllowed;
+		loadScript();
+	}
+
+	function loadScript() {
 		if (scriptsAllowed) {
 			var className = Type.getClassName(Type.getClass(this));
 			var scriptName = className.substr(className.lastIndexOf(".")+1);
@@ -111,10 +113,12 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 
 	override function update(elapsed:Float)
 	{
-		//everyStep();
-		var oldStep:Int = curStep;
-
-
+		// TODO: DEBUG MODE!!
+		if (FlxG.keys.justPressed.F5) {
+			loadScript();
+			if (stateScript != null && !(stateScript is DummyScript))
+				Logs.trace('State script successfully reloaded', WARNING, GREEN);
+		}
 		call("update");
 		super.update(elapsed);
 	}
