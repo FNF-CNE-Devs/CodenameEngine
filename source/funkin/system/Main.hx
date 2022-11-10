@@ -1,5 +1,6 @@
 package funkin.system;
 
+import openfl.utils.AssetCache;
 import openfl.text.TextFormat;
 import flixel.system.ui.FlxSoundTray;
 import funkin.windows.WindowsAPI;
@@ -143,9 +144,6 @@ class Main extends Sprite
 		FlxG.fixedTimestep = false;
 
 		refreshAssets();
-		if (FlxG.game.soundTray != null) {
-			FlxG.game.soundTray.text.setTextFormat(new TextFormat(Paths.font("vcr.ttf")));
-		}
 
 		Conductor.init();
 		AudioSwitchFix.init();
@@ -160,11 +158,18 @@ class Main extends Sprite
 		 });
 		#end
 		
+		FlxG.signals.preStateCreate.add(onStateSwitch);
+
 		initTransition();
 	}
 
 	public static function refreshAssets() {
 		FlxSoundTray.volumeChangeSFX = Paths.sound('menu/volume');
+
+		if (FlxG.game.soundTray != null)
+			FlxG.game.soundTray.text.setTextFormat(new TextFormat(Paths.font("vcr.ttf")));
+
+
 	}
 
 	public static function initTransition() {
@@ -176,6 +181,16 @@ class Main extends Sprite
 			new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, 0.7, new FlxPoint(0, 1),
 			{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
-
 	}
+
+    private static function onStateSwitch(newState:FlxState) {
+        // manual asset clearing since base openfl one doesnt clear lime one
+        // doesnt clear bitmaps since flixel fork does it auto
+        
+        var cache = cast(Assets.cache, AssetCache);
+        for (key=>font in cache.font)
+            cache.removeFont(key);
+        for (key=>sound in cache.sound)
+            cache.removeSound(key);
+    }
 }
