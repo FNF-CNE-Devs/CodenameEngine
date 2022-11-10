@@ -721,7 +721,7 @@ class PlayState extends MusicBeatState
 
 	override function openSubState(SubState:FlxSubState)
 	{
-		var event = scripts.event("onSubstateOpen", new SubstateEvent(SubState));
+		var event = scripts.event("onSubstateOpen", new StateEvent(SubState));
 
 		if (!postCreated)
 			FlxTransitionableState.skipNextTransIn = true;
@@ -745,7 +745,7 @@ class PlayState extends MusicBeatState
 
 	override function closeSubState()
 	{
-		var event = scripts.event("onSubstateClose", new SubstateEvent(subState));
+		var event = scripts.event("onSubstateClose", new StateEvent(subState));
 		if (event.cancelled) return;
 
 		if (paused)

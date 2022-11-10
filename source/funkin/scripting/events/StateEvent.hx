@@ -1,14 +1,14 @@
 package funkin.scripting.events;
 
-import flixel.FlxSubState;
+import flixel.FlxState;
 
-class SubstateEvent extends CancellableEvent {
+class StateEvent extends CancellableEvent {
     /**
      * Substate that is about to be opened/closed
      */
-    public var substate:FlxSubState;
+    public var substate:FlxState;
 
-    public function new(substate:FlxSubState) {
+    public function new(substate:FlxState) {
         super();
         this.substate = substate;
     }

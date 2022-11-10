@@ -98,11 +98,11 @@ interface PlayStateScript {
      * Triggered on substate open.
      * @param event Event object containing the substate, which is cancellable.
      */
-    public function onSubstateOpen(event:SubstateEvent):Void;
+    public function onSubstateOpen(event:StateEvent):Void;
 
     /**
      * Triggered on substate close.
      * @param event Event object containing the substate, which is cancellable.
      */
-    public function onSubstateClose(event:SubstateEvent):Void;
+    public function onSubstateClose(event:StateEvent):Void;
 }
