@@ -1,5 +1,6 @@
 package funkin.mods;
 
+import funkin.system.Main;
 import openfl.utils.AssetCache;
 import flixel.util.FlxSignal.FlxTypedSignal;
 import openfl.utils.Assets;
@@ -76,6 +77,7 @@ class ModsFolder {
             unloadMod(m);
         
         loadMod(ModsFolder.currentModFolder = mod);
+        Main.refreshAssets();
         onModSwitch.dispatch(ModsFolder.currentModFolder);
         FlxG.resetState();
     }

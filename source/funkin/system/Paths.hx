@@ -1,5 +1,6 @@
 package funkin.system;
 
+import haxe.io.Path;
 import funkin.mods.LimeLibrarySymbol;
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -153,7 +154,11 @@ class Paths
 
 	inline static public function font(key:String)
 	{
+		#if sys
+		return OpenFlAssets.getPath(getPath('fonts/$key', FONT, null));
+		#else
 		return getPath('fonts/$key', FONT, null);
+		#end
 	}
 
 	inline static public function getSparrowAtlas(key:String, ?library:String)
