@@ -205,7 +205,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
      */
     public function error(text:String, ?additionalInfo:Dynamic):Void {
         Logs.traceColored([
-            Logs.logText(fileName, GREEN),
+            Logs.logText(fileName, RED),
             Logs.logText(text)
         ], ERROR);
     }

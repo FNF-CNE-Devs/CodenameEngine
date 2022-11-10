@@ -23,13 +23,23 @@ class HScript extends Script {
         interp.variables.set("trace", this.trace);
         try {
             expr = parser.parseString(code, fileName);
+        } catch(e:Error) {
+            _errorHandler(e);
         } catch(e) {
-            return;
+            _errorHandler(new Error(ECustom(e.toString()), 0, 0, fileName, 0));
         }
     }
 
     private function _errorHandler(error:Error) {
-        this.error('$fileName:${error.line}: ${error.toString()}');
+
+        var fn = '$fileName:${error.line}: ';
+        var err = error.toString();
+        if (err.startsWith(fn)) err = err.substr(fn.length);
+
+        Logs.traceColored([
+            Logs.logText(fn, GREEN),
+            Logs.logText(err, RED)
+        ], ERROR);
     }
 
     public override function setParent(parent:Dynamic) {

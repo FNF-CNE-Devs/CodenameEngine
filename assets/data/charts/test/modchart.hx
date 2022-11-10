@@ -3,7 +3,6 @@ function create() {
     pixelNotesForBF = false;
     enablePixelUI = true;
     enableCameraHacks = false;
-    // defaultCamZoom = 0.5;
 }
 
 function updatePost(elapsed) {
