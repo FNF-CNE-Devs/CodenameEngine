@@ -81,12 +81,16 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 
 	function loadScript() {
 		if (scriptsAllowed) {
-			var className = Type.getClassName(Type.getClass(this));
-			var scriptName = className.substr(className.lastIndexOf(".")+1);
-	
-			stateScript = Script.create(Paths.script('data/states/${scriptName}'));
-			stateScript.setParent(this);
-			stateScript.load();
+			if (stateScript == null || stateScript is DummyScript) {
+				var className = Type.getClassName(Type.getClass(this));
+				var scriptName = className.substr(className.lastIndexOf(".")+1);
+		
+				stateScript = Script.create(Paths.script('data/states/${scriptName}'));
+				stateScript.setParent(this);
+				stateScript.load();
+			} else {
+				stateScript.reload();
+			}
 		}
 	}
 	override function create()
