@@ -138,6 +138,15 @@ class MainMenuState extends MusicBeatState
 				FlxG.switchState(new TitleState());
 			}
 
+			#if MOD_SUPPORT
+			// make it customisable
+			if (FlxG.keys.justPressed.TAB) {
+				openSubState(new ModSwitchMenu());
+				persistentUpdate = false;
+				persistentDraw = true;
+			}
+			#end
+
 			if (controls.ACCEPT)
 			{
 				if (optionShit[curSelected] == 'donate')
