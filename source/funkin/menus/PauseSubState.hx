@@ -1,7 +1,7 @@
 package funkin.menus;
 
 import funkin.scripting.events.PauseCreationEvent;
-import funkin.scripting.events.PauseSelectOptionEvent;
+import funkin.scripting.events.NameEvent;
 import funkin.scripting.Script;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -124,7 +124,7 @@ class PauseSubState extends MusicBeatSubstate
 	}
 
 	public function selectOption() {
-		var event = new PauseSelectOptionEvent(menuItems[curSelected]);
+		var event = new NameEvent(menuItems[curSelected]);
 		pauseScript.call("onSelectOption", [event]);
 
 		if (event.cancelled) return;

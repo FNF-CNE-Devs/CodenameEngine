@@ -1,8 +1,8 @@
 package funkin.scripting.events;
 
-class PauseSelectOptionEvent extends CancellableEvent {
+class NameEvent extends CancellableEvent {
     /**
-     * Option name thats going to be selected
+     * Name
      */
     public var name:String;
 

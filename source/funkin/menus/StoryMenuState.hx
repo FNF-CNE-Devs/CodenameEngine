@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import funkin.scripting.events.*;
 import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
 import funkin.system.XMLUtil;
@@ -132,11 +133,12 @@ class StoryMenuState extends MusicBeatState {
         scoreText.text = 'WEEK SCORE:${Math.round(lerpScore)}';
         
         if (canSelect) {
-            leftArrow.animation.play(controls.LEFT ? 'press' : 'idle');
-            rightArrow.animation.play(controls.RIGHT ? 'press' : 'idle');
+            if (leftArrow != null && leftArrow.exists) leftArrow.animation.play(controls.LEFT ? 'press' : 'idle');
+            if (rightArrow != null && rightArrow.exists) rightArrow.animation.play(controls.RIGHT ? 'press' : 'idle');
 
-            if (controls.BACK)
-                FlxG.switchState(new MainMenuState());
+            if (controls.BACK) {
+                goBack();
+            }
 
             
             changeDifficulty((controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0));
@@ -146,14 +148,23 @@ class StoryMenuState extends MusicBeatState {
                 selectWeek();
         } else {
             for(e in [leftArrow, rightArrow])
-                e.animation.play('idle');
+                if (e != null && e.exists)
+                    e.animation.play('idle');
         }
+    }
+
+    public function goBack() {
+        var event = event("onGoBack", new CancellableEvent());
+        if (!event.cancelled)
+            FlxG.switchState(new MainMenuState());
     }
 
     public function changeWeek(change:Int, force:Bool = false) {
         if (change == 0 && !force) return;
 
-        curWeek = FlxMath.wrap(curWeek + change, 0, weeks.length-1);
+        var event = event("onChangeWeek", new MenuChangeEvent(curWeek, FlxMath.wrap(curWeek + change, 0, weeks.length-1), change));
+        if (event.cancelled) return;
+        curWeek = event.value;
         
         if (!force) CoolUtil.playMenuSFX();
         for(k=>e in weekSprites.members) {
@@ -171,7 +182,9 @@ class StoryMenuState extends MusicBeatState {
     public function changeDifficulty(change:Int, force:Bool = false) {
         if (change == 0 && !force) return;
 
-        curDifficulty = FlxMath.wrap(curDifficulty + change, 0, weeks[curWeek].difficulties.length-1);
+        var event = event("onChangeDifficulty", new MenuChangeEvent(curDifficulty, FlxMath.wrap(curDifficulty + change, 0, weeks[curWeek].difficulties.length-1), change));
+        if (event.cancelled) return;
+        curDifficulty = event.value;
 
         if (__oldDiffName != (__oldDiffName = weeks[curWeek].difficulties[curDifficulty].toLowerCase())) {
             for(e in difficultySprites) e.visible = false;
@@ -204,6 +217,11 @@ class StoryMenuState extends MusicBeatState {
     }
 
     public function selectWeek() {
+        
+
+        var event = event("onWeekSelect", new WeekSelectEvent(weeks[curWeek], weeks[curWeek].difficulties[curDifficulty], curWeek, curDifficulty));
+        if (event.cancelled) return;
+
         canSelect = false;
         CoolUtil.playMenuSFX(1);
 
