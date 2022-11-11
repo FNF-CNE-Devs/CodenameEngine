@@ -28,6 +28,11 @@ class Note extends FlxSprite
 	public var wasGoodHit:Bool = false;
 
 	/**
+	 * Whenever that note should be avoided by Botplay.
+	 */
+	public var avoid:Bool = false;
+
+	/**
 	 * The note that comes before this one (sustain and not)
 	 */
 	public var prevNote:Note;
