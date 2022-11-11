@@ -67,6 +67,7 @@ class Note extends FlxSprite
 	@:dox(hide) public var __strumCameras:Array<FlxCamera> = null;
 
 	private function get_noteType() {
+		if (PlayState.instance == null) return null;
 		return PlayState.instance.getNoteType(noteTypeID);
 	}
 
