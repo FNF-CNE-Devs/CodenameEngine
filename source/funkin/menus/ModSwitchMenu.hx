@@ -23,6 +23,7 @@ class ModSwitchMenu extends MusicBeatSubstate {
         var bg = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFF000000);
         bg.scale.set(FlxG.width, FlxG.height);
         bg.updateHitbox();
+        bg.scrollFactor.set();
         add(bg);
 
         bg.alpha = 0;
@@ -47,6 +48,7 @@ class ModSwitchMenu extends MusicBeatSubstate {
         for(mod in mods) {
             var a = new Alphabet(0, 0, mod, true);
             a.isMenuItem = true;
+            a.scrollFactor.set();
             alphabets.add(a);
         }
         add(alphabets);
