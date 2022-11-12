@@ -102,6 +102,13 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         doCharNodeShit(PlayState.instance.gf, node);
                         PlayState.instance.add(PlayState.instance.gf);
                         PlayState.instance.gf;
+                    case "ratings" | "combo":
+                        PlayState.instance.comboGroup.setPosition(
+                            Std.parseFloat(node.getAtt("x")).getDefault(PlayState.instance.comboGroup.x),
+                            Std.parseFloat(node.getAtt("y")).getDefault(PlayState.instance.comboGroup.y)
+                        );
+                        PlayState.instance.add(PlayState.instance.comboGroup);
+                        PlayState.instance.comboGroup;
                     case "dad" | "opponent":
                         if (PlayState.instance.dad == null || PlayState.instance.dad.isGF) continue;
                         doCharNodeShit(PlayState.instance.dad, node);
