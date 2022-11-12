@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="assets.png">
+	<!-- Created with Adobe Animate version 21.0.1.37179 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="arrow left0000" x="10" y="10" width="48" height="85" pivotX="0" pivotY="0"/>
+	<SubTexture name="arrow push left0000" x="68" y="10" width="42" height="75" pivotX="0" pivotY="0"/>
+	<SubTexture name="arrow push right0000" x="120" y="10" width="41" height="74" pivotX="0" pivotY="0"/>
+	<SubTexture name="arrow right0000" x="171" y="10" width="47" height="85" pivotX="0" pivotY="0"/>
+	<SubTexture name="lock0000" x="228" y="10" width="67" height="93" pivotX="0" pivotY="0"/>
+</TextureAtlas>

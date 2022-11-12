@@ -1,0 +1,133 @@
+{
+    "addOGSongs": false,
+    "songs": [
+        {
+            "name": "test",
+            "icon": "bf"
+        },
+        {
+            "name": "Tutorial",
+            "icon": "gf",
+            "color": "#9271FD"
+        },
+
+
+        {
+            "name": "Bopeebo",
+            "icon": "dad",
+            "color": "#9271FD"
+        },
+        {
+            "name": "Fresh",
+            "icon": "dad",
+            "color": "#9271FD"
+        },
+        {
+            "name": "Dadbattle",
+            "icon": "dad",
+            "color": "#9271FD"
+        },
+
+
+        {
+            "name": "Spookeez",
+            "icon": "spooky",
+            "color": "#223344"
+        },
+        {
+            "name": "South",
+            "icon": "spooky",
+            "color": "#223344"
+        },
+        {
+            "name": "Monster",
+            "icon": "monster",
+            "color": "#223344"
+        },
+
+
+        {
+            "name": "Pico",
+            "icon": "pico",
+            "color": "#941653"
+        },
+        {
+            "name": "Philly Nice",
+            "icon": "pico",
+            "color": "#941653"
+        },
+        {
+            "name": "Blammed",
+            "icon": "pico",
+            "color": "#941653"
+        },
+
+
+        {
+            "name": "Satin Panties",
+            "icon": "mom",
+            "color": "#FC96D7"
+        },
+        {
+            "name": "High",
+            "icon": "mom",
+            "color": "#FC96D7"
+        },
+        {
+            "name": "MILF",
+            "icon": "mom",
+            "color": "#FC96D7"
+        },
+
+        
+        {
+            "name": "Cocoa",
+            "icon": "parents-christmas",
+            "color": "#A0D1FF"
+        },
+        {
+            "name": "Eggnog",
+            "icon": "parents-christmas",
+            "color": "#A0D1FF"
+        },
+        {
+            "name": "Winter Horrorland",
+            "icon": "monster",
+            "color": "#A0D1FF"
+        },
+
+        
+        {
+            "name": "Senpai",
+            "icon": "senpai",
+            "color": "#FF78BF"
+        },
+        {
+            "name": "Roses",
+            "icon": "senpai",
+            "color": "#FF78BF"
+        },
+        {
+            "name": "Thorns",
+            "icon": "spirit",
+            "color": "#FF78BF"
+        },
+
+        
+        {
+            "name": "Ugh",
+            "icon": "tankman",
+            "color": "#F6B604"
+        },
+        {
+            "name": "Guns",
+            "icon": "tankman",
+            "color": "#F6B604"
+        },
+        {
+            "name": "Stress",
+            "icon": "tankman",
+            "color": "#F6B604"
+        }
+    ]
+}

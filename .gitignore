@@ -1,3 +1,4 @@
 export/
-latest/
+latest/windows/obj/
+latest/windows/haxe/
 .vscode/

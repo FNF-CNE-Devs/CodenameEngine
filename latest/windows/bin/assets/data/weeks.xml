@@ -1,0 +1,72 @@
+<!DOCTYPE codename-engine-weeks>
+<config>
+    <characters>
+        <!-- BOYFRIEND -->
+        <char name="bf" scale="0.9" x="80">
+            <anim name="idle"       anim="BF idle dance white"  fps="24"    loop="true" />
+            <anim name="confirm"    anim="BF HEY!!"             fps="24"    loop="false"/>
+        </char>
+
+        <!-- ANIMATION IS AUTOMATICALLY ADDED. IF YOU WANT TO SPECIFY A PREFIX, ADD AN IDLE ANIM LIKE ABOVE. -->
+        <char name="dad"                scale="0.5" x="50" />
+        <char name="gf"                 scale="0.5" />
+        <char name="spooky"             scale="0.7" x="125" />
+        <char name="pico"               scale="0.7" x="100" y="-30"     flip="true"/>
+        <char name="mom"                scale="0.5" x="50"  y="10"/>
+        <char name="parents-christmas"  scale="0.4" x="150" y="-20" />
+        <char name="senpai"                         x="130" y="-50"/>
+        <char name="tankman"                        x="75" y="-35"/>
+    </characters>
+    <weeks>
+        <!-- SPRITE BUTTONS ARE LOCATED IN "images/menus/storymenu/weeks/" -->
+        <!-- IF NO SPRITE ARE SPECIFIED, "week(week number)" WILL BE USED. -->
+        <!-- IF YOU WANT CUSTOM DIFFICULTIES, ADD THIS: difficulties="easy,normal,hard" -->
+        <!-- DIFFICULTIES SPRITES IN "images/menus/storymenu/difficulties/" -->
+
+        <week name="" chars="none,bf,gf" sprite="tutorial">
+            <song name="Tutorial" />
+        </week>
+
+        <week name="DADDY DEAREST" chars="dad,bf,gf" sprite="week1">
+            <song name="Bopeebo" />
+            <song name="Fresh" />
+            <song name="Dadbattle" />
+        </week>
+
+        <week name="SPOOKY MONTH" chars="spooky,bf,gf" sprite="week2">
+            <song name="Spookeez" />
+            <song name="South" />
+            <song name="Monster" hide="true" />
+        </week>
+
+        <week name="PICO" chars="pico,bf,gf" sprite="week3">
+            <song name="Pico" />
+            <song name="Philly" />
+            <song name="Blammed" />
+        </week>
+
+        <week name="MOMMY MUST MURDER" chars="mom,bf,gf" sprite="week4">
+            <song name="Satin Panties" />
+            <song name="High" />
+            <song name="MILF" />
+        </week>
+
+        <week name="RED SNOW" chars="parents-christmas,bf,gf" sprite="week5">
+            <song name="Cocoa" />
+            <song name="Eggnog" />
+            <song name="Winter-Horrorland" hide="true" />
+        </week>
+
+        <week name="HATING SIMULATOR FT. MOAWLING" chars="senpai,bf,gf" sprite="week6">
+            <song name="Senpai" />
+            <song name="Roses" />
+            <song name="Thorns" hide="true" />
+        </week>
+
+        <week name="TANKMAN" chars="tankman,bf,gf" sprite="week7">
+            <song name="Ugh" />
+            <song name="Guns" />
+            <song name="Stress" />
+        </week>
+    </weeks>
+</config>
