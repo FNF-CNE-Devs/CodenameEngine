@@ -433,6 +433,8 @@ class PlayState extends MusicBeatState
 	public var startTimer:FlxTimer;
 	public var perfectMode:Bool = false;
 	public var introLength:Int = 5;
+	public var introSprites:Array<String> = [null, 'game/ready', "game/set", "game/go"];
+	public var introSounds:Array<String> = ['intro3', 'intro2', "intro1", "introGo"];
 
 	public function startCountdown():Void
 	{
@@ -449,8 +451,6 @@ class PlayState extends MusicBeatState
 
 		var swagCounter:Int = 0;
 
-		var introSprites:Array<String> = [null, 'game/ready', "game/set", "game/go"];
-		var introSounds:Array<String> = ['intro3', 'intro2', "intro1", "introGo"];
 
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
@@ -458,49 +458,57 @@ class PlayState extends MusicBeatState
 			gf.dance();
 			boyfriend.dance();
 
-			var event:CountdownEvent = scripts.event("onCountdown", new CountdownEvent(
-				swagCounter, 
-				introSprites[swagCounter],
-				introSounds[swagCounter],
-				1, 0.6, true));
+			countdown(swagCounter);
 
-			var sprite:FlxSprite = null;
-			var sound:FlxSound = null;
-			var tween:FlxTween = null;
-
-			if (!event.cancelled) {
-				if (event.spritePath != null) {
-					var spr = event.spritePath;
-					if (!Assets.exists(spr)) spr = Paths.image('$spr');
-
-					sprite = new FlxSprite().loadGraphic(spr);
-					sprite.scrollFactor.set();
-					sprite.scale.set(event.scale, event.scale);
-					sprite.updateHitbox();
-					sprite.screenCenter();
-					add(sprite);
-					tween = FlxTween.tween(sprite, {y: sprite.y + 100, alpha: 0}, Conductor.crochet / 1000, {
-						ease: FlxEase.cubeInOut,
-						onComplete: function(twn:FlxTween)
-						{
-							sprite.destroy();
-						}
-					});
-				}
-				if (event.soundPath != null) {
-					var sfx = event.soundPath;
-					if (!Assets.exists(sfx)) sfx = Paths.sound(sfx);
-					sound = FlxG.sound.play(sfx, event.volume);
-				}
-			}
-			event.sprite = sprite;
-			event.sound = sound;
-			event.spriteTween = tween;
-			event.cancelled = false;
-
-			scripts.event("onCountdownPost", event);
 			swagCounter += 1;
 		}, introLength);
+	}
+
+	/**
+	 * Creates a fake countdown.
+	 */
+	public function countdown(swagCounter:Int) {
+		var event:CountdownEvent = scripts.event("onCountdown", new CountdownEvent(
+			swagCounter, 
+			introSprites[swagCounter],
+			introSounds[swagCounter],
+			1, 0.6, true));
+
+		var sprite:FlxSprite = null;
+		var sound:FlxSound = null;
+		var tween:FlxTween = null;
+
+		if (!event.cancelled) {
+			if (event.spritePath != null) {
+				var spr = event.spritePath;
+				if (!Assets.exists(spr)) spr = Paths.image('$spr');
+
+				sprite = new FlxSprite().loadGraphic(spr);
+				sprite.scrollFactor.set();
+				sprite.scale.set(event.scale, event.scale);
+				sprite.updateHitbox();
+				sprite.screenCenter();
+				add(sprite);
+				tween = FlxTween.tween(sprite, {y: sprite.y + 100, alpha: 0}, Conductor.crochet / 1000, {
+					ease: FlxEase.cubeInOut,
+					onComplete: function(twn:FlxTween)
+					{
+						sprite.destroy();
+					}
+				});
+			}
+			if (event.soundPath != null) {
+				var sfx = event.soundPath;
+				if (!Assets.exists(sfx)) sfx = Paths.sound(sfx);
+				sound = FlxG.sound.play(sfx, event.volume);
+			}
+		}
+		event.sprite = sprite;
+		event.sound = sound;
+		event.spriteTween = tween;
+		event.cancelled = false;
+
+		scripts.event("onCountdownPost", event);
 	}
 
 	public var previousFrameTime:Int = 0;

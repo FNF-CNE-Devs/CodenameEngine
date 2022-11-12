@@ -86,7 +86,6 @@ class GlobalScript {
         script.call(name, args);
     }
     public static function onModSwitch(newMod:String) {
-        trace(newMod);
         if (script != null) {
             script.destroy();
             script = null;
