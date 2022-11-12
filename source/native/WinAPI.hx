@@ -104,7 +104,6 @@ class AudioFixClient : public IMMNotificationClient {
         EDataFlow flow, ERole role,
         LPCWSTR pwstrDeviceId)
     {
-        std::cout << "fuck";
         ::funkin::_hx_system::Main_obj::audioDisconnected = true;
         return S_OK;
     };
