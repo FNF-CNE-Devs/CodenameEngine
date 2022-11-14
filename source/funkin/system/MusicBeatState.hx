@@ -92,6 +92,25 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 				stateScript.reload();
 		}
 	}
+
+	public override function tryUpdate(elapsed:Float):Void
+	{
+		if (persistentUpdate || subState == null) {
+			call("preUpdate", [elapsed]);
+			update(elapsed);
+			call("postUpdate", [elapsed]);
+		}
+
+		if (_requestSubStateReset)
+		{
+			_requestSubStateReset = false;
+			resetSubState();
+		}
+		if (subState != null)
+		{
+			subState.tryUpdate(elapsed);
+		}
+	}
 	override function create()
 	{
 		super.create();
