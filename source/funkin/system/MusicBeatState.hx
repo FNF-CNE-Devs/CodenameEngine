@@ -122,7 +122,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 			if (stateScript != null && !(stateScript is DummyScript))
 				Logs.trace('State script successfully reloaded', WARNING, GREEN);
 		}
-		call("update");
+		call("update", [elapsed]);
 		super.update(elapsed);
 	}
 
