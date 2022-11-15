@@ -16,7 +16,7 @@ interface CharacterScript {
     /**
      * Triggered after the character has been entirely loaded.
      */
-    public function createPost():Void;
+    public function postCreate():Void;
 
     /**
      * Triggered every frame.

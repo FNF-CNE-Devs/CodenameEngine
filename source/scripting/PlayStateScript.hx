@@ -20,7 +20,7 @@ interface PlayStateScript {
     /**
      * Triggered at the very end of PlayState's creation
      */
-    public function createPost():Void;
+    public function postCreate():Void;
 
     /**
      * Triggered every frame.
@@ -32,7 +32,7 @@ interface PlayStateScript {
      * Triggered at the end of every frame.
      * @param elapsed Time elapsed since last frame.
      */
-    public function updatePost(elapsed:Float):Void;
+    public function postUpdate(elapsed:Float):Void;
 
     /**
      * Triggered every step
@@ -80,7 +80,7 @@ interface PlayStateScript {
      * Triggered after the input system updates.
      * @param note Event object with the pressed, justPressed and justReleased notes.
      */
-    public function inputUpdatePost(event:InputSystemEvent):Void;
+    public function inputPostUpdate(event:InputSystemEvent):Void;
 
     /**
      * Triggered on each note creation

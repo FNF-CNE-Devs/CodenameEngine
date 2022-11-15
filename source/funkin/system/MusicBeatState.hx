@@ -119,7 +119,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 
 	public override function createPost() {
 		super.createPost();
-		call("createPost");
+		call("postCreate");
 	}
 	public function call(name:String, ?args:Array<Dynamic>, ?defaultVal:Dynamic):Dynamic {
 		// calls the function on the assigned script

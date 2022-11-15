@@ -293,7 +293,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		if (isPlayer) flipX = !flipX;
 		__baseFlipped = flipX;
 		dance();
-		script.call("createPost");
+		script.call("postCreate");
 	}
 
 	var __baseFlipped:Bool = false;

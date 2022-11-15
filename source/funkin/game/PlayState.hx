@@ -386,7 +386,7 @@ class PlayState extends MusicBeatState
 	public override function createPost() {
 		startCutscene();
 		super.createPost();
-		scripts.call("createPost");
+		scripts.call("postCreate");
 	}
 
 	public function startCutscene() {
@@ -1095,7 +1095,7 @@ class PlayState extends MusicBeatState
 				for(e in (daNote.mustPress ? playerStrums : cpuStrums).members) {
 					if (e.ID == daNote.noteData % 4) {
 						strum = e;
-						break;
+						break; //ing bad
 					}
 				}
 				

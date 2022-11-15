@@ -51,7 +51,7 @@ interface GlobalScript {
      * 
      * @param elapsed Time elapsed since last frame
      */
-    public function updatePost(elapsed:Float):Void;
+    public function postUpdate(elapsed:Float):Void;
     
     /**
      * Called before the game draws on screen.

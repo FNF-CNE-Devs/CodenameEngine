@@ -97,7 +97,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
-		pauseScript.call("createPost");
+		pauseScript.call("postCreate");
 	}
 
 	override function update(elapsed:Float)

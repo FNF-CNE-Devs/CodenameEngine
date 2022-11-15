@@ -42,7 +42,6 @@ class GlobalScript {
         });
         FlxG.signals.postUpdate.add(function() {
             call("postUpdate", [FlxG.elapsed]);
-            call("updatePost", [FlxG.elapsed]);
             if (FlxG.keys.justPressed.F5) {
                 if (script != null && !(script is DummyScript)) {
                     Logs.trace('Reloading global script...', WARNING, YELLOW);

@@ -30,7 +30,7 @@ class ScriptedCutscene extends Cutscene {
     public override function update(elapsed:Float) {
         script.call("update", [elapsed]);
         super.update(elapsed);
-        script.call("updatePost", [elapsed]);
+        script.call("postUpdate", [elapsed]);
     }
 
     public override function beatHit(curBeat:Int) {
