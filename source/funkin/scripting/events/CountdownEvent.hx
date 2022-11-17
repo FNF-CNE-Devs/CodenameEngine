@@ -32,15 +32,15 @@ class CountdownEvent extends CancellableEvent {
 
 
     /**
-     * Created sprite, only available in `onCountdownPost`
+     * Created sprite, only available in `onPostCountdown`
      */
     public var sprite:FlxSprite;
     /**
-     * Created tween for the sprite, only available in `onCountdownPost`
+     * Created tween for the sprite, only available in `onPostCountdown`
      */
     public var spriteTween:FlxTween;
     /**
-     * Created sound, only available in `onCountdownPost`
+     * Created sound, only available in `onPostCountdown`
      */
     public var sound:FlxSound;
 

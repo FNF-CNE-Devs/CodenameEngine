@@ -82,7 +82,7 @@ function destroy() {
 var canDoShit = true;
 var time:Float = 0;
 function update(elapsed) {
-    pixelScript.call("updatePost", [elapsed]);
+    pixelScript.call("postUpdate", [elapsed]);
 
     pauseCam.alpha = lerp(pauseCam.alpha, 1, 0.25);
     time += elapsed;

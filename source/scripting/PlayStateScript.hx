@@ -56,7 +56,7 @@ interface PlayStateScript {
      * Triggered after every countdown.
      * @param event Countdown event.
      */
-    public function onCountdownPost(event:CountdownEvent):Void;
+    public function onPostCountdown(event:CountdownEvent):Void;
 
     /**
      * Triggered whenever the player hits a note.

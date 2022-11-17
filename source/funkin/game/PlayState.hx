@@ -508,7 +508,7 @@ class PlayState extends MusicBeatState
 		event.spriteTween = tween;
 		event.cancelled = false;
 
-		scripts.event("onCountdownPost", event);
+		scripts.event("onPostCountdown", event);
 	}
 
 	public var previousFrameTime:Int = 0;
@@ -1132,7 +1132,7 @@ class PlayState extends MusicBeatState
 					if (event.__reposNote) event.strum.updateNotePosition(daNote);
 					event.strum.updateSustain(daNote);
 
-					PlayState.instance.scripts.event("onNoteUpdatePost", event);
+					PlayState.instance.scripts.event("onNotePostUpdate", event);
 				}
 				
 			});
@@ -1146,7 +1146,7 @@ class PlayState extends MusicBeatState
 			endSong();
 		#end
 		
-		scripts.call("updatePost", [elapsed]);
+		scripts.call("postUpdate", [elapsed]);
 	}
 
 	function endSong():Void
@@ -1278,7 +1278,7 @@ class PlayState extends MusicBeatState
 		playerStrums.forEach(function(str:Strum) {
 			str.updatePlayerInput(pressed[str.ID], justPressed[str.ID], justReleased[str.ID]);
 		});
-		scripts.call("onKeyShitPost");
+		scripts.call("onPostKeyShit");
 	}
 
 	function noteMiss(note:Note):Void
