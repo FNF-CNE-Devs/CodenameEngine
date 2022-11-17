@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import flixel.FlxCamera;
 import funkin.scripting.events.PauseCreationEvent;
 import funkin.scripting.events.NameEvent;
 import funkin.scripting.Script;
@@ -95,7 +96,9 @@ class PauseSubState extends MusicBeatSubstate
 
 		changeSelection();
 
-		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+		camera = new FlxCamera();
+		camera.bgColor = 0;
+		FlxG.cameras.add(camera, false);
 
 		pauseScript.call("postCreate");
 	}
