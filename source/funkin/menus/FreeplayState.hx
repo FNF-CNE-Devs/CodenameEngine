@@ -69,7 +69,7 @@ class FreeplayState extends MusicBeatState
 
 		// LOAD CHARACTERS
 
-		bg = new FlxSprite(0, 0, Paths.image('menus/menuDesat'));
+		bg = new FlxSprite(0, 0).loadAnimatedGraphic(Paths.image('menus/menuDesat'));
 		if (songs.length > 0)
 			bg.color = songs[0].color;
 		add(bg);

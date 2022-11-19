@@ -349,7 +349,7 @@ class IntroText {
 
 				var scale:Float = CoolUtil.getDefault(image.scale, 1);
 
-				var sprite = new FlxSprite(0, 200, Paths.image(image.path));
+				var sprite = new FlxSprite(0, 200).loadAnimatedGraphic(Paths.image(image.path));
 				sprite.flipX = CoolUtil.getDefault(image.flipX, false);
 				sprite.flipY = CoolUtil.getDefault(image.flipY, false);
 				sprite.scale.set(scale, scale);

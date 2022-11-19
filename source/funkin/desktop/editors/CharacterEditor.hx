@@ -27,11 +27,11 @@ class CharacterEditor extends WindowContent {
         parent.addCamera(camHUD);
 
         // stage
-        var bg = new FlxSprite(-600, -200, Paths.image('stages/default/stageback'));
+        var bg = new FlxSprite(-600, -200).loadAnimatedGraphic(Paths.image('stages/default/stageback'));
         bg.scrollFactor.set(0.9, 0.9);
-        var stageFront = new FlxSprite(-600, 600, Paths.image('stages/default/stagefront'));
+        var stageFront = new FlxSprite(-600, 600).loadAnimatedGraphic(Paths.image('stages/default/stagefront'));
         stageFront.scrollFactor.set(0.9, 0.9);
-        var stageCurtains = new FlxSprite(-500, -300, Paths.image('stages/default/stagecurtains'));
+        var stageCurtains = new FlxSprite(-500, -300).loadAnimatedGraphic(Paths.image('stages/default/stagecurtains'));
         stageCurtains.scrollFactor.set(1.3, 1.3);
         char = new Character(100, 100, curCharacter, false);
 
