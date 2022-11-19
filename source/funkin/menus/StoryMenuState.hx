@@ -71,7 +71,7 @@ class StoryMenuState extends MusicBeatState {
         weekSprites = new FlxTypedGroup<MenuItem>();
 
         // DUMBASS ARROWS
-		var assets = Paths.getSparrowAtlas('menus/storymenu/assets');
+		var assets = Paths.getFrames('menus/storymenu/assets');
         var directions = ["left", "right"];
 
         leftArrow = new FlxSprite((FlxG.width + 400) / 2, weekBG.y + weekBG.height + 10 + 10);

@@ -339,7 +339,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
-		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('game/healthBar'));
+		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadAnimatedGraphic(Paths.image('game/healthBar'));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
@@ -483,7 +483,7 @@ class PlayState extends MusicBeatState
 				var spr = event.spritePath;
 				if (!Assets.exists(spr)) spr = Paths.image('$spr');
 
-				sprite = new FlxSprite().loadGraphic(spr);
+				sprite = new FlxSprite().loadAnimatedGraphic(spr);
 				sprite.scrollFactor.set();
 				sprite.scale.set(event.scale, event.scale);
 				sprite.updateHitbox();
@@ -1138,7 +1138,7 @@ class PlayState extends MusicBeatState
 				
 			});
 		}
-		
+
 		if (!inCutscene)
 			keyShit();
 
@@ -1379,12 +1379,12 @@ class PlayState extends MusicBeatState
 			
 					songScore += score;
 			
-					rating.loadGraphic(Paths.image('${event.ratingPrefix}$daRating${event.ratingSuffix}'));
+					rating.loadAnimatedGraphic(Paths.image('${event.ratingPrefix}$daRating${event.ratingSuffix}'));
 					rating.acceleration.y = 550;
 					rating.velocity.y -= FlxG.random.int(140, 175);
 					rating.velocity.x -= FlxG.random.int(0, 10);
 			
-					var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('${event.ratingPrefix}combo${event.ratingSuffix}'));
+					var comboSpr:FlxSprite = new FlxSprite().loadAnimatedGraphic(Paths.image('${event.ratingPrefix}combo${event.ratingSuffix}'));
 					comboSpr.acceleration.y = 600;
 					comboSpr.velocity.y -= 150;
 					comboSpr.velocity.x += FlxG.random.int(1, 10);
@@ -1407,7 +1407,7 @@ class PlayState extends MusicBeatState
 						{
 							var e = separatedScore.charAt(i);
 				
-							var numScore:FlxSprite = new FlxSprite((43 * i) - 90, 80).loadGraphic(Paths.image('${event.ratingPrefix}num$e${event.ratingSuffix}'));
+							var numScore:FlxSprite = new FlxSprite((43 * i) - 90, 80).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}num$e${event.ratingSuffix}'));
 							numScore.antialiasing = event.numAntialiasing;
 							numScore.scale.set(event.numScale, event.numScale);
 							numScore.updateHitbox();

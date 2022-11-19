@@ -317,5 +317,7 @@ class CoolUtil
 			spr.animation.add("idle", [for(i in 0...spr.frames.frames.length) i], 24, true);
 			spr.animation.play("idle");
 		}
+
+		return spr;
 	}
 }

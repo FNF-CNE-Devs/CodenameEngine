@@ -14,6 +14,6 @@ function onDadHit(event) {
     }
 }
 
-function createPost() {
+function postCreate() {
     generateNotes(CoolUtil.parseJson(Paths.chart('stress', 'picospeaker')).song);
 }

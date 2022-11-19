@@ -25,7 +25,7 @@ class Checkbox extends TextOption {
         super(text, desc, null);
 
         checkbox = new FlxSprite(10, -40);
-        checkbox.frames = Paths.getSparrowAtlas('menus/options/checkboxThingie');
+        checkbox.frames = Paths.getFrames('menus/options/checkboxThingie');
         checkbox.animation.addByPrefix("checked", "Check Box Selected Static", 24);
         checkbox.animation.addByPrefix("unchecked", "Check Box unselected", 24);
         checkbox.animation.addByPrefix("checking", "Check Box selecting animation", 24, false);

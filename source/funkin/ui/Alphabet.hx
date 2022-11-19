@@ -254,7 +254,7 @@ class AlphaCharacter extends FlxSprite
 			width = 40;
 			return;
 		}
-		frames = Paths.getSparrowAtlas(boldAlphabetPath);
+		frames = Paths.getFrames(boldAlphabetPath);
 		animation.addByPrefix(letter, boldAnims[letter], 24);
 		animation.play(letter);
 		updateHitbox();
@@ -267,7 +267,7 @@ class AlphaCharacter extends FlxSprite
 			width = 40;
 			return;
 		}
-		frames = Paths.getSparrowAtlas(letterAlphabetPath);
+		frames = Paths.getFrames(letterAlphabetPath);
 		animation.addByPrefix(letter, letterAnims[letter], 24);
 		animation.play(letter);
 		updateHitbox();

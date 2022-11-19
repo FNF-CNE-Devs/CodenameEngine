@@ -56,7 +56,7 @@ class OptionsMenu extends MusicBeatState {
         if (fromPlayState != null) OptionsMenu.fromPlayState = fromPlayState;
     }
     public override function create() {
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menus/menuBGBlue'));
+		var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBGBlue'));
         bg.scrollFactor.set();
 		bg.scale.set(1.15, 1.15);
 		bg.updateHitbox();

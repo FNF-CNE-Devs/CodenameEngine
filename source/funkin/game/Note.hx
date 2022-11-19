@@ -106,7 +106,7 @@ class Note extends FlxSprite
 			{
 				// case "My Custom Note Type": // hardcoding note types
 				default:
-					frames = Paths.getSparrowAtlas(event.noteSprite);
+					frames = Paths.getFrames(event.noteSprite);
 
 					switch(event.strumID % 4) {
 						case 0:

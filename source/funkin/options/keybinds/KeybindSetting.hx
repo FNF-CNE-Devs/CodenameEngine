@@ -56,7 +56,7 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
 
         if (sparrowIcon != null) {
             icon = new FlxSprite();
-            icon.frames = Paths.getSparrowAtlas(sparrowIcon);
+            icon.frames = Paths.getFrames(sparrowIcon);
             icon.antialiasing = true;
             icon.animation.addByPrefix('icon', sparrowAnim, 24, true);
             icon.animation.play('icon');

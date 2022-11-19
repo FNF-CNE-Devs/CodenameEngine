@@ -5,7 +5,7 @@ function create() {
     enableCameraHacks = false;
 }
 
-function updatePost(elapsed) {
+function postUpdate(elapsed) {
     var sin = Math.sin(curBeatFloat * Math.PI / 2);
 
     camGame.angle = sin * -15;

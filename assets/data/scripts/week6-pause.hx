@@ -72,9 +72,6 @@ function confText(text) {
     if (!isThorns) text.borderColor = 0xFF953E3E;
 }
 
-function createPost() {
-}
-
 function destroy() {
     FlxG.cameras.remove(pauseCam);
 }

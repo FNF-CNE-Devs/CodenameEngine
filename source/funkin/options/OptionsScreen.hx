@@ -43,7 +43,7 @@ class OptionsScreen extends MusicBeatState {
         FlxTransitionableState.skipNextTransIn = true;
         super.create();
         
-        bg = new FlxSprite(-80).loadGraphic(Paths.image('menus/menuBG'));
+        bg = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBG'));
         bg.scrollFactor.set();
         bg.scale.set(1.15, 1.15);
         bg.updateHitbox();

@@ -76,7 +76,7 @@ function onPlayerHit(event:NoteHitEvent) {
 /**
  * CAMERA HACKS!!
  */
-function createPost() {
+function postCreate() {
     if (enablePauseMenu) {
         PauseSubState.script = 'data/scripts/week6-pause';
     }
@@ -147,7 +147,7 @@ var pixellyShaders = [];
 //             n.offset.x -= 1;
 //     });
 // }
-function updatePost(elapsed) {
+function postUpdate(elapsed) {
     for(e in pixellyCameras) {
         if (Std.isOfType(e, HudCamera))
             e.downscroll = camHUD.downscroll;
