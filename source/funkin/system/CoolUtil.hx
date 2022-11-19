@@ -269,7 +269,31 @@ class CoolUtil
 	public static function loadFrames(path:String, Unique:Bool = false, Key:String = null):FlxFramesCollection {
 		var noExt = Path.withoutExtension(path);
 
-		if (Assets.exists('$noExt/Animation.json')
+		if (Assets.exists('$noExt/1.png')) {
+			// MULTIPLE SPRITESHEETS!!
+
+			var graphic = FlxG.bitmap.add("flixel/images/logo/default.png", false, '$noExt/mult');
+			var frames = FlxAtlasFrames.findFrame(graphic);
+			if (frames != null)
+				return frames;
+			
+			trace("no frames yet for multiple atlases!!");
+			var spritesheets = [];
+			var cur = 1;
+			var finalFrames = new FlxFramesCollection(graphic, ATLAS);
+			while(Assets.exists('$noExt/$cur.png')) {
+				spritesheets.push(loadFrames('$noExt/$cur.png'));
+				cur++;
+			}
+			for(frames in spritesheets)
+				if (frames != null && frames.frames != null)
+					for(f in frames.frames)
+						if (f != null) {
+							finalFrames.frames.push(f);
+							f.parent = frames.parent;
+						}
+			return finalFrames;
+		} else if (Assets.exists('$noExt/Animation.json')
 		&& Assets.exists('$noExt/spritemap.json')
 		&& Assets.exists('$noExt/spritemap.png')) {
 			// TODO: Credit Smokey555!!

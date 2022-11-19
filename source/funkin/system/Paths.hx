@@ -115,7 +115,10 @@ class Paths
 	inline static public function image(key:String, ?library:String, checkForAtlas:Bool = false)
 	{
 		var atlasPath = checkForAtlas ? getPath('images/$key/spritemap.png', IMAGE, library) : null;
-		return (checkForAtlas && OpenFlAssets.exists(atlasPath)) ? atlasPath.substr(0, atlasPath.length - 14) : getPath('images/$key.png', IMAGE, library);
+		var multiplePath = checkForAtlas ? getPath('images/$key/1.png', IMAGE, library) : null;
+		if (atlasPath != null && OpenFlAssets.exists(atlasPath)) return atlasPath.substr(0, atlasPath.length - 14);
+		if (multiplePath != null && OpenFlAssets.exists(multiplePath)) return multiplePath.substr(0, multiplePath.length - 6);
+		return getPath('images/$key.png', IMAGE, library);
 	}
 
 	inline static public function script(key:String, ?library:String, isAssetsPath:Bool = false) {
