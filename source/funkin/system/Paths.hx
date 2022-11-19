@@ -168,6 +168,10 @@ class Paths
 	{
 		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
 	}
+
+	inline static public function getFrames(key:String, ?library:String) {
+		return CoolUtil.loadFrames(Paths.image(key, library, true));
+	}
 	inline static public function getSparrowAtlasAlt(key:String)
 	{
 		return FlxAtlasFrames.fromSparrow('$key.png', '$key.xml');

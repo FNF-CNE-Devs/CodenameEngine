@@ -1087,6 +1087,7 @@ class PlayState extends MusicBeatState
 		// 	notes.add(unspawnNotes.shift());
 		
 
+
 		if (generatedMusic)
 		{
 			notes.forEachAlive(function(daNote:Note)
@@ -1137,7 +1138,7 @@ class PlayState extends MusicBeatState
 				
 			});
 		}
-
+		
 		if (!inCutscene)
 			keyShit();
 
