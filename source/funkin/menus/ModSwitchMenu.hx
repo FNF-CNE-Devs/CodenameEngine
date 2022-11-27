@@ -38,8 +38,6 @@ class ModSwitchMenu extends MusicBeatSubstate {
                     case 'zip':
                         // is a zip mod!!
                         mods.push(Path.withoutExtension(modFolder));
-                    default:
-                        trace('$modFolder is not a valid mod folder!!');
                 }
             }
         }

@@ -727,11 +727,6 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	function tweenCamIn():Void
-	{
-		FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
-	}
-
 	override function openSubState(SubState:FlxSubState)
 	{
 		var event = scripts.event("onSubstateOpen", new StateEvent(SubState));
@@ -834,6 +829,12 @@ class PlayState extends MusicBeatState
 	public var paused:Bool = false;
 	public var startedCountdown:Bool = false;
 	public var canPause:Bool = true;
+
+	public var curSection(get, null):SwagSection;
+
+	public function get_curSection() {
+		return PlayState.SONG.notes[Std.int(curStep / 16)];
+	}
 
 
 	public function pauseGame() {
@@ -954,58 +955,28 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
+		if (generatedMusic && curSection != null)
 		{
-			if (PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
-			{
-				var pos = boyfriend.getCameraPosition();
-				camFollow.setPosition(pos.x, pos.y);
+			var dadPos = dad.getCameraPosition();
+			var bfPos = boyfriend.getCameraPosition();
+			var section = curSection;
 
-				// switch (curStage)
-				// {
-				// 	case 'limo':
-				// 		camFollow.x = boyfriend.getMidpoint().x - 300;
-				// 	case 'mall':
-				// 		camFollow.y = boyfriend.getMidpoint().y - 200;
-				// 	case 'school':
-				// 		camFollow.x = boyfriend.getMidpoint().x - 200;
-				// 		camFollow.y = boyfriend.getMidpoint().y - 200;
-				// 	case 'schoolEvil':
-				// 		camFollow.x = boyfriend.getMidpoint().x - 200;
-				// 		camFollow.y = boyfriend.getMidpoint().y - 200;
-				// }
-				
-				if (SONG.song.toLowerCase() == 'tutorial')
-				{
-					FlxTween.tween(FlxG.camera, {zoom: 1}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
-				}
-			} else {
-				var pos = dad.getCameraPosition();
-				camFollow.setPosition(pos.x, pos.y);
+			// from dad to bf
+			var ratio:Float = 0;
+			if (section.camTarget != null)
+				ratio = section.camTarget;
+			else
+				ratio = section.mustHitSection ? 1 : 0;
 
-				// camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
-				// camFollow.setPosition(lucky.getMidpoint().x - 120, lucky.getMidpoint().y + 210);
+			var event = scripts.event("onCameraMove", new CamMoveEvent(bfPos, dadPos, ratio, FlxPoint.get(FlxMath.lerp(dadPos.x, bfPos.x, ratio), FlxMath.lerp(dadPos.y, bfPos.y, ratio))));
 
-				// switch (dad.curCharacter)
-				// {
-				// 	case 'mom':
-				// 		camFollow.y = dad.getMidpoint().y;
-				// 	case 'senpai':
-				// 		camFollow.y = dad.getMidpoint().y - 430;
-				// 		camFollow.x = dad.getMidpoint().x - 100;
-				// 	case 'senpai-angry':
-				// 		camFollow.y = dad.getMidpoint().y - 430;
-				// 		camFollow.x = dad.getMidpoint().x - 100;
-				// }
-
-				if (dad.curCharacter == 'mom')
-					vocals.volume = 1;
-
-				if (SONG.song.toLowerCase() == 'tutorial')
-				{
-					tweenCamIn();
-				}
+			if (!event.cancelled) {
+				camFollow.setPosition(
+					event.position.x, event.position.y
+				);
 			}
+			for(e in [event.position, event.bfCamPos, event.dadCamPos])
+				e.put();
 		}
 
 		if (camZooming)
