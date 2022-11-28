@@ -251,6 +251,7 @@ class AlphaCharacter extends FlxSprite
 		letter = letter.toUpperCase();
 		if (boldAnims[letter] == null) {
 			visible = false;
+			scale.set();
 			width = 40;
 			return;
 		}
@@ -264,6 +265,7 @@ class AlphaCharacter extends FlxSprite
 	{
 		if (letterAnims[letter] == null) {
 			visible = false;
+			scale.set();
 			width = 40;
 			return;
 		}

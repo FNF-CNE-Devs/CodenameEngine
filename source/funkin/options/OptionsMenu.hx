@@ -1,5 +1,6 @@
 package funkin.options;
 
+import flixel.util.typeLimit.OneOfTwo;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -15,7 +16,7 @@ import funkin.options.categories.*;
 typedef OptionCategory = {
     var name:String;
     var desc:String;
-    var state:Class<FlxState>;
+    var state:OneOfTwo<Class<FlxState>, FlxState>;
 }
 class OptionsMenu extends MusicBeatState {
     public static var fromPlayState:Bool = false;
@@ -85,7 +86,10 @@ class OptionsMenu extends MusicBeatState {
             FlxFlicker.flicker(alphabets.members[curSelected], 1, Options.flashingMenu ? 0.06 : 0.15, false, false, function(flick:FlxFlicker)
             {
                 FlxTransitionableState.skipNextTransOut = true;
-                FlxG.switchState(Type.createInstance(options[curSelected].state, []));
+                if (options[curSelected].state is FlxState)
+                    FlxG.switchState(options[curSelected].state);
+                else 
+                    FlxG.switchState(Type.createInstance(options[curSelected].state, []));
             });
         } else if (controls.BACK) {
             if (fromPlayState)

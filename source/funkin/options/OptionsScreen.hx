@@ -64,6 +64,8 @@ class OptionsScreen extends MusicBeatState {
         descDrop.scrollFactor.set();
         add(descDrop);
 
+        descText.antialiasing = descDrop.antialiasing = true;
+
         for(k=>option in options) {
             option.setPosition(k * 20, 10 + (k * optionHeight));
             add(option);
@@ -116,7 +118,7 @@ class OptionsScreen extends MusicBeatState {
     }
 
     public function updateDesc() {
-        descText.text = '/ ${options[curSelected].desc} /';
+        descText.text = '/    ${options[curSelected].desc}    /';
         @:privateAccess descText.regenGraphic(); //updates the thing
 
         descDrop.loadFrame(descText.frame);
