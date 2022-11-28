@@ -1,5 +1,6 @@
 package funkin.cutscenes;
 
+#if sys
 import vlc.bitmap.VlcBitmap;
 import flixel.util.FlxTimer;
 import funkin.options.PlayerSettings;
@@ -173,3 +174,4 @@ class MP4Handler
 			bitmap.volume = 0;
 	}
 }
+#end

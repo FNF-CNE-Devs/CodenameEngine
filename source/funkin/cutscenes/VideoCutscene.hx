@@ -9,8 +9,10 @@ class VideoCutscene extends Cutscene {
     var path:String;
     var localPath:String;
 
+    #if sys
     var video:MP4Handler;
     var videoSprite:FlxSprite;
+    #end
     var cutsceneCamera:FlxCamera;
     
     public function new(path:String, callback:Void->Void) {
@@ -25,6 +27,7 @@ class VideoCutscene extends Cutscene {
         cutsceneCamera.bgColor = 0;
         FlxG.cameras.add(cutsceneCamera, false);
         
+        #if sys
         video = new MP4Handler();
         video.finishCallback = close;
         video.canvasWidth = cutsceneCamera.width;
@@ -36,12 +39,16 @@ class VideoCutscene extends Cutscene {
         add(videoSprite);
         
         video.playMP4(localPath, false, videoSprite);
+        #end
 
         cameras = [cutsceneCamera];
     }
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
+        #if !sys
+        close();
+        #end
     }
     public override function destroy() {
         FlxG.cameras.remove(camera, true);
