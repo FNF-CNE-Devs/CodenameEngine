@@ -32,10 +32,11 @@ class Script extends FlxBasic implements IFlxDestroyable {
             // Flixel related stuff
             "FlxG"              => flixel.FlxG,
             "FlxSprite"         => flixel.FlxSprite,
-            "FlxEase"           => flixel.tweens.FlxEase,
-            "FlxTween"          => flixel.tweens.FlxTween,
+            "FlxBasic"          => flixel.FlxBasic,
             "FlxCamera"         => flixel.FlxCamera,
             "state"             => flixel.FlxG.state,
+            "FlxEase"           => flixel.tweens.FlxEase,
+            "FlxTween"          => flixel.tweens.FlxTween,
             "FlxSound"          => flixel.system.FlxSound,
             "FlxAssets"         => flixel.system.FlxAssets,
             "FlxMath"           => flixel.math.FlxMath,
@@ -53,6 +54,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
                 build: funkin.macros.BuildCounterMacro.getBuildNumber(),
                 name: "Codename Engine"
             },
+            "ModState"          => funkin.scripting.ModState,
             "PlayState"         => funkin.game.PlayState,
             "GameOverSubstate"  => funkin.game.GameOverSubstate,
             "Note"              => funkin.game.Note,
@@ -68,8 +70,11 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "Paths"             => funkin.system.Paths,
             "Conductor"         => funkin.system.Conductor,
             "CoolUtil"          => funkin.system.CoolUtil,
+            "XMLUtil"           => funkin.system.XMLUtil,
             "FunkinShader"      => funkin.shaders.FunkinShader,
             "CustomShader"      => funkin.shaders.CustomShader,
+            "FunkinText"        => funkin.ui.FunkinText,
+            "Alphabet"          => funkin.ui.Alphabet,
         ];
     }
     /**

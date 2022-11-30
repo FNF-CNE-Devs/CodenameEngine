@@ -70,12 +70,15 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 
 	public var scriptsAllowed:Bool = true;
 
+	public var scriptName:String = null;
+
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
-	public function new(scriptsAllowed:Bool = true) {
+	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
 		super();
 		this.scriptsAllowed = scriptsAllowed;
+		this.scriptName = scriptName;
 		loadScript();
 	}
 
@@ -83,7 +86,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 		if (scriptsAllowed) {
 			if (stateScript == null || stateScript is DummyScript) {
 				var className = Type.getClassName(Type.getClass(this));
-				var scriptName = className.substr(className.lastIndexOf(".")+1);
+				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
 		
 				stateScript = Script.create(Paths.script('data/states/${scriptName}'));
 				stateScript.setParent(this);
