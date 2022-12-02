@@ -1,5 +1,7 @@
 package funkin.game;
 
+import flixel.FlxG;
+import flixel.FlxState;
 import funkin.system.XMLUtil;
 import flixel.FlxSprite;
 import openfl.utils.Assets;
@@ -22,9 +24,12 @@ class Stage extends FlxBasic implements IBeatReceiver {
         return stageSprites[name];
     }
 
-    public function new(stage:String) {
+    public function new(stage:String, ?state:FlxState) {
         super();
-        if (PlayState.instance == null) return;
+        
+        if (state == null) state = PlayState.instance;
+        if (state == null) state = FlxG.state;
+        
         stagePath = Paths.xml('stages/$stage');
         try {
             if (Assets.exists(stagePath)) stageXML = new Access(Xml.parse(Assets.getText(stagePath)).firstElement());
@@ -35,23 +40,25 @@ class Stage extends FlxBasic implements IBeatReceiver {
         if (stageXML != null) {
 
             var spritesParentFolder = "";
-            if (stageXML.has.zoom) {
-                var parsed:Null<Float> = Std.parseFloat(stageXML.att.zoom);
-                if (parsed != null) PlayState.instance.defaultCamZoom = parsed;
+            if (PlayState.instance != null) {
+                if (stageXML.has.zoom) {
+                    var parsed:Null<Float> = Std.parseFloat(stageXML.att.zoom);
+                    if (parsed != null && PlayState.instance != null) PlayState.instance.defaultCamZoom = parsed;
+                }
+                PlayState.instance.curStage = stageXML.has.name ? stageXML.att.name : stage;
             }
             if (stageXML.has.folder) {
                 spritesParentFolder = stageXML.att.folder;
                 if (spritesParentFolder.charAt(spritesParentFolder.length-1) != "/") spritesParentFolder = spritesParentFolder + "/";
             }
-            if (stageXML.has.name) PlayState.instance.curStage = stageXML.att.name;
         
             for(node in stageXML.elements) {
                 var sprite:Dynamic = switch(node.name) {
                     case "sprite" | "spr" | "sparrow":
-                        var spr = new StageSprite();
-                        spr.antialiasing = true;
-
                         if (!node.has.sprite || !node.has.name || !node.has.x || !node.has.y) continue;
+
+                        var spr = new StageSprite(node.att.name);
+                        spr.antialiasing = true;
 
                         spr.loadAnimatedGraphic(Paths.image('$spritesParentFolder${node.att.sprite}', null, true));
 
@@ -92,17 +99,20 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         }
     
                         stageSprites.set(node.att.name, spr);
-                        PlayState.instance.add(spr);
+                        state.add(spr);
                         spr;
                     case "boyfriend" | "bf":
+                        if (PlayState.instance == null) continue;
                         doCharNodeShit(PlayState.instance.boyfriend, node);
                         PlayState.instance.add(PlayState.instance.boyfriend);
                         PlayState.instance.boyfriend;
                     case "girlfriend" | "gf":
+                        if (PlayState.instance == null) continue;
                         doCharNodeShit(PlayState.instance.gf, node);
                         PlayState.instance.add(PlayState.instance.gf);
                         PlayState.instance.gf;
                     case "ratings" | "combo":
+                        if (PlayState.instance == null) continue;
                         PlayState.instance.comboGroup.setPosition(
                             Std.parseFloat(node.getAtt("x")).getDefault(PlayState.instance.comboGroup.x),
                             Std.parseFloat(node.getAtt("y")).getDefault(PlayState.instance.comboGroup.y)
@@ -110,19 +120,20 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         PlayState.instance.add(PlayState.instance.comboGroup);
                         PlayState.instance.comboGroup;
                     case "dad" | "opponent":
-                        if (PlayState.instance.dad == null || PlayState.instance.dad.isGF) continue;
+                        if (PlayState.instance == null || PlayState.instance.dad == null || PlayState.instance.dad.isGF) continue;
                         doCharNodeShit(PlayState.instance.dad, node);
                         PlayState.instance.add(PlayState.instance.dad);
                         PlayState.instance.dad;
                     default: null;
                 }
                 if (sprite != null) {
-                    for(e in node.nodes.property) {
+                    for(e in node.nodes.property)
                         XMLUtil.applyXMLProperty(sprite, e);
-                    }
                 }
             }
         }
+
+        if (PlayState.instance == null) return;
         stageScript = Script.create(Paths.script('data/stages/$stage'));
         for(k=>e in stageSprites) {
             stageScript.set(k, e);
@@ -157,7 +168,12 @@ class Stage extends FlxBasic implements IBeatReceiver {
 
 class StageSprite extends FlxSprite implements IBeatReceiver {
     public var beatAnims:Array<String> = [];
+    public var name:String;
 
+    public function new(name:String) {
+        super();
+        this.name = name;
+    }
     public override function update(elapsed:Float) {
         super.update(elapsed);
     }

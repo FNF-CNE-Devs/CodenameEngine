@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.editors.CharacterEditor;
 import funkin.scripting.DummyScript;
 import funkin.menus.StoryMenuState.WeekData;
 import funkin.ui.FunkinText;
@@ -128,7 +129,6 @@ class PlayState extends MusicBeatState
 	public var iconP2:HealthIcon;
 	public var camHUD:HudCamera;
 	public var camGame:FlxCamera;
-
 	
 	public var songScore:Int = 0;
 	public var misses:Int = 0;
@@ -278,7 +278,7 @@ class PlayState extends MusicBeatState
 
 
 		if (SONG.stage == null || SONG.stage.trim() == "") SONG.stage = "stage";
-		add(new Stage(SONG.stage));
+		add(stage = new Stage(SONG.stage));
 
 		
 		switch(SONG.song) {
@@ -937,7 +937,9 @@ class PlayState extends MusicBeatState
 			FlxG.switchState(new Charting()); */
 
 		if (FlxG.keys.justPressed.EIGHT)
-			FlxG.switchState(new AnimationDebug(SONG.player2));
+			FlxG.switchState(new CharacterEditor(SONG.player2));
+		if (FlxG.keys.justPressed.NINE)
+			FlxG.switchState(new CharacterEditor(SONG.player1));
 
 		if (startingSong)
 		{

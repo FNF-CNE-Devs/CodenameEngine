@@ -77,7 +77,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 
 	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
 		super();
-		this.scriptsAllowed = scriptsAllowed;
+		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
 		this.scriptName = scriptName;
 		loadScript();
 	}
