@@ -1,19 +1,11 @@
 package funkin.mods;
 
-import lime.utils.Log;
 import lime.utils.AssetLibrary;
 import lime.utils.Assets as LimeAssets;
-import lime.utils.AssetManifest;
 
-import haxe.io.Path;
-import lime.app.Event;
-import lime.app.Future;
-import lime.app.Promise;
 import lime.media.AudioBuffer;
 import lime.graphics.Image;
-import lime.net.HTTPRequest;
 import lime.text.Font;
-import lime.utils.AssetType;
 import lime.utils.Bytes;
 
 #if MOD_SUPPORT
@@ -124,7 +116,7 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 
     public override function exists(asset:String, type:String):Bool { 
         if(!__parseAsset(asset)) return false;
-
+        trace('$folderPath: $_parsedAsset: ${FileSystem.exists(getAssetPath())}');
         return FileSystem.exists(getAssetPath());
     }
 

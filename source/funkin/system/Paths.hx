@@ -1,5 +1,6 @@
 package funkin.system;
 
+import flixel.graphics.frames.FlxFramesCollection;
 import haxe.io.Path;
 import funkin.mods.LimeLibrarySymbol;
 import flixel.FlxG;
@@ -20,6 +21,14 @@ class Paths
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 
 	public static var assetsTree:AssetsLibraryList;
+
+	public static var tempFramesCache:Map<String, FlxFramesCollection> = [];
+
+	public static function init() {
+		FlxG.signals.preStateSwitch.add(function() {
+			tempFramesCache.clear();
+		});
+	}
 
 	public static function getPath(file:String, type:AssetType, library:Null<String>, skipModsVerification:Bool = false)
 	{
@@ -163,8 +172,14 @@ class Paths
 		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
 	}
 
-	inline static public function getFrames(key:String, ?library:String) {
-		return CoolUtil.loadFrames(Paths.image(key, library, true));
+	static public function getFrames(key:String, ?library:String) {
+		if (tempFramesCache.exists(key)) {
+			if (tempFramesCache[key].parent.bitmap.readable)
+				return tempFramesCache[key];
+			else
+				tempFramesCache[key] = null;
+		}
+		return tempFramesCache[key] = CoolUtil.loadFrames(Paths.image(key, library, true));
 	}
 	inline static public function getSparrowAtlasAlt(key:String)
 	{

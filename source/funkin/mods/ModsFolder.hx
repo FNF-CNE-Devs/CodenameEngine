@@ -1,5 +1,6 @@
 package funkin.mods;
 
+import funkin.menus.TitleState;
 import funkin.system.Main;
 import openfl.utils.AssetCache;
 import flixel.util.FlxSignal.FlxTypedSignal;
@@ -8,6 +9,7 @@ import openfl.utils.AssetManifest;
 import openfl.utils.AssetLibrary;
 import flixel.graphics.FlxGraphic;
 import flixel.util.FlxSignal.FlxTypedSignal;
+import flixel.FlxG;
 
 #if MOD_SUPPORT
 import sys.FileSystem;
@@ -74,7 +76,12 @@ class ModsFolder {
 
         Main.refreshAssets();
         onModSwitch.dispatch(ModsFolder.currentModFolder);
-        FlxG.resetState();
+        if (FlxG.sound.music != null && FlxG.sound.music.playing)
+            FlxG.sound.music.fadeOut(0.25, 0, function(t) {
+                FlxG.sound.music.stop();
+            });
+        TitleState.initialized = false;
+        FlxG.switchState(new TitleState());
     }
 
     public static function unloadMod(mod:String) {

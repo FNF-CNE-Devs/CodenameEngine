@@ -115,8 +115,7 @@ class Main extends Sprite
 		Paths.assetsTree = new AssetsLibraryList();
 
 		Logs.init();
-		
-		// TODO: Mod switching
+		Paths.init();
 		ModsFolder.init();
 		#if MOD_SUPPORT
 		ModsFolder.switchMod("introMod");
@@ -187,8 +186,6 @@ class Main extends Sprite
 
 		if (FlxG.game.soundTray != null)
 			FlxG.game.soundTray.text.setTextFormat(new TextFormat(Paths.font("vcr.ttf")));
-
-
 	}
 
 	public static function initTransition() {
