@@ -21,6 +21,7 @@ class Options
 	public static var fpsCounter:Bool = true;
 	public static var autoPause:Bool = true;
 	public static var antialiasing:Bool = true;
+	public static var enablePngBins:Bool = true; // optimization feature kinda which takes space on your computer!
 	public static var volume:Float = 1;
 
 	/**

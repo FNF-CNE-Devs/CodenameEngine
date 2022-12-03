@@ -2,3 +2,4 @@ export/
 latest/windows/obj/
 latest/windows/haxe/
 .vscode/
+**.png.bin
