@@ -9,14 +9,18 @@ class ModdableAssetsFolder extends ModsFolderLibrary {
     public var oldLibrary:AssetLibrary;
 
     public override function exists(id:String, type:String) {
-        if (!id.startsWith("assets/"))
+        if (!id.startsWith("assets/") && !exists('assets/$id', type))
             return oldLibrary.exists(id, type);
         return super.exists(id, type);
     }
 
     public override function getAsset(id:String, type:String) {
-        if (!id.startsWith("assets/"))
+        if (!id.startsWith("assets/")) {
+            var possibleReplacement = getAsset('assets/$id', type);
+            if (possibleReplacement != null)
+                return possibleReplacement;
             return oldLibrary.getAsset(id, type);
+        }
         return super.getAsset(id, type);
     }
 

@@ -29,6 +29,7 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
     public var zipPath:String;
     public var libName:String;
     public var useImageCache:Bool = false;
+    public var prefix = 'assets/';
     
     #if MOD_SUPPORT
     public var zip:Reader;
@@ -38,6 +39,7 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
     public function new(zipPath:String, libName:String) {
         this.zipPath = zipPath;
         this.libName = libName;
+        this.prefix = 'assets/$libName/';
 
         #if MOD_SUPPORT
         zip = new Reader(File.read(zipPath, true));
@@ -124,7 +126,6 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
     }
 
     public function __parseAsset(asset:String):Bool {
-        var prefix = 'assets/$libName/';
         if (!asset.startsWith(prefix)) return false;
         _parsedAsset = asset.substr(prefix.length).toLowerCase();
         return true;

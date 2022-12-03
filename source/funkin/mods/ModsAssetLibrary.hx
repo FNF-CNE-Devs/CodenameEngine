@@ -23,6 +23,8 @@ import sys.FileSystem;
 using StringTools;
 
 interface ModsAssetLibrary {
+    public var prefix:String;
+    
     #if MOD_SUPPORT
     public var _parsedAsset:String;
 

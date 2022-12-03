@@ -1,5 +1,6 @@
 package funkin.system;
 
+import openfl.utils.AssetLibrary;
 import openfl.utils.AssetCache;
 import openfl.text.TextFormat;
 import flixel.system.ui.FlxSoundTray;
@@ -111,6 +112,8 @@ class Main extends Sprite
 	
 
 	public function loadGameSettings() {
+		Paths.assetsTree = new AssetsLibraryList();
+
 		Logs.init();
 		
 		// TODO: Mod switching
@@ -127,7 +130,9 @@ class Main extends Sprite
 		if (Sys.args().contains("-livereload")) {
 			#if USE_SOURCE_ASSETS
 			trace("Used lime test windows. Switching into source assets.");
-			ModsFolder.loadLibraryFromFolder('default', './../../../../assets/', true, true);
+			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './../../../../assets/', true));
+			#else
+			Assets.registerLibrary('assets', Paths.assetsTree.base);
 			#end
 
 			var buildNum:Int = Std.parseInt(File.getContent("./../../../../buildnumber.txt"));
@@ -135,10 +140,20 @@ class Main extends Sprite
 			File.saveContent("./../../../../buildnumber.txt", Std.string(buildNum));
 		} else {
 			#if USE_ADAPTED_ASSETS
-			ModsFolder.loadLibraryFromFolder('default', './assets/', true, true);
+			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './assets/', true));
+			#else
+			Assets.registerLibrary('assets', Paths.assetsTree.base);
 			#end
 		}
+		#else
+		Assets.registerLibrary('assets', Paths.assetsTree.base);
 		#end
+
+
+		var lib = new AssetLibrary();
+		@:privateAccess
+		lib.__proxy = Paths.assetsTree;
+		Assets.registerLibrary('default', lib);
 
 		funkin.options.PlayerSettings.init();
 		FlxG.save.bind('Save');

@@ -27,10 +27,12 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
     public var folderPath:String;
     public var libName:String;
     public var useImageCache:Bool = true;
+    public var prefix = 'assets/';
 
     public function new(folderPath:String, libName:String) {
         this.folderPath = folderPath;
         this.libName = libName;
+        this.prefix = 'assets/$libName/';
         super();
     }
 
@@ -48,10 +50,8 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
             return LimeAssets.cache.audio.get('$libName:$id');
         }
         else {
-            if (!exists(id, "SOUND")) {
-                Log.error('ModsAssetLibrary: Audio Buffer at $id does not exist.');
+            if (!exists(id, "SOUND")) 
                 return null;
-            }
             var path = getAssetPath();
             editedTimes[id] = FileSystem.stat(path).mtime.getTime();
             var e = AudioBuffer.fromFile(path);
@@ -64,10 +64,8 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
         if (__isCacheValid(cachedBytes, id, true))
             return cachedBytes.get(id);
         else {
-            if (!exists(id, "BINARY")) {
-                Log.error('ModsAssetLibrary: Bytes at $id does not exist.');
+            if (!exists(id, "BINARY"))
                 return null;
-            }
             var path = getAssetPath();
             editedTimes[id] = FileSystem.stat(path).mtime.getTime();
             var e = Bytes.fromFile(path);
@@ -80,10 +78,8 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
         if (__isCacheValid(LimeAssets.cache.font, id))
             return LimeAssets.cache.font.get(id);
         else {
-            if (!exists(id, "FONT")) {
-                Log.error('ModsAssetLibrary: Font at $id does not exist.');
+            if (!exists(id, "FONT"))
                 return null;
-            }
             var path = getAssetPath();
             editedTimes[id] = FileSystem.stat(path).mtime.getTime();
             var e = Font.fromFile(path);
@@ -95,10 +91,8 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
         if (useImageCache && __isCacheValid(LimeAssets.cache.image, id))
             return LimeAssets.cache.image.get('$libName:$id');
         else {
-            if (!exists(id, "IMAGE")) {
-                Log.error('ModsAssetLibrary: Image at $id does not exist.');
+            if (!exists(id, "IMAGE"))
                 return null;
-            }
             var path = getAssetPath();
             editedTimes[id] = FileSystem.stat(path).mtime.getTime();
 
@@ -150,7 +144,6 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
     }
 
     private function __parseAsset(asset:String):Bool {
-        var prefix = 'assets/$libName/';
         if (!asset.startsWith(prefix)) return false;
         _parsedAsset = asset.substr(prefix.length);
         return true;

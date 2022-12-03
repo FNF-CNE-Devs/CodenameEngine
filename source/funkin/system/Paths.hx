@@ -19,19 +19,14 @@ class Paths
 	 */
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 
+	public static var assetsTree:AssetsLibraryList;
+
 	public static function getPath(file:String, type:AssetType, library:Null<String>, skipModsVerification:Bool = false)
 	{
-		if (library != null && library.startsWith("mods/")) {
-			library = library.toLowerCase();
-		} else if (!skipModsVerification && ModsFolder.currentModFolder != null) {
-			var modPath = getPath(file, type, 'mods/${ModsFolder.currentModFolder}');
-			if (OpenFlAssets.exists(modPath)) return modPath;
-		}
-
 		if (library != null)
 			return getLibraryPath(file, library);
 
-		return getAssetsPath(file);
+		return skipModsVerification ? 'assets:${getAssetsPath(file)}' : getAssetsPath(file);
 	}
 
 	static public function video(key:String) {
@@ -188,13 +183,20 @@ class Paths
 
 	static public function getFolderContent(key:String, includeSource:Bool = true, addPath:Bool = false, scanSource:Bool = false):Array<String> {
 		// designed to work both on windows and web
-		
+		if (!key.endsWith("/")) key += "/";
+		var content = assetsTree.getFiles('assets/$key');
+		if (addPath) {
+			for(k=>e in content)
+				content[k] = '$key$e';
+		}
+		return content;
+		/*
 		if (!key.endsWith("/")) key = key + "/";
 
 		if (ModsFolder.currentModFolder == null && !scanSource)
 			return getFolderContent(key, false, addPath, true);
 
-		var folderPath:String = scanSource ? getPreloadPath(key) : getLibraryPathForce(key, 'mods/${ModsFolder.currentModFolder}');
+		var folderPath:String = scanSource ? getAssetsPath(key) : getLibraryPathForce(key, 'mods/${ModsFolder.currentModFolder}');
 		var libThing = new LimeLibrarySymbol(folderPath);
 		var library = libThing.library;
 
@@ -239,5 +241,6 @@ class Paths
 		}
 
 		return content;
+		*/
 	}
 }

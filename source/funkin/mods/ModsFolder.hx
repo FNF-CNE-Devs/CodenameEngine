@@ -30,9 +30,9 @@ class ModsFolder {
      */
     public static var currentModFolder:String = null;
     /**
-     * Array of all loaded mods' folder names.
+     * Map all loaded mods' folder libraries.
      */
-    public static var loadedMods:Array<String> = [];
+    public static var loadedMods:Map<String, lime.utils.AssetLibrary> = [];
     /**
      * Path to the `mods` folder.
      */
@@ -54,15 +54,11 @@ class ModsFolder {
         #if MOD_SUPPORT
         if (mod == null) return null; // may be loading base game
 
-        if (FileSystem.exists('${modsPath}$mod.zip')) {
-            var e = loadLibraryFromZip('mods/$mod'.toLowerCase(), '${modsPath}$mod.zip', force);
-            loadedMods.push(mod);
-            return e;
-        } else {
-            var e = loadLibraryFromFolder('mods/$mod'.toLowerCase(), '${modsPath}$mod', force);
-            loadedMods.push(mod);
-            return e;
-        }
+        if (FileSystem.exists('${modsPath}$mod.zip'))
+            return loadedMods[mod] = loadLibraryFromZip('mods/$mod'.toLowerCase(), '${modsPath}$mod.zip', force);
+        else
+            return loadedMods[mod] = loadLibraryFromFolder('mods/$mod'.toLowerCase(), '${modsPath}$mod', force);
+
         #else
         return null;
         #end
@@ -73,16 +69,17 @@ class ModsFolder {
      * @param libName 
      */
     public static function switchMod(mod:String) {
-        for(m in loadedMods)
-            unloadMod(m);
-        
-        loadMod(ModsFolder.currentModFolder = mod);
+        unloadMod(ModsFolder.currentModFolder);
+        Paths.assetsTree.addLibrary(loadMod(ModsFolder.currentModFolder = mod));
+
         Main.refreshAssets();
         onModSwitch.dispatch(ModsFolder.currentModFolder);
         FlxG.resetState();
     }
 
     public static function unloadMod(mod:String) {
+        if (mod == null) return;
+        Paths.assetsTree.removeLibrary(loadedMods[mod]);
         Assets.unloadLibrary('mods/$mod'.toLowerCase());
     }
 
@@ -103,64 +100,20 @@ class ModsFolder {
         return AssetLibrary.fromManifest(assets);
     }
 
+    public static function prepareModLibrary(libName:String, lib:ModsAssetLibrary, force:Bool = false) {
+        var openLib = prepareLibrary(libName, force);
+        lib.prefix = 'assets/';
+        @:privateAccess
+        openLib.__proxy = cast(lib, lime.utils.AssetLibrary);
+        Assets.registerLibrary(libName, openLib);
+        return openLib;
+    }
+
+    public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false) {
+        return prepareModLibrary(libName, new ModsFolderLibrary(folder, libName), force);
+    }
+
     public static function loadLibraryFromZip(libName:String, zipPath:String, force:Bool = false) {
-        var lib = prepareLibrary(libName, force);
-        @:privateAccess
-        lib.__proxy = new ZipFolderLibrary(zipPath, libName);
-        Assets.registerLibrary(libName, lib);
-        return lib;
-    }
-
-    public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false, useOldWhenMissing:Bool = false) {
-        var oldLib = useOldWhenMissing ? Assets.getLibrary(libName) : null;
-        var lib = prepareLibrary(libName, force);
-        @:privateAccess
-        lib.__proxy = useOldWhenMissing ? new ModdableAssetsFolder(folder, libName, oldLib) : new ModsFolderLibrary(folder, libName);
-        Assets.registerLibrary(libName, lib);
-        return lib;
-    }
-
-    /**
-     * Gets all assets in folders and put them in the `assets` array.
-     * @param assets Array of assets
-     * @param rootPath Root path
-     * @param path Path inside of the rootPath (ex: `root path/path/path2/`)
-     * @param libraryName Name of the library (ex: `mods/my mod/`)
-     * @param prefix Prefix for the asset names (ex: `assets/mods/my mod/`)
-     * @param addRoot Whenever the root should be added to the paths. Defaults to false
-     */
-    public static function getAssetFiles(assets:Array<Dynamic>, rootPath:String, path:String, libraryName:String, prefix:String = "", addRoot:Bool = false) {
-        #if sys
-        for(f in FileSystem.readDirectory('$rootPath$path')) {
-            if (FileSystem.isDirectory('$rootPath$path$f')) {
-                // fuck you git
-                if (f.toLowerCase() != ".git")
-                    getAssetFiles(assets, rootPath, '$path$f/', libraryName);
-            } else {
-                var type = "BINARY";
-                var useExt:Bool = true;
-                switch(Path.extension(f).toLowerCase()) {
-                    case "txt" | "xml" | "json" | "hx" | "hscript" | "hsc" | "lua" | "frag" | "vert":
-                        type = "TEXT";
-                    case "png":
-                        type = "IMAGE";
-                    case "ogg":
-                        type = path.toLowerCase().startsWith("music") ? "MUSIC" : "SOUND";
-                    case "ttf":
-                        type = "FONT";
-                        useExt = false;
-
-                }
-                var stat = FileSystem.stat('$rootPath$path$f');
-                assets.push({
-                    type: type,
-                    id: ('assets/$libraryName/$prefix$path${useExt ? f : Path.withoutExtension(f)}').toLowerCase(), // for case sensitive shit & correct linux support
-                    path: (addRoot ? rootPath : '') + '$path$f',
-                    size: stat.size,
-                    edited: stat.mtime.getTime() / 1000
-                });
-            }
-        }
-        #end
+        return prepareModLibrary(libName, new ZipFolderLibrary(zipPath, libName), force);
     }
 }

@@ -186,7 +186,7 @@ class FreeplayState extends MusicBeatState
 		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, curSong.difficulties.length-1);
 
 		#if !switch
-		intendedScore = Highscore.getScore(songs[curSelected].songName, songs[curSelected].difficulties[curDifficulty]).score;
+		intendedScore = Highscore.getScore(curSong.songName, curSong.difficulties[curDifficulty]).score;
 		#end
 
 		
