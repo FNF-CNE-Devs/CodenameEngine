@@ -20,7 +20,7 @@ class CharacterEditor extends MusicBeatState {
     public override function create() {
         super.create();
 
-        add(new Stage("stage"));
+        add(new Stage("default"));
         
         character = new Character(770, 100, characterName, true);
         characterName = character.curCharacter;

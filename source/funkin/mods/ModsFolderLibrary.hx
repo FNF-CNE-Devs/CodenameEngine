@@ -1,7 +1,5 @@
 package funkin.mods;
 
-import funkin.options.Options;
-import lime.graphics.ImageBuffer;
 import lime.utils.Log;
 import lime.utils.AssetLibrary;
 import lime.utils.Assets as LimeAssets;
@@ -98,23 +96,8 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
             var path = getAssetPath();
             editedTimes[id] = FileSystem.stat(path).mtime.getTime();
 
-            var buffer:ImageBuffer = null;
-            var image:Image;
-            if (Options.enablePngBins) {
-                if (PngBinHandler.exists(path)) {
-                    buffer = PngBinHandler.loadBinPng(path);
-                    @:privateAccess
-                    image = new Image(buffer);
-                } else {
-                    @:privateAccess
-                    image = Image.fromFile(path);
-                    PngBinHandler.saveBinPng(image.buffer, path);
-                }
-            } else {
-                @:privateAccess
-                image = Image.fromFile(path);
-            }
-            return image;
+            var e = Image.fromFile(path);
+            return e;
         }
     }
 
