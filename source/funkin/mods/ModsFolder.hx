@@ -111,10 +111,11 @@ class ModsFolder {
         return lib;
     }
 
-    public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false) {
+    public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false, useOldWhenMissing:Bool = false) {
+        var oldLib = useOldWhenMissing ? Assets.getLibrary(libName) : null;
         var lib = prepareLibrary(libName, force);
         @:privateAccess
-        lib.__proxy = new ModsFolderLibrary(folder, libName);
+        lib.__proxy = useOldWhenMissing ? new ModdableAssetsFolder(folder, libName, oldLib) : new ModsFolderLibrary(folder, libName);
         Assets.registerLibrary(libName, lib);
         return lib;
     }

@@ -125,14 +125,18 @@ class Main extends Sprite
 		
 		#if sys
 		if (Sys.args().contains("-livereload")) {
+			#if USE_SOURCE_ASSETS
 			trace("Used lime test windows. Switching into source assets.");
-			ModsFolder.loadLibraryFromFolder('sourceassets', './../../../../assets/');
-			@:privateAccess
-			Paths.__useSourceAssets = true;
+			ModsFolder.loadLibraryFromFolder('default', './../../../../assets/', true, true);
+			#end
 
 			var buildNum:Int = Std.parseInt(File.getContent("./../../../../buildnumber.txt"));
 			buildNum++;
 			File.saveContent("./../../../../buildnumber.txt", Std.string(buildNum));
+		} else {
+			#if USE_ADAPTED_ASSETS
+			ModsFolder.loadLibraryFromFolder('default', './assets/', true, true);
+			#end
 		}
 		#end
 

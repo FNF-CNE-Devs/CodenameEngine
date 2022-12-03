@@ -18,7 +18,6 @@ class Paths
 	 * Currently is set to `mp3` for web targets, and `ogg` for other targets.
 	 */
 	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
-	private static var __useSourceAssets = false;
 
 	public static function getPath(file:String, type:AssetType, library:Null<String>, skipModsVerification:Bool = false)
 	{
@@ -32,16 +31,16 @@ class Paths
 		if (library != null)
 			return getLibraryPath(file, library);
 
-		return getPreloadPath(file);
+		return getAssetsPath(file);
 	}
 
 	static public function video(key:String) {
 		return getPath('videos/$key.mp4', BINARY, null);
 	}
 
-	static public function getLibraryPath(file:String, library = "preload")
+	static public function getLibraryPath(file:String, library = "default")
 	{
-		return if (library == "preload" || library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);
+		return if (library == "preload" || library == "default") getAssetsPath(file); else getLibraryPathForce(file, library);
 	}
 
 	inline static function getLibraryPathForce(file:String, library:String)
@@ -50,9 +49,9 @@ class Paths
 		return '$library:assets/$library/$file';
 	}
 
-	inline static function getPreloadPath(file:String)
+	inline static function getAssetsPath(file:String)
 	{
-		return (__useSourceAssets) ? getLibraryPathForce(file, 'sourceassets') : 'assets/$file';
+		return 'assets/$file';
 	}
 
 	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)

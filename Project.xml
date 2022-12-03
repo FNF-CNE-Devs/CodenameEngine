@@ -154,7 +154,9 @@
 	<haxedef name="HXCPP_DEBUG_LINK" if="release" />
 	<haxedef name="hscriptPos" /> <!-- for logging -->
 
-	<!-- ENGINE SETTINGS !-->
+	<!-- 
+		ENGINE SETTINGS
+	!-->
 
 	<!-- Comment this out to disable titlescreen.xml !-->
 	<haxedef name="TITLESCREEN_XML" />
@@ -167,4 +169,10 @@
 
 	<!-- Comment this out to disable softcoded states and state scripting !-->
 	<haxedef name="SOFTCODED_STATES" />
+
+	<!-- Comment this out to disable usage of source assets when using lime test windows !-->
+	<haxedef name="USE_SOURCE_ASSETS" />
+
+	<!-- Comment this out to use the default OpenFL assets system for the assets/ folder. !-->
+	<haxedef name="USE_ADAPTED_ASSETS" />
 </project>
