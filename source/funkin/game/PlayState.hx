@@ -108,6 +108,7 @@ class PlayState extends MusicBeatState
 	public var cpuStrums:FlxTypedGroup<Strum>;
 
 	public var muteVocalsOnMiss:Bool = true;
+	public var canAccessDebugMenus:Bool = true;
 
 	public var camZooming:Bool = false;
 	public var camZoomingInterval:Int = 4;
@@ -898,18 +899,24 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 			pauseGame();
 
-		if (FlxG.keys.justPressed.SEVEN)
-		{
-			FlxG.switchState(new ChartingState());
-
-			#if desktop
-			DiscordClient.changePresence("Chart Editor", null, null, true);
-			#end
-		}
-		if (FlxG.keys.justPressed.F5) {
-			Logs.trace('Reloading scripts...', WARNING, YELLOW);
-			scripts.reload();
-			Logs.trace('Song scripts successfully reloaded.', WARNING, GREEN);
+		if (canAccessDebugMenus) {
+			if (FlxG.keys.justPressed.SEVEN)
+			{
+				FlxG.switchState(new ChartingState());
+	
+				#if desktop
+				DiscordClient.changePresence("Chart Editor", null, null, true);
+				#end
+			}
+			if (FlxG.keys.justPressed.F5) {
+				Logs.trace('Reloading scripts...', WARNING, YELLOW);
+				scripts.reload();
+				Logs.trace('Song scripts successfully reloaded.', WARNING, GREEN);
+			}
+			if (FlxG.keys.justPressed.EIGHT)
+				FlxG.switchState(new CharacterEditor(SONG.player2));
+			if (FlxG.keys.justPressed.NINE)
+				FlxG.switchState(new CharacterEditor(SONG.player1));
 		}
 
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
@@ -931,14 +938,6 @@ class PlayState extends MusicBeatState
 
 		iconP1.health = healthBar.percent / 100;
 		iconP2.health = 1 - (healthBar.percent / 100);
-		
-		/* if (FlxG.keys.justPressed.NINE)
-			FlxG.switchState(new Charting()); */
-
-		if (FlxG.keys.justPressed.EIGHT)
-			FlxG.switchState(new CharacterEditor(SONG.player2));
-		if (FlxG.keys.justPressed.NINE)
-			FlxG.switchState(new CharacterEditor(SONG.player1));
 
 		if (startingSong)
 		{

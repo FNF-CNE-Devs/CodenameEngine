@@ -320,5 +320,7 @@ class SongMetadata
 				}
 			}
 		}
+		if (this.difficulties.length <= 0)
+			this.difficulties.push("NORMAL");
 	}
 }
