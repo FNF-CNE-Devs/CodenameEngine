@@ -149,6 +149,9 @@ class Note extends FlxSprite
 		} else {
 			animation.play("scroll");
 		}
+
+		if (PlayState.instance != null)
+			PlayState.instance.scripts.event("onPostNoteCreation", event);
 	}
 
 	public var lastScrollSpeed:Null<Float> = null;
@@ -159,6 +162,8 @@ class Note extends FlxSprite
 		@:privateAccess if (__strumCameras != null) FlxCamera._defaultCameras = __strumCameras;
 		
 		var negativeScroll = isSustainNote && nextSustain != null && lastScrollSpeed < 0;
+		if (antialiasing && nextSustain == null)
+			rotOffset.y += 2;
 		if (negativeScroll)	offset.y *= -1;
 
 		if (angleOffsets && Std.int(angle % 360) != 0) {
@@ -203,6 +208,8 @@ class Note extends FlxSprite
 		}
 		super.draw();
 		if (negativeScroll)	offset.y *= -1;
+		if (antialiasing && nextSustain == null)
+			rotOffset.y -= 2;
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
 	}
 
