@@ -1,5 +1,6 @@
 package funkin.system;
 
+import flixel.system.FlxSoundGroup;
 import animateatlas.AtlasFrameMaker;
 import haxe.Json;
 import funkin.menus.StoryMenuState.WeekData;
@@ -138,14 +139,28 @@ class CoolUtil
 	public static function playMenuSong(fadeIn:Bool = false) {
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
 		{
-			Conductor.reset();
-
-			// TODO: bpm from config
-			Conductor.changeBPM(102);
-			FlxG.sound.playMusic(Paths.music('freakyMenu'), fadeIn ? 0 : 1);
+			playMusic(Paths.music('freakyMenu'), 102, fadeIn ? 0 : 1);
 			if (fadeIn)
 				FlxG.sound.music.fadeIn(4, 0, 0.7);
 		}
+	}
+
+	public static function playMusic(path:String, DefaultBPM:Int = 102, Volume:Int = 1, Looped:Bool = true, ?Group:FlxSoundGroup) {
+		Conductor.reset();
+		FlxG.sound.playMusic(path, Volume, Looped, Group);
+
+		var infoPath = '${Path.withoutExtension(path)}.ini';
+		if (Assets.exists(infoPath)) {
+			var musicInfo = IniUtils.parseAsset(infoPath, [
+				"BPM" => Std.string(DefaultBPM)
+			]);
+			var parsedBPM:Null<Float> = Std.parseFloat(musicInfo["BPM"]);
+			if (parsedBPM == null)
+				Conductor.changeBPM(102);
+			else
+				Conductor.changeBPM(parsedBPM);
+		} else
+			Conductor.changeBPM(102);
 	}
 	/**
 	 * Plays a specified Menu SFX.

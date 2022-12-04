@@ -1,5 +1,7 @@
 package funkin.game;
 
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.system.FlxSound;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSubState;
@@ -13,6 +15,8 @@ import funkin.system.Conductor;
 class GameOverSubstate extends MusicBeatSubstate
 {
 	var bf:Character;
+	public var character:String;
+	public var gameOverSong:String;
 	var camFollow:FlxObject;
 
 	var stageSuffix:String = "";
@@ -20,43 +24,33 @@ class GameOverSubstate extends MusicBeatSubstate
 	var x:Float = 0;
 	var y:Float = 0;
 
-	public function new(x:Float, y:Float) {
+	public var lossSFX:FlxSound;
+
+	public function new(x:Float, y:Float, character:String = "bf", gameOverSong:String = "gameOver") {
 		super();
 		this.x = x;
 		this.y = y;
+		this.character = character;
+		this.gameOverSong = gameOverSong;
 	}
 
 	public override function create()
 	{
 		super.create();
-		var daStage = PlayState.instance.curStage;
-		var daBf:String = '';
-		switch (daStage)
-		{
-			case 'school':
-				stageSuffix = '-pixel';
-				daBf = 'bf-pixel-dead';
-			case 'schoolEvil':
-				stageSuffix = '-pixel';
-				daBf = 'bf-pixel-dead';
-			default:
-				daBf = 'bf';
-		}
+		if (FlxG.sound.music != null)
+			FlxG.sound.music.stop();
 
-		bf = new Character(x, y, daBf, true);
+		bf = new Character(x, y, character, true);
 		add(bf);
 
 		camFollow = new FlxObject(bf.getGraphicMidpoint().x, bf.getGraphicMidpoint().y, 1, 1);
 		add(camFollow);
+		FlxG.camera.target = camFollow;
 
-		FlxG.sound.play(Paths.sound('fnf_loss_sfx' + stageSuffix));
+		lossSFX = FlxG.sound.play(Paths.sound('fnf_loss_sfx' + stageSuffix));
 		Conductor.changeBPM(100);
 
-		// FlxG.camera.followLerp = 1;
-		// FlxG.camera.focusOn(FlxPoint.get(FlxG.width / 2, FlxG.height / 2));
-		FlxG.camera.scroll.set();
-		FlxG.camera.target = null;
-
+		bf.danceOnBeat = false;
 		bf.playAnim('firstDeath');
 	}
 
@@ -71,7 +65,8 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (controls.BACK)
 		{
-			FlxG.sound.music.stop();
+			if (FlxG.sound.music != null)
+				FlxG.sound.music.stop();
 
 			if (PlayState.isStoryMode)
 				FlxG.switchState(new StoryMenuState());
@@ -79,20 +74,15 @@ class GameOverSubstate extends MusicBeatSubstate
 				FlxG.switchState(new FreeplayState());
 		}
 
-		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.curFrame == 12)
-		{
-			FlxG.camera.follow(camFollow, LOCKON, 0.01);
-		}
-
-		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
-		{
-			FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix));
-		}
+		if (!lossSFX.playing && (FlxG.sound.music == null || !FlxG.sound.music.playing))
+			CoolUtil.playMusic(Paths.music(gameOverSong), 100);
 	}
 
 	override function beatHit(curBeat:Int)
 	{
 		super.beatHit(curBeat);
+		if (!lossSFX.playing)
+			bf.playAnim("deathLoop", DANCE);
 	}
 
 	var isEnding:Bool = false;
@@ -109,6 +99,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			{
 				FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
 				{
+					FlxTransitionableState.skipNextTransOut = true;
 					FlxG.switchState(new PlayState());
 				});
 			});
