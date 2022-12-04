@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.mods.ModsAssetLibrary;
 import lime.ui.KeyCode;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
@@ -71,14 +72,32 @@ class FramerateField extends TextField {
         text.push('CODENAME ENGINE ALPHA - BUILD ${funkin.macros.BuildCounterMacro.getBuildNumber()}');
         #end
         if (debugMode) {
-            text.push('======');
+            text.push('=== CONDUCTOR INFO ===');
             text.push('Current Song Position: ${Conductor.songPosition} (${Conductor.curBeat} beats - ${Conductor.curStep} steps)');
             text.push('Current BPM: ${Conductor.bpm}');
-            text.push('======');
+            text.push('=== SYSTEM INFO ===');
             text.push('System: ${lime.system.System.platformLabel} ${lime.system.System.platformVersion}');
             text.push('Objs in state: ${FlxG.state.members.length}');
             text.push('Nb cameras: ${FlxG.cameras.list.length}');
             text.push('Current state: ${Type.getClassName(Type.getClass(FlxG.state))}');
+            text.push('=== ASSET LIBRARIES TREE ===');
+            if (Paths.assetsTree == null)
+                text.push('Not initialized yet');
+            else {
+                for(e in Paths.assetsTree.libraries) {
+                    var l = e;
+                    if (l is openfl.utils.AssetLibrary) {
+                        var al = cast(l, openfl.utils.AssetLibrary);
+                        @:privateAccess
+                        if (al.__proxy != null) l = al.__proxy;
+                    }
+
+                    if (l is ModsAssetLibrary)
+                        text.push('${Type.getClassName(Type.getClass(l))} - ${cast(l, ModsAssetLibrary).libName} (${cast(l, ModsAssetLibrary).prefix})');
+                    else
+                        text.push(Std.string(e));
+                }
+            }
         }
         this.text = text.join("\n");
     }

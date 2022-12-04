@@ -116,7 +116,6 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 
     public override function exists(asset:String, type:String):Bool { 
         if(!__parseAsset(asset)) return false;
-        trace('$folderPath: $_parsedAsset: ${FileSystem.exists(getAssetPath())}');
         return FileSystem.exists(getAssetPath());
     }
 

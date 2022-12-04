@@ -265,8 +265,10 @@ class PlayState extends MusicBeatState
 		} else {
 			var gfVersion = SONG.gf;
 			if (gfVersion == null) gfVersion = "gf";
-			gf = new Character(400, 130, gfVersion);
-			gf.scrollFactor.set(0.95, 0.95);
+			if (gfVersion != "none") {
+				gf = new Character(400, 130, gfVersion);
+				gf.scrollFactor.set(0.95, 0.95);
+			}
 		}
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
@@ -454,13 +456,10 @@ class PlayState extends MusicBeatState
 
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
-			dad.dance();
-			gf.dance();
-			boyfriend.dance();
-
-			countdown(swagCounter);
-
-			swagCounter += 1;
+			for(char in [dad, gf, boyfriend])
+				if (char != null)
+					char.dance();
+			countdown(swagCounter++);
 		}, introLength);
 	}
 
@@ -1223,7 +1222,7 @@ class PlayState extends MusicBeatState
 			if (event.cancelled) return;
 			
 			health += event.healthGain;
-			if (combo > 5 && gf.animOffsets.exists('sad'))
+			if (gf != null && combo > 5 && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');
 			}
@@ -1441,7 +1440,7 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		if (curBeat % gfSpeed == 0)
+		if (gf != null && curBeat % gfSpeed == 0)
 		{
 			gf.dance();
 		}

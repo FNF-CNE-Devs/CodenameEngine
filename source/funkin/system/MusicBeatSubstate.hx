@@ -1,5 +1,9 @@
 package funkin.system;
 
+import flixel.FlxState;
+import funkin.scripting.events.*;
+import funkin.scripting.Script;
+import funkin.scripting.DummyScript;
 import funkin.interfaces.IBeatReceiver;
 import funkin.system.Conductor.BPMChangeEvent;
 import funkin.system.Conductor;
@@ -10,11 +14,6 @@ import flixel.math.FlxMath;
 
 class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 {
-	public function new()
-	{
-		super();
-	}
-
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 
@@ -51,6 +50,16 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	 inline function get_songPos():Float
 		 return Conductor.songPosition;
 	 
+
+	/**
+	 * Current injected script attached to the state. To add one, create a file at path "data/states/stateName" (ex: "data/states/PauseMenuSubstate.hx")
+	 */
+	public var stateScript:Script;
+
+	public var scriptsAllowed:Bool = true;
+
+	public var scriptName:String = null;
+
 	 /**
 	  * Game Controls.
 	  */
@@ -59,23 +68,102 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
+
+	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
+		super();
+		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
+		this.scriptName = scriptName;
+		loadScript();
+	}
+
+	function loadScript() {
+		if (scriptsAllowed) {
+			if (stateScript == null || stateScript is DummyScript) {
+				var className = Type.getClassName(Type.getClass(this));
+				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
+		
+				stateScript = Script.create(Paths.script('data/states/${scriptName}'));
+				stateScript.setParent(this);
+				stateScript.load();
+			} else
+				stateScript.reload();
+		}
+	}
+
+	public override function tryUpdate(elapsed:Float):Void
+	{
+		if (persistentUpdate || subState == null) {
+			call("preUpdate", [elapsed]);
+			update(elapsed);
+			call("postUpdate", [elapsed]);
+		}
+
+		if (_requestSubStateReset)
+		{
+			_requestSubStateReset = false;
+			resetSubState();
+		}
+		if (subState != null)
+		{
+			subState.tryUpdate(elapsed);
+		}
+	}
+
+	override function close() {
+		var event = event("onClose", new CancellableEvent());
+		if (!event.cancelled) {
+			super.close();
+			call("onClosePost");
+		}
+	}
+
+	override function create()
+	{
+		super.create();
+		call("create");
+	}
+
+	public override function createPost() {
+		super.createPost();
+		call("postCreate");
+	}
+	public function call(name:String, ?args:Array<Dynamic>, ?defaultVal:Dynamic):Dynamic {
+		// calls the function on the assigned script
+		if (stateScript == null) return defaultVal;
+		return stateScript.call(name, args);
+	}
+
+	public function event<T:CancellableEvent>(name:String, event:T):T {
+		if (stateScript == null) return event;
+		stateScript.call(name, [event]);
+		return event;
+	}
+
 	override function update(elapsed:Float)
 	{
+		// TODO: DEBUG MODE!!
+		if (FlxG.keys.justPressed.F5) {
+			loadScript();
+			if (stateScript != null && !(stateScript is DummyScript))
+				Logs.trace('State script successfully reloaded', WARNING, GREEN);
+		}
+		call("update", [elapsed]);
 		super.update(elapsed);
 	}
 
-
 	@:dox(hide) public function stepHit(curStep:Int):Void
 	{
-		//do literally nothing neither dumbass
+		for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).stepHit(curStep);
+		call("stepHit", [curStep]);
 	}
 
 	@:dox(hide) public function beatHit(curBeat:Int):Void
 	{
-		//do literally nothing dumbass
+		for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).beatHit(curBeat);
+		call("beatHit", [curBeat]);
 	}
-	
-	/**	
+
+	/**
 	 * Shortcut to `FlxMath.lerp` or `CoolUtil.lerp`, depending on `fpsSensitive`
 	 * @param v1 Value 1
 	 * @param v2 Value 2
@@ -87,5 +175,42 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 			return FlxMath.lerp(v1, v2, ratio);
 		else
 			return CoolUtil.fpsLerp(v1, v2, ratio);
+	}
+
+	/**
+	 * SCRIPTING STUFF 
+	 */
+	public override function openSubState(subState:FlxSubState) {
+		var e = event("onOpenSubState", new StateEvent(subState));
+		if (!e.cancelled)
+			super.openSubState(subState);
+	}
+
+	public override function onResize(w:Int, h:Int) {
+		super.onResize(w, h);
+		event("onResize", new ResizeEvent(w, h));
+	}
+
+	public override function destroy() {
+		super.destroy();
+		call("onDestroy");
+		stateScript.destroy();
+	}
+
+	public override function switchTo(nextState:FlxState) {
+		var e = event("onStateSwitch", new StateEvent(nextState));
+		if (e.cancelled)
+			return false;
+		return super.switchTo(nextState);
+	}
+
+	public override function onFocus() {
+		super.onFocus();
+		call("onFocus");
+	}
+
+	public override function onFocusLost() {
+		super.onFocusLost();
+		call("onFocusLost");
 	}
 }

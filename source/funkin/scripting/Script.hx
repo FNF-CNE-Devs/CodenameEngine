@@ -1,5 +1,6 @@
 package funkin.scripting;
 
+import lime.app.Application;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.FlxBasic;
 import haxe.io.Path;
@@ -55,6 +56,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
                 name: "Codename Engine"
             },
             "ModState"          => funkin.scripting.ModState,
+            "ModSubState"       => funkin.scripting.ModSubState,
             "PlayState"         => funkin.game.PlayState,
             "GameOverSubstate"  => funkin.game.GameOverSubstate,
             "Note"              => funkin.game.Note,
@@ -75,6 +77,25 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "CustomShader"      => funkin.shaders.CustomShader,
             "FunkinText"        => funkin.ui.FunkinText,
             "Alphabet"          => funkin.ui.Alphabet,
+        ];
+    }
+    public static function getDefaultPreprocessors():Map<String, Dynamic> {
+        return [
+            "CODENAME_ENGINE" => true,
+            "CODENAME_VER" => Application.current.meta.get('version'),
+            "CODENAME_BUILD" => funkin.macros.BuildCounterMacro.getBuildNumber(),
+            "desktop" => #if desktop true #else false #end,
+            "windows" => #if windows true #else false #end,
+            "linux" => #if linux true #else false #end,
+            "macos" => #if macos true #else false #end,
+            "android" => #if android true #else false #end,
+            "web" => #if web true #else false #end,
+            "debug" => #if debug true #else false #end,
+            "MOD_SUPPORT" => #if MOD_SUPPORT true #else false #end,
+            "GLOBAL_SCRIPT" => #if GLOBAL_SCRIPT true #else false #end,
+            "SOFTCODED_STATES" => #if SOFTCODED_STATES true #else false #end,
+            "USE_SOURCE_ASSETS" => #if USE_SOURCE_ASSETS true #else false #end,
+            "USE_ADAPTED_ASSETS" => #if USE_ADAPTED_ASSETS true #else false #end,
         ];
     }
     /**

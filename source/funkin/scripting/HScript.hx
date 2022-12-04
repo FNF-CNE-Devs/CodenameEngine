@@ -16,6 +16,7 @@ class HScript extends Script {
         var code:String = Assets.getText(path);
         var parser = new hscript.Parser();
         parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
+        parser.preprocesorValues = Script.getDefaultPreprocessors();
         interp.errorHandler = _errorHandler;
         interp.staticVariables = Script.staticVariables;
         interp.allowStaticVariables = interp.allowPublicVariables = true;

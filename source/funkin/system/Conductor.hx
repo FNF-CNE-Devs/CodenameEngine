@@ -169,8 +169,8 @@ class Conductor
 				if (FlxG.state is IBeatReceiver) {
 					var state = FlxG.state;
 					while(state != null) {
-						if (FlxG.state is IBeatReceiver) {
-							var st = cast(FlxG.state, IBeatReceiver);
+						if (state is IBeatReceiver && (state.subState == null || state.subState.persistentUpdate)) {
+							var st = cast(state, IBeatReceiver);
 							st.stepHit(curStep);
 							if (updateBeat)
 								st.beatHit(curBeat);

@@ -24,6 +24,7 @@ using StringTools;
 
 interface ModsAssetLibrary {
     public var prefix:String;
+    public var libName:String;
     
     #if MOD_SUPPORT
     public var _parsedAsset:String;
