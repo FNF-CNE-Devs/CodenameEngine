@@ -21,6 +21,11 @@ class StrumCreationEvent extends CancellableEvent {
      */
     public var strumID:Int;
 
+    /**
+     * Sprite path, in case you only want to change the sprite.
+     */
+    public var sprite:String = "game/NOTE_assets";
+
     public function new(strum:Strum, player:Int, strumID:Int) {
         super();
         this.strum = strum;

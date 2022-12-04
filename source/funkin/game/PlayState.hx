@@ -673,7 +673,7 @@ class PlayState extends MusicBeatState
 				{
 					// case "school":
 					default:
-						babyArrow.frames = Paths.getSparrowAtlas('game/NOTE_assets');
+						babyArrow.frames = Paths.getFrames(event.sprite);
 						babyArrow.animation.addByPrefix('green', 'arrowUP');
 						babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
 						babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
