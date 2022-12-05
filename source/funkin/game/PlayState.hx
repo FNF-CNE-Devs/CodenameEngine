@@ -81,7 +81,7 @@ class PlayState extends MusicBeatState
 	public var halloweenLevel:Bool = false;
 
 	public var gameOverSong:String = "gameOver";
-	public var lossSFX:String = "fnf_loss_sfx";
+	public var lossSFX:String = "gameOverSFX";
 	public var retrySFX:String = "gameOverEnd";
 
 	public var stage:Stage;
@@ -1081,9 +1081,9 @@ class PlayState extends MusicBeatState
 
 	function gameOver(?character:String, ?gameOverSong:String, ?lossSFX:String, ?retrySFX:String) {
 		character = character.getDefault((boyfriend != null) ? boyfriend.gameOverCharacter : "bf-dead");
-		gameOverSong.getDefault(this.gameOverSong);
-		lossSFX.getDefault(this.lossSFX);
-		retrySFX.getDefault(this.retrySFX);
+		gameOverSong = gameOverSong.getDefault(this.gameOverSong);
+		lossSFX = lossSFX.getDefault(this.lossSFX);
+		retrySFX = retrySFX.getDefault(this.retrySFX);
 			
 		boyfriend.stunned = true;
 
