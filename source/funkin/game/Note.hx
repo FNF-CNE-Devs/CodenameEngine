@@ -55,6 +55,7 @@ class Note extends FlxSprite
 	public var sustainLength:Float = 0;
 	public var stepLength:Float = 0;
 	public var isSustainNote:Bool = false;
+	public var flipSustain:Bool = true;
 
 	public var noteTypeID:Int = 0;
 
