@@ -47,6 +47,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	public var playerOffsets:Bool = false;
 
 	public var icon:String = null;
+	public var gameOverCharacter:String = "bf-dead";
 
 	public var cameraOffset:FlxPoint = new FlxPoint(0, 0);
 	public var globalOffset:FlxPoint = new FlxPoint(0, 0);
@@ -111,6 +112,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 					if (xml.has.isGF) isGF = (xml.att.isGF == "true");
 					if (xml.has.x) globalOffset.x = Std.parseFloat(xml.att.x);
 					if (xml.has.y) globalOffset.y = Std.parseFloat(xml.att.y);
+					if (xml.has.gameOverChar) gameOverCharacter = xml.att.gameOverChar;
 					if (xml.has.camx) cameraOffset.x = Std.parseFloat(xml.att.camx);
 					if (xml.has.camy) cameraOffset.y = Std.parseFloat(xml.att.camy);
 					if (xml.has.holdTime) holdTime = CoolUtil.getDefault(Std.parseFloat(xml.att.holdTime), 4);
@@ -142,56 +144,6 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		/**
 			NON CONVERTED CHARACTERS - DO NOT REMOVE
 		**/
-		// 	case 'gf-pixel':
-		// 		tex = Paths.getSparrowAtlas('weeb/gfPixel');
-		// 		frames = tex;
-		// 		animation.addByIndices('singUP', 'GF IDLE', [2], "", 24, false);
-		// 		animation.addByIndices('danceLeft', 'GF IDLE', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-		// 		animation.addByIndices('danceRight', 'GF IDLE', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-
-		// 		addOffset('danceLeft', 0);
-		// 		addOffset('danceRight', 0);
-
-		// 		playAnim('danceRight');
-
-		// 		setGraphicSize(Std.int(width * PlayState.daPixelZoom));
-		// 		updateHitbox();
-		// 		antialiasing = false;
-		// 		flipX = true;
-
-		// 	case 'bf-pixel':
-		// 		frames = Paths.getSparrowAtlas('weeb/bfPixel');
-		// 		animation.addByPrefix('idle', 'BF IDLE', 24, false);
-		// 		animation.addByPrefix('singUP', 'BF UP NOTE', 24, false);
-		// 		animation.addByPrefix('singLEFT', 'BF LEFT NOTE', 24, false);
-		// 		animation.addByPrefix('singRIGHT', 'BF RIGHT NOTE', 24, false);
-		// 		animation.addByPrefix('singDOWN', 'BF DOWN NOTE', 24, false);
-		// 		animation.addByPrefix('singUPmiss', 'BF UP MISS', 24, false);
-		// 		animation.addByPrefix('singLEFTmiss', 'BF LEFT MISS', 24, false);
-		// 		animation.addByPrefix('singRIGHTmiss', 'BF RIGHT MISS', 24, false);
-		// 		animation.addByPrefix('singDOWNmiss', 'BF DOWN MISS', 24, false);
-
-		// 		addOffset('idle');
-		// 		addOffset("singUP");
-		// 		addOffset("singRIGHT");
-		// 		addOffset("singLEFT");
-		// 		addOffset("singDOWN");
-		// 		addOffset("singUPmiss");
-		// 		addOffset("singRIGHTmiss");
-		// 		addOffset("singLEFTmiss");
-		// 		addOffset("singDOWNmiss");
-
-		// 		setGraphicSize(Std.int(width * 6));
-		// 		updateHitbox();
-
-		// 		playAnim('idle');
-
-		// 		width -= 100;
-		// 		height -= 100;
-
-		// 		antialiasing = false;
-
-		// 		flipX = true;
 		// 	case 'bf-pixel-dead':
 		// 		frames = Paths.getSparrowAtlas('weeb/bfPixelsDEAD');
 		// 		animation.addByPrefix('singUP', "BF Dies pixel", 24, false);
@@ -209,67 +161,6 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		// 		updateHitbox();
 		// 		antialiasing = false;
 		// 		flipX = true;
-
-		// 	case 'senpai':
-		// 		frames = Paths.getSparrowAtlas('weeb/senpai');
-		// 		animation.addByPrefix('idle', 'Senpai Idle', 24, false);
-		// 		animation.addByPrefix('singUP', 'SENPAI UP NOTE', 24, false);
-		// 		animation.addByPrefix('singLEFT', 'SENPAI LEFT NOTE', 24, false);
-		// 		animation.addByPrefix('singRIGHT', 'SENPAI RIGHT NOTE', 24, false);
-		// 		animation.addByPrefix('singDOWN', 'SENPAI DOWN NOTE', 24, false);
-
-		// 		addOffset('idle');
-		// 		addOffset("singUP", 5, 37);
-		// 		addOffset("singRIGHT");
-		// 		addOffset("singLEFT", 40);
-		// 		addOffset("singDOWN", 14);
-
-		// 		playAnim('idle');
-
-		// 		setGraphicSize(Std.int(width * 6));
-		// 		updateHitbox();
-
-		// 		antialiasing = false;
-		// 	case 'senpai-angry':
-		// 		frames = Paths.getSparrowAtlas('weeb/senpai');
-		// 		animation.addByPrefix('idle', 'Angry Senpai Idle', 24, false);
-		// 		animation.addByPrefix('singUP', 'Angry Senpai UP NOTE', 24, false);
-		// 		animation.addByPrefix('singLEFT', 'Angry Senpai LEFT NOTE', 24, false);
-		// 		animation.addByPrefix('singRIGHT', 'Angry Senpai RIGHT NOTE', 24, false);
-		// 		animation.addByPrefix('singDOWN', 'Angry Senpai DOWN NOTE', 24, false);
-
-		// 		addOffset('idle');
-		// 		addOffset("singUP", 5, 37);
-		// 		addOffset("singRIGHT");
-		// 		addOffset("singLEFT", 40);
-		// 		addOffset("singDOWN", 14);
-		// 		playAnim('idle');
-
-		// 		setGraphicSize(Std.int(width * 6));
-		// 		updateHitbox();
-
-		// 		antialiasing = false;
-
-		// 	case 'spirit':
-		// 		frames = Paths.getPackerAtlas('weeb/spirit');
-		// 		animation.addByPrefix('idle', "idle spirit_", 24, false);
-		// 		animation.addByPrefix('singUP', "up_", 24, false);
-		// 		animation.addByPrefix('singRIGHT', "right_", 24, false);
-		// 		animation.addByPrefix('singLEFT', "left_", 24, false);
-		// 		animation.addByPrefix('singDOWN', "spirit down_", 24, false);
-
-		// 		addOffset('idle', -220, -280);
-		// 		addOffset('singUP', -220, -240);
-		// 		addOffset("singRIGHT", -220, -280);
-		// 		addOffset("singLEFT", -200, -280);
-		// 		addOffset("singDOWN", 170, 110);
-
-		// 		setGraphicSize(Std.int(width * 6));
-		// 		updateHitbox();
-
-		// 		playAnim('idle');
-
-		// 		antialiasing = false;
 
 
 		isDanceLeftDanceRight = (animation.getByName("danceLeft") != null && animation.getByName("danceRight") != null);

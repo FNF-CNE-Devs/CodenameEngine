@@ -4,6 +4,7 @@ import funkin.scripting.events.NoteHitEvent;
 public var pixelNotesForBF = true;
 public var pixelNotesForDad = true;
 public var enablePixelUI = true;
+public var enablePixelGameOver = true;
 public var enableCameraHacks = true;
 public var enablePauseMenu = true;
 public var isSpooky = false;
@@ -90,6 +91,11 @@ function postCreate() {
     
         makeCameraPixely(camGame);
         defaultCamZoom /= daPixelZoom;
+    }
+    if (enablePixelGameOver) {
+        gameOverSong = "pixel/gameOver";
+        lossSFX = "pixel/gameOverSFX";
+        retrySFX = "pixel/gameOverEnd";
     }
 }
 

@@ -80,7 +80,12 @@ class PlayState extends MusicBeatState
 	public var scripts:ScriptPack;
 	public var halloweenLevel:Bool = false;
 
+	public var gameOverSong:String = "gameOver";
+	public var lossSFX:String = "fnf_loss_sfx";
+	public var retrySFX:String = "gameOverEnd";
+
 	public var stage:Stage;
+	public var canDie:Bool = true;
 	public var scrollSpeed:Float = 0;
 	public var downscroll(get, set):Bool;
 
@@ -782,6 +787,8 @@ class PlayState extends MusicBeatState
 		super.closeSubState();
 	}
 
+	var __wereVocalsPlaying:Bool = false;
+	var __wasAutoPause:Bool = false;
 	override public function onFocus():Void
 	{
 		scripts.call("onFocus");
@@ -798,6 +805,8 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
+		if (__wasAutoPause && __wereVocalsPlaying)
+			vocals.play();
 
 		super.onFocus();
 	}
@@ -811,6 +820,11 @@ class PlayState extends MusicBeatState
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + difficultyText + ")", iconRPC);
 		}
 		#end
+		if (__wasAutoPause = FlxG.autoPause) {
+			__wereVocalsPlaying = vocals.playing;
+			vocals.pause();
+		}
+			
 
 		super.onFocusLost();
 	}
@@ -1003,31 +1017,8 @@ class PlayState extends MusicBeatState
 			trace("User is cheating!");
 		}
 
-		if (health <= 0)
-		{
-			boyfriend.stunned = true;
-
-			persistentUpdate = false;
-			persistentDraw = false;
-			paused = true;
-
-			vocals.stop();
-			FlxG.sound.music.stop();
-
-			openSubState(new GameOverSubstate(boyfriend.x, boyfriend.y));
-
-			// FlxG.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-			
-			#if desktop
-			// Game Over doesn't get his own variable because it's only used here
-			DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + difficultyText + ")", iconRPC);
-			#end
-		}
-
-		// while(unspawnNotes[0] != null && unspawnNotes[0].strumTime - Conductor.songPosition < 1500)
-		// 	notes.add(unspawnNotes.shift());
-		
-
+		if (health <= 0 && canDie)
+			gameOver();
 
 		if (generatedMusic)
 		{
@@ -1089,6 +1080,30 @@ class PlayState extends MusicBeatState
 		#end
 		
 		scripts.call("postUpdate", [elapsed]);
+	}
+
+	function gameOver(?character:String, ?gameOverSong:String, ?lossSFX:String, ?retrySFX:String) {
+		character = character.getDefault((boyfriend != null) ? boyfriend.gameOverCharacter : "bf-dead");
+		gameOverSong.getDefault(this.gameOverSong);
+		lossSFX.getDefault(this.lossSFX);
+		retrySFX.getDefault(this.retrySFX);
+			
+		boyfriend.stunned = true;
+
+		persistentUpdate = false;
+		persistentDraw = false;
+		paused = true;
+
+		vocals.stop();
+		if (FlxG.sound.music != null)
+			FlxG.sound.music.stop();
+
+		openSubState(new GameOverSubstate(boyfriend.x, boyfriend.y, character, gameOverSong, lossSFX, retrySFX));
+
+		#if desktop
+		// Game Over doesn't get his own variable because it's only used here
+		DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + difficultyText + ")", iconRPC);
+		#end
 	}
 
 	function endSong():Void
