@@ -77,14 +77,15 @@ class GameOverSubstate extends MusicBeatSubstate
 				FlxG.switchState(new FreeplayState());
 		}
 
-		if (!isEnding && ((!lossSFX.playing) || (character.animation.curAnim != null && character.animation.curAnim.name == "firstDeath" && character.animation.curAnim.finished)) && (FlxG.sound.music == null || !FlxG.sound.music.playing))
+		if (!isEnding && ((!lossSFX.playing) || (character.animation.curAnim != null && character.animation.curAnim.name == "firstDeath" && character.animation.curAnim.finished)) && (FlxG.sound.music == null || !FlxG.sound.music.playing)) {
 			CoolUtil.playMusic(Paths.music(gameOverSong), 100);
+		}
 	}
 
 	override function beatHit(curBeat:Int)
 	{
 		super.beatHit(curBeat);
-		if (!lossSFX.playing)
+		if (FlxG.sound.music != null && FlxG.sound.music.playing)
 			character.playAnim("deathLoop", true, DANCE);
 	}
 
