@@ -460,15 +460,21 @@ class ShaderTemplates {
     }
 
     uniform vec4 _camSize;
-
+    
+    float map(float value, float min1, float max1, float min2, float max2) {
+      return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+    }
+    
     vec2 getCamPos(vec2 pos) {
-        return (pos * openfl_TextureSize / vec2(_camSize.z, _camSize.w)) + vec2(_camSize.x / _camSize.z, _camSize.y / _camSize.z);
+        vec4 size = _camSize / vec4(openfl_TextureSize, openfl_TextureSize);
+        return vec2(map(pos.x, size.x, size.x + size.z, 0.0, 1.0), map(pos.y, size.y, size.y + size.w, 0.0, 1.0));
     }
     vec2 camToOg(vec2 pos) {
-        return ((pos - vec2(_camSize.x / _camSize.z, _camSize.y / _camSize.z)) * vec2(_camSize.z, _camSize.w) / openfl_TextureSize);
+        vec4 size = _camSize / vec4(openfl_TextureSize, openfl_TextureSize);
+        return vec2(map(pos.x, 0.0, 1.0, size.x, size.x + size.z), map(pos.y, 0.0, 1.0, size.y, size.y + size.w));
     }
     vec4 textureCam(sampler2D bitmap, vec2 pos) {
-        return texture2D(bitmap, camToOg(pos));
+        return flixel_texture2D(bitmap, camToOg(pos));
     }";
 
     public static final fragBody:String = "vec4 color = texture2D (bitmap, openfl_TextureCoordv);

@@ -77,6 +77,8 @@ class XMLUtil {
 		}
 		if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
 
+		spr.zoomFactor = Std.parseFloat(node.getAtt("zoomfactor")).getDefault(spr.zoomFactor);
+		
 		for(anim in node.nodes.anim)
 			addXMLAnimation(spr, anim);
 
@@ -139,23 +141,4 @@ typedef AnimData = {
 	var x:Float;
 	var y:Float;
 	var indices:Array<Int>;
-}
-
-class XMLSprite extends FlxSprite implements IBeatReceiver {
-    public var beatAnims:Array<String> = [];
-    public var name:String;
-
-    public override function update(elapsed:Float) {
-        super.update(elapsed);
-    }
-
-    public function beatHit(curBeat:Int) {
-        if (beatAnims.length > 0) {
-            var anim = beatAnims[FlxMath.wrap(curBeat, 0, beatAnims.length-1)];
-            if (anim != null && anim != "null" && anim != "none")
-                animation.play(anim);
-        }
-        
-    }
-    public function stepHit(curBeat:Int) {}
 }
