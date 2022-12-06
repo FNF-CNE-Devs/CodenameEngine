@@ -57,48 +57,9 @@ class Stage extends FlxBasic implements IBeatReceiver {
                     case "sprite" | "spr" | "sparrow":
                         if (!node.has.sprite || !node.has.name || !node.has.x || !node.has.y) continue;
 
-                        var spr = new StageSprite(node.att.name);
-                        spr.antialiasing = true;
-
-                        spr.loadAnimatedGraphic(Paths.image('$spritesParentFolder${node.att.sprite}', null, true));
-
-                        var x:Null<Float> = Std.parseFloat(node.att.x);
-                        var y:Null<Float> = Std.parseFloat(node.att.y);
-                        if (x != null) spr.x = x;
-                        if (y != null) spr.y = y;
-                        if (node.has.scroll) {
-                            var scroll:Null<Float> = Std.parseFloat(node.att.scroll);
-                            if (scroll != null) spr.scrollFactor.set(scroll, scroll);
-                        } else {
-                            if (node.has.scrollx) {
-                                var scroll:Null<Float> = Std.parseFloat(node.att.scrollx);
-                                if (scroll != null) spr.scrollFactor.x = scroll;
-                            } 
-                            if (node.has.scrolly) {
-                                var scroll:Null<Float> = Std.parseFloat(node.att.scrolly);
-                                if (scroll != null) spr.scrollFactor.y = scroll;
-                            } 
-                        }
-                        if (node.has.antialiasing) spr.antialiasing = node.att.antialiasing == "true";
-                        if (node.has.scale) {
-                            var scale:Null<Float> = Std.parseFloat(node.att.scale);
-                            if (scale != null) spr.scale.set(scale, scale);
-                        }
-                        if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
-
-                        for(anim in node.nodes.anim) {
-                            if (anim.has.name) spr.beatAnims.push(anim.att.name);
-                            XMLUtil.addXMLAnimation(spr, anim);
-                        }
-                        if (node.has.beatAnim && node.att.beatAnim.trim() != "") spr.beatAnims = [for(e in node.att.beatAnim.split(",")) e.trim()];
-                        
-                        if (node.has.anim) {
-                            spr.animation.play(node.att.anim, true);   
-                        } else if (spr.beatAnims.length > 0) {
-                            spr.animation.play(spr.beatAnims[0], true);
-                        }
+                        var spr = XMLUtil.createSpriteFromXML(node, spritesParentFolder);
     
-                        stageSprites.set(node.att.name, spr);
+                        stageSprites.set(spr.name, spr);
                         state.add(spr);
                         spr;
                     case "boyfriend" | "bf":
@@ -164,27 +125,4 @@ class Stage extends FlxBasic implements IBeatReceiver {
     public function beatHit(curBeat:Int) {}
 
     public function stepHit(curStep:Int) {}
-}
-
-class StageSprite extends FlxSprite implements IBeatReceiver {
-    public var beatAnims:Array<String> = [];
-    public var name:String;
-
-    public function new(name:String) {
-        super();
-        this.name = name;
-    }
-    public override function update(elapsed:Float) {
-        super.update(elapsed);
-    }
-
-    public function beatHit(curBeat:Int) {
-        if (beatAnims.length > 0) {
-            var anim = beatAnims[FlxMath.wrap(curBeat, 0, beatAnims.length-1)];
-            if (anim != null && anim != "null" && anim != "none")
-                animation.play(anim);
-        }
-        
-    }
-    public function stepHit(curBeat:Int) {}
 }

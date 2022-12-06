@@ -1,5 +1,7 @@
 package funkin.system;
 
+import flixel.math.FlxMath;
+import funkin.interfaces.IBeatReceiver;
 import haxe.xml.Access;
 import funkin.interfaces.IOffsetCompatible;
 import flixel.FlxSprite;
@@ -38,6 +40,48 @@ class XMLUtil {
         }
         return OK;
     }
+
+	/**
+	 * Creates a new sprite based on a XML node.
+	 */
+	public static function createSpriteFromXML(node:Access, parentFolder:String = "", ?cl:Class<XMLSprite>):XMLSprite {
+		if (parentFolder == null) parentFolder = "";
+
+		var spr = cl != null ? Type.createInstance(cl, []) : new XMLSprite();
+		spr.name = node.getAtt("name");
+		spr.antialiasing = true;
+
+		spr.loadAnimatedGraphic(Paths.image('$parentFolder${node.getAtt("sprite")}', null, true));
+
+		var x:Null<Float> = node.has.x ? Std.parseFloat(node.att.x) : null;
+		var y:Null<Float> = node.has.y ? Std.parseFloat(node.att.y) : null;
+		if (x != null) spr.x = x;
+		if (y != null) spr.y = y;
+		if (node.has.scroll) {
+			var scroll:Null<Float> = Std.parseFloat(node.att.scroll);
+			if (scroll != null) spr.scrollFactor.set(scroll, scroll);
+		} else {
+			if (node.has.scrollx) {
+				var scroll:Null<Float> = Std.parseFloat(node.att.scrollx);
+				if (scroll != null) spr.scrollFactor.x = scroll;
+			} 
+			if (node.has.scrolly) {
+				var scroll:Null<Float> = Std.parseFloat(node.att.scrolly);
+				if (scroll != null) spr.scrollFactor.y = scroll;
+			} 
+		}
+		if (node.has.antialiasing) spr.antialiasing = node.att.antialiasing == "true";
+		if (node.has.scale) {
+			var scale:Null<Float> = Std.parseFloat(node.att.scale);
+			if (scale != null) spr.scale.set(scale, scale);
+		}
+		if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
+
+		for(anim in node.nodes.anim)
+			addXMLAnimation(spr, anim);
+
+		return spr;
+	}
 
 	/**
 	 * Adds an XML animation to `sprite`.
@@ -95,4 +139,23 @@ typedef AnimData = {
 	var x:Float;
 	var y:Float;
 	var indices:Array<Int>;
+}
+
+class XMLSprite extends FlxSprite implements IBeatReceiver {
+    public var beatAnims:Array<String> = [];
+    public var name:String;
+
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+    }
+
+    public function beatHit(curBeat:Int) {
+        if (beatAnims.length > 0) {
+            var anim = beatAnims[FlxMath.wrap(curBeat, 0, beatAnims.length-1)];
+            if (anim != null && anim != "null" && anim != "none")
+                animation.play(anim);
+        }
+        
+    }
+    public function stepHit(curBeat:Int) {}
 }

@@ -1,5 +1,7 @@
 package funkin.menus;
 
+import funkin.system.MusicBeatGroup;
+import funkin.system.XMLUtil;
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
 import flixel.FlxG;
@@ -56,6 +58,7 @@ class TitleState extends MusicBeatState
 	var gfDance:FlxSprite;
 	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
+	var titleScreenSprites:MusicBeatGroup;
 
 	function startIntro()
 	{
@@ -64,28 +67,15 @@ class TitleState extends MusicBeatState
 
 		persistentUpdate = true;
 
-		loadXML();
-
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
-		logoBl = new FlxSprite(-150, -100);
-		logoBl.frames = Paths.getFrames('logoBumpin');
-		logoBl.antialiasing = true;
-		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
-		logoBl.animation.play('bump');
-		logoBl.updateHitbox();
-
-		gfDance = new FlxSprite(FlxG.width * 0.4, FlxG.height * 0.07);
-		gfDance.frames = Paths.getFrames('gfDanceTitle');
-		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-		gfDance.antialiasing = true;
-		add(gfDance);
-		add(logoBl);
+		titleScreenSprites = new MusicBeatGroup();
+		add(titleScreenSprites);
+		loadXML();
 
 		titleText = new FlxSprite(100, FlxG.height * 0.8);
-		titleText.frames = Paths.getFrames('titleEnter');
+		titleText.frames = Paths.getFrames('menus/titlescreen/titleEnter');
 		titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
 		titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
 		titleText.antialiasing = true;
@@ -211,14 +201,6 @@ class TitleState extends MusicBeatState
 	{
 		super.beatHit(curBeat);
 
-		logoBl.animation.play('bump');
-		danceLeft = !danceLeft;
-
-		if (danceLeft)
-			gfDance.animation.play('danceRight');
-		else
-			gfDance.animation.play('danceLeft');
-
 		#if TITLESCREEN_XML
 		if (curBeat >= titleLength || skippedIntro) {
 			if (!skippedIntro) skipIntro();
@@ -275,6 +257,18 @@ class TitleState extends MusicBeatState
 			if (xml.hasNode.intro) {
 				titleLines = [];
 				if (xml.node.intro.has.length) titleLength = CoolUtil.getDefault(Std.parseInt(xml.node.intro.att.length), 16);
+				for(node in xml.nodes.sprites) {
+					var parentFolder:String = node.getAtt("folder").getDefault("");
+					if (parentFolder != "" && !parentFolder.endsWith("/")) parentFolder += "/";
+					for(sprNode in node.elements) {
+						var spr = XMLUtil.createSpriteFromXML(sprNode, parentFolder);
+						switch(node.name) {
+							// TODO: press enter to begin customisation
+							default:
+								titleScreenSprites.add(spr);
+						}
+					}
+				}
 				for(text in xml.node.intro.nodes.text) {
 					var beat:Int = CoolUtil.getDefault(text.has.beat ? Std.parseInt(text.att.beat) : null, 0);
 					var texts:Array<OneOfTwo<String, TitleStateImage>> = [];

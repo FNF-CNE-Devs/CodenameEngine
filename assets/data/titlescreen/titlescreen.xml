@@ -1,7 +1,13 @@
 <!DOCTYPE codename-titlestate >
 <titlestate>
-    <sprites folder="titlescreen">
+    <sprites folder="menus/titlescreen">
+        <sprite name="logo" sprite="logo" x="-150" y="-100" />
+        <sprite name="gf" sprite="gf" x="512" y="50">
+            <anim name="danceLeft" anim="gfDance" indices="30,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
+            <anim name="danceRight" anim="gfDance" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
+        </sprite>
 
+        <titleEnter sprite="titleEnter" x="-150" y="-100" />
     </sprites>
 
     <intro length="16">
