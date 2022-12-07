@@ -68,6 +68,11 @@ class Paths
 		return getPath('data/$key.txt', TEXT, library);
 	}
 
+	inline static public function ini(key:String, ?library:String)
+	{
+		return getPath('data/$key.ini', TEXT, library);
+	}
+
 	inline static public function fragShader(key:String, ?library:String)
 	{
 		return getPath('shaders/$key.frag', TEXT, library);
