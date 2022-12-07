@@ -66,6 +66,7 @@ class Note extends FlxSprite
 	public var noteType(get, null):String;
 
 	@:dox(hide) public var __strumCameras:Array<FlxCamera> = null;
+	@:dox(hide) public var __noteAngle:Float = 0;
 
 	private function get_noteType() {
 		if (PlayState.instance == null) return null;
@@ -167,7 +168,7 @@ class Note extends FlxSprite
 			rotOffset.y += 2;
 		if (negativeScroll)	offset.y *= -1;
 
-		if (angleOffsets && Std.int(angle % 360) != 0) {
+		if (angleOffsets && Std.int(__noteAngle % 360) != 0) {
 			// get default values
 			var oldOffset = FlxPoint.get(offset.x, offset.y);
 			var oldOrigin = FlxPoint.get(origin.x, origin.y);

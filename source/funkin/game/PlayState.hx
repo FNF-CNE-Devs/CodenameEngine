@@ -1437,7 +1437,6 @@ class PlayState extends MusicBeatState
 	override function beatHit(curBeat:Int)
 	{
 		super.beatHit(curBeat);
-		scripts.call("beatHit", [curBeat]);
 		
 		if (camZoomingInterval < 1) camZoomingInterval = 1;
 		if (Options.camZoomOnBeat && camZooming && FlxG.camera.zoom < 1.35 && curBeat % camZoomingInterval == 0)
@@ -1456,6 +1455,8 @@ class PlayState extends MusicBeatState
 		{
 			gf.dance();
 		}
+		
+		scripts.call("beatHit", [curBeat]);
 	}
 
 	public var curLight:Int = 0;

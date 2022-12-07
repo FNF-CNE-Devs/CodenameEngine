@@ -55,7 +55,7 @@ class Strum extends FlxSprite {
         
         daNote.scrollFactor.set(scrollFactor.x, scrollFactor.y);
         
-        var noteAngle = getNotesAngle(daNote);
+        var noteAngle = daNote.__noteAngle = getNotesAngle(daNote);
         daNote.angle = daNote.isSustainNote ? noteAngle : angle;
         if (Std.int(noteAngle % 360) != 0) {
             var noteAngleCos = Math.cos(noteAngle / 180 * Math.PI);
