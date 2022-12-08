@@ -48,6 +48,10 @@ class Main extends Sprite
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
+	#if sys
+	public static var gameThreads:Array<Thread> = [];
+	#end
+
 	public static function main():Void
 	{
 		Lib.current.addChild(new Main());
@@ -112,6 +116,10 @@ class Main extends Sprite
 	
 
 	public function loadGameSettings() {
+		#if sys
+		for(i in 0...4)
+			gameThreads.push(Thread.createWithEventLoop(function() {Thread.current().events.promise();}));
+		#end
 		Paths.assetsTree = new AssetsLibraryList();
 
 		Logs.init();

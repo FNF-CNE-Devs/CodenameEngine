@@ -1,5 +1,7 @@
 package funkin.system;
 
+import sys.thread.Thread;
+import flixel.FlxBasic;
 import funkin.scripting.DummyScript;
 import flixel.FlxState;
 import flixel.FlxSubState;
@@ -145,7 +147,48 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 				Logs.trace('State script successfully reloaded', WARNING, GREEN);
 		}
 		call("update", [elapsed]);
+		
+		#if sys
+		// 4 threads
+		var partLength = Math.ceil(members.length / 4);
+		var done = [for(i in 0...Main.gameThreads.length) false];
+		for(part=>thread in Main.gameThreads) {
+			thread.events.run(function() {
+				var p:Int = part;
+				try {
+					var i:Int = partLength * p;
+					var num:Int = partLength * (p+1);
+					var basic:FlxBasic = null;
+			
+					while (i < num)
+					{
+						basic = members[i++];
+			
+						if (basic != null && basic.exists && basic.active)
+							basic.update(elapsed);
+					}
+					done[p] = true;
+				} catch(e) {
+					trace(e);
+					done[p] = true;
+				}
+			});
+		}
+		while(done.contains(false))
+			Thread.current().events.wait(0.0001);
+		
+		if (tooltips != null)
+			tooltips.update(elapsed);
+
+		if (_reload && _reload_countdown > 0)
+		{
+			_reload_countdown--;
+			if (_reload_countdown == 0)
+				reloadUI();
+		}
+		#else
 		super.update(elapsed);
+		#end
 	}
 
 	@:dox(hide) public function stepHit(curStep:Int):Void
