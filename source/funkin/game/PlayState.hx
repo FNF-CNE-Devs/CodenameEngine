@@ -608,6 +608,8 @@ class PlayState extends MusicBeatState
 
 		inst = FlxG.sound.load(Paths.inst(PlayState.SONG.song));
 		vocals = FlxG.sound.list.recycle(FlxSound);
+		@:privateAccess
+		vocals.reset();
 		if (SONG.needsVoices)
 			vocals.loadEmbedded(Paths.voices(PlayState.SONG.song));
 		FlxG.sound.list.add(vocals);
@@ -790,10 +792,10 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
-		if (__wasAutoPause && __songPlaying) {
-			inst.play();
-			vocals.play();
-		}
+		// if (__wasAutoPause && __songPlaying) {
+			// inst.play();
+			// vocals.play();
+		// }
 
 		super.onFocus();
 	}
@@ -807,11 +809,11 @@ class PlayState extends MusicBeatState
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + difficultyText + ")", iconRPC);
 		}
 		#end
-		if (__wasAutoPause = FlxG.autoPause) {
-			__songPlaying = inst.playing;
-			inst.pause();
-			vocals.pause();
-		}
+		// if (__wasAutoPause = FlxG.autoPause) {
+		// 	__songPlaying = inst.playing;
+		// 	inst.pause();
+		// 	vocals.pause();
+		// }
 			
 
 		super.onFocusLost();

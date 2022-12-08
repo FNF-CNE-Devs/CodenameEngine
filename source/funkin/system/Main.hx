@@ -113,7 +113,17 @@ class Main extends Sprite
 	public static var audioDisconnected:Bool = false;
 	
 	public static var changeID:Int = 0;
+
 	
+	private static var __threadCycle:Int = 0;
+	public static function execAsync(func:Void->Void) {
+		#if sys
+		var thread = gameThreads[(__threadCycle++) % gameThreads.length];
+		thread.events.run(func);
+		#else
+		func();
+		#end
+	}
 
 	public function loadGameSettings() {
 		#if sys
