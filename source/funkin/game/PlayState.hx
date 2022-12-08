@@ -204,19 +204,15 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 		instance = this;
+
 		PauseSubState.script = "";
+		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
-		if (FlxG.sound.music != null)
-			FlxG.sound.music.stop();
-
-		scripts = new ScriptPack("PlayState");
-		scripts.setParent(this);
+		(scripts = new ScriptPack("PlayState")).setParent(this);
 
 		camGame = camera;
-		camHUD = new HudCamera();
+		FlxG.cameras.add(camHUD = new HudCamera(), false);
 		camHUD.bgColor.alpha = 0;
-
-		FlxG.cameras.add(camHUD, false);
 
 		downscroll = Options.downscroll;
 		// camGame.widescreen = true;
@@ -229,31 +225,19 @@ class PlayState extends MusicBeatState
 
 		scrollSpeed = SONG.speed;
 
-		Conductor.reset();
-		Conductor.mapBPMChanges(SONG);
-		Conductor.changeBPM(SONG.bpm);
+		Conductor.setupSong(SONG);
 
 		#if desktop
 		// TODO: Scriptable custom RPC
 		iconRPC = SONG.player2;
 
-		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
-		if (isStoryMode)
-		{
-			detailsText = "Story Mode: " + storyWeek.name;
-		}
-		else
-		{
-			detailsText = "Freeplay";
-		}
+		detailsText = isStoryMode ? ("Story Mode: " + storyWeek.name) : "Freeplay";
 
 		// Checks if cutscene files exists
 		var cutscenePath = Paths.script('data/cutscenes/${SONG.song.toLowerCase()}');
 		var endCutscenePath = Paths.script('data/cutscenes/${SONG.song.toLowerCase()}-end');
-		if (Assets.exists(cutscenePath))
-			cutscene = cutscenePath;
-		if (Assets.exists(endCutscenePath))
-			endCutscene = endCutscenePath;
+		if (Assets.exists(cutscenePath)) cutscene = cutscenePath;
+		if (Assets.exists(endCutscenePath)) endCutscene = endCutscenePath;
 
 		// String for when the game is paused
 		detailsPausedText = "Paused - " + detailsText;
@@ -623,7 +607,7 @@ class PlayState extends MusicBeatState
 		curSong = songData.song;
 
 		inst = FlxG.sound.load(Paths.inst(PlayState.SONG.song));
-		vocals = new FlxSound();
+		vocals = FlxG.sound.list.recycle(FlxSound);
 		if (SONG.needsVoices)
 			vocals.loadEmbedded(Paths.voices(PlayState.SONG.song));
 		FlxG.sound.list.add(vocals);
@@ -788,7 +772,7 @@ class PlayState extends MusicBeatState
 		super.closeSubState();
 	}
 
-	var __wereVocalsPlaying:Bool = false;
+	var __songPlaying:Bool = false;
 	var __wasAutoPause:Bool = false;
 	override public function onFocus():Void
 	{
@@ -806,8 +790,10 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
-		if (__wasAutoPause && __wereVocalsPlaying)
+		if (__wasAutoPause && __songPlaying) {
+			inst.play();
 			vocals.play();
+		}
 
 		super.onFocus();
 	}
@@ -822,7 +808,8 @@ class PlayState extends MusicBeatState
 		}
 		#end
 		if (__wasAutoPause = FlxG.autoPause) {
-			__wereVocalsPlaying = vocals.playing;
+			__songPlaying = inst.playing;
+			inst.pause();
 			vocals.pause();
 		}
 			

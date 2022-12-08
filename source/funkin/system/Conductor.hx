@@ -88,6 +88,12 @@ class Conductor
 		bpmChangeMap = [];
 		changeBPM(0);
 	}
+
+	public static function setupSong(SONG:SwagSong) {
+		reset();
+		mapBPMChanges(SONG);
+		changeBPM(SONG.bpm);
+	}
 	/**
 	 * Maps BPM changes from a song.
 	 * @param song Song to map BPM changes from.
