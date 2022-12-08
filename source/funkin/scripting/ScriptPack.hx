@@ -66,7 +66,7 @@ class ScriptPack extends Script {
         for(e in scripts) {
             e.call(func, [event]);
             @:privateAccess
-            if (event.cancelled && event.__continueCalls) break;
+            if (event.cancelled && !event.__continueCalls) break;
         }
         return event;
     }

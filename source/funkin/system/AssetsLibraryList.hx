@@ -24,9 +24,12 @@ class AssetsLibraryList extends AssetLibrary {
 
     public override function getPath(id:String) {
         for(e in libraries) {
-            var path = e.getPath(id);
-            if (path != null)
-                return path;
+            @:privateAccess
+            if (e.exists(id, e.types.get(id))) {
+                var path = e.getPath(id);
+                if (path != null)
+                    return path;
+            }
         }
         return null;
     }

@@ -75,7 +75,7 @@ class HScript extends Script {
         if (interp == null) return null;
 
         var func = interp.variables.get(funcName);
-        if (Reflect.isFunction(func))
+        if (func != null && Reflect.isFunction(func))
             return (parameters != null && parameters.length > 0) ? Reflect.callMethod(null, func, parameters) : func();
 
         return null;

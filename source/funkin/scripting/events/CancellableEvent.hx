@@ -16,7 +16,7 @@ class CancellableEvent {
      * Prevents default action from occuring.
      * @param c Whenever the scripts following this one should be called or not. (Defaults to `true`)
      */
-    public function preventDefault(c:Bool = true) {
+    public function preventDefault(c:Bool = false) {
         cancelled = true;
         __continueCalls = c;
     }
