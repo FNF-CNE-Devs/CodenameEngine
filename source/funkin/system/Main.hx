@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.away3d.Flx3DView;
 import openfl.utils.AssetLibrary;
 import openfl.utils.AssetCache;
 import openfl.text.TextFormat;
@@ -135,6 +136,7 @@ class Main extends Sprite
 		Logs.init();
 		Paths.init();
 		ModsFolder.init();
+		Flx3DView.init();
 		#if MOD_SUPPORT
 		ModsFolder.switchMod("introMod");
 		#end
