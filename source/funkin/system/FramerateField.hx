@@ -55,54 +55,45 @@ class FramerateField extends TextField
 		});
 	}
 
-	public override function __enterFrame(t:Float)
-	{
-		var text = [];
-		if (showFPS || debugMode)
-		{
-			lastFPS = CoolUtil.fpsLerp(lastFPS, FlxG.elapsed == 0 ? 0 : (1 / FlxG.elapsed), 0.25);
-			text.push('FPS: ${Std.int(lastFPS)}');
-		}
-		#if !web
-		if (showMemory || debugMode)
-		{
-			text.push('RAM: ${CoolUtil.getSizeString(System.totalMemory)}');
-		}
-		if (showMemoryPeak || debugMode)
-		{
-			if (peak < System.totalMemory)
-				peak = System.totalMemory;
-			text.push('RAM PEAK: (${CoolUtil.getSizeString(peak)})');
-		}
-		#end
-		#if !release
-		text.push('CODENAME ENGINE ALPHA - BUILD ${funkin.macros.BuildCounterMacro.getBuildNumber()}');
-		#end
-		if (debugMode)
-		{
-			text.push('=== CONDUCTOR INFO ===');
-			text.push('Current Song Position: ${Conductor.songPosition} (${Conductor.curBeat} beats - ${Conductor.curStep} steps)');
-			text.push('Current BPM: ${Conductor.bpm}');
-			text.push('=== SYSTEM INFO ===');
-			text.push('System: ${lime.system.System.platformLabel} ${lime.system.System.platformVersion}');
-			text.push('Objs in state: ${FlxG.state.members.length}');
-			text.push('Nb cameras: ${FlxG.cameras.list.length}');
-			text.push('Current state: ${Type.getClassName(Type.getClass(FlxG.state))}');
-			text.push('=== ASSET LIBRARIES TREE ===');
-			if (Paths.assetsTree == null)
-				text.push('Not initialized yet');
-			else
-			{
-				for (e in Paths.assetsTree.libraries)
-				{
-					var l = e;
-					if (l is openfl.utils.AssetLibrary)
-					{
-						var al = cast(l, openfl.utils.AssetLibrary);
-						@:privateAccess
-						if (al.__proxy != null)
-							l = al.__proxy;
-					}
+    public override function __enterFrame(t:Float) {
+        var text = [];
+        if (showFPS || debugMode) {
+            lastFPS = CoolUtil.fpsLerp(lastFPS, FlxG.elapsed == 0 ? 0 : (1 / FlxG.elapsed), 0.25);
+            text.push('FPS: ${Std.int(lastFPS)}');
+        }
+        #if !web
+        if (showMemory || debugMode) {
+            text.push('RAM: ${CoolUtil.getSizeString(System.totalMemory)}');
+        }
+        if (showMemoryPeak || debugMode) {
+            if (peak < System.totalMemory)
+                peak = System.totalMemory;
+            text.push('RAM PEAK: (${CoolUtil.getSizeString(peak)})');
+        }
+        #end
+        #if !release
+        text.push('CODENAME ENGINE BETA - BUILD ${funkin.macros.BuildCounterMacro.getBuildNumber()}');
+        #end
+        if (debugMode) {
+            text.push('=== CONDUCTOR INFO ===');
+            text.push('Current Song Position: ${Conductor.songPosition} (${Conductor.curBeat} beats - ${Conductor.curStep} steps)');
+            text.push('Current BPM: ${Conductor.bpm}');
+            text.push('=== SYSTEM INFO ===');
+            text.push('System: ${lime.system.System.platformLabel} ${lime.system.System.platformVersion}');
+            text.push('Objs in state: ${FlxG.state.members.length}');
+            text.push('Nb cameras: ${FlxG.cameras.list.length}');
+            text.push('Current state: ${Type.getClassName(Type.getClass(FlxG.state))}');
+            text.push('=== ASSET LIBRARIES TREE ===');
+            if (Paths.assetsTree == null)
+                text.push('Not initialized yet');
+            else {
+                for(e in Paths.assetsTree.libraries) {
+                    var l = e;
+                    if (l is openfl.utils.AssetLibrary) {
+                        var al = cast(l, openfl.utils.AssetLibrary);
+                        @:privateAccess
+                        if (al.__proxy != null) l = al.__proxy;
+                    }
 
 					if (l is ModsAssetLibrary)
 						text.push('${Type.getClassName(Type.getClass(l))} - ${cast (l, ModsAssetLibrary).libName} (${cast (l, ModsAssetLibrary).prefix})');
