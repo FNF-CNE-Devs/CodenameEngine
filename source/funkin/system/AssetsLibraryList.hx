@@ -82,6 +82,7 @@ class AssetsLibraryList extends AssetLibrary {
             @:privateAccess var cachedAudioBuffers = lib.cachedAudioBuffers;
             @:privateAccess var cachedBytes = lib.cachedBytes;
             @:privateAccess var cachedFonts = lib.cachedFonts;
+            @:privateAccess var cachedImages = lib.cachedImages;
             @:privateAccess var cachedText = lib.cachedText;
 
 
