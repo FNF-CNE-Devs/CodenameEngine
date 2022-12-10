@@ -1,6 +1,7 @@
 package native;
 
 import funkin.windows.WindowsAPI.MessageBoxIcon;
+
 #if windows
 @:buildXml('
 <target id="haxe">
@@ -167,19 +168,18 @@ class WinAPI
         system("CLS");
         std::cout<< "" <<std::flush;
     ')
-    #end
-    public static function clearScreen() {
+	#end
+	public static function clearScreen()
+	{
+	}
 
-    }
-
-
-    #if windows
-    @:functionCode('
+	#if windows
+	@:functionCode('
         MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);
     ')
-    #end
-    public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
-        
-    }
+	#end
+	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING)
+	{
+	}
 }
 #end

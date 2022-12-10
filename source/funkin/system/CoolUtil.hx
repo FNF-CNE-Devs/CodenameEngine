@@ -52,12 +52,15 @@ class CoolUtil
 		return false;
 	}
 
-	public static function last<T>(array:Array<T>):T {
+	public static function last<T>(array:Array<T>):T
+	{
 		return array[array.length - 1];
 	}
 
-	public static function setFieldDefault<T>(v:Dynamic, name:String, defaultValue:T):T {
-		if (Reflect.hasField(v, name)) {
+	public static function setFieldDefault<T>(v:Dynamic, name:String, defaultValue:T):T
+	{
+		if (Reflect.hasField(v, name))
+		{
 			var f:Null<Dynamic> = Reflect.field(v, name);
 			if (f != null)
 				return cast f;
@@ -324,7 +327,8 @@ class CoolUtil
 		return xml.att.resolve(name);
 	}
 
-	public static function loadFrames(path:String, Unique:Bool = false, Key:String = null):FlxFramesCollection {
+	public static function loadFrames(path:String, Unique:Bool = false, Key:String = null):FlxFramesCollection
+	{
 		var noExt = Path.withoutExtension(path);
 
 		if (Assets.exists('$noExt/1.png'))

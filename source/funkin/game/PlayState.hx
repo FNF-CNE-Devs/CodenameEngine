@@ -1113,7 +1113,7 @@ class PlayState extends MusicBeatState
 			notes.forEachAlive(function(daNote:Note)
 			{
 				var strum:Strum = null;
-				for (e in(daNote.mustPress ? playerStrums : cpuStrums).members)
+				for (e in (daNote.mustPress ? playerStrums : cpuStrums).members)
 				{
 					if (e.ID == daNote.noteData % 4)
 					{

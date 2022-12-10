@@ -24,27 +24,29 @@ class WindowsAPI
 		#end
 	}
 
-    /**
-     * Shows a message box
-     */
-    public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
-        #if windows
-        native.WinAPI.showMessageBox(caption, message, icon);
-        #else
-        lime.app.Application.current.window.alert(title, text);
-        #end
-    }
+	/**
+	 * Shows a message box
+	 */
+	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING)
+	{
+		#if windows
+		native.WinAPI.showMessageBox(caption, message, icon);
+		#else
+		lime.app.Application.current.window.alert(title, text);
+		#end
+	}
 
-    /**
-     * Sets the console colors
-     */
-    public static function setConsoleColors(foregroundColor:ConsoleColor = LIGHTGRAY, ?backgroundColor:ConsoleColor = BLACK) {
-        #if windows
-        var fg = cast(foregroundColor, Int);
-        var bg = cast(backgroundColor, Int);
-        native.WinAPI.setConsoleColors((bg * 16) + fg);
-        #end
-    } 
+	/**
+	 * Sets the console colors
+	 */
+	public static function setConsoleColors(foregroundColor:ConsoleColor = LIGHTGRAY, ?backgroundColor:ConsoleColor = BLACK)
+	{
+		#if windows
+		var fg = cast(foregroundColor, Int);
+		var bg = cast(backgroundColor, Int);
+		native.WinAPI.setConsoleColors((bg * 16) + fg);
+		#end
+	}
 
 	/**
 	 * Sets the console colors
@@ -82,29 +84,30 @@ class WindowsAPI
 	}
 }
 
-
-@:enum abstract ConsoleColor(Int) {
-    var BLACK:ConsoleColor = 0;
-    var DARKBLUE:ConsoleColor = 1;
-    var DARKGREEN:ConsoleColor = 2;
-    var DARKCYAN:ConsoleColor = 3;
-    var DARKRED:ConsoleColor = 4;
-    var DARKMAGENTA:ConsoleColor = 5;
-    var DARKYELLOW:ConsoleColor = 6;
-    var LIGHTGRAY:ConsoleColor = 7;
-    var GRAY:ConsoleColor = 8;
-    var BLUE:ConsoleColor = 9;
-    var GREEN:ConsoleColor = 10;
-    var CYAN:ConsoleColor = 11;
-    var RED:ConsoleColor = 12;
-    var MAGENTA:ConsoleColor = 13;
-    var YELLOW:ConsoleColor = 14;
-    var WHITE:ConsoleColor = 15;
+@:enum abstract ConsoleColor(Int)
+{
+	var BLACK:ConsoleColor = 0;
+	var DARKBLUE:ConsoleColor = 1;
+	var DARKGREEN:ConsoleColor = 2;
+	var DARKCYAN:ConsoleColor = 3;
+	var DARKRED:ConsoleColor = 4;
+	var DARKMAGENTA:ConsoleColor = 5;
+	var DARKYELLOW:ConsoleColor = 6;
+	var LIGHTGRAY:ConsoleColor = 7;
+	var GRAY:ConsoleColor = 8;
+	var BLUE:ConsoleColor = 9;
+	var GREEN:ConsoleColor = 10;
+	var CYAN:ConsoleColor = 11;
+	var RED:ConsoleColor = 12;
+	var MAGENTA:ConsoleColor = 13;
+	var YELLOW:ConsoleColor = 14;
+	var WHITE:ConsoleColor = 15;
 }
 
-@:enum abstract MessageBoxIcon(Int) {
-    var MSG_ERROR:MessageBoxIcon = 0x00000010;
-    var MSG_QUESTION:MessageBoxIcon = 0x00000020;
-    var MSG_WARNING:MessageBoxIcon = 0x00000030;
-    var MSG_INFORMATION:MessageBoxIcon = 0x00000040;
+@:enum abstract MessageBoxIcon(Int)
+{
+	var MSG_ERROR:MessageBoxIcon = 0x00000010;
+	var MSG_QUESTION:MessageBoxIcon = 0x00000020;
+	var MSG_WARNING:MessageBoxIcon = 0x00000030;
+	var MSG_INFORMATION:MessageBoxIcon = 0x00000040;
 }
