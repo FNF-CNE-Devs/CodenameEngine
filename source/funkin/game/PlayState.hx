@@ -1113,7 +1113,7 @@ class PlayState extends MusicBeatState
 			notes.forEachAlive(function(daNote:Note)
 			{
 				var strum:Strum = null;
-				for (e in (daNote.mustPress ? playerStrums : cpuStrums).members)
+				for (e in(daNote.mustPress ? playerStrums : cpuStrums).members)
 				{
 					if (e.ID == daNote.noteData % 4)
 					{
@@ -1524,7 +1524,10 @@ class PlayState extends MusicBeatState
 					{
 						if (str.ID == Math.abs(note.strumID))
 						{
-							str.press((note.nextSustain != null && note.nextSustain.nextSustain != null) ? 0.3 : 0.15);
+							var time:Float = 0.175;
+							if (note.nextSustain != null && note.nextSustain.nextSustain != null)
+								time *= 2;
+							str.press(time);
 						}
 					});
 			}
