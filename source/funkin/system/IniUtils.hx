@@ -5,37 +5,42 @@ import openfl.utils.Assets;
 /**
  * DOESNT SUPPORT CATEGORIES YET!!
  */
-class IniUtils {
-    public static inline function parseAsset(assetPath:String, ?defaultVariables:Map<String, String>)
-        return parseString(Assets.getText(assetPath), defaultVariables);
+class IniUtils
+{
+	public static inline function parseAsset(assetPath:String, ?defaultVariables:Map<String, String>)
+		return parseString(Assets.getText(assetPath), defaultVariables);
 
-    public static function parseString(data:String, ?defaultVariables:Map<String, String>) {
-        var trimmed:String;
-        var splitContent = [for(e in data.split("\n")) if ((trimmed = e.trim()) != "") trimmed];
-        
-        var finalMap:Map<String, String> = [];
-        if (defaultVariables != null)
-            for(k=>e in defaultVariables)
-                finalMap[k] = e;
+	public static function parseString(data:String, ?defaultVariables:Map<String, String>)
+	{
+		var trimmed:String;
+		var splitContent = [for (e in data.split("\n")) if ((trimmed = e.trim()) != "") trimmed];
 
-        for(line in splitContent) {
-            // comment
-            if (line.startsWith(";")) continue;
-            // categories; not supported yet
-            if (line.startsWith("[") && line.endsWith("]")) continue;
+		var finalMap:Map<String, String> = [];
+		if (defaultVariables != null)
+			for (k => e in defaultVariables)
+				finalMap[k] = e;
 
-            var index = line.indexOf("=");
-            var name = line.substr(0, index).trim();
-            var value = line.substr(index+1).trim();
+		for (line in splitContent)
+		{
+			// comment
+			if (line.startsWith(";"))
+				continue;
+			// categories; not supported yet
+			if (line.startsWith("[") && line.endsWith("]"))
+				continue;
 
-            if (value.startsWith("\"") && value.endsWith("\""))
-                value = value.substr(1, value.length - 2);
+			var index = line.indexOf("=");
+			var name = line.substr(0, index).trim();
+			var value = line.substr(index + 1).trim();
 
-            if (value.length == 0 || name.length == 0)
-                continue;
-            
-            finalMap[name] = value;
-        }
-        return finalMap;
-    }
+			if (value.startsWith("\"") && value.endsWith("\""))
+				value = value.substr(1, value.length - 2);
+
+			if (value.length == 0 || name.length == 0)
+				continue;
+
+			finalMap[name] = value;
+		}
+		return finalMap;
+	}
 }

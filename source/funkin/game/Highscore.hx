@@ -27,19 +27,22 @@ class Highscore
 
 	static function setScore(song:String, score:SongScore):Void
 	{
-		if (score == null) return;
+		if (score == null)
+			return;
 		songScores.set(song, score);
 		save();
 	}
 
 	static function setWeekScore(song:String, score:SongScore):Void
 	{
-		if (score == null) return;
+		if (score == null)
+			return;
 		weekScores.set(song, score);
 		save();
 	}
 
-	public static function save() {
+	public static function save()
+	{
 		FlxG.save.data.songScores = songScores;
 		FlxG.save.data.weekScores = weekScores;
 		FlxG.save.flush();
@@ -72,8 +75,10 @@ class Highscore
 		return prepareScore(weekScores.get(daWeek));
 	}
 
-	public static function prepareScore(score:SongScore):SongScore {
-		if (score == null) score = {};
+	public static function prepareScore(score:SongScore):SongScore
+	{
+		if (score == null)
+			score = {};
 
 		score.setFieldDefault('score', 0);
 		score.setFieldDefault('accuracy', 0);
@@ -82,19 +87,20 @@ class Highscore
 
 		return score;
 	}
+
 	public static function load():Void
 	{
 		songScores = CoolUtil.getDefault(FlxG.save.data.songScores, new Map<String, SongScore>());
 		weekScores = CoolUtil.getDefault(FlxG.save.data.weekScores, new Map<String, SongScore>());
-		
-		for(k=>e in songScores)
+
+		for (k => e in songScores)
 			if (e is Int)
 				songScores.remove(k);
 	}
 }
 
-
-typedef SongScore = {
+typedef SongScore =
+{
 	@:optional var score:Int;
 	@:optional var accuracy:Float;
 	@:optional var misses:Int;

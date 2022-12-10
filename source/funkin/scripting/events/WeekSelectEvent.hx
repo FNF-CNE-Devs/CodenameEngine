@@ -2,33 +2,35 @@ package funkin.scripting.events;
 
 import funkin.menus.StoryMenuState.WeekData;
 
-class WeekSelectEvent extends CancellableEvent {
-    /**
-     * Week that is going to be selected
-     */
-    public var week:WeekData;
+class WeekSelectEvent extends CancellableEvent
+{
+	/**
+	 * Week that is going to be selected
+	 */
+	public var week:WeekData;
 
-    /**
-     * The difficulty that has been selected
-     */
-    public var difficulty:String;
+	/**
+	 * The difficulty that has been selected
+	 */
+	public var difficulty:String;
 
-    /**
-     * At which emplacement the week is. Goes from 0 to the number of weeks - 1.
-     */
-    public var weekID:Int;
+	/**
+	 * At which emplacement the week is. Goes from 0 to the number of weeks - 1.
+	 */
+	public var weekID:Int;
 
-    /**
-     * At which emplacement the difficulty is. Goes from 0 to the number of weeks - 1.
-     */
-    public var difficultyID:Int;
+	/**
+	 * At which emplacement the difficulty is. Goes from 0 to the number of weeks - 1.
+	 */
+	public var difficultyID:Int;
 
-    public override function new(week:WeekData, difficulty:String, weekID:Int, difficultyID:Int) {
-        super();
+	public override function new(week:WeekData, difficulty:String, weekID:Int, difficultyID:Int)
+	{
+		super();
 
-        this.week = week;
-        this.difficulty = difficulty;
-        this.weekID = weekID;
-        this.difficultyID = difficultyID;
-    }
+		this.week = week;
+		this.difficulty = difficulty;
+		this.weekID = weekID;
+		this.difficultyID = difficultyID;
+	}
 }

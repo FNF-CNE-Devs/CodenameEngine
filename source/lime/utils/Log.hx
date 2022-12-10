@@ -20,7 +20,6 @@ class Log
 			#else
 			println("[" + info.className + "] " + Std.string(message));
 			#end
-
 		}
 	}
 
@@ -30,14 +29,14 @@ class Log
 		{
 			var message = '[${info.className}] $message';
 
-            FunkinLogs.trace(message, ERROR, RED);
+			FunkinLogs.trace(message, ERROR, RED);
 		}
 	}
 
 	public static function info(message:Dynamic, ?info:PosInfos):Void
 	{
 		if (level >= LogLevel.INFO)
-            FunkinLogs.trace('[${info.className}] $message', INFO, RED);
+			FunkinLogs.trace('[${info.className}] $message', INFO, RED);
 	}
 
 	public static inline function print(message:Dynamic):Void
@@ -69,14 +68,14 @@ class Log
 	public static function verbose(message:Dynamic, ?info:PosInfos):Void
 	{
 		if (level >= LogLevel.VERBOSE)
-            FunkinLogs.trace('[${info.className}] $message', VERBOSE);
+			FunkinLogs.trace('[${info.className}] $message', VERBOSE);
 	}
 
 	public static function warn(message:Dynamic, ?info:PosInfos):Void
 	{
 		if (level >= LogLevel.WARN)
 		{
-            FunkinLogs.trace('[${info.className}] $message', WARNING, YELLOW);
+			FunkinLogs.trace('[${info.className}] $message', WARNING, YELLOW);
 		}
 	}
 
@@ -111,7 +110,9 @@ class Log
 		}
 		if (untyped __js__("console").log == null)
 		{
-			untyped __js__("console").log = function() {};
+			untyped __js__("console").log = function()
+			{
+			};
 		}
 		#end
 	}

@@ -24,8 +24,10 @@ class Paths
 
 	public static var tempFramesCache:Map<String, FlxFramesCollection> = [];
 
-	public static function init() {
-		FlxG.signals.preStateSwitch.add(function() {
+	public static function init()
+	{
+		FlxG.signals.preStateSwitch.add(function()
+		{
 			tempFramesCache.clear();
 		});
 	}
@@ -38,7 +40,8 @@ class Paths
 		return skipModsVerification ? 'assets:${getAssetsPath(file)}' : getAssetsPath(file);
 	}
 
-	static public function video(key:String) {
+	static public function video(key:String)
+	{
 		return getPath('videos/$key.mp4', BINARY, null);
 	}
 
@@ -49,7 +52,8 @@ class Paths
 
 	inline static function getLibraryPathForce(file:String, library:String)
 	{
-		if (library.startsWith("mods")) library = library.toLowerCase();
+		if (library.startsWith("mods"))
+			library = library.toLowerCase();
 		return '$library:assets/$library/$file';
 	}
 
@@ -57,7 +61,7 @@ class Paths
 	{
 		return 'assets/$file';
 	}
-	
+
 	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)
 	{
 		return getPath(file, type, library);
@@ -124,17 +128,22 @@ class Paths
 	{
 		var atlasPath = checkForAtlas ? getPath('images/$key/spritemap.png', IMAGE, library) : null;
 		var multiplePath = checkForAtlas ? getPath('images/$key/1.png', IMAGE, library) : null;
-		if (atlasPath != null && OpenFlAssets.exists(atlasPath)) return atlasPath.substr(0, atlasPath.length - 14);
-		if (multiplePath != null && OpenFlAssets.exists(multiplePath)) return multiplePath.substr(0, multiplePath.length - 6);
+		if (atlasPath != null && OpenFlAssets.exists(atlasPath))
+			return atlasPath.substr(0, atlasPath.length - 14);
+		if (multiplePath != null && OpenFlAssets.exists(multiplePath))
+			return multiplePath.substr(0, multiplePath.length - 6);
 		return getPath('images/$key.png', IMAGE, library);
 	}
 
-	inline static public function script(key:String, ?library:String, isAssetsPath:Bool = false) {
+	inline static public function script(key:String, ?library:String, isAssetsPath:Bool = false)
+	{
 		var scriptPath = isAssetsPath ? key : getPath(key, TEXT, library);
 		var p:String;
-		for(ex in Script.scriptExtensions) {
+		for (ex in Script.scriptExtensions)
+		{
 			p = isAssetsPath ? '$key.$ex' : getPath('$key.$ex', TEXT, library);
-			if (OpenFlAssets.exists(p)) {
+			if (OpenFlAssets.exists(p))
+			{
 				scriptPath = p;
 				break;
 			}
@@ -142,7 +151,8 @@ class Paths
 		return scriptPath;
 	}
 
-	static public function chart(song:String, ?difficulty:String = "normal"):String {
+	static public function chart(song:String, ?difficulty:String = "normal"):String
+	{
 		difficulty = difficulty.toLowerCase();
 		song = song.toLowerCase();
 
@@ -150,15 +160,18 @@ class Paths
 
 		// data/charts/your-song/hard.json
 		var p = json('charts/$song/$difficulty');
-		if (OpenFlAssets.exists(p)) return p;
+		if (OpenFlAssets.exists(p))
+			return p;
 
 		// data/charts/your-song/your-song-hard.json
 		var p2 = json('charts/$song/$song$difficultyEnd');
-		if (OpenFlAssets.exists(p2)) return p2;
+		if (OpenFlAssets.exists(p2))
+			return p2;
 
 		// data/your-song/your-song-hard.json (default old format)
 		p2 = json('$song/$song$difficultyEnd');
-		if (OpenFlAssets.exists(p2)) return p2;
+		if (OpenFlAssets.exists(p2))
+			return p2;
 
 		return p; // returns the normal one so that it shows the correct path in the error message.
 	}
@@ -172,7 +185,8 @@ class Paths
 		#end
 	}
 
-	inline static public function obj(key:String) {
+	inline static public function obj(key:String)
+	{
 		return getPath('models/$key.obj', BINARY, null);
 	}
 
@@ -181,8 +195,10 @@ class Paths
 		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
 	}
 
-	static public function getFrames(key:String, ?library:String) {
-		if (tempFramesCache.exists(key)) {
+	static public function getFrames(key:String, ?library:String)
+	{
+		if (tempFramesCache.exists(key))
+		{
 			if (tempFramesCache[key].parent.bitmap.readable)
 				return tempFramesCache[key];
 			else
@@ -190,6 +206,7 @@ class Paths
 		}
 		return tempFramesCache[key] = CoolUtil.loadFrames(Paths.image(key, library, true));
 	}
+
 	inline static public function getSparrowAtlasAlt(key:String)
 	{
 		return FlxAtlasFrames.fromSparrow('$key.png', '$key.xml');
@@ -205,66 +222,69 @@ class Paths
 		return FlxAtlasFrames.fromSpriteSheetPacker('$key.png', '$key.txt');
 	}
 
-	static public function getFolderContent(key:String, includeSource:Bool = true, addPath:Bool = false, scanSource:Bool = false):Array<String> {
+	static public function getFolderContent(key:String, includeSource:Bool = true, addPath:Bool = false, scanSource:Bool = false):Array<String>
+	{
 		// designed to work both on windows and web
-		if (!key.endsWith("/")) key += "/";
+		if (!key.endsWith("/"))
+			key += "/";
 		var content = assetsTree.getFiles('assets/$key');
-		if (addPath) {
-			for(k=>e in content)
+		if (addPath)
+		{
+			for (k => e in content)
 				content[k] = '$key$e';
 		}
 		return content;
 		/*
-		if (!key.endsWith("/")) key = key + "/";
+			if (!key.endsWith("/")) key = key + "/";
 
-		if (ModsFolder.currentModFolder == null && !scanSource)
-			return getFolderContent(key, false, addPath, true);
+			if (ModsFolder.currentModFolder == null && !scanSource)
+				return getFolderContent(key, false, addPath, true);
 
-		var folderPath:String = scanSource ? getAssetsPath(key) : getLibraryPathForce(key, 'mods/${ModsFolder.currentModFolder}');
-		var libThing = new LimeLibrarySymbol(folderPath);
-		var library = libThing.library;
+			var folderPath:String = scanSource ? getAssetsPath(key) : getLibraryPathForce(key, 'mods/${ModsFolder.currentModFolder}');
+			var libThing = new LimeLibrarySymbol(folderPath);
+			var library = libThing.library;
 
-		if (library is openfl.utils.AssetLibrary) {
-			var lib = cast(libThing.library, openfl.utils.AssetLibrary);
-			@:privateAccess
-			if (lib.__proxy != null) library = lib.__proxy;
-		}
-		
-		var content:Array<String> = [];
-		#if MOD_SUPPORT
-		if (library is funkin.mods.ModsAssetLibrary) {
-			// easy task, can immediatly scan for files!
-			var lib = cast(library, funkin.mods.ModsAssetLibrary);
-			content = lib.getFiles(libThing.symbolName);
-			if (addPath) 
-				for(i in 0...content.length)
-					content[i] = '$folderPath${content[i]}';
-		} else #end {
-			@:privateAccess
-			for(k=>e in library.paths) {
-				if (k.toLowerCase().startsWith(libThing.symbolName.toLowerCase())) {
-					if (addPath) {
-						if (libThing.libraryName != "")
-							content.push('${libThing.libraryName}:$k');
-						else
-							content.push(k);
-					} else {
-						var barebonesFileName = k.substr(libThing.symbolName.length);
-						if (!barebonesFileName.contains("/"))
-							content.push(barebonesFileName);
+			if (library is openfl.utils.AssetLibrary) {
+				var lib = cast(libThing.library, openfl.utils.AssetLibrary);
+				@:privateAccess
+				if (lib.__proxy != null) library = lib.__proxy;
+			}
+
+			var content:Array<String> = [];
+			#if MOD_SUPPORT
+			if (library is funkin.mods.ModsAssetLibrary) {
+				// easy task, can immediatly scan for files!
+				var lib = cast(library, funkin.mods.ModsAssetLibrary);
+				content = lib.getFiles(libThing.symbolName);
+				if (addPath) 
+					for(i in 0...content.length)
+						content[i] = '$folderPath${content[i]}';
+			} else #end {
+				@:privateAccess
+				for(k=>e in library.paths) {
+					if (k.toLowerCase().startsWith(libThing.symbolName.toLowerCase())) {
+						if (addPath) {
+							if (libThing.libraryName != "")
+								content.push('${libThing.libraryName}:$k');
+							else
+								content.push(k);
+						} else {
+							var barebonesFileName = k.substr(libThing.symbolName.length);
+							if (!barebonesFileName.contains("/"))
+								content.push(barebonesFileName);
+						}
 					}
 				}
 			}
-		}
 
-		if (includeSource) {
-			var sourceResult = getFolderContent(key, false, addPath, true);
-			for(e in sourceResult)
-				if (!content.contains(e))
-					content.push(e);
-		}
+			if (includeSource) {
+				var sourceResult = getFolderContent(key, false, addPath, true);
+				for(e in sourceResult)
+					if (!content.contains(e))
+						content.push(e);
+			}
 
-		return content;
-		*/
+			return content;
+		 */
 	}
 }

@@ -12,7 +12,8 @@ import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
 
-enum abstract Action(String) to String from String {
+enum abstract Action(String) to String from String
+{
 	var UP = "up";
 	var LEFT = "left";
 	var RIGHT = "right";
@@ -25,8 +26,6 @@ enum abstract Action(String) to String from String {
 	var LEFT_R = "left-release";
 	var RIGHT_R = "right-release";
 	var DOWN_R = "down-release";
-
-	
 	var NOTE_UP = "note-up";
 	var NOTE_LEFT = "note-left";
 	var NOTE_RIGHT = "note-right";
@@ -39,7 +38,6 @@ enum abstract Action(String) to String from String {
 	var NOTE_LEFT_R = "note-left-release";
 	var NOTE_RIGHT_R = "note-right-release";
 	var NOTE_DOWN_R = "note-down-release";
-
 	var ACCEPT = "accept";
 	var BACK = "back";
 	var PAUSE = "pause";
@@ -468,7 +466,7 @@ class Controls extends FlxActionSet
 			for (input in action.inputs)
 			{
 				if (device == null || isDevice(input, device))
-				byName[name].add(cast input);
+					byName[name].add(cast input);
 			}
 		}
 		#end
@@ -484,7 +482,7 @@ class Controls extends FlxActionSet
 				#else
 				for (gamepad in controls.gamepadsAdded)
 					if (gamepadsAdded.indexOf(gamepad) == -1)
-					  gamepadsAdded.push(gamepad);
+						gamepadsAdded.push(gamepad);
 				#end
 
 				mergeKeyboardScheme(controls.keyboardScheme);
@@ -564,7 +562,7 @@ class Controls extends FlxActionSet
 			removeKeyboard();
 
 		keyboardScheme = scheme;
-		
+
 		switch (scheme)
 		{
 			case Solo:
@@ -628,10 +626,10 @@ class Controls extends FlxActionSet
 	public function addGamepad(id:Int, ?buttonMap:Map<Control, Array<FlxGamepadInputID>>):Void
 	{
 		gamepadsAdded.push(id);
-		
+
 		#if (haxe >= "4.0.0")
 		for (control => buttons in buttonMap)
-			inline bindButtons(control, id, buttons);
+		inline bindButtons(control, id, buttons);
 		#else
 		for (control in buttonMap.keys())
 			bindButtons(control, id, buttonMap[control]);
@@ -644,7 +642,7 @@ class Controls extends FlxActionSet
 
 		#if (haxe >= "4.0.0")
 		for (control => buttons in buttonMap)
-			inline bindButtons(control, id, buttons);
+		inline bindButtons(control, id, buttons);
 		#else
 		for (control in buttonMap.keys())
 			bindButtons(control, id, buttonMap[control]);
@@ -682,7 +680,7 @@ class Controls extends FlxActionSet
 		]);
 		#else
 		addGamepadLiteral(id, [
-			//Swap A and B for switch
+			// Swap A and B for switch
 			Control.ACCEPT => [B],
 			Control.BACK => [A],
 			Control.UP => [DPAD_UP, LEFT_STICK_DIGITAL_UP, RIGHT_STICK_DIGITAL_UP],
@@ -690,7 +688,7 @@ class Controls extends FlxActionSet
 			Control.LEFT => [DPAD_LEFT, LEFT_STICK_DIGITAL_LEFT, RIGHT_STICK_DIGITAL_LEFT],
 			Control.RIGHT => [DPAD_RIGHT, LEFT_STICK_DIGITAL_RIGHT, RIGHT_STICK_DIGITAL_RIGHT],
 			Control.PAUSE => [START],
-			//Swap Y and X for switch
+			// Swap Y and X for switch
 			Control.RESET => [Y],
 			Control.CHEAT => [X]
 		]);

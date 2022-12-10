@@ -10,8 +10,7 @@ package native;
     <lib name="uxtheme.lib" if="windows" />
 </target>
 ')
-
-// majority is taken from microsofts doc 
+// majority is taken from microsofts doc
 @:cppFileCode('
 #include "mmdeviceapi.h"
 #include "combaseapi.h"
@@ -112,30 +111,33 @@ class AudioFixClient : public IMMNotificationClient {
 AudioFixClient *curAudioFix;
 ')
 @:dox(hide)
-class WinAPI {
+class WinAPI
+{
+	public static var __audioChangeCallback:Void->Void = function()
+	{
+		trace("test");
+	};
 
-    public static var __audioChangeCallback:Void->Void = function() {
-        trace("test");
-    };
-
-
-    @:functionCode('
+	@:functionCode('
     if (!curAudioFix) curAudioFix = new AudioFixClient();
     ')
-    public static function registerAudio() {
-        funkin.system.Main.audioDisconnected = false;
-    }
+	public static function registerAudio()
+	{
+		funkin.system.Main.audioDisconnected = false;
+	}
 
-    @:functionCode('
+	@:functionCode('
         int darkMode = enable ? 1 : 0;
         HWND window = GetActiveWindow();
         if (S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
             DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
         }
     ')
-    public static function setDarkMode(enable:Bool) {}
+	public static function setDarkMode(enable:Bool)
+	{
+	}
 
-    @:functionCode('
+	@:functionCode('
     // https://stackoverflow.com/questions/15543571/allocconsole-not-displaying-cout
 
     if (!AllocConsole())
@@ -145,28 +147,28 @@ class WinAPI {
     freopen("CONOUT$", "w", stdout);
     freopen("CONOUT$", "w", stderr);
     ')
-    public static function allocConsole() {
-    }
+	public static function allocConsole()
+	{
+	}
 
-    
-    #if windows
-    @:functionCode('
+	#if windows
+	@:functionCode('
         HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); 
         SetConsoleTextAttribute(console, color);
     ')
-    #end
-    public static function setConsoleColors(color:Int) {
+	#end
+	public static function setConsoleColors(color:Int)
+	{
+	}
 
-    }
-
-    #if windows
-    @:functionCode('
+	#if windows
+	@:functionCode('
         system("CLS");
         std::cout<< "" <<std::flush;
     ')
-    #end
-    public static function clearScreen() {
-
-    }
+	#end
+	public static function clearScreen()
+	{
+	}
 }
 #end

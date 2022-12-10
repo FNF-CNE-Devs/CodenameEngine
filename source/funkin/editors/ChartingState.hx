@@ -36,7 +36,6 @@ import openfl.net.FileReference;
 import openfl.utils.ByteArray;
 import funkin.system.Conductor;
 import funkin.game.HealthIcon;
-
 import funkin.game.Note;
 
 using StringTools;
@@ -93,7 +92,9 @@ class ChartingState extends MusicBeatState
 	override function create()
 	{
 		curSection = lastSection;
-		characterList = [for(e in Paths.getFolderContent('data/characters/')) if (Path.extension(e).toLowerCase() == "xml") e.substr(0, e.length-4)];
+		characterList = [
+			for (e in Paths.getFolderContent('data/characters/')) if (Path.extension(e).toLowerCase() == "xml") e.substr(0, e.length - 4)
+		];
 
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);
 		add(gridBG);
@@ -182,7 +183,6 @@ class ChartingState extends MusicBeatState
 		add(curRenderedNotes);
 		add(curRenderedSustains);
 
-		
 		super.create();
 	}
 

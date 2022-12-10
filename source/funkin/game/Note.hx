@@ -36,19 +36,24 @@ class Note extends FlxSprite
 	 * The note that comes before this one (sustain and not)
 	 */
 	public var prevNote:Note;
+
 	/**
 	 * The note that comes after this one (sustain and not)
 	 */
 	public var nextNote:Note;
+
 	/**
 	 * The next sustain after this one
 	 */
 	public var nextSustain:Note;
 
 	public var strumID(get, never):Int;
-	private function get_strumID() {
+
+	private function get_strumID()
+	{
 		var id = noteData % 4;
-		if (id < 0) id = 0;
+		if (id < 0)
+			id = 0;
 		return id;
 	}
 
@@ -68,8 +73,10 @@ class Note extends FlxSprite
 	@:dox(hide) public var __strumCameras:Array<FlxCamera> = null;
 	@:dox(hide) public var __noteAngle:Float = 0;
 
-	private function get_noteType() {
-		if (PlayState.instance == null) return null;
+	private function get_noteType()
+	{
+		if (PlayState.instance == null)
+			return null;
 		return PlayState.instance.getNoteType(noteTypeID);
 	}
 
@@ -77,7 +84,8 @@ class Note extends FlxSprite
 
 	public var animSuffix:String = "";
 
-	public function new(strumTime:Float, noteData:Int, noteType:Int = 0, mustPress:Bool = true, ?prevNote:Note, ?sustainNote:Bool = false, animSuffix:String = "")
+	public function new(strumTime:Float, noteData:Int, noteType:Int = 0, mustPress:Bool = true, ?prevNote:Note, ?sustainNote:Bool = false,
+			animSuffix:String = "")
 	{
 		super();
 
@@ -97,20 +105,23 @@ class Note extends FlxSprite
 		this.noteData = noteData;
 
 		var customType = Paths.image('game/notes/${this.noteType}');
-		var event = new NoteCreationEvent(this, strumID, this.noteType, noteTypeID, mustPress, Assets.exists(customType) ? 'game/notes/${this.noteType}' : 'game/NOTE_assets', 0.7, animSuffix);
+		var event = new NoteCreationEvent(this, strumID, this.noteType, noteTypeID, mustPress,
+			Assets.exists(customType) ? 'game/notes/${this.noteType}' : 'game/NOTE_assets', 0.7, animSuffix);
 
 		if (PlayState.instance != null)
 			event = PlayState.instance.scripts.event("onNoteCreation", event);
 
 		this.animSuffix = event.animSuffix;
-		if (!event.cancelled) {
+		if (!event.cancelled)
+		{
 			switch (event.noteType)
 			{
 				// case "My Custom Note Type": // hardcoding note types
 				default:
 					frames = Paths.getFrames(event.noteSprite);
 
-					switch(event.strumID % 4) {
+					switch (event.strumID % 4)
+					{
 						case 0:
 							animation.addByPrefix('scroll', 'purple0');
 							animation.addByPrefix('hold', 'purple hold piece');
@@ -135,7 +146,6 @@ class Note extends FlxSprite
 			}
 		}
 
-
 		if (isSustainNote && prevNote != null)
 		{
 			alpha = 0.6;
@@ -148,7 +158,9 @@ class Note extends FlxSprite
 				prevNote.nextSustain = this;
 				prevNote.animation.play('hold');
 			}
-		} else {
+		}
+		else
+		{
 			animation.play("scroll");
 		}
 
@@ -159,16 +171,20 @@ class Note extends FlxSprite
 	public var lastScrollSpeed:Null<Float> = null;
 	public var angleOffsets:Bool = true;
 
-	override function draw() {
+	override function draw()
+	{
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
-		@:privateAccess if (__strumCameras != null) FlxCamera._defaultCameras = __strumCameras;
-		
+		@:privateAccess if (__strumCameras != null)
+			FlxCamera._defaultCameras = __strumCameras;
+
 		var negativeScroll = isSustainNote && nextSustain != null && lastScrollSpeed < 0;
 		if (antialiasing && nextSustain == null)
 			rotOffset.y += 2;
-		if (negativeScroll)	offset.y *= -1;
+		if (negativeScroll)
+			offset.y *= -1;
 
-		if (angleOffsets && Std.int(__noteAngle % 360) != 0) {
+		if (angleOffsets && Std.int(__noteAngle % 360) != 0)
+		{
 			// get default values
 			var oldOffset = FlxPoint.get(offset.x, offset.y);
 			var oldOrigin = FlxPoint.get(origin.x, origin.y);
@@ -181,10 +197,8 @@ class Note extends FlxSprite
 
 			var sin = _sinAngle;
 			var cos = _cosAngle;
-			
-			var anglePos = FlxPoint.get(
-				(-cos * pos.x) + (-sin * pos.y),
-				(-sin * pos.x) + (-cos * pos.y));
+
+			var anglePos = FlxPoint.get((-cos * pos.x) + (-sin * pos.y), (-sin * pos.x) + (-cos * pos.y));
 
 			// applies new values
 			x -= anglePos.x;
@@ -209,7 +223,8 @@ class Note extends FlxSprite
 			return;
 		}
 		super.draw();
-		if (negativeScroll)	offset.y *= -1;
+		if (negativeScroll)
+			offset.y *= -1;
 		if (antialiasing && nextSustain == null)
 			rotOffset.y -= 2;
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
@@ -218,35 +233,41 @@ class Note extends FlxSprite
 	// The * 0.5 is so that it's easier to hit them too late, instead of too early
 	public var earlyPressWindow:Float = 0.5;
 	public var latePressWindow:Float = 1;
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 	}
 
-	public function updateSustain(strum:Strum) {
+	public function updateSustain(strum:Strum)
+	{
 		var scrollSpeed = strum.getScrollSpeed(this);
 
-		if (nextSustain != null && lastScrollSpeed != scrollSpeed) {
+		if (nextSustain != null && lastScrollSpeed != scrollSpeed)
+		{
 			// is long sustain
 			lastScrollSpeed = scrollSpeed;
 
 			// scale.y = stepLength / 100 * 1.5 * scrollSpeed * 0.7;
 			scale.y = (stepLength * (0.45 * FlxMath.roundDecimal(scrollSpeed, 2))) / frameHeight;
 			updateHitbox();
-			if (antialiasing && !FlxG.forceNoAntialiasing) {
+			if (antialiasing && !FlxG.forceNoAntialiasing)
+			{
 				// dumbass antialiasing
 				scale.y += 3 / frameHeight;
 			}
 		}
 
-		if (!wasGoodHit) return;
+		if (!wasGoodHit)
+			return;
 		var t = FlxMath.bound((Conductor.songPosition - strumTime) / (height / (0.45 * FlxMath.roundDecimal(scrollSpeed, 2))), 0, 1);
 		var swagRect = new FlxRect(0, t * frameHeight, frameWidth, frameHeight);
 
 		setClipRect(swagRect);
 	}
 
-	public function setClipRect(rect:FlxRect) {
+	public function setClipRect(rect:FlxRect)
+	{
 		this.clipRect = rect;
 	}
 }

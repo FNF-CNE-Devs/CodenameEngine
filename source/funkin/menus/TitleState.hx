@@ -48,7 +48,7 @@ class TitleState extends MusicBeatState
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
 		FlxTransitionableState.skipNextTransIn = true;
-		
+
 		super.create();
 
 		startIntro();
@@ -125,7 +125,8 @@ class TitleState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		if (FlxG.keys.justPressed.F)  FlxG.fullscreen = !FlxG.fullscreen;
+		if (FlxG.keys.justPressed.F)
+			FlxG.fullscreen = !FlxG.fullscreen;
 
 		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER;
 
@@ -176,9 +177,10 @@ class TitleState extends MusicBeatState
 
 	public function createCoolText(textArray:Array<String>)
 	{
-		for (i=>text in textArray)
+		for (i => text in textArray)
 		{
-			if (text == "" || text == null) continue;
+			if (text == "" || text == null)
+				continue;
 			var money:Alphabet = new Alphabet(0, (i * 60) + 200, text, true, false);
 			money.screenCenter(X);
 			textGroup.add(money);
@@ -194,7 +196,8 @@ class TitleState extends MusicBeatState
 
 	public function deleteCoolText()
 	{
-		while (textGroup.members.length > 0) textGroup.remove(textGroup.members[0], true);
+		while (textGroup.members.length > 0)
+			textGroup.remove(textGroup.members[0], true);
 	}
 
 	override function beatHit(curBeat:Int)
@@ -202,8 +205,10 @@ class TitleState extends MusicBeatState
 		super.beatHit(curBeat);
 
 		#if TITLESCREEN_XML
-		if (curBeat >= titleLength || skippedIntro) {
-			if (!skippedIntro) skipIntro();
+		if (curBeat >= titleLength || skippedIntro)
+		{
+			if (!skippedIntro)
+				skipIntro();
 			return;
 		}
 		var introText = titleLines[curBeat];
@@ -212,19 +217,34 @@ class TitleState extends MusicBeatState
 		#else
 		switch (curBeat)
 		{
-			case 1:		createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
-			case 3:		addMoreText('present');
-			case 4:		deleteCoolText();
-			case 5:		createCoolText(['In association', 'with']);
-			case 7:		addMoreText('newgrounds');	ngSpr.visible = true;
-			case 8:		deleteCoolText();			ngSpr.visible = false;
-			case 9:		createCoolText([curWacky[0]]);
-			case 11:	addMoreText(curWacky[1]);
-			case 12:	deleteCoolText();
-			case 13:	addMoreText('Friday');
-			case 14:	addMoreText('Night');
-			case 15:	addMoreText('Funkin');
-			case 16:	skipIntro();
+			case 1:
+				createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
+			case 3:
+				addMoreText('present');
+			case 4:
+				deleteCoolText();
+			case 5:
+				createCoolText(['In association', 'with']);
+			case 7:
+				addMoreText('newgrounds');
+				ngSpr.visible = true;
+			case 8:
+				deleteCoolText();
+				ngSpr.visible = false;
+			case 9:
+				createCoolText([curWacky[0]]);
+			case 11:
+				addMoreText(curWacky[1]);
+			case 12:
+				deleteCoolText();
+			case 13:
+				addMoreText('Friday');
+			case 14:
+				addMoreText('Night');
+			case 15:
+				addMoreText('Funkin');
+			case 16:
+				skipIntro();
 		}
 		#end
 	}
@@ -237,11 +257,16 @@ class TitleState extends MusicBeatState
 		3 => new IntroText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er', 'present']),
 		4 => new IntroText(),
 		5 => new IntroText(['In association', 'with']),
-		7 => new IntroText(['In association', 'with', 'newgrounds', {
-			name: "newgroundsLogo",
-			path: "titlescreen/newgrounds_logo",
-			scale: 0.8
-		}]),
+		7 => new IntroText([
+			'In association',
+			'with',
+			'newgrounds',
+			{
+				name: "newgroundsLogo",
+				path: "titlescreen/newgrounds_logo",
+				scale: 0.8
+			}
+		]),
 		8 => new IntroText(),
 		9 => new IntroText(["{introText1}"]),
 		11 => new IntroText(["{introText1}", "{introText2}"]),
@@ -251,37 +276,51 @@ class TitleState extends MusicBeatState
 		15 => new IntroText(['Friday', 'Night', "Funkin'"]),
 	];
 
-	public function loadXML() {
-		try {
+	public function loadXML()
+	{
+		try
+		{
 			xml = new Access(Xml.parse(Assets.getText(Paths.xml('titlescreen/titlescreen'))).firstElement());
-			if (xml.hasNode.intro) {
+			if (xml.hasNode.intro)
+			{
 				titleLines = [];
-				if (xml.node.intro.has.length) titleLength = CoolUtil.getDefault(Std.parseInt(xml.node.intro.att.length), 16);
-				for(node in xml.nodes.sprites) {
+				if (xml.node.intro.has.length)
+					titleLength = CoolUtil.getDefault(Std.parseInt(xml.node.intro.att.length), 16);
+				for (node in xml.nodes.sprites)
+				{
 					var parentFolder:String = node.getAtt("folder").getDefault("");
-					if (parentFolder != "" && !parentFolder.endsWith("/")) parentFolder += "/";
-					for(sprNode in node.elements) {
+					if (parentFolder != "" && !parentFolder.endsWith("/"))
+						parentFolder += "/";
+					for (sprNode in node.elements)
+					{
 						var spr = XMLUtil.createSpriteFromXML(sprNode, parentFolder);
-						switch(node.name) {
+						switch (node.name)
+						{
 							// TODO: press enter to begin customisation
 							default:
 								titleScreenSprites.add(spr);
 						}
 					}
 				}
-				for(text in xml.node.intro.nodes.text) {
+				for (text in xml.node.intro.nodes.text)
+				{
 					var beat:Int = CoolUtil.getDefault(text.has.beat ? Std.parseInt(text.att.beat) : null, 0);
 					var texts:Array<OneOfTwo<String, TitleStateImage>> = [];
-					for(e in text.elements) {
-						switch(e.name) {
+					for (e in text.elements)
+					{
+						switch (e.name)
+						{
 							case "line":
-								if (!e.has.text) continue;
+								if (!e.has.text)
+									continue;
 								texts.push(e.att.text);
 							case "introtext":
-								if (!e.has.line) continue;
+								if (!e.has.line)
+									continue;
 								texts.push('{introText${e.att.line}}');
 							case "sprite":
-								if (!e.has.path) continue;
+								if (!e.has.path)
+									continue;
 								var name:String = e.has.name ? e.att.name : null;
 								var path:String = e.att.path;
 								var flipX:Bool = e.has.flipX ? e.att.flipX == "true" : false;
@@ -299,8 +338,10 @@ class TitleState extends MusicBeatState
 					titleLines[beat] = new IntroText(texts);
 				}
 			}
-		} catch(e) {
-            Logs.trace('Failed to load titlescreen XML: $e', ERROR);
+		}
+		catch (e)
+		{
+			Logs.trace('Failed to load titlescreen XML: $e', ERROR);
 		}
 	}
 	#end
@@ -322,25 +363,35 @@ class TitleState extends MusicBeatState
 	}
 }
 
-class IntroText {
+class IntroText
+{
 	public var lines:Array<OneOfTwo<String, TitleStateImage>> = [];
 
-	public function new(?lines:Array<OneOfTwo<String, TitleStateImage>>) {
+	public function new(?lines:Array<OneOfTwo<String, TitleStateImage>>)
+	{
 		this.lines = lines;
 	}
 
-	public function show() {
+	public function show()
+	{
 		var state = cast(FlxG.state, TitleState);
 		state.deleteCoolText();
-		if (lines == null) return;
-		for(e in lines) {
-			if (e is String) {
+		if (lines == null)
+			return;
+		for (e in lines)
+		{
+			if (e is String)
+			{
 				var text = cast(e, String);
-				for(k=>e in state.curWacky) text = text.replace('{introText${k+1}', e);
+				for (k => e in state.curWacky)
+					text = text.replace('{introText${k + 1}', e);
 				state.addMoreText(text);
-			} else if (e is Dynamic) {
+			}
+			else if (e is Dynamic)
+			{
 				var image:TitleStateImage = e;
-				if (image.path == null) continue;
+				if (image.path == null)
+					continue;
 
 				var scale:Float = CoolUtil.getDefault(image.scale, 1);
 
@@ -356,7 +407,8 @@ class IntroText {
 	}
 }
 
-typedef TitleStateImage = {
+typedef TitleStateImage =
+{
 	var name:String;
 	var path:String;
 	@:optional var scale:Null<Float>;

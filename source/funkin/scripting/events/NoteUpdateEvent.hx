@@ -3,53 +3,71 @@ package funkin.scripting.events;
 import funkin.game.Note;
 import funkin.game.Strum;
 
-class NoteUpdateEvent extends CancellableEvent {
-    @:dox(hide) public var __updateHitWindow = true;
-    @:dox(hide) public var __autoCPUHit = true;
-    @:dox(hide) public var __reposNote = true;
-    /**
-     * Note that is being updated
-     */
-    public var note:Note;
+class NoteUpdateEvent extends CancellableEvent
+{
+	@:dox(hide) public var __updateHitWindow = true;
+	@:dox(hide) public var __autoCPUHit = true;
+	@:dox(hide) public var __reposNote = true;
 
-    /**
-     * Time elapsed since last frame
-     */
-    public var elapsed:Float;
+	/**
+	 * Note that is being updated
+	 */
+	public var note:Note;
 
-    /**
-     * Note's strum (can be changed)
-     */
-    public var strum:Strum;
+	/**
+	 * Time elapsed since last frame
+	 */
+	public var elapsed:Float;
 
-    public function new(note:Note, elapsed:Float, strum:Strum) {
-        super();
-        this.note = note;
-        this.elapsed = elapsed;
-        this.strum = strum;
-    }
+	/**
+	 * Note's strum (can be changed)
+	 */
+	public var strum:Strum;
 
-    /**
-     * Cancels the hit window update.
-     */
-    public function cancelWindowUpdate() {
-        __updateHitWindow = false;
-    }
-    @:dox(hide) public function preventWindowUpdate() { cancelWindowUpdate(); }
+	public function new(note:Note, elapsed:Float, strum:Strum)
+	{
+		super();
+		this.note = note;
+		this.elapsed = elapsed;
+		this.strum = strum;
+	}
 
-    /**
-     * Cancels the automatic CPU hit.
-     */
-    public function cancelAutoCPUHit() {
-        __autoCPUHit = false;
-    }
-    @:dox(hide) public function preventAutoCPUHit() { cancelAutoCPUHit(); }
+	/**
+	 * Cancels the hit window update.
+	 */
+	public function cancelWindowUpdate()
+	{
+		__updateHitWindow = false;
+	}
 
-    /**
-     * Cancels the note position update (note will freeze).
-     */
-    public function cancelPositionUpdate() {
-        __reposNote = false;
-    }
-    @:dox(hide) public function preventPositionUpdate() { cancelPositionUpdate(); }
+	@:dox(hide) public function preventWindowUpdate()
+	{
+		cancelWindowUpdate();
+	}
+
+	/**
+	 * Cancels the automatic CPU hit.
+	 */
+	public function cancelAutoCPUHit()
+	{
+		__autoCPUHit = false;
+	}
+
+	@:dox(hide) public function preventAutoCPUHit()
+	{
+		cancelAutoCPUHit();
+	}
+
+	/**
+	 * Cancels the note position update (note will freeze).
+	 */
+	public function cancelPositionUpdate()
+	{
+		__reposNote = false;
+	}
+
+	@:dox(hide) public function preventPositionUpdate()
+	{
+		cancelPositionUpdate();
+	}
 }

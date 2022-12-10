@@ -24,7 +24,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Change Controls', 'Options','Exit to menu'];
+	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Change Controls', 'Options', 'Exit to menu'];
 	var curSelected:Int = 0;
 
 	var pauseMusic:FlxSound;
@@ -41,20 +41,20 @@ class PauseSubState extends MusicBeatSubstate
 
 		pauseScript = Script.create(Paths.script(script));
 		pauseScript.setParent(this);
-        pauseScript.load();
+		pauseScript.load();
 
 		var event = new PauseCreationEvent('breakfast', menuItems);
 		pauseScript.call('create', [event]);
 
 		menuItems = event.options;
 
-
 		pauseMusic = new FlxSound().loadEmbedded(Paths.music(event.music), true, true);
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 		FlxG.sound.list.add(pauseMusic);
 
-		if (__cancelDefault = event.cancelled) return;
+		if (__cancelDefault = event.cancelled)
+			return;
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
@@ -112,7 +112,8 @@ class PauseSubState extends MusicBeatSubstate
 
 		pauseScript.call("update", [elapsed]);
 
-		if (__cancelDefault) return;
+		if (__cancelDefault)
+			return;
 
 		var upP = controls.UP_P;
 		var downP = controls.DOWN_P;
@@ -126,11 +127,13 @@ class PauseSubState extends MusicBeatSubstate
 			selectOption();
 	}
 
-	public function selectOption() {
+	public function selectOption()
+	{
 		var event = new NameEvent(menuItems[curSelected]);
 		pauseScript.call("onSelectOption", [event]);
 
-		if (event.cancelled) return;
+		if (event.cancelled)
+			return;
 
 		var daSelected:String = event.name;
 
@@ -147,10 +150,12 @@ class PauseSubState extends MusicBeatSubstate
 				FlxG.switchState(new MainMenuState());
 		}
 	}
+
 	override function destroy()
 	{
 		pauseScript.call("destroy");
-		if (pauseMusic != null) pauseMusic.destroy();
+		if (pauseMusic != null)
+			pauseMusic.destroy();
 
 		super.destroy();
 	}

@@ -4,91 +4,103 @@ import flixel.FlxG;
 import flixel.FlxCamera;
 import flixel.math.FlxPoint;
 
-class EditorPlayState extends WindowContent {
-    var state:PlayState;
+class EditorPlayState extends WindowContent
+{
+	var state:PlayState;
 
-    public function new() {
-        super("PlayState", 120, 120, 1280, 720);
-        state = new PlayState();
-    }
-    public override function create() {
-        super.create();
+	public function new()
+	{
+		super("PlayState", 120, 120, 1280, 720);
+		state = new PlayState();
+	}
 
-        beforeStateShit();
-        state.camera = parent.windowCameras[0].camera;
-        state.create();
-        afterStateShit();
+	public override function create()
+	{
+		super.create();
 
-        parent.windowCameras[0].resizeScroll = false;
-        parent.windowCameras.push(
-            {
-                camera: state.camHUD,
-                width: 1280,
-                height: 720,
-                resizeScroll: true
-            }
-        );
-        parent.move(winX, winY);
-        parent.resize(1280, 720);
-        beforeStateShit();
-        state.createPost();
-        afterStateShit();
-    }
-    var oldSize = FlxPoint.get(FlxG.width, FlxG.height);
-    var oldCamList:Array<FlxCamera>;
-    var oldCam:FlxCamera;
-    
-    public function beforeStateShit() {
-        oldSize.set(FlxG.width, FlxG.height);
-        @:privateAccess
-        FlxG.width = 1280;
-        @:privateAccess
-        FlxG.height = 720;
+		beforeStateShit();
+		state.camera = parent.windowCameras[0].camera;
+		state.create();
+		afterStateShit();
 
-        oldCamList = FlxG.cameras.list;
-        oldCam = FlxG.camera;
-        @:privateAccess
-        FlxG.cameras.list = [for(e in parent.windowCameras) e.camera];
-        FlxG.camera = parent.windowCameras[0].camera;
-    }
-    public function afterStateShit() {
-        @:privateAccess
-        FlxG.width = Std.int(oldSize.x);
-        @:privateAccess
-        FlxG.height = Std.int(oldSize.y);
+		parent.windowCameras[0].resizeScroll = false;
+		parent.windowCameras.push({
+			camera: state.camHUD,
+			width: 1280,
+			height: 720,
+			resizeScroll: true
+		});
+		parent.move(winX, winY);
+		parent.resize(1280, 720);
+		beforeStateShit();
+		state.createPost();
+		afterStateShit();
+	}
 
-        parent.windowCameras = [for(e in FlxG.cameras.list) {
-            camera: e,
-            width: 1280,
-            height: 720,
-            resizeScroll: false
-        }];
-        @:privateAccess
-        FlxG.cameras.list = oldCamList;
-        FlxG.camera = oldCam;
+	var oldSize = FlxPoint.get(FlxG.width, FlxG.height);
+	var oldCamList:Array<FlxCamera>;
+	var oldCam:FlxCamera;
 
-        oldCamList = null;
-        oldCam = null;
-    }
+	public function beforeStateShit()
+	{
+		oldSize.set(FlxG.width, FlxG.height);
+		@:privateAccess
+		FlxG.width = 1280;
+		@:privateAccess
+		FlxG.height = 720;
 
-    public override function update(elapsed:Float) {
-        beforeStateShit();
-        super.update(elapsed);
-        state.update(elapsed);
-        afterStateShit();
-    }
+		oldCamList = FlxG.cameras.list;
+		oldCam = FlxG.camera;
+		@:privateAccess
+		FlxG.cameras.list = [for (e in parent.windowCameras) e.camera];
+		FlxG.camera = parent.windowCameras[0].camera;
+	}
 
-    public override function destroy() {
-        beforeStateShit();
-        super.destroy();
-        state.destroy();
-        afterStateShit();
-    }
+	public function afterStateShit()
+	{
+		@:privateAccess
+		FlxG.width = Std.int(oldSize.x);
+		@:privateAccess
+		FlxG.height = Std.int(oldSize.y);
 
-    public override function draw() {
-        beforeStateShit();
-        super.draw();
-        state.draw();
-        afterStateShit();
-    }
+		parent.windowCameras = [
+			for (e in FlxG.cameras.list)
+				{
+					camera: e,
+					width: 1280,
+					height: 720,
+					resizeScroll: false
+				}
+		];
+		@:privateAccess
+		FlxG.cameras.list = oldCamList;
+		FlxG.camera = oldCam;
+
+		oldCamList = null;
+		oldCam = null;
+	}
+
+	public override function update(elapsed:Float)
+	{
+		beforeStateShit();
+		super.update(elapsed);
+		state.update(elapsed);
+		afterStateShit();
+	}
+
+	public override function destroy()
+	{
+		beforeStateShit();
+		super.destroy();
+		state.destroy();
+		afterStateShit();
+	}
+
+	public override function draw()
+	{
+		beforeStateShit();
+		super.draw();
+		state.draw();
+		afterStateShit();
+	}
 }

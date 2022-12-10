@@ -13,22 +13,25 @@ import hscript.IHScriptCustomBehaviour;
  * 
  * To access the shader's uniform variables, use `shader.variable`
  */
-class CustomShader extends FunkinShader {
-    /**
-     * Creates a new custom shader
-     * @param name Name of the frag and vert files.
-     * @param glslVersion GLSL version to use. Defaults to `120`.
-     */
-    public function new(name:String, glslVersion:String = "120") {
-        var fragShaderPath = Paths.fragShader(name);
-        var vertShaderPath = Paths.vertShader(name);
-        var fragCode = Assets.exists(fragShaderPath) ? Assets.getText(fragShaderPath) : null;
-        var vertCode = Assets.exists(vertShaderPath) ? Assets.getText(vertShaderPath) : null;
+class CustomShader extends FunkinShader
+{
+	/**
+	 * Creates a new custom shader
+	 * @param name Name of the frag and vert files.
+	 * @param glslVersion GLSL version to use. Defaults to `120`.
+	 */
+	public function new(name:String, glslVersion:String = "120")
+	{
+		var fragShaderPath = Paths.fragShader(name);
+		var vertShaderPath = Paths.vertShader(name);
+		var fragCode = Assets.exists(fragShaderPath) ? Assets.getText(fragShaderPath) : null;
+		var vertCode = Assets.exists(vertShaderPath) ? Assets.getText(vertShaderPath) : null;
 
-        if (fragCode != null && vertCode != null) {
-            // TODO: logging!!
-        }
-        
-        super(fragCode, vertCode, glslVersion);
-    }
+		if (fragCode != null && vertCode != null)
+		{
+			// TODO: logging!!
+		}
+
+		super(fragCode, vertCode, glslVersion);
+	}
 }

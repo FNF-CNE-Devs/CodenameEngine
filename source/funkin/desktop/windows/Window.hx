@@ -17,279 +17,330 @@ import funkin.desktop.sprites.*;
 import funkin.desktop.editors.MessageBox.MessageBoxIcon;
 import funkin.desktop.editors.MessageBox;
 
-
-typedef WindowCam = {
-    var camera:FlxCamera;
-    var resizeScroll:Bool;
-    var width:Int;
-    var height:Int;
+typedef WindowCam =
+{
+	var camera:FlxCamera;
+	var resizeScroll:Bool;
+	var width:Int;
+	var height:Int;
 }
-class Window extends FlxTypedGroup<FlxBasic> {
-    public var windowFrame:SpliceSprite;
-    public var windowInactiveFrame:SpliceSprite;
-    public var captionButtons:FlxTypedSpriteGroup<WindowCaptionButton>;
 
-    public var windowWidth:Int = 0;
-    public var windowHeight:Int = 0;
+class Window extends FlxTypedGroup<FlxBasic>
+{
+	public var windowFrame:SpliceSprite;
+	public var windowInactiveFrame:SpliceSprite;
+	public var captionButtons:FlxTypedSpriteGroup<WindowCaptionButton>;
 
-    public var windowCaptionCamera:FlxCamera;
-    public var windowCameras:Array<WindowCam> = [];
+	public var windowWidth:Int = 0;
+	public var windowHeight:Int = 0;
 
-    private var __captionTweens:Array<FlxTween> = [];
-    private var __closing:Bool = false;
+	public var windowCaptionCamera:FlxCamera;
+	public var windowCameras:Array<WindowCam> = [];
 
-    public var content:WindowContent;
+	private var __captionTweens:Array<FlxTween> = [];
+	private var __closing:Bool = false;
 
-    public var caption:FlxUIText;
-    public var icon:FlxSprite;
-    public var dragHitbox:WindowDragHitbox;
+	public var content:WindowContent;
 
-    public var moveable:Bool = true;
-    public var resizeable:Bool = true;
-    public var canClose:Bool = true;
-    public var canMinimize:Bool = true;
-    public var canHelp:Bool = false;
+	public var caption:FlxUIText;
+	public var icon:FlxSprite;
+	public var dragHitbox:WindowDragHitbox;
 
-    public var maximized:Bool = false;
+	public var moveable:Bool = true;
+	public var resizeable:Bool = true;
+	public var canClose:Bool = true;
+	public var canMinimize:Bool = true;
+	public var canHelp:Bool = false;
 
-    public var focused(get, null):Bool;
+	public var maximized:Bool = false;
 
-    public var curDialog:Window = null;
+	public var focused(get, null):Bool;
 
-    public function openDialog(window:Window) {
-        curDialog = window;
-        if (focused) DesktopMain.instance.focusWindow(curDialog);
-    }
-    private function get_focused() {
-        return DesktopMain.instance.windows.members.last() == this;
-    }
+	public var curDialog:Window = null;
 
-    public function showMessage(caption:String, message:String, icon:MessageBoxIcon) {
-        var win = DesktopMain.instance.openWindow(new MessageBox(caption, message, icon));
-        curDialog = win;
-        win.move(
-            windowCaptionCamera.x + ((windowCaptionCamera.width - win.windowCaptionCamera.width) / 2),
-            windowCaptionCamera.y + ((windowCaptionCamera.height - win.windowCaptionCamera.height) / 2));
-    }
+	public function openDialog(window:Window)
+	{
+		curDialog = window;
+		if (focused)
+			DesktopMain.instance.focusWindow(curDialog);
+	}
 
-    public function loadIcon(path:String) {
-        icon.loadGraphic(path);
-        icon.setUnstretchedGraphicSize(16, 16, false);
-    }
-    public function new(content:WindowContent) {
-        super();
-        windowFrame = new SpliceSprite(Paths.image(DesktopMain.theme.captionActive.sprite), 0, 0, 10, 10,
-            Std.int(DesktopMain.theme.captionActive.left),
-            Std.int(DesktopMain.theme.captionActive.top),
-            Std.int(DesktopMain.theme.captionActive.right),
-            Std.int(DesktopMain.theme.captionActive.bottom));
-        windowInactiveFrame = new SpliceSprite(Paths.image(DesktopMain.theme.captionInactive.sprite), 0, 0, 10, 10,
-            Std.int(DesktopMain.theme.captionInactive.left),
-            Std.int(DesktopMain.theme.captionInactive.top),
-            Std.int(DesktopMain.theme.captionInactive.right),
-            Std.int(DesktopMain.theme.captionInactive.bottom));
-        add(windowFrame);
-        add(windowInactiveFrame);
+	private function get_focused()
+	{
+		return DesktopMain.instance.windows.members.last() == this;
+	}
 
-        caption = new FlxUIText(24, 4, 0, content.title);
-        captionButtons = new FlxTypedSpriteGroup<WindowCaptionButton>();
-        for(i in 0...4) {
-            var btn = new WindowCaptionButton(this, i);
-            btn.x = (i+1) * -(DesktopMain.theme.captionButtons.size.x + DesktopMain.theme.captionButtons.margin.x);
-            captionButtons.add(btn);
-        }
-        add(caption);
+	public function showMessage(caption:String, message:String, icon:MessageBoxIcon)
+	{
+		var win = DesktopMain.instance.openWindow(new MessageBox(caption, message, icon));
+		curDialog = win;
+		win.move(windowCaptionCamera.x + ((windowCaptionCamera.width - win.windowCaptionCamera.width) / 2),
+			windowCaptionCamera.y + ((windowCaptionCamera.height - win.windowCaptionCamera.height) / 2));
+	}
 
-        dragHitbox = new WindowDragHitbox(DesktopMain.theme.captionActive.left, DesktopMain.theme.captionActive.left, DesktopMain.theme.captionActive.left, DesktopMain.theme.captionActive.top);
-        dragHitbox.parent = this;
-        add(dragHitbox);
+	public function loadIcon(path:String)
+	{
+		icon.loadGraphic(path);
+		icon.setUnstretchedGraphicSize(16, 16, false);
+	}
 
-        icon = new FlxSprite(4, 4);
-        add(icon);
-        loadIcon(content.icon);
+	public function new(content:WindowContent)
+	{
+		super();
+		windowFrame = new SpliceSprite(Paths.image(DesktopMain.theme.captionActive.sprite), 0, 0, 10, 10, Std.int(DesktopMain.theme.captionActive.left),
+			Std.int(DesktopMain.theme.captionActive.top), Std.int(DesktopMain.theme.captionActive.right), Std.int(DesktopMain.theme.captionActive.bottom));
+		windowInactiveFrame = new SpliceSprite(Paths.image(DesktopMain.theme.captionInactive.sprite), 0, 0, 10, 10,
+			Std.int(DesktopMain.theme.captionInactive.left), Std.int(DesktopMain.theme.captionInactive.top), Std.int(DesktopMain.theme.captionInactive.right),
+			Std.int(DesktopMain.theme.captionInactive.bottom));
+		add(windowFrame);
+		add(windowInactiveFrame);
 
-        add(captionButtons);
+		caption = new FlxUIText(24, 4, 0, content.title);
+		captionButtons = new FlxTypedSpriteGroup<WindowCaptionButton>();
+		for (i in 0...4)
+		{
+			var btn = new WindowCaptionButton(this, i);
+			btn.x = (i + 1) * -(DesktopMain.theme.captionButtons.size.x + DesktopMain.theme.captionButtons.margin.x);
+			captionButtons.add(btn);
+		}
+		add(caption);
 
-        this.content = content;
+		dragHitbox = new WindowDragHitbox(DesktopMain.theme.captionActive.left, DesktopMain.theme.captionActive.left, DesktopMain.theme.captionActive.left,
+			DesktopMain.theme.captionActive.top);
+		dragHitbox.parent = this;
+		add(dragHitbox);
 
-        // scrollFactor.set(0.5, 0.5);
+		icon = new FlxSprite(4, 4);
+		add(icon);
+		loadIcon(content.icon);
 
-        windowCaptionCamera = new FlxCamera(0, 0, content.width, content.height, 1);
-        windowCaptionCamera.pixelPerfectRender = true;
-        windowCaptionCamera.bgColor = 0;
-        FlxG.cameras.add(windowCaptionCamera, false);
-        cameras = [windowCaptionCamera];
-        dragHitbox.cameras = [windowCaptionCamera];
-        
-        for(btn in captionButtons.members)
-            btn.cameras = cameras; // so that buttons detects on the right camera
+		add(captionButtons);
 
-        if (content.windowCamera == null) {
-            content.windowCamera = new FlxCamera(Std.int(content.winX + 4), Std.int(content.winY + 23), Std.int(content.width), Std.int(content.height), 1);
-            content.windowCamera.pixelPerfectRender = true;
-            content.windowCamera.bgColor = DesktopMain.theme.window.color;
-        }
-        content.cameras = [content.windowCamera];
-        content.parent = this;
-        addCamera(content.windowCamera);
-        content.create();
-        add(content);
+		this.content = content;
 
-        windowWidth = content.width;
-        windowHeight = content.height;
+		// scrollFactor.set(0.5, 0.5);
 
-        popupCamera(windowCaptionCamera);
-        for(e in windowCameras) popupCamera(e.camera);
+		windowCaptionCamera = new FlxCamera(0, 0, content.width, content.height, 1);
+		windowCaptionCamera.pixelPerfectRender = true;
+		windowCaptionCamera.bgColor = 0;
+		FlxG.cameras.add(windowCaptionCamera, false);
+		cameras = [windowCaptionCamera];
+		dragHitbox.cameras = [windowCaptionCamera];
 
-        resize(content.width, content.height);
-        move(content.winX, content.winY);
-    }
+		for (btn in captionButtons.members)
+			btn.cameras = cameras; // so that buttons detects on the right camera
 
-    public function addCamera(camera:FlxCamera, useResizeTechnique:Bool = true) {
-        FlxG.cameras.add(camera, false);
-        windowCameras.push({
-            camera: camera,
-            resizeScroll: useResizeTechnique,
-            width: camera.width,
-            height: camera.height
-        });
-    }
+		if (content.windowCamera == null)
+		{
+			content.windowCamera = new FlxCamera(Std.int(content.winX + 4), Std.int(content.winY + 23), Std.int(content.width), Std.int(content.height), 1);
+			content.windowCamera.pixelPerfectRender = true;
+			content.windowCamera.bgColor = DesktopMain.theme.window.color;
+		}
+		content.cameras = [content.windowCamera];
+		content.parent = this;
+		addCamera(content.windowCamera);
+		content.create();
+		add(content);
 
-    public function onDesktopSizeChange(width:Int, height:Int) {
-        if (maximized) {
-            resize(width, Std.int(height - DesktopMain.theme.captionActive.top + DesktopMain.theme.captionActive.left));
-        }
-        content.onDesktopSizeChange(width, height);
-    }
+		windowWidth = content.width;
+		windowHeight = content.height;
 
-    public function maximize() {
-        if (maximized != (maximized = true)) {
-            // maximizing!!
-            captionButtons.members[1].animation.play("restore", true);
-            move(-DesktopMain.theme.captionActive.left, -DesktopMain.theme.captionActive.left);
-            resize(FlxG.width, Std.int(FlxG.height - DesktopMain.theme.captionActive.top + DesktopMain.theme.captionActive.left)); // TODO: taskbar stuff
-        }
-    }
+		popupCamera(windowCaptionCamera);
+		for (e in windowCameras)
+			popupCamera(e.camera);
 
-    public function minimize() {
+		resize(content.width, content.height);
+		move(content.winX, content.winY);
+	}
 
-    }
+	public function addCamera(camera:FlxCamera, useResizeTechnique:Bool = true)
+	{
+		FlxG.cameras.add(camera, false);
+		windowCameras.push({
+			camera: camera,
+			resizeScroll: useResizeTechnique,
+			width: camera.width,
+			height: camera.height
+		});
+	}
 
-    public function restore() {
-        if (maximized != (maximized = false)) {
-            // maximizing!!
-            captionButtons.members[1].animation.play("maximize", true);
-            move(100, 100);
-            var w:Int = 320;
-            var h:Int = 320;
-            if (windowCameras[0] != null) {
-                w = windowCameras[0].width;
-                h = windowCameras[0].height;
-            }
-            resize(w, h); // TODO: taskbar stuff
-        }
-    }
+	public function onDesktopSizeChange(width:Int, height:Int)
+	{
+		if (maximized)
+		{
+			resize(width, Std.int(height - DesktopMain.theme.captionActive.top + DesktopMain.theme.captionActive.left));
+		}
+		content.onDesktopSizeChange(width, height);
+	}
 
-    public function changeCaption(text:String) {
-        caption.text = text;
-    }
+	public function maximize()
+	{
+		if (maximized != (maximized = true))
+		{
+			// maximizing!!
+			captionButtons.members[1].animation.play("restore", true);
+			move(-DesktopMain.theme.captionActive.left, -DesktopMain.theme.captionActive.left);
+			resize(FlxG.width, Std.int(FlxG.height - DesktopMain.theme.captionActive.top + DesktopMain.theme.captionActive.left)); // TODO: taskbar stuff
+		}
+	}
 
-    public function popupCamera(cam:FlxCamera, popout:Bool = false, ?onFinish:FlxTween->Void) {
-        if (popout) {
-            __captionTweens.push(FlxTween.tween(cam.flashSprite, {scaleX: 0.85, scaleY: 0.85}, 1/5, {ease: FlxEase.quintOut}));
-            __captionTweens.push(FlxTween.tween(cam, {alpha: 0}, 1/5, {ease: FlxEase.quintOut, onComplete: onFinish}));
-        } else {
-            cam.flashSprite.scaleX = 0.85;
-            cam.flashSprite.scaleY = 0.85;
-            cam.alpha = 0;
-    
-            __captionTweens.push(FlxTween.tween(cam.flashSprite, {scaleX: 1, scaleY: 1}, 1/3, {ease: FlxEase.cubeOut}));
-            __captionTweens.push(FlxTween.tween(cam, {alpha: 1}, 1/3, {ease: FlxEase.cubeOut, onComplete: onFinish}));
-        }
-    }
-    public override function destroy() {
-        super.destroy();
-        for(e in __captionTweens) e.cancel();
-        FlxG.cameras.remove(windowCaptionCamera, true);
-        for(cam in windowCameras) {
-            FlxG.cameras.remove(cam.camera, true);
-        }
-        windowCameras = null;
-        windowCaptionCamera = null;
-        __captionTweens = null;
-    }
+	public function minimize()
+	{
+	}
 
-    public function resize(width:Int, height:Int) {
-        windowWidth = width;
-        windowHeight = height;
-        updateWindowFrame();
-    }
+	public function restore()
+	{
+		if (maximized != (maximized = false))
+		{
+			// maximizing!!
+			captionButtons.members[1].animation.play("maximize", true);
+			move(100, 100);
+			var w:Int = 320;
+			var h:Int = 320;
+			if (windowCameras[0] != null)
+			{
+				w = windowCameras[0].width;
+				h = windowCameras[0].height;
+			}
+			resize(w, h); // TODO: taskbar stuff
+		}
+	}
 
-    public function move(x:Float, y:Float) {
-        @:privateAccess content.__noParentUpdate = true;
-        content.winX = windowCaptionCamera.x = x;
-        content.winY = windowCaptionCamera.y = y;
-        @:privateAccess content.__noParentUpdate = false;
-        for(e in windowCameras) {
-            e.camera.x = x + Std.int(DesktopMain.theme.captionActive.left);
-            e.camera.y = y + Std.int(DesktopMain.theme.captionActive.top);
-        }
-    }
+	public function changeCaption(text:String)
+	{
+		caption.text = text;
+	}
 
-    public override function update(elapsed:Float) {
-        if (__closing) {
-            // DesktopMain.instance.windows.remove(this, true);
-            // destroy();
-            return;
-        }
-        windowInactiveFrame.visible = !(windowFrame.visible = focused);
-        var i = members.length;
-        
-        var shouldCancel = DesktopMain.instance.mouseInput.overlapsRect(this, new Rectangle(0, 0, windowCaptionCamera.width, windowCaptionCamera.height), windowCaptionCamera);
+	public function popupCamera(cam:FlxCamera, popout:Bool = false, ?onFinish:FlxTween->Void)
+	{
+		if (popout)
+		{
+			__captionTweens.push(FlxTween.tween(cam.flashSprite, {scaleX: 0.85, scaleY: 0.85}, 1 / 5, {ease: FlxEase.quintOut}));
+			__captionTweens.push(FlxTween.tween(cam, {alpha: 0}, 1 / 5, {ease: FlxEase.quintOut, onComplete: onFinish}));
+		}
+		else
+		{
+			cam.flashSprite.scaleX = 0.85;
+			cam.flashSprite.scaleY = 0.85;
+			cam.alpha = 0;
 
-        
+			__captionTweens.push(FlxTween.tween(cam.flashSprite, {scaleX: 1, scaleY: 1}, 1 / 3, {ease: FlxEase.cubeOut}));
+			__captionTweens.push(FlxTween.tween(cam, {alpha: 1}, 1 / 3, {ease: FlxEase.cubeOut, onComplete: onFinish}));
+		}
+	}
 
-        if (curDialog != null && curDialog.exists) {
-            if (shouldCancel) {
-                if (DesktopMain.instance.mouseInput.justPressed) {
-                    // TODO: sounds
-                    DesktopMain.instance.focusWindow(curDialog);
-                }
-                DesktopMain.instance.mouseInput.cancel();
-            }
-            return;
-        } else if (shouldCancel && DesktopMain.instance.mouseInput.justPressed)
-            DesktopMain.instance.focusWindow(this);
-        // updates them backwards!!
-        while(i > 0) {
-            i--;
-            var spr = members[i];
-            if (spr == null || !spr.exists) continue;
-            spr.update(elapsed);
-        }
+	public override function destroy()
+	{
+		super.destroy();
+		for (e in __captionTweens)
+			e.cancel();
+		FlxG.cameras.remove(windowCaptionCamera, true);
+		for (cam in windowCameras)
+		{
+			FlxG.cameras.remove(cam.camera, true);
+		}
+		windowCameras = null;
+		windowCaptionCamera = null;
+		__captionTweens = null;
+	}
 
-        if (shouldCancel) DesktopMain.instance.mouseInput.cancel();
-    }
+	public function resize(width:Int, height:Int)
+	{
+		windowWidth = width;
+		windowHeight = height;
+		updateWindowFrame();
+	}
 
-    public function close() {
-        __closing = true;
-        popupCamera(windowCaptionCamera, true, function(t) {
-            DesktopMain.instance.windows.remove(this, true);
-            destroy();
-        });
-        for(e in windowCameras) popupCamera(e.camera, true);
-    }
+	public function move(x:Float, y:Float)
+	{
+		@:privateAccess content.__noParentUpdate = true;
+		content.winX = windowCaptionCamera.x = x;
+		content.winY = windowCaptionCamera.y = y;
+		@:privateAccess content.__noParentUpdate = false;
+		for (e in windowCameras)
+		{
+			e.camera.x = x + Std.int(DesktopMain.theme.captionActive.left);
+			e.camera.y = y + Std.int(DesktopMain.theme.captionActive.top);
+		}
+	}
 
-    public function updateWindowFrame() {
-        for(frame in [windowInactiveFrame, windowFrame])
-            frame.resize(windowWidth + Std.int(DesktopMain.theme.captionActive.left * 2), windowHeight + Std.int(DesktopMain.theme.captionActive.top) + Std.int(DesktopMain.theme.captionActive.left));
-        windowCaptionCamera.setSize(windowWidth + Std.int(DesktopMain.theme.captionActive.left * 2), windowHeight + Std.int(DesktopMain.theme.captionActive.top) + Std.int(DesktopMain.theme.captionActive.left));
-        captionButtons.setPosition(windowWidth + Std.int((DesktopMain.theme.captionActive.left * 2) - DesktopMain.theme.captionButtons.offset.x), Std.int(DesktopMain.theme.captionButtons.offset.y));
-        for(e in windowCameras) {
-            e.camera.setSize(windowWidth, windowHeight);
-            if (e.resizeScroll) {
-                e.camera.scroll.set(-Std.int(e.camera.width - e.width), -Std.int(e.camera.height - e.height));
-            }
-        }
-    }
+	public override function update(elapsed:Float)
+	{
+		if (__closing)
+		{
+			// DesktopMain.instance.windows.remove(this, true);
+			// destroy();
+			return;
+		}
+		windowInactiveFrame.visible = !(windowFrame.visible = focused);
+		var i = members.length;
+
+		var shouldCancel = DesktopMain.instance.mouseInput.overlapsRect(this, new Rectangle(0, 0, windowCaptionCamera.width, windowCaptionCamera.height),
+			windowCaptionCamera);
+
+		if (curDialog != null && curDialog.exists)
+		{
+			if (shouldCancel)
+			{
+				if (DesktopMain.instance.mouseInput.justPressed)
+				{
+					// TODO: sounds
+					DesktopMain.instance.focusWindow(curDialog);
+				}
+				DesktopMain.instance.mouseInput.cancel();
+			}
+			return;
+		}
+		else if (shouldCancel && DesktopMain.instance.mouseInput.justPressed)
+			DesktopMain.instance.focusWindow(this);
+		// updates them backwards!!
+		while (i > 0)
+		{
+			i--;
+			var spr = members[i];
+			if (spr == null || !spr.exists)
+				continue;
+			spr.update(elapsed);
+		}
+
+		if (shouldCancel)
+			DesktopMain.instance.mouseInput.cancel();
+	}
+
+	public function close()
+	{
+		__closing = true;
+		popupCamera(windowCaptionCamera, true, function(t)
+		{
+			DesktopMain.instance.windows.remove(this, true);
+			destroy();
+		});
+		for (e in windowCameras)
+			popupCamera(e.camera, true);
+	}
+
+	public function updateWindowFrame()
+	{
+		for (frame in [windowInactiveFrame, windowFrame])
+			frame.resize(windowWidth
+				+ Std.int(DesktopMain.theme.captionActive.left * 2),
+				windowHeight
+				+ Std.int(DesktopMain.theme.captionActive.top)
+				+ Std.int(DesktopMain.theme.captionActive.left));
+		windowCaptionCamera.setSize(windowWidth
+			+ Std.int(DesktopMain.theme.captionActive.left * 2),
+			windowHeight
+			+ Std.int(DesktopMain.theme.captionActive.top)
+			+ Std.int(DesktopMain.theme.captionActive.left));
+		captionButtons.setPosition(windowWidth + Std.int((DesktopMain.theme.captionActive.left * 2) - DesktopMain.theme.captionButtons.offset.x),
+			Std.int(DesktopMain.theme.captionButtons.offset.y));
+		for (e in windowCameras)
+		{
+			e.camera.setSize(windowWidth, windowHeight);
+			if (e.resizeScroll)
+			{
+				e.camera.scroll.set(-Std.int(e.camera.width - e.width), -Std.int(e.camera.height - e.height));
+			}
+		}
+	}
 }

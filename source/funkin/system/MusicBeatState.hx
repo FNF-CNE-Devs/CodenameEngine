@@ -26,24 +26,28 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	/**
 	 * Whenever the Conductor auto update should be enabled or not.
 	 */
-	 public var cancelConductorUpdate:Bool = false;
+	public var cancelConductorUpdate:Bool = false;
 
 	/**
 	 * Current step
 	 */
 	public var curStep(get, never):Int;
+
 	/**
 	 * Current beat
 	 */
 	public var curBeat(get, never):Int;
+
 	/**
 	 * Current step, as a `Float` (ex: 4.94, instead of 4)
 	 */
 	public var curStepFloat(get, never):Float;
+
 	/**
 	 * Current beat, as a `Float` (ex: 1.24, instead of 1)
 	 */
 	public var curBeatFloat(get, never):Float;
+
 	/**
 	 * Current song position (in milliseconds).
 	 */
@@ -51,12 +55,16 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 
 	inline function get_curStep():Int
 		return Conductor.curStep;
+
 	inline function get_curBeat():Int
 		return Conductor.curBeat;
+
 	inline function get_curStepFloat():Float
 		return Conductor.curStepFloat;
+
 	inline function get_curBeatFloat():Float
 		return Conductor.curBeatFloat;
+
 	inline function get_songPos():Float
 		return Conductor.songPosition;
 
@@ -77,30 +85,36 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
-	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
+	public function new(scriptsAllowed:Bool = true, ?scriptName:String)
+	{
 		super();
 		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
 		this.scriptName = scriptName;
 		loadScript();
 	}
 
-	function loadScript() {
-		if (scriptsAllowed) {
-			if (stateScript == null || stateScript is DummyScript) {
+	function loadScript()
+	{
+		if (scriptsAllowed)
+		{
+			if (stateScript == null || stateScript is DummyScript)
+			{
 				var className = Type.getClassName(Type.getClass(this));
-				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
-		
+				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".") + 1);
+
 				stateScript = Script.create(Paths.script('data/states/${scriptName}'));
 				stateScript.setParent(this);
 				stateScript.load();
-			} else
+			}
+			else
 				stateScript.reload();
 		}
 	}
 
 	public override function tryUpdate(elapsed:Float):Void
 	{
-		if (persistentUpdate || subState == null) {
+		if (persistentUpdate || subState == null)
+		{
 			call("preUpdate", [elapsed]);
 			update(elapsed);
 			call("postUpdate", [elapsed]);
@@ -116,24 +130,31 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 			subState.tryUpdate(elapsed);
 		}
 	}
+
 	override function create()
 	{
 		super.create();
 		call("create");
 	}
 
-	public override function createPost() {
+	public override function createPost()
+	{
 		super.createPost();
 		call("postCreate");
 	}
-	public function call(name:String, ?args:Array<Dynamic>, ?defaultVal:Dynamic):Dynamic {
+
+	public function call(name:String, ?args:Array<Dynamic>, ?defaultVal:Dynamic):Dynamic
+	{
 		// calls the function on the assigned script
-		if (stateScript == null) return defaultVal;
+		if (stateScript == null)
+			return defaultVal;
 		return stateScript.call(name, args);
 	}
 
-	public function event<T:CancellableEvent>(name:String, event:T):T {
-		if (stateScript == null) return event;
+	public function event<T:CancellableEvent>(name:String, event:T):T
+	{
+		if (stateScript == null)
+			return event;
 		stateScript.call(name, [event]);
 		return event;
 	}
@@ -141,25 +162,30 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	override function update(elapsed:Float)
 	{
 		// TODO: DEBUG MODE!!
-		if (FlxG.keys.justPressed.F5) {
+		if (FlxG.keys.justPressed.F5)
+		{
 			loadScript();
 			if (stateScript != null && !(stateScript is DummyScript))
 				Logs.trace('State script successfully reloaded', WARNING, GREEN);
 		}
 		call("update", [elapsed]);
-		
+
 		super.update(elapsed);
 	}
 
 	@:dox(hide) public function stepHit(curStep:Int):Void
 	{
-		for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).stepHit(curStep);
+		for (e in members)
+			if (e is IBeatReceiver)
+				cast(e, IBeatReceiver).stepHit(curStep);
 		call("stepHit", [curStep]);
 	}
 
 	@:dox(hide) public function beatHit(curBeat:Int):Void
 	{
-		for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).beatHit(curBeat);
+		for (e in members)
+			if (e is IBeatReceiver)
+				cast(e, IBeatReceiver).beatHit(curBeat);
 		call("beatHit", [curBeat]);
 	}
 
@@ -170,7 +196,8 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	 * @param ratio Ratio
 	 * @param fpsSensitive Whenever the ratio should not be adjusted to run at the same speed independant of framerate.
 	 */
-	public function lerp(v1:Float, v2:Float, ratio:Float, fpsSensitive:Bool = false) {
+	public function lerp(v1:Float, v2:Float, ratio:Float, fpsSensitive:Bool = false)
+	{
 		if (fpsSensitive)
 			return FlxMath.lerp(v1, v2, ratio);
 		else
@@ -180,36 +207,42 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	/**
 	 * SCRIPTING STUFF 
 	 */
-	public override function openSubState(subState:FlxSubState) {
+	public override function openSubState(subState:FlxSubState)
+	{
 		var e = event("onOpenSubState", new StateEvent(subState));
 		if (!e.cancelled)
 			super.openSubState(subState);
 	}
 
-	public override function onResize(w:Int, h:Int) {
+	public override function onResize(w:Int, h:Int)
+	{
 		super.onResize(w, h);
 		event("onResize", new ResizeEvent(w, h));
 	}
 
-	public override function destroy() {
+	public override function destroy()
+	{
 		super.destroy();
 		call("onDestroy");
 		stateScript.destroy();
 	}
 
-	public override function switchTo(nextState:FlxState) {
+	public override function switchTo(nextState:FlxState)
+	{
 		var e = event("onStateSwitch", new StateEvent(nextState));
 		if (e.cancelled)
 			return false;
 		return super.switchTo(nextState);
 	}
 
-	public override function onFocus() {
+	public override function onFocus()
+	{
 		super.onFocus();
 		call("onFocus");
 	}
 
-	public override function onFocusLost() {
+	public override function onFocusLost()
+	{
 		super.onFocusLost();
 		call("onFocusLost");
 	}

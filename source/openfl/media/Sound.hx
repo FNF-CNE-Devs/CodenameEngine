@@ -599,16 +599,18 @@ class Sound extends EventDispatcher
 		#end
 	}
 
-    var changeID:Int = 0;
-    public function regen() {
-        var audioBuffer = new AudioBuffer();
+	var changeID:Int = 0;
+
+	public function regen()
+	{
+		var audioBuffer = new AudioBuffer();
 		audioBuffer.bitsPerSample = __buffer.bitsPerSample;
 		audioBuffer.channels = __buffer.channels;
 		audioBuffer.data = __buffer.data;
 		audioBuffer.sampleRate = __buffer.sampleRate;
 
 		__buffer = audioBuffer;
-    }
+	}
 
 	/**
 		Generates a new SoundChannel object to play back the sound. This method
@@ -636,10 +638,11 @@ class Sound extends EventDispatcher
 			return null;
 		}
 
-        if (changeID < funkin.system.Main.changeID) {
-            changeID = funkin.system.Main.changeID;
-            regen();
-        }
+		if (changeID < funkin.system.Main.changeID)
+		{
+			changeID = funkin.system.Main.changeID;
+			regen();
+		}
 
 		if (sndTransform == null)
 		{
@@ -652,14 +655,17 @@ class Sound extends EventDispatcher
 
 		var pan = SoundMixer.__soundTransform.pan + sndTransform.pan;
 
-		if (pan > 1) pan = 1;
-		if (pan < -1) pan = -1;
+		if (pan > 1)
+			pan = 1;
+		if (pan < -1)
+			pan = -1;
 
 		var volume = SoundMixer.__soundTransform.volume * sndTransform.volume;
 
 		var source = new AudioSource(__buffer);
 		source.offset = Std.int(startTime);
-		if (loops > 1) source.loops = loops - 1;
+		if (loops > 1)
+			source.loops = loops - 1;
 
 		source.gain = volume;
 

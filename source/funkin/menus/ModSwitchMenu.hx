@@ -12,70 +12,83 @@ import flixel.tweens.FlxTween;
 import flixel.FlxSprite;
 import flixel.FlxG;
 
-class ModSwitchMenu extends MusicBeatSubstate {
-    var mods:Array<String> = [];
-    var alphabets:FlxTypedGroup<Alphabet>;
-    var curSelected:Int = 0;
+class ModSwitchMenu extends MusicBeatSubstate
+{
+	var mods:Array<String> = [];
+	var alphabets:FlxTypedGroup<Alphabet>;
+	var curSelected:Int = 0;
 
-    public override function create() {
-        super.create();
-        
-        var bg = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFF000000);
-        bg.scale.set(FlxG.width, FlxG.height);
-        bg.updateHitbox();
-        bg.scrollFactor.set();
-        add(bg);
+	public override function create()
+	{
+		super.create();
 
-        bg.alpha = 0;
-        FlxTween.tween(bg, {alpha: 0.5}, 0.25, {ease: FlxEase.cubeOut});
+		var bg = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFF000000);
+		bg.scale.set(FlxG.width, FlxG.height);
+		bg.updateHitbox();
+		bg.scrollFactor.set();
+		add(bg);
 
-        for(modFolder in FileSystem.readDirectory(ModsFolder.modsPath)) {
-            if (FileSystem.isDirectory('${ModsFolder.modsPath}${modFolder}')) {
-                mods.push(modFolder);
-            } else {
-                var ext = Path.extension(modFolder).toLowerCase();
-                switch(ext) {
-                    case 'zip':
-                        // is a zip mod!!
-                        mods.push(Path.withoutExtension(modFolder));
-                }
-            }
-        }
+		bg.alpha = 0;
+		FlxTween.tween(bg, {alpha: 0.5}, 0.25, {ease: FlxEase.cubeOut});
 
-        alphabets = new FlxTypedGroup<Alphabet>();
-        for(mod in mods) {
-            var a = new Alphabet(0, 0, mod, true);
-            a.isMenuItem = true;
-            a.scrollFactor.set();
-            alphabets.add(a);
-        }
-        add(alphabets);
-        changeSelection(0, true);
-    }
+		for (modFolder in FileSystem.readDirectory(ModsFolder.modsPath))
+		{
+			if (FileSystem.isDirectory('${ModsFolder.modsPath}${modFolder}'))
+			{
+				mods.push(modFolder);
+			}
+			else
+			{
+				var ext = Path.extension(modFolder).toLowerCase();
+				switch (ext)
+				{
+					case 'zip':
+						// is a zip mod!!
+						mods.push(Path.withoutExtension(modFolder));
+				}
+			}
+		}
 
-    public override function update(elapsed:Float) {
-        super.update(elapsed);
+		alphabets = new FlxTypedGroup<Alphabet>();
+		for (mod in mods)
+		{
+			var a = new Alphabet(0, 0, mod, true);
+			a.isMenuItem = true;
+			a.scrollFactor.set();
+			alphabets.add(a);
+		}
+		add(alphabets);
+		changeSelection(0, true);
+	}
 
-        changeSelection((controls.DOWN_P ? 1 : 0) + (controls.UP_P ? -1 : 0));
+	public override function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-        if (controls.ACCEPT) {
-            ModsFolder.switchMod(mods[curSelected]);
-            close();
-        }
-    }
+		changeSelection((controls.DOWN_P ? 1 : 0) + (controls.UP_P ? -1 : 0));
 
-    public function changeSelection(change:Int, force:Bool = false) {
-        if (change == 0 && !force) return;
+		if (controls.ACCEPT)
+		{
+			ModsFolder.switchMod(mods[curSelected]);
+			close();
+		}
+	}
 
-        curSelected = FlxMath.wrap(curSelected + change, 0, alphabets.length-1);
+	public function changeSelection(change:Int, force:Bool = false)
+	{
+		if (change == 0 && !force)
+			return;
 
-        CoolUtil.playMenuSFX();
+		curSelected = FlxMath.wrap(curSelected + change, 0, alphabets.length - 1);
 
-        for(k=>alphabet in alphabets.members) {
-            alphabet.alpha = 0.6;
-            alphabet.targetY = k - curSelected;
-        }
-        alphabets.members[curSelected].alpha = 1;
-    }
+		CoolUtil.playMenuSFX();
+
+		for (k => alphabet in alphabets.members)
+		{
+			alphabet.alpha = 0.6;
+			alphabet.targetY = k - curSelected;
+		}
+		alphabets.members[curSelected].alpha = 1;
+	}
 }
 #end

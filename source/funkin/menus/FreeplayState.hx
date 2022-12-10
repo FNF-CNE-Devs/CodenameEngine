@@ -116,7 +116,6 @@ class FreeplayState extends MusicBeatState
 
 		super.create();
 	}
-	
 
 	#if PRELOAD_ALL
 	var autoplayElapsed:Float = 0;
@@ -151,19 +150,18 @@ class FreeplayState extends MusicBeatState
 
 		bg.color = CoolUtil.lerpColor(bg.color, songs[curSelected].color, 0.0625);
 
-
 		// putting it before so that its actually smooth
 		updateOptionsAlpha();
 
 		#if PRELOAD_ALL
 		autoplayElapsed += elapsed;
-		if (!songInstPlaying && (autoplayElapsed > timeUntilAutoplay || FlxG.keys.justPressed.SPACE)) {
+		if (!songInstPlaying && (autoplayElapsed > timeUntilAutoplay || FlxG.keys.justPressed.SPACE))
+		{
 			if (curPlayingInst != (curPlayingInst = Paths.inst(songs[curSelected].songName, songs[curSelected].difficulties[curDifficulty])))
 				FlxG.sound.playMusic(curPlayingInst, 0);
 			songInstPlaying = true;
 		}
 		#end
-
 
 		if (controls.BACK)
 		{
@@ -180,16 +178,16 @@ class FreeplayState extends MusicBeatState
 
 	function changeDiff(change:Int = 0, force:Bool = false)
 	{
-		if (change == 0 && !force) return;
+		if (change == 0 && !force)
+			return;
 
 		var curSong = songs[curSelected];
-		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, curSong.difficulties.length-1);
+		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, curSong.difficulties.length - 1);
 
 		#if !switch
 		intendedScore = Highscore.getScore(curSong.songName, curSong.difficulties[curDifficulty]).score;
 		#end
 
-		
 		if (curSong.difficulties.length > 1)
 			diffText.text = '< ${curSong.difficulties[curDifficulty]} >';
 		else
@@ -198,20 +196,22 @@ class FreeplayState extends MusicBeatState
 
 	function changeSelection(change:Int = 0, force:Bool = false)
 	{
-		if (change == 0 && !force) return;
-        CoolUtil.playMenuSFX(0, 0.4);
+		if (change == 0 && !force)
+			return;
+		CoolUtil.playMenuSFX(0, 0.4);
 
-		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length-1);
+		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length - 1);
 
 		changeDiff(0, true);
-		
+
 		#if PRELOAD_ALL
-			autoplayElapsed = 0;
-			songInstPlaying = false;
+		autoplayElapsed = 0;
+		songInstPlaying = false;
 		#end
 	}
 
-	function updateOptionsAlpha() {
+	function updateOptionsAlpha()
+	{
 		var bullShit:Int = 0;
 
 		for (i in 0...iconArray.length)
@@ -232,59 +232,71 @@ class FreeplayState extends MusicBeatState
 	}
 }
 
-class FreeplaySonglist {
-    public var addOGSongs:Bool = false;
-    public var songs:Array<SongMetadata> = [];
+class FreeplaySonglist
+{
+	public var addOGSongs:Bool = false;
+	public var songs:Array<SongMetadata> = [];
 
-    public function new() {
+	public function new()
+	{
+	}
 
-    }
+	private function _addJSONSongs(songs:Array<FreeplaySong>, source:Bool = false)
+	{
+		if (songs != null && songs is Array)
+		{
+			for (e in songs)
+			{
+				if (e is Dynamic)
+				{
+					if (e.name == null)
+						continue;
+					if (e.icon == null)
+						e.icon = "bf";
+					if (e.color == null)
+						e.color = FreeplayState.defaultColor;
 
-    private function _addJSONSongs(songs:Array<FreeplaySong>, source:Bool = false) {
-        if (songs != null && songs is Array) {
-            for(e in songs) {
-                if (e is Dynamic) {
-                    if (e.name == null) continue;
-                    if (e.icon == null) e.icon = "bf";
-                    if (e.color == null) e.color = FreeplayState.defaultColor;
+					this.songs.push(new SongMetadata(e.name, e.icon.getDefault("bf"),
+						CoolUtil.getColorFromDynamic(e.color).getDefault(FreeplayState.defaultColor), e.difficulties, source));
+				}
+			}
+		}
+	}
 
-                    this.songs.push(new SongMetadata(e.name,
-                        e.icon.getDefault("bf"),
-                        CoolUtil.getColorFromDynamic(e.color).getDefault(FreeplayState.defaultColor), e.difficulties, source));
-                }
-            }
-        }
-    }
+	public static function get()
+	{
+		var songList = new FreeplaySonglist();
 
-    public static function get() {
-        var songList = new FreeplaySonglist();
+		var jsonPath = Paths.json("freeplaySonglist");
+		var baseJsonPath = Paths.getPath('data/freeplaySonglist.json', TEXT, null, true);
 
-        var jsonPath = Paths.json("freeplaySonglist");
-        var baseJsonPath = Paths.getPath('data/freeplaySonglist.json', TEXT, null, true);
+		try
+		{
+			var json:FreeplayJSON = Json.parse(Assets.getText(jsonPath));
+			var addOGSongs = CoolUtil.getDefault(json.addOGSongs, true);
+			songList._addJSONSongs(json.songs, jsonPath == baseJsonPath);
+			if (addOGSongs && (jsonPath != baseJsonPath))
+			{
+				var json:FreeplayJSON = Json.parse(Assets.getText(baseJsonPath));
+				songList._addJSONSongs(json.songs, true);
+			}
+		}
 
-        try {
-            var json:FreeplayJSON = Json.parse(Assets.getText(jsonPath));
-            var addOGSongs = CoolUtil.getDefault(json.addOGSongs, true);
-            songList._addJSONSongs(json.songs, jsonPath == baseJsonPath);
-            if (addOGSongs && (jsonPath != baseJsonPath)) {
-                var json:FreeplayJSON = Json.parse(Assets.getText(baseJsonPath));
-                songList._addJSONSongs(json.songs, true);
-            }
-        }
-
-        return songList;
-    }
+		return songList;
+	}
 }
 
-typedef FreeplayJSON = {
-    public var addOGSongs:Null<Bool>;
-    public var songs:Array<FreeplaySong>;
+typedef FreeplayJSON =
+{
+	public var addOGSongs:Null<Bool>;
+	public var songs:Array<FreeplaySong>;
 }
 
-typedef FreeplaySong = {
-    public var name:String;
-    public var icon:String;
-    public var color:Dynamic;
+typedef FreeplaySong =
+{
+	public var name:String;
+	public var icon:String;
+	public var color:Dynamic;
 	public var difficulties:Array<String>;
 }
 
@@ -300,20 +312,33 @@ class SongMetadata
 		this.songName = song;
 		this.color = color;
 		this.songCharacter = songCharacter;
-		if (difficulties != null && difficulties.length > 0) {
+		if (difficulties != null && difficulties.length > 0)
+		{
 			this.difficulties = difficulties;
-		} else {
-			this.difficulties = difficulties = [for(f in Paths.getFolderContent('data/charts/${song}/', false, false, fromSource)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
-			if (difficulties.length == 3) {
+		}
+		else
+		{
+			this.difficulties = difficulties = [
+				for (f in Paths.getFolderContent('data/charts/${song}/', false, false,
+					fromSource)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)
+			];
+			if (difficulties.length == 3)
+			{
 				var hasHard = false, hasNormal = false, hasEasy = false;
-				for(d in difficulties) {
-					switch(d) {
-						case "EASY":	hasEasy = true;
-						case "NORMAL":	hasNormal = true;
-						case "HARD":	hasHard = true;
+				for (d in difficulties)
+				{
+					switch (d)
+					{
+						case "EASY":
+							hasEasy = true;
+						case "NORMAL":
+							hasNormal = true;
+						case "HARD":
+							hasHard = true;
 					}
 				}
-				if (hasHard && hasNormal && hasEasy) {
+				if (hasHard && hasNormal && hasEasy)
+				{
 					difficulties[0] = "EASY";
 					difficulties[1] = "NORMAL";
 					difficulties[2] = "HARD";

@@ -28,7 +28,6 @@ import funkin.system.Discord.DiscordClient;
 import sys.thread.Thread;
 #end
 import lime.app.Application;
-
 #if sys
 import sys.io.File;
 #end
@@ -38,7 +37,6 @@ import funkin.mods.ModsFolder;
 class Main extends Sprite
 {
 	// TODO: CREDIT SMOKEY FOR ATLAS STUFF!!
-	
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var initialState:Class<FlxState> = TitleState; // The FlxState the game starts with.
@@ -48,7 +46,6 @@ class Main extends Sprite
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
-
 	#if sys
 	public static var gameThreads:Array<Thread> = [];
 	#end
@@ -100,11 +97,10 @@ class Main extends Sprite
 		initialState = TitleState;
 		#end
 
-
 		addChild(new FlxGame(gameWidth, gameHeight, null, zoom, framerate, framerate, skipSplash, startFullscreen));
 		loadGameSettings();
 		FlxG.switchState(new TitleState());
-		
+
 		#if !mobile
 		addChild(new FramerateField(10, 3, 0xFFFFFF));
 		#end
@@ -112,12 +108,13 @@ class Main extends Sprite
 
 	@:dox(hide)
 	public static var audioDisconnected:Bool = false;
-	
+
 	public static var changeID:Int = 0;
 
-	
 	private static var __threadCycle:Int = 0;
-	public static function execAsync(func:Void->Void) {
+
+	public static function execAsync(func:Void->Void)
+	{
 		#if sys
 		var thread = gameThreads[(__threadCycle++) % gameThreads.length];
 		thread.events.run(func);
@@ -126,10 +123,14 @@ class Main extends Sprite
 		#end
 	}
 
-	public function loadGameSettings() {
+	public function loadGameSettings()
+	{
 		#if sys
-		for(i in 0...4)
-			gameThreads.push(Thread.createWithEventLoop(function() {Thread.current().events.promise();}));
+		for (i in 0...4)
+			gameThreads.push(Thread.createWithEventLoop(function()
+			{
+				Thread.current().events.promise();
+			}));
 		#end
 		Paths.assetsTree = new AssetsLibraryList();
 
@@ -140,13 +141,14 @@ class Main extends Sprite
 		#if MOD_SUPPORT
 		ModsFolder.switchMod("introMod");
 		#end
-		
+
 		#if GLOBAL_SCRIPT
 		funkin.scripting.GlobalScript.init();
 		#end
-		
+
 		#if sys
-		if (Sys.args().contains("-livereload")) {
+		if (Sys.args().contains("-livereload"))
+		{
 			#if USE_SOURCE_ASSETS
 			trace("Used lime test windows. Switching into source assets.");
 			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './../../../../assets/', true));
@@ -157,7 +159,9 @@ class Main extends Sprite
 			var buildNum:Int = Std.parseInt(File.getContent("./../../../../buildnumber.txt"));
 			buildNum++;
 			File.saveContent("./../../../../buildnumber.txt", Std.string(buildNum));
-		} else {
+		}
+		else
+		{
 			#if USE_ADAPTED_ASSETS
 			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './assets/', true));
 			#else
@@ -167,7 +171,6 @@ class Main extends Sprite
 		#else
 		Assets.registerLibrary('assets', Paths.assetsTree.base);
 		#end
-
 
 		var lib = new AssetLibrary();
 		@:privateAccess
@@ -187,50 +190,51 @@ class Main extends Sprite
 		AudioSwitchFix.init();
 		WindowsAPI.setDarkMode(true);
 
-		
 		#if desktop
 		DiscordClient.initialize();
-		
-		Application.current.onExit.add (function (exitCode) {
+
+		Application.current.onExit.add(function(exitCode)
+		{
 			DiscordClient.shutdown();
-		 });
+		});
 		#end
-		
+
 		FlxG.signals.preStateCreate.add(onStateSwitch);
 
 		initTransition();
 	}
 
-	public static function refreshAssets() {
+	public static function refreshAssets()
+	{
 		FlxSoundTray.volumeChangeSFX = Paths.sound('menu/volume');
 
 		if (FlxG.game.soundTray != null)
 			FlxG.game.soundTray.text.setTextFormat(new TextFormat(Paths.font("vcr.ttf")));
 	}
 
-	public static function initTransition() {
+	public static function initTransition()
+	{
 		var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
 		diamond.persist = true;
 		diamond.destroyOnNoUse = false;
 
 		FlxTransitionableState.defaultTransIn = new TransitionData(FADE, 0xFF000000, 1, new FlxPoint(0, -1), {asset: diamond, width: 32, height: 32},
 			new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
-		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, 0.7, new FlxPoint(0, 1),
-			{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
+		FlxTransitionableState.defaultTransOut = new TransitionData(FADE, 0xFF000000, 0.7, new FlxPoint(0, 1), {asset: diamond, width: 32, height: 32},
+			new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 	}
 
-    private static function onStateSwitch(newState:FlxState) {
-        // manual asset clearing since base openfl one doesnt clear lime one
-        // doesnt clear bitmaps since flixel fork does it auto
-        
-        var cache = cast(Assets.cache, AssetCache);
-        for (key=>font in cache.font)
-            cache.removeFont(key);
-        for (key=>sound in cache.sound)
-            cache.removeSound(key);
+	private static function onStateSwitch(newState:FlxState)
+	{
+		// manual asset clearing since base openfl one doesnt clear lime one
+		// doesnt clear bitmaps since flixel fork does it auto
+
+		var cache = cast(Assets.cache, AssetCache);
+		for (key => font in cache.font)
+			cache.removeFont(key);
+		for (key => sound in cache.sound)
+			cache.removeSound(key);
 
 		Paths.assetsTree.clearCache();
-
-		
-    }
+	}
 }

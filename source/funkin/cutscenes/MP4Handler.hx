@@ -24,7 +24,7 @@ class MP4Handler
 
 	public function new()
 	{
-		//FlxG.autoPause = false;
+		// FlxG.autoPause = false;
 	}
 
 	public function playMP4(path:String, ?repeat:Bool = false, ?outputTo:FlxSprite = null, ?isWindow:Bool = false, ?isFullscreen:Bool = false,
@@ -51,8 +51,6 @@ class MP4Handler
 			bitmap.set_height(FlxG.stage.stageWidth / (16 / 9));
 		}
 
-		
-
 		bitmap.onVideoReady = onVLCVideoReady;
 		bitmap.onComplete = onVLCComplete;
 		bitmap.onError = onVLCError;
@@ -60,7 +58,7 @@ class MP4Handler
 		FlxG.stage.addEventListener(Event.ENTER_FRAME, update);
 
 		if (repeat)
-			bitmap.repeat = -1; 
+			bitmap.repeat = -1;
 		else
 			bitmap.repeat = 0;
 
@@ -98,9 +96,11 @@ class MP4Handler
 	{
 		trace("video loaded!");
 
-		if (sprite != null) {
+		if (sprite != null)
+		{
 			sprite.loadGraphic(bitmap.bitmapData);
-			if (canvasWidth != null && canvasHeight != null) {
+			if (canvasWidth != null && canvasHeight != null)
+			{
 				sprite.setGraphicSize(canvasWidth, canvasHeight);
 				sprite.updateHitbox();
 

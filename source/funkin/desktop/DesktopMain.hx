@@ -15,137 +15,163 @@ import funkin.desktop.editors.*;
 import funkin.desktop.windows.*;
 import funkin.desktop.theme.Theme;
 
-class DesktopMain extends MusicBeatState {
-    public var oldScaleMode:BaseScaleMode;
-    public var wallpaper:FlxSprite;
-    public var screenSize:FlxPoint;
+class DesktopMain extends MusicBeatState
+{
+	public var oldScaleMode:BaseScaleMode;
+	public var wallpaper:FlxSprite;
+	public var screenSize:FlxPoint;
 
-    public var windows:WindowGroup<Window>;
+	public var windows:WindowGroup<Window>;
 
-    public static var instance:DesktopMain;
+	public static var instance:DesktopMain;
 
-    public var mouseInput:MouseInput = new MouseInput();
+	public var mouseInput:MouseInput = new MouseInput();
 
-    public static var theme:Theme = null;
+	public static var theme:Theme = null;
 
-    public override function create() {
-        super.create();
+	public override function create()
+	{
+		super.create();
 
-        theme = Theme.loadFromAssets(Paths.getPath('images/desktop/ui.xml', TEXT, null));
-        instance = this;
-        
-        FlxG.mouse.useSystemCursor = FlxG.mouse.visible = true;
-        oldScaleMode = FlxG.scaleMode;
-        FlxG.scaleMode = new FixedScaleAdjustSizeScaleMode(false, false);
+		theme = Theme.loadFromAssets(Paths.getPath('images/desktop/ui.xml', TEXT, null));
+		instance = this;
 
-        wallpaper = new FlxSprite();
-        #if windows
-        try {
-            wallpaper.loadGraphic(BitmapData.fromFile('${Sys.getEnv("AppData")}\\Microsoft\\Windows\\Themes\\TranscodedWallpaper'));
-        } catch(e) #end wallpaper.loadGraphic(Paths.image("menus/menuBG"));
-        wallpaper.scrollFactor.set(0, 0); // anchor at top left
-        wallpaper.antialiasing = true;
-        add(wallpaper);
+		FlxG.mouse.useSystemCursor = FlxG.mouse.visible = true;
+		oldScaleMode = FlxG.scaleMode;
+		FlxG.scaleMode = new FixedScaleAdjustSizeScaleMode(false, false);
 
-        screenSize = new FlxPoint(-1, -1);
+		wallpaper = new FlxSprite();
+		#if windows try
+		{
+			wallpaper.loadGraphic(BitmapData.fromFile('${Sys.getEnv("AppData")}\\Microsoft\\Windows\\Themes\\TranscodedWallpaper'));
+		}
+		catch (e) #end wallpaper.loadGraphic(Paths.image("menus/menuBG"));
+		wallpaper.scrollFactor.set(0, 0); // anchor at top left
+		wallpaper.antialiasing = true;
+		add(wallpaper);
 
-        windows = new WindowGroup<Window>();
-        add(windows);
-    }
+		screenSize = new FlxPoint(-1, -1);
 
-    public override function update(elapsed:Float) {
-        mouseInput.set(FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased);
+		windows = new WindowGroup<Window>();
+		add(windows);
+	}
 
-        super.update(elapsed);
+	public override function update(elapsed:Float)
+	{
+		mouseInput.set(FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased);
 
-        if (screenSize.x != FlxG.width || screenSize.y != FlxG.height) {
-            screenSize.set(FlxG.width, FlxG.height);
-            updateScreenRes();
-        }
+		super.update(elapsed);
 
-        // debug window
-        if (FlxG.keys.justPressed.SPACE)
-            windows.add(new Window(new HelloWorld()));
-        if (FlxG.keys.justPressed.F1)
-            windows.add(new Window(new CharacterEditor('dad')));
-        if (FlxG.keys.justPressed.F2)
-            windows.add(new Window(new EditorPlayState()));
-    }
+		if (screenSize.x != FlxG.width || screenSize.y != FlxG.height)
+		{
+			screenSize.set(FlxG.width, FlxG.height);
+			updateScreenRes();
+		}
 
-    public function openWindow(content:WindowContent) {
-        return windows.add(new Window(content));
-    }
+		// debug window
+		if (FlxG.keys.justPressed.SPACE)
+			windows.add(new Window(new HelloWorld()));
+		if (FlxG.keys.justPressed.F1)
+			windows.add(new Window(new CharacterEditor('dad')));
+		if (FlxG.keys.justPressed.F2)
+			windows.add(new Window(new EditorPlayState()));
+	}
 
-    public function updateScreenRes() {
-        // update wallpaper
-        wallpaper.setUnstretchedGraphicSize(FlxG.width, FlxG.height);
-        for(e in windows) {
-            e.onDesktopSizeChange(FlxG.width, FlxG.height);
-        }
-    }
+	public function openWindow(content:WindowContent)
+	{
+		return windows.add(new Window(content));
+	}
 
-    public override function destroy() {
-        super.destroy();
-        FlxG.scaleMode = oldScaleMode;
-        FlxG.mouse.useSystemCursor = FlxG.mouse.visible = false;
+	public function updateScreenRes()
+	{
+		// update wallpaper
+		wallpaper.setUnstretchedGraphicSize(FlxG.width, FlxG.height);
+		for (e in windows)
+		{
+			e.onDesktopSizeChange(FlxG.width, FlxG.height);
+		}
+	}
 
-        // TODO: switch back while using config
-        FlxG.resizeGame(1280, 720);
-    }
+	public override function destroy()
+	{
+		super.destroy();
+		FlxG.scaleMode = oldScaleMode;
+		FlxG.mouse.useSystemCursor = FlxG.mouse.visible = false;
 
-    public function focusWindow(window:Window) {
-        windows.remove(window, true);
-        windows.add(window);
-        layerCameras();
-    }
+		// TODO: switch back while using config
+		FlxG.resizeGame(1280, 720);
+	}
 
-    public function layerCameras() {
-        for(win in windows.members) {
-            FlxG.cameras.remove(win.windowCaptionCamera, false);
-            for(e in win.windowCameras) FlxG.cameras.remove(e.camera, false);
-        }
-        for(win in windows.members) {
-            FlxG.cameras.add(win.windowCaptionCamera, false);
-            for(e in win.windowCameras) FlxG.cameras.add(e.camera, false);
-        }
-    }
+	public function focusWindow(window:Window)
+	{
+		windows.remove(window, true);
+		windows.add(window);
+		layerCameras();
+	}
+
+	public function layerCameras()
+	{
+		for (win in windows.members)
+		{
+			FlxG.cameras.remove(win.windowCaptionCamera, false);
+			for (e in win.windowCameras)
+				FlxG.cameras.remove(e.camera, false);
+		}
+		for (win in windows.members)
+		{
+			FlxG.cameras.add(win.windowCaptionCamera, false);
+			for (e in win.windowCameras)
+				FlxG.cameras.add(e.camera, false);
+		}
+	}
 }
 
-class MouseInput {
-    public var pressed:Bool = false;
-    public var justPressed:Bool = false;
-    public var justReleased:Bool = false;
-    private var __cancelled:Bool = false;
+class MouseInput
+{
+	public var pressed:Bool = false;
+	public var justPressed:Bool = false;
+	public var justReleased:Bool = false;
 
-    public function cancel() {
-        pressed = justPressed = justReleased = false;
-        __cancelled = true;
-    }
+	private var __cancelled:Bool = false;
 
-    public function new() {}
+	public function cancel()
+	{
+		pressed = justPressed = justReleased = false;
+		__cancelled = true;
+	}
 
-    public function set(pressed:Bool, justPressed:Bool, justReleased:Bool) {
-        this.pressed = pressed;
-        this.justPressed = justPressed;
-        this.justReleased = justReleased;
-        this.__cancelled = false;
-    }
+	public function new()
+	{
+	}
 
-    public function overlaps(spr:FlxObject, ?camera:FlxCamera) {
-        return overlapsRect(spr, new Rectangle(spr.x, spr.y, spr.width, spr.height), camera);
-        // return FlxG.mouse.overlaps(spr, camera);
-    }
+	public function set(pressed:Bool, justPressed:Bool, justReleased:Bool)
+	{
+		this.pressed = pressed;
+		this.justPressed = justPressed;
+		this.justReleased = justReleased;
+		this.__cancelled = false;
+	}
 
-    public function overlapsRect(spr:FlxBasic, rect:Rectangle, ?camera:FlxCamera) {
-        if (__cancelled) return false;
-        if (camera == null) camera = FlxG.camera;
-        if (spr is FlxObject) {
-            var obj = cast(spr, FlxObject);
-            rect.x -= camera.scroll.x * obj.scrollFactor.x;
-            rect.y -= camera.scroll.y * obj.scrollFactor.y;
-        }
-        var pos = FlxG.mouse.getScreenPosition(camera);
-        
-        return ((pos.x > rect.x) && (pos.x < rect.x + rect.width)) && ((pos.y > rect.y) && (pos.y < rect.y + rect.height));
-    }
+	public function overlaps(spr:FlxObject, ?camera:FlxCamera)
+	{
+		return overlapsRect(spr, new Rectangle(spr.x, spr.y, spr.width, spr.height), camera);
+		// return FlxG.mouse.overlaps(spr, camera);
+	}
+
+	public function overlapsRect(spr:FlxBasic, rect:Rectangle, ?camera:FlxCamera)
+	{
+		if (__cancelled)
+			return false;
+		if (camera == null)
+			camera = FlxG.camera;
+		if (spr is FlxObject)
+		{
+			var obj = cast(spr, FlxObject);
+			rect.x -= camera.scroll.x * obj.scrollFactor.x;
+			rect.y -= camera.scroll.y * obj.scrollFactor.y;
+		}
+		var pos = FlxG.mouse.getScreenPosition(camera);
+
+		return ((pos.x > rect.x) && (pos.x < rect.x + rect.width)) && ((pos.y > rect.y) && (pos.y < rect.y + rect.height));
+	}
 }

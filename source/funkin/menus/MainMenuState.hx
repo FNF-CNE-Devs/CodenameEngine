@@ -18,7 +18,6 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
-
 import funkin.options.OptionsMenu;
 
 using StringTools;
@@ -41,7 +40,7 @@ class MainMenuState extends MusicBeatState
 	override function create()
 	{
 		super.create();
-		
+
 		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
@@ -97,7 +96,8 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nPre-Alpha: Build ${funkin.macros.BuildCounterMacro.getBuildNumber()}\n');
+		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0,
+			'Codename Engine v${Application.current.meta.get('version')}\nPre-Alpha: Build ${funkin.macros.BuildCounterMacro.getBuildNumber()}\n');
 		versionShit.scrollFactor.set();
 		versionShit.y -= versionShit.height;
 		add(versionShit);
@@ -140,7 +140,8 @@ class MainMenuState extends MusicBeatState
 
 			#if MOD_SUPPORT
 			// make it customisable
-			if (FlxG.keys.justPressed.TAB) {
+			if (FlxG.keys.justPressed.TAB)
+			{
 				openSubState(new ModSwitchMenu());
 				persistentUpdate = false;
 				persistentDraw = true;
@@ -162,11 +163,13 @@ class MainMenuState extends MusicBeatState
 					selectedSomethin = true;
 					CoolUtil.playMenuSFX(1);
 
-					if (Options.flashingMenu) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
+					if (Options.flashingMenu)
+						FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
 					menuItems.forEach(function(spr:FlxSprite)
 					{
-						if (spr.ID != curSelected) return;
+						if (spr.ID != curSelected)
+							return;
 						FlxFlicker.flicker(spr, 1, Options.flashingMenu ? 0.06 : 0.15, false, false, function(flick:FlxFlicker)
 						{
 							var daChoice:String = optionShit[curSelected];
@@ -198,15 +201,18 @@ class MainMenuState extends MusicBeatState
 		});
 	}
 
-	
-	public override function switchTo(nextState:FlxState):Bool {
-		try {
-			menuItems.forEach(function(spr:FlxSprite) {
+	public override function switchTo(nextState:FlxState):Bool
+	{
+		try
+		{
+			menuItems.forEach(function(spr:FlxSprite)
+			{
 				FlxTween.tween(spr, {alpha: 0}, 0.5, {ease: FlxEase.quintOut});
 			});
 		}
 		return super.switchTo(nextState);
 	}
+
 	function changeItem(huh:Int = 0)
 	{
 		curSelected += huh;
