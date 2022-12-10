@@ -238,3 +238,4 @@ class Main extends Sprite
 
 		Paths.assetsTree.clearCache();
 	}
+}

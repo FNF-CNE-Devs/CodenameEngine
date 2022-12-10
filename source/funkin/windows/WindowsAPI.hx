@@ -25,6 +25,16 @@ class WindowsAPI
 	}
 
 	/**
+	 * Sets the window titlebar to dark mode (Windows 10 only)
+	 */
+	public static function setDarkMode(enable:Bool)
+	{
+		#if windows
+		native.WinAPI.setDarkMode(enable);
+		#end
+	}
+
+	/**
 	 * Shows a message box
 	 */
 	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING)
@@ -33,18 +43,6 @@ class WindowsAPI
 		native.WinAPI.showMessageBox(caption, message, icon);
 		#else
 		lime.app.Application.current.window.alert(title, text);
-		#end
-	}
-
-	/**
-	 * Sets the console colors
-	 */
-	public static function setConsoleColors(foregroundColor:ConsoleColor = LIGHTGRAY, ?backgroundColor:ConsoleColor = BLACK)
-	{
-		#if windows
-		var fg = cast(foregroundColor, Int);
-		var bg = cast(backgroundColor, Int);
-		native.WinAPI.setConsoleColors((bg * 16) + fg);
 		#end
 	}
 

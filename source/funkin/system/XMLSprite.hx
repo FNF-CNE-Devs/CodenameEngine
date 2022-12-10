@@ -15,11 +15,6 @@ class XMLSprite extends FlxSprite implements IBeatReceiver
 	public var zoomFactor:Float = 1;
 	public var initialZoom:Float = 1;
 
-	public override function update(elapsed:Float)
-	{
-		super.update(elapsed);
-	}
-
 	public function beatHit(curBeat:Int)
 	{
 		if (beatAnims.length > 0)
