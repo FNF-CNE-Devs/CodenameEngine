@@ -8,7 +8,9 @@ Early alpha of Codename Engine, known issues:
 - Week 6 still have no dialogue
 - Week 7 have no running tankman
 
-Build instructions are below, use the "introMod" folder for... mods. Also, `lime test windows` uses the source assets folder instead of the export one.
+Build instructions are below. Press TAB on the main menu to switch mods.
+
+Also, `lime test windows` uses the source assets folder instead of the export one.
 
 ## CREDITS
 - Credits to Smokey555 for the fancy Animate Atlas code
