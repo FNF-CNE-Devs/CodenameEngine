@@ -69,7 +69,7 @@ class FramerateField extends TextField {
         }
         #end
         #if !release
-        text.push('CODENAME ENGINE ALPHA - BUILD ${funkin.macros.BuildCounterMacro.getBuildNumber()}');
+        text.push('CODENAME ENGINE BETA - BUILD ${funkin.macros.BuildCounterMacro.getBuildNumber()}');
         #end
         if (debugMode) {
             text.push('=== CONDUCTOR INFO ===');
