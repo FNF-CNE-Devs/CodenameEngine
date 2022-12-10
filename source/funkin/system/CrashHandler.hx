@@ -27,19 +27,19 @@ class CrashHandler {
         var stackLabel:String = "";
         for(e in stack) {
             switch(e) {
-                case CFunction: stackLabel += "- Non-Haxe (C) Function";
-                case Module(c): stackLabel += '- Module ${c}';
+                case CFunction: stackLabel += "Non-Haxe (C) Function";
+                case Module(c): stackLabel += 'Module ${c}';
                 case FilePos(parent, file, line, col):
                     switch(parent) {
                         case Method(cla, func):
-                            stackLabel += '- (${file}) ${cla.split(".").last()}.$func() - line $line';
+                            stackLabel += '(${file}) ${cla.split(".").last()}.$func() - line $line';
                         case _:
-                            stackLabel += '- (${file}) - line $line';
+                            stackLabel += '(${file}) - line $line';
                     }
                 case LocalFunction(v):
-                    stackLabel += '- Local Function ${v}';
+                    stackLabel += 'Local Function ${v}';
                 case Method(cl, m):
-                    stackLabel += '- ${cl} - ${m}';
+                    stackLabel += '${cl} - ${m}';
             }
             stackLabel += "\r\n";
         }
