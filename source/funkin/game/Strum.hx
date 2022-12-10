@@ -10,7 +10,7 @@ import funkin.system.Conductor;
 class Strum extends FlxSprite
 {
 	public var cpu = false;
-	public var lastHit:Float = -5000;
+	public var hitTime:Float = 0;
 
 	public var scrollSpeed:Null<Float> = null; // custom scroll speed per strum
 	public var noteAngle:Null<Float> = null; // custom scroll speed per strum
@@ -40,9 +40,10 @@ class Strum extends FlxSprite
 	public override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		if (cpu)
+		if (cpu && hitTime > 0)
 		{
-			if (lastHit + (Conductor.crochet / 2) < Conductor.songPosition && getAnim() == "confirm")
+			hitTime -= elapsed;
+			if (hitTime <= 0 && getAnim() == "confirm")
 			{
 				playAnim("static");
 			}
@@ -123,7 +124,7 @@ class Strum extends FlxSprite
 
 	public function press(time:Float)
 	{
-		lastHit = time;
+		hitTime = time;
 		playAnim("confirm");
 	}
 

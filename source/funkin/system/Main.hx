@@ -156,9 +156,9 @@ class Main extends Sprite
 			Assets.registerLibrary('assets', Paths.assetsTree.base);
 			#end
 
-			var buildNum:Int = Std.parseInt(File.getContent("./../../../../buildnumber.txt"));
-			buildNum++;
-			File.saveContent("./../../../../buildnumber.txt", Std.string(buildNum));
+			// var buildNum:Int = Std.parseInt(File.getContent("./../../../../buildnumber.txt"));
+			// buildNum++;
+			// File.saveContent("./../../../../buildnumber.txt", Std.string(buildNum));
 		}
 		else
 		{

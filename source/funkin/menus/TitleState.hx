@@ -39,9 +39,6 @@ class TitleState extends MusicBeatState
 
 	public var blackScreen:FlxSprite;
 	public var textGroup:FlxGroup;
-	#if !TITLESCREEN_XML
-	public var ngSpr:FlxSprite;
-	#end
 
 	override public function create():Void
 	{
@@ -54,9 +51,6 @@ class TitleState extends MusicBeatState
 		startIntro();
 	}
 
-	var logoBl:FlxSprite;
-	var gfDance:FlxSprite;
-	var danceLeft:Bool = false;
 	var titleText:FlxSprite;
 	var titleScreenSprites:MusicBeatGroup;
 
@@ -87,16 +81,6 @@ class TitleState extends MusicBeatState
 
 		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(blackScreen);
-
-		#if !TITLESCREEN_XML
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadAnimatedGraphic(Paths.image('menus/titlescreen/newgrounds_logo'));
-		add(ngSpr);
-		ngSpr.visible = false;
-		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
-		ngSpr.updateHitbox();
-		ngSpr.screenCenter(X);
-		ngSpr.antialiasing = true;
-		#end
 
 		FlxG.mouse.visible = false;
 
@@ -206,7 +190,6 @@ class TitleState extends MusicBeatState
 	{
 		super.beatHit(curBeat);
 
-		#if TITLESCREEN_XML
 		if (curBeat >= titleLength || skippedIntro)
 		{
 			if (!skippedIntro)
@@ -216,43 +199,11 @@ class TitleState extends MusicBeatState
 		var introText = titleLines[curBeat];
 		if (introText != null)
 			introText.show();
-		#else
-		switch (curBeat)
-		{
-			case 1:
-				createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
-			case 3:
-				addMoreText('present');
-			case 4:
-				deleteCoolText();
-			case 5:
-				createCoolText(['In association', 'with']);
-			case 7:
-				addMoreText('newgrounds');
-				ngSpr.visible = true;
-			case 8:
-				deleteCoolText();
-				ngSpr.visible = false;
-			case 9:
-				createCoolText([curWacky[0]]);
-			case 11:
-				addMoreText(curWacky[1]);
-			case 12:
-				deleteCoolText();
-			case 13:
-				addMoreText('Friday');
-			case 14:
-				addMoreText('Night');
-			case 15:
-				addMoreText('Funkin');
-			case 16:
-				skipIntro();
-		}
-		#end
 	}
 
 	#if TITLESCREEN_XML
 	public var xml:Access;
+	#end
 	public var titleLength:Int = 16;
 	public var titleLines:Map<Int, IntroText> = [
 		1 => new IntroText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']),
@@ -278,6 +229,7 @@ class TitleState extends MusicBeatState
 		15 => new IntroText(['Friday', 'Night', "Funkin'"]),
 	];
 
+	#if TITLESCREEN_XML
 	public function loadXML()
 	{
 		try
@@ -354,10 +306,6 @@ class TitleState extends MusicBeatState
 	{
 		if (!skippedIntro)
 		{
-			#if !TITLESCREEN_XML
-			remove(ngSpr);
-			#end
-
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(blackScreen);
 			blackScreen.destroy();

@@ -655,18 +655,18 @@ class PlayState extends MusicBeatState
 
 				swagNote.nextNote = (swagNote = new Note(daStrumTime, daNoteData % 4, daNoteType, gottaHitNote, swagNote, false,
 					section.altAnim ? "-alt" : ""));
-				swagNote.sustainLength = songNotes[2];
+				swagNote.sustainLength = Math.round(songNotes[2] / stepCrochet) * stepCrochet;
 				swagNote.scrollFactor.set(0, 0);
 				swagNote.stepLength = stepCrochet;
 				notes.add(swagNote);
 
 				// calculate sustain length and fix
-				var susLength:Float = swagNote.sustainLength / stepCrochet;
-				if (susLength > 0.75)
-					susLength++;
+				var susLength:Int = Math.round(swagNote.sustainLength / stepCrochet);
+				if (susLength > 0)
+					susLength = Std.int(Math.max(susLength, 2));
 
 				// create sustains
-				for (susNote in 0...Math.floor(susLength))
+				for (susNote in 0...susLength)
 				{
 					swagNote = new Note(daStrumTime + (stepCrochet * susNote), daNoteData % 4, daNoteType, gottaHitNote, swagNote, true,
 						section.altAnim ? "-alt" : "");
@@ -885,10 +885,11 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
-		// if (__wasAutoPause && __songPlaying) {
-		// inst.play();
-		// vocals.play();
-		// }
+		if (__wasAutoPause && __songPlaying)
+		{
+			inst.play();
+			vocals.play();
+		}
 
 		super.onFocus();
 	}
@@ -902,11 +903,12 @@ class PlayState extends MusicBeatState
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + difficultyText + ")", iconRPC);
 		}
 		#end
-		// if (__wasAutoPause = FlxG.autoPause) {
-		// 	__songPlaying = inst.playing;
-		// 	inst.pause();
-		// 	vocals.pause();
-		// }
+		if (__wasAutoPause = FlxG.autoPause)
+		{
+			__songPlaying = inst.playing;
+			inst.pause();
+			vocals.pause();
+		}
 
 		super.onFocusLost();
 	}
@@ -1111,7 +1113,7 @@ class PlayState extends MusicBeatState
 			notes.forEachAlive(function(daNote:Note)
 			{
 				var strum:Strum = null;
-				for (e in(daNote.mustPress ? playerStrums : cpuStrums).members)
+				for (e in (daNote.mustPress ? playerStrums : cpuStrums).members)
 				{
 					if (e.ID == daNote.noteData % 4)
 					{
@@ -1522,7 +1524,7 @@ class PlayState extends MusicBeatState
 					{
 						if (str.ID == Math.abs(note.strumID))
 						{
-							str.press(note.strumTime);
+							str.press((note.nextSustain != null && note.nextSustain.nextSustain != null) ? 0.3 : 0.15);
 						}
 					});
 			}

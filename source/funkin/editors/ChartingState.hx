@@ -93,7 +93,8 @@ class ChartingState extends MusicBeatState
 	{
 		curSection = lastSection;
 		characterList = [
-			for (e in Paths.getFolderContent('data/characters/')) if (Path.extension(e).toLowerCase() == "xml") e.substr(0, e.length - 4)
+			for (e in Paths.getFolderContent('data/characters/'))
+				if (Path.extension(e).toLowerCase() == "xml") e.substr(0, e.length - 4)
 		];
 
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);

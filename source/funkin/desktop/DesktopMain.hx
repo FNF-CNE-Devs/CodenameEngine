@@ -41,11 +41,13 @@ class DesktopMain extends MusicBeatState
 		FlxG.scaleMode = new FixedScaleAdjustSizeScaleMode(false, false);
 
 		wallpaper = new FlxSprite();
-		#if windows try
+		#if windows
+		try
 		{
 			wallpaper.loadGraphic(BitmapData.fromFile('${Sys.getEnv("AppData")}\\Microsoft\\Windows\\Themes\\TranscodedWallpaper'));
 		}
-		catch (e) #end wallpaper.loadGraphic(Paths.image("menus/menuBG"));
+		catch (e)
+		#end wallpaper.loadGraphic(Paths.image("menus/menuBG"));
 		wallpaper.scrollFactor.set(0, 0); // anchor at top left
 		wallpaper.antialiasing = true;
 		add(wallpaper);

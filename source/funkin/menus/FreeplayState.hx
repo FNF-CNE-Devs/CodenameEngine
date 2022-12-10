@@ -57,8 +57,6 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
-		var initSonglist = CoolUtil.coolTextFile(Paths.json('freeplaySonglist'));
-
 		songList = FreeplaySonglist.get();
 		songs = songList.songs;
 
@@ -319,8 +317,8 @@ class SongMetadata
 		else
 		{
 			this.difficulties = difficulties = [
-				for (f in Paths.getFolderContent('data/charts/${song}/', false, false,
-					fromSource)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)
+				for (f in Paths.getFolderContent('data/charts/${song}/', false, false, fromSource))
+					if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)
 			];
 			if (difficulties.length == 3)
 			{
