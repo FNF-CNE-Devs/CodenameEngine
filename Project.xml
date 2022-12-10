@@ -27,10 +27,10 @@
 	<window if="html5" resizable="true" />
 
 	<!--Desktop-specific-->
-	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false" />
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
+	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false" />
 
 	<!--Switch-specific-->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
@@ -43,27 +43,25 @@
 	<set name="BUILD_DIR" value="latest/" if="beta" />
 
 	<classpath name="source" />
-	
+
 	<!-- <define name="PRELOAD_ALL" /> -->
 	<define name="PRELOAD_ALL" unless="web" />
-	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
-	
+	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL" />
+
 	<section if="PRELOAD_ALL">
-		<library name="assets"    preload="true" />
+		<library name="assets" preload="true" />
 	</section>
-	
+
 	<section if="NO_PRELOAD_ALL">
-		<library name="assets"    preload="false" />
+		<library name="assets" preload="false" />
 	</section>
-	
-	<assets path="assets/"    rename="assets"	exclude="*.ogg" if="web"/>
-	<assets path="assets/"    rename="assets"	exclude="*.mp3" unless="web"/>
-	
-	<assets path='example_mods' rename='mods' embed='false'/>
+
+	<assets path="assets/" rename="assets" exclude="*.ogg" if="web" />
+	<assets path="assets/" rename="assets" exclude="*.mp3" unless="web" />
+
+	<assets path='example_mods' rename='mods' embed='false' />
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 	<!-- <template path='mods' /> -->
-	
-	<assets path="CHANGELOG.md" rename='changelog.txt'/>
 
 	<!-- NOTE FOR FUTURE SELF SINCE FONTS ARE ALWAYS FUCKY 
 		TO FIX ONE OF THEM, I CONVERTED IT TO OTF. DUNNO IF YOU NEED TO
@@ -73,7 +71,7 @@
 	<!-- <assets path="assets/fonts" embed='true'/> -->
 	<!-- _______________________________ Libraries ______________________________ -->
 
-	<haxelib name="hxCodec"/>
+	<haxelib name="hxCodec" />
 	<haxelib name="away3d" />
 	<haxelib name="flixel-yc29" rename="flixel" />
 	<haxedev set='webgl' />
@@ -84,7 +82,7 @@
 	<!-- <haxelib name="discord_rpc_yce" if="desktop"/> -->
 
 	<!-- haxelib git linc_discord-rpc https://github.com/Aidan63/linc_discord-rpc !-->
-	<haxelib name="linc_discord-rpc" if="desktop"/>
+	<haxelib name="linc_discord-rpc" if="desktop" />
 
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
 
@@ -129,15 +127,15 @@
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	<icon path="art/icon16.png" size='16'/>
-	<icon path="art/icon32.png" size='32'/>
-	<icon path="art/icon64.png" size='64'/>
+	<icon path="art/icon16.png" size='16' />
+	<icon path="art/icon32.png" size='32' />
+	<icon path="art/icon64.png" size='64' />
 	<icon path="art/iconOG.png" />
 
 	<!-- so that everything within flixel gets compiled which means hscript super powaaah -->
 	<haxeflag name="--macro" value="include('flixel')" />
 	<haxeflag name="--macro" value="include('away3d')" />
-	<haxeflag name="--macro" value="include('sys')" if="sys"/>
+	<haxeflag name="--macro" value="include('sys')" if="sys" />
 
 	<!-- HAXE STUFF !-->
 	<haxeflag name="--macro" value="include('DateTools')" />
@@ -146,7 +144,7 @@
 	<haxeflag name="--macro" value="include('StringBuf')" />
 	<haxeflag name="--macro" value="include('haxe.crypto')" />
 	<haxeflag name="--macro" value="exclude('scripting')" />
-	
+
 	<!-- MACROS & DOCUMENTATION !-->
 	<haxeflag name="--macro" value="funkin.macros.BuildCounterMacro.getBuildNumber()" />
 
@@ -164,7 +162,7 @@
 	<haxedef name="TITLESCREEN_XML" />
 
 	<!-- Comment this out to disable mods folder !-->
-	<haxedef name="MOD_SUPPORT" unless="web"/>
+	<haxedef name="MOD_SUPPORT" unless="web" />
 
 	<!-- Comment this out to disable global scripts !-->
 	<haxedef name="GLOBAL_SCRIPT" />
