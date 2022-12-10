@@ -48,7 +48,7 @@ class CrashHandler {
         e.stopPropagation();
         e.stopImmediatePropagation();
 
-        WindowsAPI.showMessageBox("Codename Engine Crash Handler", 'Uncaught Error:$m\n\n$stackLabel');
+        WindowsAPI.showMessageBox("Codename Engine Crash Handler", 'Uncaught Error:$m\n\n$stackLabel', MSG_ERROR);
         #if sys
         Sys.exit(1);
         #end
