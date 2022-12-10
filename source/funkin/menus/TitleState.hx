@@ -39,9 +39,9 @@ class TitleState extends MusicBeatState
 
 	public var blackScreen:FlxSprite;
 	public var textGroup:FlxGroup;
+	#if !TITLESCREEN_XML
 	public var ngSpr:FlxSprite;
-
-	public var wackyImage:FlxSprite;
+	#end
 
 	override public function create():Void
 	{
@@ -88,13 +88,15 @@ class TitleState extends MusicBeatState
 		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(blackScreen);
 
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadAnimatedGraphic(Paths.image('newgrounds_logo'));
+		#if !TITLESCREEN_XML
+		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadAnimatedGraphic(Paths.image('menus/titlescreen/newgrounds_logo'));
 		add(ngSpr);
 		ngSpr.visible = false;
 		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = true;
+		#end
 
 		FlxG.mouse.visible = false;
 
@@ -263,7 +265,7 @@ class TitleState extends MusicBeatState
 			'newgrounds',
 			{
 				name: "newgroundsLogo",
-				path: "titlescreen/newgrounds_logo",
+				path: "menus/titlescreen/newgrounds_logo",
 				scale: 0.8
 			}
 		]),
@@ -352,7 +354,9 @@ class TitleState extends MusicBeatState
 	{
 		if (!skippedIntro)
 		{
+			#if !TITLESCREEN_XML
 			remove(ngSpr);
+			#end
 
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(blackScreen);

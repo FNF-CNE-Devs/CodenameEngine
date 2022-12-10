@@ -129,7 +129,6 @@ class Strum extends FlxSprite
 
 	public function playAnim(anim:String, force:Bool = true)
 	{
-		var oldAnim = animation.curAnim;
 		animation.play(anim, force);
 		centerOffsets();
 		centerOrigin();

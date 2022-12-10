@@ -37,7 +37,7 @@
             <line text="In association" />
             <line text="with" />
             <line text="Newgrounds" />
-            <sprite path="titlescreen/newgrounds_logo" scale="0.8"/>
+            <sprite path="menus/titlescreen/newgrounds_logo" scale="0.8"/>
         </text>
 
         <text beat="8" /> <!-- clears the screen !-->
