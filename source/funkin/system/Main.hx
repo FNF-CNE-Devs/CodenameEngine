@@ -228,5 +228,9 @@ class Main extends Sprite
             cache.removeFont(key);
         for (key=>sound in cache.sound)
             cache.removeSound(key);
+
+		Paths.assetsTree.clearCache();
+
+		
     }
 }

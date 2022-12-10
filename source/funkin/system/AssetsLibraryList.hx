@@ -68,6 +68,32 @@ class AssetsLibraryList extends AssetLibrary {
         return null;
     }
 
+    public function clearCache() {
+        var libs:Array<AssetLibrary> = [for(lib in libraries) lib];
+        libs.push(this);
+        for(l in libs) {
+            var lib:AssetLibrary = l;
+            if (lib is openfl.utils.AssetLibrary) {
+                var openflLib = cast(lib, openfl.utils.AssetLibrary);
+                @:privateAccess
+                if (openflLib.__proxy != null) lib = openflLib.__proxy;
+            }
+
+            @:privateAccess var cachedAudioBuffers = lib.cachedAudioBuffers;
+            @:privateAccess var cachedBytes = lib.cachedBytes;
+            @:privateAccess var cachedFonts = lib.cachedFonts;
+            @:privateAccess var cachedText = lib.cachedText;
+
+
+            for(buff in cachedAudioBuffers) buff.dispose();
+            cachedAudioBuffers.clear();
+
+            cachedBytes.clear();
+            cachedFonts.clear();
+            cachedText.clear();
+        }
+    }
+
     public function new(?base:AssetLibrary) {
         super();
         if (base == null)

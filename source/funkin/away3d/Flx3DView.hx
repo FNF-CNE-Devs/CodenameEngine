@@ -25,7 +25,7 @@ class Flx3DView extends FlxSprite {
 
     public static function init() {
         __sprite = new Sprite();
-        FlxG.stage.addChild(__sprite);
+        FlxG.game.addChild(__sprite);
     }
     #end
 
