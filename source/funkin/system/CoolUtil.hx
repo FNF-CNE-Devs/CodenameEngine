@@ -49,6 +49,10 @@ class CoolUtil
 		return false;
 	}
 
+	public static function last<T>(array:Array<T>):T {
+		return array[array.length - 1];
+	}
+
 	public static function setFieldDefault<T>(v:Dynamic, name:String, defaultValue:T):T {
 		if (Reflect.hasField(v, name)) {
 			var f:Null<Dynamic> = Reflect.field(v, name);
@@ -272,13 +276,6 @@ class CoolUtil
 	public static function getAtt(xml:Access, name:String) {
 		if (!xml.has.resolve(name)) return null;
 		return xml.att.resolve(name);
-	}
-
-	/**
-	 * Returns last member of array
-	 */
-	public static function last<T>(array:Array<T>):T {
-		return array[array.length-1];
 	}
 
 	public static function loadFrames(path:String, Unique:Bool = false, Key:String = null):FlxFramesCollection {

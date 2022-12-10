@@ -33,6 +33,17 @@ class WindowsAPI {
     }
 
     /**
+     * Shows a message box
+     */
+    public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
+        #if windows
+        native.WinAPI.showMessageBox(caption, message, icon);
+        #else
+        lime.app.Application.current.window.alert(title, text);
+        #end
+    }
+
+    /**
      * Sets the console colors
      */
     public static function setConsoleColors(foregroundColor:ConsoleColor = LIGHTGRAY, ?backgroundColor:ConsoleColor = BLACK) {
@@ -82,4 +93,11 @@ class WindowsAPI {
     var MAGENTA:ConsoleColor = 13;
     var YELLOW:ConsoleColor = 14;
     var WHITE:ConsoleColor = 15;
+}
+
+@:enum abstract MessageBoxIcon(Int) {
+    var MSG_ERROR:MessageBoxIcon = 0x00000010;
+    var MSG_QUESTION:MessageBoxIcon = 0x00000020;
+    var MSG_WARNING:MessageBoxIcon = 0x00000030;
+    var MSG_INFORMATION:MessageBoxIcon = 0x00000040;
 }

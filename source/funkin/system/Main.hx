@@ -133,6 +133,7 @@ class Main extends Sprite
 		#end
 		Paths.assetsTree = new AssetsLibraryList();
 
+		CrashHandler.init();
 		Logs.init();
 		Paths.init();
 		ModsFolder.init();
@@ -231,6 +232,6 @@ class Main extends Sprite
 
 		Paths.assetsTree.clearCache();
 
-		
+
     }
 }
