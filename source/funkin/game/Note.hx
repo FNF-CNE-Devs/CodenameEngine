@@ -97,7 +97,6 @@ class Note extends FlxSprite
 		this.noteTypeID = noteType;
 		isSustainNote = sustainNote;
 
-		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
 		this.strumTime = strumTime;
@@ -161,6 +160,8 @@ class Note extends FlxSprite
 		}
 		else
 		{
+			earlyPressWindow = 1;
+
 			animation.play("scroll");
 		}
 

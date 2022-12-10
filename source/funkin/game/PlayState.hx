@@ -187,6 +187,12 @@ class PlayState extends MusicBeatState
 		new ComboRating(0.9, "S", 0xFF44FFFF),
 		new ComboRating(1, "S++", 0xFF44FFFF),
 	];
+	public var timeRatings:Array<TimeRating> = [
+		new TimeRating(45, "sick", 350, 1),
+		new TimeRating(90, "good", 200, 0.75),
+		new TimeRating(135, "bad", 100, 0.45),
+		new TimeRating(180, "shit", 50, 0.25)
+	];
 
 	#if desktop
 	// Discord RPC variables
@@ -1105,7 +1111,7 @@ class PlayState extends MusicBeatState
 			notes.forEachAlive(function(daNote:Note)
 			{
 				var strum:Strum = null;
-				for (e in (daNote.mustPress ? playerStrums : cpuStrums).members)
+				for (e in(daNote.mustPress ? playerStrums : cpuStrums).members)
 				{
 					if (e.ID == daNote.noteData % 4)
 					{
@@ -1395,49 +1401,33 @@ class PlayState extends MusicBeatState
 		{
 			note.wasGoodHit = true;
 
-			/**
-			 * CALCULATES RATING
-			 */
-			var noteDiff = Math.abs(Conductor.songPosition - note.strumTime);
+			var rating:TimeRating = null;
+			var diff:Float = Math.abs(Conductor.songPosition - note.strumTime);
 
-			var daRating:String = "sick";
-			var score:Int = 300;
-			var accuracy:Float = 1;
-
-			if (noteDiff > Conductor.safeZoneOffset * 0.9)
+			for (e in timeRatings)
 			{
-				daRating = 'shit';
-				score = 50;
-				accuracy = 0.25;
-			}
-			else if (noteDiff > Conductor.safeZoneOffset * 0.75)
-			{
-				daRating = 'bad';
-				score = 100;
-				accuracy = 0.45;
-			}
-			else if (noteDiff > Conductor.safeZoneOffset * 0.2)
-			{
-				daRating = 'good';
-				score = 200;
-				accuracy = 0.75;
+				if (diff <= e.time)
+				{
+					rating = e;
+					break;
+				}
 			}
 
 			var event:NoteHitEvent;
 			if (note.mustPress)
 				event = scripts.event("onPlayerHit",
-					new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, score, note.animSuffix, daRating,
-						note.isSustainNote ? null : accuracy, "game/score/", ''));
+					new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, rating.score, note.animSuffix,
+						rating.rating, note.isSustainNote ? null : rating.accuracy, "game/score/", ''));
 			else
 				event = scripts.event("onDadHit",
-					new NoteHitEvent(note, dad, false, note.noteType, note.strumID, 0, 0, note.animSuffix, daRating, null, "game/score/", ''));
+					new NoteHitEvent(note, dad, false, note.noteType, note.strumID, 0, 0, note.animSuffix, rating.rating, null, "game/score/", ''));
 
 			if (!event.cancelled)
 			{
 				if (event.accuracy != null)
 				{
 					accuracyPressedNotes++;
-					totalAccuracyAmount += accuracy;
+					totalAccuracyAmount += rating.accuracy;
 
 					updateRating();
 				}
@@ -1446,27 +1436,27 @@ class PlayState extends MusicBeatState
 
 				if (event.showRating || (event.showRating == null && event.player && !note.isSustainNote))
 				{
-					var rating:FlxSprite = new FlxSprite(-40, -60);
+					var ratingSpr:FlxSprite = new FlxSprite(-40, -60);
 
-					songScore += score;
+					songScore += rating.score;
 
-					rating.loadAnimatedGraphic(Paths.image('${event.ratingPrefix}$daRating${event.ratingSuffix}'));
-					rating.acceleration.y = 550;
-					rating.velocity.y -= FlxG.random.int(140, 175);
-					rating.velocity.x -= FlxG.random.int(0, 10);
+					ratingSpr.loadAnimatedGraphic(Paths.image('${event.ratingPrefix}${rating.rating}${event.ratingSuffix}'));
+					ratingSpr.acceleration.y = 550;
+					ratingSpr.velocity.y -= FlxG.random.int(140, 175);
+					ratingSpr.velocity.x -= FlxG.random.int(0, 10);
 
 					var comboSpr:FlxSprite = new FlxSprite().loadAnimatedGraphic(Paths.image('${event.ratingPrefix}combo${event.ratingSuffix}'));
 					comboSpr.acceleration.y = 600;
 					comboSpr.velocity.y -= 150;
 					comboSpr.velocity.x += FlxG.random.int(1, 10);
 
-					rating.scale.set(event.ratingScale, event.ratingScale);
-					rating.antialiasing = event.ratingAntialiasing;
+					ratingSpr.scale.set(event.ratingScale, event.ratingScale);
+					ratingSpr.antialiasing = event.ratingAntialiasing;
 					comboSpr.scale.set(event.ratingScale, event.ratingScale);
 					comboSpr.antialiasing = event.ratingAntialiasing;
 
 					comboSpr.updateHitbox();
-					rating.updateHitbox();
+					ratingSpr.updateHitbox();
 
 					var separatedScore:String = Std.string(combo).addZeros(3);
 
@@ -1499,9 +1489,9 @@ class PlayState extends MusicBeatState
 							});
 						}
 					}
-					comboGroup.add(rating);
+					comboGroup.add(ratingSpr);
 
-					FlxTween.tween(rating, {alpha: 0}, 0.2, {
+					FlxTween.tween(ratingSpr, {alpha: 0}, 0.2, {
 						startDelay: Conductor.crochet * 0.001
 					});
 
@@ -1509,10 +1499,10 @@ class PlayState extends MusicBeatState
 						onComplete: function(tween:FlxTween)
 						{
 							comboGroup.remove(comboSpr, true);
-							comboGroup.remove(rating, true);
+							comboGroup.remove(ratingSpr, true);
 							comboSpr.destroy();
 
-							rating.destroy();
+							ratingSpr.destroy();
 						},
 						startDelay: Conductor.crochet * 0.001
 					});
@@ -1613,5 +1603,21 @@ class ComboRating
 		this.percent = percent;
 		this.rating = rating;
 		this.color = color;
+	}
+}
+
+class TimeRating
+{
+	public var time:Float;
+	public var rating:String;
+	public var score:Int;
+	public var accuracy:Float;
+
+	public function new(time:Float, rating:String, score:Int, accuracy:Float)
+	{
+		this.time = time;
+		this.rating = rating;
+		this.score = score;
+		this.accuracy = accuracy;
 	}
 }

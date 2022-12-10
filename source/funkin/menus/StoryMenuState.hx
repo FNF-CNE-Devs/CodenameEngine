@@ -191,7 +191,7 @@ class StoryMenuState extends MusicBeatState
 		{
 			e.targetY = k - curWeek;
 		}
-		tracklist.text = 'TRACKS\n\n${[for (e in weeks[curWeek].songs) if (!e.hide) e.name.toUpperCase()].join('\n')}';
+		tracklist.text = 'TRACKS\n\n${[for (e in weeks[curWeek].songs) if (!e.hide) e.name.toUpperCase()].join('\n')}\n';
 
 		for (i in 0...3)
 			characterSprites.members[i].changeCharacter(characters[weeks[curWeek].chars[i]]);
