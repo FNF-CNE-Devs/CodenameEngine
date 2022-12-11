@@ -1,0 +1,136 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  buildLinux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+      - name: Install Haxelib
+        run: |
+          sudo apt-get install libvlc-dev
+          sudo apt-get install libvlccore-dev
+          haxelib setup ~/haxelib
+          haxelib install lime
+          haxelib install openfl
+          haxelib git flixel-yc29 https://github.com/YoshiCrafter29/flixel
+          haxelib run lime setup
+          haxelib run lime setup flixel
+          haxelib install flixel-tools
+          haxelib install flixel-ui
+          haxelib install flixel-addons
+          haxelib install hxCodec
+          haxelib git hscript-improved https://github.com/YoshiCrafter29/hscript-improved
+          haxelib git linc_discord-rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib git away3d https://github.com/Stilic/away3d
+      - name: Compile
+        run: haxelib run lime build linux
+      - name: Publish artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-build
+          path: ./export/release/linux/bin
+  buildWindows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+      - name: Install Haxelib
+        run: |
+          haxelib setup C:/haxelib
+          haxelib install lime
+          haxelib install openfl
+          haxelib git flixel-yc29 https://github.com/YoshiCrafter29/flixel
+          haxelib run lime setup
+          haxelib run lime setup flixel
+          haxelib install flixel-tools
+          haxelib install flixel-ui
+          haxelib install flixel-addons
+          haxelib install hxCodec
+          haxelib git hscript-improved https://github.com/YoshiCrafter29/hscript-improved
+          haxelib git linc_discord-rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib git away3d https://github.com/Stilic/away3d
+        shell: cmd
+      - name: Compile
+        run: haxelib run lime build windows
+      - name: Publish artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-build
+          path: ./export/release/windows/bin
+  buildMac:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install lime
+          haxelib install openfl
+          haxelib git flixel-yc29 https://github.com/YoshiCrafter29/flixel
+          haxelib run lime setup
+          haxelib run lime setup flixel
+          haxelib install flixel-tools
+          haxelib install flixel-ui
+          haxelib install flixel-addons
+          haxelib install hxCodec
+          haxelib git hscript-improved https://github.com/YoshiCrafter29/hscript-improved
+          haxelib git linc_discord-rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib git away3d https://github.com/Stilic/away3d
+      - name: Compile
+        run: haxelib run lime build mac
+      - name: Publish artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: mac-build
+          path: ./export/release/macos/bin
+  buildHTML:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install lime
+          haxelib install openfl
+          haxelib git flixel-yc29 https://github.com/YoshiCrafter29/flixel
+          haxelib run lime setup
+          haxelib run lime setup flixel
+          haxelib install flixel-tools
+          haxelib install flixel-ui
+          haxelib install flixel-addons
+          haxelib install hxCodec
+          haxelib git hscript-improved https://github.com/YoshiCrafter29/hscript-improved
+          haxelib git away3d https://github.com/Stilic/away3d
+      - name: Compile
+        run: haxelib run lime build html5
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./export/release/html5/bin
