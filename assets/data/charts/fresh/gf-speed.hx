@@ -1,12 +1,12 @@
 function beatHit(curBeat) {
     switch(curBeat) {
         case 16:
-            gfSpeed = 2;
+            gf.danceSpeed = 2;
         case 48:
-            gfSpeed = 1;
+            gf.danceSpeed = 0;
         case 80:
-            gfSpeed = 2;
+            gf.danceSpeed = 2;
         case 112:
-            gfSpeed = 1;
+            gf.danceSpeed = 0;
     }
 }

@@ -127,7 +127,6 @@ class PlayState extends MusicBeatState
 	public var curSong:String = "";
 	public var curStage:String = "";
 
-	public var gfSpeed:Int = 1;
 	public var health:Float = 1;
 	public var combo:Int = 0;
 
@@ -323,10 +322,7 @@ class PlayState extends MusicBeatState
 		scripts.call("create");
 
 		if (gf != null)
-		{
-			gf.danceOnBeat = false;
 			add(gf);
-		}
 
 		add(comboGroup);
 
@@ -509,9 +505,16 @@ class PlayState extends MusicBeatState
 
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
+			// fuck tutorial
+			var charsDanced:Array<Character> = [];
 			for (char in [dad, gf, boyfriend])
-				if (char != null)
+			{
+				if (char != null && !charsDanced.contains(char))
+				{
 					char.dance();
+					charsDanced.push(char);
+				}
+			}
 			countdown(swagCounter++);
 		}, introLength);
 	}
@@ -610,12 +613,9 @@ class PlayState extends MusicBeatState
 		if (songData.noteTypes == null)
 			songData.noteTypes = [];
 
-		var noteData:Array<SwagSection> = songData.notes;
-		var playerCounter:Int = 0;
-		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
 		var stepCrochet = Conductor.stepCrochet;
 
-		for (section in noteData)
+		for (section in songData.notes)
 		{
 			if (section == null || section.sectionNotes == null)
 				continue;
@@ -675,7 +675,6 @@ class PlayState extends MusicBeatState
 					notes.add(swagNote);
 				}
 			}
-			daBeats += 1;
 		}
 		notes.sortNotes();
 	}
@@ -1585,11 +1584,6 @@ class PlayState extends MusicBeatState
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
-
-		if (gf != null && curBeat % gfSpeed == 0)
-		{
-			gf.dance();
-		}
 
 		scripts.call("beatHit", [curBeat]);
 	}

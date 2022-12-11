@@ -211,6 +211,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 			flipX = !flipX;
 		__baseFlipped = flipX;
 		dance();
+		animation.finish();
 		script.call("postCreate");
 	}
 
@@ -255,9 +256,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 				// hardcode custom dance animations here
 				default:
 					if (isDanceLeftDanceRight)
-					{
 						playAnim((danced = !danced) ? 'danceLeft' : 'danceRight', DANCE);
-					}
 					else
 						playAnim('idle', DANCE);
 			}
@@ -265,9 +264,14 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	}
 
 	/**
-	 * Whenever the character should dance on beat or not. Set to false for `gf`, since the dance animation is automatically handled by PlayState.
+	 * Whenever the character should dance on beat or not.
 	 */
 	public var danceOnBeat:Bool = true;
+
+	/**
+	 * The dance speed of the character (works like `gfSpeed`). Set this to 0 if you want the speed to be automatically handled by the game.
+	 */
+	public var danceSpeed:Int = 0;
 
 	public function beatHit(curBeat:Int)
 	{
@@ -282,7 +286,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 				case DANCE:
 					dance();
 				default:
-					if (animation.curAnim == null || animation.curAnim.finished)
+					if ((danceSpeed > 0 && curBeat % danceSpeed == 0) || animation.curAnim == null || animation.curAnim.finished)
 						dance();
 			}
 		}
