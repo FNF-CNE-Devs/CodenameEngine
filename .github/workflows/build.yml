@@ -19,9 +19,9 @@ jobs:
           haxe-version: 4.2.5
       - name: Install Haxelib
         run: |
-          sudo apt-get install libvlc-dev
-          sudo apt-get install libvlccore-dev
+          sudo apt-get install libvlc-dev libvlccore-dev
           haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null
           haxelib install lime
           haxelib install openfl
           haxelib git flixel-yc29 https://github.com/YoshiCrafter29/flixel
@@ -53,6 +53,7 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup C:/haxelib
+          haxelib install hxcpp > nul
           haxelib install lime
           haxelib install openfl
           haxelib git flixel-yc29 https://github.com/YoshiCrafter29/flixel
@@ -85,6 +86,7 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null
           haxelib install lime
           haxelib install openfl
           haxelib git flixel-yc29 https://github.com/YoshiCrafter29/flixel
