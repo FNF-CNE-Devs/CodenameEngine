@@ -13,8 +13,8 @@ Build instructions are below. Press TAB on the main menu to switch mods.
 Also, `lime test windows` uses the source assets folder instead of the export one.
 
 ## CREDITS
+- Credits to [Ne_Eo](https://twitter.com/Ne_Eo_Twitch) and the [3D-HaxeFlixel](https://github.com/lunarcleint/3D-HaxeFlixel) repository for Away3D Flixel support
 - Credits to Smokey555 for the fancy Animate Atlas code (might be replaced soon)
-- Credits to [Ne_Eo](https://twitter.com/Ne_Eo_Twitch) and the [3D-HaxeFlixel](https://github.com/lunarcleint/3D-HaxeFlixel) repository for away3d stuff
 
 ## HOW TO BUILD
 - Install the required libraries as told in the original Funkin' repo (with latest Haxe!)
