@@ -183,17 +183,17 @@ class CoolUtil
 		FlxG.sound.playMusic(path, Volume, Looped, Group);
 
 		var infoPath = '${Path.withoutExtension(path)}.ini';
-		if (Assets.exists(infoPath))
-		{
-			var musicInfo = IniUtils.parseAsset(infoPath, ["BPM" => Std.string(DefaultBPM)]);
+		if (Assets.exists(infoPath)) {
+			var musicInfo = IniUtils.parseAsset(infoPath, [
+				"BPM" => null
+			]);
 			var parsedBPM:Null<Float> = Std.parseFloat(musicInfo["BPM"]);
 			if (parsedBPM == null)
-				Conductor.changeBPM(102);
+				Conductor.changeBPM(DefaultBPM);
 			else
 				Conductor.changeBPM(parsedBPM);
-		}
-		else
-			Conductor.changeBPM(102);
+		} else
+			Conductor.changeBPM(DefaultBPM);
 	}
 
 	/**

@@ -136,6 +136,8 @@
 	<haxeflag name="--macro" value="include('flixel')" />
 	<haxeflag name="--macro" value="include('away3d')" />
 	<haxeflag name="--macro" value="include('sys')" if="sys" />
+	<haxeflag name="--macro" value="include('flx3d')" />
+	<haxeflag name="--macro" value="include('sys')" if="sys"/>
 
 	<!-- HAXE STUFF !-->
 	<haxeflag name="--macro" value="include('DateTools')" />
@@ -143,6 +145,9 @@
 	<haxeflag name="--macro" value="include('Lambda')" />
 	<haxeflag name="--macro" value="include('StringBuf')" />
 	<haxeflag name="--macro" value="include('haxe.crypto')" />
+	<haxeflag name="--macro" value="include('haxe.display')" />
+	<haxeflag name="--macro" value="include('haxe.exceptions')" />
+	<haxeflag name="--macro" value="include('haxe.extern')" />
 	<haxeflag name="--macro" value="exclude('scripting')" />
 
 	<!-- MACROS & DOCUMENTATION !-->

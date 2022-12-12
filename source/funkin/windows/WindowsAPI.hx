@@ -24,15 +24,15 @@ class WindowsAPI
 		#end
 	}
 
-	/**
-	 * Sets the window titlebar to dark mode (Windows 10 only)
-	 */
-	public static function setDarkMode(enable:Bool)
-	{
-		#if windows
-		native.WinAPI.setDarkMode(enable);
-		#end
-	}
+  /**
+   * Sets the window titlebar to dark mode (Windows 10 only)
+   */
+  public static function setDarkMode(enable:Bool)
+  {
+      #if windows
+      native.WinAPI.setDarkMode(enable);
+      #end
+  }
 
 	/**
 	 * Shows a message box
