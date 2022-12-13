@@ -792,10 +792,10 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
-		// if (__wasAutoPause && __songPlaying) {
-			// inst.play();
-			// vocals.play();
-		// }
+		if (__wasAutoPause && __songPlaying) {
+			inst.play();
+			vocals.play();
+		}
 
 		super.onFocus();
 	}
@@ -809,11 +809,11 @@ class PlayState extends MusicBeatState
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + difficultyText + ")", iconRPC);
 		}
 		#end
-		// if (__wasAutoPause = FlxG.autoPause) {
-		// 	__songPlaying = inst.playing;
-		// 	inst.pause();
-		// 	vocals.pause();
-		// }
+		if (__wasAutoPause = FlxG.autoPause) {
+			__songPlaying = inst.playing;
+			inst.pause();
+			vocals.pause();
+		}
 			
 
 		super.onFocusLost();

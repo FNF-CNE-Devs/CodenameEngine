@@ -138,7 +138,7 @@
 	<haxeflag name="--macro" value="include('flixel')" />
 	<haxeflag name="--macro" value="include('away3d')" />
 	<haxeflag name="--macro" value="include('flx3d')" />
-	<haxeflag name="--macro" value="include('sys')" if="sys"/>
+	<haxeflag name="--macro" value="include('sys')" unless="html5"/>
 
 	<!-- HAXE STUFF !-->
 	<haxeflag name="--macro" value="include('DateTools')" />

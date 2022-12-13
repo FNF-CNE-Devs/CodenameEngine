@@ -8,7 +8,24 @@ import flixel.math.FlxMath;
 import funkin.interfaces.IBeatReceiver;
 import flixel.FlxSprite;
 
+@:enum
+abstract XMLAnimType(Int) {
+    var NONE = 0;
+    var BEAT = 1;
+    var LOOP = 2;
+
+    public static function fromString(str:String, def:XMLAnimType = NONE) {
+        return switch(str.trim().toLowerCase()) {
+            case "none":                NONE;
+            case "beat" | "onbeat":     BEAT;
+            case "loop":                LOOP;
+            default:                    def;
+        }
+    }
+}
+
 class XMLSprite extends FlxSprite implements IBeatReceiver {
+    public var spriteAnimType:XMLAnimType = NONE;
     public var beatAnims:Array<String> = [];
     public var name:String;
     public var zoomFactor:Float = 1;

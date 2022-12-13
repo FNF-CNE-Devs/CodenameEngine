@@ -58,6 +58,7 @@ class FlxView3D extends FlxSprite
 	{
 		Main.instance.removeChild(view);
 		view.dispose();
+		_loader.disposeWithChildren();
 		super.destroy();
 		if (bmp != null)
 		{
