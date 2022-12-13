@@ -74,7 +74,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	public var controls(get, never):Controls;
 
 	/**
-	 * Current injected script attached to the state. To add one, create a file at path "scripts/stateName" (ex: "scripts/")
+	 * Current injected script attached to the state. To add one, create a file at path "data/states/stateName" (ex: data/states/FreeplayState)
 	 */
 	public var stateScript:Script;
 
