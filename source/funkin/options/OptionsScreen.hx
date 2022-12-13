@@ -102,7 +102,7 @@ class OptionsScreen extends MusicBeatState {
         
         FlxTransitionableState.skipNextTransOut = true;
         FlxTransitionableState.skipNextTransIn = true;
-        FlxG.switchState(new OptionsMenu(false));
+        FlxG.switchState(new OptionsMenu());
     }
 
     public function changeSelection(change:Int) {
