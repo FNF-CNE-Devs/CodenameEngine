@@ -161,6 +161,7 @@ class Options
 			});
 			__eventAdded = true;
 		}
+		FlxG.sound.volume = volume;
 		applySettings();
 	}
 
@@ -168,7 +169,6 @@ class Options
 		PlayerSettings.player1.setKeyboardScheme(Solo);
 		FlxG.game.stage.quality = (FlxG.forceNoAntialiasing = !antialiasing) ? LOW : BEST;
 		FlxG.autoPause = autoPause;
-		FlxG.sound.volume = volume;
 	}
 
 	public static function save() {
