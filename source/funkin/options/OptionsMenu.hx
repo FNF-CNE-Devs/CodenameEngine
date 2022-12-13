@@ -75,7 +75,7 @@ class OptionsMenu extends MusicBeatState {
         add(alphabets);
         changeSelection(1);
 
-        CoolUtil.playMenuMusic();
+        CoolUtil.playMenuSong();
     }
 
     public override function update(elapsed:Float) {
