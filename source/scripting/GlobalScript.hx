@@ -4,7 +4,7 @@ import flixel.FlxState;
 /**
  * A global script is a special kind of script that runs on everywhere on your mod: menus, game, etc...
  * 
- * To create one, go to data and create a script named "global", then press F5 in game.
+ * To create one, go to data and create a script named "global", then press F5 in game to hot reload.
  * 
  * All flixel signals are automatically binded, as shown below.
  */
