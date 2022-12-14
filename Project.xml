@@ -134,22 +134,33 @@
 	<icon path="art/icon64.png" size='64'/>
 	<icon path="art/iconOG.png" />
 
-	<!-- so that everything within flixel gets compiled which means hscript super powaaah -->
-	<haxeflag name="--macro" value="include('flixel')" />
-	<haxeflag name="--macro" value="include('away3d')" />
-	<haxeflag name="--macro" value="include('flx3d')" />
-	<haxeflag name="--macro" value="include('sys')" unless="html5"/>
+	
+	<!-- _________________________________ HScript classes _______________________________ -->
+	
+	<!-- Comment this off to prevent additional classes from being compiled.
+		 Reduces compilation time at the cost of less HScript flexibility. !-->
+	<haxedef name="COMPILE_ALL_CLASSES" />
 
-	<!-- HAXE STUFF !-->
-	<haxeflag name="--macro" value="include('DateTools')" />
-	<haxeflag name="--macro" value="include('EReg')" />
-	<haxeflag name="--macro" value="include('Lambda')" />
-	<haxeflag name="--macro" value="include('StringBuf')" />
-	<haxeflag name="--macro" value="include('haxe.crypto')" />
-	<haxeflag name="--macro" value="include('haxe.display')" />
-	<haxeflag name="--macro" value="include('haxe.exceptions')" />
-	<haxeflag name="--macro" value="include('haxe.extern')" />
-	<haxeflag name="--macro" value="exclude('scripting')" />
+	<section if="COMPILE_ALL_CLASSES">
+		<haxeflag name="-dce" value="no" />
+	
+		<!-- so that everything within flixel gets compiled which means hscript super powaaah -->
+		<haxeflag name="--macro" value="include('flixel')" />
+		<haxeflag name="--macro" value="include('away3d')" />
+		<haxeflag name="--macro" value="include('flx3d')" />
+		<haxeflag name="--macro" value="include('sys')" unless="html5"/>
+	
+		<!-- HAXE STUFF !-->
+		<haxeflag name="--macro" value="include('DateTools')" />
+		<haxeflag name="--macro" value="include('EReg')" />
+		<haxeflag name="--macro" value="include('Lambda')" />
+		<haxeflag name="--macro" value="include('StringBuf')" />
+		<haxeflag name="--macro" value="include('haxe.crypto')" />
+		<haxeflag name="--macro" value="include('haxe.display')" />
+		<haxeflag name="--macro" value="include('haxe.exceptions')" />
+		<haxeflag name="--macro" value="include('haxe.extern')" />
+		<haxeflag name="--macro" value="exclude('scripting')" />
+	</section>
 	
 	<!-- MACROS & DOCUMENTATION !-->
 	<haxeflag name="--macro" value="funkin.macros.BuildCounterMacro.getBuildNumber()" />
@@ -160,9 +171,7 @@
 	<haxedef name="HXCPP_DEBUG_LINK" if="release" />
 	<haxedef name="hscriptPos" /> <!-- for logging -->
 
-	<!-- 
-		ENGINE SETTINGS
-	!-->
+	<!-- _________________________________ Engine Settings _______________________________ -->
 
 	<!-- Comment this out to disable titlescreen.xml !-->
 	<haxedef name="TITLESCREEN_XML" />
