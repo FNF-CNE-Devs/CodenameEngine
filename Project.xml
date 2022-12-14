@@ -139,7 +139,7 @@
 	
 	<!-- Comment this off to prevent additional classes from being compiled.
 		 Reduces compilation time at the cost of less HScript flexibility. !-->
-	<haxedef name="COMPILE_ALL_CLASSES" />
+	<define name="COMPILE_ALL_CLASSES" />
 
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
