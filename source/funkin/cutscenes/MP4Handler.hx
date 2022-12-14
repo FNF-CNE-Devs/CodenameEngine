@@ -1,6 +1,6 @@
 package funkin.cutscenes;
 
-#if sys
+#if VIDEO_CUTSCENES
 import vlc.bitmap.VlcBitmap;
 import flixel.util.FlxTimer;
 import funkin.options.PlayerSettings;
