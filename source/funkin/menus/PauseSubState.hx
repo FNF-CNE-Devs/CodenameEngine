@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import funkin.options.OptionsMenu;
 import flixel.FlxCamera;
 import funkin.scripting.events.PauseCreationEvent;
 import funkin.scripting.events.NameEvent;
@@ -146,6 +147,8 @@ class PauseSubState extends MusicBeatSubstate
 			case "Change Controls":
 				persistentDraw = false;
 				openSubState(new KeybindsOptions());
+			case "Options":
+				FlxG.switchState(new OptionsMenu(true));
 			case "Exit to menu":
 				FlxG.switchState(new MainMenuState());
 		}

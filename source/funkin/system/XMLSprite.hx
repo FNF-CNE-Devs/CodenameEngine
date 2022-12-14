@@ -8,98 +8,103 @@ import flixel.math.FlxMath;
 import funkin.interfaces.IBeatReceiver;
 import flixel.FlxSprite;
 
-class XMLSprite extends FlxSprite implements IBeatReceiver
-{
-	public var beatAnims:Array<String> = [];
-	public var name:String;
-	public var zoomFactor:Float = 1;
-	public var initialZoom:Float = 1;
+@:enum
+abstract XMLAnimType(Int) {
+    var NONE = 0;
+    var BEAT = 1;
+    var LOOP = 2;
 
-	public function beatHit(curBeat:Int)
-	{
-		if (beatAnims.length > 0)
-		{
-			var anim = beatAnims[FlxMath.wrap(curBeat, 0, beatAnims.length - 1)];
-			if (anim != null && anim != "null" && anim != "none")
-				animation.play(anim);
-		}
-	}
+    public static function fromString(str:String, def:XMLAnimType = NONE) {
+        return switch(str.trim().toLowerCase()) {
+            case "none":                NONE;
+            case "beat" | "onbeat":     BEAT;
+            case "loop":                LOOP;
+            default:                    def;
+        }
+    }
+}
 
-	public function stepHit(curBeat:Int)
-	{
-	}
+class XMLSprite extends FlxSprite implements IBeatReceiver {
+    public var spriteAnimType:XMLAnimType = NONE;
+    public var beatAnims:Array<String> = [];
+    public var name:String;
+    public var zoomFactor:Float = 1;
+    public var initialZoom:Float = 1;
 
-	public override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
-	{
-		__doPreZoomScaleProcedure(camera);
-		var r = super.getScreenBounds(newRect, camera);
-		__doPostZoomScaleProcedure();
-		return r;
-	}
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+    }
 
-	public override function drawComplex(camera:FlxCamera)
-	{
-		super.drawComplex(camera);
-	}
+    public function beatHit(curBeat:Int) {
+        if (beatAnims.length > 0) {
+            var anim = beatAnims[FlxMath.wrap(curBeat, 0, beatAnims.length-1)];
+            if (anim != null && anim != "null" && anim != "none")
+                animation.play(anim);
+        }
+    }
+    public function stepHit(curBeat:Int) {}
 
-	public override function doAdditionalMatrixStuff(matrix:FlxMatrix, camera:FlxCamera)
-	{
-		super.doAdditionalMatrixStuff(matrix, camera);
-		matrix.translate(-camera.width / 2, -camera.height / 2);
+    public override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect {
+        __doPreZoomScaleProcedure(camera);
+        var r = super.getScreenBounds(newRect, camera);
+        __doPostZoomScaleProcedure();
+        return r;
+    }
+    public override function drawComplex(camera:FlxCamera) {
+        super.drawComplex(camera);
+    }
 
-		var requestedZoom = FlxMath.lerp(1, camera.zoom, zoomFactor);
-		var diff = requestedZoom / camera.zoom;
-		matrix.scale(diff, diff);
-		matrix.translate(camera.width / 2, camera.height / 2);
-	}
+    public override function doAdditionalMatrixStuff(matrix:FlxMatrix, camera:FlxCamera) {
+        super.doAdditionalMatrixStuff(matrix, camera);
+        matrix.translate(-camera.width / 2, -camera.height / 2);
 
-	public override function getScreenPosition(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
-	{
-		if (__shouldDoScaleProcedure())
-		{
-			__oldScale = FlxPoint.get(scrollFactor.x, scrollFactor.y);
-			var requestedZoom = FlxMath.lerp(initialZoom, camera.zoom, zoomFactor);
-			var diff = requestedZoom / camera.zoom;
+        var requestedZoom = FlxMath.lerp(1, camera.zoom, zoomFactor);
+        var diff = requestedZoom / camera.zoom;
+        matrix.scale(diff, diff);
+        matrix.translate(camera.width / 2, camera.height / 2);
+    }
 
-			scrollFactor.scale(1 / diff);
+    public override function getScreenPosition(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint {
+        if (__shouldDoScaleProcedure()) {
+            __oldScale = FlxPoint.get(scrollFactor.x, scrollFactor.y);
+            var requestedZoom = FlxMath.lerp(initialZoom, camera.zoom, zoomFactor);
+            var diff = requestedZoom / camera.zoom;
 
-			var r = super.getScreenPosition(point, Camera);
+            scrollFactor.scale(1/diff);
 
-			scrollFactor.set(__oldScale.x, __oldScale.y);
-			__oldScale.put();
-			__oldScale = null;
+            var r = super.getScreenPosition(point, Camera);
 
-			return r;
-		}
-		return super.getScreenPosition(point, Camera);
-	}
+            scrollFactor.set(__oldScale.x, __oldScale.y);
+            __oldScale.put();
+            __oldScale = null;
 
-	// SCALING FUNCS
-	#if REGION
-	private inline function __shouldDoScaleProcedure()
-		return zoomFactor != 1;
+            return r;
+        }
+        return super.getScreenPosition(point, Camera);
+    }
 
-	var __oldScale:FlxPoint;
-	var __skipZoomProcedure:Bool = false;
+    // SCALING FUNCS
+    #if REGION
+    private inline function __shouldDoScaleProcedure()
+        return zoomFactor != 1;
 
-	private function __doPreZoomScaleProcedure(camera:FlxCamera)
-	{
-		if (__skipZoomProcedure = !__shouldDoScaleProcedure())
-			return;
-		__oldScale = FlxPoint.get(scale.x, scale.y);
-		var requestedZoom = FlxMath.lerp(initialZoom, camera.zoom, zoomFactor);
-		var diff = requestedZoom / camera.zoom;
+    var __oldScale:FlxPoint;
+    var __skipZoomProcedure:Bool = false;
 
-		scale.scale(diff);
-	}
+    private function __doPreZoomScaleProcedure(camera:FlxCamera) {
+        if (__skipZoomProcedure = !__shouldDoScaleProcedure()) return;
+        __oldScale = FlxPoint.get(scale.x, scale.y);
+        var requestedZoom = FlxMath.lerp(initialZoom, camera.zoom, zoomFactor);
+        var diff = requestedZoom / camera.zoom;
 
-	private function __doPostZoomScaleProcedure()
-	{
-		if (__skipZoomProcedure)
-			return;
-		scale.set(__oldScale.x, __oldScale.y);
-		__oldScale.put();
-		__oldScale = null;
-	}
-	#end
+        scale.scale(diff);
+    }
+
+    private function __doPostZoomScaleProcedure() {
+        if (__skipZoomProcedure) return;
+        scale.set(__oldScale.x, __oldScale.y);
+        __oldScale.put();
+        __oldScale = null;
+    }
+    #end
 }

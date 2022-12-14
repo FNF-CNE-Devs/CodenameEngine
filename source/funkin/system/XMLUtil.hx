@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.system.XMLSprite.XMLAnimType;
 import flixel.math.FlxMath;
 import funkin.interfaces.IBeatReceiver;
 import haxe.xml.Access;
@@ -52,16 +53,18 @@ class XMLUtil
 	/**
 	 * Creates a new sprite based on a XML node.
 	 */
-	public static function createSpriteFromXML(node:Access, parentFolder:String = "", ?cl:Class<XMLSprite>):XMLSprite
-	{
-		if (parentFolder == null)
-			parentFolder = "";
+	public static function createSpriteFromXML(node:Access, parentFolder:String = "", defaultAnimType:XMLAnimType = BEAT, ?cl:Class<XMLSprite>):XMLSprite {
+		if (parentFolder == null) parentFolder = "";
 
-		var spr = cl != null ? Type.createInstance(cl, []) : new XMLSprite();
+		var spr:XMLSprite = cl != null ? Type.createInstance(cl, []) : new XMLSprite();
 		spr.name = node.getAtt("name");
 		spr.antialiasing = true;
 
 		spr.loadAnimatedGraphic(Paths.image('$parentFolder${node.getAtt("sprite")}', null, true));
+
+		spr.spriteAnimType = defaultAnimType;
+		if (node.has.type)
+			spr.spriteAnimType = XMLAnimType.fromString(node.att.type, spr.spriteAnimType);
 
 		var x:Null<Float> = node.has.x ? Std.parseFloat(node.att.x) : null;
 		var y:Null<Float> = node.has.y ? Std.parseFloat(node.att.y) : null;
@@ -114,32 +117,30 @@ class XMLUtil
 	 * @param sprite Destination sprite
 	 * @param anim Animation (Must be a `anim` XML node)
 	 */
-	public static function addXMLAnimation(sprite:FlxSprite, anim:Access, loop:Bool = false):ErrorCode
-	{
+	public static function addXMLAnimation(sprite:FlxSprite, anim:Access, loop:Bool = false):ErrorCode {
+		var animType:XMLAnimType = NONE;
+		if (sprite is XMLSprite)
+			animType = cast(sprite, XMLSprite).spriteAnimType;
+
 		var animData:AnimData = {
 			name: null,
 			anim: null,
 			fps: 24,
 			loop: loop,
+			animType: animType,
 			x: 0,
 			y: 0,
 			indices: []
 		};
 
-		if (anim.has.name)
-			animData.name = anim.att.name;
-		if (anim.has.anim)
-			animData.anim = anim.att.anim;
-		if (anim.has.fps)
-			animData.fps = Std.parseInt(anim.att.fps);
-		if (anim.has.x)
-			animData.x = Std.parseFloat(anim.att.x);
-		if (anim.has.y)
-			animData.y = Std.parseFloat(anim.att.y);
-		if (anim.has.loop)
-			animData.loop = anim.att.loop == "true";
-		if (anim.has.indices)
-		{
+		if (anim.has.name) animData.name = anim.att.name;
+		if (anim.has.type) animData.animType = XMLAnimType.fromString(anim.att.type, animData.animType);
+		if (anim.has.anim) animData.anim = anim.att.anim;
+		if (anim.has.fps) animData.fps = Std.parseInt(anim.att.fps);
+		if (anim.has.x) animData.x = Std.parseFloat(anim.att.x);
+		if (anim.has.y) animData.y = Std.parseFloat(anim.att.y);
+		if (anim.has.loop) animData.loop = anim.att.loop == "true";
+		if (anim.has.indices) {
 			var indicesSplit = anim.att.indices.split(",");
 			for (indice in indicesSplit)
 			{
@@ -162,7 +163,18 @@ class XMLUtil
 			if (sprite is IOffsetCompatible)
 				cast(sprite, IOffsetCompatible).addOffset(animData.name, animData.x, animData.y);
 
-			return OK;
+			if (sprite is XMLSprite) {
+				var xmlSpr = cast(sprite, XMLSprite);
+				switch(animData.animType) {
+					case BEAT:
+						xmlSpr.beatAnims.push(animData.name);
+					case LOOP:
+						xmlSpr.animation.play(animData.name);
+					default:
+						// nothing
+				}
+			}
+            return OK;
 		}
 		return MISSING_PROPERTY;
 	}
@@ -177,4 +189,5 @@ typedef AnimData =
 	var x:Float;
 	var y:Float;
 	var indices:Array<Int>;
+	var animType:XMLAnimType;
 }

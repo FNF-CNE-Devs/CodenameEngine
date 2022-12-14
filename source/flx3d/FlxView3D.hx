@@ -48,9 +48,7 @@ class FlxView3D extends FlxSprite
 	private function dispose<T:IAsset>(obj:Null<T>):T // ! CALL THIS WHEN YOU DESTROY YOUR SCENE
 	{
 		if (obj != null)
-		{
 			obj.dispose();
-		}
 		return null;
 	}
 
@@ -58,6 +56,7 @@ class FlxView3D extends FlxSprite
 	{
 		Main.instance.removeChild(view);
 		view.dispose();
+		_loader.disposeWithChildren();
 		super.destroy();
 		if (bmp != null)
 		{

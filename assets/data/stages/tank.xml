@@ -12,7 +12,7 @@
     <sprite name="smokeLeft" x="-200" y="-100" sprite="smokeLeft" scroll="0.4" zoomfactor="0.6"/>
     <sprite name="smokeRight" x="1100" y="-100" sprite="smokeRight" scroll="0.4" zoomfactor="0.6"/>
     <sprite name="tankWatchtower" x="100" y="50" sprite="tankWatchtower" scroll="0.5" onBeat="true" zoomfactor="0.7"/>
-    <sprite name="tankRolling" x="300" y="300" sprite="tankRolling" scroll="0.5" zoomfactor="0.8"/>
+    <sprite name="tankRolling" x="300" y="300" sprite="tankRolling" scroll="0.5" zoomfactor="0.8" type="loop"/>
     <sprite name="tankGround" x="-420" y="-150" sprite="tankGround" scale="1.15" updateHitbox="true" zoomfactor="1.0"/>
 
     <!-- CHARACTERS -->
