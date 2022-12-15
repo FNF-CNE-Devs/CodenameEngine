@@ -103,33 +103,3 @@ jobs:
         with:
           name: mac-build
           path: ./export/release/macos/bin
-  buildHTML:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: krdlab/setup-haxe@master
-        with:
-          haxe-version: 4.2.5
-      - name: Install Haxelib
-        run: |
-          haxelib setup ~/haxelib
-          haxelib install lime
-          haxelib install openfl
-          haxelib git flixel-yc29 https://github.com/YoshiCrafter29/flixel
-          haxelib run lime setup
-          haxelib run lime setup flixel
-          haxelib install flixel-tools
-          haxelib install flixel-ui
-          haxelib install flixel-addons
-          haxelib install hxCodec
-          haxelib git hscript-improved https://github.com/YoshiCrafter29/hscript-improved
-          haxelib git away3d https://github.com/Stilic/away3d
-      - name: Compile
-        run: haxelib run lime build html5
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./export/release/html5/bin
