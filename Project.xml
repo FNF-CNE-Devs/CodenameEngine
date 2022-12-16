@@ -114,11 +114,13 @@
 	<haxedef name="USE_ADAPTED_ASSETS" />
 
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
-	<haxedef name="VIDEO_CUTSCENES" unless="web" />
+	<define name="VIDEO_CUTSCENES" unless="web" />
 	
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
+	<haxedef name="VIDEO_CUTSCENES" if="VIDEO_CUTSCENES" />
+	
 	<haxelib name="hxCodec" if="VIDEO_CUTSCENES" />
 	<haxelib name="away3d" />
 	
