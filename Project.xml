@@ -95,6 +95,9 @@
 
 	<!-- _________________________________ Engine Settings _______________________________ -->
 
+	<!-- Comment this out to disable updates !-->
+	<define name="UPDATE_CHECKING" />
+
 	<!-- Comment this out to disable titlescreen.xml !-->
 	<haxedef name="TITLESCREEN_XML" />
 
@@ -117,9 +120,10 @@
 	<define name="VIDEO_CUTSCENES" unless="web" />
 	
 
+	<haxedef name="VIDEO_CUTSCENES" if="VIDEO_CUTSCENES" />
+	<haxedef name="UPDATE_CHECKING" if="UPDATE_CHECKING" />
 	<!-- _______________________________ Libraries ______________________________ -->
 
-	<haxedef name="VIDEO_CUTSCENES" if="VIDEO_CUTSCENES" />
 	
 	<haxelib name="hxCodec" if="VIDEO_CUTSCENES" />
 	<haxelib name="away3d" />
@@ -129,6 +133,8 @@
 
 	<haxelib name="hscript-improved" />
 	<haxelib name="linc_discord-rpc" if="desktop"/>
+
+	<haxelib name="markdown" if="UPDATE_CHECKING" />
 	
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
 	

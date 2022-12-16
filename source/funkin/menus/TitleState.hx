@@ -1,6 +1,5 @@
 package funkin.menus;
 
-import funkin.system.UpdateUtil;
 import funkin.github.GitHub;
 import funkin.system.MusicBeatGroup;
 import funkin.system.XMLUtil;
@@ -176,12 +175,12 @@ class TitleState extends MusicBeatState
 
 		new FlxTimer().start(2, function(tmr:FlxTimer)
 		{
-			/*
-			UpdateUtil.checkForUpdates(function(newUpdate) {
-
-			});
-			*/
-			FlxG.switchState(new MainMenuState());
+			var report = funkin.updating.UpdateUtil.checkForUpdates();
+			if (report.newUpdate) {
+				FlxG.switchState(new funkin.updating.UpdateScreen(report));
+			} else {
+				FlxG.switchState(new MainMenuState());
+			}
 		});
 	}
 
