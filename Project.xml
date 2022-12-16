@@ -96,7 +96,7 @@
 	<!-- _________________________________ Engine Settings _______________________________ -->
 
 	<!-- Comment this out to disable updates !-->
-	<define name="UPDATE_CHECKING" />
+	<!-- <define name="UPDATE_CHECKING" /> -->
 
 	<!-- Comment this out to disable titlescreen.xml !-->
 	<haxedef name="TITLESCREEN_XML" />
@@ -151,7 +151,7 @@
 		<haxeflag name="--macro" value="include('flixel')" />
 		<haxeflag name="--macro" value="include('away3d')" />
 		<haxeflag name="--macro" value="include('flx3d')" />
-		<haxeflag name="--macro" value="include('sys')" unless="html5"/>
+		<haxeflag name="--macro" value="include('sys')" unless="web"/>
 	
 		<!-- HAXE STUFF !-->
 		<haxeflag name="--macro" value="include('DateTools')" />
@@ -164,6 +164,7 @@
 		<haxeflag name="--macro" value="include('haxe.extern')" />
 		<haxeflag name="--macro" value="exclude('scripting')" />
 	</section>
+	<haxeflag name="--macro" value="exclude('funkin.updating')" unless="UPDATE_CHECKING"/>
 	
 	<!-- MACROS & DOCUMENTATION !-->
 	<haxeflag name="--macro" value="funkin.macros.BuildCounterMacro.getBuildNumber()" />

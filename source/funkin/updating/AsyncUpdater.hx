@@ -1,5 +1,15 @@
 package funkin.updating;
 
+import haxe.zip.Reader;
+import funkin.system.ZipUtils;
+import haxe.io.Path;
+import openfl.utils.ByteArray;
+import sys.io.File;
+import sys.io.FileOutput;
+import openfl.events.Event;
+import openfl.events.ProgressEvent;
+import openfl.net.URLRequest;
+import openfl.net.URLLoader;
 import sys.FileSystem;
 import funkin.github.GitHubRelease;
 
@@ -15,13 +25,98 @@ class AsyncUpdater {
     }
     #end
     
+    
+    #if windows 
+    public var executableGitHubName:String = "update-windows.exe";
+    public var executableName:String = "CodenameEngine.exe";
+    #end
+    #if linux
+    public var executableGitHubName:String = "update-linux";
+    public var executableName:String = "CodenameEngine";
+    #end
+
     public var releases:Array<GitHubRelease>;
     public var progress:UpdaterProgress = new UpdaterProgress();
     public var path:String;
+    public var downloadStream:URLLoader;
     
     public function installUpdates() {
         prepareInstallationEnvironment();
+        downloadFiles();
+    }
 
+    public function installFiles(files:Array<String>) {
+        progress.step = INSTALLING;
+        for(e in files) {
+            var path = '$path$e';
+            trace('extracting file ${path}');
+            var reader = ZipUtils.openZip(path);
+            
+            progress.curZipProgress = new ZipProgress();
+            ZipUtils.uncompressZip(reader, './', null, progress.curZipProgress);
+        }
+    }
+
+    public function downloadFiles() {
+        var files:Array<String> = [];
+        var fileNames:Array<String> = [];
+        var exePath:String = "";
+        for(r in releases) {
+            for(e in r.assets) {
+                if (e.name.toLowerCase() == "update-assets.zip") {
+                    files.push(e.browser_download_url);
+                    fileNames.push('${Path.withoutExtension(e.name)}-${r.tag_name}.${Path.extension(e.name)}');
+                } else if (e.name.toLowerCase() == executableGitHubName) {
+                    exePath = e.browser_download_url;
+                }
+            }
+        }
+        progress.curFile = 0;
+        progress.files = files.length;
+        progress.step = DOWNLOADING_ASSETS;
+        trace('starting assets download');
+        doFile([for(e in files) e], [for(e in fileNames) e], function() {
+            progress.curFile = 0;
+            progress.files = 1;
+            progress.step = DOWNLOADING_EXECUTABLE;
+            trace('starting exe download');
+            // doFile([exePath], [executableName], function() {
+                trace('done, starting installation');
+                installFiles(fileNames);
+            // });
+        });
+    }
+
+    public function doFile(files:Array<String>, fileNames:Array<String>, onFinish:Void->Void) {
+        var f = files.shift();
+        if (f == null) {
+            onFinish();
+            return;
+        }
+        var fn = fileNames.shift();
+        trace('downloading $f ($fn)');
+        progress.curFile++;
+        downloadStream = new URLLoader();
+		downloadStream.dataFormat = BINARY;
+
+		downloadStream.addEventListener(ProgressEvent.PROGRESS, function(e) {
+			progress.bytesLoaded = e.bytesLoaded;
+            progress.bytesTotal = e.bytesTotal;
+            trace('${progress.bytesLoaded} / ${progress.bytesTotal}');
+		});
+        downloadStream.addEventListener(Event.COMPLETE, function(e) {
+			var fileOutput:FileOutput = File.write('$path$fn', true);
+
+			var data:ByteArray = new ByteArray();
+			downloadStream.data.readBytes(data, 0, downloadStream.data.length - downloadStream.data.position);
+			fileOutput.writeBytes(data, 0, data.length);
+			fileOutput.flush();
+
+			fileOutput.close();
+			doFile(files, fileNames, onFinish);
+		});
+
+        downloadStream.load(new URLRequest(f));
     }
 
     public function prepareInstallationEnvironment() {
@@ -39,6 +134,11 @@ class AsyncUpdater {
 
 class UpdaterProgress {
     public var step:UpdaterStep = PREPARING;
+    public var curFile:Int = 0;
+    public var files:Int = 0;
+    public var bytesLoaded:Float = 0;
+    public var bytesTotal:Float = 0;
+    public var curZipProgress:ZipProgress = null;
 
     public function new() {}
 }

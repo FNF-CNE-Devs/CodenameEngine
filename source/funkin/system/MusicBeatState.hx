@@ -1,21 +1,15 @@
 package funkin.system;
 
-import sys.thread.Thread;
-import flixel.FlxBasic;
 import funkin.scripting.DummyScript;
 import flixel.FlxState;
 import flixel.FlxSubState;
 import funkin.scripting.events.*;
 import funkin.scripting.Script;
 import funkin.interfaces.IBeatReceiver;
-import funkin.system.Conductor.BPMChangeEvent;
 import funkin.system.Conductor;
 import flixel.FlxG;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.FlxUIState;
-import flixel.math.FlxRect;
 import flixel.math.FlxMath;
-import flixel.util.FlxTimer;
 import funkin.options.PlayerSettings;
 
 class MusicBeatState extends FlxUIState implements IBeatReceiver

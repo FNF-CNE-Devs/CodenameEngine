@@ -175,12 +175,16 @@ class TitleState extends MusicBeatState
 
 		new FlxTimer().start(2, function(tmr:FlxTimer)
 		{
+			#if UPDATE_CHECKING
 			var report = funkin.updating.UpdateUtil.checkForUpdates();
 			if (report.newUpdate) {
 				FlxG.switchState(new funkin.updating.UpdateScreen(report));
 			} else {
 				FlxG.switchState(new MainMenuState());
 			}
+			#else
+			FlxG.switchState(new MainMenuState());
+			#end
 		});
 	}
 

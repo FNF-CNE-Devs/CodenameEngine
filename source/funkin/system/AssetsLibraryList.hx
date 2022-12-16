@@ -45,11 +45,13 @@ class AssetsLibraryList extends AssetLibrary {
             }
 
             // TODO: do base folder scanning
+            #if MODS_FOLDER
             if (l is ModsAssetLibrary) {
                 var lib = cast(l, ModsAssetLibrary);
                 for(e in lib.getFiles(folder))
                     content.push(e);
             }
+            #end
         }
         return content;
     }
@@ -93,6 +95,21 @@ class AssetsLibraryList extends AssetLibrary {
             cachedFonts.clear();
             cachedText.clear();
         }
+    }
+
+    public override function isLocal(id:String, type:String) {
+        return true;
+        // for(l in libraries) {
+        //     var lib:AssetLibrary = l;
+        //     if (lib is openfl.utils.AssetLibrary) {
+        //         var openflLib = cast(lib, openfl.utils.AssetLibrary);
+        //         @:privateAccess
+        //         if (openflLib.__proxy != null) lib = openflLib.__proxy;
+        //     }
+        //     if (lib.exists(id, type) && lib.isLocal(id, type))
+        //         return true;
+        // }
+        // return false;
     }
 
     public function new(?base:AssetLibrary) {
