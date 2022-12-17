@@ -308,7 +308,6 @@ class CoolUtil
 		} else if (Assets.exists('$noExt/Animation.json')
 		&& Assets.exists('$noExt/spritemap.json')
 		&& Assets.exists('$noExt/spritemap.png')) {
-			// TODO: Credit Smokey555!!
 			return AtlasFrameMaker.construct(noExt);
 		} else if (Assets.exists('$noExt.xml')) {
 			return Paths.getSparrowAtlasAlt(noExt);

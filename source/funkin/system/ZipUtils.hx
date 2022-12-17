@@ -177,7 +177,7 @@ class ZipUtils {
                     fileTime: Date.now(),
                     dataSize: 0,
                     data: fileContent,
-                    crc32: Crc32.make(fileContent), // TODO???
+                    crc32: Crc32.make(fileContent), 
                     compressed: false
                 };
                 Tools.compress(entry, 1);

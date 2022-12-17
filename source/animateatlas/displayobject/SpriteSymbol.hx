@@ -214,7 +214,6 @@ class SpriteSymbol extends Sprite {
 	}
 
 	private function createLayers():Void {
-		// todo safety check for not initialiing twice
 		if (_layers != null) {
 			throw new Error("You must not call this twice");
 		}

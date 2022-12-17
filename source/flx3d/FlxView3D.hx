@@ -40,6 +40,7 @@ class FlxView3D extends FlxSprite
 		view.width = width == -1 ? FlxG.width : width;
 		view.height = height == -1 ? FlxG.height : height;
 		view.backgroundAlpha = 0;
+		view.alpha = 0;
 		bmp = new BitmapData(Std.int(view.width), Std.int(view.height), true, 0x0);
 
 		loadGraphic(bmp);
