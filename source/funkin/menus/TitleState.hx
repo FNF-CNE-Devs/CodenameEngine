@@ -178,7 +178,7 @@ class TitleState extends MusicBeatState
 			#if UPDATE_CHECKING
 			var report = funkin.updating.UpdateUtil.checkForUpdates();
 			if (report.newUpdate) {
-				FlxG.switchState(new funkin.updating.UpdateScreen(report));
+				FlxG.switchState(new funkin.updating.UpdateAvailableScreen(report));
 			} else {
 				FlxG.switchState(new MainMenuState());
 			}

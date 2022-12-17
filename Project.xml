@@ -96,7 +96,7 @@
 	<!-- _________________________________ Engine Settings _______________________________ -->
 
 	<!-- Comment this out to disable updates !-->
-	<!-- <define name="UPDATE_CHECKING" /> -->
+	<define name="UPDATE_CHECKING" />
 
 	<!-- Comment this out to disable titlescreen.xml !-->
 	<haxedef name="TITLESCREEN_XML" />

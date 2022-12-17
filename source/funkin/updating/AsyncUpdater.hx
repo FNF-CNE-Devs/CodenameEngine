@@ -47,8 +47,10 @@ class AsyncUpdater {
 
     public function installFiles(files:Array<String>) {
         progress.step = INSTALLING;
-        for(e in files) {
+        progress.files = files.length;
+        for(k=>e in files) {
             var path = '$path$e';
+            progress.curFile = k+1;
             trace('extracting file ${path}');
             var reader = ZipUtils.openZip(path);
             
@@ -80,10 +82,10 @@ class AsyncUpdater {
             progress.files = 1;
             progress.step = DOWNLOADING_EXECUTABLE;
             trace('starting exe download');
-            // doFile([exePath], [executableName], function() {
+            doFile([exePath], [executableName], function() {
                 trace('done, starting installation');
                 installFiles(fileNames);
-            // });
+            });
         });
     }
 
@@ -96,13 +98,14 @@ class AsyncUpdater {
         var fn = fileNames.shift();
         trace('downloading $f ($fn)');
         progress.curFile++;
+        progress.bytesLoaded = 0;
+        progress.bytesTotal = 1;
         downloadStream = new URLLoader();
 		downloadStream.dataFormat = BINARY;
 
 		downloadStream.addEventListener(ProgressEvent.PROGRESS, function(e) {
 			progress.bytesLoaded = e.bytesLoaded;
             progress.bytesTotal = e.bytesTotal;
-            trace('${progress.bytesLoaded} / ${progress.bytesTotal}');
 		});
         downloadStream.addEventListener(Event.COMPLETE, function(e) {
 			var fileOutput:FileOutput = File.write('$path$fn', true);
@@ -138,7 +141,7 @@ class UpdaterProgress {
     public var files:Int = 0;
     public var bytesLoaded:Float = 0;
     public var bytesTotal:Float = 0;
-    public var curZipProgress:ZipProgress = null;
+    public var curZipProgress:ZipProgress = new ZipProgress();
 
     public function new() {}
 }
