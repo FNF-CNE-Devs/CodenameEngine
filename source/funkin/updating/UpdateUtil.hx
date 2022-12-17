@@ -60,29 +60,6 @@ class UpdateUtil {
 
         return newArray.length <= 0 ? newArray : newArray.splice(__curVersionPos+1, newArray.length-(__curVersionPos+1));
     }
-
-    /**
-     * Replaces all `⚠ TEXT` into `<o>/!\ TEXT</o>`
-     * @param text 
-     */
-    public static function parseWarnings(text:String) {
-        text = parseEmote(text, "⚠", "<o>(!)", "<o>");
-        text = parseEmote(text, "❌", "<r>(X)", "<r>");
-        text = parseEmote(text, "✔", "<g>(+)", "<g>");
-        text = parseEmote(text, "\n> ", "\n<gray>| ", "<gray>");
-        return text;
-    }
-
-    public static function parseEmote(text:String, emote:String, beginning:String, end:String) {
-        var index:Int;
-        while((index = text.indexOf(emote)) >= 0) {
-            var nextIndex = text.indexOf("\n", index + emote.length);
-            if (nextIndex < 0)
-                nextIndex = text.length;
-            text = text.substr(0, index) + beginning + text.substring(index + emote.length, nextIndex) + end + text.substring(nextIndex);
-        }
-        return text;
-    }
 }
 
 typedef UpdateCheckCallback = {

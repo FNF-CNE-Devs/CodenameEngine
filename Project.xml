@@ -134,7 +134,7 @@
 	<haxelib name="hscript-improved" />
 	<haxelib name="linc_discord-rpc" if="desktop"/>
 
-	<haxelib name="markdown" if="UPDATE_CHECKING" />
+	<haxelib name="markdown" />
 	
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
 	

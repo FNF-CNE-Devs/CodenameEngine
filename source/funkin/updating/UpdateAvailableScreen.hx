@@ -1,5 +1,6 @@
 package funkin.updating;
 
+import funkin.system.MarkdownUtil;
 import funkin.menus.MainMenuState;
 import flixel.math.FlxPoint;
 import flixel.math.FlxMath;
@@ -63,17 +64,9 @@ class UpdateAvailableScreen extends MusicBeatState {
         versionCheckBG.updateHitbox();
         versionCheckBG.scrollFactor.set();
 
-        changeLogText = new FunkinText(0, versionCheckBG.y + versionCheckBG.height + 10, FlxG.width, "", 20, false);
-        changeLogText.textField.htmlText = Markdown.markdownToHtml(check.updates.last().body.replace("\t", "    "));
-        changeLogText.applyMarkup(
-            UpdateUtil.parseWarnings(changeLogText.textField.text),
-            [
-                new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFFFF00, false, true), "<o>"),
-                new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFF0000, false, true), "<r>"),
-                new FlxTextFormatMarkerPair(new FlxTextFormat(0xFF00FF08, false, true), "<g>"),
-                new FlxTextFormatMarkerPair(new FlxTextFormat(0xFF7D7D7D, false, true), "<gray>"),
-            ]
-        );
+        changeLogText = new FunkinText(0, versionCheckBG.y + versionCheckBG.height + 10, FlxG.width, "", 20, true);
+        changeLogText.borderColor = 0xFF000000;
+        MarkdownUtil.applyMarkdownText(changeLogText, check.updates.last().body);
 
         installButton = new FunkinText(0, FlxG.height - 25, Std.int(FlxG.width / 2), "> INSTALL <", 32);
         skipButton = new FunkinText(Std.int(FlxG.width / 2), FlxG.height - 25, Std.int(FlxG.width / 2), "SKIP", 32);
