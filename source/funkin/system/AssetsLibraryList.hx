@@ -45,7 +45,7 @@ class AssetsLibraryList extends AssetLibrary {
             }
 
             // TODO: do base folder scanning
-            #if MODS_FOLDER
+            #if MOD_SUPPORT
             if (l is ModsAssetLibrary) {
                 var lib = cast(l, ModsAssetLibrary);
                 for(e in lib.getFiles(folder))
