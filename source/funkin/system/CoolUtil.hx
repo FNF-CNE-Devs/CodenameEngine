@@ -358,10 +358,9 @@ class CoolUtil
 							f.parent = frames.parent;
 						}
 			return finalFrames;
-		}
-		else if (Assets.exists('$noExt/Animation.json') && Assets.exists('$noExt/spritemap.json') && Assets.exists('$noExt/spritemap.png'))
-		{
-			// TODO: Credit Smokey555!!
+		} else if (Assets.exists('$noExt/Animation.json')
+		&& Assets.exists('$noExt/spritemap.json')
+		&& Assets.exists('$noExt/spritemap.png')) {
 			return AtlasFrameMaker.construct(noExt);
 		}
 		else if (Assets.exists('$noExt.xml'))

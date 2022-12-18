@@ -27,11 +27,9 @@ class CustomShader extends FunkinShader
 		var fragCode = Assets.exists(fragShaderPath) ? Assets.getText(fragShaderPath) : null;
 		var vertCode = Assets.exists(vertShaderPath) ? Assets.getText(vertShaderPath) : null;
 
-		if (fragCode != null && vertCode != null)
-		{
-			// TODO: logging!!
-		}
-
-		super(fragCode, vertCode, glslVersion);
-	}
+        if (fragCode == null && vertCode == null)
+            Logs.trace('Shader "$name" couldn\'t be found.', ERROR);
+        
+        super(fragCode, vertCode, glslVersion);
+    }
 }

@@ -48,7 +48,6 @@ class HealthIcon extends FlxSprite
 		if (!Assets.exists(path))
 			path = Paths.image('icons/face');
 
-		// TODO: Icon Jsons?? (maybe not not to mess with sparrows but perhaps)
 		loadGraphic(path, true, 150, 150);
 
 		animation.add(char, [for (i in 0...frames.frames.length) i], 0, false, isPlayer);

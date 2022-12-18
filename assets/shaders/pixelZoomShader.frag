@@ -1,7 +1,10 @@
 #pragma header
 
 uniform float pixelZoom;
-// zooms the game 6 times
+// how it works
+// - takes the camera
+// - unzooms it to make it pixel perfect and align every pixel
+// - zooms in the result using this shader
 void main() {
     vec2 camPos = getCamPos(openfl_TextureCoordv);
 

@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import funkin.github.GitHub;
 import funkin.system.MusicBeatGroup;
 import funkin.system.XMLUtil;
 import flixel.util.typeLimit.OneOfThree;
@@ -141,24 +142,37 @@ class TitleState extends MusicBeatState
 
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
-			titleText.animation.play('press');
-
-			FlxG.camera.flash(FlxColor.WHITE, 1);
-			CoolUtil.playMenuSFX(1, 0.7);
-
-			transitioning = true;
-			// FlxG.sound.music.stop();
-
-			new FlxTimer().start(2, function(tmr:FlxTimer)
-			{
-				FlxG.switchState(new MainMenuState());
-			});
+			pressEnter();
 		}
 
 		if (pressedEnter && !skippedIntro)
 			skipIntro();
 
 		super.update(elapsed);
+	}
+
+	public function pressEnter() {
+		titleText.animation.play('press');
+
+		FlxG.camera.flash(FlxColor.WHITE, 1);
+		CoolUtil.playMenuSFX(1, 0.7);
+
+		transitioning = true;
+		// FlxG.sound.music.stop();
+
+		new FlxTimer().start(2, function(tmr:FlxTimer)
+		{
+			#if UPDATE_CHECKING
+			var report = funkin.updating.UpdateUtil.checkForUpdates();
+			if (report.newUpdate) {
+				FlxG.switchState(new funkin.updating.UpdateAvailableScreen(report));
+			} else {
+				FlxG.switchState(new MainMenuState());
+			}
+			#else
+			FlxG.switchState(new MainMenuState());
+			#end
+		});
 	}
 
 	public function createCoolText(textArray:Array<String>)

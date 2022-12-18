@@ -90,8 +90,6 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour
 			{
 				program = __context.createProgram(GLSL);
 
-				// TODO
-				// program.uploadSources (vertex, fragment);
 				@:privateAccess program.__glProgram = __createGLProgram(vertex, fragment);
 
 				@:privateAccess __context.__programs.set(id, program);

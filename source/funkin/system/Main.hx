@@ -1,6 +1,5 @@
 package funkin.system;
 
-import funkin.away3d.Flx3DView;
 import openfl.utils.AssetLibrary;
 import openfl.utils.AssetCache;
 import openfl.text.TextFormat;
@@ -139,7 +138,6 @@ class Main extends Sprite
 		Logs.init();
 		Paths.init();
 		ModsFolder.init();
-		Flx3DView.init();
 		#if MOD_SUPPORT
 		ModsFolder.switchMod("introMod");
 		#end
@@ -154,8 +152,6 @@ class Main extends Sprite
 			#if USE_SOURCE_ASSETS
 			trace("Used lime test windows. Switching into source assets.");
 			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './../../../../assets/', true));
-			#else
-			Assets.registerLibrary('assets', Paths.assetsTree.base);
 			#end
 
 			var buildNum:Int = Std.parseInt(File.getContent("./../../../../buildnumber.txt"));
@@ -166,12 +162,8 @@ class Main extends Sprite
 		{
 			#if USE_ADAPTED_ASSETS
 			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './assets/', true));
-			#else
-			Assets.registerLibrary('assets', Paths.assetsTree.base);
 			#end
 		}
-		#else
-		Assets.registerLibrary('assets', Paths.assetsTree.base);
 		#end
 
 		var lib = new AssetLibrary();
@@ -238,5 +230,9 @@ class Main extends Sprite
 			cache.removeSound(key);
 
 		Paths.assetsTree.clearCache();
-	}
+
+		#if cpp
+		cpp.vm.Gc.run(true);
+		#end
+    }
 }

@@ -249,7 +249,7 @@ class PlayState extends MusicBeatState
 
 		#if desktop
 		// TODO: Scriptable custom RPC
-		iconRPC = SONG.player2;
+		iconRPC = (dad != null && dad.icon != null) ? dad.icon : SONG.player2;
 
 		detailsText = isStoryMode ? ("Story Mode: " + storyWeek.name) : "Freeplay";
 
@@ -934,10 +934,11 @@ class PlayState extends MusicBeatState
 		return PlayState.SONG.notes[Std.int(curStep / 16)];
 	}
 
-	public function pauseGame()
-	{
-		// TODO: Cancellable game pause
-		scripts.call("onGamePause");
+
+	public function pauseGame() {
+		var e = scripts.event("onGamePause", new CancellableEvent());
+		if (e.cancelled) return;
+
 		persistentUpdate = false;
 		persistentDraw = true;
 		paused = true;
@@ -1213,10 +1214,10 @@ class PlayState extends MusicBeatState
 		if (SONG.validScore)
 		{
 			#if !switch
-			// TODO: Accuracy stuff
 			Highscore.saveScore(SONG.song, {
 				score: songScore,
-				misses: misses
+				misses: misses,
+				accuracy: accuracy
 			}, difficulty);
 			#end
 		}
