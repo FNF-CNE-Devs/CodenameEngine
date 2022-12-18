@@ -285,11 +285,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 			{
 				case SING | MISS:
 					if (lastHit + (Conductor.stepCrochet * holdTime) < Conductor.songPosition)
-					{
 						dance();
-						if (lastAnimContext != SING && curBeat % danceSpeed != 0)
-							animation.finish();
-					}
 				default:
 					if (curBeat % danceSpeed == 0)
 						dance();
