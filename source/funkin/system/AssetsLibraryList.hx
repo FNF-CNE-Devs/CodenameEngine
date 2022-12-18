@@ -57,15 +57,30 @@ class AssetsLibraryList extends AssetLibrary {
     }
 
     public override function getAsset(id:String, type:String) {
-        if (!id.startsWith("assets/")) {
-            var ass = getAsset('assets/$id', type);
-            if (ass != null)
-                return ass;
-        }
-        for(e in libraries) {
-            var asset = e.getAsset(id, type);
-            if (asset != null)
-                return asset;
+        try {
+            #if cpp
+            cpp.vm.Gc.enable(false);
+            #end
+
+            if (!id.startsWith("assets/")) {
+                var ass = getAsset('assets/$id', type);
+                if (ass != null)
+                    return ass;
+            }
+            for(e in libraries) {
+                var asset = e.getAsset(id, type);
+                if (asset != null)
+                    return asset;
+            }
+            
+            #if cpp
+            cpp.vm.Gc.enable(true);
+            #end
+        } catch(e) {
+            #if cpp
+            cpp.vm.Gc.enable(true);
+            #end
+            throw e;
         }
         return null;
     }
