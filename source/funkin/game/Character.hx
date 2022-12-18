@@ -191,6 +191,9 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 		isDanceLeftDanceRight = (animation.getByName("danceLeft") != null && animation.getByName("danceRight") != null);
 
+		if (isDanceLeftDanceRight)
+			danceSpeed = 1;
+
 		// alternative to xor operator
 		// for people who dont believe it, heres the truth table
 		// [   a   ][   b   ][ a!= b ]
@@ -269,9 +272,9 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	public var danceOnBeat:Bool = true;
 
 	/**
-	 * The dance speed of the character (works like `gfSpeed`). Set this to 0 if you want the speed to be automatically handled by the game.
+	 * The dance speed of the character (works like `gfSpeed`).
 	 */
-	public var danceSpeed:Int = 0;
+	public var danceSpeed:Int = 2;
 
 	public function beatHit(curBeat:Int)
 	{
@@ -286,7 +289,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 				case DANCE:
 					dance();
 				default:
-					if ((danceSpeed > 0 && curBeat % danceSpeed == 0) || animation.curAnim == null || animation.curAnim.finished)
+					if (curBeat % danceSpeed == 0)
 						dance();
 			}
 		}
