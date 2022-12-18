@@ -42,9 +42,10 @@ class GitHub
 	 */
 	public static inline function filterReleases(releases:Array<GitHubRelease>, keepPrereleases:Bool = true, keepDrafts:Bool = false)
 		return [
-			for (release in releases) if (release != null
-				&& (!release.prerelease || (release.prerelease && keepPrereleases))
-				&& (!release.draft || (release.draft && keepDrafts))) release
+			for (release in releases)
+				if (release != null
+					&& (!release.prerelease || (release.prerelease && keepPrereleases))
+					&& (!release.draft || (release.draft && keepDrafts))) release
 		];
 
 	private static function __requestOnGitHubServers(url:String)

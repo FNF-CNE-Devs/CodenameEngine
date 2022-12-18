@@ -509,7 +509,7 @@ class PlayState extends MusicBeatState
 			var charsDanced:Array<Character> = [];
 			for (char in [dad, gf, boyfriend])
 			{
-				if (char != null && !charsDanced.contains(char))
+				if (char != null && !charsDanced.contains(char) && swagCounter % char.danceSpeed == 0)
 				{
 					char.dance();
 					charsDanced.push(char);
