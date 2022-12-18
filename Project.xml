@@ -2,16 +2,21 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin' - Codename Engine" file="CodenameEngine" packageName="com.yoshman29.codenameengine" package="com.yoshman29.codenameengine" main="funkin.system.Main" version="0.0.1" company="yoshman29" />
+	<app title="Friday Night Funkin' - Codename Engine" file="CodenameEngine"
+		packageName="com.yoshman29.codenameengine" package="com.yoshman29.codenameengine"
+		main="funkin.system.Main" version="0.0.1" company="yoshman29" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
 
-	<!-- DO NOT REMOVE!! ALLOWS ME TO DO REGIONS LIKE IN C# AND KEEP CODE ORGANIZED. REMOVING IT WOULD BREAK THE ENGINE -->
+	<!-- DO NOT REMOVE!! ALLOWS ME TO DO REGIONS LIKE IN C# AND KEEP CODE ORGANIZED. REMOVING IT
+	WOULD BREAK THE ENGINE -->
 	<haxedef name="REGION" />
 
-	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
-		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
+	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the
+	swf into a html file
+		or you can set the actual size of your file manually at
+	"FlxPreloaderBase-onUpdate-bytesTotal"-->
 	<!-- <app preloader="Preloader" resizable="true" /> -->
 	<app preloader="flixel.system.FlxPreloader" />
 
@@ -30,10 +35,12 @@
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false" />
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false" />
+	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0"
+		resizable="false" />
 
 	<!--Switch-specific-->
-	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
+	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0"
+		resizable="true" />
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
@@ -43,20 +50,18 @@
 	<set name="BUILD_DIR" value="latest/" if="beta" />
 
 	<classpath name="source" />
-	
+
 	<define name="PRELOAD_ALL" unless="web" />
-	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
-	
-	<library name="assets"    preload="true"  if="PRELOAD_ALL"/>
-	<library name="assets"    preload="false" if="NO_PRELOAD_ALL" />
-	
-	<assets path="assets/"    rename="assets"	exclude="*.ogg" if="web"/>
-	<assets path="assets/"    rename="assets"	exclude="*.mp3" unless="web"/>
-	
-	<assets path='example_mods' rename='mods' embed='false'/>
+	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL" />
+
+	<library name="assets" preload="true" if="PRELOAD_ALL" />
+	<library name="assets" preload="false" if="NO_PRELOAD_ALL" />
+
+	<assets path="assets/" rename="assets" exclude="*.ogg" if="web" />
+	<assets path="assets/" rename="assets" exclude="*.mp3" unless="web" />
+
+	<assets path='example_mods' rename='mods' embed='false' />
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
-	
-	<assets path="CHANGELOG.md" rename='changelog.txt'/>
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
@@ -69,16 +74,18 @@
 	<!--Disable the native cursor API on Flash-->
 	<!--<haxedef name="FLX_NO_NATIVE_CURSOR" />-->
 
-	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
+	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your
+	game-->
 	<!-- <haxedef name="FLX_NO_MOUSE" if="mobile" /> -->
 	<!-- <haxedef name="FLX_NO_KEYBOARD" if="mobile" /> -->
 	<!-- <haxedef name="FLX_NO_TOUCH" if="desktop" /> -->
 	<!--<haxedef name="FLX_NO_GAMEPAD" />-->
-	
+
 	<!--Disable the Flixel core focus lost screen-->
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 
-	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
+	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release
+	mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 
 	<!--Enable this for Nape release builds for a serious peformance improvement-->
@@ -88,10 +95,9 @@
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	<icon path="art/iconOG.png" />
-	<icon path="art/icon16.png" size='16'/>
-	<icon path="art/icon32.png" size='32'/>
-	<icon path="art/icon64.png" size='64'/>
-
+	<icon path="art/icon16.png" size='16' />
+	<icon path="art/icon32.png" size='32' />
+	<icon path="art/icon64.png" size='64' />
 
 	<!-- _________________________________ Engine Settings _______________________________ -->
 
@@ -118,41 +124,42 @@
 
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
 	<define name="VIDEO_CUTSCENES" unless="web" />
-	
+
 
 	<haxedef name="VIDEO_CUTSCENES" if="VIDEO_CUTSCENES" />
 	<haxedef name="UPDATE_CHECKING" if="UPDATE_CHECKING" />
 	<!-- _______________________________ Libraries ______________________________ -->
 
-	
+
 	<haxelib name="hxCodec" if="VIDEO_CUTSCENES" />
 	<haxelib name="away3d" />
-	
+
 	<haxelib name="flixel-yc29" rename="flixel" />
 	<haxedev set='webgl' />
 
 	<haxelib name="hscript-improved" />
-	<haxelib name="linc_discord-rpc" if="desktop"/>
+	<haxelib name="linc_discord-rpc" if="desktop" />
 
 	<haxelib name="markdown" />
-	
+
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
-	
+
 	<!-- _________________________________ HScript classes _______________________________ -->
-	
+
 	<!-- Comment this off to prevent additional classes from being compiled.
-		 Reduces compilation time at the cost of limited HScript flexibility. !-->
+		 Reduces compilation
+	time at the cost of limited HScript flexibility. !-->
 	<define name="COMPILE_ALL_CLASSES" />
 
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
-	
+
 		<!-- so that everything within flixel gets compiled which means hscript super powaaah -->
 		<haxeflag name="--macro" value="include('flixel')" />
 		<haxeflag name="--macro" value="include('away3d')" />
 		<haxeflag name="--macro" value="include('flx3d')" />
-		<haxeflag name="--macro" value="include('sys')" unless="web"/>
-	
+		<haxeflag name="--macro" value="include('sys')" unless="web" />
+
 		<!-- HAXE STUFF !-->
 		<haxeflag name="--macro" value="include('DateTools')" />
 		<haxeflag name="--macro" value="include('EReg')" />
@@ -164,8 +171,8 @@
 		<haxeflag name="--macro" value="include('haxe.extern')" />
 		<haxeflag name="--macro" value="exclude('scripting')" />
 	</section>
-	<haxeflag name="--macro" value="exclude('funkin.updating')" unless="UPDATE_CHECKING"/>
-	
+	<haxeflag name="--macro" value="exclude('funkin.updating')" unless="UPDATE_CHECKING" />
+
 	<!-- MACROS & DOCUMENTATION !-->
 	<haxeflag name="--macro" value="funkin.macros.BuildCounterMacro.getBuildNumber()" />
 
