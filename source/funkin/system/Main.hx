@@ -234,5 +234,5 @@ class Main extends Sprite
 		#if cpp
 		cpp.vm.Gc.run(true);
 		#end
-    }
+	}
 }

@@ -53,8 +53,10 @@ class XMLUtil
 	/**
 	 * Creates a new sprite based on a XML node.
 	 */
-	public static function createSpriteFromXML(node:Access, parentFolder:String = "", defaultAnimType:XMLAnimType = BEAT, ?cl:Class<XMLSprite>):XMLSprite {
-		if (parentFolder == null) parentFolder = "";
+	public static function createSpriteFromXML(node:Access, parentFolder:String = "", defaultAnimType:XMLAnimType = BEAT, ?cl:Class<XMLSprite>):XMLSprite
+	{
+		if (parentFolder == null)
+			parentFolder = "";
 
 		var spr:XMLSprite = cl != null ? Type.createInstance(cl, []) : new XMLSprite();
 		spr.name = node.getAtt("name");
@@ -117,7 +119,8 @@ class XMLUtil
 	 * @param sprite Destination sprite
 	 * @param anim Animation (Must be a `anim` XML node)
 	 */
-	public static function addXMLAnimation(sprite:FlxSprite, anim:Access, loop:Bool = false):ErrorCode {
+	public static function addXMLAnimation(sprite:FlxSprite, anim:Access, loop:Bool = false):ErrorCode
+	{
 		var animType:XMLAnimType = NONE;
 		if (sprite is XMLSprite)
 			animType = cast(sprite, XMLSprite).spriteAnimType;
@@ -133,14 +136,22 @@ class XMLUtil
 			indices: []
 		};
 
-		if (anim.has.name) animData.name = anim.att.name;
-		if (anim.has.type) animData.animType = XMLAnimType.fromString(anim.att.type, animData.animType);
-		if (anim.has.anim) animData.anim = anim.att.anim;
-		if (anim.has.fps) animData.fps = Std.parseInt(anim.att.fps);
-		if (anim.has.x) animData.x = Std.parseFloat(anim.att.x);
-		if (anim.has.y) animData.y = Std.parseFloat(anim.att.y);
-		if (anim.has.loop) animData.loop = anim.att.loop == "true";
-		if (anim.has.indices) {
+		if (anim.has.name)
+			animData.name = anim.att.name;
+		if (anim.has.type)
+			animData.animType = XMLAnimType.fromString(anim.att.type, animData.animType);
+		if (anim.has.anim)
+			animData.anim = anim.att.anim;
+		if (anim.has.fps)
+			animData.fps = Std.parseInt(anim.att.fps);
+		if (anim.has.x)
+			animData.x = Std.parseFloat(anim.att.x);
+		if (anim.has.y)
+			animData.y = Std.parseFloat(anim.att.y);
+		if (anim.has.loop)
+			animData.loop = anim.att.loop == "true";
+		if (anim.has.indices)
+		{
 			var indicesSplit = anim.att.indices.split(",");
 			for (indice in indicesSplit)
 			{
@@ -163,9 +174,11 @@ class XMLUtil
 			if (sprite is IOffsetCompatible)
 				cast(sprite, IOffsetCompatible).addOffset(animData.name, animData.x, animData.y);
 
-			if (sprite is XMLSprite) {
+			if (sprite is XMLSprite)
+			{
 				var xmlSpr = cast(sprite, XMLSprite);
-				switch(animData.animType) {
+				switch (animData.animType)
+				{
 					case BEAT:
 						xmlSpr.beatAnims.push(animData.name);
 					case LOOP:
@@ -174,7 +187,7 @@ class XMLUtil
 						// nothing
 				}
 			}
-            return OK;
+			return OK;
 		}
 		return MISSING_PROPERTY;
 	}

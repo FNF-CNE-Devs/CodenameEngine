@@ -49,46 +49,53 @@ class AssetsLibraryList extends AssetLibrary
 		{
 			var l = e;
 
-            // TODO: do base folder scanning
-            #if MOD_SUPPORT
-            if (l is ModsAssetLibrary) {
-                var lib = cast(l, ModsAssetLibrary);
-                for(e in lib.getFiles(folder))
-                    content.push(e);
-            }
-            #end
-        }
-        return content;
-    }
+			// TODO: do base folder scanning
+			#if MOD_SUPPORT
+			if (l is ModsAssetLibrary)
+			{
+				var lib = cast(l, ModsAssetLibrary);
+				for (e in lib.getFiles(folder))
+					content.push(e);
+			}
+			#end
+		}
+		return content;
+	}
 
-    public override function getAsset(id:String, type:String) {
-        try {
-            #if cpp
-            cpp.vm.Gc.enable(false);
-            #end
+	public override function getAsset(id:String, type:String)
+	{
+		try
+		{
+			#if cpp
+			cpp.vm.Gc.enable(false);
+			#end
 
-            if (!id.startsWith("assets/")) {
-                var ass = getAsset('assets/$id', type);
-                if (ass != null)
-                    return ass;
-            }
-            for(e in libraries) {
-                var asset = e.getAsset(id, type);
-                if (asset != null)
-                    return asset;
-            }
-            
-            #if cpp
-            cpp.vm.Gc.enable(true);
-            #end
-        } catch(e) {
-            #if cpp
-            cpp.vm.Gc.enable(true);
-            #end
-            throw e;
-        }
-        return null;
-    }
+			if (!id.startsWith("assets/"))
+			{
+				var ass = getAsset('assets/$id', type);
+				if (ass != null)
+					return ass;
+			}
+			for (e in libraries)
+			{
+				var asset = e.getAsset(id, type);
+				if (asset != null)
+					return asset;
+			}
+
+			#if cpp
+			cpp.vm.Gc.enable(true);
+			#end
+		}
+		catch (e)
+		{
+			#if cpp
+			cpp.vm.Gc.enable(true);
+			#end
+			throw e;
+		}
+		return null;
+	}
 
 	public function clearCache()
 	{
@@ -121,27 +128,29 @@ class AssetsLibraryList extends AssetLibrary
 		}
 	}
 
-    public override function isLocal(id:String, type:String) {
-        return true;
-        // for(l in libraries) {
-        //     var lib:AssetLibrary = l;
-        //     if (lib is openfl.utils.AssetLibrary) {
-        //         var openflLib = cast(lib, openfl.utils.AssetLibrary);
-        //         @:privateAccess
-        //         if (openflLib.__proxy != null) lib = openflLib.__proxy;
-        //     }
-        //     if (lib.exists(id, type) && lib.isLocal(id, type))
-        //         return true;
-        // }
-        // return false;
-    }
+	public override function isLocal(id:String, type:String)
+	{
+		return true;
+		// for(l in libraries) {
+		//     var lib:AssetLibrary = l;
+		//     if (lib is openfl.utils.AssetLibrary) {
+		//         var openflLib = cast(lib, openfl.utils.AssetLibrary);
+		//         @:privateAccess
+		//         if (openflLib.__proxy != null) lib = openflLib.__proxy;
+		//     }
+		//     if (lib.exists(id, type) && lib.isLocal(id, type))
+		//         return true;
+		// }
+		// return false;
+	}
 
-    public function new(?base:AssetLibrary) {
-        super();
-        if (base == null)
-            base = Assets.getLibrary("default");
-        addLibrary(this.base = base);
-    }
+	public function new(?base:AssetLibrary)
+	{
+		super();
+		if (base == null)
+			base = Assets.getLibrary("default");
+		addLibrary(this.base = base);
+	}
 
 	public function addLibrary(lib:AssetLibrary)
 	{

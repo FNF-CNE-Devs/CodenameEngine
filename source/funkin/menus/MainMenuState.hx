@@ -172,7 +172,8 @@ class MainMenuState extends MusicBeatState
 		return super.switchTo(nextState);
 	}
 
-	function selectItem() {
+	function selectItem()
+	{
 		if (optionShit[curSelected] == 'donate')
 		{
 			#if linux
@@ -186,11 +187,13 @@ class MainMenuState extends MusicBeatState
 			selectedSomethin = true;
 			CoolUtil.playMenuSFX(1);
 
-			if (Options.flashingMenu) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
+			if (Options.flashingMenu)
+				FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
 			menuItems.forEach(function(spr:FlxSprite)
 			{
-				if (spr.ID != curSelected) return;
+				if (spr.ID != curSelected)
+					return;
 				FlxFlicker.flicker(spr, 1, Options.flashingMenu ? 0.06 : 0.15, false, false, function(flick:FlxFlicker)
 				{
 					var daChoice:String = optionShit[curSelected];
@@ -212,6 +215,7 @@ class MainMenuState extends MusicBeatState
 			});
 		}
 	}
+
 	function changeItem(huh:Int = 0)
 	{
 		curSelected += huh;

@@ -183,16 +183,16 @@ class CoolUtil
 		FlxG.sound.playMusic(path, Volume, Looped, Group);
 
 		var infoPath = '${Path.withoutExtension(path)}.ini';
-		if (Assets.exists(infoPath)) {
-			var musicInfo = IniUtils.parseAsset(infoPath, [
-				"BPM" => null
-			]);
+		if (Assets.exists(infoPath))
+		{
+			var musicInfo = IniUtils.parseAsset(infoPath, ["BPM" => null]);
 			var parsedBPM:Null<Float> = Std.parseFloat(musicInfo["BPM"]);
 			if (parsedBPM == null)
 				Conductor.changeBPM(DefaultBPM);
 			else
 				Conductor.changeBPM(parsedBPM);
-		} else
+		}
+		else
 			Conductor.changeBPM(DefaultBPM);
 	}
 
@@ -358,9 +358,9 @@ class CoolUtil
 							f.parent = frames.parent;
 						}
 			return finalFrames;
-		} else if (Assets.exists('$noExt/Animation.json')
-		&& Assets.exists('$noExt/spritemap.json')
-		&& Assets.exists('$noExt/spritemap.png')) {
+		}
+		else if (Assets.exists('$noExt/Animation.json') && Assets.exists('$noExt/spritemap.json') && Assets.exists('$noExt/spritemap.png'))
+		{
 			return AtlasFrameMaker.construct(noExt);
 		}
 		else if (Assets.exists('$noExt.xml'))

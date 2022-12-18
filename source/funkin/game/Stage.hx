@@ -43,7 +43,7 @@ class Stage extends FlxBasic implements IBeatReceiver
 		}
 		catch (e)
 		{
-            Logs.trace('Couldn\'t load stage "$stage": ${e.message}', ERROR);
+			Logs.trace('Couldn\'t load stage "$stage": ${e.message}', ERROR);
 		}
 		if (stageXML != null)
 		{

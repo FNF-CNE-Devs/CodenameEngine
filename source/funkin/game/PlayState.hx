@@ -934,10 +934,11 @@ class PlayState extends MusicBeatState
 		return PlayState.SONG.notes[Std.int(curStep / 16)];
 	}
 
-
-	public function pauseGame() {
+	public function pauseGame()
+	{
 		var e = scripts.event("onGamePause", new CancellableEvent());
-		if (e.cancelled) return;
+		if (e.cancelled)
+			return;
 
 		persistentUpdate = false;
 		persistentDraw = true;

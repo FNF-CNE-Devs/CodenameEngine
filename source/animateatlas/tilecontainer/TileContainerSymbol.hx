@@ -236,8 +236,10 @@ class TileContainerSymbol extends TileContainer
 		}
 	}
 
-	private function createLayers():Void {
-		if (_layers != null) {
+	private function createLayers():Void
+	{
+		if (_layers != null)
+		{
 			throw new Error("You must not call this twice");
 		}
 		_layers = new Array<TileContainer>();

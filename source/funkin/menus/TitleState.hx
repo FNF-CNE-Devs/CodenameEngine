@@ -151,7 +151,8 @@ class TitleState extends MusicBeatState
 		super.update(elapsed);
 	}
 
-	public function pressEnter() {
+	public function pressEnter()
+	{
 		titleText.animation.play('press');
 
 		FlxG.camera.flash(FlxColor.WHITE, 1);
@@ -164,9 +165,12 @@ class TitleState extends MusicBeatState
 		{
 			#if UPDATE_CHECKING
 			var report = funkin.updating.UpdateUtil.checkForUpdates();
-			if (report.newUpdate) {
+			if (report.newUpdate)
+			{
 				FlxG.switchState(new funkin.updating.UpdateAvailableScreen(report));
-			} else {
+			}
+			else
+			{
 				FlxG.switchState(new MainMenuState());
 			}
 			#else
