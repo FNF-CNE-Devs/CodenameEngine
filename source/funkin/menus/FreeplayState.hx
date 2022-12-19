@@ -155,12 +155,14 @@ class FreeplayState extends MusicBeatState
 		// putting it before so that its actually smooth
 		updateOptionsAlpha();
 
+		var dontPlaySongThisFrame = false;
 		#if PRELOAD_ALL
 		autoplayElapsed += elapsed;
 		if (!songInstPlaying && (autoplayElapsed > timeUntilAutoplay || FlxG.keys.justPressed.SPACE)) {
 			if (curPlayingInst != (curPlayingInst = Paths.inst(songs[curSelected].songName, songs[curSelected].difficulties[curDifficulty])))
 				FlxG.sound.playMusic(curPlayingInst, 0);
 			songInstPlaying = true;
+			dontPlaySongThisFrame = true;
 		}
 		#end
 
@@ -171,7 +173,7 @@ class FreeplayState extends MusicBeatState
 			FlxG.switchState(new MainMenuState());
 		}
 
-		if (controls.ACCEPT)
+		if (controls.ACCEPT && !dontPlaySongThisFrame)
 		{
 			CoolUtil.loadSong(songs[curSelected].songName, songs[curSelected].difficulties[curDifficulty]);
 			FlxG.switchState(new PlayState());

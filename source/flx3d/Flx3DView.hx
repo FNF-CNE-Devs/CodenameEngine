@@ -3,7 +3,7 @@ package flx3d;
 import away3d.loaders.misc.AssetLoaderToken;
 import away3d.library.assets.Asset3DType;
 import away3d.events.Asset3DEvent;
-import away3d.loaders.parsers.OBJParser;
+import away3d.loaders.parsers.*;
 import away3d.utils.Cast;
 import away3d.materials.TextureMaterial;
 import haxe.io.Path;
@@ -69,7 +69,13 @@ class Flx3DView extends FlxView3D {
         if (texturePath != null)
             material = new TextureMaterial(Cast.bitmapTexture(texturePath), smoothTexture);
 
-        var token = _loader.loadData(model, context, null, new OBJParser());
+        var token = _loader.loadData(model, context, null, switch(Path.extension(assetPath).toLowerCase()) {
+            case "dae": new DAEParser();
+            case "md2": new MD2Parser();
+            case "md5": new MD5MeshParser();
+            case "awd": new AWDParser();
+            default:    new OBJParser();
+        });
         meshCallback = function(mesh) {
             if (material != null)
                 mesh.material = material;

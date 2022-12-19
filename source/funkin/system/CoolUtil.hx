@@ -159,10 +159,7 @@ class CoolUtil
 				"BPM" => null
 			]);
 			var parsedBPM:Null<Float> = Std.parseFloat(musicInfo["BPM"]);
-			if (parsedBPM == null)
-				Conductor.changeBPM(DefaultBPM);
-			else
-				Conductor.changeBPM(parsedBPM);
+			Conductor.changeBPM(parsedBPM == null ? DefaultBPM : parsedBPM);
 		} else
 			Conductor.changeBPM(DefaultBPM);
 	}
