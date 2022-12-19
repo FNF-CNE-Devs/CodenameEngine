@@ -4,3 +4,4 @@ haxelib git hscript-improved https://www.github.com/YoshiCrafter29/hscript-impro
 haxelib install away3d
 haxelib install hxCodec
 haxelib install markdown
+haxelib git flxanimate https://github.com/Dot-Stuff/flxanimate/

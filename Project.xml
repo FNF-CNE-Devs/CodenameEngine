@@ -146,23 +146,7 @@
 
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
-	
-		<!-- so that everything within flixel gets compiled which means hscript super powaaah -->
-		<haxeflag name="--macro" value="include('flixel')" />
-		<haxeflag name="--macro" value="include('away3d')" />
-		<haxeflag name="--macro" value="include('flx3d')" />
-		<haxeflag name="--macro" value="include('sys')" unless="web"/>
-	
-		<!-- HAXE STUFF !-->
-		<haxeflag name="--macro" value="include('DateTools')" />
-		<haxeflag name="--macro" value="include('EReg')" />
-		<haxeflag name="--macro" value="include('Lambda')" />
-		<haxeflag name="--macro" value="include('StringBuf')" />
-		<haxeflag name="--macro" value="include('haxe.crypto')" />
-		<haxeflag name="--macro" value="include('haxe.display')" />
-		<haxeflag name="--macro" value="include('haxe.exceptions')" />
-		<haxeflag name="--macro" value="include('haxe.extern')" />
-		<haxeflag name="--macro" value="exclude('scripting')" />
+		<haxeflag name="--macro" value="funkin.macros.ScriptsMacro.addAdditionalClasses()" />
 	</section>
 	<haxeflag name="--macro" value="exclude('funkin.updating')" unless="UPDATE_CHECKING"/>
 	
