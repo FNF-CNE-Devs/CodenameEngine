@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="bf.png">
+	<!-- Created with Adobe Animate version 21.0.1.37179 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="load0000" x="561" y="565" width="407" height="413" pivotX="215.85" pivotY="278.8" frameX="-74" frameY="-72" frameWidth="553" frameHeight="557"/>
+	<SubTexture name="load0001" x="563" y="0" width="532" height="555" frameX="0" frameY="0" frameWidth="553" frameHeight="557"/>
+	<SubTexture name="load0002" x="563" y="0" width="532" height="555" frameX="0" frameY="0" frameWidth="553" frameHeight="557"/>
+	<SubTexture name="load0003" x="0" y="561" width="551" height="549" frameX="0" frameY="-8" frameWidth="553" frameHeight="557"/>
+	<SubTexture name="load0004" x="0" y="561" width="551" height="549" frameX="0" frameY="-8" frameWidth="553" frameHeight="557"/>
+	<SubTexture name="load0005" x="0" y="0" width="553" height="551" frameX="0" frameY="-6" frameWidth="553" frameHeight="557"/>
+	<SubTexture name="load0006" x="0" y="0" width="553" height="551" frameX="0" frameY="-6" frameWidth="553" frameHeight="557"/>
+</TextureAtlas>

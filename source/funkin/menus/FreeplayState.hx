@@ -140,6 +140,8 @@ class FreeplayState extends MusicBeatState
 
 		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
 		changeDiff((controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0));
+		// putting it before so that its actually smooth
+		updateOptionsAlpha();
 
 		scoreText.text = "PERSONAL BEST:" + lerpScore;
 		scoreBG.scale.set(Math.max(diffText.width, scoreText.width) + 8, 66);
@@ -151,9 +153,6 @@ class FreeplayState extends MusicBeatState
 
 		bg.color = CoolUtil.lerpColor(bg.color, songs[curSelected].color, 0.0625);
 
-
-		// putting it before so that its actually smooth
-		updateOptionsAlpha();
 
 		var dontPlaySongThisFrame = false;
 		#if PRELOAD_ALL

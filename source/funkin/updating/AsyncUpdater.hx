@@ -85,6 +85,7 @@ class AsyncUpdater {
             doFile([exePath], [executableName], function() {
                 trace('done, starting installation');
                 installFiles(fileNames);
+                progress.done = true;
             });
         });
     }
@@ -141,6 +142,7 @@ class UpdaterProgress {
     public var files:Int = 0;
     public var bytesLoaded:Float = 0;
     public var bytesTotal:Float = 0;
+    public var done:Bool = false;
     public var curZipProgress:ZipProgress = new ZipProgress();
 
     public function new() {}
