@@ -516,7 +516,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music = inst;
 			FlxG.sound.music.play();
 		}
-		FlxG.sound.music.onComplete = endSong;
+		inst.onComplete = endSong;
 		vocals.play();
 
 		updateDiscordStatus();
