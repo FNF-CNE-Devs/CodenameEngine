@@ -1,5 +1,6 @@
 package funkin.updating;
 
+import funkin.shaders.CustomShader;
 import flixel.util.FlxDestroyUtil;
 import funkin.ui.FunkinText;
 import funkin.menus.TitleState;
@@ -23,6 +24,8 @@ class UpdateScreen extends MusicBeatState {
 
     public var generalProgress:FunkinText;
     public var partProgress:FunkinText;
+
+    public var rainbowShader:CustomShader;
 
     public function new(check:UpdateCheckCallback) {
         super(false);
@@ -59,6 +62,8 @@ class UpdateScreen extends MusicBeatState {
         overSound = FlxG.sound.load(Paths.sound('gameOverEnd'));
 
         updater.execute();
+        
+        FlxG.camera.addShader(rainbowShader = new CustomShader("updaterShader"));
     }
 
 
@@ -66,6 +71,12 @@ class UpdateScreen extends MusicBeatState {
         super.update(elapsed);
 
         elapsedTime += elapsed;
+        rainbowShader.hset("elapsed", elapsedTime / 5);
+        if (elapsedTime >= 3)
+            rainbowShader.hset("strength", 1);
+        else
+            rainbowShader.hset("strength", elapsedTime / 5);
+
         progressBar.y = FlxG.height - (60 + (Math.sin(elapsedTime * Math.PI / 2) * 15));
 
         if (done) return;
