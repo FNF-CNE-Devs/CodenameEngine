@@ -79,15 +79,16 @@ class UpdateScreen extends MusicBeatState {
                 partProgress.text = "Creating installation folder and cleaning old update files...";
             case DOWNLOADING_ASSETS:
                 progressBar.value = 1 + ((prog.curFile-1+(prog.bytesLoaded/prog.bytesTotal)) / prog.files);
-                generalProgress.text = "Download update assets... (2/4)";
+                generalProgress.text = "Downloading update assets... (2/4)";
                 partProgress.text = 'Downloading file ${prog.curFileName}\n(${prog.curFile+1}/${prog.files} | ${CoolUtil.getSizeString(prog.bytesLoaded)} / ${CoolUtil.getSizeString(prog.bytesTotal)} | ${CoolUtil.getSizeString(lerpSpeed)}/s)';
             case DOWNLOADING_EXECUTABLE:
                 progressBar.value = 2 + (prog.bytesLoaded/prog.bytesTotal);
-                generalProgress.text = "Download new engine executable... (3/4)";
+                generalProgress.text = "Downloading new engine executable... (3/4)";
                 partProgress.text = 'Downloading ${prog.curFileName}\n(${CoolUtil.getSizeString(prog.bytesLoaded)} / ${CoolUtil.getSizeString(prog.bytesTotal)} | ${CoolUtil.getSizeString(lerpSpeed)}/s)';
             case INSTALLING:
                 progressBar.value = 3 + ((prog.curFile-1+(prog.curZipProgress.curFile/prog.curZipProgress.fileCount))/prog.files);
                 generalProgress.text = "Installing new files... (4/4)";
+                partProgress.text = 'Installing ${prog.curFileName}\n(${prog.curFile}/${prog.files})';
         }
         var rect = new FlxRect(0, (1 - (progressBar.value / 4)) * bf.frameHeight, bf.frameWidth, 0);
         rect.height = bf.frameHeight - rect.y;

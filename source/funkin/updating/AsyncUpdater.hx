@@ -57,6 +57,7 @@ class AsyncUpdater {
         for(k=>e in files) {
             var path = '$path$e';
             progress.curFile = k+1;
+            progress.curFileName = e;
             trace('extracting file ${path}');
             var reader = ZipUtils.openZip(path);
             
@@ -65,6 +66,9 @@ class AsyncUpdater {
             // FileSystem.deleteFile(path);
         }
         if (executableReplaced = FileSystem.exists('$path$executableName')) {
+            progress.curFile = files.length;
+            progress.curFileName = executableName;
+            
             var progPath = Sys.programPath();
             var bakFile = '${Path.withoutExtension(progPath)}.bak';
             if (FileSystem.exists(bakFile))
