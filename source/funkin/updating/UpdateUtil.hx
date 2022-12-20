@@ -1,5 +1,7 @@
 package funkin.updating;
 
+import sys.FileSystem;
+import haxe.io.Path;
 import funkin.github.GitHubRelease;
 import funkin.github.GitHub;
 import lime.app.Application;
@@ -7,6 +9,15 @@ import lime.app.Application;
 using funkin.github.GitHub;
 
 class UpdateUtil {
+    public static function init() {
+        // deletes old bak file if it exists
+        #if sys
+        var bakPath = '${Path.withoutExtension(Sys.programPath())}.bak';
+        if (FileSystem.exists(bakPath))
+            FileSystem.deleteFile(bakPath);
+        #end
+    }
+
     public static function checkForUpdates():UpdateCheckCallback {
         var curTag = 'v${Application.current.meta.get('version')}';    
         trace(curTag);

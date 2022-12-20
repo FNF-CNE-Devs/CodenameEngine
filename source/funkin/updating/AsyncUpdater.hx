@@ -1,5 +1,6 @@
 package funkin.updating;
 
+import sys.io.Process;
 import haxe.zip.Reader;
 import funkin.system.ZipUtils;
 import haxe.io.Path;
@@ -47,7 +48,7 @@ class AsyncUpdater {
 
     public function installFiles(files:Array<String>) {
         progress.step = INSTALLING;
-        progress.files = files.length;
+        progress.files = files.length+1;
         for(k=>e in files) {
             var path = '$path$e';
             progress.curFile = k+1;
@@ -57,6 +58,16 @@ class AsyncUpdater {
             progress.curZipProgress = new ZipProgress();
             ZipUtils.uncompressZip(reader, './', null, progress.curZipProgress);
         }
+
+        var progPath = Sys.programPath();
+        var bakFile = '${Path.withoutExtension(progPath)}.bak';
+        if (FileSystem.exists(bakFile))
+            FileSystem.deleteFile(bakFile);
+        FileSystem.rename(progPath, bakFile);
+        FileSystem.rename('$path$executableName', progPath);
+
+		Sys.command('start /B $executableName');
+		openfl.system.System.exit(0);
     }
 
     public function downloadFiles() {
@@ -82,11 +93,11 @@ class AsyncUpdater {
             progress.files = 1;
             progress.step = DOWNLOADING_EXECUTABLE;
             trace('starting exe download');
-            doFile([exePath], [executableName], function() {
+            // doFile([exePath], [executableName], function() {
                 trace('done, starting installation');
                 installFiles(fileNames);
                 progress.done = true;
-            });
+            // });
         });
     }
 

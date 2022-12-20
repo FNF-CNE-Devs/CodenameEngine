@@ -132,6 +132,9 @@ class Main extends Sprite
 		#end
 		Paths.assetsTree = new AssetsLibraryList();
 
+		#if UPDATE_CHECKING
+		funkin.updating.UpdateUtil.init();
+		#end
 		CrashHandler.init();
 		Logs.init();
 		Paths.init();
