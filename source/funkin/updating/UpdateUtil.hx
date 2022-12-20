@@ -10,6 +10,9 @@ import lime.app.Application;
 using funkin.github.GitHub;
 
 class UpdateUtil {
+    public static final repoOwner:String = "YoshiCrafter29";
+    public static final repoName:String = "CodenameEngine";
+    
     public static function init() {
         // deletes old bak file if it exists
         #if sys
@@ -24,10 +27,8 @@ class UpdateUtil {
         trace(curTag);
         
         var error = false;
-
-        // TODO: replace "CodenameTestRepo" by "CodenameEngine" once done.
         
-        var newUpdates = __doReleaseFiltering(GitHub.getReleases("YoshiCrafter29", "CodenameTestRepo", function(e) {
+        var newUpdates = __doReleaseFiltering(GitHub.getReleases(repoOwner, repoName, function(e) {
             error = true;
         }), curTag);
 
