@@ -27,6 +27,13 @@ class MarkdownUtil {
             parseWarnings(text.textField.text),
             changes
         );
+        @:privateAccess {
+            // hacky fix for the text cutting when bigger text formats are used
+            text._regen = true;
+            text.regenGraphic();
+            text._regen = true;
+            text.regenGraphic();
+        }
     }
 
     public static function createAdvancedMarkerPair(marker:String, color:FlxColor, size:Null<Float>, bold:Bool = false, italic:Bool = false, ?underline:Bool = false, ?blockIndent:Int, ?bullet:Bool) {
