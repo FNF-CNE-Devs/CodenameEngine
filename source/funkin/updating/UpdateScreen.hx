@@ -69,7 +69,7 @@ class UpdateScreen extends MusicBeatState {
             FlxG.sound.music.stop();
             overSound.play();
             bf.animation.curAnim.frameRate = 24;
-            bf.animation.play("loading-anim");
+            bf.animation.play("loading-anim", true, false, 1);
             bf.alpha = 1;
             FlxG.camera.fade(0xFF000000, overSound.length / 1000, false, function() {
                 if (updater.executableReplaced) {

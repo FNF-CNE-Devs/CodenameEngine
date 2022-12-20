@@ -58,7 +58,7 @@ class AsyncUpdater {
             
             progress.curZipProgress = new ZipProgress();
             ZipUtils.uncompressZip(reader, './', null, progress.curZipProgress);
-            FileSystem.deleteFile(path);
+            // FileSystem.deleteFile(path);
         }
         if (executableReplaced = FileSystem.exists('$path$executableName')) {
             var progPath = Sys.programPath();
@@ -93,11 +93,11 @@ class AsyncUpdater {
             progress.files = 1;
             progress.step = DOWNLOADING_EXECUTABLE;
             trace('starting exe download');
-            // doFile([exePath], [executableName], function() {
+            doFile([exePath], [executableName], function() {
                 trace('done, starting installation');
                 installFiles(fileNames);
                 progress.done = true;
-            // });
+            });
         });
     }
 
