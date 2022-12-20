@@ -68,7 +68,7 @@ class CoolUtil
 		return str;
 	}
 
-	public static function getSizeString(size:UInt):String {
+	public static function getSizeString(size:Float):String {
 		var labels = ["B", "KB", "MB", "GB", "TB"];
 		var rSize:Float = size;
 		var label:Int = 0;
@@ -76,7 +76,7 @@ class CoolUtil
 			label++;
 			rSize /= 1024;
 		}
-		return '${FlxMath.roundDecimal(rSize, 2)}${labels[label]}';
+		return '${Std.int(rSize) + "." + addZeros(Std.string(Math.round((rSize % 1) * 100)), 2)}${labels[label]}';
 	}
 
 	public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {

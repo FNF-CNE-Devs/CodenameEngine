@@ -1,5 +1,6 @@
 package funkin.updating;
 
+import openfl.Lib;
 import sys.io.Process;
 import haxe.zip.Reader;
 import funkin.system.ZipUtils;
@@ -41,6 +42,9 @@ class AsyncUpdater {
     public var path:String;
     public var downloadStream:URLLoader;
     public var executableReplaced:Bool = false;
+
+    public var lastTime:Float = 0;
+    public var oldBytesLoaded:Float = 0;
     
     public function installUpdates() {
         prepareInstallationEnvironment();
@@ -84,12 +88,14 @@ class AsyncUpdater {
                 }
             }
         }
-        progress.curFile = 0;
+        progress.curFile = -1;
+        progress.curFileName = null;
         progress.files = files.length;
         progress.step = DOWNLOADING_ASSETS;
         trace('starting assets download');
         doFile([for(e in files) e], [for(e in fileNames) e], function() {
-            progress.curFile = 0;
+            progress.curFile = -1;
+            progress.curFileName = null;
             progress.files = 1;
             progress.step = DOWNLOADING_EXECUTABLE;
             trace('starting exe download');
@@ -110,6 +116,7 @@ class AsyncUpdater {
         var fn = fileNames.shift();
         trace('downloading $f ($fn)');
         progress.curFile++;
+        progress.curFileName = fn;
         progress.bytesLoaded = 0;
         progress.bytesTotal = 1;
         downloadStream = new URLLoader();
@@ -118,6 +125,13 @@ class AsyncUpdater {
 		downloadStream.addEventListener(ProgressEvent.PROGRESS, function(e) {
 			progress.bytesLoaded = e.bytesLoaded;
             progress.bytesTotal = e.bytesTotal;
+            
+            var curTime = Lib.getTimer();
+
+            progress.downloadSpeed = (e.bytesLoaded - oldBytesLoaded) / ((curTime - lastTime) / 1000);
+
+            lastTime = curTime;
+            oldBytesLoaded = e.bytesLoaded;
 		});
         downloadStream.addEventListener(Event.COMPLETE, function(e) {
 			var fileOutput:FileOutput = File.write('$path$fn', true);
@@ -131,6 +145,8 @@ class AsyncUpdater {
 			doFile(files, fileNames, onFinish);
 		});
 
+        oldBytesLoaded = 0;
+        lastTime = Lib.getTimer();
         downloadStream.load(new URLRequest(f));
     }
 
@@ -153,6 +169,8 @@ class UpdaterProgress {
     public var files:Int = 0;
     public var bytesLoaded:Float = 0;
     public var bytesTotal:Float = 0;
+    public var downloadSpeed:Float = 0;
+    public var curFileName:String = "";
     public var done:Bool = false;
     public var curZipProgress:ZipProgress = new ZipProgress();
 
