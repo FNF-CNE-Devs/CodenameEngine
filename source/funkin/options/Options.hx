@@ -22,6 +22,7 @@ class Options
 	public static var autoPause:Bool = true;
 	public static var antialiasing:Bool = true;
 	public static var volume:Float = 1;
+	public static var betaUpdates:Bool = false;
 
 	/**
 	 * PLAYER 1 CONTROLS

@@ -118,7 +118,11 @@ class OptionsScreen extends MusicBeatState {
     }
 
     public function updateDesc() {
-        descText.text = '/    ${options[curSelected].desc}    /';
+        updateDescText(options[curSelected].desc);
+    }
+
+    public function updateDescText(text:String) {
+        descText.text = '/    ${text}    /';
         @:privateAccess descText.regenGraphic(); //updates the thing
 
         descDrop.loadFrame(descText.frame);

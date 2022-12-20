@@ -1,5 +1,6 @@
 package funkin.updating;
 
+import funkin.menus.TitleState;
 import flixel.math.FlxRect;
 import flixel.system.FlxSound;
 import flixel.FlxSprite;
@@ -71,7 +72,14 @@ class UpdateScreen extends MusicBeatState {
             bf.animation.play("loading-anim");
             bf.alpha = 1;
             FlxG.camera.fade(0xFF000000, overSound.length / 1000, false, function() {
-                trace("crap");
+                if (updater.executableReplaced) {
+                    // the executable has been replaced, restart the game entirely
+                    Sys.command('start /B ${updater.executableName}');
+                    openfl.system.System.exit(0);
+                } else {
+                    // assets update, switch back to TitleState.
+                    FlxG.switchState(new TitleState());
+                }
             });
             bf.clipRect = null;
         }

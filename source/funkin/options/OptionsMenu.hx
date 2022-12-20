@@ -37,9 +37,9 @@ class OptionsMenu extends MusicBeatState {
             state: BehaviourOptions
         },
         {
-            name: 'Save Data',
+            name: 'Miscellaneous',
             desc: 'Use this menu to reset save data or engine settings.',
-            state: SaveDataOptions
+            state: MiscOptions
         },
         {
             name: 'Debug Options',

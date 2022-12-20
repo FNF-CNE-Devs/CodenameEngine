@@ -1,5 +1,6 @@
 package funkin.updating;
 
+import funkin.options.Options;
 import sys.FileSystem;
 import haxe.io.Path;
 import funkin.github.GitHubRelease;
@@ -53,7 +54,7 @@ class UpdateUtil {
 
     static var __curVersionPos = 0;
     static function __doReleaseFiltering(releases:Array<GitHubRelease>, currentVersionTag:String) {
-        releases = releases.filterReleases(false, false);
+        releases = releases.filterReleases(Options.betaUpdates, false);
         if (releases.length <= 0)
             return releases;
 

@@ -40,6 +40,7 @@ class AsyncUpdater {
     public var progress:UpdaterProgress = new UpdaterProgress();
     public var path:String;
     public var downloadStream:URLLoader;
+    public var executableReplaced:Bool = false;
     
     public function installUpdates() {
         prepareInstallationEnvironment();
@@ -58,16 +59,14 @@ class AsyncUpdater {
             progress.curZipProgress = new ZipProgress();
             ZipUtils.uncompressZip(reader, './', null, progress.curZipProgress);
         }
-
-        var progPath = Sys.programPath();
-        var bakFile = '${Path.withoutExtension(progPath)}.bak';
-        if (FileSystem.exists(bakFile))
-            FileSystem.deleteFile(bakFile);
-        FileSystem.rename(progPath, bakFile);
-        FileSystem.rename('$path$executableName', progPath);
-
-		Sys.command('start /B $executableName');
-		openfl.system.System.exit(0);
+        if (executableReplaced = FileSystem.exists('$path$executableName')) {
+            var progPath = Sys.programPath();
+            var bakFile = '${Path.withoutExtension(progPath)}.bak';
+            if (FileSystem.exists(bakFile))
+                FileSystem.deleteFile(bakFile);
+            FileSystem.rename(progPath, bakFile);
+            FileSystem.rename('$path$executableName', progPath);
+        }
     }
 
     public function downloadFiles() {
