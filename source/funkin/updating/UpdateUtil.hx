@@ -11,7 +11,7 @@ using funkin.github.GitHub;
 
 class UpdateUtil {
     public static final repoOwner:String = "YoshiCrafter29";
-    public static final repoName:String = "CodenameEngine";
+    public static final repoName:String = "CodenameTestRepo";
     
     public static function init() {
         // deletes old bak file if it exists
