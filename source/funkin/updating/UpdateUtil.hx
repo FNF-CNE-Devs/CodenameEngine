@@ -64,10 +64,19 @@ class UpdateUtil {
             var i = releases.length - 1 - index;
 
             var release = releases[i];
-            if (release.tag_name == currentVersionTag) {
-                __curVersionPos = index;
+            var containsBinary = false;
+            for(asset in release.assets) {
+                if (asset.name.toLowerCase() == AsyncUpdater.executableGitHubName.toLowerCase()) {
+                    containsBinary = true;
+                    break;
+                }
             }
-            newArray.push(release);
+            if (containsBinary) {
+                if (release.tag_name == currentVersionTag) {
+                    __curVersionPos = index;
+                }
+                newArray.push(release);
+            }
         }
 
         return newArray.length <= 0 ? newArray : newArray.splice(__curVersionPos+1, newArray.length-(__curVersionPos+1));

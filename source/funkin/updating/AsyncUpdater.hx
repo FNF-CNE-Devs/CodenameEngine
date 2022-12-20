@@ -28,12 +28,12 @@ class AsyncUpdater {
     
     
     #if windows 
-    public var executableGitHubName:String = "update-windows.exe";
-    public var executableName:String = "CodenameEngine.exe";
+    public static var executableGitHubName:String = "update-windows.exe";
+    public static var executableName:String = "CodenameEngine.exe";
     #end
     #if linux
-    public var executableGitHubName:String = "update-linux";
-    public var executableName:String = "CodenameEngine";
+    public static var executableGitHubName:String = "update-linux";
+    public static var executableName:String = "CodenameEngine";
     #end
 
     public var releases:Array<GitHubRelease>;
@@ -58,6 +58,7 @@ class AsyncUpdater {
             
             progress.curZipProgress = new ZipProgress();
             ZipUtils.uncompressZip(reader, './', null, progress.curZipProgress);
+            FileSystem.deleteFile(path);
         }
         if (executableReplaced = FileSystem.exists('$path$executableName')) {
             var progPath = Sys.programPath();

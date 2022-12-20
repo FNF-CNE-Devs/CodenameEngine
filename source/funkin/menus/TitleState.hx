@@ -35,6 +35,7 @@ using StringTools;
 class TitleState extends MusicBeatState
 {
 	static var initialized:Bool = false;
+	static var hasCheckedUpdates:Bool = false;
 
 	public var curWacky:Array<String> = [];
 
@@ -176,8 +177,10 @@ class TitleState extends MusicBeatState
 		new FlxTimer().start(2, function(tmr:FlxTimer)
 		{
 			#if UPDATE_CHECKING
-			var report = funkin.updating.UpdateUtil.checkForUpdates();
-			if (report.newUpdate) {
+			var report = hasCheckedUpdates ? null : funkin.updating.UpdateUtil.checkForUpdates();
+			hasCheckedUpdates = true;
+
+			if (report != null && report.newUpdate) {
 				FlxG.switchState(new funkin.updating.UpdateAvailableScreen(report));
 			} else {
 				FlxG.switchState(new MainMenuState());
