@@ -3,7 +3,7 @@
     <captionActive      path="caption"          textColor="255,255,255" left="5" top="30" right="5" bottom="5" />
     <captionInactive    path="captionInactive"  textColor="216,228,248" left="5" top="30" right="5" bottom="5" />
     <captionButtons     path="captionButtons"   size="21,21" margin="2,0" offset="4,6" />
-    <window             color="#ECE9D8"         textColor="0,0,0"   font="file://C:/Windows/fonts/tahoma.ttf"    fontSize="11"/>
+    <window             color="255,255,255"     textColor="0,0,0"   font="file://C:/Windows/fonts/tahoma.ttf"    fontSize="11"/>
 
     <!-- BUTTONS !-->
     <normalButton       path="button"           textColor="0,0,0"       left="4" top="4" right="4" bottom="4" />
