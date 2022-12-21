@@ -245,20 +245,20 @@ class Window extends FlxTypedGroup<FlxBasic> {
         windowInactiveFrame.visible = !(windowFrame.visible = focused);
         var i = members.length;
         
-        var shouldCancel = DesktopMain.instance.mouseInput.overlapsRect(this, new Rectangle(0, 0, windowCaptionCamera.width, windowCaptionCamera.height), windowCaptionCamera);
+        var shouldCancel = DesktopMain.mouseInput.overlapsRect(this, new Rectangle(0, 0, windowCaptionCamera.width, windowCaptionCamera.height), windowCaptionCamera);
 
         
 
         if (curDialog != null && curDialog.exists) {
             if (shouldCancel) {
-                if (DesktopMain.instance.mouseInput.justPressed) {
+                if (DesktopMain.mouseInput.justPressed) {
                     // TODO: sounds
                     DesktopMain.instance.focusWindow(curDialog);
                 }
-                DesktopMain.instance.mouseInput.cancel();
+                DesktopMain.mouseInput.cancel();
             }
             return;
-        } else if (shouldCancel && DesktopMain.instance.mouseInput.justPressed)
+        } else if (shouldCancel && DesktopMain.mouseInput.justPressed)
             DesktopMain.instance.focusWindow(this);
         // updates them backwards!!
         while(i > 0) {
@@ -268,7 +268,7 @@ class Window extends FlxTypedGroup<FlxBasic> {
             spr.update(elapsed);
         }
 
-        if (shouldCancel) DesktopMain.instance.mouseInput.cancel();
+        if (shouldCancel) DesktopMain.mouseInput.cancel();
     }
 
     public function close() {

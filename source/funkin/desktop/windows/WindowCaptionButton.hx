@@ -30,7 +30,7 @@ class WindowCaptionButton extends FlxSprite {
             super.update(elapsed);
             return;
         }
-        var mouseInput = DesktopMain.instance.mouseInput;
+        var mouseInput = DesktopMain.mouseInput;
 
         visible = switch(ID) {
             case 1 | 2: window.resizeable || window.canMinimize;
@@ -45,7 +45,7 @@ class WindowCaptionButton extends FlxSprite {
             case 3:     window.canHelp;
             default:    true;
         }) {
-            if (DesktopMain.instance.mouseInput.overlaps(this, camera)) {
+            if (DesktopMain.mouseInput.overlaps(this, camera)) {
                 if (mouseInput.justReleased) {
                     switch(ID) {
                         case 0:

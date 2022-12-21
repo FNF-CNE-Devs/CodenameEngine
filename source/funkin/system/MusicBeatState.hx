@@ -189,7 +189,9 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	}
 
 	public override function destroy() {
-		super.destroy();
+		if (parentWindow == null)
+			super.destroy();
+		
 		call("onDestroy");
 		if (stateScript != null)
 			stateScript.destroy();
@@ -197,10 +199,6 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 
 	public override function draw() {
 		super.draw();
-		#if ALLOW_MULTITASKING
-		if (parentWindow == null)
-			funkin.multitasking.MultiTaskingHandler.draw();
-		#end
 	}
 
 	public override function switchTo(nextState:FlxState) {

@@ -38,21 +38,21 @@ class WindowDragHitbox extends FlxObject {
             screenPos.x = FlxMath.bound(screenPos.x, 0, FlxG.camera.width);
             screenPos.y = FlxMath.bound(screenPos.y, 0, FlxG.camera.height);
 
-            if (DesktopMain.instance.mouseInput.justReleased) {
+            if (DesktopMain.mouseInput.justReleased) {
                 dragging = false;
                 offset.put();
                 return;
             }
             parent.move(screenPos.x + offset.x, screenPos.y + offset.y);
-            DesktopMain.instance.mouseInput.cancel();
+            DesktopMain.mouseInput.cancel();
         } else {
-            if (DesktopMain.instance.mouseInput.overlaps(this, camera)) {
-                if (DesktopMain.instance.mouseInput.justPressed) {
+            if (DesktopMain.mouseInput.overlaps(this, camera)) {
+                if (DesktopMain.mouseInput.justPressed) {
                     var screenPos = FlxG.mouse.getScreenPosition(FlxG.camera);
                     offset = FlxPoint.get(parent.content.winX - screenPos.x, parent.content.winY - screenPos.y);
                     dragging = true;
                 }
-                DesktopMain.instance.mouseInput.cancel();
+                DesktopMain.mouseInput.cancel();
             }
         }
     }

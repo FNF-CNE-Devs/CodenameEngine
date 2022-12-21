@@ -53,7 +53,7 @@ class Button extends FlxObject {
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
-        var mouseInput = DesktopMain.instance.mouseInput;
+        var mouseInput = DesktopMain.mouseInput;
         if (mouseInput.overlaps(normalSprite, camera)) {
             if (mouseInput.justReleased) {
                 callback();

@@ -24,14 +24,22 @@ class DesktopMain extends MusicBeatState {
 
     public static var instance:DesktopMain;
 
-    public var mouseInput:MouseInput = new MouseInput();
+    public static var mouseInput:MouseInput;
 
     public static var theme:Theme = null;
+
+    public static function init() {
+        theme = Theme.loadFromAssets(Paths.getPath('images/desktop/ui.xml', TEXT, null));
+        mouseInput = new MouseInput();
+
+        FlxG.signals.preUpdate.add(function() {
+            mouseInput.set(FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased);
+        });
+    }
 
     public override function create() {
         super.create();
 
-        theme = Theme.loadFromAssets(Paths.getPath('images/desktop/ui.xml', TEXT, null));
         instance = this;
         
         FlxG.mouse.useSystemCursor = FlxG.mouse.visible = true;
