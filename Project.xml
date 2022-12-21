@@ -95,6 +95,9 @@
 
 	<!-- _________________________________ Engine Settings _______________________________ -->
 
+	<!-- Comment this out to disable multiple windows for editors !-->
+	<define name="ALLOW_MULTITASKING" />
+
 	<!-- Comment this out to disable updates !-->
 	<define name="UPDATE_CHECKING" />
 
@@ -149,6 +152,7 @@
 		<haxeflag name="--macro" value="funkin.macros.ScriptsMacro.addAdditionalClasses()" />
 	</section>
 	<haxeflag name="--macro" value="exclude('funkin.updating')" unless="UPDATE_CHECKING"/>
+	<haxeflag name="--macro" value="exclude('funkin.multitasking')" unless="ALLOW_MULTITASKING"/>
 	
 	<!-- MACROS & DOCUMENTATION !-->
 	<haxeflag name="--macro" value="funkin.macros.BuildCounterMacro.getBuildNumber()" />

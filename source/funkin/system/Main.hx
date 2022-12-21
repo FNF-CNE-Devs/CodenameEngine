@@ -142,7 +142,9 @@ class Main extends Sprite
 		#if MOD_SUPPORT
 		ModsFolder.switchMod("introMod");
 		#end
-		
+		#if ALLOW_MULTITASKING
+		funkin.multitasking.MultiTaskingHandler.init();
+		#end
 		#if GLOBAL_SCRIPT
 		funkin.scripting.GlobalScript.init();
 		#end

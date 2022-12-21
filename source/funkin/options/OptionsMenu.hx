@@ -28,12 +28,12 @@ class OptionsMenu extends MusicBeatState {
         },
         {
             name: 'Gameplay',
-            desc: 'Change Gameplay options such as Downscroll, Scroll Speed...',
+            desc: 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...',
             state: GameplayOptions
         },
         {
             name: 'Behaviour',
-            desc: 'Change Behaviour options such as Naughtyness, Flashing lights...',
+            desc: 'Change Behaviour options such as Flashing menus...',
             state: BehaviourOptions
         },
         {

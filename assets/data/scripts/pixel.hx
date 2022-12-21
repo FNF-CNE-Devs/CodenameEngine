@@ -5,7 +5,7 @@ public var pixelNotesForBF = true;
 public var pixelNotesForDad = true;
 public var enablePixelUI = true;
 public var enablePixelGameOver = true;
-public var enableCameraHacks = true;
+public var enableCameraHacks = Options.week6PixelPerfect;
 public var enablePauseMenu = true;
 public var isSpooky = false;
 
@@ -147,12 +147,6 @@ function pixelCam(cam) {
 var pixellyCameras = [];
 var pixellyShaders = [];
 
-// function stepHit() {
-//     notes.forEach(function(n) {
-//         if (n.isSustainNote)
-//             n.offset.x -= 1;
-//     });
-// }
 function postUpdate(elapsed) {
     for(e in pixellyCameras) {
         if (Std.isOfType(e, HudCamera))

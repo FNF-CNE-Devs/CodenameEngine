@@ -8,13 +8,13 @@ class GameplayOptions extends OptionsScreen {
                 "If checked, notes will go from up to down instead of down to up, like if they were falling",
                 "downscroll"),
             new Checkbox(
-                "Auto Pause",
-                "If checked, switching windows will pause the game",
-                "autoPause"),
+                "Naughtyness",
+                "If unchecked, will censor Week 7 cutscenes",
+                "naughtyness"),
             new Checkbox(
-                "Antialiasing",
-                "If unchecked, will disable antialiasing on every sprite. Can boost performances at the cost of sharper, more pixely sprites",
-                "antialiasing"),
+                "Camera Zoom on Beat",
+                "If unchecked, will disable camera zooming every 4 beats",
+                "camZoomOnBeat"),
         ];
         super.create();
     }

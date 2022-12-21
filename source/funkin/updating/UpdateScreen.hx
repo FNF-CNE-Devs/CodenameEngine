@@ -71,11 +71,11 @@ class UpdateScreen extends MusicBeatState {
         super.update(elapsed);
 
         elapsedTime += elapsed;
-        rainbowShader.hset("elapsed", elapsedTime / 5);
+        rainbowShader.hset("elapsed", elapsedTime / 3);
         if (elapsedTime >= 3)
             rainbowShader.hset("strength", 1);
         else
-            rainbowShader.hset("strength", elapsedTime / 5);
+            rainbowShader.hset("strength", Math.sqrt(elapsedTime / 3));
 
         progressBar.y = FlxG.height - (60 + (Math.sin(elapsedTime * Math.PI / 2) * 15));
 
