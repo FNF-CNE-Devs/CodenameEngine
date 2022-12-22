@@ -1316,7 +1316,7 @@ class PlayState extends MusicBeatState
 
 				if (event.showRating || (event.showRating == null && event.player && !note.isSustainNote))
 				{
-					if (doSplash && !event.noteSplashCancelled) {
+					if (doSplash && !event.noteSplashCancelled && Options.noteSplash) {
 						var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
 						splash.setupNoteSplash(note.x, note.y, note.noteData);
 						grpNoteSplashes.add(splash);
