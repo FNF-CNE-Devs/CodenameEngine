@@ -74,7 +74,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		if (!event.cancelled) playAnim(event.animName, event.force, SING, event.reversed, event.frame);
 	}
 
-	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
+	public function new(x:Float, y:Float, ?character:String = "bf", isPlayer:Bool = false, switchAnims:Bool = true)
 	{
 		super(x, y);
 
@@ -172,7 +172,7 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		// [ true  ][ false ][ true  ]
 		// [ false ][ true  ][ true  ]
 		// [ true  ][ true  ][ false ]
-		if (isPlayer != playerOffsets)
+		if (isPlayer != playerOffsets && switchAnims)
 		{
 			// character is flipped
 			CoolUtil.switchAnimFrames(animation.getByName('singRIGHT'), animation.getByName('singLEFT'));

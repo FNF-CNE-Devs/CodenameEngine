@@ -89,10 +89,10 @@ class Theme {
 class ThemeData implements IFlxDestroyable {
     public var sprite:String = "";
 
-    public var font:String = "";
-    public var fontSize:Float = 12;
+    public var font:String = null;
+    public var fontSize:Null<Float> = null;
 
-    public var textColor:FlxColor = FlxColor.BLACK;
+    public var textColor:Null<FlxColor> = null;
     public var color:FlxColor = FlxColor.WHITE;
 
     public var left:Float = 4;

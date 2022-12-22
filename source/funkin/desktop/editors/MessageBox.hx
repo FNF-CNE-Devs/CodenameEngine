@@ -31,8 +31,7 @@ class MessageBox extends WindowContent {
         setSize(Std.int(Math.max(text.width + 20, 240)), Std.int(text.height + 20));
 
 
-        if (__buttons == null) __buttons = ["OK"];
-        else if (__buttons.length <= 0) __buttons.push("OK");
+        if (__buttons == null || __buttons.length <= 0) __buttons = ["OK"];
 
         var firstButt:Button = null;
         for(k=>b in __buttons) {

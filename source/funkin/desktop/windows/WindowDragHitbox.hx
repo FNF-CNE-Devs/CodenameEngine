@@ -32,7 +32,10 @@ class WindowDragHitbox extends FlxObject {
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
-        if (!parent.moveable) return;
+        if (!parent.moveable || parent.maximized) {
+            dragging = false;
+            return;
+        }
         if (dragging) {
             var screenPos = FlxG.mouse.getScreenPosition(FlxG.camera);
             screenPos.x = FlxMath.bound(screenPos.x, 0, FlxG.camera.width);

@@ -9,16 +9,24 @@ class WindowText extends FlxText {
         super(x, y, w, t);
         color = 0xFF000000;
         scrollFactor.set();
+        size = 12;
         applyFontSettings(DesktopMain.theme.window);
-        // setFormat(Paths.font(.font))
     }
 
     public function applyFontSettings(data:ThemeData) {
-        var fontPath = Paths.font(data.font);
-        if (data.font.startsWith("file://")) {
-            fontPath = data.font.substr(7);
-            while(fontPath.charAt(0) == "/") fontPath = fontPath.substr(1);
+        if (data.font != null) {
+            var fontPath:String;
+            if (data.font.startsWith("file://")) {
+                fontPath = data.font.substr(7);
+                while(fontPath.charAt(0) == "/") fontPath = fontPath.substr(1);
+            } else {
+                fontPath = Paths.font(data.font);
+            }
+            font = fontPath;
         }
-        setFormat(fontPath, Std.int(data.fontSize), data.textColor);
+        if (data.fontSize != null)
+            size = Std.int(data.fontSize);
+        if (data.textColor != null)
+            color = data.textColor;
     }
 }

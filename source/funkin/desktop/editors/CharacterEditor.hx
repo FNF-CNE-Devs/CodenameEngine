@@ -29,19 +29,18 @@ class CharacterEditor extends WindowContent {
         // stage
         var bg = new FlxSprite(-600, -200).loadAnimatedGraphic(Paths.image('stages/default/stageback'));
         bg.scrollFactor.set(0.9, 0.9);
+
         var stageFront = new FlxSprite(-600, 600).loadAnimatedGraphic(Paths.image('stages/default/stagefront'));
         stageFront.scrollFactor.set(0.9, 0.9);
-        var stageCurtains = new FlxSprite(-500, -300).loadAnimatedGraphic(Paths.image('stages/default/stagecurtains'));
-        stageCurtains.scrollFactor.set(1.3, 1.3);
-        char = new Character(100, 100, curCharacter, false);
 
-        for(e in [bg, stageFront, stageCurtains]) {
+        char = new Character(100, 100, curCharacter, false, false);
+
+        for(e in [bg, stageFront]) {
             e.antialiasing = true;
         }
         add(bg);
         add(stageFront);
         add(char);
-        add(stageCurtains);
         
         // character setup & following
         camFollow = new FlxObject(0, 0, 2, 2);
@@ -55,10 +54,10 @@ class CharacterEditor extends WindowContent {
     public override function update(elapsed:Float) {
         super.update(elapsed);
         if (parent.focused) {
-            if (FlxG.keys.pressed.RIGHT)    camFollow.x += elapsed * 200;
-            if (FlxG.keys.pressed.LEFT)     camFollow.x -= elapsed * 200;
-            if (FlxG.keys.pressed.DOWN)     camFollow.y += elapsed * 200;
-            if (FlxG.keys.pressed.UP)       camFollow.y -= elapsed * 200;
+            if (FlxG.keys.pressed.RIGHT)    camFollow.x += elapsed * 500;
+            if (FlxG.keys.pressed.LEFT)     camFollow.x -= elapsed * 500;
+            if (FlxG.keys.pressed.DOWN)     camFollow.y += elapsed * 500;
+            if (FlxG.keys.pressed.UP)       camFollow.y -= elapsed * 500;
         }
     }
 }
