@@ -1,10 +1,10 @@
 package funkin.options;
 
 import flixel.FlxG;
+import flixel.input.keyboard.FlxKey;
+import flixel.util.FlxSave;
 import funkin.system.Controls;
 import openfl.Lib;
-import flixel.util.FlxSave;
-import flixel.input.keyboard.FlxKey;
 
 class Options
 {
@@ -16,6 +16,7 @@ class Options
 	 */
 	public static var naughtyness:Bool = true;
 	public static var downscroll:Bool = false;
+	public static var noteSplash:Bool = true;
 	public static var flashingMenu:Bool = true;
 	public static var camZoomOnBeat:Bool = true;
 	public static var fpsCounter:Bool = true;

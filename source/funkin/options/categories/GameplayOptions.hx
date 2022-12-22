@@ -15,6 +15,10 @@ class GameplayOptions extends OptionsScreen {
                 "Camera Zoom on Beat",
                 "If unchecked, will disable camera zooming every 4 beats",
                 "camZoomOnBeat"),
+            new Checkbox(
+                "Note Splashes",
+                "If unchecked, disables note splashes",
+                "noteSplash"),
         ];
         super.create();
     }
