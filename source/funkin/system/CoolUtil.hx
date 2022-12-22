@@ -76,7 +76,7 @@ class CoolUtil
 			label++;
 			rSize /= 1024;
 		}
-		return '${Std.int(rSize) + "." + addZeros(Std.string(Math.round((rSize % 1) * 100)), 2)}${labels[label]}';
+		return '${Std.int(rSize) + "." + addZeros(Std.string(Std.int((rSize % 1) * 100)), 2)}${labels[label]}';
 	}
 
 	public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {
@@ -246,6 +246,8 @@ class CoolUtil
 				obj.x = (cam.width - obj.width) / 2;
 			case Y:
 				obj.y = (cam.height - obj.height) / 2;
+			case NONE:
+				
 		}
 	}
 

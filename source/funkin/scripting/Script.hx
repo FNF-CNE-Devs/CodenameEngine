@@ -41,13 +41,11 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "FlxSound"          => flixel.system.FlxSound,
             "FlxAssets"         => flixel.system.FlxAssets,
             "FlxMath"           => flixel.math.FlxMath,
-            "FlxPoint"          => flixel.math.FlxPoint,
             "FlxGroup"          => flixel.group.FlxGroup,
             "FlxTypedGroup"     => flixel.group.FlxGroup.FlxTypedGroup,
             "FlxSpriteGroup"    => flixel.group.FlxSpriteGroup,
             "FlxTypeText"       => flixel.addons.text.FlxTypeText,
             "FlxText"           => flixel.text.FlxText,
-            "FlxAxes"           => flixel.util.FlxAxes,
             "FlxTimer"          => flixel.util.FlxTimer,
     
             // Engine related stuff
