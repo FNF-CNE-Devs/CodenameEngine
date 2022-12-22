@@ -15,6 +15,7 @@ Also, `lime test windows` uses the source assets folder instead of the export on
 ## CREDITS
 - Credits to [Ne_Eo](https://twitter.com/Ne_Eo_Twitch) and the [3D-HaxeFlixel](https://github.com/lunarcleint/3D-HaxeFlixel) repository for Away3D Flixel support
 - Credits to Smokey555 for the fancy Animate Atlas code (might be replaced soon)
+- Credits to the [Week 7 Decompilation](https://github.com/AngelDTF/FNF-NewgroundsPort) for the note splash code
 
 ## HOW TO BUILD
 - Install the required libraries as told in the original Funkin' repo (with latest Haxe!)
