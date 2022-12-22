@@ -1,11 +1,12 @@
 package funkin.scripting.events;
 
-import funkin.game.Note;
 import funkin.game.Character;
+import funkin.game.Note;
 
 class NoteHitEvent extends CancellableEvent {
     @:dox(hide) public var animCancelled:Bool = false;
     @:dox(hide) public var strumGlowCancelled:Bool = false;
+	@:dox(hide) public var noteSplashCancelled:Bool = false;
     @:dox(hide) public var deleteNote:Bool = true;
     @:dox(hide) public var unmuteVocals:Bool = true;
     @:dox(hide) public var enableCamZooming:Bool = true;
@@ -124,8 +125,15 @@ class NoteHitEvent extends CancellableEvent {
     public function cancelAnim() {preventAnim();}
 
     /**
-     * Prevents the note from being deleted.
+     * Prevents note splash from being created, if any.
      */
+    public function preventNoteSplash() {
+        noteSplashCancelled = true;
+    }
+
+	/**
+	 * Prevents the note from being deleted.
+	 */
     public function preventDeletion() {
         deleteNote = false;
     }
