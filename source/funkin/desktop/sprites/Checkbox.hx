@@ -1,5 +1,6 @@
 package funkin.desktop.sprites;
 
+import flixel.math.FlxRect;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.FlxObject;
@@ -26,7 +27,7 @@ class Checkbox extends WindowText {
         super.update(elapsed);
         checkboxSprite.update(elapsed);
 
-        var overlaps = DesktopMain.mouseInput.overlaps(this, camera) || DesktopMain.mouseInput.overlaps(checkboxSprite, camera);
+        var overlaps = DesktopMain.mouseInput.overlapsRect(this, new FlxRect(x, y, width + 20, height), camera);
         var pressed = DesktopMain.mouseInput.pressed;
 
         if (overlaps) {
