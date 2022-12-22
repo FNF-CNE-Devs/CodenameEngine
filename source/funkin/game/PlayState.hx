@@ -1318,7 +1318,7 @@ class PlayState extends MusicBeatState
 				{
 					if (doSplash && !event.noteSplashCancelled && Options.noteSplash) {
 						var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
-						splash.setupNoteSplash(note.x, note.y, note.noteData);
+						splash.setupNoteSplash(playerStrums.members[note.strumID].x, playerStrums.members[note.strumID].y, note.noteData);
 						grpNoteSplashes.add(splash);
 					}
 					var rating:FlxSprite = new FlxSprite(-40, -60);
