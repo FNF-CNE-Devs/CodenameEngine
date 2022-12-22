@@ -354,6 +354,14 @@ class PlayState extends MusicBeatState
 		missesTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Misses:0", 16);
 		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Acc:-% (N/A)", 16);
 		accuracyTxt.addFormat(accFormat, 0, 1);
+		
+		  if(Options.downscroll)
+			{
+				scoreTxt.y -= 60;
+				missesTxt.y -= 60;
+				accuracyTxt.y -= 60;
+			}
+
 
 		for(text in [scoreTxt, missesTxt, accuracyTxt]) {
 			text.scrollFactor.set();
