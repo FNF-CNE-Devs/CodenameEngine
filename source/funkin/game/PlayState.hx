@@ -1,20 +1,5 @@
 package funkin.game;
 
-import funkin.editors.CharacterEditor;
-import funkin.scripting.DummyScript;
-import funkin.menus.StoryMenuState.WeekData;
-import funkin.ui.FunkinText;
-import flixel.group.FlxSpriteGroup;
-import funkin.options.Options;
-import funkin.scripting.Script;
-import flixel.util.FlxDestroyUtil;
-#if desktop
-import funkin.system.Discord.DiscordClient;
-#end
-import funkin.system.Section.SwagSection;
-import funkin.system.Song.SwagSong;
-import funkin.scripting.ScriptPack;
-import funkin.shaders.WiggleEffect.WiggleEffectType;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -32,6 +17,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.graphics.atlas.FlxAtlas;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -42,25 +28,38 @@ import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
 import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
+import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
+import funkin.cutscenes.*;
+import funkin.debug.AnimationDebug;
+import funkin.editors.CharacterEditor;
+import funkin.editors.ChartingState;
+import funkin.menus.*;
+import funkin.menus.StoryMenuState.WeekData;
+import funkin.options.Options;
+import funkin.scripting.DummyScript;
+import funkin.scripting.Script;
+import funkin.scripting.ScriptPack;
+import funkin.scripting.events.*;
+import funkin.shaders.WiggleEffect.WiggleEffectType;
+import funkin.system.Conductor;
+import funkin.system.Section.SwagSection;
+import funkin.system.Song.SwagSong;
+import funkin.system.Song;
+import funkin.ui.FunkinText;
 import haxe.Json;
 import haxe.io.Path;
 import lime.utils.Assets;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
-import funkin.system.Conductor;
-import funkin.system.Song;
-import funkin.editors.ChartingState;
-import funkin.debug.AnimationDebug;
-import funkin.cutscenes.*;
-
-import funkin.menus.*;
-import funkin.scripting.events.*;
 
 using StringTools;
+#if desktop
+import funkin.system.Discord.DiscordClient;
+#end
 
 @:access(flixel.text.FlxText.FlxTextFormatRange)
 class PlayState extends MusicBeatState
@@ -110,6 +109,7 @@ class PlayState extends MusicBeatState
 
 	public var strumLineNotes:FlxTypedGroup<Strum>;
 	public var playerStrums:FlxTypedGroup<Strum>;
+	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 	public var cpuStrums:FlxTypedGroup<Strum>;
 
 	public var muteVocalsOnMiss:Bool = true;
@@ -214,6 +214,8 @@ class PlayState extends MusicBeatState
 		FlxG.cameras.add(camHUD = new HudCamera(), false);
 		camHUD.bgColor.alpha = 0;
 
+		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
+
 		downscroll = Options.downscroll;
 		// camGame.widescreen = true;
 
@@ -313,6 +315,8 @@ class PlayState extends MusicBeatState
 		cpuStrums = new FlxTypedGroup<Strum>();
 		add(strumLineNotes);
 
+		add(grpNoteSplashes);
+
 		generateSong(SONG);
 
 		if (prevCamFollow != null)
@@ -363,7 +367,7 @@ class PlayState extends MusicBeatState
 		missesTxt.alignment = CENTER;
 		accuracyTxt.alignment = LEFT;
 
-		for(e in [strumLineNotes, notes, healthBar, healthBarBG, iconP1, iconP2, scoreTxt, missesTxt, accuracyTxt])
+		for(e in [strumLineNotes, notes, grpNoteSplashes, healthBar, healthBarBG, iconP1, iconP2, scoreTxt, missesTxt, accuracyTxt])
 			e.cameras = [camHUD];
 
 		startingSong = true;
@@ -1269,6 +1273,7 @@ class PlayState extends MusicBeatState
 			 */
 			var noteDiff = Math.abs(Conductor.songPosition - note.strumTime);
 			var daRating:String = "sick";
+			var doSplash:Bool = true;
 			var score:Int = 300;
 			var accuracy:Float = 1;
 	
@@ -1277,18 +1282,21 @@ class PlayState extends MusicBeatState
 				daRating = 'shit';
 				score = 50;
 				accuracy = 0.25;
+				doSplash = false;
 			}
 			else if (noteDiff > Conductor.safeZoneOffset * 0.75)
 			{
 				daRating = 'bad';
 				score = 100;
 				accuracy = 0.45;
+				doSplash = false;
 			}
 			else if (noteDiff > Conductor.safeZoneOffset * 0.2)
 			{
 				daRating = 'good';
 				score = 200;
 				accuracy = 0.75;
+				doSplash = false;
 			}
 
 			var event:NoteHitEvent;
