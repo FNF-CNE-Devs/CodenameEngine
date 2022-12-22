@@ -103,11 +103,8 @@ class Button extends FlxObject {
             default:    normalSprite;
         };
         spr.resize(width, height);
-        for(sprite in [spr, label]) {
-            sprite.cameras = cameras;
-            sprite.setPosition(x, y);
-            sprite.scrollFactor.set(scrollFactor.x, scrollFactor.y);
-        }
+        for(sprite in [spr, label])
+            sprite.copyProperties(this);
         spr.draw();
         label.y += (height - label.height) / 2;
         label.draw();

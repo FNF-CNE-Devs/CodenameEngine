@@ -32,6 +32,10 @@ class HelloWorld extends WindowContent {
         });
         butt.scrollFactor.set();
         add(butt);
+
+        var checkbox = new Checkbox(10, 40, 0, "Test Checkbox", CHECKED);
+        checkbox.scrollFactor.set();
+        add(checkbox);
     }
 
     public var time:Float = 0;

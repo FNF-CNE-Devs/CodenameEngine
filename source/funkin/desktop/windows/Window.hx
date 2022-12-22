@@ -1,5 +1,6 @@
 package funkin.desktop.windows;
 
+import flixel.math.FlxRect;
 import flixel.addons.ui.FlxUIText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxBasic;
@@ -252,7 +253,7 @@ class Window extends FlxTypedGroup<FlxBasic> {
         windowInactiveFrame.visible = !(windowFrame.visible = focused);
         var i = members.length;
         
-        var shouldCancel = DesktopMain.mouseInput.overlapsRect(this, new Rectangle(0, 0, windowCaptionCamera.width, windowCaptionCamera.height), windowCaptionCamera);
+        var shouldCancel = DesktopMain.mouseInput.overlapsRect(this, new FlxRect(0, 0, windowCaptionCamera.width, windowCaptionCamera.height), windowCaptionCamera);
 
         
 

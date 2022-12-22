@@ -39,6 +39,11 @@ class Theme {
     public var pressedButton:ThemeData = new ThemeData();
     public var disabledButton:ThemeData = new ThemeData();
 
+    /**
+     * CHECKBOX
+     */
+    public var checkbox:ThemeData = new ThemeData();
+
     public function new(content:String) {
         try {
             var access = new Access(Xml.parse(content).firstElement());
@@ -60,6 +65,8 @@ class Theme {
                 if (element.has.right) data.right = Std.parseFloat(element.att.right).getDefault(0);
                 if (element.has.top) data.top = Std.parseFloat(element.att.top).getDefault(0);
                 if (element.has.bottom) data.bottom = Std.parseFloat(element.att.bottom).getDefault(0);
+                if (element.has.width) data.width = Std.parseFloat(element.att.width).getDefault(data.width);
+                if (element.has.height) data.height = Std.parseFloat(element.att.height).getDefault(data.height);
                 if (element.has.size) {
                     var split = element.att.size.split(",");
                     data.size.set(
@@ -99,6 +106,9 @@ class ThemeData implements IFlxDestroyable {
     public var bottom:Float = 4;
     public var top:Float = 4;
     public var right:Float = 4;
+
+    public var width:Float = 4;
+    public var height:Float = 4;
 
     public var margin:FlxPoint = FlxPoint.get(0, 0);
     public var size:FlxPoint = FlxPoint.get(20, 20);
