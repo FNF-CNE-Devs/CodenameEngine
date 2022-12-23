@@ -8,12 +8,14 @@ import haxe.macro.Compiler;
 /**
  * Removes all deprecations errors related to `Std.is`
  * Written by Yoshman29 to keep you sane.
- * Feel free to use this macro on your mod without forgetting this line in Project.xml:
+ * Feel free to use this macro on your mod.
+ * 
+ * Line to add in project.xml:
  * `<haxeflag name="--macro" value="funkin.macros.StdDeprecationsRemover.init()" />`
  */
 class StdDeprecationsRemover {
     public static function init() {
-        Compiler.addGlobalMetadata('Std', '@:build(hscript.UsingHandler.build())');
+        Compiler.addGlobalMetadata('Std', '@:build(funkin.macros.StdDeprecationsRemover.build())');
     }
 
     public static function build():Array<Field> {
