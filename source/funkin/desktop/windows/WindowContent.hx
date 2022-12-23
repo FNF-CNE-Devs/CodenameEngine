@@ -74,6 +74,7 @@ class WindowContent extends WindowGroup<FlxBasic> {
         this.height = height;
         this.winX = x;
         this.winY = y;
+        this.updateScrolls = false;
     }
 
     public function create() {

@@ -22,20 +22,24 @@ class HelloWorld extends WindowContent {
         t.scrollFactor.set(1, 1);
         add(t);
 
-        var t = new WindowText(0, 0, 0, "Top right text!");
-        t.setPosition(630 - t.width, 10);
-        t.scrollFactor.set(1, 0);
-        add(t);
+        var tabs = new TabView(330, 10, 300, 500, ["Tab 1", "Tab 2", "Tab 3"]);
+        tabs.updateScrollFactor(0, 0);
+        add(tabs);
+
+
+        var checkbox = new Checkbox(10, 40, 0, "Test Checkbox", CHECKED);
+        var text = new WindowText(10, 10, 180, "Stuff in page 1");
+        tabs.tabs[0].add(text);
+        tabs.tabs[0].add(checkbox);
+
+        var text2 = new WindowText(10, 10, 180, "Stuff in page 2");
+        tabs.tabs[1].add(text2);
 
         var butt = new Button(10, 10, "Test", function() {
             parent.showMessage("Test", "Test", ERROR);
         });
         butt.scrollFactor.set();
         add(butt);
-
-        var checkbox = new Checkbox(10, 40, 0, "Test Checkbox", CHECKED);
-        checkbox.scrollFactor.set();
-        add(checkbox);
     }
 
     public var time:Float = 0;

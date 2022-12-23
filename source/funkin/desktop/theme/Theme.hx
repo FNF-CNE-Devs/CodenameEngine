@@ -44,6 +44,15 @@ class Theme {
      */
     public var checkbox:ThemeData = new ThemeData();
 
+    /**
+     * TABS
+     */
+    public var tabBackground:ThemeData = new ThemeData();
+    public var tabButtonSelected:ThemeData = new ThemeData();
+    public var tabButtonUnselected:ThemeData = new ThemeData();
+    public var tabButtonHover:ThemeData = new ThemeData();
+    public var tabButtonPressed:ThemeData = new ThemeData();
+
     public function new(content:String) {
         try {
             var access = new Access(Xml.parse(content).firstElement());

@@ -11,6 +11,8 @@ class WindowText extends FlxText {
         scrollFactor.set();
         size = 12;
         applyFontSettings(DesktopMain.theme.window);
+
+        scrollFactor.set();
     }
 
     public function applyFontSettings(data:ThemeData) {
