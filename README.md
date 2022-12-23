@@ -1,5 +1,7 @@
 # Friday Night Funkin' - Codename Engine (WIP)
 
+![Repo size](https://img.shields.io/github/repo-size/YoshiCrafter29/CodenameEngine)
+
 ## PLEASE NOTE - THIS IS STILL IN AN ALPHA STATE
 
 Early alpha of Codename Engine, known issues:
