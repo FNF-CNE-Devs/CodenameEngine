@@ -280,7 +280,7 @@ class PlayState extends MusicBeatState
 				// ADD YOUR HARDCODED SCRIPTS HERE!
 			default:
 				for(content in [
-					Paths.getFolderContent('data/charts/${SONG.song}/', false, true, !fromMods),
+					Paths.getFolderContent('data/charts/${SONG.song.toLowerCase()}/', false, true, !fromMods),
 					Paths.getFolderContent('data/charts/', false, true, !fromMods)]) {
 					for(file in content) {
 						var ext = Path.extension(file).toLowerCase();
