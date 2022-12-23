@@ -54,6 +54,18 @@ class WindowDragHitbox extends FlxObject {
                     var screenPos = FlxG.mouse.getScreenPosition(FlxG.camera);
                     offset = FlxPoint.get(parent.content.winX - screenPos.x, parent.content.winY - screenPos.y);
                     dragging = true;
+                } else if (DesktopMain.mouseInput.justPressedRight) {
+                    var input = DesktopMain.mouseInput;
+                    new ContextMenu(input.screenPos.x, input.screenPos.y, [
+                        {
+                            name: "Close",
+                            callback: function() {
+                                parent.close();
+                            }
+                        }
+                    ], function(i) {
+                        trace(i);
+                    });
                 }
                 DesktopMain.mouseInput.cancel();
             }
