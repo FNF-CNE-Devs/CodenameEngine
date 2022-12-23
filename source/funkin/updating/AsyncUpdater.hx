@@ -160,7 +160,7 @@ class AsyncUpdater {
         #if windows
         path = '${Sys.getEnv("TEMP")}\\Codename Engine\\Updater\\';
         #else
-        path = '../.temp/';
+        path = '.temp/';
         #end
 
         FileSystem.createDirectory(path);
