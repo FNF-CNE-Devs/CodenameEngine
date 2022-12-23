@@ -123,7 +123,13 @@ class UpdateScreen extends MusicBeatState {
             FlxG.camera.fade(0xFF000000, overSound.length / 1000, false, function() {
                 if (updater.executableReplaced) {
                     // the executable has been replaced, restart the game entirely
+                    #if windows
                     Sys.command('start /B ${AsyncUpdater.executableName}');
+                    #else
+                    // We have to make the new executable allowed to execute
+                    // before we can execute it!
+                    Sys.command('chmod +x ./${AsyncUpdater.executableName} && ./${AsyncUpdater.executableName}');
+                    #end
                     openfl.system.System.exit(0);
                 } else {
                     // assets update, switch back to TitleState.
