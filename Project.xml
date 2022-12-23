@@ -120,7 +120,7 @@
 	<haxedef name="USE_ADAPTED_ASSETS" />
 
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
-	<define name="VIDEO_CUTSCENES" unless="web" />
+	<define name="VIDEO_CUTSCENES" unless="web || linux" />
 	
 
 	<haxedef name="VIDEO_CUTSCENES" if="VIDEO_CUTSCENES" />
