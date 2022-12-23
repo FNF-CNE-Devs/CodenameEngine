@@ -150,6 +150,7 @@
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
 		<haxeflag name="--macro" value="funkin.macros.ScriptsMacro.addAdditionalClasses()" />
+		<haxeflag name="--macro" value="funkin.macros.StdDeprecationsRemover.init()" />
 	</section>
 	<haxeflag name="--macro" value="exclude('funkin.updating')" unless="UPDATE_CHECKING"/>
 	<haxeflag name="--macro" value="exclude('funkin.multitasking')" unless="ALLOW_MULTITASKING"/>
