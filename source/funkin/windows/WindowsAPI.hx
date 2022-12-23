@@ -39,7 +39,7 @@ class WindowsAPI {
         #if windows
         native.WinAPI.showMessageBox(caption, message, icon);
         #else
-        lime.app.Application.current.window.alert(caption, message);
+        lime.app.Application.current.window.alert(message, caption);
         #end
     }
 
