@@ -50,6 +50,7 @@ class MessageBox extends WindowContent {
             });
             button.x -= button.width;
             button.y -= button.height;
+            button.scrollFactor.set(1, 1);
             add(button);
             if (firstButt == null) firstButt = button;
         }

@@ -21,6 +21,8 @@ class Checkbox extends WindowText {
         checkboxSprite.loadGraphic(Paths.image(t.sprite), true, Std.int(t.width), Std.int(t.height));
         checkboxSprite.animation.add("checkbox", [for(i in 0...checkboxSprite.frames.frames.length) i], 0, true);
         checkboxSprite.animation.play("checkbox");
+
+        scrollFactor.set();
     }
 
     public override function update(elapsed:Float) {

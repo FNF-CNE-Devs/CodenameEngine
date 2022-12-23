@@ -28,6 +28,8 @@ class SpliceSprite extends FlxObject {
         this.width = width;
         this.height = height;
 
+        scrollFactor.set();
+
         __internalSprite = new FlxSprite(0, 0, spr);
         
         slice = [Std.int(left), Std.int(bottom), Std.int(top), Std.int(right)];

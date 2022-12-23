@@ -29,7 +29,7 @@ class Button extends FlxObject {
         return normalSprite.height;
     }
     
-    public function new(x:Float, y:Float, text:String = "", callback:Void->Void) {
+    public function new(x:Float, y:Float, text:String = "", callback:Void->Void, ?normalButton:ThemeData, ?hoverButton:ThemeData, ?pressedButton:ThemeData, ?disabledButton:ThemeData) {
         super();
         this.x = x; 
         this.y = y;
@@ -37,10 +37,12 @@ class Button extends FlxObject {
         this.height = 24;
         this.callback = callback;
 
-        var normalButton = DesktopMain.theme.normalButton;
-        var hoverButton = DesktopMain.theme.hoverButton;
-        var pressedButton = DesktopMain.theme.pressedButton;
-        var disabledButton = DesktopMain.theme.disabledButton;
+        scrollFactor.set();
+
+        if (normalButton == null) normalButton = DesktopMain.theme.normalButton;
+        if (hoverButton == null) hoverButton = DesktopMain.theme.hoverButton;
+        if (pressedButton == null) pressedButton = DesktopMain.theme.pressedButton;
+        if (disabledButton == null) disabledButton = DesktopMain.theme.disabledButton;
 
         normalSprite = new SpliceSprite(Paths.image(normalButton.sprite), x, y, 75, 24, normalButton.left, normalButton.top, normalButton.bottom, normalButton.right);
         hoverSprite = new SpliceSprite(Paths.image(hoverButton.sprite), x, y, 75, 24, hoverButton.left, hoverButton.top, hoverButton.bottom, hoverButton.right);
