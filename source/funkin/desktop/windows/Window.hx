@@ -299,5 +299,6 @@ class Window extends FlxTypedGroup<FlxBasic> {
                 e.camera.scroll.set(-Std.int(e.camera.width - e.width), -Std.int(e.camera.height - e.height));
             }
         }
+        content.onWindowResize(windowWidth, windowHeight);
     }
 }

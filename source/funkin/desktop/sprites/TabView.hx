@@ -1,5 +1,6 @@
 package funkin.desktop.sprites;
 
+import flixel.FlxObject;
 import flixel.math.FlxRect;
 import flixel.FlxSprite;
 import flixel.FlxBasic;

@@ -81,6 +81,9 @@ class WindowContent extends WindowGroup<FlxBasic> {
 
     }
 
+    public function onWindowResize(width:Int, height:Int) {
+        
+    }
     
     public function onDesktopSizeChange(width:Int, height:Int) {
         

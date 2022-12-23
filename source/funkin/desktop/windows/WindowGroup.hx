@@ -21,36 +21,34 @@ class WindowGroup<T:FlxBasic> extends FlxTypedGroup<T> {
             var o = cast(obj, FlxObject);
             o.x += x;
             o.y += y;
-            o.scrollFactor.x = scrollFactor.x;
-            o.scrollFactor.y = scrollFactor.y;
         } else if (obj is WindowGroup) {
             var o:WindowGroup<FlxBasic> = cast obj;
             o.x += x;
             o.y += y;
-            o.scrollFactor.x = scrollFactor.x;
-            o.scrollFactor.y = scrollFactor.y;
         }
+        __updateObjScrollFactor(obj);
 
         return obj;
     }
 
     
     
-    public function updateScrollFactor(x:Float, y:Float) {
+    public function updateAnchor(x:Float, y:Float, ?cameras:Array<FlxCamera>) {
         scrollFactor.set(x, y);
+        if (cameras != null) this.cameras = cameras;
         if (!updateScrolls) return;
         for(obj in members)
-            __updateObjScrollFactor(obj);
+            __updateObjScrollFactor(obj, cameras);
     }
 
-    private function __updateObjScrollFactor(obj:FlxBasic) {
+    private function __updateObjScrollFactor(obj:FlxBasic, ?cameras:Array<FlxCamera>) {
         if (obj is FlxObject) {
             var o = cast(obj, FlxObject);
-            o.scrollFactor.x = scrollFactor.x;
-            o.scrollFactor.y = scrollFactor.y;
+            if (cameras != null) o.cameras = cameras;
+            o.scrollFactor.set(scrollFactor.x, scrollFactor.y);
         } else if (obj is WindowGroup) {
             var o:WindowGroup<FlxBasic> = cast obj;
-            o.updateScrollFactor(scrollFactor.x, scrollFactor.y);
+            o.updateAnchor(scrollFactor.x, scrollFactor.y, cameras);
         }
     }
 
