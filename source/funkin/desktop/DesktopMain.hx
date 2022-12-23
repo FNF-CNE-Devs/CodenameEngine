@@ -12,6 +12,7 @@ import flixel.FlxSprite;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.math.FlxPoint;
+import flixel.util.FlxDestroyUtil;
 import funkin.desktop.editors.*;
 import funkin.desktop.windows.*;
 import funkin.desktop.theme.Theme;
@@ -29,12 +30,14 @@ class DesktopMain extends MusicBeatState {
 
     public static var theme:Theme = null;
 
+    public static var contextMenu:ContextMenu = null;
+
     public static function init() {
         theme = Theme.loadFromAssets(Paths.getPath('images/desktop/ui.xml', TEXT, null));
         mouseInput = new MouseInput();
 
         FlxG.signals.preUpdate.add(function() {
-            mouseInput.set(FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased);
+            updateMouseInput();
         });
     }
 
@@ -62,8 +65,15 @@ class DesktopMain extends MusicBeatState {
         add(windows);
     }
 
+    private static function updateMouseInput() {
+        mouseInput.set(FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased, FlxG.mouse.pressedRight, FlxG.mouse.justPressedRight, FlxG.mouse.justReleasedRight);
+    }
+    
     public override function update(elapsed:Float) {
-        mouseInput.set(FlxG.mouse.pressed, FlxG.mouse.justPressed, FlxG.mouse.justReleased);
+        updateMouseInput();
+
+        if (contextMenu != null)
+            contextMenu.update(elapsed);
 
         super.update(elapsed);
 
@@ -85,6 +95,12 @@ class DesktopMain extends MusicBeatState {
         return windows.add(new Window(content));
     }
 
+    public override function draw() {
+        super.draw();
+        if (contextMenu != null)
+            contextMenu.draw();
+    }
+
     public function updateScreenRes() {
         // update wallpaper
         wallpaper.setUnstretchedGraphicSize(FlxG.width, FlxG.height);
@@ -95,6 +111,8 @@ class DesktopMain extends MusicBeatState {
 
     public override function destroy() {
         super.destroy();
+        contextMenu = FlxDestroyUtil.destroy(contextMenu);
+
         FlxG.scaleMode = oldScaleMode;
         FlxG.mouse.useSystemCursor = FlxG.mouse.visible = false;
 
@@ -124,19 +142,27 @@ class MouseInput {
     public var pressed:Bool = false;
     public var justPressed:Bool = false;
     public var justReleased:Bool = false;
+    public var pressedRight:Bool = false;
+    public var justPressedRight:Bool = false;
+    public var justReleasedRight:Bool = false;
+    public var screenPos:FlxPoint = null;
     private var __cancelled:Bool = false;
 
     public function cancel() {
-        pressed = justPressed = justReleased = false;
+        pressed = justPressed = justReleased = pressedRight = justPressedRight = justReleasedRight = false;
         __cancelled = true;
     }
 
     public function new() {}
 
-    public function set(pressed:Bool, justPressed:Bool, justReleased:Bool) {
+    public function set(pressed:Bool, justPressed:Bool, justReleased:Bool, pressedRight:Bool, justPressedRight:Bool, justReleasedRight:Bool) {
         this.pressed = pressed;
         this.justPressed = justPressed;
         this.justReleased = justReleased;
+        this.pressedRight = pressedRight;
+        this.justPressedRight = justPressedRight;
+        this.justReleasedRight = justReleasedRight;
+        this.screenPos = FlxG.mouse.getScreenPosition(FlxG.camera);
         this.__cancelled = false;
     }
 

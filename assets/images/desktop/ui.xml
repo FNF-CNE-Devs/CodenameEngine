@@ -23,5 +23,5 @@
 
     <!-- CONTEXT MENU -->
     <contextBackground      path="context"          textColor="0,0,0"           left="4" top="4" right="4" bottom="4" />
-    <contextOption          path="contextOption"    textColor="0,0,0"           height="20" />
+    <contextOption          path="contextOption"    textColor="255,255,255"     height="20" />
 </theme>
