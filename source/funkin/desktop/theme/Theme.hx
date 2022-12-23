@@ -53,6 +53,12 @@ class Theme {
     public var tabButtonHover:ThemeData = new ThemeData();
     public var tabButtonPressed:ThemeData = new ThemeData();
 
+    /**
+     * CONTEXT MENU
+     */
+    public var contextBackground:ThemeData = new ThemeData();
+    public var contextOption:ThemeData = new ThemeData();
+
     public function new(content:String) {
         try {
             var access = new Access(Xml.parse(content).firstElement());
