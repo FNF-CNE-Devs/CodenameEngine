@@ -23,7 +23,7 @@ class HelloWorld extends WindowContent {
         add(t);
 
         var tabs = new TabView(330, 10, 300, 500, ["Tab 1", "Tab 2", "Tab 3"]);
-        tabs.updateScrollFactor(0, 0);
+        tabs.updateAnchor(1, 0);
         add(tabs);
 
 
