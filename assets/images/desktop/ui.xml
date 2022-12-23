@@ -20,4 +20,8 @@
     <tabButtonUnselected    path="tabNonSelected"   textColor="0,0,0"           left="4" top="6" right="4" bottom="4" />
     <tabButtonHover         path="tabHover"         textColor="0,0,0"           left="4" top="4" right="4" bottom="4" />
     <tabButtonPressed       path="tabPressed"       textColor="0,0,0"           left="4" top="4" right="4" bottom="4" />
+
+    <!-- CONTEXT MENU -->
+    <contextBackground      path="context"          textColor="0,0,0"           left="4" top="4" right="4" bottom="4" />
+    <contextOption          path="contextOption"    textColor="0,0,0"           height="20" />
 </theme>
