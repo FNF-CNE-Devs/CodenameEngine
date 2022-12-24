@@ -1,5 +1,6 @@
 package funkin.menus.credits;
 
+import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import openfl.display.BitmapData;
 import flixel.FlxSprite;
@@ -8,6 +9,9 @@ import funkin.github.GitHub;
 import funkin.menus.MainMenuState;
 
 class CreditsCodename extends MusicBeatState {
+    public var contributorsSprites:Array<FlxSprite> = [];
+    public var contributorsAvatars:Array<FlxGraphic> = [];
+    public var avatarLoadListId:Int = 0;
     public override function create() {
         super.create();
 
@@ -22,15 +26,22 @@ class CreditsCodename extends MusicBeatState {
         var contributors = GitHub.getContributors("YoshiCrafter29", "CodenameEngine", function(e) {
             trace(e);
         });
-        trace(contributors);
         for(k=>c in contributors) {
-            var bmap = BitmapData.fromBytes(GitHub.__requestBytesOnGitHubServers(c.avatar_url));
-
             var spr = new FlxSprite(0, k * 50);
-            spr.loadGraphic(FlxG.bitmap.add(bmap, false, 'GITHUB-USER:${c.login}'));
+            spr.antialiasing = true;
             spr.setUnstretchedGraphicSize(50, 50, false);
+            contributorsSprites.push(spr);
             add(spr);
         }
+
+        Main.execAsync(function() {
+            for(k=>c in contributors) {
+                var bytes = GitHub.__requestBytesOnGitHubServers('${c.avatar_url}&size=64');
+                var bmap = BitmapData.fromBytes(bytes);
+                contributorsAvatars.push(FlxG.bitmap.add(bmap, false, 'GITHUB-USER:${c.login}'));
+                if (destroyed) return;
+            }
+        });
     }
 
     public override function update(elapsed:Float) {
@@ -40,5 +51,17 @@ class CreditsCodename extends MusicBeatState {
             FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
             FlxG.switchState(new MainMenuState());
         }
+        if (avatarLoadListId < contributorsAvatars.length) {
+            for(i in avatarLoadListId...contributorsAvatars.length) {
+                var v = contributorsSprites[i];
+                v.loadGraphic(contributorsAvatars[i]);
+                v.setUnstretchedGraphicSize(50, 50, false);
+            }
+            avatarLoadListId = contributorsAvatars.length;
+        }
+    }
+
+    public override function destroy() {
+        super.destroy();
     }
 }
