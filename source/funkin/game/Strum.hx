@@ -46,32 +46,42 @@ class Strum extends FlxSprite {
     public function updateNotePosition(daNote:Note) {
         if (!daNote.exists) return;
         
-        var offset = FlxPoint.get(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
-        var realOffset = FlxPoint.get(0, 0);
-
+    
         daNote.__strumCameras = lastDrawCameras;
-
-        if (daNote.isSustainNote) offset.y -= Note.swagWidth / 2;
-        
+        daNote.__strum = this;
         daNote.scrollFactor.set(scrollFactor.x, scrollFactor.y);
-        
         var noteAngle = daNote.__noteAngle = getNotesAngle(daNote);
         daNote.angle = daNote.isSustainNote ? noteAngle : angle;
-        if (Std.int(noteAngle % 360) != 0) {
-            var noteAngleCos = Math.cos(noteAngle / 180 * Math.PI);
-            var noteAngleSin = Math.sin(noteAngle / 180 * Math.PI);
-            realOffset.x = (noteAngleCos * offset.x) + (noteAngleSin * offset.y);
-            realOffset.y = (noteAngleSin * offset.x) + (noteAngleCos * offset.y);
-        } else {
-            realOffset.x = offset.x;
-            realOffset.y = offset.y;
-        }
-        realOffset.y *= -1;
 
-        daNote.setPosition(x + realOffset.x, y + realOffset.y);
-        
-        offset.put();
-        realOffset.put();
+        if (daNote.strumRelativePos) {
+            daNote.setPosition(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (daNote.strumTime - Conductor.songPosition) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
+            if (daNote.isSustainNote) daNote.y += Note.swagWidth / 2;
+        } else {
+            var offset = FlxPoint.get(0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
+            var realOffset = FlxPoint.get(0, 0);
+
+            if (daNote.isSustainNote) offset.y -= Note.swagWidth / 2;
+            
+            if (Std.int(noteAngle % 360) != 0) {
+                var noteAngleCos = Math.cos(noteAngle / 180 * Math.PI);
+                var noteAngleSin = Math.sin(noteAngle / 180 * Math.PI);
+                var aOffset:FlxPoint = FlxPoint.get(
+                    (daNote.origin.x / daNote.scale.x) - daNote.offset.x,
+                    (daNote.origin.y / daNote.scale.y) - daNote.offset.y
+                );
+                realOffset.x = -aOffset.x + (noteAngleCos * (offset.x + aOffset.x)) + (noteAngleSin * (offset.y + aOffset.y));
+                realOffset.y = -aOffset.y + (noteAngleSin * (offset.x + aOffset.x)) + (noteAngleCos * (offset.y + aOffset.y));
+            } else {
+                realOffset.x = offset.x;
+                realOffset.y = offset.y;
+            }
+            realOffset.y *= -1;
+    
+            daNote.setPosition(x + realOffset.x, y + realOffset.y);
+            
+            offset.put();
+            realOffset.put();
+        }
     }
 
     public function updateSustain(daNote:Note) {
