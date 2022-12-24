@@ -22,11 +22,11 @@ class CreditsCodename extends MusicBeatState {
         var contributors = GitHub.getContributors("YoshiCrafter29", "CodenameEngine", function(e) {
             trace(e);
         });
-        trace(contributors);
         for(k=>c in contributors) {
-            var bmap = BitmapData.fromBytes(GitHub.__requestBytesOnGitHubServers(c.avatar_url));
+            var bmap = BitmapData.fromBytes(GitHub.__requestBytesOnGitHubServers('${c.avatar_url}&size=64'));
 
             var spr = new FlxSprite(0, k * 50);
+            spr.antialiasing = true;
             spr.loadGraphic(FlxG.bitmap.add(bmap, false, 'GITHUB-USER:${c.login}'));
             spr.setUnstretchedGraphicSize(50, 50, false);
             add(spr);
