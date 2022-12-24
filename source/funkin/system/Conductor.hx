@@ -143,7 +143,10 @@ class Conductor
 	private static function update() {
 		var elapsed = FlxG.elapsed;
 
-		if (FlxG.sound.music == null || !FlxG.sound.music.playing) return;
+		if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
+			speed = 1;
+			return;
+		}
 		if (FlxG.state != null && FlxG.state is MusicBeatState && cast(FlxG.state, MusicBeatState).cancelConductorUpdate) return;
 
 		var lastPos = lastSongPos;
