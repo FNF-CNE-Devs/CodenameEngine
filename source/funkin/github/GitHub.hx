@@ -28,6 +28,22 @@ class GitHub {
         return [];
     }
 
+    public static function getContributors(user:String, repository:String, ?onError:Exception->Void):Array<GitHubContributor> {
+        try {
+            var url = 'https://api.github.com/repos/${user}/${repository}/contributors';
+
+            var data = Json.parse(__requestOnGitHubServers(url));
+            if (!(data is Array))
+                throw __parseGitHubException(data);
+            
+            return data;
+        } catch(e) {
+            if (onError != null)
+                onError(e);
+        }
+        return [];
+    }
+
     /**
      * Filters all releases gotten by `getReleases`
      * @param releases Releases
@@ -38,11 +54,24 @@ class GitHub {
     public static inline function filterReleases(releases:Array<GitHubRelease>, keepPrereleases:Bool = true, keepDrafts:Bool = false)
         return [for(release in releases) if (release != null && (!release.prerelease || (release.prerelease && keepPrereleases)) && (!release.draft || (release.draft && keepDrafts))) release];
 
-    private static function __requestOnGitHubServers(url:String) {
+    public static function __requestOnGitHubServers(url:String) {
         var h = new Http(url);
         h.setHeader("User-Agent", "request");
 		var r = null;
 		h.onData = function(d) {
+			r = d;
+		}
+		h.onError = function(e) {
+			throw e;
+		}
+		h.request(false);
+		return r;
+    }
+    public static function __requestBytesOnGitHubServers(url:String) {
+        var h = new Http(url);
+        h.setHeader("User-Agent", "request");
+		var r = null;
+		h.onBytes = function(d) {
 			r = d;
 		}
 		h.onError = function(e) {
