@@ -1,5 +1,7 @@
 package funkin.system;
 
+import flixel.math.FlxMath;
+import openfl.Lib;
 import flixel.FlxState;
 import funkin.interfaces.IBeatReceiver;
 import flixel.FlxG;
@@ -71,7 +73,9 @@ class Conductor
 	public static var curBeatFloat:Float = 0;
 
 	
-	@:dox(hide) public static var lastSongPos:Float;
+	@:dox(hide) public static var lastSongPos:Float = 0;
+	@:dox(hide) public static var lastSongPosTime:Float = 0;
+	@:dox(hide) public static var speed:Float = 0;
 	@:dox(hide) public static var offset:Float = 0;
 
 	@:dox(hide) public static var safeZoneOffset:Float = 175; // is calculated in create(), is safeFrames in milliseconds
@@ -85,6 +89,7 @@ class Conductor
 
 	public static function reset() {
 		songPosition = lastSongPos = curBeatFloat = curStepFloat = curBeat = curStep = 0;
+		speed = 1;
 		bpmChangeMap = [];
 		changeBPM(0);
 	}
@@ -126,7 +131,7 @@ class Conductor
 	}
 
 	public static function init() {
-		FlxG.signals.preUpdate.add(update);
+		FlxG.signals.postUpdate.add(update);
 		FlxG.signals.preStateCreate.add(onStateSwitch);
 		reset();
 	}
@@ -140,11 +145,15 @@ class Conductor
 
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing) return;
 		if (FlxG.state != null && FlxG.state is MusicBeatState && cast(FlxG.state, MusicBeatState).cancelConductorUpdate) return;
+
+		var lastPos = lastSongPos;
 		if (lastSongPos != (lastSongPos = FlxG.sound.music.time)) {
 			// update conductor
+			var timeUntilUpdate = -(lastSongPosTime - (lastSongPosTime = Lib.getTimer()));
+			speed = FlxMath.bound(FlxMath.lerp(speed, timeUntilUpdate / (lastSongPos - lastPos), FlxMath.bound(Math.abs(speed - 1), 0, 1)), 0, 2);
 			songPosition = lastSongPos;
 		} else {
-			songPosition += elapsed * 1000;
+			songPosition += elapsed * 1000 * speed;
 		}
 
 		if (bpm > 0) {

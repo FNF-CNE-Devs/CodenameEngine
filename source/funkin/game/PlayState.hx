@@ -204,10 +204,9 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 		instance = this;
-
-		PauseSubState.script = "";
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
+		PauseSubState.script = "";
 		(scripts = new ScriptPack("PlayState")).setParent(this);
 
 		camGame = camera;
@@ -215,7 +214,6 @@ class PlayState extends MusicBeatState
 		camHUD.bgColor.alpha = 0;
 
 		downscroll = Options.downscroll;
-		// camGame.widescreen = true;
 
 		persistentUpdate = true;
 		persistentDraw = true;
@@ -288,6 +286,17 @@ class PlayState extends MusicBeatState
 					}
 				}
 		}
+
+		/**
+		 * PRECACHING
+		 */
+
+		for(content in Paths.getFolderContent('images/game/score/', true, true))
+			FlxG.bitmap.add(content);
+
+		/**
+		 * END OF PRECACHING
+		 */
 
 		scripts.load();
 		scripts.call("create");

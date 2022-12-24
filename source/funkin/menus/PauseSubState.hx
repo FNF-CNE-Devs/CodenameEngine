@@ -152,8 +152,10 @@ class PauseSubState extends MusicBeatSubstate
 	}
 	override function destroy()
 	{
+		FlxG.cameras.remove(camera, true);
 		pauseScript.call("destroy");
 		if (pauseMusic != null) pauseMusic.destroy();
+		pauseScript.destroy();
 
 		super.destroy();
 	}

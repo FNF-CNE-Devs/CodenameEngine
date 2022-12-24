@@ -75,6 +75,7 @@ class FramerateField extends TextField {
             text.push('=== CONDUCTOR INFO ===');
             text.push('Current Song Position: ${Conductor.songPosition} (${Conductor.curBeat} beats - ${Conductor.curStep} steps)');
             text.push('Current BPM: ${Conductor.bpm}');
+            text.push('Current speed: ${FlxMath.roundDecimal(Conductor.speed, 2)}x');
             text.push('=== SYSTEM INFO ===');
             text.push('System: ${lime.system.System.platformLabel} ${lime.system.System.platformVersion}');
             text.push('Objs in state: ${FlxG.state.members.length}');
