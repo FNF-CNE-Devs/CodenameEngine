@@ -6,6 +6,7 @@ import funkin.options.Options;
 import funkin.system.Discord.DiscordClient;
 #end
 import flixel.FlxG;
+import funkin.menus.credits.CreditsMain;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -176,44 +177,37 @@ class MainMenuState extends MusicBeatState
 	}
 
 	function selectItem() {
-		if (optionShit[curSelected] == 'donate')
-		{
-			#if linux
-			Sys.command('/usr/bin/xdg-open', ["https://ninja-muffin24.itch.io/funkin", "&"]);
-			#else
-			FlxG.openURL('https://ninja-muffin24.itch.io/funkin');
-			#end
-		}
-		else
-		{
-			selectedSomethin = true;
-			CoolUtil.playMenuSFX(1);
+		selectedSomethin = true;
+		CoolUtil.playMenuSFX(1);
 
-			if (Options.flashingMenu) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
+		if (Options.flashingMenu) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
-			menuItems.forEach(function(spr:FlxSprite)
+		menuItems.forEach(function(spr:FlxSprite)
+		{
+			if (spr.ID != curSelected) return;
+			FlxFlicker.flicker(spr, 1, Options.flashingMenu ? 0.06 : 0.15, false, false, function(flick:FlxFlicker)
 			{
-				if (spr.ID != curSelected) return;
-				FlxFlicker.flicker(spr, 1, Options.flashingMenu ? 0.06 : 0.15, false, false, function(flick:FlxFlicker)
+				var daChoice:String = optionShit[curSelected];
+
+				switch (daChoice)
 				{
-					var daChoice:String = optionShit[curSelected];
+					case 'story mode':
+						FlxG.switchState(new StoryMenuState());
+						trace("Story Menu Selected");
+					case 'freeplay':
+						FlxG.switchState(new FreeplayState());
 
-					switch (daChoice)
-					{
-						case 'story mode':
-							FlxG.switchState(new StoryMenuState());
-							trace("Story Menu Selected");
-						case 'freeplay':
-							FlxG.switchState(new FreeplayState());
+						trace("Freeplay Menu Selected");
+					case 'donate':
+						FlxG.switchState(new CreditsMain());
 
-							trace("Freeplay Menu Selected");
+						trace("Donate Menu Selected");
 
-						case 'options':
-							FlxG.switchState(new OptionsMenu(false));
-					}
-				});
+					case 'options':
+						FlxG.switchState(new OptionsMenu(false));
+				}
 			});
-		}
+		});
 	}
 	function changeItem(huh:Int = 0)
 	{
