@@ -66,6 +66,7 @@ class Note extends FlxSprite
 	public var noteType(get, null):String;
 
 	@:dox(hide) public var __strumCameras:Array<FlxCamera> = null;
+	@:dox(hide) public var __strum:Strum = null;
 	@:dox(hide) public var __noteAngle:Float = 0;
 
 	private function get_noteType() {
@@ -159,6 +160,12 @@ class Note extends FlxSprite
 	public var lastScrollSpeed:Null<Float> = null;
 	public var angleOffsets:Bool = true;
 
+	/**
+	 * Whenever the position of the note should be relative to the strum position or not.
+	 * For example, if this is true, a note at the position 0; 0 will be on the strum, instead of at the top left of the screen.
+	 */
+	public var strumRelativePos:Bool = true;
+
 	override function draw() {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (__strumCameras != null) FlxCamera._defaultCameras = __strumCameras;
@@ -168,47 +175,29 @@ class Note extends FlxSprite
 			rotOffset.y += 2;
 		if (negativeScroll)	offset.y *= -1;
 
-		if (angleOffsets && Std.int(__noteAngle % 360) != 0) {
-			// get default values
-			var oldOffset = FlxPoint.get(offset.x, offset.y);
-			var oldOrigin = FlxPoint.get(origin.x, origin.y);
+		if (__strum != null && strumRelativePos) {
+			var pos = FlxPoint.get(x, y);
 
-			// get offset pos without origin
-			var pos = FlxPoint.get(-offset.x, -offset.y);
+			setPosition(__strum.x, __strum.y);
 
-			// updates sin and cos values for angle
-			updateTrig();
+			rotOffset.x -= pos.x / scale.x;
+			rotOffset.y -= pos.y / scale.y;
 
-			var sin = _sinAngle;
-			var cos = _cosAngle;
-			
-			var anglePos = FlxPoint.get(
-				(-cos * pos.x) + (-sin * pos.y),
-				(-sin * pos.x) + (-cos * pos.y));
+			this.rotOffsetAngle = __noteAngle;
 
-			// applies new values
-			x -= anglePos.x;
-			y -= anglePos.y;
-			offset.set();
-			origin.set(oldOrigin.x - oldOffset.x, oldOrigin.y - oldOffset.y);
-
-			// draw
 			super.draw();
 
-			// reset values
-			offset.set(oldOffset.x, oldOffset.y);
-			origin.set(oldOrigin.x, oldOrigin.y);
-			x += anglePos.x;
-			y += anglePos.y;
+			this.rotOffsetAngle = 0;
 
-			// put flxpoints back in the recycling pool
-			oldOffset.put();
-			oldOrigin.put();
+			rotOffset.x += pos.x / scale.x;
+			rotOffset.y += pos.y / scale.y;
+
+			setPosition(pos.x, pos.y);
 			pos.put();
-			anglePos.put();
-			return;
+		} else {
+			super.draw();
 		}
-		super.draw();
+
 		if (negativeScroll)	offset.y *= -1;
 		if (antialiasing && nextSustain == null)
 			rotOffset.y -= 2;
