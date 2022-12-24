@@ -153,7 +153,8 @@ class Conductor
 		if (lastSongPos != (lastSongPos = FlxG.sound.music.time)) {
 			// update conductor
 			var timeUntilUpdate = -(lastSongPosTime - (lastSongPosTime = Lib.getTimer()));
-			speed = FlxMath.bound(FlxMath.lerp(speed, timeUntilUpdate / (lastSongPos - lastPos), elapsed), 0.85, 1.15);
+			var elapsedAL = (lastSongPos - lastPos);
+			speed = FlxMath.bound(FlxMath.lerp(speed, timeUntilUpdate / elapsedAL, elapsedAL / 1000), 0.85, 1.15);
 			songPosition = lastSongPos;
 		} else {
 			songPosition += elapsed * 1000 * speed;
