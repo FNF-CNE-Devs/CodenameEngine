@@ -19,8 +19,6 @@ class ContextMenu extends WindowGroup<FlxObject> {
         super();
         this.callback = callback;
         this.contextOptions = options;
-
-        DesktopMain.contextMenu = FlxDestroyUtil.destroy(DesktopMain.contextMenu);
         
         var bgTheme = DesktopMain.theme.contextBackground;
         var optionTheme = DesktopMain.theme.contextOption;
@@ -58,16 +56,18 @@ class ContextMenu extends WindowGroup<FlxObject> {
         contextCamera.pixelPerfectRender = true;
         contextCamera.bgColor = 0;
         FlxG.cameras.add(contextCamera, false);
+    }
 
-        DesktopMain.contextMenu = this;
+    public static function open(x:Float, y:Float, options:Array<ContextOption>, callback:Int->Void) {
+        DesktopMain.contextMenu = new ContextMenu(x, y, options, callback);
     }
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
-        if (DesktopMain.mouseInput.overlaps(bg, camera)) {
+        if (DesktopMain.mouseInput.overlaps(bg, contextCamera)) {
             for(i=>o in selectionBGs) {
                 var wasVisible = o.visible;
-                if (o.visible = DesktopMain.mouseInput.overlaps(o, camera)) {
+                if (o.visible = DesktopMain.mouseInput.overlaps(o, contextCamera)) {
                     if (DesktopMain.mouseInput.justReleased) {
                         // select option
                         if (contextOptions[i].callback != null)
@@ -75,6 +75,7 @@ class ContextMenu extends WindowGroup<FlxObject> {
                         if (callback != null)
                             callback(i);
                         destroy();
+                        return;
                     }
                 }
                 if (o.visible != wasVisible) {
@@ -85,14 +86,15 @@ class ContextMenu extends WindowGroup<FlxObject> {
         } else {
             if (DesktopMain.mouseInput.justPressed) {
                 destroy();
+                return;
             }
         }
     }
 
     public override function destroy() {
-        super.destroy();
-        DesktopMain.contextMenu = null;
         FlxG.cameras.remove(contextCamera, true);
+        DesktopMain.contextMenu = null;
+        super.destroy();
     }
 }
 

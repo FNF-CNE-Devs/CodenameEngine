@@ -1,5 +1,6 @@
 package funkin.game;
 
+import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
 import funkin.interfaces.IBeatReceiver;
 import funkin.interfaces.IOffsetCompatible;
@@ -17,6 +18,8 @@ import haxe.xml.Access;
 import haxe.Exception;
 import haxe.io.Path;
 import funkin.system.Conductor;
+
+import flash.geom.ColorTransform;
 
 import funkin.scripting.DummyScript;
 import funkin.scripting.Script;
@@ -54,6 +57,9 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 	public var script:Script;
 	public var xml:Access;
+
+	public var shadowFrame:CharacterShadowFrame;
+
 
 	public inline function getCameraPosition() {
 		var midpoint = getMidpoint();
@@ -269,7 +275,41 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		return super.getScreenBounds(newRect, camera);
 	}
 	
+	var __drawingShadowFrame = false;
+	var __oldColorTransform = new ColorTransform();
 	public override function draw() {
+		if (!__drawingShadowFrame && shadowFrame != null) {
+			__drawingShadowFrame = true;
+
+			var oldFrame = _frame;
+			var oldPos = FlxPoint.get(rotOffset.x, rotOffset.y);
+			
+			__oldColorTransform.copyColorTransform(colorTransform);
+			
+			colorTransform.alphaMultiplier = 1;
+			colorTransform.alphaOffset = 0;
+			colorTransform.blueMultiplier = 0;
+			colorTransform.blueOffset = 25;
+			colorTransform.greenMultiplier = 0;
+			colorTransform.greenOffset = 25;
+			colorTransform.redMultiplier = 0;
+			colorTransform.redOffset = 25;
+
+			_frame = shadowFrame.frame;
+			var o = getAnimOffset(shadowFrame.anim);
+			rotOffset.set(o.x, o.y);
+			super.draw();
+
+			_frame = oldFrame;
+			rotOffset.set(oldPos.x, oldPos.y);
+			
+			colorTransform.copyColorTransform(__oldColorTransform);
+
+			oldPos.put();
+
+			__drawingShadowFrame = false;
+		}
+
 		if ((isPlayer != playerOffsets) != (flipX != __baseFlipped)) {
 			__reverseDrawProcedure = true;
 
@@ -284,6 +324,12 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 			super.draw();
 	}
 
+	public function getAnimOffset(name:String) {
+		if (animOffsets[name] != null)
+			return animOffsets[name];
+		return FlxPoint.weak(0, 0);
+	}
+
 	public var lastAnimContext:PlayAnimContext = DANCE;
 	public function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
 	{
@@ -295,11 +341,8 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 		animation.play(event.animName, event.force, event.reverse, event.startingFrame);
 
-		var daOffset = animOffsets.get(event.animName);
-		if (daOffset != null)
-			rotOffset.set(daOffset.x, daOffset.y);
-		else
-			rotOffset.set(0, 0);
+		var daOffset = getAnimOffset(event.animName);
+		rotOffset.set(daOffset.x, daOffset.y);
 
 		offset.set(globalOffset.x * (isPlayer != playerOffsets ? 1 : -1), -globalOffset.y);
 
@@ -321,4 +364,9 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	{
 		animOffsets[name] = new FlxPoint(x, y);
 	}
+}
+
+typedef CharacterShadowFrame = {
+	var anim:String;
+	var frame:FlxFrame;
 }

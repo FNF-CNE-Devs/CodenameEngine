@@ -21,6 +21,7 @@ import flixel.FlxCamera;
 import flixel.util.FlxAxes;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
+import flash.geom.ColorTransform;
 
 using StringTools;
 
@@ -329,5 +330,16 @@ class CoolUtil
 		}
 
 		return spr;
+	}
+
+	public static function copyColorTransform(color1:ColorTransform, color2:ColorTransform) {
+		color1.alphaMultiplier 	= color2.alphaMultiplier;
+		color1.alphaOffset 		= color2.alphaOffset;
+		color1.blueMultiplier 	= color2.blueMultiplier;
+		color1.blueOffset 		= color2.blueOffset;
+		color1.greenMultiplier 	= color2.greenMultiplier;
+		color1.greenOffset 		= color2.greenOffset;
+		color1.redMultiplier 	= color2.redMultiplier;
+		color1.redOffset 		= color2.redOffset;
 	}
 }

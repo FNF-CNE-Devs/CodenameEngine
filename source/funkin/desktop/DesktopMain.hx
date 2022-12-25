@@ -77,6 +77,7 @@ class DesktopMain extends MusicBeatState {
 
         super.update(elapsed);
 
+
         if (screenSize.x != FlxG.width || screenSize.y != FlxG.height) {
             screenSize.set(FlxG.width, FlxG.height);
             updateScreenRes();
@@ -174,7 +175,7 @@ class MouseInput {
     public function overlapsRect(spr:FlxBasic, rect:FlxRect, ?camera:FlxCamera) {
         if (__cancelled) return false;
         if (camera == null) camera = FlxG.camera;
-        if (spr is FlxObject) {
+        if (spr is FlxObject && camera != null) {
             var obj = cast(spr, FlxObject);
             rect.x -= camera.scroll.x * obj.scrollFactor.x;
             rect.y -= camera.scroll.y * obj.scrollFactor.y;

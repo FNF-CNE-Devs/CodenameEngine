@@ -17,6 +17,13 @@ class CharacterEditor extends WindowContent {
     public var camFollow:FlxObject;
     public var tabView:TabView;
 
+    public var animList:Array<String> = [];
+
+    /**
+     * ANIMATION TAB
+     */
+    public var animsDropDown:DropDown;
+
     public override function create() {
         super.create();
 
@@ -58,6 +65,20 @@ class CharacterEditor extends WindowContent {
         tabView = new TabView(800, 20, 400, 580, ["Animation Settings", "Character Settings"]);
         tabView.updateAnchor(1, 0, [camHUD]);
         add(tabView);
+
+        animsDropDown = new DropDown(10, 10, [], function(id) {
+            char.playAnim(animList[id], true);
+        });
+        refreshAnims();
+        
+        for(spr in [animsDropDown])
+            tabView.tabs[0].add(spr);
+    }
+
+    public function refreshAnims() {
+        @:privateAccess animList = [for(k=>e in char.animation._animations) k];
+        animsDropDown.options = animList;
+        animsDropDown.onSelectionChange(0);
     }
 
     public override function update(elapsed:Float) {

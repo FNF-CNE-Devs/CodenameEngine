@@ -56,7 +56,7 @@ class WindowDragHitbox extends FlxObject {
                     dragging = true;
                 } else if (DesktopMain.mouseInput.justPressedRight) {
                     var input = DesktopMain.mouseInput;
-                    new ContextMenu(input.screenPos.x, input.screenPos.y, [
+                    ContextMenu.open(input.screenPos.x, input.screenPos.y, [
                         {
                             name: "Close",
                             callback: function() {

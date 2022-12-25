@@ -27,7 +27,7 @@ class TabView extends WindowGroup<FlxBasic> {
         add(bg);
         for(k=>t in tabs) {
             // BUTTON
-            var b = new Button(0, y, t, function() {
+            var b = new Button(0, 0, t, function() {
                 switchTab(k);
             }, DesktopMain.theme.tabButtonUnselected, DesktopMain.theme.tabButtonHover, DesktopMain.theme.tabButtonPressed, DesktopMain.theme.tabButtonSelected);
 
@@ -36,7 +36,7 @@ class TabView extends WindowGroup<FlxBasic> {
 
             // TAB
             var tab = new WindowGroup<FlxBasic>();
-            tab.y = 20;
+            tab.y += b.height;
             this.tabs.push(tab);
             add(tab);
         }
