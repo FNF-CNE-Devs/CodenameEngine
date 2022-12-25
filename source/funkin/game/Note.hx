@@ -68,6 +68,7 @@ class Note extends FlxSprite
 	@:dox(hide) public var __strumCameras:Array<FlxCamera> = null;
 	@:dox(hide) public var __strum:Strum = null;
 	@:dox(hide) public var __noteAngle:Float = 0;
+	@:dox(hide) public var rotOffsetAngle:Float = 0;
 
 	private function get_noteType() {
 		if (PlayState.instance == null) return null;

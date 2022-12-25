@@ -52,106 +52,133 @@ class AsyncUpdater {
     }
 
     public function installFiles(files:Array<String>) {
-        progress.step = INSTALLING;
-        progress.files = files.length+1;
-        for(k=>e in files) {
-            var path = '$path$e';
-            progress.curFile = k+1;
-            progress.curFileName = e;
-            trace('extracting file ${path}');
-            var reader = ZipUtils.openZip(path);
-            
-            progress.curZipProgress = new ZipProgress();
-            ZipUtils.uncompressZip(reader, './', null, progress.curZipProgress);
-            // FileSystem.deleteFile(path);
+        try {
+            progress.step = INSTALLING;
+            progress.files = files.length+1;
+            for(k=>e in files) {
+                var path = '$path$e';
+                progress.curFile = k+1;
+                progress.curFileName = e;
+                trace('extracting file ${path}');
+                /*#if cpp
+                if (AsyncUtils.api_getFreeDiskSpace() <= 0) {
+                    return;
+                    progress.step = null;
+                    progress.error = ERROR_NO_SPACE;
+                    trace('ran out of fucking space.');
+                }
+                #end*/
+                try {
+                    var reader = ZipUtils.openZip(path);
+                
+                    progress.curZipProgress = new ZipProgress();
+                    ZipUtils.uncompressZip(reader, './', null, progress.curZipProgress);
+                }
+                catch (e:haxe.Exception){
+                    trace ('an error occurred with zip file: ' + e.message);
+                }
+            }
+            if (executableReplaced = FileSystem.exists('$path$executableName')) {
+                progress.curFile = files.length;
+                progress.curFileName = executableName;
+                
+                var progPath = Sys.programPath();
+                var bakFile = '${Path.withoutExtension(progPath)}.bak';
+                if (FileSystem.exists(bakFile))
+                    FileSystem.deleteFile(bakFile);
+                FileSystem.rename(progPath, bakFile);
+                FileSystem.rename('$path$executableName', progPath);
+            }
         }
-        if (executableReplaced = FileSystem.exists('$path$executableName')) {
-            progress.curFile = files.length;
-            progress.curFileName = executableName;
-            
-            var progPath = Sys.programPath();
-            var bakFile = '${Path.withoutExtension(progPath)}.bak';
-            if (FileSystem.exists(bakFile))
-                FileSystem.deleteFile(bakFile);
-            FileSystem.rename(progPath, bakFile);
-            FileSystem.rename('$path$executableName', progPath);
+        catch (e:haxe.Exception) {
+            trace(e.message);
         }
     }
 
     public function downloadFiles() {
-        var files:Array<String> = [];
-        var fileNames:Array<String> = [];
-        var exePath:String = "";
-        for(r in releases) {
-            for(e in r.assets) {
-                if (e.name.toLowerCase() == "update-assets.zip") {
-                    files.push(e.browser_download_url);
-                    fileNames.push('${Path.withoutExtension(e.name)}-${r.tag_name}.${Path.extension(e.name)}');
-                } else if (e.name.toLowerCase() == executableGitHubName) {
-                    exePath = e.browser_download_url;
+        try {
+            var files:Array<String> = [];
+            var fileNames:Array<String> = [];
+            var exePath:String = "";
+            for(r in releases) {
+                for(e in r.assets) {
+                    if (e.name.toLowerCase() == "update-assets.zip") {
+                        files.push(e.browser_download_url);
+                        fileNames.push('${Path.withoutExtension(e.name)}-${r.tag_name}.${Path.extension(e.name)}');
+                    } else if (e.name.toLowerCase() == executableGitHubName) {
+                        exePath = e.browser_download_url;
+                    }
                 }
             }
-        }
-        progress.curFile = -1;
-        progress.curFileName = null;
-        progress.files = files.length;
-        progress.step = DOWNLOADING_ASSETS;
-        trace('starting assets download');
-        doFile([for(e in files) e], [for(e in fileNames) e], function() {
             progress.curFile = -1;
             progress.curFileName = null;
-            progress.files = 1;
-            progress.step = DOWNLOADING_EXECUTABLE;
-            trace('starting exe download');
-            doFile([exePath], [executableName], function() {
-                trace('done, starting installation');
-                installFiles(fileNames);
-                progress.done = true;
+            progress.files = files.length;
+            progress.step = DOWNLOADING_ASSETS;
+            trace('starting assets download');
+            doFile([for(e in files) e], [for(e in fileNames) e], function() {
+                progress.curFile = -1;
+                progress.curFileName = null;
+                progress.files = 1;
+                progress.step = DOWNLOADING_EXECUTABLE;
+                trace('starting exe download');
+                doFile([exePath], [executableName], function() {
+                    trace('done, starting installation');
+                    installFiles(fileNames);
+                    progress.done = true;
+                });
             });
-        });
+        }
+        catch (e:haxe.Exception) {
+            trace(e.message);
+        }
     }
 
     public function doFile(files:Array<String>, fileNames:Array<String>, onFinish:Void->Void) {
-        var f = files.shift();
-        if (f == null) {
-            onFinish();
-            return;
+        try {
+            var f = files.shift();
+            if (f == null) {
+                onFinish();
+                return;
+            }
+            var fn = fileNames.shift();
+            trace('downloading $f ($fn)');
+            progress.curFile++;
+            progress.curFileName = fn;
+            progress.bytesLoaded = 0;
+            progress.bytesTotal = 1;
+            downloadStream = new URLLoader();
+            downloadStream.dataFormat = BINARY;
+    
+            downloadStream.addEventListener(ProgressEvent.PROGRESS, function(e) {
+                progress.bytesLoaded = e.bytesLoaded;
+                progress.bytesTotal = e.bytesTotal;
+                
+                var curTime = Lib.getTimer();
+    
+                progress.downloadSpeed = (e.bytesLoaded - oldBytesLoaded) / ((curTime - lastTime) / 1000);
+    
+                lastTime = curTime;
+                oldBytesLoaded = e.bytesLoaded;
+            });
+            downloadStream.addEventListener(Event.COMPLETE, function(e) {
+                var fileOutput:FileOutput = File.write('$path$fn', true);
+    
+                var data:ByteArray = new ByteArray();
+                downloadStream.data.readBytes(data, 0, downloadStream.data.length - downloadStream.data.position);
+                fileOutput.writeBytes(data, 0, data.length);
+                fileOutput.flush();
+    
+                fileOutput.close();
+                doFile(files, fileNames, onFinish);
+            });
+    
+            oldBytesLoaded = 0;
+            lastTime = Lib.getTimer();
+            downloadStream.load(new URLRequest(f));
         }
-        var fn = fileNames.shift();
-        trace('downloading $f ($fn)');
-        progress.curFile++;
-        progress.curFileName = fn;
-        progress.bytesLoaded = 0;
-        progress.bytesTotal = 1;
-        downloadStream = new URLLoader();
-		downloadStream.dataFormat = BINARY;
-
-		downloadStream.addEventListener(ProgressEvent.PROGRESS, function(e) {
-			progress.bytesLoaded = e.bytesLoaded;
-            progress.bytesTotal = e.bytesTotal;
-            
-            var curTime = Lib.getTimer();
-
-            progress.downloadSpeed = (e.bytesLoaded - oldBytesLoaded) / ((curTime - lastTime) / 1000);
-
-            lastTime = curTime;
-            oldBytesLoaded = e.bytesLoaded;
-		});
-        downloadStream.addEventListener(Event.COMPLETE, function(e) {
-			var fileOutput:FileOutput = File.write('$path$fn', true);
-
-			var data:ByteArray = new ByteArray();
-			downloadStream.data.readBytes(data, 0, downloadStream.data.length - downloadStream.data.position);
-			fileOutput.writeBytes(data, 0, data.length);
-			fileOutput.flush();
-
-			fileOutput.close();
-			doFile(files, fileNames, onFinish);
-		});
-
-        oldBytesLoaded = 0;
-        lastTime = Lib.getTimer();
-        downloadStream.load(new URLRequest(f));
+        catch (e:haxe.Exception) {
+            trace(e.message);
+        }
     }
 
     public function prepareInstallationEnvironment() {
@@ -169,6 +196,7 @@ class AsyncUpdater {
 
 class UpdaterProgress {
     public var step:UpdaterStep = PREPARING;
+    // public var error:UpdaterError = ERROR_UNKNOWN;
     public var curFile:Int = 0;
     public var files:Int = 0;
     public var bytesLoaded:Float = 0;
@@ -188,3 +216,12 @@ abstract UpdaterStep(Int) {
     var DOWNLOADING_EXECUTABLE = 2;
     var INSTALLING = 3;
 }
+
+/*
+@:enum
+abstract UpdaterError(String) {
+    var ERROR_NO_INTERNET = 'No internet connection';
+    var ERROR_NO_SPACE = 'No disk space available';
+    var ERROR_UNKNOWN = 'Unknown error occurred';
+}
+*/

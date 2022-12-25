@@ -17,6 +17,8 @@ var trainCars:Int = 8;
 var trainFinishing:Bool = false;
 var trainCooldown:Int = 0;
 
+// var phillyScript:Script;
+
 function create() {
     // defaultCamZoom = 0.5;
     light.color = colors[curColor];
@@ -51,6 +53,8 @@ function update(elapsed:Float) {
     if (trainMoving) {
         updateTrainPos();
     }
+
+    // phillyScript.call("onGamePause", [pauseSound]);
 }
 
 function trainStart():Void
@@ -98,4 +102,13 @@ function trainReset():Void
     trainFinishing = false;
     startedMoving = false;
     phillyTrain.velocity.x = 0;
+}
+
+function pauseSound():Void{
+    if (trainSound.playing && trainSound != null){
+        trainSound.pause();
+    }
+    else {
+        trainSound.resume();
+    }
 }
