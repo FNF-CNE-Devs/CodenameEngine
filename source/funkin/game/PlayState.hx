@@ -1657,7 +1657,7 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		// if (gf != null && curBeat % gfSpeed == 0)
+		if (gf != null && curBeat % gfSpeed == 0)
 		{
 			gf.dance();
 		}
