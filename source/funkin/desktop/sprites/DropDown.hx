@@ -15,10 +15,10 @@ class DropDown extends Button {
     }
 
     public function onClick() {
-        var pos:FlxPoint = getScreenPosition();
+        var pos:FlxPoint = getScreenPosition(null, camera);
         pos.y += height;
         
-        var camPos = camera != null ? FlxPoint.get(camera.x - (camera.scroll.x * scrollFactor.x), camera.y - (camera.scroll.y * scrollFactor.y)) : FlxPoint.get();
+        var camPos = camera != null ? FlxPoint.get(camera.x, camera.y) : FlxPoint.get();
 
         ContextMenu.open(pos.x + camPos.x, pos.y + camPos.y, [for(o in options) {
             {
