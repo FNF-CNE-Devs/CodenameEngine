@@ -65,6 +65,9 @@ using StringTools;
 @:access(flixel.text.FlxText.FlxTextFormatRange)
 class PlayState extends MusicBeatState
 {
+	/**
+	 * Current PlayState instance.
+	 */
 	public static var instance:PlayState = null;
 
 	/**
