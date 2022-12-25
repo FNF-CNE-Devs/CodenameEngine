@@ -71,74 +71,331 @@ class PlayState extends MusicBeatState
 	 * SONG METADATA
 	 */
 	public static var SONG:SwagSong;
+	/**
+	 * Whenever the song is being played in Story Mode.
+	 */
 	public static var isStoryMode:Bool = false;
+	/**
+	 * The week data of the current week
+	 */
 	public static var storyWeek:WeekData = null;
+	/**
+	 * The remaining songs in the Story Mode playlist.
+	 */
 	public static var storyPlaylist:Array<String> = [];
+	/**
+	 * The selected difficulty name
+	 */
 	public static var difficulty:String = "normal";
+	/**
+	 * Whenever the week is coming from the mods folder or not.
+	 */
 	public static var fromMods:Bool = false;
 
+	/**
+	 * Script Pack of all the scripts being ran.
+	 */
 	public var scripts:ScriptPack;
-	public var halloweenLevel:Bool = false;
 
+	/**
+	 * Game Over Song. (assets/music/gameOver.ogg)
+	 */
 	public var gameOverSong:String = "gameOver";
+	/**
+	 * Game Over Song. (assets/sounds/gameOverSFX.ogg)
+	 */
 	public var lossSFX:String = "gameOverSFX";
+	/**
+	 * Game Over End SFX, used when retrying. (assets/sounds/gameOverEnd.ogg)
+	 */
 	public var retrySFX:String = "gameOverEnd";
 
+	/**
+	 * Current Stage.
+	 */
 	public var stage:Stage;
+	/**
+	 * Whenever the player can die.
+	 */
 	public var canDie:Bool = true;
+	/**
+	 * Current scroll speed for all strums.
+	 * To set a scroll speed for a specific strum, use `strum.scrollSpeed`.
+	 */
 	public var scrollSpeed:Float = 0;
+	/**
+	 * Whenever the game is in downscroll or not. (Can be set)
+	 */
 	public var downscroll(get, set):Bool;
 
 	@:dox(hide) private function set_downscroll(v:Bool) {return camHUD.downscroll = v;}
 	@:dox(hide) private function get_downscroll():Bool  {return camHUD.downscroll;}
 
+	/**
+	 * Instrumental sound (Inst.ogg).
+	 */
 	public var inst:FlxSound;
+	/**
+	 * Vocals sound (Vocals.ogg).
+	 */
 	public var vocals:FlxSound;
 
+	/**
+	 * Dad character
+	 */
 	public var dad:Character;
+	/**
+	 * Girlfriend character
+	 */
 	public var gf:Character;
+	/**
+	 * Boyfriend character
+	 */
 	public var boyfriend:Character;
 
+	/**
+	 * Group of all of the notes. Using `forEach` on this group will only loop through the first notes.
+	 */
 	public var notes:NoteGroup;
 
+	/**
+	 * Strum line position
+	 */
 	public var strumLine:FlxObject;
+	/**
+	 * Number of ratings.
+	 */
 	public var ratingNum:Int = 0;
 
+	/**
+	 * Object defining the camera follow target.
+	 */
 	public var camFollow:FlxObject;
 
+	/**
+	 * Previous cam follow.
+	 */
 	private static var prevCamFollow:FlxObject;
 
+	/**
+	 * All of the strum line notes.
+	 */
 	public var strumLineNotes:FlxTypedGroup<Strum>;
+	/**
+	 * Player strums.
+	 */
 	public var playerStrums:FlxTypedGroup<Strum>;
+	/**
+	 * CPU strums.
+	 */
 	public var cpuStrums:FlxTypedGroup<Strum>;
 
+	/**
+	 * Whenever the vocals should be muted when a note is missed.
+	 */
 	public var muteVocalsOnMiss:Bool = true;
+	/**
+	 * Whenever the player can press 7, 8 or 9 to access the debug menus.
+	 */
 	public var canAccessDebugMenus:Bool = true;
 
-	public var camZooming:Bool = false;
+	/**
+	 * Whenever cam zooming is enabled.
+	 */
+	public var camZooming:Bool = true;
+	/**
+	 * Interval of cam zooming (beats).
+	 * For example: if set to 4, the camera will zoom every 4 beats.
+	 */
 	public var camZoomingInterval:Int = 4;
+	/**
+	 * Current song name (lowercase)
+	 */
 	public var curSong:String = "";
+	/**
+	 * Current stage name
+	 */
 	public var curStage:String = "";
 
+	/**
+	 * Interval at which Girlfriend dances.
+	 */
 	public var gfSpeed:Int = 1;
+	/**
+	 * Current health. Goes from 0 to maxHealth (defaults to 2)
+	 */
 	public var health:Float = 1;
+	/**
+	 * Current combo.
+	 */
 	public var combo:Int = 0;
 
+	/**
+	 * Whenever the misses should show "Combo Breaks" instead of "Misses"
+	 */
 	public var comboBreaks:Bool = false;
+	/**
+	 * Health bar background.
+	 */
 	public var healthBarBG:FlxSprite;
+	/**
+	 * Health bar.
+	 */
 	public var healthBar:FlxBar;
 
+	/**
+	 * Whenever the music has been generated.
+	 */
 	public var generatedMusic:Bool = false;
+	/**
+	 * Whenever the song is currently being started.
+	 */
 	public var startingSong:Bool = false;
 
+	/**
+	 * Player's icon
+	 */
 	public var iconP1:HealthIcon;
+	/**
+	 * Opponent's icon
+	 */
 	public var iconP2:HealthIcon;
+	/**
+	 * Camera for the HUD (notes, misses).
+	 */
 	public var camHUD:HudCamera;
+	/**
+	 * Camera for the game (stages, characters)
+	 */
 	public var camGame:FlxCamera;
 	
+	/**
+	 * The player's current score.
+	 */
 	public var songScore:Int = 0;
+	/**
+	 * The player's amount of misses.
+	 */
 	public var misses:Int = 0;
+	/**
+	 * The player's accuracy (shortcut to `accuracyPressedNotes / totalAccuracyAmount`).
+	 */
 	public var accuracy(get, set):Float;
+	/**
+	 * The number of pressed notes.
+	 */
+	public var accuracyPressedNotes:Float = 0;
+	/**
+	 * The total accuracy amount.
+	 */
+	public var totalAccuracyAmount:Float = 0;
+
+	/**
+	 * FunkinText that shows your score.
+	 */
+	public var scoreTxt:FunkinText;
+	/**
+	 * FunkinText that shows your amount of misses.
+	 */
+	public var missesTxt:FunkinText;
+	/**
+	 * FunkinText that shows your accuracy.
+	 */
+	public var accuracyTxt:FunkinText;
+
+	/**
+	 * Score for the current week.
+	 */
+	public static var campaignScore:Int = 0;
+
+	/**
+	 * Camera zoom at which the game lerps to.
+	 */
+	public var defaultCamZoom:Float = 1.05;
+
+	/**
+	 * Zoom for the pixel assets.
+	 */
+	public static var daPixelZoom:Float = 6;
+
+	/**
+	 * Whenever the game is currently in a cutscene or not.
+	 */
+	public var inCutscene:Bool = false;
+
+	/**
+	 * Whenever the game should play the cutscenes. Defaults to whenever the game is currently in Story Mode or not.
+	 */
+	public var playCutscenes:Bool = isStoryMode;
+	/**
+	 * Cutscene script path.
+	 */
+	public var cutscene:String = null;
+	/**
+	 * End cutscene script path.
+	 */
+	public var endCutscene:String = null;
+
+	/**
+	 * Last rating (may be null)
+	 */
+	public var curRating:ComboRating;
+
+	/**
+	 * Timer for the start countdown
+	 */
+	public var startTimer:FlxTimer;
+
+	/**
+	 * Length of the intro countdown.
+	 */
+	public var introLength:Int = 5;
+	/**
+	 * Array of sprites for the intro.
+	 */
+	public var introSprites:Array<String> = [null, 'game/ready', "game/set", "game/go"];
+	/**
+	 * Array of sounds for the intro.
+	 */
+	public var introSounds:Array<String> = ['intro3', 'intro2', "intro1", "introGo"];
+
+	/**
+	 * Whenever the game is paused or not.
+	 */
+	public var paused:Bool = false;
+	/**
+	 * Whenever the countdown has started or not.
+	 */
+	public var startedCountdown:Bool = false;
+	/**
+	 * Whenever the game can be paused or not.
+	 */
+	public var canPause:Bool = true;
+
+	/**
+	 * Current section (can be `null` when using YoshiCrafter Engine charts).
+	 */
+	public var curSection(get, null):SwagSection;
+	/**
+	 * Format for the accuracy rating.
+	 */
+	public var accFormat:FlxTextFormat = new FlxTextFormat(0xFF888888, false, false, 0);
+	/**
+	 * Whenever the song is ending or not.
+	 */
+	public var endingSong:Bool = false;
+
+	/**
+	 * Group containing all of the combo sprites.
+	 */
+	public var comboGroup:FlxSpriteGroup;
+	/**
+	 * Array containing all of the note types names.
+	 */
+	public var noteTypesArray:Array<String> = [null];
+
+	@:dox(hide)
+	var __vocalOffsetViolation:Float = 0;
 
 	private function get_accuracy():Float {
 		if (accuracyPressedNotes <= 0) return -1;
@@ -149,22 +406,9 @@ class PlayState extends MusicBeatState
 			accuracyPressedNotes = 1;
 		return totalAccuracyAmount = v * accuracyPressedNotes;
 	}
-	public var accuracyPressedNotes:Float = 0;
-	public var totalAccuracyAmount:Float = 0;
-
-	public var scoreTxt:FunkinText;
-	public var missesTxt:FunkinText;
-	public var accuracyTxt:FunkinText;
-
-	public static var campaignScore:Int = 0;
-
-	public var defaultCamZoom:Float = 1.05;
-
-	// how big to stretch the pixel art assets
-	public static var daPixelZoom:Float = 6;
-
-	public var inCutscene:Bool = false;
-
+	/**
+	 * All combo ratings.
+	 */
 	public var comboRatings:Array<ComboRating> = [
 		new ComboRating(0, "F", 0xFFFF4444),
 		new ComboRating(0.1, "E", 0xFFFF8844),
@@ -184,9 +428,6 @@ class PlayState extends MusicBeatState
 	public var detailsText:String = "";
 	public var detailsPausedText:String = "";
 	#end
-
-	public var curRating:ComboRating;
-
 	public function updateRating() {
 		var rating = null;
 		var acc = get_accuracy();
@@ -379,11 +620,6 @@ class PlayState extends MusicBeatState
 
 		super.create();
 	}
-
-	// PATH TO STRING CUTSCENE (Paths.script
-	public var playCutscenes:Bool = isStoryMode;
-	public var cutscene:String = null;
-	public var endCutscene:String = null;
 	public override function createPost() {
 		startCutscene();
 		super.createPost();
@@ -430,12 +666,6 @@ class PlayState extends MusicBeatState
 		} else
 			nextSong();
 	}
-
-	public var startTimer:FlxTimer;
-	public var perfectMode:Bool = false;
-	public var introLength:Int = 5;
-	public var introSprites:Array<String> = [null, 'game/ready', "game/set", "game/go"];
-	public var introSounds:Array<String> = ['intro3', 'intro2', "intro1", "introGo"];
 
 	public function startCountdown():Void
 	{
@@ -509,17 +739,10 @@ class PlayState extends MusicBeatState
 		scripts.event("onPostCountdown", event);
 	}
 
-	public var previousFrameTime:Int = 0;
-	public var lastReportedPlayheadPosition:Int = 0;
-	public var songTime:Float = 0;
-
 	function startSong():Void
 	{
 		scripts.call("onSongStart");
 		startingSong = false;
-
-		previousFrameTime = FlxG.game.ticks;
-		lastReportedPlayheadPosition = 0;
 
 		if (!paused) {
 			FlxG.sound.music = inst;
@@ -540,8 +763,6 @@ class PlayState extends MusicBeatState
 			vocals.destroy();
 		}
 	}
-
-	public var debugNum:Int = 0;
 
 	public function generateNotes(songData:SwagSong) {
 		if (songData == null) return;
@@ -613,7 +834,7 @@ class PlayState extends MusicBeatState
 
 		Conductor.changeBPM(songData.bpm);
 
-		curSong = songData.song;
+		curSong = songData.song.toLowerCase();
 
 		inst = FlxG.sound.load(Paths.inst(PlayState.SONG.song));
 		vocals = FlxG.sound.list.recycle(FlxSound);
@@ -839,12 +1060,6 @@ class PlayState extends MusicBeatState
 		scripts.call("onVocalsResync");
 	}
 
-	public var paused:Bool = false;
-	public var startedCountdown:Bool = false;
-	public var canPause:Bool = true;
-
-	public var curSection(get, null):SwagSection;
-
 	public function get_curSection() {
 		return PlayState.SONG.notes[Std.int(curStep / 16)];
 	}
@@ -883,14 +1098,8 @@ class PlayState extends MusicBeatState
 		scripts.call("onDiscordPresenceUpdate");
 	}
 
-	var __vocalOffsetViolation:Float = 0;
-	public var accFormat:FlxTextFormat = new FlxTextFormat(0xFF888888, false, false, 0);
 	override public function update(elapsed:Float)
 	{
-		#if !debug
-		perfectMode = false;
-		#end
-
 		super.update(elapsed);
 		scripts.call("update", [elapsed]);
 
@@ -962,7 +1171,7 @@ class PlayState extends MusicBeatState
 					startSong();
 			}
 		} else {
-			__vocalOffsetViolation = Math.max(0, __vocalOffsetViolation + (FlxG.sound.music.time != vocals.time ? elapsed * 2 : -elapsed));
+			__vocalOffsetViolation = Math.max(0, __vocalOffsetViolation + (FlxG.sound.music.time != vocals.time ? elapsed : -elapsed / 2));
 			if (__vocalOffsetViolation > 25) {
 				resyncVocals();
 				__vocalOffsetViolation = 0;
@@ -1172,10 +1381,6 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public var endingSong:Bool = false;
-
-	public var comboGroup:FlxSpriteGroup;
-
 	private function keyShit():Void
 	{
 		var pressed = [controls.NOTE_LEFT, controls.NOTE_DOWN, controls.NOTE_UP, controls.NOTE_RIGHT];
@@ -1262,7 +1467,6 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public var noteTypesArray:Array<String> = [null];
 	public function getNoteType(id:Int):String {
 		return noteTypesArray[id];
 	}
@@ -1450,15 +1654,13 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		if (gf != null && curBeat % gfSpeed == 0)
+		// if (gf != null && curBeat % gfSpeed == 0)
 		{
 			gf.dance();
 		}
 		
 		scripts.call("beatHit", [curBeat]);
 	}
-
-	public var curLight:Int = 0;
 }
 
 class ComboRating {

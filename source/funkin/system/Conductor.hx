@@ -131,7 +131,7 @@ class Conductor
 	}
 
 	public static function init() {
-		FlxG.signals.postUpdate.add(update);
+		FlxG.signals.preUpdate.add(update);
 		FlxG.signals.preStateCreate.add(onStateSwitch);
 		reset();
 	}
