@@ -24,4 +24,10 @@
     <!-- CONTEXT MENU -->
     <contextBackground      path="context"          textColor="0,0,0"           left="4" top="4" right="4" bottom="4" />
     <contextOption          path="contextOption"    textColor="255,255,255"     height="20" />
+
+    <!-- TEXTBOX -->
+    <textbox                path="textbox"          textColor="0,0,0"           left="4" top="4" right="4" bottom="4" />
+    <textboxHover           path="textboxHover"     textColor="0,0,0"           left="4" top="4" right="4" bottom="4" />
+    <textboxPressed         path="textboxPressed"   textColor="0,0,0"           left="4" top="4" right="4" bottom="4" />
+    <textboxFocused         path="textboxFocus"     textColor="0,0,0"           left="4" top="4" right="4" bottom="4" />
 </theme>

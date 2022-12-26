@@ -28,6 +28,7 @@ class CharacterEditor extends WindowContent {
     public var animsDropDown:DropDown;
     public var animNameInput:InputBox;
     public var animPrefixInput:InputBox;
+    public var animLoopCheckbox:Checkbox;
 
     public override function create() {
         super.create();
@@ -91,13 +92,15 @@ class CharacterEditor extends WindowContent {
         labels.push(label = new WindowText(10, animNameInput.y + animNameInput.height + 10, 0, "Animation Prefix"));
         animPrefixInput = new InputBox(10, label.y + label.height, 380, "");
 
+        animLoopCheckbox = new Checkbox(10, animPrefixInput.y + animPrefixInput.height + 10, 380, "Loop");
+
         // labels.push(label = new WindowText(10, animNameInput.y + animNameInput.height + 10, 0, "Animation Prefix"));
         // animPrefixInput = new InputBox(10, label.y + label.height, 380, "");
         
         for(l in labels)
             tabView.tabs[0].add(l);
 
-        for(spr in [animsDropDown, animNameInput, ])
+        for(spr in [animsDropDown, animNameInput, animPrefixInput, animLoopCheckbox])
             tabView.tabs[0].add(spr);
 
         refreshAnims();
@@ -110,6 +113,7 @@ class CharacterEditor extends WindowContent {
 
         animNameInput.text = anim.name;
         animPrefixInput.text = anim.name;
+        animLoopCheckbox.setChecked(anim.loop);
     }
 
     public function refreshAnims() {

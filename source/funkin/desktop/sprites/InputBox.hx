@@ -8,6 +8,7 @@ import lime.app.Application;
 
 class InputBox extends Button {
     public var index:Int = 0;
+    public static var insertMode:Bool = false;
 
     public var text(get, set):String;
     private inline function set_text(t:String):String
@@ -20,7 +21,8 @@ class InputBox extends Button {
     public function new(x:Float, y:Float, w:Float, t:String, ?onChange:Void->Void) {
         super(x, y, t, function() {
             setIndex(label.text.length);
-        });
+            disabled = true;
+        }, DesktopMain.theme.textbox, DesktopMain.theme.textboxHover, DesktopMain.theme.textboxPressed, DesktopMain.theme.textboxFocused);
         this.resize(w, height);
         this.label.alignment = LEFT;
         FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
@@ -33,6 +35,8 @@ class InputBox extends Button {
         switch(event.keyCode) {
             case Keyboard.ESCAPE:
                 this.loseFocus();
+            case Keyboard.INSERT:
+                insertMode = !insertMode;
             case Keyboard.LEFT:
                 changeIndex(-1);
             case Keyboard.RIGHT:
@@ -60,8 +64,24 @@ class InputBox extends Button {
 
         text = text.substr(0, index) + input + text.substring(index, text.length);
 
+        if (!insertMode)
+            index += input.length;
+
         if (onChange != null)
             onChange();
+    }
+
+    public override function update(elapsed:Float) {
+        if (DesktopMain.mouseInput.justPressed && !DesktopMain.mouseInput.overlaps(this, camera)) {
+            disabled = false;
+            this.loseFocus();
+        }
+        super.update(elapsed);
+    }
+    
+    public override function onFocusLost() {
+        super.onFocusLost();
+        disabled = false;
     }
 
     public inline function changeIndex(change:Int) {
