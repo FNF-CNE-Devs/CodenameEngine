@@ -524,9 +524,8 @@ class PlayState extends MusicBeatState
 					Paths.getFolderContent('data/charts/', false, true, !fromMods)]) {
 					for(file in content) {
 						var ext = Path.extension(file).toLowerCase();
-						if (Script.scriptExtensions.contains(ext)) {
+						if (Script.scriptExtensions.contains(ext))
 							scripts.add(Script.create(file));
-						}
 					}
 				}
 		}

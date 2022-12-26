@@ -12,7 +12,7 @@ import funkin.options.Options;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;
-import openfl.Lib;
+import flash.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -46,6 +46,8 @@ class Main extends Sprite
 	var framerate:Int = 120; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
+
+	public static var time:Int = 0;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
@@ -126,7 +128,13 @@ class Main extends Sprite
 		#end
 	}
 
+	private static function getTimer():Int {
+		return time = Lib.getTimer();
+	}
+
 	public function loadGameSettings() {
+		@:privateAccess
+		FlxG.game.getTimer = getTimer;
 		#if sys
 		for(i in 0...4)
 			gameThreads.push(Thread.createWithEventLoop(function() {Thread.current().events.promise();}));
