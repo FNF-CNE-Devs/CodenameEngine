@@ -1,6 +1,7 @@
 package flx3d;
 
-import away3d.loaders.misc.AssetLoaderToken;
+import flixel.FlxG;
+import flx3D.Flx3DUtil;
 import away3d.library.assets.Asset3DType;
 import away3d.events.Asset3DEvent;
 import away3d.loaders.parsers.*;
@@ -15,12 +16,14 @@ import away3d.loaders.Loader3D;
 // FlxView3D with helpers for easier updating
 
 class Flx3DView extends FlxView3D {
+    public var _loader:Loader3D;
 
-    public function new(x:Float = 0, y:Float = 0, width:Int = -1, height:Int = -1, scale:Float = 1) {
+    public function new(x:Float = 0, y:Float = 0, width:Int = -1, height:Int = -1) {
         if (!Flx3DUtil.is3DAvailable())
-            throw "[Flx3DView] 3D is not available on this platform.";
-        super(x, y, width, height, scale);
+            throw "[Flx3DView] 3D is not available on this platform. Stages in use: " + Flx3DUtil.getTotal3D() + ", Max stages allowed: " + FlxG.stage.stage3Ds.length + ".";
+        super(x, y, width, height);
     }
+
     public function initLoader() {
         if (_loader != null) return;
         _loader = new Loader3D();

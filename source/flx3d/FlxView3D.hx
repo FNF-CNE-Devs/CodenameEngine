@@ -1,12 +1,7 @@
-package flx3d;
+package flx3D;
 
-import away3d.entities.Mesh;
-import funkin.system.Main;
 import away3d.containers.View3D;
-import away3d.events.LoaderEvent;
 import away3d.library.assets.IAsset;
-import away3d.loaders.Loader3D;
-import away3d.loaders.misc.AssetLoaderContext;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import openfl.display.BitmapData;
@@ -20,87 +15,104 @@ import openfl.display.BitmapData;
  */
 class FlxView3D extends FlxSprite
 {
-	public var view:View3D;
-
 	@:noCompletion private var bmp:BitmapData;
 
-	private var _loader:Loader3D;
-	private var assetLoaderContext:AssetLoaderContext = new AssetLoaderContext();
+	/**
+	 * The Away3D View 
+	 */
+	public var view:View3D;
 
-	public function new(x:Float = 0, y:Float = 0, width:Int = -1, height:Int = -1, scale:Float = 1)
+	/**
+	 * Set this flag to true to force the View3D to update during the `draw()` call.
+	 */
+	 public var dirty3D:Bool = true;
+
+	/**
+	 * Creates a new instance of a View3D from Away3D and renders it as a FlxSprite
+	 * ! Call Flx3DUtil.is3DAvailable(); to make sure a 3D stage is usable
+	 * @param x 
+	 * @param y 
+	 * @param width Leave as -1 for screen width
+	 * @param height Leave as -1 for screen height
+	 */
+	public function new(x:Float = 0, y:Float = 0, width:Int = -1, height:Int = -1)
 	{
 		super(x, y);
 
-		frameRate = 60;
-
 		view = new View3D();
 		view.visible = false;
-		Main.instance.addChildAt(view, 0);
 
 		view.width = width == -1 ? FlxG.width : width;
 		view.height = height == -1 ? FlxG.height : height;
-		view.backgroundAlpha = 0;
-		view.alpha = 0;
-		bmp = new BitmapData(Std.int(view.width), Std.int(view.height), true, 0x0);
 
+		view.backgroundAlpha = 0;
+		FlxG.stage.addChildAt(view, 0);
+
+		bmp = new BitmapData(Std.int(view.width), Std.int(view.height), true, 0x0);
 		loadGraphic(bmp);
 	}
 
-	private function dispose<T:IAsset>(obj:Null<T>):T // ! CALL THIS WHEN YOU DESTROY YOUR SCENE
+	/**
+	 * Disposes (destroys) the asset and returns null
+	 * @param obj 
+	 * @return T null
+	 */
+	public static function dispose<T:IAsset>(obj:Null<T>):T
 	{
-		if (obj != null)
-			obj.dispose();
-		return null;
+		return Flx3DUtil.dispose(obj);
 	}
 
+	/**
+	 * Disposes of all the Away3D assets associated with the FlxView3D
+	 */
 	override function destroy()
 	{
-		Main.instance.removeChild(view);
-		view.dispose();
-		_loader.disposeWithChildren();
+		FlxG.stage.removeChild(view);
 		super.destroy();
+
 		if (bmp != null)
 		{
 			bmp.dispose();
 			bmp = null;
 		}
-		view = null;
-		assetLoaderContext = null;
+
+		if (view != null) 
+		{
+			view.dispose();
+			view = null;
+		}
+	
 	}
 
-	@:isVar public var frameRate(default, set):Float;
-
-	public function set_frameRate(value:Float)
-	{
-		delay = 1 / value;
-		return frameRate = value;
-	}
-
-	public var renderEveryFrame:Bool = true;
-
-	@:noCompletion private var delay:Float = 0;
-	@:noCompletion private var drawTimer:Float = 0;
-
-	override function update(elapsed:Float)
-	{
-		super.update(elapsed);
-		drawTimer += elapsed;
-	}
-
-	override function draw()
+	@:noCompletion override function draw()
 	{
 		super.draw();
 
-		if (renderEveryFrame || drawTimer > delay)
+		if (dirty3D)
 		{
-			Main.instance.addChildAt(view, 0);
+			view.visible = false;
+			FlxG.stage.addChildAt(view, 0);
+
 			var old = FlxG.game.filters;
 			FlxG.game.filters = null;
+
 			view.renderer.queueSnapshot(bmp);
 			view.render();
-			drawTimer = 0;
+
 			FlxG.game.filters = old;
-			Main.instance.removeChild(view);
+			FlxG.stage.removeChild(view);
 		}
+	}
+
+	@:noCompletion override function set_width(newWidth:Float):Float
+	{
+		super.set_width(newWidth);
+		return view != null ? view.width = width : width;
+	}
+
+	@:noCompletion override function set_height(newHeight:Float):Float
+	{
+		super.set_height(newHeight);
+		return view != null ? view.height = height : height;
 	}
 }
