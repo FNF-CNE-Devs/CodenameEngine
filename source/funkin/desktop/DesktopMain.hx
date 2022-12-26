@@ -26,6 +26,8 @@ class DesktopMain extends MusicBeatState {
 
     public static var instance:DesktopMain;
 
+    public static var currentFocus:IDesktopFocusableObject;
+
     public static var mouseInput:MouseInput;
 
     public static var theme:Theme = null;
@@ -137,6 +139,24 @@ class DesktopMain extends MusicBeatState {
             for(e in win.windowCameras) FlxG.cameras.add(e.camera, false);
         }
     }
+
+    public static function loseFocus(obj:IDesktopFocusableObject) {
+        if (currentFocus == obj) {
+            currentFocus.onFocusLost();
+            currentFocus = null;
+        }
+    }
+
+    public static function setFocus(obj:IDesktopFocusableObject) {
+        if (currentFocus == obj) return;
+        if (currentFocus != null)
+            currentFocus.onFocusLost();
+        (currentFocus = obj).onFocus();
+    }
+
+    public static function hasFocus(obj:IDesktopFocusableObject) {
+        return currentFocus == obj;
+    }
 }
 
 class MouseInput {
@@ -184,4 +204,9 @@ class MouseInput {
         
         return ((pos.x > rect.x) && (pos.x < rect.x + rect.width)) && ((pos.y > rect.y) && (pos.y < rect.y + rect.height));
     }
+}
+
+interface IDesktopFocusableObject {
+    public function onFocus():Void;
+    public function onFocusLost():Void;
 }

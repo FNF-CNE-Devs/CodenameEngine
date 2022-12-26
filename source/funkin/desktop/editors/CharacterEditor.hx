@@ -6,6 +6,8 @@ import flixel.FlxObject;
 import flixel.FlxCamera;
 import flixel.FlxG;
 
+using funkin.system.XMLUtil;
+
 class CharacterEditor extends WindowContent {
     public function new(curCharacter:String) {
         super('Character Editor - Loading...', 0, 0, 1200, 600);
@@ -17,7 +19,8 @@ class CharacterEditor extends WindowContent {
     public var camFollow:FlxObject;
     public var tabView:TabView;
 
-    public var animList:Array<String> = [];
+    public var animList:Array<AnimData> = [];
+    public var animListNames:Array<String> = [];
 
     /**
      * ANIMATION TAB
@@ -57,6 +60,12 @@ class CharacterEditor extends WindowContent {
         add(camFollow);
         windowCamera.follow(camFollow, LOCKON, 999);
 
+        // loading animations from character
+        animList = [];
+        if (char.xml != null)
+            for(anim in char.xml.nodes.anim)
+                animList.push(anim.extractAnimFromXML());
+
         // interface setup
         setupTabView();
     }
@@ -66,9 +75,13 @@ class CharacterEditor extends WindowContent {
         tabView.updateAnchor(1, 0, [camHUD]);
         add(tabView);
 
-        animsDropDown = new DropDown(10, 10, [], function(id) {
-            char.playAnim(animList[id], true);
+        var labels:Array<WindowText> = [];
+        var label:WindowText = null;
+        labels.push(label = new WindowText(10, 10, 0, "Animations"));
+        animsDropDown = new DropDown(10, label.y + label.height, [], function(id) {
+            char.playAnim(animList[id].name, true);
         });
+        labels.push(label = new WindowText(10, animsDropDown.y + animsDropDown.height + 10, 0, "Animation Name"));
         refreshAnims();
         
         for(spr in [animsDropDown])
@@ -76,8 +89,8 @@ class CharacterEditor extends WindowContent {
     }
 
     public function refreshAnims() {
-        @:privateAccess animList = [for(k=>e in char.animation._animations) k];
-        animsDropDown.options = animList;
+        animListNames = [for(e in animList) e.name];
+        animsDropDown.options = animListNames;
         animsDropDown.onSelectionChange(0);
     }
 

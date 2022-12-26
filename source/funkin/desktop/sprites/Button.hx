@@ -1,5 +1,6 @@
 package funkin.desktop.sprites;
 
+import funkin.desktop.DesktopMain.IDesktopFocusableObject;
 import funkin.desktop.theme.Theme;
 import flixel.FlxObject;
 import flixel.addons.ui.FlxUIText;
@@ -7,7 +8,9 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import funkin.desktop.windows.WindowGroup;
 
-class Button extends FlxObject {
+using funkin.desktop.DesktopMain;
+
+class Button extends FlxObject implements IDesktopFocusableObject {
     public var callback:Void->Void;
 
     public var disabled:Bool = false;
@@ -62,8 +65,10 @@ class Button extends FlxObject {
                 return;
             }
 
-            if (mouseInput.justPressed || mouseInput.pressed)
+            if (mouseInput.justPressed || mouseInput.pressed) {
+                this.setFocus();
                 frame = 2;
+            }
             else
                 frame = 1;
             mouseInput.cancel();
@@ -84,6 +89,8 @@ class Button extends FlxObject {
     }
 
     public override function destroy() {
+        DesktopMain.loseFocus(this);
+
         for(e in [normalSprite, hoverSprite, pressedSprite, disabledSprite])
             e.destroy();
         scrollFactor.put();
@@ -111,4 +118,8 @@ class Button extends FlxObject {
         label.y += (height - label.height) / 2;
         label.draw();
     }
+
+
+    public function onFocus() {}
+    public function onFocusLost() {}
 }

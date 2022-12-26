@@ -12,6 +12,7 @@ class DropDown extends Button {
         super(x, y, "", onClick, normalButton, hoverButton, pressedButton, disabledButton);
         this.options = options;
         onSelectionChange(curId);
+        this.onChange = onChange;
     }
 
     public function onClick() {
