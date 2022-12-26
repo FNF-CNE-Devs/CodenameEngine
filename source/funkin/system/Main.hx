@@ -23,13 +23,13 @@ import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-#if desktop
+#if DISCORD_RPC
 import funkin.system.Discord.DiscordClient;
-import sys.thread.Thread;
 #end
 import lime.app.Application;
 
 #if sys
+import sys.thread.Thread;
 import sys.io.File;
 #end
 // TODO: REMOVE TEST
@@ -188,7 +188,7 @@ class Main extends Sprite
 		WindowsAPI.setDarkMode(true);
 
 		
-		#if desktop
+		#if DISCORD_RPC
 		DiscordClient.initialize();
 		
 		Application.current.onExit.add (function (exitCode) {

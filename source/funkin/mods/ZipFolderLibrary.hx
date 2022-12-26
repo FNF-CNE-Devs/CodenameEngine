@@ -10,7 +10,6 @@ import lime.app.Future;
 import lime.app.Promise;
 import lime.media.AudioBuffer;
 import lime.graphics.Image;
-import lime.net.HTTPRequest;
 import lime.text.Font;
 import lime.utils.AssetType;
 import lime.utils.Bytes;

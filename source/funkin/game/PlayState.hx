@@ -8,7 +8,7 @@ import flixel.group.FlxSpriteGroup;
 import funkin.options.Options;
 import funkin.scripting.Script;
 import flixel.util.FlxDestroyUtil;
-#if desktop
+#if DISCORD_RPC
 import funkin.system.Discord.DiscordClient;
 #end
 import funkin.system.Section.SwagSection;
@@ -423,7 +423,7 @@ class PlayState extends MusicBeatState
 		new ComboRating(1, "S++", 0xFF44FFFF),
 	];
 
-	#if desktop
+	#if DISCORD_RPC
 	// Discord RPC variables
 	public var difficultyText:String = "";
 	public var iconRPC:String = "";
@@ -469,7 +469,7 @@ class PlayState extends MusicBeatState
 
 		Conductor.setupSong(SONG);
 
-		#if desktop
+		#if DISCORD_RPC
 		// TODO: Scriptable custom RPC
 		iconRPC = (dad != null && dad.icon != null) ? dad.icon : SONG.player2;
 
@@ -992,7 +992,7 @@ class PlayState extends MusicBeatState
 				startTimer.active = true;
 			paused = false;
 
-			#if desktop
+			#if DISCORD_RPC
 			if (startTimer.finished)
 			{
 				DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC, true, songLength - Conductor.songPosition);
@@ -1012,7 +1012,7 @@ class PlayState extends MusicBeatState
 	override public function onFocus():Void
 	{
 		scripts.call("onFocus");
-		#if desktop
+		#if DISCORD_RPC
 		if (health > 0 && !paused)
 		{
 			if (Conductor.songPosition > 0.0)
@@ -1036,7 +1036,7 @@ class PlayState extends MusicBeatState
 	override public function onFocusLost():Void
 	{
 		scripts.call("onFocusLost");
-		#if desktop
+		#if DISCORD_RPC
 		if (health > 0 && !paused)
 		{
 			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + difficultyText + ")", iconRPC);
@@ -1091,7 +1091,7 @@ class PlayState extends MusicBeatState
 	// TODO: Update Discord Status
 	public function updateDiscordStatus() {
 		// TODO: Cancellable Discord Update Presence
-		#if desktop
+		#if DISCORD_RPC
 		// Song duration in a float, useful for the time left feature
 		songLength = inst.length;
 
@@ -1130,7 +1130,7 @@ class PlayState extends MusicBeatState
 			{
 				FlxG.switchState(new ChartingState());
 	
-				#if desktop
+				#if DISCORD_RPC
 				DiscordClient.changePresence("Chart Editor", null, null, true);
 				#end
 			}
@@ -1309,7 +1309,7 @@ class PlayState extends MusicBeatState
 
 		openSubState(new GameOverSubstate(boyfriend.x, boyfriend.y, character, gameOverSong, lossSFX, retrySFX));
 
-		#if desktop
+		#if DISCORD_RPC
 		// Game Over doesn't get his own variable because it's only used here
 		DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + difficultyText + ")", iconRPC);
 		#end

@@ -1,5 +1,6 @@
 package funkin.github;
 
+#if GITHUB_API
 import haxe.Json;
 import haxe.Exception;
 import haxe.Http;
@@ -90,3 +91,44 @@ class GitHub {
         return new GitHubException(msg, url);
     }
 }
+
+#else
+import haxe.Json;
+import haxe.Exception;
+
+class GitHub {
+    /**
+     * Gets all the releases from a specific GitHub repository using the GitHub API.
+     * @param user 
+     * @param repository 
+     * @return Releases
+     */
+    public static function getReleases(user:String, repository:String, ?onError:Exception->Void):Array<GitHubRelease> {
+        return [];
+    }
+
+    public static function getContributors(user:String, repository:String, ?onError:Exception->Void):Array<GitHubContributor> {
+        return [];
+    }
+
+    /**
+     * Filters all releases gotten by `getReleases`
+     * @param releases Releases
+     * @param keepPrereleases Whenever to keep Pre-Releases.
+     * @param keepDrafts Whenever to keep Drafts.
+     * @return Filtered releases.
+     */
+    public static inline function filterReleases(releases:Array<GitHubRelease>, keepPrereleases:Bool = true, keepDrafts:Bool = false)
+        return releases;
+
+    public static function __requestOnGitHubServers(url:String) {
+		return null;
+    }
+    public static function __requestBytesOnGitHubServers(url:String) {
+		return null;
+    }
+    private static function __parseGitHubException(obj:Dynamic):GitHubException {
+        return null;
+    }
+}
+#end

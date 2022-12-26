@@ -8,7 +8,7 @@ class DropDown extends Button {
     public var onChange:Int->Void;
     public var options:Array<String>;
 
-    public function new(x:Float, y:Float, options:Array<String>, onChange:Int->Void, curId:Int = 0, ?normalButton:ThemeData, ?hoverButton:ThemeData, ?pressedButton:ThemeData, ?disabledButton:ThemeData) {
+    public function new(x:Float, y:Float, w:Float, options:Array<String>, onChange:Int->Void, curId:Int = 0, ?normalButton:ThemeData, ?hoverButton:ThemeData, ?pressedButton:ThemeData, ?disabledButton:ThemeData) {
         super(x, y, "", onClick, normalButton, hoverButton, pressedButton, disabledButton);
         this.options = options;
         onSelectionChange(curId);

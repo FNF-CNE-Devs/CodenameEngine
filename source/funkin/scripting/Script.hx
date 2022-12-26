@@ -85,6 +85,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "CODENAME_BUILD" => funkin.macros.BuildCounterMacro.getBuildNumber(),
             "desktop" => #if desktop true #else false #end,
             "windows" => #if windows true #else false #end,
+            "hl" => #if hl true #else false #end,
+            "neko" => #if neko true #else false #end,
             "linux" => #if linux true #else false #end,
             "macos" => #if macos true #else false #end,
             "android" => #if android true #else false #end,

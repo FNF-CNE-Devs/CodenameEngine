@@ -2,7 +2,7 @@ package funkin.menus;
 
 import funkin.ui.FunkinText;
 import funkin.options.Options;
-#if desktop
+#if DISCORD_RPC
 import funkin.system.Discord.DiscordClient;
 #end
 import flixel.FlxG;
@@ -43,7 +43,7 @@ class MainMenuState extends MusicBeatState
 	{
 		super.create();
 		
-		#if desktop
+		#if DISCORD_RPC
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end

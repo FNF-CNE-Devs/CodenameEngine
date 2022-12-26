@@ -26,6 +26,8 @@ class CharacterEditor extends WindowContent {
      * ANIMATION TAB
      */
     public var animsDropDown:DropDown;
+    public var animNameInput:InputBox;
+    public var animPrefixInput:InputBox;
 
     public override function create() {
         super.create();
@@ -77,15 +79,37 @@ class CharacterEditor extends WindowContent {
 
         var labels:Array<WindowText> = [];
         var label:WindowText = null;
+
         labels.push(label = new WindowText(10, 10, 0, "Animations"));
-        animsDropDown = new DropDown(10, label.y + label.height, [], function(id) {
-            char.playAnim(animList[id].name, true);
+        animsDropDown = new DropDown(10, label.y + label.height, 380, [], function(id) {
+            changeAnim(id);
         });
+
         labels.push(label = new WindowText(10, animsDropDown.y + animsDropDown.height + 10, 0, "Animation Name"));
-        refreshAnims();
+        animNameInput = new InputBox(10, label.y + label.height, 380, "");
+
+        labels.push(label = new WindowText(10, animNameInput.y + animNameInput.height + 10, 0, "Animation Prefix"));
+        animPrefixInput = new InputBox(10, label.y + label.height, 380, "");
+
+        // labels.push(label = new WindowText(10, animNameInput.y + animNameInput.height + 10, 0, "Animation Prefix"));
+        // animPrefixInput = new InputBox(10, label.y + label.height, 380, "");
         
-        for(spr in [animsDropDown])
+        for(l in labels)
+            tabView.tabs[0].add(l);
+
+        for(spr in [animsDropDown, animNameInput, ])
             tabView.tabs[0].add(spr);
+
+        refreshAnims();
+    }
+
+    public function changeAnim(id:Int) {
+        var anim = animList[id];
+        if (anim == null) return;
+        char.playAnim(anim.name, true);
+
+        animNameInput.text = anim.name;
+        animPrefixInput.text = anim.name;
     }
 
     public function refreshAnims() {
