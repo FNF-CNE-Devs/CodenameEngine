@@ -33,7 +33,7 @@ class CoolUtil
 	 * @param defaultValue The default value
 	 * @return The return value
 	 */
-	public static inline function getDefault<T>(v:T, defaultValue:T):T {
+	public static inline function getDefault<T>(v:Null<T>, defaultValue:T):Null<T> {
 		return (v == null || isNaN(v)) ? defaultValue : v;
 	}
 
