@@ -61,7 +61,7 @@ class Flx3DView extends FlxView3D {
 	}
 
     @:deprecated public function addMesh(assetPath:String, callback:Mesh->Void, ?texturePath:String, smoothTexture:Bool = true) {
-        Logs.trace('The addMesh() function is deprecated!', ERROR, RED);
+        Logs.trace('The addMesh() function is deprecated, use addModel instead!', ERROR, RED);
     }
 
     private var _loaders:Map<Asset3DLibraryBundle, AssetLoaderToken> = [];
