@@ -1,4 +1,4 @@
-package flx3D;
+package flx3d;
 
 import away3d.core.managers.Stage3DManager;
 import away3d.library.assets.IAsset;

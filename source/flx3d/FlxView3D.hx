@@ -1,4 +1,4 @@
-package flx3D;
+package flx3d;
 
 import away3d.containers.View3D;
 import away3d.library.assets.IAsset;

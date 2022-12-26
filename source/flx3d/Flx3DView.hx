@@ -1,7 +1,7 @@
 package flx3d;
 
 import flixel.FlxG;
-import flx3D.Flx3DUtil;
+import flx3d.Flx3DUtil;
 import away3d.library.assets.Asset3DType;
 import away3d.events.Asset3DEvent;
 import away3d.loaders.parsers.*;
