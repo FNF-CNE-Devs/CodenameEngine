@@ -1,6 +1,6 @@
 # Friday Night Funkin' - Codename Engine (WIP)
 
-## PLEASE NOTE - THIS IS STILL IN AN ALPHA STATE
+## PLEASE NOTE - THIS IS STILL IN A BETA STATE
 
 Early alpha of Codename Engine, known issues:
 - Some options are missing
