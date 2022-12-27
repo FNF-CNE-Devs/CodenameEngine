@@ -92,6 +92,8 @@ class DesktopMain extends MusicBeatState {
             windows.add(new Window(new CharacterEditor('dad')));
         if (FlxG.keys.justPressed.F2)
             windows.add(new Window(new EditorPlayState()));
+
+        FlxG.sound.enableVolumeChanges = !(currentFocus is IDesktopInputObject);
     }
 
     public function openWindow(content:WindowContent) {
@@ -115,7 +117,7 @@ class DesktopMain extends MusicBeatState {
     public override function destroy() {
         super.destroy();
 
-        FlxG.sound.soundTrayEnabled = ();
+        FlxG.sound.enableVolumeChanges = true;
         contextMenu = FlxDestroyUtil.destroy(contextMenu);
 
         FlxG.scaleMode = oldScaleMode;
