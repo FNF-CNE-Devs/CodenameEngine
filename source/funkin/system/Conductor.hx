@@ -145,6 +145,8 @@ class Conductor
 
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
 			speed = 1;
+			lastSongPos = FlxG.sound.music != null ? FlxG.sound.music.time : 0;
+			lastSongPosTime = Main.time;
 			return;
 		}
 		if (FlxG.state != null && FlxG.state is MusicBeatState && cast(FlxG.state, MusicBeatState).cancelConductorUpdate) return;
@@ -154,7 +156,7 @@ class Conductor
 			// update conductor
 			var timeUntilUpdate = -(lastSongPosTime - (lastSongPosTime = Main.time));
 			var elapsedAL = (lastSongPos - lastPos);
-			speed = FlxMath.bound(FlxMath.lerp(speed, timeUntilUpdate / elapsedAL, timeUntilUpdate / 1000), 0.85, 1.15);
+			speed = FlxMath.bound(FlxMath.lerp(speed, timeUntilUpdate / elapsedAL, timeUntilUpdate / 1000), 0.925, 1.075);
 			songPosition = lastSongPos;
 		} else {
 			songPosition += elapsed * 1000 * speed;

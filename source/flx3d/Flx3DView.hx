@@ -98,6 +98,9 @@ class Flx3DView extends FlxView3D {
             token = null;
         }
     }
+
+    public inline function addChild(c)
+        view.scene.addChild(c);
 }
 
 typedef ModelQueueItem = {
