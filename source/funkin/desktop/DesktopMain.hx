@@ -115,7 +115,7 @@ class DesktopMain extends MusicBeatState {
     public override function destroy() {
         super.destroy();
 
-        FlxG.sound.soundTrayEnabled = ();
+        FlxG.sound.soundTrayEnabled = true;
         contextMenu = FlxDestroyUtil.destroy(contextMenu);
 
         FlxG.scaleMode = oldScaleMode;
