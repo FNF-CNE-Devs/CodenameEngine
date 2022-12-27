@@ -1,5 +1,6 @@
 package funkin.desktop.editors;
 
+import flixel.FlxBasic;
 import funkin.game.Character;
 import flixel.FlxSprite;
 import flixel.FlxObject;
@@ -22,6 +23,8 @@ class CharacterEditor extends WindowContent {
     public var animList:Array<AnimData> = [];
     public var animListNames:Array<String> = [];
 
+    public var curAnim:AnimData;
+
     /**
      * ANIMATION TAB
      */
@@ -29,6 +32,9 @@ class CharacterEditor extends WindowContent {
     public var animNameInput:InputBox;
     public var animPrefixInput:InputBox;
     public var animLoopCheckbox:Checkbox;
+    public var animFpsStepper:NumericStepper;
+    public var animOffsetX:NumericStepper;
+    public var animOffsetY:NumericStepper;
 
     public override function create() {
         super.create();
@@ -78,42 +84,47 @@ class CharacterEditor extends WindowContent {
         tabView.updateAnchor(1, 0, [camHUD]);
         add(tabView);
 
-        var labels:Array<WindowText> = [];
+        var content:Array<FlxBasic> = [];
         var label:WindowText = null;
 
-        labels.push(label = new WindowText(10, 10, 0, "Animations"));
-        animsDropDown = new DropDown(10, label.y + label.height, 380, [], function(id) {
+        content.push(label = new WindowText(10, 10, 0, "Animations"));
+        content.push(animsDropDown = new DropDown(10, label.y + label.height, 380, [], function(id) {
             changeAnim(id);
-        });
+        }));
 
-        labels.push(label = new WindowText(10, animsDropDown.y + animsDropDown.height + 10, 0, "Animation Name"));
-        animNameInput = new InputBox(10, label.y + label.height, 380, "");
+        content.push(label = new WindowText(10, animsDropDown.y + animsDropDown.height + 10, 0, "Animation Name"));
+        content.push(animNameInput = new InputBox(10, label.y + label.height, 380, ""));
 
-        labels.push(label = new WindowText(10, animNameInput.y + animNameInput.height + 10, 0, "Animation Prefix"));
-        animPrefixInput = new InputBox(10, label.y + label.height, 380, "");
+        content.push(label = new WindowText(10, animNameInput.y + animNameInput.height + 10, 0, "Animation Prefix"));
+        content.push(animPrefixInput = new InputBox(10, label.y + label.height, 380, ""));
 
-        animLoopCheckbox = new Checkbox(10, animPrefixInput.y + animPrefixInput.height + 10, 380, "Loop");
-
-        // labels.push(label = new WindowText(10, animNameInput.y + animNameInput.height + 10, 0, "Animation Prefix"));
-        // animPrefixInput = new InputBox(10, label.y + label.height, 380, "");
+        content.push(animLoopCheckbox = new Checkbox(10, animPrefixInput.y + animPrefixInput.height + 10, 380, "Loop"));
         
-        for(l in labels)
-            tabView.tabs[0].add(l);
+        content.push(label = new WindowText(10, animLoopCheckbox.y + animLoopCheckbox.height + 10, 0, "Animation FPS (Frames per second)"));
+        content.push(animFpsStepper = new NumericStepper(10, label.y + label.height + 10, 380, 0));
 
-        for(spr in [animsDropDown, animNameInput, animPrefixInput, animLoopCheckbox])
+        content.push(label = new WindowText(10, animFpsStepper.y + animFpsStepper.height + 10, 0, "Animation Offset (Relative to scale)"));
+        content.push(animOffsetX = new NumericStepper(10, label.y + label.height + 10, 180, 0));
+        content.push(animOffsetY = new NumericStepper(200, label.y + label.height + 10, 180, 0));
+        
+        for(spr in content)
             tabView.tabs[0].add(spr);
 
         refreshAnims();
+        changeAnim(0);
     }
 
     public function changeAnim(id:Int) {
-        var anim = animList[id];
-        if (anim == null) return;
-        char.playAnim(anim.name, true);
+        curAnim = animList[id];
+        if (curAnim == null) return;
+        char.playAnim(curAnim.name, true);
 
-        animNameInput.text = anim.name;
-        animPrefixInput.text = anim.name;
-        animLoopCheckbox.setChecked(anim.loop);
+        animNameInput.text = curAnim.name;
+        animPrefixInput.text = curAnim.anim;
+        animLoopCheckbox.setChecked(curAnim.loop);
+        animFpsStepper.value = curAnim.fps;
+        animOffsetX.value = curAnim.x;
+        animOffsetY.value = curAnim.y;
     }
 
     public function refreshAnims() {
@@ -130,6 +141,33 @@ class CharacterEditor extends WindowContent {
             if (FlxG.keys.pressed.DOWN)     camFollow.y += elapsed * 500;
             if (FlxG.keys.pressed.UP)       camFollow.y -= elapsed * 500;
         }
+
+        if (curAnim != null) {
+            // animation updating
+            var shouldUpdate = false;
+            var oldName:String = curAnim.name;
+
+            var updateListAsWell = shouldUpdate = (curAnim.name != (curAnim.name = animNameInput.text));
+            shouldUpdate = (curAnim.anim != (curAnim.anim = animPrefixInput.text)) || shouldUpdate;
+            shouldUpdate = (curAnim.fps != (curAnim.fps = Std.int(animFpsStepper.value))) || shouldUpdate;
+            shouldUpdate = (curAnim.loop != (curAnim.loop = animLoopCheckbox.checked)) || shouldUpdate;
+            shouldUpdate = (curAnim.x != (curAnim.x = animOffsetX.value)) || shouldUpdate;
+            shouldUpdate = (curAnim.y != (curAnim.y = animOffsetY.value)) || shouldUpdate;
+
+            if (shouldUpdate)
+                updateCurAnim(oldName, updateListAsWell);
+        }
+    }
+
+    public function updateCurAnim(?oldName:String, updateListAsWell:Bool = false) {
+        if (oldName == null)
+            oldName = char.animation.curAnim != null ? char.animation.curAnim.name : curAnim.name;
+
+        char.animation.remove(oldName);
+
+        XMLUtil.addAnimToSprite(char, curAnim);
+
+        char.playAnim(curAnim.name, true);
     }
 
     public override function onWindowResize(width:Int, height:Int) {

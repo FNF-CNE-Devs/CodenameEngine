@@ -6,7 +6,7 @@ import openfl.events.KeyboardEvent;
 import flixel.FlxG;
 import lime.app.Application;
 
-class InputBox extends Button {
+class InputBox extends Button implements IDesktopInputObject {
     public var index:Int = 0;
     public static var insertMode:Bool = false;
 
@@ -17,6 +17,7 @@ class InputBox extends Button {
         return label.text;
 
     public var onChange:Void->Void;
+    public var onConfirm:Void->Void;
 
     public function new(x:Float, y:Float, w:Float, t:String, ?onChange:Void->Void) {
         super(x, y, t, function() {
@@ -49,11 +50,14 @@ class InputBox extends Button {
                 text = text.substr(0, index) + text.substring(index + 1, text.length);
                 onTextInput("");
             case Keyboard.BACKSPACE:
-                text = text.substr(0, index - 1) + text.substring(index, text.length);
+                text = text.substr(0, index <= 0 ? 0 : index - 1) + text.substring(index, text.length);
                 index--;
                 onTextInput("");
             case Keyboard.ENTER | Keyboard.NUMPAD_ENTER:
-                onTextInput("\n");
+                if (onChange != null)
+                    onChange();
+                if (onConfirm != null)
+                    onConfirm();
             default:
                 // nothing
         }
@@ -62,26 +66,31 @@ class InputBox extends Button {
     private function onTextInput(input:String) {
         if (!this.hasFocus()) return;
 
-        text = text.substr(0, index) + input + text.substring(index, text.length);
-
-        if (!insertMode)
-            index += input.length;
+        if (input.length > 0) {
+            text = text.substr(0, index) + input + text.substring(index, text.length);
+    
+            if (!insertMode)
+                index += input.length;
+        }
 
         if (onChange != null)
             onChange();
     }
 
     public override function update(elapsed:Float) {
-        if (DesktopMain.mouseInput.justPressed && !DesktopMain.mouseInput.overlaps(this, camera)) {
-            disabled = false;
+        if (DesktopMain.mouseInput.justPressed && !DesktopMain.mouseInput.overlaps(this, camera))
             this.loseFocus();
-        }
         super.update(elapsed);
     }
     
     public override function onFocusLost() {
         super.onFocusLost();
-        disabled = false;
+        if (disabled != (disabled = false)) {
+            if (onChange != null)
+                onChange();
+            if (onConfirm != null)
+                onConfirm();
+        }
     }
 
     public inline function changeIndex(change:Int) {
@@ -90,11 +99,9 @@ class InputBox extends Button {
 
     public inline function setIndex(index:Int) {
         this.index = index;
-
     }
 
     public override function destroy() {
         super.destroy();
-
     }
 }

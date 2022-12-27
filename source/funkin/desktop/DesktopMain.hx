@@ -114,6 +114,8 @@ class DesktopMain extends MusicBeatState {
 
     public override function destroy() {
         super.destroy();
+
+        FlxG.sound.soundTrayEnabled = ();
         contextMenu = FlxDestroyUtil.destroy(contextMenu);
 
         FlxG.scaleMode = oldScaleMode;
@@ -209,4 +211,9 @@ class MouseInput {
 interface IDesktopFocusableObject {
     public function onFocus():Void;
     public function onFocusLost():Void;
+}
+
+// useless, only here for 
+interface IDesktopInputObject {
+
 }

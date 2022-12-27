@@ -130,8 +130,10 @@ class XMLUtil {
 		if (sprite is XMLSprite)
 			animType = cast(sprite, XMLSprite).spriteAnimType;
 
-		var animData = extractAnimFromXML(anim, animType, loop);
+		return addAnimToSprite(sprite, extractAnimFromXML(anim, animType, loop));
+	}
 
+	public static function addAnimToSprite(sprite:FlxSprite, animData:AnimData):ErrorCode {
 		if (animData.name != null && animData.anim != null) {
 			if (animData.fps <= 0 #if web || animData.fps == null #end) animData.fps = 24;
 
