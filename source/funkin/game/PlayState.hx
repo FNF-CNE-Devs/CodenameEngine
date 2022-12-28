@@ -1442,7 +1442,7 @@ class PlayState extends MusicBeatState
 			health += event.healthGain;
 			if (gf != null && combo > 5 && gf.animOffsets.exists('sad'))
 			{
-				gf.playAnim('sad');
+				gf.playAnim('sad', true, MISS);
 			}
 			combo = 0;
 
