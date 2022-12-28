@@ -1,5 +1,11 @@
 package flx3d;
 
+import away3d.entities.SegmentSet;
+import away3d.cameras.Camera3D;
+import away3d.entities.TextureProjector;
+import away3d.primitives.SkyBox;
+import away3d.lights.LightBase;
+import away3d.containers.ObjectContainer3D;
 import away3d.library.Asset3DLibraryBundle;
 import away3d.events.LoaderEvent;
 import away3d.loaders.AssetLoader;
@@ -73,14 +79,36 @@ class Flx3DView extends FlxView3D {
         lib = Asset3DLibraryBundle.getInstance(null);
         token = lib.loadData(data, context, null, parser);
 
-        token.addEventListener(Asset3DEvent.ASSET_COMPLETE, onAssetCallback);
-        
-        token.addEventListener(LoaderEvent.RESOURCE_COMPLETE, (_) -> { // Dispose loader when done
-            trace("Disposing Loader...");
-            _loaders.remove(lib);
+        token.addEventListener(Asset3DEvent.ASSET_COMPLETE, (event:Asset3DEvent) -> {
+            // ! Taken from Loader3D https://github.com/openfl/away3d/blob/master/away3d/loaders/Loader3D.hx#L207-L232
+            if (event.type == Asset3DEvent.ASSET_COMPLETE) {
+                var obj:ObjectContainer3D = null;
+                switch (event.asset.assetType) {
+                    case Asset3DType.LIGHT:
+                        obj = #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end(event.asset, LightBase) ? cast event.asset : null;
+                    case Asset3DType.CONTAINER:
+                        obj = #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end(event.asset, ObjectContainer3D) ? cast event.asset : null;
+                    case Asset3DType.MESH:
+                        obj = #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end(event.asset, Mesh) ? cast event.asset : null;
+                    case Asset3DType.SKYBOX:
+                        obj = #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end(event.asset, SkyBox) ? cast event.asset : null;
+                    case Asset3DType.TEXTURE_PROJECTOR:
+                        obj = #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end(event.asset, TextureProjector) ? cast event.asset : null;
+                    case Asset3DType.CAMERA:
+                        obj = #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end(event.asset, Camera3D) ? cast event.asset : null;
+                    case Asset3DType.SEGMENT_SET:
+                        obj = #if (haxe_ver >= 4.2) Std.isOfType #else Std.is #end(event.asset, SegmentSet) ? cast event.asset : null;
+                }
+                if (obj != null && obj.parent == null)
+                    view.scene.addChild(obj);
+            }
 
-            lib = null;
-            token = null;
+            if (onAssetCallback != null)
+                onAssetCallback(event);
+        });
+        
+        token.addEventListener(LoaderEvent.RESOURCE_COMPLETE, (_) -> {
+            trace("Loader Finished...");
         });
 
         _loaders.set(lib,token);
@@ -90,21 +118,8 @@ class Flx3DView extends FlxView3D {
 
     override function destroy() {
         super.destroy();
-
-        for (loader => token in _loaders) {
-            _loaders.remove(loader);
-
-            loader = null;
-            token = null;
-        }
     }
 
     public inline function addChild(c)
         view.scene.addChild(c);
-}
-
-typedef ModelQueueItem = {
-    var assetPath:String;
-    var callback:Asset3DEvent->Void;
-    var texturePath:String;
 }
