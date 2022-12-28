@@ -27,6 +27,7 @@ import funkin.scripting.events.*;
 import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
 using StringTools;
 
+@:allow(funkin.desktop.editors.CharacterEditor)
 class Character extends FlxSprite implements IBeatReceiver implements IOffsetCompatible
 {
 	private var __stunnedTime:Float = 0;

@@ -25,6 +25,8 @@ class CharacterEditor extends WindowContent {
 
     public var curAnim:AnimData;
 
+    public var menuBar:MenuBar;
+
     /**
      * ANIMATION TAB
      */
@@ -35,6 +37,20 @@ class CharacterEditor extends WindowContent {
     public var animFpsStepper:NumericStepper;
     public var animOffsetX:NumericStepper;
     public var animOffsetY:NumericStepper;
+
+    /**
+     * CHARACTER SETTINGS TAB
+     */
+    public var charSpriteInput:InputBox;
+    public var charIconInput:InputBox;
+    public var charIsPlayerCheckbox:Checkbox;
+    public var charIsGFCheckbox:Checkbox;
+    public var charOffsetXStepper:NumericStepper;
+    public var charOffsetYStepper:NumericStepper;
+    public var charHoldTimeStepper:NumericStepper;
+    public var charFlipXCheckbox:Checkbox;
+    public var charScaleStepper:NumericStepper;
+    public var charAntialiasingCheckbox:Checkbox;
 
     public override function create() {
         super.create();
@@ -77,6 +93,78 @@ class CharacterEditor extends WindowContent {
 
         // interface setup
         setupTabView();
+
+        // todo: menu bar handlers
+        menuBar = new MenuBar([
+            {
+                name: "File",
+                options: [
+                    {
+                        name: "New"
+                    },
+                    {
+                        name: "Open"
+                    },
+                    {
+                        name: "Save"
+                    },
+                    {
+                        name: "Save As..."
+                    },
+                    {
+                        name: "Exit"
+                    }
+                ]
+            },
+            {
+                name: "Edit",
+                options: [
+                    {
+                        name: "Add Animation..."
+                    },
+                    {
+                        name: "Delete Animation"
+                    }
+                ]
+            },
+            {
+                name: "View",
+                options: [
+                    {
+                        name: "Lock Camera on Character"
+                    },
+                    {
+                        name: "Reset Camera Position",
+                        callback: resetCamPos
+                    },
+                    {
+                        name: "Reset Camera Zoom"
+                    },
+                    {
+                        name: "Show a Boyfriend Silouhette"
+                    },
+                    {
+                        name: "Show a Dad Silouhette"
+                    },
+                    {
+                        name: "Show a Girlfriend Silouhette"
+                    }
+                ]
+            },
+            {
+                name: "Help",
+                options: [
+                    {
+                        name: "Open Editor Documentation"
+                    },
+                    {
+                        name: "Open Engine Documentation"
+                    }
+                ]
+            }
+        ]);
+        menuBar.cameras = [camHUD];
+        add(menuBar);
     }
 
     public function setupTabView() {
@@ -84,6 +172,14 @@ class CharacterEditor extends WindowContent {
         tabView.updateAnchor(1, 0, [camHUD]);
         add(tabView);
 
+        addAnimTab();
+        addCharTab();
+
+        refreshAnims();
+        changeAnim(0);
+    }
+
+    public function addAnimTab() {
         var content:Array<FlxBasic> = [];
         var label:WindowText = null;
 
@@ -101,17 +197,42 @@ class CharacterEditor extends WindowContent {
         content.push(animLoopCheckbox = new Checkbox(10, animPrefixInput.y + animPrefixInput.height + 10, 380, "Loop"));
         
         content.push(label = new WindowText(10, animLoopCheckbox.y + animLoopCheckbox.height + 10, 0, "Animation FPS (Frames per second)"));
-        content.push(animFpsStepper = new NumericStepper(10, label.y + label.height + 10, 380, 0));
+        content.push(animFpsStepper = new NumericStepper(10, label.y + label.height, 380, 0));
 
         content.push(label = new WindowText(10, animFpsStepper.y + animFpsStepper.height + 10, 0, "Animation Offset (Relative to scale)"));
-        content.push(animOffsetX = new NumericStepper(10, label.y + label.height + 10, 180, 0));
-        content.push(animOffsetY = new NumericStepper(200, label.y + label.height + 10, 180, 0));
+        content.push(animOffsetX = new NumericStepper(10, label.y + label.height, 180, 0));
+        content.push(animOffsetY = new NumericStepper(200, label.y + label.height, 180, 0));
+
+        for(e in [animOffsetX, animOffsetY])
+            e.increment = 10;
         
         for(spr in content)
             tabView.tabs[0].add(spr);
+    }
 
-        refreshAnims();
-        changeAnim(0);
+    public function addCharTab() {
+        var content:Array<FlxObject> = [];
+        var label:WindowText = null;
+
+        content.push(label = new WindowText(10, 10, 0, "Sprite Name (images/characters/)"));
+        content.push(charSpriteInput = new InputBox(10, label.y + label.height, 380, char.xml.has.sprite ? char.xml.att.sprite : ""));
+
+        content.push(label = new WindowText(10, content.last().y + content.last().height, 0, "Icon Name (images/icons/)"));
+        content.push(charIconInput = new InputBox(10, label.y + label.height, 380, char.icon.getDefault("")));
+        
+        content.push(charIsPlayerCheckbox = new Checkbox(10, content.last().y + content.last().height + 10, 380, "Playable character"));
+        content.push(label = new WindowText(10, content.last().y + content.last().height, 380, "(Offsets are automatically fixed when playing as a non-playable character and vice versa)"));
+        charIsPlayerCheckbox.checked = char.xml.getAtt("isPlayer") == "true";
+        
+        content.push(charIsGFCheckbox = new Checkbox(10, content.last().y + content.last().height + 10, 380, "Is Girlfriend"));
+        content.push(label = new WindowText(10, content.last().y + content.last().height, 380, "(Characters marked as Girlfriend will replace GF when used as opponent)"));
+        charIsGFCheckbox.checked = char.isGF;
+        
+        content.push(charFlipXCheckbox = new Checkbox(10, content.last().y + content.last().height + 10, 380, "Flip Horizontally"));
+        charFlipXCheckbox.checked = char.__baseFlipped != char.isPlayer;
+        
+        for(spr in content)
+            tabView.tabs[1].add(spr);
     }
 
     public function changeAnim(id:Int) {
@@ -157,6 +278,11 @@ class CharacterEditor extends WindowContent {
             if (shouldUpdate)
                 updateCurAnim(oldName, updateListAsWell);
         }
+
+        char.isPlayer = char.playerOffsets = charIsPlayerCheckbox.checked;
+        char.isGF = charIsPlayerCheckbox.checked;
+        char.flipX = char.__baseFlipped = (charFlipXCheckbox.checked != char.isPlayer);
+        char.x = charIsPlayerCheckbox.checked ? 770 : 100;
     }
 
     public function updateCurAnim(?oldName:String, updateListAsWell:Bool = false) {
@@ -164,6 +290,7 @@ class CharacterEditor extends WindowContent {
             oldName = char.animation.curAnim != null ? char.animation.curAnim.name : curAnim.name;
 
         char.animation.remove(oldName);
+        char.animation.curAnim = null;
 
         XMLUtil.addAnimToSprite(char, curAnim);
 
@@ -172,5 +299,20 @@ class CharacterEditor extends WindowContent {
 
     public override function onWindowResize(width:Int, height:Int) {
         tabView.resize(400, height - 20);
+    }
+
+    /**
+     * =========== CONTEXT MENU OPTIONS ===========
+     */
+    
+    /**
+     * View
+     */
+    public function resetCamPos() {
+        var pos = char.getCameraPosition();
+        camFollow.setPosition(pos.x, pos.y);
+    }
+    public function resetCamZoom() {
+        windowCamera.zoom = 1;
     }
 }

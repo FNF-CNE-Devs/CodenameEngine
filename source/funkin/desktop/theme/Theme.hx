@@ -60,6 +60,11 @@ class Theme {
     public var contextOption:ThemeData = new ThemeData();
 
     /**
+     * MENU BAR
+     */
+    public var menuBar:ThemeData = new ThemeData();
+
+    /**
      * THEME
      */
     public var textbox:ThemeData = new ThemeData();

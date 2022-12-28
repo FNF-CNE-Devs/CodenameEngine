@@ -51,7 +51,7 @@ class InputBox extends Button implements IDesktopInputObject {
                 onTextInput("");
             case Keyboard.BACKSPACE:
                 text = text.substr(0, index <= 0 ? 0 : index - 1) + text.substring(index, text.length);
-                index--;
+                changeIndex(-1);
                 onTextInput("");
             case Keyboard.ENTER | Keyboard.NUMPAD_ENTER:
                 if (onChange != null)

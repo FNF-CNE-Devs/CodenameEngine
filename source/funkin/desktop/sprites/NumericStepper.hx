@@ -2,6 +2,7 @@ package funkin.desktop.sprites;
 
 import flixel.math.FlxMath;
 
+// TODO: FIX MEMORY GOING BRRRRRRRRRRRRRRRRRRRRR
 class NumericStepper extends InputBox {
     public var decimals:Int = 0;
     public var increment:Float = 1;
@@ -34,13 +35,12 @@ class NumericStepper extends InputBox {
         super.update(elapsed);
     }
 
-    public override function draw() {
+    public override function additionalDraw() {
         addButton.copyProperties(this);
         subButton.copyProperties(this);
         addButton.x += width;
         subButton.x += width + height;
 
-        super.draw();
         addButton.draw();
         subButton.draw();
     }

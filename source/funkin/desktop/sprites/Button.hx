@@ -117,7 +117,10 @@ class Button extends FlxObject implements IDesktopFocusableObject {
         spr.draw();
         label.y += (height - label.height) / 2;
         label.draw();
+        additionalDraw();
     }
+
+    public function additionalDraw() {}
 
 
     public function onFocus() {}
