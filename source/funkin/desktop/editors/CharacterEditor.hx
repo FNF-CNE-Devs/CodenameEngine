@@ -138,7 +138,8 @@ class CharacterEditor extends WindowContent {
                         callback: resetCamPos
                     },
                     {
-                        name: "Reset Camera Zoom"
+                        name: "Reset Camera Zoom",
+                        callback: resetCamZoom
                     },
                     {
                         name: "Show a Boyfriend Silouhette"
