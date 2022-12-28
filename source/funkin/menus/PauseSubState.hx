@@ -18,6 +18,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import funkin.ui.Alphabet;
 import funkin.options.keybinds.KeybindsOptions;
+import funkin.menus.StoryMenuState;
 
 class PauseSubState extends MusicBeatSubstate
 {
@@ -147,7 +148,14 @@ class PauseSubState extends MusicBeatSubstate
 			case "Options":
 				FlxG.switchState(new OptionsMenu(true));
 			case "Exit to menu":
-				FlxG.switchState(new MainMenuState());
+				if(StoryMenuState.playStoryMode){
+						FlxG.switchState(new StoryMenuState());
+				}
+				else{
+					FlxG.switchState(new FreeplayState());
+				}
+				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				
 		}
 	}
 	override function destroy()

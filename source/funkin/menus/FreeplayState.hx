@@ -66,6 +66,7 @@ class FreeplayState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
+		StoryMenuState.playStoryMode = false;
 
 		// LOAD CHARACTERS
 
