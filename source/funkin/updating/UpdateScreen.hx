@@ -72,17 +72,14 @@ class UpdateScreen extends MusicBeatState {
 
         elapsedTime += elapsed;
         rainbowShader.hset("elapsed", elapsedTime / 3);
-        if (elapsedTime >= 3)
-            rainbowShader.hset("strength", 1);
-        else
-            rainbowShader.hset("strength", Math.sqrt(elapsedTime / 3));
+        rainbowShader.hset("strength", (elapsedTime >= 3) ? 1 : Math.sqrt(elapsedTime / 3));
 
-        progressBar.y = FlxG.height - (60 + (Math.sin(elapsedTime * Math.PI / 2) * 15));
+        progressBar.y = FlxG.height - (65 + (Math.sin(elapsedTime * Math.PI / 2) * 10));
 
         if (done) return;
 
         var prog = updater.progress;
-        lerpSpeed = lerp(lerpSpeed, prog.downloadSpeed, 1/16);
+        lerpSpeed = lerp(lerpSpeed, prog.downloadSpeed, 0.0625);
         switch(prog.step) {
             case PREPARING:
                 progressBar.value = 0;
@@ -122,8 +119,8 @@ class UpdateScreen extends MusicBeatState {
 
             FlxG.camera.fade(0xFF000000, overSound.length / 1000, false, function() {
                 if (updater.executableReplaced) {
-                    // the executable has been replaced, restart the game entirely
                     #if windows
+                    // the executable has been replaced, restart the game entirely
                     Sys.command('start /B ${AsyncUpdater.executableName}');
                     #else
                     // We have to make the new executable allowed to execute

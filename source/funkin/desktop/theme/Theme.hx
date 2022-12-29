@@ -59,6 +59,19 @@ class Theme {
     public var contextBackground:ThemeData = new ThemeData();
     public var contextOption:ThemeData = new ThemeData();
 
+    /**
+     * MENU BAR
+     */
+    public var menuBar:ThemeData = new ThemeData();
+
+    /**
+     * THEME
+     */
+    public var textbox:ThemeData = new ThemeData();
+    public var textboxHover:ThemeData = new ThemeData();
+    public var textboxPressed:ThemeData = new ThemeData();
+    public var textboxFocused:ThemeData = new ThemeData();
+
     public function new(content:String) {
         try {
             var access = new Access(Xml.parse(content).firstElement());

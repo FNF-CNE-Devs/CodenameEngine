@@ -3,8 +3,8 @@
     <anim name="idle" anim="Pico Idle Dance" fps="24" loop="false"/>
 
     <!-- Sing Animations -->
-    <anim name="singLEFT"  anim="Pico Note Right0" fps="24" loop="false" x="-30" y="0" />
-    <anim name="singDOWN"  anim="Pico Down Note0"  fps="24" loop="false" x="-40" y="-94" />
+    <anim name="singLEFT"  anim="Pico Note Right0" fps="24" loop="false" x="65" y="9" />
+    <anim name="singDOWN"  anim="Pico Down Note0"  fps="24" loop="false" x="200" y="-70" />
     <anim name="singUP"    anim="pico Up note0"    fps="24" loop="false" x="-20" y="50" />
     <anim name="singRIGHT" anim="Pico NOTE LEFT0"  fps="24" loop="false" x="-51" y="0" />
 

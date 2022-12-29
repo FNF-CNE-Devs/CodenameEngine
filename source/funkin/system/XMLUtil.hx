@@ -90,16 +90,7 @@ class XMLUtil {
 		return spr;
 	}
 
-	/**
-	 * Adds an XML animation to `sprite`.
-	 * @param sprite Destination sprite
-	 * @param anim Animation (Must be a `anim` XML node)
-	 */
-	public static function addXMLAnimation(sprite:FlxSprite, anim:Access, loop:Bool = false):ErrorCode {
-		var animType:XMLAnimType = NONE;
-		if (sprite is XMLSprite)
-			animType = cast(sprite, XMLSprite).spriteAnimType;
-
+	public static function extractAnimFromXML(anim:Access, animType:XMLAnimType = NONE, loop:Bool = false):AnimData {
 		var animData:AnimData = {
 			name: null,
 			anim: null,
@@ -127,6 +118,22 @@ class XMLUtil {
 			}
 		} 
 
+		return animData;
+	}
+	/**
+	 * Adds an XML animation to `sprite`.
+	 * @param sprite Destination sprite
+	 * @param anim Animation (Must be a `anim` XML node)
+	 */
+	public static function addXMLAnimation(sprite:FlxSprite, anim:Access, loop:Bool = false):ErrorCode {
+		var animType:XMLAnimType = NONE;
+		if (sprite is XMLSprite)
+			animType = cast(sprite, XMLSprite).spriteAnimType;
+
+		return addAnimToSprite(sprite, extractAnimFromXML(anim, animType, loop));
+	}
+
+	public static function addAnimToSprite(sprite:FlxSprite, animData:AnimData):ErrorCode {
 		if (animData.name != null && animData.anim != null) {
 			if (animData.fps <= 0 #if web || animData.fps == null #end) animData.fps = 24;
 

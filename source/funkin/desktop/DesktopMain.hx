@@ -26,6 +26,8 @@ class DesktopMain extends MusicBeatState {
 
     public static var instance:DesktopMain;
 
+    public static var currentFocus:IDesktopFocusableObject;
+
     public static var mouseInput:MouseInput;
 
     public static var theme:Theme = null;
@@ -77,6 +79,7 @@ class DesktopMain extends MusicBeatState {
 
         super.update(elapsed);
 
+
         if (screenSize.x != FlxG.width || screenSize.y != FlxG.height) {
             screenSize.set(FlxG.width, FlxG.height);
             updateScreenRes();
@@ -89,6 +92,8 @@ class DesktopMain extends MusicBeatState {
             windows.add(new Window(new CharacterEditor('dad')));
         if (FlxG.keys.justPressed.F2)
             windows.add(new Window(new EditorPlayState()));
+
+        FlxG.sound.enableVolumeChanges = !(currentFocus is IDesktopInputObject);
     }
 
     public function openWindow(content:WindowContent) {
@@ -111,6 +116,8 @@ class DesktopMain extends MusicBeatState {
 
     public override function destroy() {
         super.destroy();
+
+        FlxG.sound.enableVolumeChanges = true;
         contextMenu = FlxDestroyUtil.destroy(contextMenu);
 
         FlxG.scaleMode = oldScaleMode;
@@ -135,6 +142,24 @@ class DesktopMain extends MusicBeatState {
             FlxG.cameras.add(win.windowCaptionCamera, false);
             for(e in win.windowCameras) FlxG.cameras.add(e.camera, false);
         }
+    }
+
+    public static function loseFocus(obj:IDesktopFocusableObject) {
+        if (currentFocus == obj) {
+            currentFocus.onFocusLost();
+            currentFocus = null;
+        }
+    }
+
+    public static function setFocus(obj:IDesktopFocusableObject) {
+        if (currentFocus == obj) return;
+        if (currentFocus != null)
+            currentFocus.onFocusLost();
+        (currentFocus = obj).onFocus();
+    }
+
+    public static function hasFocus(obj:IDesktopFocusableObject) {
+        return currentFocus == obj;
     }
 }
 
@@ -174,7 +199,7 @@ class MouseInput {
     public function overlapsRect(spr:FlxBasic, rect:FlxRect, ?camera:FlxCamera) {
         if (__cancelled) return false;
         if (camera == null) camera = FlxG.camera;
-        if (spr is FlxObject) {
+        if (spr is FlxObject && camera != null) {
             var obj = cast(spr, FlxObject);
             rect.x -= camera.scroll.x * obj.scrollFactor.x;
             rect.y -= camera.scroll.y * obj.scrollFactor.y;
@@ -183,4 +208,14 @@ class MouseInput {
         
         return ((pos.x > rect.x) && (pos.x < rect.x + rect.width)) && ((pos.y > rect.y) && (pos.y < rect.y + rect.height));
     }
+}
+
+interface IDesktopFocusableObject {
+    public function onFocus():Void;
+    public function onFocusLost():Void;
+}
+
+// useless, only here for 
+interface IDesktopInputObject {
+
 }

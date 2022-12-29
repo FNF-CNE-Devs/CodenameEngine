@@ -25,6 +25,10 @@ class Checkbox extends WindowText {
         scrollFactor.set();
     }
 
+    public function setChecked(checked:Bool) {
+        this.checked = cast checked;
+    }
+
     public override function update(elapsed:Float) {
         super.update(elapsed);
         checkboxSprite.update(elapsed);
@@ -61,7 +65,7 @@ class Checkbox extends WindowText {
 }
 
 @:enum
-abstract CheckState(Null<Bool>) {
+abstract CheckState(Null<Bool>) from Null<Bool> to Null<Bool> from Bool to Bool {
     var CHECKED:CheckState = true;
     var UNCHECKED:CheckState = false;
     var BOTH:CheckState = null;

@@ -1,7 +1,7 @@
 package funkin.menus;
 
 import haxe.io.Path;
-#if desktop
+#if DISCORD_RPC
 import funkin.system.Discord.DiscordClient;
 #end
 import flash.text.TextField;
@@ -62,7 +62,7 @@ class FreeplayState extends MusicBeatState
 		songList = FreeplaySonglist.get();
 		songs = songList.songs;
 
-		#if desktop
+		#if DISCORD_RPC
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end

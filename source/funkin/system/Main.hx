@@ -12,7 +12,7 @@ import funkin.options.Options;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;
-import openfl.Lib;
+import flash.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -23,13 +23,13 @@ import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-#if desktop
+#if DISCORD_RPC
 import funkin.system.Discord.DiscordClient;
-import sys.thread.Thread;
 #end
 import lime.app.Application;
 
 #if sys
+import sys.thread.Thread;
 import sys.io.File;
 #end
 // TODO: REMOVE TEST
@@ -46,6 +46,8 @@ class Main extends Sprite
 	var framerate:Int = 120; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
+
+	public static var time:Int = 0;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
@@ -126,7 +128,13 @@ class Main extends Sprite
 		#end
 	}
 
+	private static function getTimer():Int {
+		return time = Lib.getTimer();
+	}
+
 	public function loadGameSettings() {
+		@:privateAccess
+		FlxG.game.getTimer = getTimer;
 		#if sys
 		for(i in 0...4)
 			gameThreads.push(Thread.createWithEventLoop(function() {Thread.current().events.promise();}));
@@ -188,7 +196,7 @@ class Main extends Sprite
 		WindowsAPI.setDarkMode(true);
 
 		
-		#if desktop
+		#if DISCORD_RPC
 		DiscordClient.initialize();
 		
 		Application.current.onExit.add (function (exitCode) {

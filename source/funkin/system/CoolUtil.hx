@@ -21,6 +21,7 @@ import flixel.FlxCamera;
 import flixel.util.FlxAxes;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
+import flash.geom.ColorTransform;
 
 using StringTools;
 
@@ -32,7 +33,7 @@ class CoolUtil
 	 * @param defaultValue The default value
 	 * @return The return value
 	 */
-	public static function getDefault<T>(v:T, defaultValue:T):T {
+	public static inline function getDefault<T>(v:Null<T>, defaultValue:T):Null<T> {
 		return (v == null || isNaN(v)) ? defaultValue : v;
 	}
 
@@ -43,13 +44,13 @@ class CoolUtil
 	public inline static function parseJsonString(str:String)
 		return Json.parse(str);
 
-	public static function isNaN(v:Dynamic) {
+	public static inline function isNaN(v:Dynamic) {
 		if (v is Float || v is Int)
 			return Math.isNaN(cast(v, Float));
 		return false;
 	}
 
-	public static function last<T>(array:Array<T>):T {
+	public static inline function last<T>(array:Array<T>):T {
 		return array[array.length - 1];
 	}
 
@@ -63,7 +64,7 @@ class CoolUtil
 		return defaultValue;
 	}
 
-	public static function addZeros(str:String, num:Int) {
+	public static inline function addZeros(str:String, num:Int) {
 		while(str.length < num) str = '0${str}';
 		return str;
 	}
@@ -79,7 +80,7 @@ class CoolUtil
 		return '${Std.int(rSize) + "." + addZeros(Std.string(Std.int((rSize % 1) * 100)), 2)}${labels[label]}';
 	}
 
-	public static function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {
+	public static inline function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {
 		return FlxMath.lerp(v1, v2, getFPSRatio(ratio));
 	}
 	/**
@@ -89,7 +90,7 @@ class CoolUtil
 	 * @param ratio Ratio
 	 * @param fpsSensitive Whenever the ratio should be case sentivive (adapted when game is running at 120 instead of 60)
 	 */
-	public static function lerpColor(color1:FlxColor, color2:FlxColor, ratio:Float, fpsSensitive:Bool = false) {
+	public static inline function lerpColor(color1:FlxColor, color2:FlxColor, ratio:Float, fpsSensitive:Bool = false) {
 		if (!fpsSensitive)
 			ratio = getFPSRatio(ratio);
 		return FlxColor.interpolate(color1, color2, ratio);
@@ -100,7 +101,7 @@ class CoolUtil
 	 * @param ratio Ratio
 	 * @return FPS-Modified Ratio
 	 */
-	public static function getFPSRatio(ratio:Float):Float {
+	public static inline function getFPSRatio(ratio:Float):Float {
 		return FlxMath.bound(ratio * 60 * FlxG.elapsed, 0, 1);
 	}
 	/**
@@ -181,7 +182,7 @@ class CoolUtil
 		return [for(e in Assets.getText(path).trim().split('\n')) e.trim()];
 	}
 
-	public static function numberArray(max:Int, ?min = 0):Array<Int>
+	public static inline function numberArray(max:Int, ?min = 0):Array<Int>
 	{
 		return [for (i in min...max) i];
 	}
@@ -201,7 +202,7 @@ class CoolUtil
 		sprite.scale.set(nScale, nScale);
 	}
 
-	public static function keyToString(key:Null<FlxKey>):String {
+	public static inline function keyToString(key:Null<FlxKey>):String {
 		return switch(key) {
 			case null | 0 | NONE:	"---";
 			case LEFT: 				"←";
@@ -272,7 +273,7 @@ class CoolUtil
 		sprite.updateHitbox();
 	}
 
-	public static function getAtt(xml:Access, name:String) {
+	public static inline function getAtt(xml:Access, name:String) {
 		if (!xml.has.resolve(name)) return null;
 		return xml.att.resolve(name);
 	}
@@ -329,5 +330,16 @@ class CoolUtil
 		}
 
 		return spr;
+	}
+
+	public static inline function copyColorTransform(color1:ColorTransform, color2:ColorTransform) {
+		color1.alphaMultiplier 	= color2.alphaMultiplier;
+		color1.alphaOffset 		= color2.alphaOffset;
+		color1.blueMultiplier 	= color2.blueMultiplier;
+		color1.blueOffset 		= color2.blueOffset;
+		color1.greenMultiplier 	= color2.greenMultiplier;
+		color1.greenOffset 		= color2.greenOffset;
+		color1.redMultiplier 	= color2.redMultiplier;
+		color1.redOffset 		= color2.redOffset;
 	}
 }

@@ -47,9 +47,8 @@ class StoryMenuState extends MusicBeatState {
     public override function create() {
         super.create();
         loadXMLs();
-        
         persistentUpdate = persistentDraw = true;
-
+        
         // WEEK INFO
         blackBar = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFFFFFFFF);
         blackBar.color = 0xFF000000;
