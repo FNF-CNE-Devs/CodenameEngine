@@ -64,18 +64,28 @@ class AssetsLibraryList extends AssetLibrary {
 
             if (!id.startsWith("assets/")) {
                 var ass = getAsset('assets/$id', type);
-                if (ass != null)
+                if (ass != null) {
+                    #if cpp
+                    cpp.vm.Gc.enable(true);
+                    #end
                     return ass;
+                }
             }
             for(e in libraries) {
                 var asset = e.getAsset(id, type);
-                if (asset != null)
+                if (asset != null) {
+                    #if cpp
+                    cpp.vm.Gc.enable(true);
+                    #end
                     return asset;
+                }
             }
             
             #if cpp
             cpp.vm.Gc.enable(true);
             #end
+
+            return null;
         } catch(e) {
             #if cpp
             cpp.vm.Gc.enable(true);

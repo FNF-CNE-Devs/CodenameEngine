@@ -21,10 +21,11 @@ class MenuChangeEvent extends CancellableEvent {
      */
     public var playMenuSFX:Bool = true;
 
-    public function new(oldValue:Int, value:Int, change:Int) {
+    public function new(oldValue:Int, value:Int, change:Int, playMenuSFX:Bool = true) {
         super();
         this.value = value;
         this.oldValue = value;
         this.change = change;
+        this.playMenuSFX = playMenuSFX;
     }
 }

@@ -28,9 +28,13 @@ class NoteHitEvent extends CancellableEvent {
      */
     public var note:Note;
     /**
-     * Character that pressed the note
+     * Character that pressed the note.
      */
-    public var character:Character;
+    public var character(get, set):Character;
+    /**
+     * Characters that pressed the note.
+     */
+    public var characters:Array<Character>;
     /**
      * Whenever the Character is a player
      */
@@ -91,14 +95,14 @@ class NoteHitEvent extends CancellableEvent {
     /**
      * Creates a new NoteHitEvent.
      */
-    public function new(note:Note, character:Character, player:Bool, noteType:String,
+    public function new(note:Note, characters:Array<Character>, player:Bool, noteType:String,
         direction:Int, healthGain:Float, unmuteVocals:Bool = true, score:Int = 350,
         animSuffix:String = "", rating:String = "sick", ?accuracy:Null<Float>, ratingPrefix:String = "",
         ratingSuffix:String = "") {
         super();
 
         this.note = note;
-        this.character = character;
+        this.characters = characters;
         this.player = player;
         this.noteType = noteType;
         this.direction = direction;
@@ -176,4 +180,11 @@ class NoteHitEvent extends CancellableEvent {
     }
     @:dox(hide)
     public function cancelStrumGlow() {preventStrumGlow();}
+
+    private inline function get_character() 
+        return characters[0];
+    private function set_character(char:Character) {
+        characters = [char];
+        return char;
+    }
 }

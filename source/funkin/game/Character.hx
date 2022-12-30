@@ -73,12 +73,12 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		
 	}
 
-	public function playSingAnim(direction:Int, suffix:String = "", Reversed:Bool = false, Frame:Int = 0) {
+	public function playSingAnim(direction:Int, suffix:String = "", Context:PlayAnimContext = SING, Reversed:Bool = false, Frame:Int = 0) {
 		var anims = ["singLEFT", "singDOWN", "singUP", "singRIGHT"];
 
-		var event = new DirectionAnimEvent('${anims[direction]}$suffix', direction, suffix, Reversed, Frame);
+		var event = new DirectionAnimEvent('${anims[direction]}$suffix', direction, suffix, Context, Reversed, Frame);
 		script.call("onPlaySingAnim", [event]);
-		if (!event.cancelled) playAnim(event.animName, event.force, SING, event.reversed, event.frame);
+		if (!event.cancelled) playAnim(event.animName, event.force, Context, event.reversed, event.frame);
 	}
 
 	public function new(x:Float, y:Float, ?character:String = "bf", isPlayer:Bool = false, switchAnims:Bool = true)
