@@ -1,5 +1,7 @@
 package funkin.scripting.events;
 
+import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
+
 class DirectionAnimEvent extends CancellableEvent {
     /**
         Default animation that will be played
@@ -18,6 +20,10 @@ class DirectionAnimEvent extends CancellableEvent {
     **/
     public var reversed:Bool;
     /**
+        Context of the animation. Is either equal to `SING` or `MISS`.
+    **/
+    public var context:PlayAnimContext;
+    /**
         Whenever the animation will play reversed or not.
     **/
     public var force:Bool;
@@ -26,11 +32,12 @@ class DirectionAnimEvent extends CancellableEvent {
     **/
     public var frame:Int;
 
-    public function new(animName:String, direction:Int, suffix:String = "", reversed:Bool = false, frame:Int = 0) {
+    public function new(animName:String, direction:Int, suffix:String = "", context:PlayAnimContext = SING, reversed:Bool = false, frame:Int = 0) {
         super();
         this.animName = animName;
         this.direction = direction;
         this.suffix = suffix;
+        this.context = context;
         this.reversed = reversed;
         this.force = true;
         this.frame = frame;

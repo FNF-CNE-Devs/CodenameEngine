@@ -1347,9 +1347,6 @@ class PlayState extends MusicBeatState
 			if (storyPlaylist.length <= 0)
 			{
 
-				transIn = FlxTransitionableState.defaultTransIn;
-				transOut = FlxTransitionableState.defaultTransOut;
-
 				FlxG.switchState(new StoryMenuState());
 
 				if (SONG.validScore)
@@ -1435,7 +1432,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned)
 		{
-			var event:NoteHitEvent = scripts.event("onPlayerMiss", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, -0.04, false, -10));
+			var event:NoteHitEvent = scripts.event("onPlayerMiss", new NoteHitEvent(note, [boyfriend], true, note.noteType, note.strumID, -0.04, false, -10));
 
 			if (event.cancelled) return;
 			
@@ -1452,19 +1449,15 @@ class PlayState extends MusicBeatState
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 
 			if (muteVocalsOnMiss) vocals.volume = 0;
-			boyfriend.stunned = true;
 
-			switch (note.strumID)
-			{
-				case 0:
-					boyfriend.playAnim('singLEFTmiss', true, MISS);
-				case 1:
-					boyfriend.playAnim('singDOWNmiss', true, MISS);
-				case 2:
-					boyfriend.playAnim('singUPmiss', true, MISS);
-				case 3:
-					boyfriend.playAnim('singRIGHTmiss', true, MISS);
+			for(char in event.characters) {
+				if (char == null) continue;
+
+				char.stunned = true;
+				char.playSingAnim(note.strumID, "miss", MISS);
 			}
+			// boyfriend.stunned = true;
+
 			deleteNote(note);
 		}
 	}
@@ -1508,9 +1501,9 @@ class PlayState extends MusicBeatState
 
 			var event:NoteHitEvent;
 			if (note.mustPress)
-				event = scripts.event("onPlayerHit", new NoteHitEvent(note, boyfriend, true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, score, note.animSuffix, daRating, note.isSustainNote ? null : accuracy, "game/score/", ''));
+				event = scripts.event("onPlayerHit", new NoteHitEvent(note, [boyfriend], true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, score, note.animSuffix, daRating, note.isSustainNote ? null : accuracy, "game/score/", ''));
 			else
-				event = scripts.event("onDadHit", new NoteHitEvent(note, dad, false, note.noteType, note.strumID, 0, 0, note.animSuffix, daRating, null, "game/score/", ''));
+				event = scripts.event("onDadHit", new NoteHitEvent(note, [dad], false, note.noteType, note.strumID, 0, 0, note.animSuffix, daRating, null, "game/score/", ''));
 			
 			if (!event.cancelled) {
 				if (event.accuracy != null) {
@@ -1599,9 +1592,10 @@ class PlayState extends MusicBeatState
 
 				health += event.healthGain;
 	
-				if (!event.animCancelled) {
-					event.character.playSingAnim(event.direction, event.animSuffix);
-				}
+				if (!event.animCancelled)
+					for(char in event.characters)
+						if (char != null)
+							char.playSingAnim(event.direction, event.animSuffix);
 	
 				if (!event.strumGlowCancelled) (event.player ? playerStrums : cpuStrums).forEach(function(str:Strum) {
 					if (str.ID == Math.abs(note.strumID)) {
