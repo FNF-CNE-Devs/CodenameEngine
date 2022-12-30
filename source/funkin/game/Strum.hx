@@ -43,9 +43,11 @@ class Strum extends FlxSprite {
         super.draw();
     }
 
+    @:noCompletion public static final PIX180:Float = 565.4866776461628; // 180 * Math.PI
+    @:noCompletion public static final N_WIDTHDIV2:Float = Note.swagWidth / 2;
+
     public function updateNotePosition(daNote:Note) {
         if (!daNote.exists) return;
-        
     
         daNote.__strumCameras = lastDrawCameras;
         daNote.__strum = this;
@@ -55,22 +57,25 @@ class Strum extends FlxSprite {
 
         if (daNote.strumRelativePos) {
             daNote.setPosition(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (daNote.strumTime - Conductor.songPosition) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
-            if (daNote.isSustainNote) daNote.y += Note.swagWidth / 2;
+            if (daNote.isSustainNote) daNote.y += N_WIDTHDIV2;
         } else {
             var offset = FlxPoint.get(0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
             var realOffset = FlxPoint.get(0, 0);
 
-            if (daNote.isSustainNote) offset.y -= Note.swagWidth / 2;
+            if (daNote.isSustainNote) offset.y -= N_WIDTHDIV2;
             
             if (Std.int(noteAngle % 360) != 0) {
-                var noteAngleCos = Math.cos(noteAngle / 180 * Math.PI);
-                var noteAngleSin = Math.sin(noteAngle / 180 * Math.PI);
+                var noteAngleCos = FlxMath.fastCos(noteAngle / PIX180);
+                var noteAngleSin = FlxMath.fastSin(noteAngle / PIX180);
+
                 var aOffset:FlxPoint = FlxPoint.get(
                     (daNote.origin.x / daNote.scale.x) - daNote.offset.x,
                     (daNote.origin.y / daNote.scale.y) - daNote.offset.y
                 );
                 realOffset.x = -aOffset.x + (noteAngleCos * (offset.x + aOffset.x)) + (noteAngleSin * (offset.y + aOffset.y));
                 realOffset.y = -aOffset.y + (noteAngleSin * (offset.x + aOffset.x)) + (noteAngleCos * (offset.y + aOffset.y));
+
+                aOffset.put();
             } else {
                 realOffset.x = offset.x;
                 realOffset.y = offset.y;
