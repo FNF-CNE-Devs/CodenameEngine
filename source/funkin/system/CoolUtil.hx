@@ -342,4 +342,13 @@ class CoolUtil
 		color1.redMultiplier 	= color2.redMultiplier;
 		color1.redOffset 		= color2.redOffset;
 	}
+
+	public static function resetSprite(spr:FlxSprite, x:Float, y:Float) {
+		spr.reset(x, y);
+		spr.alpha = 1;
+		spr.visible = true;
+		spr.active = true;
+		spr.antialiasing = FlxSprite.defaultAntialiasing;
+		spr.rotOffset.set();
+	}
 }

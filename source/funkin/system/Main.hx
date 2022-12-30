@@ -28,8 +28,10 @@ import funkin.system.Discord.DiscordClient;
 #end
 import lime.app.Application;
 
-#if sys
+#if ALLOW_MULTITHREADING
 import sys.thread.Thread;
+#end
+#if sys
 import sys.io.File;
 #end
 // TODO: REMOVE TEST
@@ -51,7 +53,7 @@ class Main extends Sprite
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
-	#if sys
+	#if ALLOW_MULTITHREADING
 	public static var gameThreads:Array<Thread> = [];
 	#end
 
@@ -120,7 +122,7 @@ class Main extends Sprite
 	
 	private static var __threadCycle:Int = 0;
 	public static function execAsync(func:Void->Void) {
-		#if sys
+		#if ALLOW_MULTITHREADING
 		var thread = gameThreads[(__threadCycle++) % gameThreads.length];
 		thread.events.run(func);
 		#else
@@ -135,7 +137,7 @@ class Main extends Sprite
 	public function loadGameSettings() {
 		@:privateAccess
 		FlxG.game.getTimer = getTimer;
-		#if sys
+		#if ALLOW_MULTITHREADING
 		for(i in 0...4)
 			gameThreads.push(Thread.createWithEventLoop(function() {Thread.current().events.promise();}));
 		#end

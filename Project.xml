@@ -111,6 +111,9 @@
 		 Reduces compilation time at the cost of limited HScript flexibility. !-->
 	<define name="COMPILE_ALL_CLASSES" />
 
+	<!-- Comment this out to disable multithreading !-->
+	<haxedef name="ALLOW_MULTITHREADING" unless="web || flash" />
+
 	<!-- Comment this out to disable titlescreen.xml !-->
 	<haxedef name="TITLESCREEN_XML" />
 
