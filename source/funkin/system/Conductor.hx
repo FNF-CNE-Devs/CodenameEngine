@@ -76,6 +76,7 @@ class Conductor
 	@:dox(hide) public static var lastSongPos:Float = 0;
 	@:dox(hide) public static var lastSongPosTime:Float = 0;
 	@:dox(hide) public static var speed:Float = 0;
+	@:dox(hide) public static var destSpeed:Float = 0;
 	@:dox(hide) public static var offset:Float = 0;
 
 	@:dox(hide) public static var safeZoneOffset:Float = 175; // is calculated in create(), is safeFrames in milliseconds
@@ -84,6 +85,14 @@ class Conductor
 	 * Array of all BPM changes that have been mapped.
 	 */
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
+
+	/**
+	 * Thread for multi-threaded audio syncing.
+	 */
+	#if ALLOW_MULTITHREADING
+	public static var syncThread:sys.thread.Thread;
+	public static var syncThreadTime:Null<Float> = null;
+	#end
 
 	@:dox(hide) public function new() {}
 
@@ -130,10 +139,50 @@ class Conductor
 		}
 	}
 
+	private static var elapsed:Float;
+
 	public static function init() {
 		FlxG.signals.preUpdate.add(update);
 		FlxG.signals.preStateCreate.add(onStateSwitch);
 		reset();
+
+		#if ALLOW_MULTITHREADING
+		syncThread = ThreadUtil.createSafe(function() {
+			while(true) {
+				if (syncThreadTime == null)
+					syncThreadTime = Sys.time();
+
+				// if (FlxG.state != null && FlxG.state is MusicBeatState && cast(FlxG.state, MusicBeatState).cancelConductorUpdate) continue;
+
+				elapsed = -(syncThreadTime - (syncThreadTime = Sys.time()));
+
+				if (elapsed == 0) continue;
+
+				__updateSongPos(elapsed);
+			}
+		}, true);
+		#end
+	}
+
+	private static function __updateSongPos(elapsed:Float) {
+		if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
+			speed = destSpeed = 1;
+			lastSongPos = FlxG.sound.music != null ? FlxG.sound.music.time : 0;
+			lastSongPosTime = Main.time;
+			return;
+		}
+
+		var lastPos = lastSongPos;
+		if (lastSongPos != (lastSongPos = FlxG.sound.music.time)) {
+			// update conductor
+			var timeUntilUpdate = -(lastSongPosTime - (lastSongPosTime = Main.time));
+			var elapsedAL = (lastSongPos - lastPos);
+			destSpeed = FlxMath.bound(timeUntilUpdate / elapsedAL, 0.925, 1.075);
+			songPosition = lastSongPos;
+		} else {
+			songPosition += elapsed * 1000 * speed;
+		}
+		speed = FlxMath.lerp(speed, destSpeed, FlxMath.bound(elapsed, 0, 1));
 	}
 
 	private static function onStateSwitch(newState:FlxState) {
@@ -141,26 +190,11 @@ class Conductor
 			reset();
 	}
 	private static function update() {
-		var elapsed = FlxG.elapsed;
-
-		if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
-			speed = 1;
-			lastSongPos = FlxG.sound.music != null ? FlxG.sound.music.time : 0;
-			lastSongPosTime = Main.time;
-			return;
-		}
 		if (FlxG.state != null && FlxG.state is MusicBeatState && cast(FlxG.state, MusicBeatState).cancelConductorUpdate) return;
 
-		var lastPos = lastSongPos;
-		if (lastSongPos != (lastSongPos = FlxG.sound.music.time)) {
-			// update conductor
-			var timeUntilUpdate = -(lastSongPosTime - (lastSongPosTime = Main.time));
-			var elapsedAL = (lastSongPos - lastPos);
-			speed = FlxMath.bound(FlxMath.lerp(speed, timeUntilUpdate / elapsedAL, FlxMath.bound(timeUntilUpdate / 1000, 0, 1)), 0.925, 1.075);
-			songPosition = lastSongPos;
-		} else {
-			songPosition += elapsed * 1000 * speed;
-		}
+		#if !ALLOW_MULTITHREADING
+		__updateSongPos(FlxG.elapsed);
+		#end
 
 		if (bpm > 0) {
 			// updates curbeat and stuff

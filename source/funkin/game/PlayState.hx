@@ -1516,7 +1516,9 @@ class PlayState extends MusicBeatState
 
 				if (event.showRating || (event.showRating == null && event.player && !note.isSustainNote))
 				{
-					var rating:FlxSprite = new FlxSprite(-40, -60);
+					var rating:FlxSprite = comboGroup.recycle(FlxSprite);
+					rating.resetSprite(-40, -60);
+					comboGroup.remove(rating, true);
 			
 					songScore += score;
 			
@@ -1525,7 +1527,9 @@ class PlayState extends MusicBeatState
 					rating.velocity.y -= FlxG.random.int(140, 175);
 					rating.velocity.x -= FlxG.random.int(0, 10);
 			
-					var comboSpr:FlxSprite = new FlxSprite().loadAnimatedGraphic(Paths.image('${event.ratingPrefix}combo${event.ratingSuffix}'));
+					var comboSpr:FlxSprite = comboGroup.recycle(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}combo${event.ratingSuffix}'));
+					comboSpr.resetSprite(0, 0);
+					comboGroup.remove(comboSpr, true);
 					comboSpr.acceleration.y = 600;
 					comboSpr.velocity.y -= 150;
 					comboSpr.velocity.x += FlxG.random.int(1, 10);
@@ -1548,7 +1552,9 @@ class PlayState extends MusicBeatState
 						{
 							var e = separatedScore.charAt(i);
 				
-							var numScore:FlxSprite = new FlxSprite((43 * i) - 90, 80).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}num$e${event.ratingSuffix}'));
+							var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}num$e${event.ratingSuffix}'));
+							numScore.resetSprite((43 * i) - 90, 80);
+							comboGroup.remove(numScore, true);
 							numScore.antialiasing = event.numAntialiasing;
 							numScore.scale.set(event.numScale, event.numScale);
 							numScore.updateHitbox();
@@ -1562,8 +1568,7 @@ class PlayState extends MusicBeatState
 							FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 								onComplete: function(tween:FlxTween)
 								{
-									comboGroup.remove(numScore, true);
-									numScore.destroy();
+									numScore.exists = false;
 								},
 								startDelay: Conductor.crochet * 0.002
 							});
@@ -1578,11 +1583,8 @@ class PlayState extends MusicBeatState
 					FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
 						onComplete: function(tween:FlxTween)
 						{
-							comboGroup.remove(comboSpr, true);
-							comboGroup.remove(rating, true);
-							comboSpr.destroy();
-			
-							rating.destroy();
+							rating.exists = false;
+							comboSpr.exists = false;
 						},
 						startDelay: Conductor.crochet * 0.001
 					});
