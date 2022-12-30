@@ -27,6 +27,7 @@ class DropDown extends Button {
             }
         }], onSelectionChange);
 
+        pos.put();
         camPos.put();
     }
 

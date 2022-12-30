@@ -107,6 +107,10 @@ class AtlasFrameMaker extends FlxFramesCollection{
                         
                         //trace(daFramez);
                 }
+
+                if (frameSize != null)
+                        frameSize.put();
+
                 return daFramez;
         }
 

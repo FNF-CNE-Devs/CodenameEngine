@@ -152,5 +152,6 @@ class UpdateAvailableScreen extends MusicBeatState {
     public override function destroy() {
         super.destroy();
         FlxG.mouse.visible = false;
+        oldPos.put();
     }
 }
