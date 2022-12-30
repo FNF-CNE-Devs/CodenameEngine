@@ -26,6 +26,8 @@ class MenuBar extends WindowGroup<FlxBasic> {
                 var camPos = camera != null ? FlxPoint.get(camera.x, camera.y) : FlxPoint.get();
         
                 ContextMenu.open(pos.x + camPos.x, pos.y + camPos.y, t.options, function(i) {});
+                
+                pos.put();
             });
             b.label.fieldWidth = 0;
             @:privateAccess b.label._regen = true;

@@ -359,6 +359,9 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 	public override function destroy() {
 		super.destroy();
+		
+		cameraOffset.put();
+		globalOffset.put();
 	}
 
 	public inline function getIcon() {

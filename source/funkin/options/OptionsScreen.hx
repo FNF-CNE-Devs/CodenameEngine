@@ -138,5 +138,6 @@ class OptionsScreen extends MusicBeatState {
     public override function destroy() {
         super.destroy();
         instance = null;
+        scrollDest.put();
     }
 }

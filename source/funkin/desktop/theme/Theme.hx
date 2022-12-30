@@ -146,17 +146,11 @@ class ThemeData implements IFlxDestroyable {
     public function new() {}
 
     public function destroy() {
-        if (margin != null) {
+        if (margin != null)
             margin.put();
-            margin = null;
-        }
-        if (size != null) {
+        if (size != null)
             size.put();
-            size = null;
-        }
-        if (offset != null) {
+        if (offset != null)
             offset.put();
-            offset = null;
-        }
     }
 }

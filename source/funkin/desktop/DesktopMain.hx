@@ -125,6 +125,9 @@ class DesktopMain extends MusicBeatState {
 
         // TODO: switch back while using config
         FlxG.resizeGame(1280, 720);
+
+        if (screenSize != null)
+            screenSize.put();
     }
 
     public function focusWindow(window:Window) {
