@@ -21,7 +21,12 @@ class HScript extends Script {
         interp.staticVariables = Script.staticVariables;
         interp.allowStaticVariables = interp.allowPublicVariables = true;
 
-        interp.variables.set("trace", this.trace);
+        interp.variables.set("trace", Reflect.makeVarArgs((args) -> {
+            var v:String = Std.string(args.shift());
+            for (a in args) v += ", " + Std.string(a);
+            this.trace(v);
+        }));
+
         try {
             expr = parser.parseString(code, fileName);
         } catch(e:Error) {
@@ -93,7 +98,7 @@ class HScript extends Script {
         var posInfo = interp.posInfos();
         Logs.traceColored([
             Logs.logText('${fileName}:${posInfo.lineNumber}: ', GREEN),
-            Logs.logText(Std.string(v))
+            Logs.logText(Std.isOfType(v, String) ? v : Std.string(v))
         ], TRACE);
     }
 
