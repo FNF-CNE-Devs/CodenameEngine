@@ -351,4 +351,11 @@ class CoolUtil
 		spr.antialiasing = FlxSprite.defaultAntialiasing;
 		spr.rotOffset.set();
 	}
+
+	/**
+	 * Gets the macro class created by hscript-improved for an abstract / enum
+	 */
+	public static function getMacroAbstractClass(className:String) {
+		return Type.resolveClass('${className}_HSC');
+	}
 }

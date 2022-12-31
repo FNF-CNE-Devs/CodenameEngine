@@ -47,6 +47,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "FlxTypeText"       => flixel.addons.text.FlxTypeText,
             "FlxText"           => flixel.text.FlxText,
             "FlxTimer"          => flixel.util.FlxTimer,
+            "FlxPoint"          => CoolUtil.getMacroAbstractClass("flixel.math.FlxPoint"),
+            "FlxAxes"           => CoolUtil.getMacroAbstractClass("flixel.util.FlxAxes"),
     
             // Engine related stuff
             "engine"            => {
@@ -57,6 +59,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "ModSubState"       => funkin.scripting.ModSubState,
             "PlayState"         => funkin.game.PlayState,
             "GameOverSubstate"  => funkin.game.GameOverSubstate,
+            "HealthIcon"        => funkin.game.HealthIcon,
+            "HudCamera"         => funkin.game.HudCamera,
             "Note"              => funkin.game.Note,
             "Strum"             => funkin.game.Strum,
             "Character"         => funkin.game.Character,

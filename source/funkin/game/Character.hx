@@ -246,6 +246,9 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 					dance();
 			case DANCE:
 				dance();
+			case LOCK:
+				if (animation.curAnim == null)
+					dance();
 			default:
 				if (animation.curAnim == null || animation.curAnim.finished)
 					dance();
