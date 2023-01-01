@@ -162,6 +162,8 @@ class Conductor
 		#end
 	}
 
+	private static var __timeUntilUpdate:Float;
+	private static var __elapsedAL:Float;
 	private static function __updateSongPos(elapsed:Float) {
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
 			speed = destSpeed = 1;
@@ -173,9 +175,9 @@ class Conductor
 		var lastPos = lastSongPos;
 		if (lastSongPos != (lastSongPos = FlxG.sound.music.time)) {
 			// update conductor
-			var timeUntilUpdate = -(lastSongPosTime - (lastSongPosTime = Main.time));
-			var elapsedAL = (lastSongPos - lastPos);
-			destSpeed = FlxMath.bound(timeUntilUpdate / elapsedAL, 0.925, 1.075);
+			__timeUntilUpdate = -(lastSongPosTime - (lastSongPosTime = Main.time));
+			__elapsedAL = (lastSongPos - lastPos);
+			destSpeed = FlxMath.bound(__elapsedAL / __timeUntilUpdate, 0.925, 1.075);
 			songPosition = lastSongPos;
 		} else {
 			songPosition += elapsed * 1000 * speed;
