@@ -22,7 +22,7 @@ typedef SwagSong =
 	var gf:String;
 	var validScore:Bool;
 
-	var maxHealth:Null<Float>;
+	@:optional var maxHealth:Null<Float>;
 }
 
 class Song
