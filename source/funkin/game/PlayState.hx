@@ -403,6 +403,12 @@ class PlayState extends MusicBeatState
 	 */
 	public var noteTypesArray:Array<String> = [null];
 
+	/**
+	 * Hit window, in milliseconds. Defaults to 250ms unless changed in options.
+	 * Base game hit window is 175ms.
+	 */
+	public var hitWindow:Float = Options.hitWindow; // is calculated in create(), is safeFrames in milliseconds
+
 	@:dox(hide)
 	var __vocalOffsetViolation:Float = 0;
 
@@ -1265,10 +1271,10 @@ class PlayState extends MusicBeatState
 					if (event.__updateHitWindow) {
 						if (daNote.mustPress)
 						{
-							daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * daNote.latePressWindow)
-								&& daNote.strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * daNote.earlyPressWindow));
+							daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (hitWindow * daNote.latePressWindow)
+								&& daNote.strumTime < Conductor.songPosition + (hitWindow * daNote.earlyPressWindow));
 		
-							if (daNote.strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !daNote.wasGoodHit)
+							if (daNote.strumTime < Conductor.songPosition - hitWindow && !daNote.wasGoodHit)
 								daNote.tooLate = true;
 						}
 						else
@@ -1500,19 +1506,19 @@ class PlayState extends MusicBeatState
 			var score:Int = 300;
 			var accuracy:Float = 1;
 	
-			if (noteDiff > Conductor.safeZoneOffset * 0.9)
+			if (noteDiff > hitWindow * 0.9)
 			{
 				daRating = 'shit';
 				score = 50;
 				accuracy = 0.25;
 			}
-			else if (noteDiff > Conductor.safeZoneOffset * 0.75)
+			else if (noteDiff > hitWindow * 0.75)
 			{
 				daRating = 'bad';
 				score = 100;
 				accuracy = 0.45;
 			}
-			else if (noteDiff > Conductor.safeZoneOffset * 0.2)
+			else if (noteDiff > hitWindow * 0.2)
 			{
 				daRating = 'good';
 				score = 200;

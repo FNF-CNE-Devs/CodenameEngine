@@ -53,7 +53,10 @@ class HScript extends Script {
     }
 
     public override function onLoad() {
-        if (expr != null) interp.execute(expr);
+        if (expr != null) {
+            interp.execute(expr);
+            call("new", []);
+        }
     }
 
     public override function reload() {

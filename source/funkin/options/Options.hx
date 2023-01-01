@@ -24,6 +24,7 @@ class Options
 	public static var volume:Float = 1;
 	public static var week6PixelPerfect:Bool = true;
 	public static var betaUpdates:Bool = false;
+	public static var hitWindow:Float = 250;
 
 	/**
 	 * PLAYER 1 CONTROLS
@@ -58,7 +59,7 @@ class Options
 	public static var P2_RESET:Array<FlxKey> = [];
 
 	/**
-	 * SOLO GETTERS & SETTERS
+	 * SOLO GETTERS
 	 */
 	public static var SOLO_NOTE_LEFT(get, null):Array<FlxKey>;
 	public static var SOLO_NOTE_DOWN(get, null):Array<FlxKey>;
