@@ -224,10 +224,16 @@ class PlayState extends MusicBeatState
 	 * Interval at which Girlfriend dances.
 	 */
 	public var gfSpeed:Int = 1;
+
 	/**
 	 * Current health. Goes from 0 to maxHealth (defaults to 2)
 	 */
 	public var health:Float = 1;
+
+	/**
+	 * Maximum health the player can have. Defaults to 2.
+	 */
+	@:isVar public var maxHealth(get, set):Float = 2;
 	/**
 	 * Current combo.
 	 */
@@ -445,6 +451,15 @@ class PlayState extends MusicBeatState
 			curRating = event.rating;
 	}
 
+	private inline function get_maxHealth()
+		return this.maxHealth;
+	private function set_maxHealth(v:Float) {
+		if (healthBar != null && healthBar.max == this.maxHealth) {
+			healthBar.setRange(healthBar.min, v);
+		}
+		return this.maxHealth = v;
+	}
+
 	override public function create()
 	{
 		instance = this;
@@ -589,10 +604,12 @@ class PlayState extends MusicBeatState
 		add(healthBarBG);
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
-			'health', 0, 2);
+			'health', 0, SONG.maxHealth);
 		healthBar.scrollFactor.set();
 		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		add(healthBar);
+
+		health = SONG.maxHealth / 2;
 
 
 		iconP1 = new HealthIcon(boyfriend.getIcon(), true);
@@ -833,6 +850,9 @@ class PlayState extends MusicBeatState
 	private function generateSong(?songData:SwagSong):Void
 	{
 		if (songData == null) songData = SONG;
+
+		if (songData.maxHealth != null && songData.maxHealth > 0)
+			maxHealth = songData.maxHealth;
 
 		Conductor.changeBPM(songData.bpm);
 

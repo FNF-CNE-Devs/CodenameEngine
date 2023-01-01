@@ -21,6 +21,8 @@ typedef SwagSong =
 	var player2:String;
 	var gf:String;
 	var validScore:Bool;
+
+	var maxHealth:Null<Float>;
 }
 
 class Song
