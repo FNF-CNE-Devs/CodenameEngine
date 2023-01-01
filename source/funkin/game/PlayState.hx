@@ -1576,9 +1576,7 @@ class PlayState extends MusicBeatState
 						comboGroup.add(comboSpr);
 						for (i in 0...separatedScore.length)
 						{
-							var e = separatedScore.charAt(i);
-				
-							var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}num$e${event.ratingSuffix}'));
+							var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}num${separatedScore.charAt(i)}${event.ratingSuffix}'));
 							numScore.resetSprite((43 * i) - 90, 80);
 							comboGroup.remove(numScore, true);
 							numScore.antialiasing = event.numAntialiasing;
