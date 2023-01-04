@@ -156,7 +156,7 @@ class Conductor
 
 				if (elapsed == 0) continue;
 
-				__updateSongPos(elapsed);
+				__updateSongPos(elapsed, syncThreadTime);
 			}
 		}, true);
 		#end
@@ -164,18 +164,18 @@ class Conductor
 
 	private static var __timeUntilUpdate:Float;
 	private static var __elapsedAL:Float;
-	private static function __updateSongPos(elapsed:Float) {
+	private static function __updateSongPos(elapsed:Float, mainTime:Float) {
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
 			speed = destSpeed = 1;
 			lastSongPos = FlxG.sound.music != null ? FlxG.sound.music.time : 0;
-			lastSongPosTime = Main.time;
+			lastSongPosTime = mainTime;
 			return;
 		}
 
 		var lastPos = lastSongPos;
 		if (lastSongPos != (lastSongPos = FlxG.sound.music.time)) {
 			// update conductor
-			__timeUntilUpdate = -(lastSongPosTime - (lastSongPosTime = Main.time));
+			__timeUntilUpdate = -(lastSongPosTime - (lastSongPosTime = mainTime));
 			__elapsedAL = (lastSongPos - lastPos);
 			destSpeed = FlxMath.bound(__elapsedAL / __timeUntilUpdate, 0.925, 1.075);
 			songPosition = lastSongPos;
@@ -193,7 +193,7 @@ class Conductor
 		if (FlxG.state != null && FlxG.state is MusicBeatState && cast(FlxG.state, MusicBeatState).cancelConductorUpdate) return;
 
 		#if !ALLOW_MULTITHREADING
-		__updateSongPos(FlxG.elapsed);
+		__updateSongPos(FlxG.elapsed, Main.time);
 		#end
 
 		if (bpm > 0) {

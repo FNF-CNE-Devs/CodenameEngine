@@ -60,7 +60,7 @@ class FramerateField extends TextField {
         }
         #if !web
         if (showMemory || debugMode) {
-            text.push('RAM: ${CoolUtil.getSizeString(System.totalMemory)}');
+            text.push('RAM: ${CoolUtil.getSizeString(cast(System.totalMemory, UInt))}');
         }
         if (showMemoryPeak || debugMode) {
             if (peak < System.totalMemory)

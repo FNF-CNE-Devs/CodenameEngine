@@ -150,6 +150,14 @@ class CoolUtil
 		}
 	}
 
+	public static function preloadCharacter(name:String, ?spriteName:String) {
+		if (name == null) return;
+		if (spriteName == null)
+			spriteName = name;
+		Assets.getText(Paths.xml('characters/$name'));
+		Paths.getFrames('characters/$spriteName');
+	}
+
 	public static function playMusic(path:String, DefaultBPM:Int = 102, Volume:Int = 1, Looped:Bool = true, ?Group:FlxSoundGroup) {
 		Conductor.reset();
 		FlxG.sound.playMusic(path, Volume, Looped, Group);

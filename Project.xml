@@ -145,6 +145,7 @@
 	
 	<haxelib name="hxCodec" if="VIDEO_CUTSCENES" />
 	<haxelib name="away3d" />
+	<haxelib name="format" />
 	
 	<haxelib name="flixel-yc29" rename="flixel" />
 	<haxedev set='webgl' />
