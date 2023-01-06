@@ -8,14 +8,14 @@
     {
       "name": "flixel-yc29",
       "type": "git",
-      "dir": null,
+      "dir": "flixel",
       "ref": "master",
       "url": "https://www.github.com/YoshiCrafter29/flixel"
     },
     {
       "name": "flxanimate",
       "type": "git",
-      "dir": null,
+      "dir": "flxanimate",
       "ref": "master",
       "url": "https://github.com/Dot-Stuff/flxanimate/"
     },
@@ -27,7 +27,7 @@
     {
       "name": "hscript-improved",
       "type": "git",
-      "dir": null,
+      "dir": "hscript-improved",
       "ref": "master",
       "url": "https://www.github.com/YoshiCrafter29/hscript-improved"
     },
@@ -44,7 +44,7 @@
     {
       "name": "linc_discord-rpc",
       "type": "git",
-      "dir": null,
+      "dir": "linc_discord-rpc",
       "ref": "master",
       "url": "https://github.com/Aidan63/linc_discord-rpc"
     },

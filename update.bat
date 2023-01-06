@@ -1,3 +1,1 @@
-haxelib install hmm
-haxelib run hmm setup
-hmm install
+@haxe -cp update -D analyzer-optimize -main Update --interp
