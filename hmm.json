@@ -1,0 +1,62 @@
+{
+  "dependencies": [
+    {
+      "name": "away3d",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "flixel-yc29",
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://www.github.com/YoshiCrafter29/flixel"
+    },
+    {
+      "name": "flxanimate",
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://github.com/Dot-Stuff/flxanimate/"
+    },
+    {
+      "name": "format",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "hscript-improved",
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://www.github.com/YoshiCrafter29/hscript-improved"
+    },
+    {
+      "name": "hxCodec",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "lime",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "linc_discord-rpc",
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://github.com/Aidan63/linc_discord-rpc"
+    },
+    {
+      "name": "markdown",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "openfl",
+      "type": "haxelib",
+      "version": null
+    }
+  ]
+}

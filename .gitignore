@@ -3,3 +3,4 @@ dump/
 latest/windows/obj/
 latest/windows/haxe/
 .vscode/
+.haxelib/
