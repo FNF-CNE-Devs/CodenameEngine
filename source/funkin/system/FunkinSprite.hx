@@ -1,5 +1,6 @@
 package funkin.system;
 
+import flixel.FlxG;
 import openfl.utils.Assets;
 import flxanimate.FlxAnimate;
 import haxe.io.Path;
@@ -12,6 +13,7 @@ import flixel.FlxCamera;
 import flixel.math.FlxMath;
 import funkin.interfaces.IBeatReceiver;
 import flixel.FlxSprite;
+import flixel.util.FlxDestroyUtil;
 
 @:enum
 abstract XMLAnimType(Int) {
@@ -38,6 +40,7 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
 
     public var animateAtlas:FlxAnimate;
     @:noCompletion public var atlasPlayingAnim:String;
+    @:noCompletion public var atlasPath:String;
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
@@ -50,6 +53,7 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
         if (Assets.exists('$noExt/Animation.json')
             && Assets.exists('$noExt/spritemap1.json')
             && Assets.exists('$noExt/spritemap1.png')) {
+                atlasPath = noExt;
                 animateAtlas = new FlxAnimate(x, y, noExt);
             }
         else {
@@ -126,6 +130,17 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
             animateAtlas.y = y;
             animateAtlas.antialiasing = antialiasing;
         }
+    }
+
+    public override function destroy() {
+        super.destroy();
+        if (animateAtlas != null) {
+            for(f in animateAtlas.frames.frames)
+                FlxG.bitmap.remove(f.parent);
+            Assets.cache.clear(atlasPath);
+            animateAtlas = FlxDestroyUtil.destroy(animateAtlas);
+        }
+        
     }
     #end
 
