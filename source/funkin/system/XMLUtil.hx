@@ -137,10 +137,18 @@ class XMLUtil {
 		if (animData.name != null && animData.anim != null) {
 			if (animData.fps <= 0 #if web || animData.fps == null #end) animData.fps = 24;
 
-			if (animData.indices.length > 0)
-				sprite.animation.addByIndices(animData.name, animData.anim, animData.indices, "", animData.fps, animData.loop);
-			else
-				sprite.animation.addByPrefix(animData.name, animData.anim, animData.fps, animData.loop);
+			if (sprite is FunkinSprite && cast(sprite, FunkinSprite).animateAtlas != null) {
+				var animateAnim = cast(sprite, FunkinSprite).animateAtlas.anim;
+				if (animData.indices.length > 0)
+					animateAnim.addBySymbolIndices(animData.name, animData.anim, animData.indices, animData.fps, animData.loop);
+				else
+					animateAnim.addBySymbol(animData.name, animData.anim, animData.fps, animData.loop);
+			} else {
+				if (animData.indices.length > 0)
+					sprite.animation.addByIndices(animData.name, animData.anim, animData.indices, "", animData.fps, animData.loop);
+				else
+					sprite.animation.addByPrefix(animData.name, animData.anim, animData.fps, animData.loop);
+			}
 
 			if (sprite is IOffsetCompatible)
 				cast(sprite, IOffsetCompatible).addOffset(animData.name, animData.x, animData.y);

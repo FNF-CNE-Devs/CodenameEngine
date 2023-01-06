@@ -133,7 +133,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 					if (xml.has.antialiasing) antialiasing = (xml.att.antialiasing == "true");
 					if (xml.has.sprite) sprite = xml.att.sprite;
 
-					frames = Paths.getFrames('characters/$sprite', null);
+					loadSprite(Paths.image('characters/$sprite'));
 					for(anim in xml.nodes.anim) {
 						XMLUtil.addXMLAnimation(this, anim);
 					}
@@ -170,7 +170,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		// 		flipX = true;
 
 
-		isDanceLeftDanceRight = (animation.getByName("danceLeft") != null && animation.getByName("danceRight") != null);
+		isDanceLeftDanceRight = (hasAnimation("danceLeft") && hasAnimation("danceRight"));
 		
 		// alternative to xor operator
 		// for people who dont believe it, heres the truth table
@@ -241,10 +241,10 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			case DANCE:
 				dance();
 			case LOCK:
-				if (animation.curAnim == null)
+				if (getAnimName() == null)
 					dance();
 			default:
-				if (animation.curAnim == null || animation.curAnim.finished)
+				if (getAnimName() == null || isAnimFinished())
 					dance();
 		}
 	}

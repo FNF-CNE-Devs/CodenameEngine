@@ -1,5 +1,8 @@
 package funkin.system;
 
+import openfl.utils.Assets;
+import flxanimate.FlxAnimate;
+import haxe.io.Path;
 import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
 import funkin.interfaces.IOffsetCompatible;
 import flixel.math.FlxMatrix;
@@ -33,8 +36,25 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
     public var zoomFactor:Float = 1;
     public var initialZoom:Float = 1;
 
+    public var animateAtlas:FlxAnimate;
+    @:noCompletion public var atlasPlayingAnim:String;
+
     public override function update(elapsed:Float) {
         super.update(elapsed);
+        if (animateAtlas != null)
+            animateAtlas.update(elapsed);
+    }
+
+    public function loadSprite(path:String, Unique:Bool = false, Key:String = null) {
+        var noExt = Path.withoutExtension(path);
+        if (Assets.exists('$noExt/Animation.json')
+            && Assets.exists('$noExt/spritemap1.json')
+            && Assets.exists('$noExt/spritemap1.png')) {
+                animateAtlas = new FlxAnimate(x, y, noExt);
+            }
+        else {
+            frames = CoolUtil.loadFrames(path, Unique, Key, true);
+        }
     }
 
     public function beatHit(curBeat:Int) {
@@ -85,6 +105,30 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
         return super.getScreenPosition(point, Camera);
     }
 
+    // ANIMATE ATLAS DRAWING
+    #if REGION
+    public override function draw() {
+        if (animateAtlas != null) {
+            copyAtlasValues();
+            animateAtlas.draw();
+        } else {
+            super.draw();
+        }
+    }
+
+    public function copyAtlasValues() {
+        @:privateAccess {
+            animateAtlas.cameras = cameras;
+            animateAtlas.scrollFactor = scrollFactor;
+            animateAtlas.offset = offset;
+            animateAtlas.rotOffset = rotOffset;
+            animateAtlas.x = x;
+            animateAtlas.y = y;
+            animateAtlas.antialiasing = antialiasing;
+        }
+    }
+    #end
+
     // SCALING FUNCS
     #if REGION
     private inline function __shouldDoScaleProcedure()
@@ -130,9 +174,19 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
     public var lastAnimContext:PlayAnimContext = DANCE;
 	public function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		if (AnimName == null || !animation.exists(AnimName)) return;
+		if (AnimName == null) return;
 
-		animation.play(AnimName, Force, Reversed, Frame);
+        if (animateAtlas != null)  {
+            @:privateAccess
+            //if (!animateAtlas.anim.animsMap.exists(AnimName) && !animateAtlas.anim.symbolDictionary.exists(AnimName)) return;
+            animateAtlas.anim.play(AnimName, Force, Reversed, Frame);
+            atlasPlayingAnim = AnimName;
+        }
+        else {
+            if (!animation.exists(AnimName)) return;
+		    animation.play(AnimName, Force, Reversed, Frame);
+        }
+        
 
 		var daOffset = getAnimOffset(AnimName);
 		rotOffset.set(daOffset.x, daOffset.y);
@@ -145,5 +199,26 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
 			return animOffsets[name];
 		return FlxPoint.weak(0, 0);
 	}
+
+    public inline function hasAnimation(AnimName:String):Bool
+        @:privateAccess
+        return animateAtlas != null
+            ? (animateAtlas.anim.animsMap.exists(AnimName) || animateAtlas.anim.symbolDictionary.exists(AnimName))
+            : animation.getByName(AnimName) != null;
+
+    public inline function getAnimName() {
+        var name = null;
+        if (animateAtlas != null) {
+            name = atlasPlayingAnim;
+        } else {
+            if (animation.curAnim != null)
+                name = animation.curAnim.name;
+        }
+        return name;
+    }
+
+    public inline function isAnimFinished() {
+        return animateAtlas != null ? (animateAtlas.anim.finished) : (animation.curAnim != null ? animation.curAnim.finished : true);
+    }
     #end
 }

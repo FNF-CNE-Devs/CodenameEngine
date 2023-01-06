@@ -286,7 +286,7 @@ class CoolUtil
 		return xml.att.resolve(name);
 	}
 
-	public static function loadFrames(path:String, Unique:Bool = false, Key:String = null):FlxFramesCollection {
+	public static function loadFrames(path:String, Unique:Bool = false, Key:String = null, SkipAtlasCheck:Bool = false):FlxFramesCollection {
 		var noExt = Path.withoutExtension(path);
 
 		if (Assets.exists('$noExt/1.png')) {
@@ -313,7 +313,7 @@ class CoolUtil
 							f.parent = frames.parent;
 						}
 			return finalFrames;
-		} else if (Assets.exists('$noExt/Animation.json')
+		} else if (!SkipAtlasCheck && Assets.exists('$noExt/Animation.json')
 		&& Assets.exists('$noExt/spritemap.json')
 		&& Assets.exists('$noExt/spritemap.png')) {
 			return AtlasFrameMaker.construct(noExt);
