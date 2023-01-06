@@ -124,10 +124,17 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
         @:privateAccess {
             animateAtlas.cameras = cameras;
             animateAtlas.scrollFactor = scrollFactor;
+            animateAtlas.scale = scale;
             animateAtlas.offset = offset;
             animateAtlas.rotOffset = rotOffset;
             animateAtlas.x = x;
             animateAtlas.y = y;
+            animateAtlas.angle = angle;
+            animateAtlas.alpha = alpha;
+            animateAtlas.visible = visible;
+            animateAtlas.flipX = flipX;
+            animateAtlas.flipY = flipY;
+            animateAtlas.shader = shader;
             animateAtlas.antialiasing = antialiasing;
         }
     }
