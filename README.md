@@ -17,6 +17,8 @@ Also, `lime test windows` uses the source assets folder instead of the export on
 - Credits to Smokey555 for the fancy Animate Atlas code (might be replaced soon)
 
 ## HOW TO BUILD
-- Install the required libraries as told in the original Funkin' repo (with latest Haxe!)
-- Run `update.bat` to install all required additional libraries (flixel fork, hscript fork...)
+- Install the [latest version of Haxe](https://haxe.org/download/)
+- Install everything mentioned here for your platform: [`Windows`](https://lime.openfl.org/docs/advanced-setup/windows/), [`Linux`](https://lime.openfl.org/docs/advanced-setup/linux/), [`MacOS`](https://lime.openfl.org/docs/advanced-setup/macos/)
+- Run `update.bat` to install/update all libraries needed for the engine.
+    - If you're using another operating system, execute `haxe -cp update -D analyzer-optimize -main Update --interp` in a terminal.
 - Run `lime test windows` to compile the game (may take a long time)

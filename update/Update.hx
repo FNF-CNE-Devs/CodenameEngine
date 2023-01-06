@@ -9,16 +9,18 @@ class Update {
             FileSystem.createDirectory('.haxelib');
 
         var json:Array<Library> = Json.parse(File.getContent('./hmm.json')).dependencies;
-        prettyPrint("Installing libraries...");
+        prettyPrint("Preparing installation...");
         for(lib in json) {
-            // install lib.
+            // install libs
             switch(lib.type) {
                 case "haxelib":
-                    prettyPrint('Installing haxelib ${lib.name}...');
+                    prettyPrint('Installing "${lib.name}"...');
                     Sys.command('haxelib install ${lib.name}');
                 case "git":
-                    prettyPrint('Installing ${lib.name} from git url ${lib.url}');
+                    prettyPrint('Installing "${lib.name}" from git url "${lib.url}"');
                     Sys.command('haxelib git ${lib.name} ${lib.url}');
+                default:
+                    prettyPrint('Cannot resolve library of type "${lib.type}"');
             }
         }
     }
