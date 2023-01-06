@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.system.FunkinSprite;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
 import funkin.interfaces.IBeatReceiver;
@@ -28,7 +29,7 @@ import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
 using StringTools;
 
 @:allow(funkin.desktop.editors.CharacterEditor)
-class Character extends FlxSprite implements IBeatReceiver implements IOffsetCompatible
+class Character extends FunkinSprite implements IBeatReceiver implements IOffsetCompatible
 {
 	private var __stunnedTime:Float = 0;
 	public var stunned(default, set):Bool = false;
@@ -38,7 +39,6 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 		return stunned = b;
 	}
 
-	public var animOffsets:Map<String, FlxPoint>;
 	public var debugMode:Bool = false;
 
 	public var isPlayer:Bool = false;
@@ -197,12 +197,6 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	var __baseFlipped:Bool = false;
 	var isDanceLeftDanceRight:Bool = false;
 
-	public function switchOffset(anim1:String, anim2:String) {
-		var old = animOffsets[anim1];
-		animOffsets[anim1] = animOffsets[anim2];
-		animOffsets[anim2] = old;
-	}
-
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -260,14 +254,14 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 	 */
 	public var danceOnBeat:Bool = true;
 
-	public function beatHit(curBeat:Int) {
+	public override function beatHit(curBeat:Int) {
 		script.call("beatHit", [curBeat]);
 		if (danceOnBeat) {
 			tryDance();
 		}
 	}
 	
-	public function stepHit(curStep:Int) {
+	public override function stepHit(curStep:Int) {
 		script.call("stepHit", [curStep]);
 		// nothing
 	}
@@ -332,33 +326,20 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 			super.draw();
 	}
 
-	public function getAnimOffset(name:String) {
-		if (animOffsets[name] != null)
-			return animOffsets[name];
-		return FlxPoint.weak(0, 0);
-	}
-
-	public var lastAnimContext:PlayAnimContext = DANCE;
-	public function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
+	public override function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		var event = new PlayAnimEvent(AnimName, Force, Reversed, Frame, Context);
-		
 		script.call("onPlayAnim", [event]);
+		if (event.cancelled) return;
 
-		if (event.cancelled || event.animName == null || !animation.exists(event.animName)) return;
-
-		animation.play(event.animName, event.force, event.reverse, event.startingFrame);
-
-		var daOffset = getAnimOffset(event.animName);
-		rotOffset.set(daOffset.x, daOffset.y);
-
+		super.playAnim(event.animName, event.force, event.context, event.reverse, event.startingFrame);
+		
 		offset.set(globalOffset.x * (isPlayer != playerOffsets ? 1 : -1), -globalOffset.y);
-
 		if (event.context == SING || event.context == MISS)
 			lastHit = Conductor.songPosition;
-
-		lastAnimContext = event.context;
 	}
+
+	
 
 	public override function destroy() {
 		super.destroy();
@@ -369,11 +350,6 @@ class Character extends FlxSprite implements IBeatReceiver implements IOffsetCom
 
 	public inline function getIcon() {
 		return (icon != null) ? icon : curCharacter;
-	}
-
-	public function addOffset(name:String, x:Float = 0, y:Float = 0)
-	{
-		animOffsets[name] = new FlxPoint(x, y);
 	}
 }
 

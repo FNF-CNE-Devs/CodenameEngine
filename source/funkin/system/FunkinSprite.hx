@@ -1,5 +1,7 @@
 package funkin.system;
 
+import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
+import funkin.interfaces.IOffsetCompatible;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
@@ -24,7 +26,7 @@ abstract XMLAnimType(Int) {
     }
 }
 
-class XMLSprite extends FlxSprite implements IBeatReceiver {
+class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffsetCompatible {
     public var spriteAnimType:XMLAnimType = NONE;
     public var beatAnims:Array<String> = [];
     public var name:String;
@@ -39,7 +41,7 @@ class XMLSprite extends FlxSprite implements IBeatReceiver {
         if (beatAnims.length > 0) {
             var anim = beatAnims[FlxMath.wrap(curBeat, 0, beatAnims.length-1)];
             if (anim != null && anim != "null" && anim != "none")
-                animation.play(anim);
+                playAnim(anim);
         }
     }
     public function stepHit(curBeat:Int) {}
@@ -106,5 +108,42 @@ class XMLSprite extends FlxSprite implements IBeatReceiver {
         __oldScale.put();
         __oldScale = null;
     }
+    #end
+
+    // OFFSETTING
+    #if REGION
+	public var animOffsets:Map<String, FlxPoint> = new Map<String, FlxPoint>();
+	public function addOffset(name:String, x:Float = 0, y:Float = 0)
+    {
+        animOffsets[name] = new FlxPoint(x, y);
+    }
+
+	public function switchOffset(anim1:String, anim2:String) {
+		var old = animOffsets[anim1];
+		animOffsets[anim1] = animOffsets[anim2];
+		animOffsets[anim2] = old;
+	}
+    #end
+
+    // PLAYANIM
+    #if REGION
+    public var lastAnimContext:PlayAnimContext = DANCE;
+	public function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
+	{
+		if (AnimName == null || !animation.exists(AnimName)) return;
+
+		animation.play(AnimName, Force, Reversed, Frame);
+
+		var daOffset = getAnimOffset(AnimName);
+		rotOffset.set(daOffset.x, daOffset.y);
+
+		lastAnimContext = Context;
+	}
+
+	public inline function getAnimOffset(name:String) {
+		if (animOffsets[name] != null)
+			return animOffsets[name];
+		return FlxPoint.weak(0, 0);
+	}
     #end
 }

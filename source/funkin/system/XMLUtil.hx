@@ -1,6 +1,6 @@
 package funkin.system;
 
-import funkin.system.XMLSprite.XMLAnimType;
+import funkin.system.FunkinSprite.XMLAnimType;
 import flixel.math.FlxMath;
 import funkin.interfaces.IBeatReceiver;
 import haxe.xml.Access;
@@ -45,10 +45,10 @@ class XMLUtil {
 	/**
 	 * Creates a new sprite based on a XML node.
 	 */
-	public static function createSpriteFromXML(node:Access, parentFolder:String = "", defaultAnimType:XMLAnimType = BEAT, ?cl:Class<XMLSprite>):XMLSprite {
+	public static function createSpriteFromXML(node:Access, parentFolder:String = "", defaultAnimType:XMLAnimType = BEAT, ?cl:Class<FunkinSprite>):FunkinSprite {
 		if (parentFolder == null) parentFolder = "";
 
-		var spr:XMLSprite = cl != null ? Type.createInstance(cl, []) : new XMLSprite();
+		var spr:FunkinSprite = cl != null ? Type.createInstance(cl, []) : new FunkinSprite();
 		spr.name = node.getAtt("name");
 		spr.antialiasing = true;
 
@@ -127,8 +127,8 @@ class XMLUtil {
 	 */
 	public static function addXMLAnimation(sprite:FlxSprite, anim:Access, loop:Bool = false):ErrorCode {
 		var animType:XMLAnimType = NONE;
-		if (sprite is XMLSprite)
-			animType = cast(sprite, XMLSprite).spriteAnimType;
+		if (sprite is FunkinSprite)
+			animType = cast(sprite, FunkinSprite).spriteAnimType;
 
 		return addAnimToSprite(sprite, extractAnimFromXML(anim, animType, loop));
 	}
@@ -145,8 +145,8 @@ class XMLUtil {
 			if (sprite is IOffsetCompatible)
 				cast(sprite, IOffsetCompatible).addOffset(animData.name, animData.x, animData.y);
 
-			if (sprite is XMLSprite) {
-				var xmlSpr = cast(sprite, XMLSprite);
+			if (sprite is FunkinSprite) {
+				var xmlSpr = cast(sprite, FunkinSprite);
 				switch(animData.animType) {
 					case BEAT:
 						xmlSpr.beatAnims.push(animData.name);
