@@ -11,7 +11,8 @@ jobs:
         with:
           haxe-version: 4.2.5
       - run: |
-          mkdir "%HAXELIB_ROOT%"
-          haxelib setup "%HAXELIB_ROOT%"
+          mkdir ".haxelib"
+          haxelib setup ".haxelib"
+          ls
           haxe -cp ./update -D analyzer-optimize -main Update --interp
           lime build linux
