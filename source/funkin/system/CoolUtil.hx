@@ -366,4 +366,19 @@ class CoolUtil
 	public static function getMacroAbstractClass(className:String) {
 		return Type.resolveClass('${className}_HSC');
 	}
+
+	/**
+	 * Clears the content of an array
+	 */
+	public static function clear<T>(array:Array<T>):Array<T> {
+		while(array.length > 0)
+			array.shift();
+		return array;	
+	}
+
+	public static function pushGroup<T>(array:Array<T>, ...args:T):Array<T> {
+		for(a in args)
+			array.push(a);
+		return array;
+	}
 }

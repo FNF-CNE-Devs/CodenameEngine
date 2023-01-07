@@ -72,9 +72,11 @@ class TitleState extends MusicBeatState
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
+		#if TITLESCREEN_XML
 		titleScreenSprites = new MusicBeatGroup();
 		add(titleScreenSprites);
 		loadXML();
+		#end
 
 		titleText = new FlxSprite(100, FlxG.height * 0.8);
 		titleText.frames = Paths.getFrames('menus/titlescreen/titleEnter');

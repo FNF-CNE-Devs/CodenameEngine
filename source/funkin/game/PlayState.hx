@@ -1406,22 +1406,33 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	@:gcOptimize
+	var __funcsToExec:Array<Note->Void> = [];
+	var __pressed:Array<Bool> = [];
+	var __justPressed:Array<Bool> = [];
+	var __justReleased:Array<Bool> = [];
 	private function keyShit():Void
 	{
-		var pressed = [controls.NOTE_LEFT, controls.NOTE_DOWN, controls.NOTE_UP, controls.NOTE_RIGHT];
-		var justPressed = [controls.NOTE_LEFT_P, controls.NOTE_DOWN_P, controls.NOTE_UP_P, controls.NOTE_RIGHT_P];
-		var justReleased = [controls.NOTE_LEFT_R, controls.NOTE_DOWN_R, controls.NOTE_UP_R, controls.NOTE_RIGHT_R];
+		__funcsToExec.clear();
+		__pressed.clear();
+		__justPressed.clear();
+		__justReleased.clear();
 
-		var event = scripts.event("onKeyShit", new InputSystemEvent(pressed, justPressed, justReleased));
+		__pressed.pushGroup(controls.NOTE_LEFT, controls.NOTE_DOWN, controls.NOTE_UP, controls.NOTE_RIGHT);
+		__justPressed.pushGroup(controls.NOTE_LEFT_P, controls.NOTE_DOWN_P, controls.NOTE_UP_P, controls.NOTE_RIGHT_P);
+		__justReleased.pushGroup(controls.NOTE_LEFT_R, controls.NOTE_DOWN_R, controls.NOTE_UP_R, controls.NOTE_RIGHT_R);
+
+		var event = scripts.event("onKeyShit", new InputSystemEvent(__pressed, __justPressed, __justReleased));
 		if (event.cancelled) return;
-		pressed = CoolUtil.getDefault(event.pressed, []);
-		justPressed = CoolUtil.getDefault(event.justPressed, []);
-		justReleased = CoolUtil.getDefault(event.justReleased, []);
 
-		var funcsToExec:Array<Note->Void> = [];
-		if (pressed.contains(true)) {
-			funcsToExec.push(function(note:Note) {
-				if (pressed[note.strumID] && note.isSustainNote && note.canBeHit && note.mustPress && !note.wasGoodHit) {
+		__pressed = CoolUtil.getDefault(event.pressed, []);
+		__justPressed = CoolUtil.getDefault(event.justPressed, []);
+		__justReleased = CoolUtil.getDefault(event.justReleased, []);
+
+		
+		if (__pressed.contains(true)) {
+			__funcsToExec.push(function(note:Note) {
+				if (__pressed[note.strumID] && note.isSustainNote && note.canBeHit && note.mustPress && !note.wasGoodHit) {
 					goodNoteHit(note);
 				}
 			});
@@ -1429,9 +1440,9 @@ class PlayState extends MusicBeatState
 
 		var notePerStrum = [for(i in 0...4) null];
 		var additionalNotes:Array<Note> = [];
-		if (justPressed.contains(true)) {
-			funcsToExec.push(function(note:Note) {
-				if (justPressed[note.strumID] && !note.isSustainNote && note.mustPress && !note.wasGoodHit && note.canBeHit) {
+		if (__justPressed.contains(true)) {
+			__funcsToExec.push(function(note:Note) {
+				if (__justPressed[note.strumID] && !note.isSustainNote && note.mustPress && !note.wasGoodHit && note.canBeHit) {
 					if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;
 					else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 10) additionalNotes.push(note);
 					else if (note.strumTime < notePerStrum[note.strumID].strumTime)					notePerStrum[note.strumID] = note;
@@ -1439,9 +1450,9 @@ class PlayState extends MusicBeatState
 			});
 		}
 
-		if (funcsToExec.length > 0) {
+		if (__funcsToExec.length > 0) {
 			notes.forEachAlive(function(note:Note) {
-				for(e in funcsToExec) e(note);
+				for(e in __funcsToExec) e(note);
 			});
 		}
 
@@ -1449,7 +1460,7 @@ class PlayState extends MusicBeatState
 		for(e in additionalNotes) goodNoteHit(e);
 
 		playerStrums.forEach(function(str:Strum) {
-			str.updatePlayerInput(pressed[str.ID], justPressed[str.ID], justReleased[str.ID]);
+			str.updatePlayerInput(__pressed[str.ID], __justPressed[str.ID], __justReleased[str.ID]);
 		});
 		scripts.call("onPostKeyShit");
 	}
