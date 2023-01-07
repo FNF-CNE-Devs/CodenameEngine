@@ -23,8 +23,8 @@ jobs:
           key: cache-build-mac
           path: |
             .haxelib/
-            export/release/mac/haxe/
-            export/release/mac/obj/
+            export/release/macos/haxe/
+            export/release/macos/obj/
           restore-keys: |
             cache-build-mac
       - name: Setting up Haxelib
@@ -74,7 +74,7 @@ jobs:
           key: cache-build-mac
           path: |
             .haxelib/
-            export/release/mac/haxe/
-            export/release/mac/obj/
+            export/release/macos/haxe/
+            export/release/macos/obj/
           restore-keys: |
             cache-build-mac
