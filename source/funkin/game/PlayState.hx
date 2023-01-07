@@ -203,9 +203,9 @@ class PlayState extends MusicBeatState
 	public var canAccessDebugMenus:Bool = true;
 
 	/**
-	 * Whenever cam zooming is enabled.
+	 * Whenever cam zooming is enabled, enables on a note hit if not cancelled.
 	 */
-	public var camZooming:Bool = true;
+	public var camZooming:Bool = false;
 	/**
 	 * Interval of cam zooming (beats).
 	 * For example: if set to 4, the camera will zoom every 4 beats.
