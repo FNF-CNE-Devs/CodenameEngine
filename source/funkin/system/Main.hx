@@ -167,10 +167,11 @@ class Main extends Sprite
 			trace("Used lime test windows. Switching into source assets.");
 			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './../../../../assets/', true));
 			#end
-
+			#if windows
 			var buildNum:Int = Std.parseInt(File.getContent("./../../../../buildnumber.txt"));
 			buildNum++;
-			File.saveContent("./../../../../buildnumber.txt", Std.string(buildNum));
+			File.saveContent("./../../../../buildnumber.txt", Std.string(buildNum));\
+			#end
 		} else {
 			#if USE_ADAPTED_ASSETS
 			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './assets/', true));
