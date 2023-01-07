@@ -20,9 +20,11 @@ jobs:
           # not caching the bin folder to prevent asset duplication and stuff like that
           key: cache-build-mac
           path: |
-            ~/.haxelib/
-            ~/export/release/mac/haxe/
-            ~/export/release/mac/obj/
+            .haxelib/
+            export/release/mac/haxe/
+            export/release/mac/obj/
+          restore-keys: |
+            cache-build-mac
       - name: Setting up Haxelib
         run: |
           mkdir ".haxelib"
@@ -30,9 +32,9 @@ jobs:
       - name: Installing libraries
         run: |
           haxe -cp ./update -D analyzer-optimize -main Update --interp
-      # - name: Building the game
-      #   run: |
-      #     haxelib run lime build mac
+      - name: Building the game
+        run: |
+          haxelib run lime build mac
       - name: Artifact upload (entire build)
         uses: actions/upload-artifact@v2
         with:

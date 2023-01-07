@@ -25,6 +25,8 @@ jobs:
             .haxelib/
             export/release/linux/haxe/
             export/release/linux/obj/
+          restore-keys: |
+            cache-build-linux
       - name: Setting up Haxelib
         run: |
           mkdir ".haxelib"
@@ -33,9 +35,9 @@ jobs:
         run: |
           ls
           haxe -cp ./update -D analyzer-optimize -main Update --interp
-      # - name: Building the game
-      #   run: |
-      #     haxelib run lime build linux
+      - name: Building the game
+        run: |
+          haxelib run lime build linux
       - name: Artifact upload (entire build)
         uses: actions/upload-artifact@v2
         with:
