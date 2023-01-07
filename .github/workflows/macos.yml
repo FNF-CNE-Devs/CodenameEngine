@@ -27,12 +27,12 @@ jobs:
         run: |
           mkdir ".haxelib"
           haxelib setup ".haxelib"
-      # - name: Installing libraries
-      #   run: |
-      #     haxe -cp ./update -D analyzer-optimize -main Update --interp
-      - name: Building the game
+      - name: Installing libraries
         run: |
-          haxelib run lime build mac
+          haxe -cp ./update -D analyzer-optimize -main Update --interp
+      # - name: Building the game
+      #   run: |
+      #     haxelib run lime build mac
       - name: Artifact upload (entire build)
         uses: actions/upload-artifact@v2
         with:
