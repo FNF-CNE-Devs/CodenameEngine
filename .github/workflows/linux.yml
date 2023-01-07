@@ -13,6 +13,14 @@ jobs:
         uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
+      - name: Cache Haxelibs and build
+        uses: actions/cache@v3
+        key: cache-build-linux
+        with:
+          path: |
+            ~/.haxelib/
+            ~/export/release/linux/haxe/
+            ~/export/release/linux/obj/
       - name: Setting up Haxelib
         run: |
           mkdir ".haxelib"
