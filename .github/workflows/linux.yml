@@ -1,0 +1,15 @@
+
+name: Compile on Linux
+on:
+  pull_request:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.2.5
+      - run: |
+          haxe -cp update -D analyzer-optimize -main Update --interp
+          lime build linux
