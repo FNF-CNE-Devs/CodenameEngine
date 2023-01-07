@@ -12,16 +12,16 @@ jobs:
         with:
           haxe-version: 4.2.5
       - name: Setting up Haxelib
-      - run: |
+        run: |
           mkdir ".haxelib"
           haxelib setup ".haxelib"
       - name: Installing libraries
-      - run: |
+        run: |
           cd ..
           ls
           haxe -cp ./update -D analyzer-optimize -main Update --interp
       - name: Building the game
-      - run: |
+        run: |
           haxelib run lime build linux
       - uses: actions/upload-artifact@v2
         with:
