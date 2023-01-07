@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: Mac OS Build
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Pulling the new commit
         uses: actions/checkout@v2
@@ -14,6 +14,8 @@ jobs:
         uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
+      - name: Show current dir
+        run: pwd
       - name: Cache Haxelibs and build
         uses: actions/cache@v3
         with:
@@ -31,6 +33,7 @@ jobs:
           haxelib setup ".haxelib"
       - name: Installing libraries
         run: |
+          ls
           haxe -cp ./update -D analyzer-optimize -main Update --interp
       - name: Building the game
         run: |
@@ -45,3 +48,33 @@ jobs:
         with:
           name: Update-Mac
           path: export/release/mac/bin/CodenameEngine
+      - name: Clear cache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              if (cache.key == "cache-build-mac") {
+                console.log('Clearing ' + cache.key + '...')
+                await github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+                console.log("Cache cleared.")
+              }
+            }
+      - name: Cache... again
+        uses: actions/cache@v3
+        with:
+          # caching again since for some reason it doesnt work with the first post cache shit
+          key: cache-build-mac
+          path: |
+            .haxelib/
+            export/release/mac/haxe/
+            export/release/mac/obj/
+          restore-keys: |
+            cache-build-mac

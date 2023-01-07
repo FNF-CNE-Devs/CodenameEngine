@@ -35,9 +35,9 @@ jobs:
         run: |
           ls
           haxe -cp ./update -D analyzer-optimize -main Update --interp
-      # - name: Building the game
-      #   run: |
-      #     haxelib run lime build linux
+      - name: Building the game
+        run: |
+          haxelib run lime build linux
       - name: Artifact upload (entire build)
         uses: actions/upload-artifact@v2
         with:
@@ -59,7 +59,7 @@ jobs:
             for (const cache of caches.data.actions_caches) {
               if (cache.key == "cache-build-linux") {
                 console.log('Clearing ' + cache.key + '...')
-                github.rest.actions.deleteActionsCacheById({
+                await github.rest.actions.deleteActionsCacheById({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   cache_id: cache.id,
@@ -70,7 +70,7 @@ jobs:
       - name: Cache... again
         uses: actions/cache@v3
         with:
-          # not caching the bin folder to prevent asset duplication and stuff like that
+          # caching again since for some reason it doesnt work with the first post cache shit
           key: cache-build-linux
           path: |
             .haxelib/
