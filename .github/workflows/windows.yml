@@ -1,0 +1,47 @@
+
+name: Windows Build
+on:
+  pull_request:
+  push:
+jobs:
+  build:
+    name: Windows Build
+    runs-on: windows-latest
+    steps:
+      - name: Pulling the new commit
+        uses: actions/checkout@v2
+      - name: Setting up Haxe
+        uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.2.5
+      - name: Cache Haxelibs and build
+        uses: actions/cache@v3
+        with:
+          # not caching the bin folder to prevent asset duplication and stuff like that
+          key: cache-build-windows
+          path: |
+            .haxelib/
+            export/release/windows/haxe/
+            export/release/windows/obj/
+          restore-keys: |
+            cache-build-windows
+      - name: Setting up Haxelib
+        run: |
+          if not exist ".haxelib\" mkdir ".haxelib"
+          haxelib setup ".haxelib"
+      - name: Installing libraries
+        run: |
+          haxe -cp ./update -D analyzer-optimize -main Update --interp
+      - name: Building the game
+        run: |
+          haxelib run lime build windows
+      - name: Artifact upload (entire build)
+        uses: actions/upload-artifact@v2
+        with:
+          name: Codename Engine
+          path: export/release/windows/bin
+      - name: Artifact upload (executable)
+        uses: actions/upload-artifact@v2
+        with:
+          name: Update-Windows
+          path: export/release/windows/bin/CodenameEngine.exe
