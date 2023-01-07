@@ -22,9 +22,9 @@ jobs:
           # not caching the bin folder to prevent asset duplication and stuff like that
           key: cache-build-linux
           path: |
-            ~/.haxelib/
-            ~/export/release/linux/haxe/
-            ~/export/release/linux/obj/
+            /home/runner/work/CodenameEngine/CodenameEngine/.haxelib/
+            /home/runner/work/CodenameEngine/CodenameEngine/export/release/linux/haxe/
+            /home/runner/work/CodenameEngine/CodenameEngine/export/release/linux/obj/
       - name: Setting up Haxelib
         run: |
           mkdir ".haxelib"
