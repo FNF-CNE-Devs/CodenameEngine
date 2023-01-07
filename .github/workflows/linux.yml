@@ -67,3 +67,14 @@ jobs:
                 console.log("Cache cleared.")
               }
             }
+      - name: Cache... again
+        uses: actions/cache@v3
+        with:
+          # not caching the bin folder to prevent asset duplication and stuff like that
+          key: cache-build-linux
+          path: |
+            .haxelib/
+            export/release/linux/haxe/
+            export/release/linux/obj/
+          restore-keys: |
+            cache-build-linux
