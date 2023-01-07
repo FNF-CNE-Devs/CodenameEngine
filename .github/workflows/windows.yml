@@ -27,7 +27,7 @@ jobs:
             cache-build-windows
       - name: Setting up Haxelib
         run: |
-          if not exist ".haxelib\" mkdir ".haxelib"
+          if (not exist ".haxelib\") mkdir ".haxelib"
           haxelib setup ".haxelib"
       - name: Installing libraries
         run: |
