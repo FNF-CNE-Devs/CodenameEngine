@@ -11,5 +11,5 @@ jobs:
         with:
           haxe-version: 4.2.5
       - run: |
-          haxe -cp update -D analyzer-optimize -main Update --interp
+          haxe -cp ./update -D analyzer-optimize -main Update --interp
           lime build linux
