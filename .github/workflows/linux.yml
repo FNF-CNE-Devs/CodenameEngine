@@ -17,7 +17,6 @@ jobs:
           haxelib setup ".haxelib"
       - name: Installing libraries
         run: |
-          cd ..
           ls
           haxe -cp ./update -D analyzer-optimize -main Update --interp
       - name: Building the game
