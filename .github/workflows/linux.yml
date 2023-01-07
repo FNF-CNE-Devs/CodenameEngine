@@ -14,15 +14,17 @@ jobs:
         uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
+      - name: Show current dir
+        run: cd
       - name: Cache Haxelibs and build
         uses: actions/cache@v3
         with:
           # not caching the bin folder to prevent asset duplication and stuff like that
           key: cache-build-linux
           path: |
-            ~/CodenameEngine/.haxelib/
-            ~/CodenameEngine/export/release/linux/haxe/
-            ~/CodenameEngine/export/release/linux/obj/
+            ~/.haxelib/
+            ~/export/release/linux/haxe/
+            ~/export/release/linux/obj/
       - name: Setting up Haxelib
         run: |
           mkdir ".haxelib"

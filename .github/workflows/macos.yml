@@ -20,9 +20,9 @@ jobs:
           # not caching the bin folder to prevent asset duplication and stuff like that
           key: cache-build-mac
           path: |
-            ~/CodenameEngine/.haxelib/
-            ~/CodenameEngine/export/release/mac/haxe/
-            ~/CodenameEngine/export/release/mac/obj/
+            ~/.haxelib/
+            ~/export/release/mac/haxe/
+            ~/export/release/mac/obj/
       - name: Setting up Haxelib
         run: |
           mkdir ".haxelib"
