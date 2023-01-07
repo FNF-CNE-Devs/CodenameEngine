@@ -7,8 +7,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: krdlab/setup-haxe@v1
+      - name: Pulling the new commit
+        uses: actions/checkout@v2
+      - name: Setting up Haxe
+        uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
       - name: Setting up Haxelib
@@ -22,11 +24,13 @@ jobs:
       - name: Building the game
         run: |
           haxelib run lime build linux
-      - uses: actions/upload-artifact@v2
+      - name: Artifact upload (entire build)
+        uses: actions/upload-artifact@v2
         with:
           name: Codename Engine
           path: export/release/linux/bin
-      - uses: actions/upload-artifact@v2
+      - name: Artifact upload (executable)
+        uses: actions/upload-artifact@v2
         with:
           name: Update-Linux
           path: export/release/linux/bin/CodenameEngine
