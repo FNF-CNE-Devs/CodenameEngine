@@ -31,13 +31,13 @@ jobs:
         run: |
           mkdir -p ".haxelib"
           haxelib setup ".haxelib"
-      - name: Installing libraries
-        run: |
-          ls
-          haxe -cp ./update -D analyzer-optimize -main Update --interp
-      - name: Building the game
-        run: |
-          haxelib run lime build linux
+      # - name: Installing libraries
+      #   run: |
+      #     ls
+      #     haxe -cp ./update -D analyzer-optimize -main Update --interp
+      # - name: Building the game
+      #   run: |
+      #     haxelib run lime build linux
       - name: Artifact upload (entire build)
         uses: actions/upload-artifact@v2
         with:
