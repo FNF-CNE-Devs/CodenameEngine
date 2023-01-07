@@ -27,7 +27,7 @@ jobs:
             cache-build-mac
       - name: Setting up Haxelib
         run: |
-          mkdir ".haxelib"
+          mkdir -p ".haxelib"
           haxelib setup ".haxelib"
       - name: Installing libraries
         run: |

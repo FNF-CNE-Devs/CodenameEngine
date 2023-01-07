@@ -29,7 +29,7 @@ jobs:
             cache-build-linux
       - name: Setting up Haxelib
         run: |
-          mkdir ".haxelib"
+          mkdir -p ".haxelib"
           haxelib setup ".haxelib"
       - name: Installing libraries
         run: |
