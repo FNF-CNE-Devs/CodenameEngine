@@ -7,13 +7,27 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
+      - name: Setting up Haxelib
       - run: |
           mkdir ".haxelib"
           haxelib setup ".haxelib"
+      - name: Installing libraries
+      - run: |
           cd ..
           ls
           haxe -cp ./update -D analyzer-optimize -main Update --interp
+      - name: Building the game
+      - run: |
           haxelib run lime build linux
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Codename Engine
+          path: export/release/linux/bin
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Update-Linux
+          path: export/release/linux/bin/CodenameEngine
