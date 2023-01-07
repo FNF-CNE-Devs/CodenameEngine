@@ -36,6 +36,10 @@ class AsyncUpdater {
     public static var executableGitHubName:String = "update-linux";
     public static var executableName:String = "CodenameEngine";
     #end
+    #if mac
+    public static var executableGitHubName:String = "update-mac";
+    public static var executableName:String = "CodenameEngine";
+    #end
 
     public var releases:Array<GitHubRelease>;
     public var progress:UpdaterProgress = new UpdaterProgress();
