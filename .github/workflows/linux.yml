@@ -35,9 +35,9 @@ jobs:
         run: |
           ls
           haxe -cp ./update -D analyzer-optimize -main Update --interp
-      - name: Building the game
-        run: |
-          haxelib run lime build linux
+      # - name: Building the game
+      #   run: |
+      #     haxelib run lime build linux
       - name: Artifact upload (entire build)
         uses: actions/upload-artifact@v2
         with:
@@ -48,3 +48,14 @@ jobs:
         with:
           name: Update-Linux
           path: export/release/linux/bin/CodenameEngine
+      - name: Clear cache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              console.log(cache)
+            }
