@@ -13,6 +13,7 @@ jobs:
       - run: |
           mkdir ".haxelib"
           haxelib setup ".haxelib"
+          cd ..
           ls
           haxe -cp ./update -D analyzer-optimize -main Update --interp
-          lime build linux
+          haxelib run lime build linux
