@@ -1,14 +1,17 @@
 package funkin.system;
 
+import flixel.math.FlxMath;
 import openfl.geom.ColorTransform;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxAngle;
 import flixel.math.FlxRect;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
+import flixel.FlxG;
+import flixel.FlxCamera;
 
 class FlxAnimate extends flxanimate.FlxAnimate {
-    public override function drawLimb(limb:FlxFrame, _matrix:FlxMatrix, ?colorTransform:ColorTransform)
+    override function drawLimb(limb:FlxFrame, _matrix:FlxMatrix, ?colorTransform:ColorTransform)
     {
         if (alpha == 0 || colorTransform != null && (colorTransform.alphaMultiplier == 0 || colorTransform.alphaOffset == -255) || limb == null || limb.type == EMPTY)
             return;
@@ -69,4 +72,10 @@ class FlxAnimate extends flxanimate.FlxAnimate {
             drawDebug();
         #end
     }
+
+    override function limbOnScreen(limb:FlxFrame, m:FlxMatrix, ?Camera:FlxCamera)
+	{
+        // TODO: ACTUAL OPTIMISATION
+		return true;
+	}
 }
