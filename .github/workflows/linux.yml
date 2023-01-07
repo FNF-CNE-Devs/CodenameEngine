@@ -15,7 +15,7 @@ jobs:
         with:
           haxe-version: 4.2.5
       - name: Show current dir
-        run: cd
+        run: pwd
       - name: Cache Haxelibs and build
         uses: actions/cache@v3
         with:
