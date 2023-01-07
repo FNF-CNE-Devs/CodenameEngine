@@ -24,6 +24,9 @@ class ScriptsMacro {
         Compiler.include("haxe.extern");
         
         Compiler.include("scripting");
+
+        // FOR ABSTRACTS
+        Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');
     }
 
     public static function build():Array<Field> {
