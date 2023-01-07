@@ -20,16 +20,16 @@ jobs:
           # not caching the bin folder to prevent asset duplication and stuff like that
           key: cache-build-mac
           path: |
-            ~/.haxelib/
-            ~/export/release/mac/haxe/
-            ~/export/release/mac/obj/
+            ~/CodenameEngine/.haxelib/
+            ~/CodenameEngine/export/release/mac/haxe/
+            ~/CodenameEngine/export/release/mac/obj/
       - name: Setting up Haxelib
         run: |
           mkdir ".haxelib"
           haxelib setup ".haxelib"
-      - name: Installing libraries
-        run: |
-          haxe -cp ./update -D analyzer-optimize -main Update --interp
+      # - name: Installing libraries
+      #   run: |
+      #     haxe -cp ./update -D analyzer-optimize -main Update --interp
       - name: Building the game
         run: |
           haxelib run lime build mac
