@@ -110,14 +110,14 @@ class Paths
 
 	inline static public function voices(song:String, difficulty:String = "normal")
 	{
-		var diff = getPath('songs/${song.toLowerCase()}/audio/Voices-$difficulty.$SOUND_EXT', MUSIC, null);
-		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/audio/Voices.$SOUND_EXT', MUSIC, null);
+		var diff = getPath('songs/${song.toLowerCase()}/song/Voices-$difficulty.$SOUND_EXT', MUSIC, null);
+		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/song/Voices.$SOUND_EXT', MUSIC, null);
 	}
 
 	inline static public function inst(song:String, difficulty:String = "normal")
 	{
-		var diff = getPath('songs/${song.toLowerCase()}/audio/Inst-$difficulty.$SOUND_EXT', MUSIC, null);
-		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/audio/Inst.$SOUND_EXT', MUSIC, null);
+		var diff = getPath('songs/${song.toLowerCase()}/song/Inst-$difficulty.$SOUND_EXT', MUSIC, null);
+		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/song/Inst.$SOUND_EXT', MUSIC, null);
 	}
 
 	inline static public function image(key:String, ?library:String, checkForAtlas:Bool = false)

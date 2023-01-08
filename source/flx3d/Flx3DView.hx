@@ -29,6 +29,7 @@ import funkin.windows.WindowsAPI.ConsoleColor;
 
 class Flx3DView extends FlxView3D {
 
+    var meshes:Array<Mesh> = [];
     public function new(x:Float = 0, y:Float = 0, width:Int = -1, height:Int = -1) {
         if (!Flx3DUtil.is3DAvailable())
             throw "[Flx3DView] 3D is not available on this platform. Stages in use: " + Flx3DUtil.getTotal3D() + ", Max stages allowed: " + FlxG.stage.stage3Ds.length + ".";
@@ -61,6 +62,7 @@ class Flx3DView extends FlxView3D {
                 var mesh:Mesh = cast(event.asset, Mesh);
                 if (material != null)
                     mesh.material = material;
+                meshes.push(mesh);
             }
             callback(event);
         });
@@ -118,6 +120,9 @@ class Flx3DView extends FlxView3D {
 
     override function destroy() {
         super.destroy();
+        if (meshes != null)
+            for(mesh in meshes)
+                mesh.dispose();
     }
 
     public inline function addChild(c)
