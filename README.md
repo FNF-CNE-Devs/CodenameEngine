@@ -1,8 +1,5 @@
 # Friday Night Funkin' - Codename Engine (WIP)
 
-<details>
-  <summary><h2>⚠ WARNING ⚠</h2></summary>
-
 ## PLEASE NOTE - THIS IS STILL IN A BETA STATE
 Known issues in the beta:
 - Some options are missing
@@ -13,7 +10,6 @@ Known issues in the beta:
 Build instructions are below. Press TAB on the main menu to switch mods.
 
 Also, `lime test windows` uses the source assets folder instead of the export one for easier development.
-</details>
 
 <details>
   <summary><h2>Credits</h2></summary>
@@ -28,7 +24,7 @@ Also, `lime test windows` uses the source assets folder instead of the export on
 
 > **Open the instructions for your platform**
 <details>
-    <summary><h4>Windows</h4></summary>
+    <summary>Windows</summary>
 
 ##### Tested on Windows 10 21H2
 1. Install the [latest version of Haxe](https://haxe.org/download/).
@@ -51,7 +47,7 @@ Also, `lime test windows` uses the source assets folder instead of the export on
     - ℹ You can run `haxelib run lime setup` to make the lime command global, allowing you to execute `lime test windows` directly.
 </details>
 <details>
-    <summary><h4>Linux</h4></summary>
+    <summary>Linux</summary>
 
 ##### Requires testing
 1. Install `g++`, if not present already.
@@ -69,6 +65,8 @@ Also, `lime test windows` uses the source assets folder instead of the export on
 1. Install `Xcode` to allow C++ app building.
 2. Download and install [`git-scm`](https://git-scm.com/download/mac).
 3. Open a terminal in the Codename Engine source folder, and run `update.sh`.
+4. Once the libraries are installed, run `haxelib run lime test mac` to compile and launch the game (may take a long time)
+    - ℹ You can run `haxelib run lime setup` to make the lime command global, allowing you to execute `lime test mac` directly.
 
 
 </details>
