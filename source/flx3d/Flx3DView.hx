@@ -28,12 +28,14 @@ import funkin.windows.WindowsAPI.ConsoleColor;
 // FlxView3D with helpers for easier updating
 
 class Flx3DView extends FlxView3D {
+    private static var __3DIDS:Int = 0;
 
     var meshes:Array<Mesh> = [];
     public function new(x:Float = 0, y:Float = 0, width:Int = -1, height:Int = -1) {
         if (!Flx3DUtil.is3DAvailable())
             throw "[Flx3DView] 3D is not available on this platform. Stages in use: " + Flx3DUtil.getTotal3D() + ", Max stages allowed: " + FlxG.stage.stage3Ds.length + ".";
         super(x, y, width, height);
+        __cur3DStageID = __3DIDS++;
     }
 
 	public function addModel(assetPath:String, callback:Asset3DEvent->Void, ?texturePath:String, smoothTexture:Bool = true) {
@@ -72,13 +74,15 @@ class Flx3DView extends FlxView3D {
         Logs.trace('The addMesh() function is deprecated, use addModel instead!', ERROR, RED);
     }
 
+
+    private var __cur3DStageID:Int;
     private var _loaders:Map<Asset3DLibraryBundle, AssetLoaderToken> = [];
 
     private function loadData(data:Dynamic, context:AssetLoaderContext, parser:ParserBase, onAssetCallback:Asset3DEvent->Void):AssetLoaderToken {
         var token:AssetLoaderToken;
 
         var lib:Asset3DLibraryBundle;
-        lib = Asset3DLibraryBundle.getInstance(null);
+        lib = Asset3DLibraryBundle.getInstance('Flx3DView-${__cur3DStageID}');
         token = lib.loadData(data, context, null, parser);
 
         token.addEventListener(Asset3DEvent.ASSET_COMPLETE, (event:Asset3DEvent) -> {
@@ -111,6 +115,7 @@ class Flx3DView extends FlxView3D {
         
         token.addEventListener(LoaderEvent.RESOURCE_COMPLETE, (_) -> {
             trace("Loader Finished...");
+
         });
 
         _loaders.set(lib,token);
@@ -123,6 +128,11 @@ class Flx3DView extends FlxView3D {
         if (meshes != null)
             for(mesh in meshes)
                 mesh.dispose();
+        var bundle = Asset3DLibraryBundle.getInstance('Flx3DView-${__cur3DStageID}');
+        @:privateAccess
+        if (bundle != null)
+            for(asset in bundle._assets)
+                bundle.removeAsset(asset, true);
     }
 
     public inline function addChild(c)
