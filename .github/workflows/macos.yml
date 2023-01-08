@@ -42,12 +42,12 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Codename Engine
-          path: export/release/mac/bin
+          path: export/release/macos/bin
       - name: Artifact upload (executable)
         uses: actions/upload-artifact@v2
         with:
           name: Update-Mac
-          path: export/release/mac/bin/CodenameEngine
+          path: export/release/macos/bin/CodenameEngine
       - name: Clear cache
         uses: actions/github-script@v6
         with:
