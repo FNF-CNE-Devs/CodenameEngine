@@ -14,8 +14,6 @@ jobs:
         uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
-      - name: Show current dir
-        run: pwd
       - name: Cache Haxelibs and build
         uses: actions/cache@v3
         with:
@@ -34,17 +32,17 @@ jobs:
       - name: Building the game
         run: |
           haxelib run lime build windows
-      - name: Artifact upload (entire build)
+      - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v2
         with:
           name: Codename Engine
           path: export/release/windows/bin
-      - name: Artifact upload (executable)
+      - name: Uploading artifact (executable)
         uses: actions/upload-artifact@v2
         with:
           name: Update-Windows
           path: export/release/windows/bin/CodenameEngine.exe
-      - name: Clear cache
+      - name: Clearing already existing cache
         uses: actions/github-script@v6
         with:
           script: |
@@ -63,7 +61,7 @@ jobs:
                 console.log("Cache cleared.")
               }
             }
-      - name: Cache... again
+      - name: Uploading new cache
         uses: actions/cache@v3
         with:
           # caching again since for some reason it doesnt work with the first post cache shit

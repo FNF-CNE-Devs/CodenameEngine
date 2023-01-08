@@ -36,7 +36,9 @@ Also, `lime test windows` uses the source assets folder instead of the export on
 5. This is what your Installation details panel should look like. Once correct, press "Install".
     - ⚠ This will download around 1.07 GB of data from the internet, and will require around 5.5 GB of available space on your computer.
 
-![Installation details](art/github/windows-installation-details.png)
+<p align="center">
+<img src="https://github.com/YoshiCrafter29/CodenameEngine/blob/main/art/github/windows-installation-details.png?raw=true" />
+</p>
 
 6. Once the installation is done, close Visual Studio Installer.
 7. Download and install [`git-scm`](https://git-scm.com/download/win).
@@ -55,11 +57,9 @@ Also, `lime test windows` uses the source assets folder instead of the export on
 3. Open a terminal in the Codename Engine source folder, and run `update.sh`.
 4. Once the libraries are installed, run `haxelib run lime test linux` to compile and launch the game (may take a long time)
     - ℹ You can run `haxelib run lime setup` to make the lime command global, allowing you to execute `lime test linux` directly.
-
-
 </details>
 <details>
-    <summary><h4>MacOS</h4></summary>
+    <summary>MacOS</summary>
 
 ##### Requires testing
 1. Install `Xcode` to allow C++ app building.
