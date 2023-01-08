@@ -10,7 +10,7 @@ import openfl.display.BitmapData;
  * @author Ne_Eo 
  * @see https://twitter.com/Ne_Eo_Twitch
  * 
- * Edited by lunarclient
+ * @author lunarclient
  * @see https://twitter.com/lunarcleint
  */
 class FlxView3D extends FlxSprite

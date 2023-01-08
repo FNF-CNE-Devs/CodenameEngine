@@ -14,6 +14,7 @@ import funkin.system.Logs;
 import flixel.FlxG;
 import flx3d.Flx3DUtil;
 import away3d.library.assets.Asset3DType;
+import away3d.library.Asset3DLibrary;
 import away3d.events.Asset3DEvent;
 import away3d.loaders.parsers.*;
 import away3d.utils.Cast;
@@ -124,21 +125,22 @@ class Flx3DView extends FlxView3D {
     }
 
     override function destroy() {
-        super.destroy();
         if (meshes != null)
             for(mesh in meshes)
                 mesh.dispose();
+
         var bundle = Asset3DLibraryBundle.getInstance('Flx3DView-${__cur3DStageID}');
-        @:privateAccess
-        if (bundle != null)
-            for(asset in bundle._assets) {
-                // very unstable!!
-                try {
-                    bundle.removeAsset(asset, true);
-                } catch(e) {
-                    // woops
+        bundle.stopAllLoadingSessions();
+        @:privateAccess {
+            if (bundle._loadingSessions != null) {
+                for(load in bundle._loadingSessions) {
+                    load.dispose();
                 }
             }
+            Asset3DLibrary._instances.remove('Flx3DView-${__cur3DStageID}');
+        }
+
+        super.destroy();
     }
 
     public inline function addChild(c)
