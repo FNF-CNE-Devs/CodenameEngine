@@ -300,7 +300,7 @@ class SongMetadata
 		if (difficulties != null && difficulties.length > 0) {
 			this.difficulties = difficulties;
 		} else {
-			this.difficulties = difficulties = [for(f in Paths.getFolderContent('data/charts/${song.toLowerCase()}/', false, false, fromSource)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
+			this.difficulties = difficulties = [for(f in Paths.getFolderContent('songs/${song.toLowerCase()}/charts/', false, false, fromSource)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
 			if (difficulties.length == 3) {
 				var hasHard = false, hasNormal = false, hasEasy = false;
 				for(d in difficulties) {

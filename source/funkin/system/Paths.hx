@@ -110,14 +110,14 @@ class Paths
 
 	inline static public function voices(song:String, difficulty:String = "normal")
 	{
-		var diff = getPath('songs/${song.toLowerCase()}/Voices-$difficulty.$SOUND_EXT', MUSIC, null);
-		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/Voices.$SOUND_EXT', MUSIC, null);
+		var diff = getPath('songs/${song.toLowerCase()}/audio/Voices-$difficulty.$SOUND_EXT', MUSIC, null);
+		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/audio/Voices.$SOUND_EXT', MUSIC, null);
 	}
 
 	inline static public function inst(song:String, difficulty:String = "normal")
 	{
-		var diff = getPath('songs/${song.toLowerCase()}/Inst-$difficulty.$SOUND_EXT', MUSIC, null);
-		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/Inst.$SOUND_EXT', MUSIC, null);
+		var diff = getPath('songs/${song.toLowerCase()}/audio/Inst-$difficulty.$SOUND_EXT', MUSIC, null);
+		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/audio/Inst.$SOUND_EXT', MUSIC, null);
 	}
 
 	inline static public function image(key:String, ?library:String, checkForAtlas:Bool = false)
@@ -148,17 +148,13 @@ class Paths
 
 		var difficultyEnd = (difficulty == "normal") ? "" : '-$difficulty';
 
+		// songs/your-song/charts/hard.json
+		var p = getPath('songs/$song/charts/$difficulty.json', TEXT, null);
+		if (OpenFlAssets.exists(p)) return p;
+
 		// data/charts/your-song/hard.json
 		var p = json('charts/$song/$difficulty');
 		if (OpenFlAssets.exists(p)) return p;
-
-		// data/charts/your-song/your-song-hard.json
-		var p2 = json('charts/$song/$song$difficultyEnd');
-		if (OpenFlAssets.exists(p2)) return p2;
-
-		// data/your-song/your-song-hard.json (default old format)
-		p2 = json('$song/$song$difficultyEnd');
-		if (OpenFlAssets.exists(p2)) return p2;
 
 		return p; // returns the normal one so that it shows the correct path in the error message.
 	}

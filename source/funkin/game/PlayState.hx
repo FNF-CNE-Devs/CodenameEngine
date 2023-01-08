@@ -505,8 +505,8 @@ class PlayState extends MusicBeatState
 		detailsText = isStoryMode ? ("Story Mode: " + storyWeek.name) : "Freeplay";
 
 		// Checks if cutscene files exists
-		var cutscenePath = Paths.script('data/cutscenes/${SONG.song.toLowerCase()}');
-		var endCutscenePath = Paths.script('data/cutscenes/${SONG.song.toLowerCase()}-end');
+		var cutscenePath = Paths.script('songs/${SONG.song.toLowerCase()}/cutscene');
+		var endCutscenePath = Paths.script('songs/${SONG.song.toLowerCase()}/cutscene-end');
 		if (Assets.exists(cutscenePath)) cutscene = cutscenePath;
 		if (Assets.exists(endCutscenePath)) endCutscene = endCutscenePath;
 
@@ -549,7 +549,7 @@ class PlayState extends MusicBeatState
 				// ADD YOUR HARDCODED SCRIPTS HERE!
 			default:
 				for(content in [
-					Paths.getFolderContent('data/charts/${SONG.song.toLowerCase()}/', false, true, !fromMods),
+					Paths.getFolderContent('songs/${SONG.song.toLowerCase()}/scripts', false, true, !fromMods),
 					Paths.getFolderContent('data/charts/', false, true, !fromMods)]) {
 					for(file in content) {
 						var ext = Path.extension(file).toLowerCase();
@@ -662,6 +662,7 @@ class PlayState extends MusicBeatState
 	public function startCutscene() {
 		if (playCutscenes) {
 			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-cutscene');
+			var videoCutsceneAlt = Paths.video('${PlayState.SONG.song.toLowerCase()}-cutscene');
 			persistentUpdate = false;
 			if (cutscene != null) {
 				openSubState(new ScriptedCutscene(cutscene, function() {
