@@ -131,8 +131,14 @@ class Flx3DView extends FlxView3D {
         var bundle = Asset3DLibraryBundle.getInstance('Flx3DView-${__cur3DStageID}');
         @:privateAccess
         if (bundle != null)
-            for(asset in bundle._assets)
-                bundle.removeAsset(asset, true);
+            for(asset in bundle._assets) {
+                // very unstable!!
+                try {
+                    bundle.removeAsset(asset, true);
+                } catch(e) {
+                    // woops
+                }
+            }
     }
 
     public inline function addChild(c)
