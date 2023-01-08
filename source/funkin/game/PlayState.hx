@@ -212,6 +212,14 @@ class PlayState extends MusicBeatState
 	 */
 	public var camZoomingInterval:Int = 4;
 	/**
+	 * How strong the cam zooms should be (defaults to 1)
+	 */
+	public var camZoomingStrength:Float = 1;
+	/**
+	 * Maximum amount of zoom for the camera.
+	 */
+	public var maxCamZoom:Float = 1.35;
+	/**
 	 * Current song name (lowercase)
 	 */
 	public var curSong:String = "";
@@ -426,12 +434,12 @@ class PlayState extends MusicBeatState
 	 */
 	public var comboRatings:Array<ComboRating> = [
 		new ComboRating(0, "F", 0xFFFF4444),
-		new ComboRating(0.1, "E", 0xFFFF8844),
-		new ComboRating(0.2, "D", 0xFFFFAA44),
-		new ComboRating(0.4, "C", 0xFFFFFF44),
-		new ComboRating(0.6, "B", 0xFFAAFF44),
-		new ComboRating(0.8, "A", 0xFF88FF44),
-		new ComboRating(0.9, "S", 0xFF44FFFF),
+		new ComboRating(0.5, "E", 0xFFFF8844),
+		new ComboRating(0.7, "D", 0xFFFFAA44),
+		new ComboRating(0.8, "C", 0xFFFFFF44),
+		new ComboRating(0.85, "B", 0xFFAAFF44),
+		new ComboRating(0.9, "A", 0xFF88FF44),
+		new ComboRating(0.95, "S", 0xFF44FFFF),
 		new ComboRating(1, "S++", 0xFF44FFFF),
 	];
 
@@ -769,12 +777,19 @@ class PlayState extends MusicBeatState
 		scripts.call("onSongStart");
 		startingSong = false;
 
+		inst.onComplete = endSong;
+
 		if (!paused) {
 			FlxG.sound.music = inst;
 			FlxG.sound.music.play();
 		}
-		inst.onComplete = endSong;
 		vocals.play();
+
+		vocals.pause();
+		inst.pause();
+		inst.time = vocals.time = 0;
+		vocals.play();
+		inst.play();
 
 		updateDiscordStatus();
 	}
@@ -866,8 +881,10 @@ class PlayState extends MusicBeatState
 
 		inst = FlxG.sound.load(Paths.inst(PlayState.SONG.song));
 		vocals = FlxG.sound.list.recycle(FlxSound);
-		@:privateAccess
-		vocals.reset();
+		@:privateAccess {
+			vocals.reset();
+			vocals.exists = true;
+		}
 		if (SONG.needsVoices)
 			vocals.loadEmbedded(Paths.voices(PlayState.SONG.song));
 		FlxG.sound.list.add(vocals);
@@ -1469,7 +1486,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned)
 		{
-			var event:NoteHitEvent = scripts.event("onPlayerMiss", new NoteHitEvent(note, [boyfriend], true, note.noteType, note.strumID, -0.04, false, -10));
+			var event:NoteHitEvent = scripts.event("onPlayerMiss", new NoteHitEvent(note, [boyfriend], true, note.noteType, note.strumID, -0.04, false, -10, "", "shit", 0));
 
 			if (event.cancelled) return;
 			
@@ -1486,6 +1503,13 @@ class PlayState extends MusicBeatState
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 
 			if (muteVocalsOnMiss) vocals.volume = 0;
+
+			if (event.accuracy != null) {
+				accuracyPressedNotes++;
+				totalAccuracyAmount += event.accuracy;
+
+				updateRating();
+			}
 
 			for(char in event.characters) {
 				if (char == null) continue;
@@ -1675,10 +1699,10 @@ class PlayState extends MusicBeatState
 		super.beatHit(curBeat);
 		
 		if (camZoomingInterval < 1) camZoomingInterval = 1;
-		if (Options.camZoomOnBeat && camZooming && FlxG.camera.zoom < 1.35 && curBeat % camZoomingInterval == 0)
+		if (Options.camZoomOnBeat && camZooming && FlxG.camera.zoom < maxCamZoom && curBeat % camZoomingInterval == 0)
 		{
-			FlxG.camera.zoom += 0.015;
-			camHUD.zoom += 0.03;
+			FlxG.camera.zoom += 0.015 * camZoomingStrength;
+			camHUD.zoom += 0.03 * camZoomingStrength;
 		}
 
 		iconP1.scale.set(1.2, 1.2);
