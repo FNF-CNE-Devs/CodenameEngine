@@ -74,6 +74,7 @@ class WindowDragHitbox extends FlxObject {
 
     override function destroy() {
         super.destroy();
-        offset.put();
+        if (offset != null)
+            offset.put();
     }
 }

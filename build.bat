@@ -1,2 +1,2 @@
 update.bat
-lime test windows
+haxelib run lime test windows
