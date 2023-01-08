@@ -1,8 +1,10 @@
 # Friday Night Funkin' - Codename Engine (WIP)
 
-## PLEASE NOTE - THIS IS STILL IN A BETA STATE
+<details>
+  <summary><h2>⚠ WARNING ⚠</h2></summary>
 
-Early alpha of Codename Engine, known issues:
+## PLEASE NOTE - THIS IS STILL IN A BETA STATE
+Known issues in the beta:
 - Some options are missing
 - Week 5 has no monster animation
 - Week 6 still have no dialogue
@@ -10,18 +12,23 @@ Early alpha of Codename Engine, known issues:
 
 Build instructions are below. Press TAB on the main menu to switch mods.
 
-Also, `lime test windows` uses the source assets folder instead of the export one.
+Also, `lime test windows` uses the source assets folder instead of the export one for easier development.
+</details>
 
-## CREDITS
+<details>
+  <summary><h2>Credits</h2></summary>
+
 - Credits to [Ne_Eo](https://twitter.com/Ne_Eo_Twitch) and the [3D-HaxeFlixel](https://github.com/lunarcleint/3D-HaxeFlixel) repository for Away3D Flixel support
-- Credits to Smokey555 for the fancy Animate Atlas code (might be replaced soon)
+- Credits to the [FlxAnimate](https://github.com/Dot-Stuff/flxanimate) team for the Animate Atlas support.
+- Credits to Smokey555 for the backup Animate Atlas to spritesheet code.
+</details>
 
 <details>
   <summary><h2>How to build</h2></summary>
 
-### **Open the instructions for your platform**
+> **Open the instructions for your platform**
 <details>
-    <summary><h3>Windows</h3></summary>
+    <summary><h4>Windows</h4></summary>
 
 ##### Tested on Windows 10 21H2
 1. Install the [latest version of Haxe](https://haxe.org/download/).
@@ -42,6 +49,28 @@ Also, `lime test windows` uses the source assets folder instead of the export on
 9. On the command prompt, run `update.bat`, and wait for the libraries to install.
 10. Once the libraries are installed, run `haxelib run lime test windows` to compile and launch the game (may take a long time)
     - ℹ You can run `haxelib run lime setup` to make the lime command global, allowing you to execute `lime test windows` directly.
+</details>
+<details>
+    <summary><h4>Linux</h4></summary>
+
+##### Requires testing
+1. Install `g++`, if not present already.
+2. Download and install [`git-scm`](https://git-scm.com/download/linux).
+3. Open a terminal in the Codename Engine source folder, and run `update.sh`.
+4. Once the libraries are installed, run `haxelib run lime test linux` to compile and launch the game (may take a long time)
+    - ℹ You can run `haxelib run lime setup` to make the lime command global, allowing you to execute `lime test linux` directly.
+
+
+</details>
+<details>
+    <summary><h4>MacOS</h4></summary>
+
+##### Requires testing
+1. Install `Xcode` to allow C++ app building.
+2. Download and install [`git-scm`](https://git-scm.com/download/mac).
+3. Open a terminal in the Codename Engine source folder, and run `update.sh`.
+
+
 </details>
             
 </details>
