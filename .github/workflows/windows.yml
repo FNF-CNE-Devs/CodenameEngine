@@ -14,7 +14,7 @@ jobs:
         uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
-      - name: Cache Haxelibs and build
+      - name: Restore existing build cache for faster compilation
         uses: actions/cache@v3
         with:
           # not caching the bin folder to prevent asset duplication and stuff like that
@@ -25,7 +25,7 @@ jobs:
             export/release/windows/obj/
           restore-keys: |
             cache-build-windows
-      - name: Installing libraries
+      - name: Installing/Updating libraries
         run: |
           ls
           haxe -cp ./update -D analyzer-optimize -main Update --interp
