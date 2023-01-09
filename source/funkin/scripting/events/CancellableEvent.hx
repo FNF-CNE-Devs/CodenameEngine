@@ -1,10 +1,10 @@
 package funkin.scripting.events;
 
-import funkin.scripting.ScriptPack;
+import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 @:allow(ScriptPack)
 @:autoBuild(funkin.macros.EventMacro.build())
-class CancellableEvent {
+class CancellableEvent implements IFlxDestroyable {
     @:dox(hide) public var cancelled:Bool = false;
     @:dox(hide) private var __continueCalls:Bool = true;
 
@@ -48,5 +48,9 @@ class CancellableEvent {
         var claName = Type.getClassName(Type.getClass(this)).split(".");
         var rep = '[${claName[claName.length-1]}${cancelled ? " (Cancelled)" : ""}]';
         return rep;
+    }
+
+    public function destroy() {
+        data = null;
     }
 }

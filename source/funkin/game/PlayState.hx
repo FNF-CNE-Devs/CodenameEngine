@@ -1273,8 +1273,10 @@ class PlayState extends MusicBeatState
 		if (health <= 0 && canDie)
 			gameOver();
 
-		if (generatedMusic)
+		if (generatedMusic) {
+			__updateNote_event = EventManager.get(NoteUpdateEvent);
 			notes.forEachAlive(updateNote);
+		}
 
 		if (!inCutscene)
 			keyShit();
@@ -1288,6 +1290,7 @@ class PlayState extends MusicBeatState
 	}
 
 	var __updateNote_strum:Strum = null;
+	var __updateNote_event:NoteUpdateEvent = null;
 	function updateNote(daNote:Note)
 	{
 		for(e in (daNote.mustPress ? playerStrums : cpuStrums).members) {
@@ -1297,7 +1300,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 		
-		var event = PlayState.instance.scripts.event("onNoteUpdate", EventManager.get(NoteUpdateEvent).recycle(daNote, FlxG.elapsed, __updateNote_strum));
+		var event = PlayState.instance.scripts.event("onNoteUpdate", __updateNote_event.recycle(daNote, FlxG.elapsed, __updateNote_strum));
 		if (!event.cancelled) {
 			if (event.__updateHitWindow) {
 				if (daNote.mustPress)

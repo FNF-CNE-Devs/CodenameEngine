@@ -185,7 +185,7 @@ class Main extends Sprite
 		Assets.registerLibrary('default', lib);
 
 		funkin.options.PlayerSettings.init();
-		FlxG.save.bind('Save');
+		FlxG.save.bind('Codename Engine');
 		Options.load();
 		Highscore.load();
 
@@ -206,6 +206,7 @@ class Main extends Sprite
 		 });
 		#end
 		
+		EventManager.init();
 		FlxG.signals.preStateCreate.add(onStateSwitch);
 
 		initTransition();

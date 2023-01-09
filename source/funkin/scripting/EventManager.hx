@@ -1,5 +1,7 @@
 package funkin.scripting;
 
+import flixel.FlxG;
+import flixel.FlxState;
 import funkin.scripting.events.*;
 
 class EventManager {
@@ -19,4 +21,19 @@ class EventManager {
 
         return cast eventValues[index];
     }
+
+    public static function reset() {
+        for(v in eventValues)
+            v.destroy();
+        eventValues = [];
+        eventKeys = [];
+    }
+
+    public static function init() {
+		
+		FlxG.signals.preStateCreate.add(onStateSwitch);
+    }
+
+    private static inline function onStateSwitch(newState:FlxState)
+        reset();
 }
