@@ -1,7 +1,9 @@
 package funkin.macros;
 
+#if !macro
 import haxe.macro.Expr.Field;
 import haxe.macro.Context;
+#end
 #if sys
 import sys.io.File;
 #end

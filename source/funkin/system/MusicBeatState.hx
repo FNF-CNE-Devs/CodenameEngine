@@ -178,14 +178,14 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	 * SCRIPTING STUFF 
 	 */
 	public override function openSubState(subState:FlxSubState) {
-		var e = event("onOpenSubState", new StateEvent(subState));
+		var e = event("onOpenSubState", EventManager.get(StateEvent).recycle(subState));
 		if (!e.cancelled)
 			super.openSubState(subState);
 	}
 
 	public override function onResize(w:Int, h:Int) {
 		super.onResize(w, h);
-		event("onResize", new ResizeEvent(w, h));
+		event("onResize", EventManager.get(ResizeEvent).recycle(w, h, null, null));
 	}
 
 	public override function destroy() {
@@ -202,7 +202,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	}
 
 	public override function switchTo(nextState:FlxState) {
-		var e = event("onStateSwitch", new StateEvent(nextState));
+		var e = event("onStateSwitch", EventManager.get(StateEvent).recycle(nextState));
 		if (e.cancelled)
 			return false;
 		return super.switchTo(nextState);

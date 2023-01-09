@@ -3,7 +3,7 @@ package funkin.scripting.events;
 import funkin.game.Strum;
 
 class StrumCreationEvent extends CancellableEvent {
-    @:dox(hide) public var __doAnimation = !PlayState.isStoryMode;
+    @:dox(hide) public var __doAnimation = true;
 
 
     /**
@@ -11,7 +11,7 @@ class StrumCreationEvent extends CancellableEvent {
      */
     public var strum:Strum;
 
-    /**
+    /**s
      * Player ID
      */
     public var player:Int;
@@ -25,13 +25,6 @@ class StrumCreationEvent extends CancellableEvent {
      * Sprite path, in case you only want to change the sprite.
      */
     public var sprite:String = "game/NOTE_assets";
-
-    public function new(strum:Strum, player:Int, strumID:Int) {
-        super();
-        this.strum = strum;
-        this.player = player;
-        this.strumID = strumID;
-    }
 
     /**
      * Cancels the animation that makes the strum "land" in the strumline.

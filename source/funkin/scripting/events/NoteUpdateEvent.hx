@@ -22,13 +22,6 @@ class NoteUpdateEvent extends CancellableEvent {
      */
     public var strum:Strum;
 
-    public function new(note:Note, elapsed:Float, strum:Strum) {
-        super();
-        this.note = note;
-        this.elapsed = elapsed;
-        this.strum = strum;
-    }
-
     /**
      * Cancels the hit window update.
      */

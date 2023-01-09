@@ -30,13 +30,4 @@ class CamMoveEvent extends CancellableEvent {
      * Whenever the camera focuses BF more than dad.
      */
     public var focusBF:Bool = false;
-
-    public function new(bfCamPos:FlxPoint, dadCamPos:FlxPoint, ratio:Float, position:FlxPoint) {
-        super();
-        this.bfCamPos = bfCamPos;
-        this.dadCamPos = dadCamPos;
-        this.ratio = ratio;
-        this.position = position;
-        this.focusBF = ratio >= 0.5;
-    }
 }

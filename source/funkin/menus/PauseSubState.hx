@@ -45,7 +45,7 @@ class PauseSubState extends MusicBeatSubstate
 		pauseScript.setParent(this);
         pauseScript.load();
 
-		var event = new PauseCreationEvent('breakfast', menuItems);
+		var event = EventManager.get(PauseCreationEvent).recycle('breakfast', menuItems);
 		pauseScript.call('create', [event]);
 
 		menuItems = event.options;
@@ -129,7 +129,7 @@ class PauseSubState extends MusicBeatSubstate
 	}
 
 	public function selectOption() {
-		var event = new NameEvent(menuItems[curSelected]);
+		var event = EventManager.get(NameEvent).recycle(menuItems[curSelected]);
 		pauseScript.call("onSelectOption", [event]);
 
 		if (event.cancelled) return;

@@ -43,14 +43,4 @@ class CountdownEvent extends CancellableEvent {
      * Created sound, only available in `onPostCountdown`
      */
     public var sound:FlxSound;
-
-    public function new(swagCounter:Int, spritePath:String, soundPath:String, scale:Float = 1, volume:Float = 1, antialiasing:Bool = true) {
-        super();
-        this.swagCounter = swagCounter;
-        this.volume = volume;
-        this.soundPath = soundPath;
-        this.spritePath = spritePath;
-        this.scale = scale;
-        this.antialiasing = antialiasing;
-    }
 }

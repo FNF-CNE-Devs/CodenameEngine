@@ -3,6 +3,7 @@ package funkin.scripting.events;
 import funkin.scripting.ScriptPack;
 
 @:allow(ScriptPack)
+@:autoBuild(funkin.macros.EventMacro.build())
 class CancellableEvent {
     @:dox(hide) public var cancelled:Bool = false;
     @:dox(hide) private var __continueCalls:Bool = true;
@@ -29,6 +30,12 @@ class CancellableEvent {
      * This allows scripts to call `cancel()` to cancel the event.
      */
     public function new() {}
+
+    public function recycleBase() {
+        data = {};
+        cancelled = false;
+        __continueCalls = true;
+    }
 
     /**
      * Returns a string representation of the event, in this format:

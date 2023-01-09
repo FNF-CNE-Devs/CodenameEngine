@@ -460,7 +460,7 @@ class PlayState extends MusicBeatState
 				rating = e;
 		}
 
-		var event = scripts.event("onRatingUpdate", new RatingUpdateEvent(rating, curRating));
+		var event = scripts.event("onRatingUpdate", EventManager.get(RatingUpdateEvent).recycle(rating, curRating));
 		if (!event.cancelled)
 			curRating = event.rating;
 	}
@@ -730,11 +730,12 @@ class PlayState extends MusicBeatState
 	 * Creates a fake countdown.
 	 */
 	public function countdown(swagCounter:Int) {
-		var event:CountdownEvent = scripts.event("onCountdown", new CountdownEvent(
+		var event:CountdownEvent = scripts.event("onCountdown", EventManager.get(CountdownEvent).recycle(
 			swagCounter, 
-			introSprites[swagCounter],
+			1,
 			introSounds[swagCounter],
-			1, 0.6, true));
+			introSprites[swagCounter],
+			0.6, true, null, null, null));
 
 		var sprite:FlxSprite = null;
 		var sound:FlxSound = null;
@@ -935,7 +936,7 @@ class PlayState extends MusicBeatState
 			var babyArrow:Strum = new Strum((FlxG.width * 0.25) + (Note.swagWidth * (i - 2)) + ((FlxG.width / 2) * player), strumLine.y);
 			babyArrow.ID = i;
 
-			var event = scripts.event("onStrumCreation", new StrumCreationEvent(babyArrow, player, i));
+			var event = scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, player, i));
 
 			if (!event.cancelled) {
 				switch (curStage)
@@ -997,7 +998,7 @@ class PlayState extends MusicBeatState
 
 	override function openSubState(SubState:FlxSubState)
 	{
-		var event = scripts.event("onSubstateOpen", new StateEvent(SubState));
+		var event = scripts.event("onSubstateOpen", EventManager.get(StateEvent).recycle(SubState));
 
 		if (!postCreated)
 			FlxTransitionableState.skipNextTransIn = true;
@@ -1021,7 +1022,7 @@ class PlayState extends MusicBeatState
 
 	override function closeSubState()
 	{
-		var event = scripts.event("onSubstateClose", new StateEvent(subState));
+		var event = scripts.event("onSubstateClose", EventManager.get(StateEvent).recycle(subState));
 		if (event.cancelled) return;
 
 		if (paused)
@@ -1237,7 +1238,7 @@ class PlayState extends MusicBeatState
 			else
 				ratio = section.mustHitSection ? 1 : 0;
 
-			var event = scripts.event("onCameraMove", new CamMoveEvent(bfPos, dadPos, ratio, FlxPoint.get(FlxMath.lerp(dadPos.x, bfPos.x, ratio), FlxMath.lerp(dadPos.y, bfPos.y, ratio))));
+			var event = scripts.event("onCameraMove", EventManager.get(CamMoveEvent).recycle(FlxPoint.get(FlxMath.lerp(dadPos.x, bfPos.x, ratio), FlxMath.lerp(dadPos.y, bfPos.y, ratio)), bfPos, dadPos, ratio, ratio >= 0.5));
 
 			if (!event.cancelled) {
 				camFollow.setPosition(
@@ -1296,7 +1297,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 		
-		var event = PlayState.instance.scripts.event("onNoteUpdate", new NoteUpdateEvent(daNote, FlxG.elapsed, __updateNote_strum));
+		var event = PlayState.instance.scripts.event("onNoteUpdate", EventManager.get(NoteUpdateEvent).recycle(daNote, FlxG.elapsed, __updateNote_strum));
 		if (!event.cancelled) {
 			if (event.__updateHitWindow) {
 				if (daNote.mustPress)
@@ -1440,7 +1441,7 @@ class PlayState extends MusicBeatState
 		__justPressed.pushGroup(controls.NOTE_LEFT_P, controls.NOTE_DOWN_P, controls.NOTE_UP_P, controls.NOTE_RIGHT_P);
 		__justReleased.pushGroup(controls.NOTE_LEFT_R, controls.NOTE_DOWN_R, controls.NOTE_UP_R, controls.NOTE_RIGHT_R);
 
-		var event = scripts.event("onKeyShit", new InputSystemEvent(__pressed, __justPressed, __justReleased));
+		var event = scripts.event("onKeyShit", EventManager.get(InputSystemEvent).recycle(__pressed, __justPressed, __justReleased));
 		if (event.cancelled) return;
 
 		__pressed = CoolUtil.getDefault(event.pressed, []);
@@ -1487,7 +1488,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned)
 		{
-			var event:NoteHitEvent = scripts.event("onPlayerMiss", new NoteHitEvent(note, [boyfriend], true, note.noteType, note.strumID, -0.04, false, -10, "", "shit", 0));
+			var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, [boyfriend], true, note.noteType, "", "", "", note.strumID, -10, 0, -0.04, "shit"));
 
 			if (event.cancelled) return;
 			
@@ -1563,9 +1564,10 @@ class PlayState extends MusicBeatState
 
 			var event:NoteHitEvent;
 			if (note.mustPress)
-				event = scripts.event("onPlayerHit", new NoteHitEvent(note, [boyfriend], true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, score, note.animSuffix, daRating, note.isSustainNote ? null : accuracy, "game/score/", ''));
+				// event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(note, [boyfriend], true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, score, note.animSuffix, daRating, note.isSustainNote ? null : accuracy, "game/score/", ''));
+				event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, true, !note.isSustainNote, note, [boyfriend], true, note.noteType, "", "game/score/", "", note.strumID, score, accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating));
 			else
-				event = scripts.event("onDadHit", new NoteHitEvent(note, [dad], false, note.noteType, note.strumID, 0, 0, note.animSuffix, daRating, null, "game/score/", ''));
+				event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, [dad], false, note.noteType, "", "game/score/", "", note.strumID, 0, null, 0, daRating));
 			
 			if (!event.cancelled) {
 				if (event.accuracy != null) {
@@ -1680,7 +1682,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function deleteNote(note:Note) {
-		var event:SimpleNoteEvent = scripts.event("onNoteDelete", new SimpleNoteEvent(note));
+		var event:SimpleNoteEvent = scripts.event("onNoteDelete", EventManager.get(SimpleNoteEvent).recycle(note));
 		if (!event.cancelled) {
 			scripts.call("onNoteDelete", [note]);
 			note.kill();

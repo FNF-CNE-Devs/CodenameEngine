@@ -22,13 +22,4 @@ class WeekSelectEvent extends CancellableEvent {
      * At which emplacement the difficulty is. Goes from 0 to the number of weeks - 1.
      */
     public var difficultyID:Int;
-
-    public override function new(week:WeekData, difficulty:String, weekID:Int, difficultyID:Int) {
-        super();
-
-        this.week = week;
-        this.difficulty = difficulty;
-        this.weekID = weekID;
-        this.difficultyID = difficultyID;
-    }
 }

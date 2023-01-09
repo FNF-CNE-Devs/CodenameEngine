@@ -16,30 +16,19 @@ class DirectionAnimEvent extends CancellableEvent {
     **/
     public var suffix:String;
     /**
-        Whenever the animation will play reversed or not.
-    **/
-    public var reversed:Bool;
-    /**
         Context of the animation. Is either equal to `SING` or `MISS`.
     **/
     public var context:PlayAnimContext;
     /**
         Whenever the animation will play reversed or not.
     **/
-    public var force:Bool;
+    public var reversed:Bool;
     /**
         At what frame the animation will start playing
     **/
     public var frame:Int;
-
-    public function new(animName:String, direction:Int, suffix:String = "", context:PlayAnimContext = SING, reversed:Bool = false, frame:Int = 0) {
-        super();
-        this.animName = animName;
-        this.direction = direction;
-        this.suffix = suffix;
-        this.context = context;
-        this.reversed = reversed;
-        this.force = true;
-        this.frame = frame;
-    }
+    /**
+        Whenever the animation will play reversed or not.
+    **/
+    public var force:Bool = true;
 }

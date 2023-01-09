@@ -1,10 +1,5 @@
 package funkin.macros;
 #if macro
-import haxe.macro.Expr;
-import haxe.macro.Context;
-import haxe.macro.Printer;
-import haxe.macro.Type.ClassField;
-import haxe.macro.TypeTools;
 
 class FlxSpriteProxyMacro {
     public static function build() {

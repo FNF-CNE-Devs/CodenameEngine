@@ -25,15 +25,6 @@ class PlayAnimEvent extends CancellableEvent {
         Context of the animation
     **/
     public var context:PlayAnimContext;
-
-    public function new(animName:String, force:Bool, reverse:Bool, startingFrame:Int, context:PlayAnimContext) {
-        super();
-        this.animName = animName;
-        this.force = force;
-        this.reverse = reverse;
-        this.startingFrame = startingFrame;
-        this.context = context;
-    }
 }
 
 /**

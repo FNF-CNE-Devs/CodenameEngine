@@ -10,9 +10,4 @@ class RatingUpdateEvent extends CancellableEvent {
     **/
     public var oldRating:ComboRating;
 
-    public function new(rating:ComboRating, oldRating:ComboRating) {
-        super();
-        this.rating = rating;
-        this.oldRating = oldRating;
-    }
 }

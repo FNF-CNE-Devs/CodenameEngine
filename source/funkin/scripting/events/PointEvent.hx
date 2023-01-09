@@ -9,9 +9,4 @@ class PointEvent extends CancellableEvent {
         Y position
     **/
     public var y:Float;
-    public function new(x:Float, y:Float) {
-        super();
-        this.x = x;
-        this.y = y;
-    }
 }

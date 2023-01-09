@@ -18,11 +18,4 @@ class InputSystemEvent extends CancellableEvent {
      * For example, `justReleased[0]` will return whenever the left strum was just released.
      */
     public var justReleased:Array<Bool>;
-
-    public function new(pressed:Array<Bool>, justPressed:Array<Bool>, justReleased:Array<Bool>) {
-        super();
-        this.pressed = pressed;
-        this.justPressed = justPressed;
-        this.justReleased = justReleased;
-    }
 }

@@ -13,11 +13,4 @@ class PauseCreationEvent extends CancellableEvent {
      * All option names
      */
     public var options:Array<String>;
-
-    public function new(music:String, options:Array<String>) {
-        super();
-        
-        this.music = music;
-        this.options = options;
-    }
 }

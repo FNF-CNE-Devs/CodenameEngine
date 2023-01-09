@@ -64,7 +64,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 	public inline function getCameraPosition() {
 		var midpoint = getMidpoint();
-		var event = new PointEvent(
+		var event = EventManager.get(PointEvent).recycle(
 			midpoint.x + (isPlayer ? -100 : 150) + globalOffset.x + cameraOffset.x,
 			midpoint.y - 100 + globalOffset.y + cameraOffset.y);
 		script.call("onGetCamPos", [event]);
@@ -76,7 +76,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public function playSingAnim(direction:Int, suffix:String = "", Context:PlayAnimContext = SING, Reversed:Bool = false, Frame:Int = 0) {
 		var anims = ["singLEFT", "singDOWN", "singUP", "singRIGHT"];
 
-		var event = new DirectionAnimEvent('${anims[direction]}$suffix', direction, suffix, Context, Reversed, Frame);
+		var event = EventManager.get(DirectionAnimEvent).recycle('${anims[direction]}$suffix', direction, suffix, Context, Reversed, Frame);
 		script.call("onPlaySingAnim", [event]);
 		if (!event.cancelled) playAnim(event.animName, event.force, Context, event.reversed, event.frame);
 	}
@@ -217,7 +217,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	{
 		if (!debugMode)
 		{
-			var event = new DanceEvent(danced);
+			var event = EventManager.get(DanceEvent).recycle(danced);
 			script.call("onDance", [event]);
 			if (event.cancelled) return;
 
@@ -328,7 +328,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 	public override function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		var event = new PlayAnimEvent(AnimName, Force, Reversed, Frame, Context);
+		var event = EventManager.get(PlayAnimEvent).recycle(AnimName, Force, Reversed, Frame, Context);
 		script.call("onPlayAnim", [event]);
 		if (event.cancelled) return;
 

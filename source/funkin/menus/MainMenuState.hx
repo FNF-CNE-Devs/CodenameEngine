@@ -169,7 +169,7 @@ class MainMenuState extends MusicBeatState
 		{
 			var daChoice:String = optionShit[curSelected];
 
-			var event = event("onSelectItem", new NameEvent(daChoice));
+			var event = event("onSelectItem", EventManager.get(NameEvent).recycle(daChoice));
 			if (event.cancelled) return;
 			switch (daChoice)
 			{
@@ -192,7 +192,7 @@ class MainMenuState extends MusicBeatState
 	}
 	function changeItem(huh:Int = 0)
 	{
-		var event = event("onChangeItem", new MenuChangeEvent(curSelected, FlxMath.wrap(curSelected + huh, 0, menuItems.length-1), huh, huh != 0));
+		var event = event("onChangeItem", EventManager.get(MenuChangeEvent).recycle(curSelected, FlxMath.wrap(curSelected + huh, 0, menuItems.length-1), huh, huh != 0));
 		if (event.cancelled) return;
 
 		curSelected = event.value;

@@ -42,24 +42,4 @@ class NoteCreationEvent extends CancellableEvent {
      * Sing animation suffix. "-alt" for alt anim or "" for normal notes.
      */
     public var animSuffix:String;
-
-    /**
-     * [Description] Creates a new NoteCreationEvent
-     * @param note 
-     * @param strumID 
-     * @param noteType 
-     * @param noteTypeID 
-     * @param mustHit 
-     */
-    public function new(note:Note, strumID:Int, noteType:String, noteTypeID:Int, mustHit:Bool, noteSprite:String, noteScale:Float, animSuffix:String) {
-        super();
-        this.note = note;
-        this.strumID = strumID;
-        this.noteType = noteType;
-        this.noteTypeID = noteTypeID;
-        this.mustHit = mustHit;
-        this.noteSprite = noteSprite;
-        this.noteScale = noteScale;
-        this.animSuffix = animSuffix;
-    }
 }
