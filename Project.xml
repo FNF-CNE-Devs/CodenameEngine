@@ -53,7 +53,7 @@
 	<assets path="assets/"    rename="assets"	exclude="*.ogg" if="web"/>
 	<assets path="assets/"    rename="assets"	exclude="*.mp3" unless="web"/>
 	
-	<assets path='example_mods' rename='mods' embed='false'/>
+	<assets path='mods' rename='mods' embed='false'/>
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 	
 	<assets path="CHANGELOG.md" rename='changelog.txt'/>
