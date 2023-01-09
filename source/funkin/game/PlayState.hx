@@ -1273,55 +1273,7 @@ class PlayState extends MusicBeatState
 			gameOver();
 
 		if (generatedMusic)
-		{
-			notes.forEachAlive(function(daNote:Note)
-			{
-				var strum:Strum = null;
-				for(e in (daNote.mustPress ? playerStrums : cpuStrums).members) {
-					if (e.ID == daNote.noteData % 4) {
-						strum = e;
-						break; //ing bad
-					}
-				}
-				
-				var event = PlayState.instance.scripts.event("onNoteUpdate", new NoteUpdateEvent(daNote, elapsed, strum));
-				if (!event.cancelled) {
-					if (event.__updateHitWindow) {
-						if (daNote.mustPress)
-						{
-							daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (hitWindow * daNote.latePressWindow)
-								&& daNote.strumTime < Conductor.songPosition + (hitWindow * daNote.earlyPressWindow));
-		
-							if (daNote.strumTime < Conductor.songPosition - hitWindow && !daNote.wasGoodHit)
-								daNote.tooLate = true;
-						}
-						else
-							daNote.canBeHit = false;
-					}
-						
-					if (event.__autoCPUHit && !daNote.mustPress && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) goodNoteHit(daNote);
-
-					if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.stepLength) < Conductor.songPosition) {
-						deleteNote(daNote);
-						return;
-					}
-	
-					if (daNote.tooLate) {
-						noteMiss(daNote);
-						return;
-					}
-	
-					
-					if (event.strum == null) return;
-
-					if (event.__reposNote) event.strum.updateNotePosition(daNote);
-					event.strum.updateSustain(daNote);
-
-					PlayState.instance.scripts.event("onNotePostUpdate", event);
-				}
-				
-			});
-		}
+			notes.forEachAlive(updateNote);
 
 		if (!inCutscene)
 			keyShit();
@@ -1332,6 +1284,54 @@ class PlayState extends MusicBeatState
 		#end
 		
 		scripts.call("postUpdate", [elapsed]);
+	}
+
+	var __updateNote_strum:Strum = null;
+	function updateNote(daNote:Note)
+	{
+		for(e in (daNote.mustPress ? playerStrums : cpuStrums).members) {
+			if (e.ID == daNote.noteData % 4) {
+				__updateNote_strum = e;
+				break; //ing bad
+			}
+		}
+		
+		var event = PlayState.instance.scripts.event("onNoteUpdate", new NoteUpdateEvent(daNote, FlxG.elapsed, __updateNote_strum));
+		if (!event.cancelled) {
+			if (event.__updateHitWindow) {
+				if (daNote.mustPress)
+				{
+					daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (hitWindow * daNote.latePressWindow)
+						&& daNote.strumTime < Conductor.songPosition + (hitWindow * daNote.earlyPressWindow));
+
+					if (daNote.strumTime < Conductor.songPosition - hitWindow && !daNote.wasGoodHit)
+						daNote.tooLate = true;
+				}
+				else
+					daNote.canBeHit = false;
+			}
+				
+			if (event.__autoCPUHit && !daNote.mustPress && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) goodNoteHit(daNote);
+
+			if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.stepLength) < Conductor.songPosition) {
+				deleteNote(daNote);
+				return;
+			}
+
+			if (daNote.tooLate) {
+				noteMiss(daNote);
+				return;
+			}
+
+			
+			if (event.strum == null) return;
+
+			if (event.__reposNote) event.strum.updateNotePosition(daNote);
+			event.strum.updateSustain(daNote);
+
+			PlayState.instance.scripts.event("onNotePostUpdate", event);
+		}
+		
 	}
 
 	function gameOver(?character:String, ?gameOverSong:String, ?lossSFX:String, ?retrySFX:String) {
