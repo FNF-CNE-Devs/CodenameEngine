@@ -86,8 +86,10 @@ class ModsFolder {
 
     public static function unloadMod(mod:String) {
         if (mod == null) return;
+        Paths.assetsTree.clearCache();
         Paths.assetsTree.removeLibrary(loadedMods[mod]);
         Assets.unloadLibrary('mods/$mod'.toLowerCase());
+        loadedMods[mod] = null;
     }
 
     public static function prepareLibrary(libName:String, force:Bool = false) {
