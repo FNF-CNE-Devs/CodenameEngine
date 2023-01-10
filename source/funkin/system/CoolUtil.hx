@@ -274,6 +274,7 @@ class CoolUtil
 	}
 	public static function __loadSong(name:String, difficulty:String) {
 		PlayState.difficulty = difficulty;
+
 		PlayState.SONG = Song.loadFromJson(name, difficulty);
 	}
 	public static function setSpriteSize(sprite:FlxSprite, width:Float, height:Float) {

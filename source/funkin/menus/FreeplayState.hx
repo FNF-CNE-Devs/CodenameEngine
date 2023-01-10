@@ -260,7 +260,7 @@ class FreeplaySonglist {
 			try {
 				var json:FreeplayJSON = Json.parse(Paths.assetsTree.getSpecificAsset(path, "TEXT", source));
 				addOGSongs = CoolUtil.getDefault(json.addOGSongs, true);
-				_addJSONSongs(json.songs, false);
+				_addJSONSongs(json.songs, source == SOURCE);
 			} catch(e) {
 				Logs.trace('Couldn\'t parse Freeplay JSON: ${e.toString()}');
 			}
@@ -286,7 +286,7 @@ class FreeplaySonglist {
 					});
 				}
 			}
-			_addJSONSongs(found, false);
+			_addJSONSongs(found, source == SOURCE);
 		}
 		return addOGSongs;
 	}
