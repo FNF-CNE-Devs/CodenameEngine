@@ -662,13 +662,19 @@ class PlayState extends MusicBeatState
 	public function startCutscene() {
 		if (playCutscenes) {
 			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-cutscene');
-			var videoCutsceneAlt = Paths.video('${PlayState.SONG.song.toLowerCase()}-cutscene');
+			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/cutscene.mp4');
 			persistentUpdate = false;
 			if (cutscene != null) {
 				openSubState(new ScriptedCutscene(cutscene, function() {
 					startCountdown();
 				}));
-			} else if (Assets.exists(videoCutscene)) {
+			} else if (Assets.exists(videoCutsceneAlt)) {
+			FlxTransitionableState.skipNextTransIn = true;
+				openSubState(new VideoCutscene(videoCutsceneAlt, function() {
+					startCountdown();
+				}));
+				persistentDraw = false;
+			}else if (Assets.exists(videoCutscene)) {
 			FlxTransitionableState.skipNextTransIn = true;
 				openSubState(new VideoCutscene(videoCutscene, function() {
 					startCountdown();
@@ -684,11 +690,17 @@ class PlayState extends MusicBeatState
 	public function startEndCutscene() {
 		if (playCutscenes) {
 			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-end-cutscene');
+			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/end-cutscene.mp4');
 			persistentUpdate = false;
 			if (endCutscene != null) {
 				openSubState(new ScriptedCutscene(endCutscene, function() {
 					nextSong();
 				}));
+			} else if (Assets.exists(videoCutsceneAlt)) {
+				openSubState(new VideoCutscene(videoCutsceneAlt, function() {
+					nextSong();
+				}));
+				persistentDraw = false;
 			} else if (Assets.exists(videoCutscene)) {
 				openSubState(new VideoCutscene(videoCutscene, function() {
 					nextSong();
