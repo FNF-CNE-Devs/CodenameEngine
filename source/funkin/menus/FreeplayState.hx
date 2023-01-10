@@ -291,7 +291,6 @@ class FreeplaySonglist {
 		return addOGSongs;
 	}
 
-	// TODO: REWRITE THIS SHIT UGH
     public static function get() {
         var songList = new FreeplaySonglist();
 
