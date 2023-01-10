@@ -253,21 +253,50 @@ class FreeplaySonglist {
         }
     }
 
+	private function getSongsFromSource(source:funkin.system.AssetsLibraryList.AssetSource) {
+		var path:String = Paths.json('freeplaySonglist');
+		var addOGSongs:Bool = true;
+		if (Paths.assetsTree.existsSpecific(path, "TEXT", source)) {
+			try {
+				var json:FreeplayJSON = Json.parse(Paths.assetsTree.getSpecificAsset(path, "TEXT", source));
+				addOGSongs = CoolUtil.getDefault(json.addOGSongs, true);
+				_addJSONSongs(json.songs, false);
+			} catch(e) {
+				Logs.trace('Couldn\'t parse Freeplay JSON: ${e.toString()}');
+			}
+		} else {
+			var found:Array<FreeplaySong> = [];
+			for(s in Paths.getFolderDirectories('songs', false, source)) {
+				var sMetaPath = Paths.file('songs/${s}/meta.json');
+				if (Paths.assetsTree.existsSpecific(sMetaPath, "TEXT", source)) {
+					try {
+						var meta:FreeplaySong = Json.parse(Paths.assetsTree.getSpecificAsset(sMetaPath, "TEXT", source));
+						if (meta.name == null)
+							meta.name = s;
+						found.push(meta);
+					} catch(e) {
+						Logs.trace('Couldn\'t parse metadata for song ${s}: ${e.toString()}');
+						found.push({
+							name: s
+						});
+					}
+				} else {
+					found.push({
+						name: s
+					});
+				}
+			}
+			_addJSONSongs(found, false);
+		}
+		return addOGSongs;
+	}
+
+	// TODO: REWRITE THIS SHIT UGH
     public static function get() {
         var songList = new FreeplaySonglist();
 
-        var jsonPath = Paths.json("freeplaySonglist");
-        var baseJsonPath = Paths.getPath('data/freeplaySonglist.json', TEXT, null, true);
-
-        try {
-            var json:FreeplayJSON = Json.parse(Assets.getText(jsonPath));
-            var addOGSongs = CoolUtil.getDefault(json.addOGSongs, true);
-            songList._addJSONSongs(json.songs, jsonPath == baseJsonPath);
-            if (addOGSongs && (jsonPath != baseJsonPath)) {
-                var json:FreeplayJSON = Json.parse(Assets.getText(baseJsonPath));
-                songList._addJSONSongs(json.songs, true);
-            }
-        }
+		if (songList.getSongsFromSource(MODS))
+			songList.getSongsFromSource(SOURCE);
 
         return songList;
     }
@@ -280,9 +309,9 @@ typedef FreeplayJSON = {
 
 typedef FreeplaySong = {
     public var name:String;
-    public var icon:String;
-    public var color:Dynamic;
-	public var difficulties:Array<String>;
+    public var ?icon:String;
+    public var ?color:Dynamic;
+	public var ?difficulties:Array<String>;
 }
 
 class SongMetadata
@@ -300,7 +329,7 @@ class SongMetadata
 		if (difficulties != null && difficulties.length > 0) {
 			this.difficulties = difficulties;
 		} else {
-			this.difficulties = difficulties = [for(f in Paths.getFolderContent('songs/${song.toLowerCase()}/charts/', false, false, fromSource)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
+			this.difficulties = difficulties = [for(f in Paths.getFolderContent('songs/${song.toLowerCase()}/charts/', false, fromSource)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
 			if (difficulties.length == 3) {
 				var hasHard = false, hasNormal = false, hasEasy = false;
 				for(d in difficulties) {

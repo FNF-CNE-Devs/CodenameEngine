@@ -98,14 +98,20 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
         return getAssetPath();
     }
 
-    public function getFiles(folder:String):Array<String> {
+    public inline function getFolders(folder:String):Array<String>
+        return __getFiles(folder, true);
+
+    public inline function getFiles(folder:String):Array<String>
+        return __getFiles(folder, false);
+
+    public function __getFiles(folder:String, folders:Bool = false) {
         if (!folder.endsWith("/")) folder = folder + "/";
         if (!__parseAsset(folder)) return [];
         var path = getAssetPath();
         try {
             var result:Array<String> = [];
             for(e in FileSystem.readDirectory(path))
-                if (!FileSystem.isDirectory('$path$e'))
+                if (FileSystem.isDirectory('$path$e') == folders)
                     result.push(e);
             return result;
         } catch(e) {

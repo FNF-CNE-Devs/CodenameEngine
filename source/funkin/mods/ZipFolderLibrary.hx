@@ -161,5 +161,22 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
         }
         return content;
     }
+
+    public function getFolders(folder:String):Array<String> {
+        var content:Array<String> = [];
+        
+        if (!folder.endsWith("/")) folder = folder + "/";
+        if (!__parseAsset(folder)) return [];
+        
+        @:privateAccess
+        for(k=>e in assets) {
+            if (k.toLowerCase().startsWith(_parsedAsset)) {
+                var fileName = k.substr(_parsedAsset.length);
+                if (fileName.contains("/"))
+                    content.push(fileName.split("/")[0]);
+            }
+        }
+        return content;
+    }
     #end
 }

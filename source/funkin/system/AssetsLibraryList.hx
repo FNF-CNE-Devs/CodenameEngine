@@ -8,22 +8,30 @@ class AssetsLibraryList extends AssetLibrary {
     public var libraries:Array<AssetLibrary> = [];
     public var base:AssetLibrary;
 
+    public var sourceLibsAmount:Int = 0;
+
     public function removeLibrary(lib:AssetLibrary) {
         if (lib == null) return lib;
         libraries.remove(lib);
         return lib;
     }
-    public override function exists(id:String, type:String) {
+    public function existsSpecific(id:String, type:String, source:AssetSource = BOTH) {
         if (!id.startsWith("assets/") && exists('assets/$id', type))
             return true;
-        for(e in libraries)
+        for(k=>e in libraries) {
+            if (shouldSkipLib(k, source)) continue;
             if (e.exists(id, type))
                 return true;
+        }
         return false;
     }
+    public override inline function exists(id:String, type:String):Bool
+        return existsSpecific(id, type, BOTH);
 
-    public override function getPath(id:String) {
-        for(e in libraries) {
+    public function getSpecificPath(id:String, source:AssetSource = BOTH) {
+        for(k=>e in libraries) {
+            if (shouldSkipLib(k, source)) continue;
+
             @:privateAccess
             if (e.exists(id, e.types.get(id))) {
                 var path = e.getPath(id);
@@ -34,9 +42,14 @@ class AssetsLibraryList extends AssetLibrary {
         return null;
     }
 
-    public function getFiles(folder:String):Array<String> {
+    public override inline function getPath(id:String)
+        return getSpecificPath(id, BOTH);
+
+    public function getFiles(folder:String, source:AssetSource = BOTH):Array<String> {
         var content:Array<String> = [];
-        for(e in libraries) {
+        for(k=>e in libraries) {
+            if (shouldSkipLib(k, source)) continue;
+
             var l = e;
 
             if (l is openfl.utils.AssetLibrary) {
@@ -56,14 +69,38 @@ class AssetsLibraryList extends AssetLibrary {
         return content;
     }
 
-    public override function getAsset(id:String, type:String) {
+    public function getFolders(folder:String, source:AssetSource = BOTH):Array<String> {
+        var content:Array<String> = [];
+        for(k=>e in libraries) {
+            if (shouldSkipLib(k, source)) continue;
+
+            var l = e;
+
+            if (l is openfl.utils.AssetLibrary) {
+                @:privateAccess
+                l = cast(l, openfl.utils.AssetLibrary).__proxy;
+            }
+
+            // TODO: do base folder scanning
+            #if MOD_SUPPORT
+            if (l is ModsAssetLibrary) {
+                var lib = cast(l, ModsAssetLibrary);
+                for(e in lib.getFolders(folder))
+                    content.push(e);
+            }
+            #end
+        }
+        return content;
+    }
+
+    public function getSpecificAsset(id:String, type:String, source:AssetSource = BOTH):Dynamic {
         try {
             #if cpp
             cpp.vm.Gc.enable(false);
             #end
 
             if (!id.startsWith("assets/")) {
-                var ass = getAsset('assets/$id', type);
+                var ass = getSpecificAsset('assets/$id', type, source);
                 if (ass != null) {
                     #if cpp
                     cpp.vm.Gc.enable(true);
@@ -71,7 +108,9 @@ class AssetsLibraryList extends AssetLibrary {
                     return ass;
                 }
             }
-            for(e in libraries) {
+            for(k=>e in libraries) {
+                if (shouldSkipLib(k, source)) continue;
+
                 var asset = e.getAsset(id, type);
                 if (asset != null) {
                     #if cpp
@@ -94,6 +133,16 @@ class AssetsLibraryList extends AssetLibrary {
         }
         return null;
     }
+
+    private function shouldSkipLib(k:Int, source:AssetSource) {
+        return switch(source) {
+            case BOTH:      false;
+            case SOURCE:    k < libraries.length - sourceLibsAmount;
+            case MODS:      k >= libraries.length - sourceLibsAmount;
+        };
+    }
+    public override inline function getAsset(id:String, type:String):Dynamic
+        return getSpecificAsset(id, type, BOTH);
 
     public function clearCache() {
         var libs:Array<AssetLibrary> = [for(lib in libraries) lib];
@@ -142,10 +191,17 @@ class AssetsLibraryList extends AssetLibrary {
         if (base == null)
             base = Assets.getLibrary("default");
         addLibrary(this.base = base);
+        sourceLibsAmount++;
     }
 
     public function addLibrary(lib:AssetLibrary) {
         libraries.insert(0, lib);
         return lib;
     }
+}
+
+enum abstract AssetSource(Null<Bool>) from Bool from Null<Bool> to Null<Bool> {
+    var SOURCE = true;
+    var MODS = false;
+    var BOTH = null;
 }

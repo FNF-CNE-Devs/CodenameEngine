@@ -217,10 +217,19 @@ class Paths
 		return FlxAtlasFrames.fromSpriteSheetPacker('$key.png', '$key.txt');
 	}
 
-	static public function getFolderContent(key:String, includeSource:Bool = true, addPath:Bool = false, scanSource:Bool = false):Array<String> {
+	static public function getFolderDirectories(key:String, addPath:Bool = false, source:funkin.system.AssetsLibraryList.AssetSource = BOTH):Array<String> {
+		if (!key.endsWith("/")) key += "/";
+		var content = assetsTree.getFolders('assets/$key', source);
+		if (addPath) {
+			for(k=>e in content)
+				content[k] = '$key$e';
+		}
+		return content;
+	}
+	static public function getFolderContent(key:String, addPath:Bool = false, source:funkin.system.AssetsLibraryList.AssetSource = BOTH):Array<String> {
 		// designed to work both on windows and web
 		if (!key.endsWith("/")) key += "/";
-		var content = assetsTree.getFiles('assets/$key');
+		var content = assetsTree.getFiles('assets/$key', source);
 		if (addPath) {
 			for(k=>e in content)
 				content[k] = '$key$e';

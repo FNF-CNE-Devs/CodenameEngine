@@ -35,5 +35,7 @@ interface ModsAssetLibrary {
     private function __parseAsset(asset:String):Bool;
 
     public function getFiles(folder:String):Array<String>;
+    
+    public function getFolders(folder:String):Array<String>;
     #end
 }

@@ -33,8 +33,10 @@
     },
     {
       "name": "hxCodec",
-      "type": "haxelib",
-      "version": null
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://www.github.com/polybiusproxy/hxCodec"
     },
     {
       "name": "lime",
