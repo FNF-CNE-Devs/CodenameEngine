@@ -17,7 +17,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
     public static var staticVariables:Map<String, Dynamic> = [];
 
 
-    public static function getDefaultVariables():Map<String, Dynamic> {
+    public static function getDefaultVariables(?script:Script):Map<String, Dynamic> {
         return [
             // Haxe related stuff
             "Std"               => Std,
@@ -78,11 +78,13 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "CustomShader"      => funkin.shaders.CustomShader,
             "FunkinText"        => funkin.ui.FunkinText,
             "Alphabet"          => funkin.ui.Alphabet,
+
             "CoolUtil"          => funkin.utils.CoolUtil,
             "IniUtil"           => funkin.utils.IniUtil,
             "XMLUtil"           => funkin.utils.XMLUtil,
             "ZipUtil"           => funkin.utils.ZipUtil,
             "MarkdownUtil"      => funkin.utils.MarkdownUtil,
+            "EngineUtil"        => funkin.utils.EngineUtil,
         ];
     }
     public static function getDefaultPreprocessors():Map<String, Dynamic> {
@@ -157,7 +159,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
         fileName = Path.withoutDirectory(path);
         this.path = path;
         onCreate(path);
-        for(k=>e in getDefaultVariables()) {
+        for(k=>e in getDefaultVariables(this)) {
             set(k, e);
         }
     }

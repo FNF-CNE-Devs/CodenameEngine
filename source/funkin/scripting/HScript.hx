@@ -5,8 +5,8 @@ import openfl.Assets;
 import hscript.*;
 
 class HScript extends Script {
-    var interp:Interp;
-    var expr:Expr;
+    public var interp:Interp;
+    public var expr:Expr;
 
     public override function onCreate(path:String) {
         super.onCreate(path);
@@ -72,7 +72,7 @@ class HScript extends Script {
         var oldParent = interp.scriptObject;
         onCreate(path);
 
-        for(k=>e in Script.getDefaultVariables())
+        for(k=>e in Script.getDefaultVariables(this))
             set(k, e);
 
         load();
