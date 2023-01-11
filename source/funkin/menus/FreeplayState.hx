@@ -1,9 +1,6 @@
 package funkin.menus;
 
 import haxe.io.Path;
-#if DISCORD_RPC
-import funkin.system.Discord.DiscordClient;
-#end
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -60,10 +57,7 @@ class FreeplayState extends MusicBeatState
 		songList = FreeplaySonglist.get();
 		songs = songList.songs;
 
-		#if DISCORD_RPC
-		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Menus", null);
-		#end
+		DiscordUtil.changePresence("In the Menus", null);
 
 		// LOAD CHARACTERS
 
@@ -164,7 +158,7 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			CoolUtil.playMenuSFX(2, 0.4);
+			CoolUtil.playMenuSFX(2, 0.7);
 			FlxG.switchState(new MainMenuState());
 		}
 
@@ -196,7 +190,7 @@ class FreeplayState extends MusicBeatState
 	function changeSelection(change:Int = 0, force:Bool = false)
 	{
 		if (change == 0 && !force) return;
-        CoolUtil.playMenuSFX(0, 0.4);
+        CoolUtil.playMenuSFX(0, 0.7);
 
 		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length-1);
 

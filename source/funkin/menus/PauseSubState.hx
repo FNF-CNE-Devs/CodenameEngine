@@ -103,6 +103,8 @@ class PauseSubState extends MusicBeatSubstate
 		FlxG.cameras.add(camera, false);
 
 		pauseScript.call("postCreate");
+
+		PlayState.instance.updateDiscordPresence();
 	}
 
 	override function update(elapsed:Float)

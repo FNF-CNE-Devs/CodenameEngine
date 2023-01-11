@@ -2,9 +2,6 @@ package funkin.menus;
 
 import funkin.ui.FunkinText;
 import funkin.options.Options;
-#if DISCORD_RPC
-import funkin.system.Discord.DiscordClient;
-#end
 import flixel.FlxG;
 import funkin.menus.credits.CreditsMain;
 import flixel.FlxObject;
@@ -47,10 +44,7 @@ class MainMenuState extends MusicBeatState
 	{
 		super.create();
 		
-		#if DISCORD_RPC
-		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Menus", null);
-		#end
+		DiscordUtil.changePresence("In the Menus", null);
 
 		CoolUtil.playMenuSong();
 
@@ -198,7 +192,7 @@ class MainMenuState extends MusicBeatState
 		curSelected = event.value;
 
 		if (event.playMenuSFX)
-			CoolUtil.playMenuSFX(0);
+			CoolUtil.playMenuSFX(0, 0.7);
 
 		menuItems.forEach(function(spr:FlxSprite)
 		{

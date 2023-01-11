@@ -121,6 +121,8 @@ class StoryMenuState extends MusicBeatState {
         }
 
         changeWeek(0, true);
+        
+		DiscordUtil.changePresence("In the Menus", null);
     }
 
     var __lastDifficultyTween:FlxTween;

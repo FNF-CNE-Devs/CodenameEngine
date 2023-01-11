@@ -225,7 +225,7 @@ class KeybindsOptions extends MusicBeatSubstate {
     
             if (controls.LEFT_P || controls.RIGHT_P) {
                 if (alphabets.members[curSelected] != null) {
-                    CoolUtil.playMenuSFX(0);
+                    CoolUtil.playMenuSFX(0, 0.7);
                     alphabets.members[curSelected].p2Selected = (p2Selected = !p2Selected);
                 }
             }

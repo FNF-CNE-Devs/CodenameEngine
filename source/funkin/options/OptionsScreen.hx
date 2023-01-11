@@ -107,7 +107,7 @@ class OptionsScreen extends MusicBeatState {
 
     public function changeSelection(change:Int) {
         if (change == 0 && curSelected != -1) return;
-        CoolUtil.playMenuSFX(0);
+        CoolUtil.playMenuSFX(0, 0.7);
         if (curSelected != (curSelected = FlxMath.wrap(curSelected + change, 0, options.length - 1))) {
             for(e in options)
                 e.selected = false;

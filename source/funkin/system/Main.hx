@@ -24,9 +24,6 @@ import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-#if DISCORD_RPC
-import funkin.system.Discord.DiscordClient;
-#end
 import lime.app.Application;
 
 #if ALLOW_MULTITHREADING
@@ -148,9 +145,7 @@ class Main extends Sprite
 		Paths.init();
 		ModsFolder.init();
 		DesktopMain.init();
-		#if MOD_SUPPORT
-		ModsFolder.switchMod("introMod");
-		#end
+		DiscordUtil.init();
 		#if ALLOW_MULTITASKING
 		funkin.multitasking.MultiTaskingHandler.init();
 		#end
@@ -195,18 +190,12 @@ class Main extends Sprite
 		Conductor.init();
 		AudioSwitchFix.init();
 		WindowsAPI.setDarkMode(true);
-
-		
-		#if DISCORD_RPC
-		DiscordClient.initialize();
-		
-		Application.current.onExit.add (function (exitCode) {
-			DiscordClient.shutdown();
-		 });
-		#end
-		
 		EventManager.init();
 		FlxG.signals.preStateCreate.add(onStateSwitch);
+
+		#if MOD_SUPPORT
+		ModsFolder.switchMod("introMod");
+		#end
 
 		initTransition();
 	}

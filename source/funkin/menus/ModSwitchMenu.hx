@@ -69,7 +69,7 @@ class ModSwitchMenu extends MusicBeatSubstate {
 
         curSelected = FlxMath.wrap(curSelected + change, 0, alphabets.length-1);
 
-        CoolUtil.playMenuSFX();
+        CoolUtil.playMenuSFX(0, 0.7);
 
         for(k=>alphabet in alphabets.members) {
             alphabet.alpha = 0.6;

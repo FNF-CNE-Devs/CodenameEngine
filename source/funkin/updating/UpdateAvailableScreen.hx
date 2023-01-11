@@ -139,7 +139,7 @@ class UpdateAvailableScreen extends MusicBeatState {
 
 
     public function changeSelection() {
-        CoolUtil.playMenuSFX();
+        CoolUtil.playMenuSFX(0, 0.7);
         if (installSelected) {
             installButton.text = "> INSTALL <";
             skipButton.text = "SKIP";

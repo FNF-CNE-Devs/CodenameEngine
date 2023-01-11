@@ -8,9 +8,6 @@ import flixel.group.FlxSpriteGroup;
 import funkin.options.Options;
 import funkin.scripting.Script;
 import flixel.util.FlxDestroyUtil;
-#if DISCORD_RPC
-import funkin.system.Discord.DiscordClient;
-#end
 import funkin.system.Section.SwagSection;
 import funkin.system.Song.SwagSong;
 import funkin.scripting.ScriptPack;
@@ -443,14 +440,9 @@ class PlayState extends MusicBeatState
 		new ComboRating(1, "S++", 0xFF44FFFF),
 	];
 
-	#if DISCORD_RPC
-	// Discord RPC variables
-	public var difficultyText:String = "";
-	public var iconRPC:String = "";
-	public var songLength:Float = 0;
 	public var detailsText:String = "";
 	public var detailsPausedText:String = "";
-	#end
+
 	public function updateRating() {
 		var rating = null;
 		var acc = get_accuracy();
@@ -498,10 +490,6 @@ class PlayState extends MusicBeatState
 
 		Conductor.setupSong(SONG);
 
-		#if DISCORD_RPC
-		// TODO: Scriptable custom RPC
-		iconRPC = (dad != null && dad.icon != null) ? dad.icon : SONG.player2;
-
 		detailsText = isStoryMode ? ("Story Mode: " + storyWeek.name) : "Freeplay";
 
 		// Checks if cutscene files exists
@@ -512,10 +500,9 @@ class PlayState extends MusicBeatState
 
 		// String for when the game is paused
 		detailsPausedText = "Paused - " + detailsText;
+
 		
 		// Updating Discord Rich Presence.
-		DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC);
-		#end
 		dad = new Character(100, 100, SONG.player2);
 
 
@@ -656,7 +643,14 @@ class PlayState extends MusicBeatState
 	public override function createPost() {
 		startCutscene();
 		super.createPost();
+
+		updateDiscordPresence();
+
 		scripts.call("postCreate");
+	}
+
+	public dynamic function updateDiscordPresence() {
+		DiscordUtil.changeSongPresence(detailsText, (paused ? "Paused - " : "") + SONG.song + " (" + difficulty + ")", inst, getIconRPC());
 	}
 
 	public function startCutscene() {
@@ -805,7 +799,7 @@ class PlayState extends MusicBeatState
 		vocals.play();
 		inst.play();
 
-		updateDiscordStatus();
+		updateDiscordPresence();
 	}
 
 	public override function destroy() {
@@ -1048,42 +1042,27 @@ class PlayState extends MusicBeatState
 				startTimer.active = true;
 			paused = false;
 
-			#if DISCORD_RPC
-			if (startTimer.finished)
-			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC, true, songLength - Conductor.songPosition);
-			}
-			else
-			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC);
-			}
-			#end
+			updateDiscordPresence();
 		}
 
 		super.closeSubState();
 	}
+	public inline function getIconRPC():String
+		return (dad != null ? (dad.icon != null ? dad.icon : dad.curCharacter) : SONG.player2);
 
 	var __songPlaying:Bool = false;
 	var __wasAutoPause:Bool = false;
 	override public function onFocus():Void
 	{
 		scripts.call("onFocus");
-		#if DISCORD_RPC
-		if (health > 0 && !paused)
-		{
-			if (Conductor.songPosition > 0.0)
-			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC, true, songLength - Conductor.songPosition);
+
+		
+		if (__wasAutoPause) {
+			updateDiscordPresence();
+			if (__songPlaying) {
+				inst.play();
+				vocals.play();
 			}
-			else
-			{
-				DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC);
-			}
-		}
-		#end
-		if (__wasAutoPause && __songPlaying) {
-			inst.play();
-			vocals.play();
 		}
 
 		super.onFocus();
@@ -1092,12 +1071,7 @@ class PlayState extends MusicBeatState
 	override public function onFocusLost():Void
 	{
 		scripts.call("onFocusLost");
-		#if DISCORD_RPC
-		if (health > 0 && !paused)
-		{
-			DiscordClient.changePresence(detailsPausedText, SONG.song + " (" + difficultyText + ")", iconRPC);
-		}
-		#end
+		updateDiscordPresence();
 		if (__wasAutoPause = FlxG.autoPause) {
 			__songPlaying = inst.playing;
 			inst.pause();
@@ -1141,20 +1115,7 @@ class PlayState extends MusicBeatState
 		else
 			openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 	
-		updateDiscordStatus();
-	}
-
-	// TODO: Update Discord Status
-	public function updateDiscordStatus() {
-		// TODO: Cancellable Discord Update Presence
-		#if DISCORD_RPC
-		// Song duration in a float, useful for the time left feature
-		songLength = inst.length;
-
-		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText, SONG.song + " (" + difficultyText + ")", iconRPC, true, songLength);
-		#end
-		scripts.call("onDiscordPresenceUpdate");
+		updateDiscordPresence();
 	}
 
 	override public function update(elapsed:Float)
@@ -1185,10 +1146,6 @@ class PlayState extends MusicBeatState
 			if (FlxG.keys.justPressed.SEVEN)
 			{
 				FlxG.switchState(new ChartingState());
-	
-				#if DISCORD_RPC
-				DiscordClient.changePresence("Chart Editor", null, null, true);
-				#end
 			}
 			if (FlxG.keys.justPressed.F5) {
 				Logs.trace('Reloading scripts...', WARNING, YELLOW);
@@ -1367,11 +1324,6 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.stop();
 
 		openSubState(new GameOverSubstate(boyfriend.x, boyfriend.y, character, gameOverSong, lossSFX, retrySFX));
-
-		#if DISCORD_RPC
-		// Game Over doesn't get his own variable because it's only used here
-		DiscordClient.changePresence("Game Over - " + detailsText, SONG.song + " (" + difficultyText + ")", iconRPC);
-		#end
 	}
 
 	function endSong():Void

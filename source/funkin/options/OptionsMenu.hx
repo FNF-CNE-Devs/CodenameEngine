@@ -103,7 +103,7 @@ class OptionsMenu extends MusicBeatState {
     
     public function changeSelection(change:Int) {
         if (change == 0) return;
-        CoolUtil.playMenuSFX(0, 0.4);
+        CoolUtil.playMenuSFX(0, 0.7);
         curSelected = FlxMath.wrap(curSelected + change, 0, options.length-1);
         alphabets.forEach(function(e) {
             e.alpha = 0.6;
