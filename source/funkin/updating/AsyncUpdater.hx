@@ -3,7 +3,7 @@ package funkin.updating;
 import openfl.Lib;
 import sys.io.Process;
 import haxe.zip.Reader;
-import funkin.system.ZipUtils;
+import funkin.utils.ZipUtil;
 import haxe.io.Path;
 import openfl.utils.ByteArray;
 import sys.io.File;
@@ -63,10 +63,10 @@ class AsyncUpdater {
             progress.curFile = k+1;
             progress.curFileName = e;
             trace('extracting file ${path}');
-            var reader = ZipUtils.openZip(path);
+            var reader = ZipUtil.openZip(path);
             
             progress.curZipProgress = new ZipProgress();
-            ZipUtils.uncompressZip(reader, './', null, progress.curZipProgress);
+            ZipUtil.uncompressZip(reader, './', null, progress.curZipProgress);
             // FileSystem.deleteFile(path);
         }
         if (executableReplaced = FileSystem.exists('$path$executableName')) {

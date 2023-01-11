@@ -1,11 +1,11 @@
-package funkin.system;
+package funkin.utils;
 
 import openfl.utils.Assets;
 
 /**
  * DOESNT SUPPORT CATEGORIES YET!!
  */
-class IniUtils {
+class IniUtil {
     public static inline function parseAsset(assetPath:String, ?defaultVariables:Map<String, String>)
         return parseString(Assets.getText(assetPath), defaultVariables);
 

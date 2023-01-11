@@ -5,7 +5,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
 import funkin.interfaces.IBeatReceiver;
 import funkin.interfaces.IOffsetCompatible;
-import funkin.system.XMLUtil;
+import funkin.utils.XMLUtil;
 
 import flixel.FlxG;
 import flixel.FlxSprite;

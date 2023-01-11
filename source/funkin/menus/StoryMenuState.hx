@@ -3,7 +3,6 @@ package funkin.menus;
 import funkin.scripting.events.*;
 import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
-import funkin.system.XMLUtil;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import funkin.game.Highscore;

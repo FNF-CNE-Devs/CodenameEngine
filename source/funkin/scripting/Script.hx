@@ -74,12 +74,15 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "Options"           => funkin.options.Options,
             "Paths"             => funkin.system.Paths,
             "Conductor"         => funkin.system.Conductor,
-            "CoolUtil"          => funkin.system.CoolUtil,
-            "XMLUtil"           => funkin.system.XMLUtil,
             "FunkinShader"      => funkin.shaders.FunkinShader,
             "CustomShader"      => funkin.shaders.CustomShader,
             "FunkinText"        => funkin.ui.FunkinText,
             "Alphabet"          => funkin.ui.Alphabet,
+            "CoolUtil"          => funkin.utils.CoolUtil,
+            "IniUtil"           => funkin.utils.IniUtil,
+            "XMLUtil"           => funkin.utils.XMLUtil,
+            "ZipUtil"           => funkin.utils.ZipUtil,
+            "MarkdownUtil"      => funkin.utils.MarkdownUtil,
         ];
     }
     public static function getDefaultPreprocessors():Map<String, Dynamic> {

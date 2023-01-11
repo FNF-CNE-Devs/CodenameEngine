@@ -2,7 +2,7 @@ package funkin.menus;
 
 import funkin.github.GitHub;
 import funkin.system.MusicBeatGroup;
-import funkin.system.XMLUtil;
+import funkin.utils.XMLUtil;
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
 import flixel.FlxG;

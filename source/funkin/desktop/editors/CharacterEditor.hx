@@ -7,7 +7,7 @@ import flixel.FlxObject;
 import flixel.FlxCamera;
 import flixel.FlxG;
 
-using funkin.system.XMLUtil;
+using funkin.utils.XMLUtil;
 
 class CharacterEditor extends WindowContent {
     public function new(curCharacter:String) {

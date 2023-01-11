@@ -1,6 +1,6 @@
 package funkin.updating;
 
-import funkin.system.MarkdownUtil;
+import funkin.utils.MarkdownUtil;
 import funkin.menus.MainMenuState;
 import flixel.math.FlxPoint;
 import flixel.math.FlxMath;

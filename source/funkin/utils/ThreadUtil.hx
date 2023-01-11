@@ -1,4 +1,4 @@
-package funkin.system;
+package funkin.utils;
 
 #if ALLOW_MULTITHREADING
 class ThreadUtil {

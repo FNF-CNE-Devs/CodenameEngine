@@ -1,5 +1,7 @@
-package funkin.system;
+package funkin.utils;
 
+import funkin.system.FunkinSprite;
+import funkin.system.ErrorCode;
 import funkin.system.FunkinSprite.XMLAnimType;
 import flixel.math.FlxMath;
 import funkin.interfaces.IBeatReceiver;

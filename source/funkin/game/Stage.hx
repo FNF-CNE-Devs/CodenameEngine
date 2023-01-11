@@ -2,7 +2,6 @@ package funkin.game;
 
 import flixel.FlxG;
 import flixel.FlxState;
-import funkin.system.XMLUtil;
 import flixel.FlxSprite;
 import openfl.utils.Assets;
 import haxe.xml.Access;

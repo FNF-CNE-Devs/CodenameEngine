@@ -1,5 +1,7 @@
-package funkin.system;
+package funkin.utils;
 
+import funkin.system.Song;
+import funkin.system.Conductor;
 import flixel.system.FlxSoundGroup;
 import animateatlas.AtlasFrameMaker;
 import haxe.Json;
@@ -164,7 +166,7 @@ class CoolUtil
 
 		var infoPath = '${Path.withoutExtension(path)}.ini';
 		if (Assets.exists(infoPath)) {
-			var musicInfo = IniUtils.parseAsset(infoPath, [
+			var musicInfo = IniUtil.parseAsset(infoPath, [
 				"BPM" => null
 			]);
 			var parsedBPM:Null<Float> = Std.parseFloat(musicInfo["BPM"]);
