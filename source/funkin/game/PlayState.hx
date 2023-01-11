@@ -725,9 +725,6 @@ class PlayState extends MusicBeatState
 
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
-			for(char in [dad, gf, boyfriend])
-				if (char != null)
-					char.dance();
 			countdown(swagCounter++);
 		}, introLength);
 	}

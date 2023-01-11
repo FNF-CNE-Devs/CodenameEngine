@@ -1,7 +1,6 @@
 
 name: Windows Build
 on:
-  pull_request:
   push:
 jobs:
   build:
@@ -27,7 +26,6 @@ jobs:
             cache-build-windows
       - name: Installing/Updating libraries
         run: |
-          ls
           haxe -cp ./update -D analyzer-optimize -main Update --interp
       - name: Building the game
         run: |

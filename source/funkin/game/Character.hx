@@ -45,7 +45,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public var isGF:Bool = false;
 	public var curCharacter:String = 'bf';
 
-	public var lastHit:Float = -5000;
+	public var lastHit:Float = Math.NEGATIVE_INFINITY;
 	public var holdTime:Float = 4;
 
 	public var playerOffsets:Bool = false;
