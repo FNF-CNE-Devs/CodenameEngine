@@ -14,7 +14,7 @@ import flixel.FlxG;
 class Flx3DUtil
 {
 	/**
-	 * Returns the total amount of 3D stages (not exculding the ones in use)
+	 * Returns the total amount of 3D stages (not excluding the ones in use)
 	 * @return Int
 	 */
 	public static inline function getTotal3D():Int
