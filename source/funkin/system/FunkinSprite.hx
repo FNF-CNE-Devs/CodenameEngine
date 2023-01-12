@@ -43,13 +43,18 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
 
     public static function copyFrom(source:FunkinSprite) {
         var spr = new FunkinSprite();
-        spr.setPosition(source.x, source.y);
-        spr.frames = source.frames;
-        if (source.animateAtlas != null && source.atlasPath != null)
-            spr.loadSprite(source.atlasPath);
-        spr.animation.copyFrom(source.animation);
-        spr.visible = source.visible;
-        spr.alpha = source.alpha;
+        @:privateAccess {
+            spr.setPosition(source.x, source.y);
+            spr.frames = source.frames;
+            if (source.animateAtlas != null && source.atlasPath != null)
+                spr.loadSprite(source.atlasPath);
+            spr.animation.copyFrom(source.animation);
+            spr.visible = source.visible;
+            spr.alpha = source.alpha;
+            spr.antialiasing = source.antialiasing;
+            spr.scale.set(source.scale.x, source.scale.y);
+            spr.scrollFactor.set(source.scrollFactor.x, source.scrollFactor.y);
+        }
         return spr;
     }
 

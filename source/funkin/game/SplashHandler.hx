@@ -31,9 +31,10 @@ class SplashHandler extends FlxTypedGroup<FunkinSprite> {
         grpMap = null;
     }
 
+    var __grp:SplashGroup;
     public function showSplash(name:String, strum:Strum) {
-        var grp = getSplashGroup(name);
-        add(grp.showOnStrum(strum));
+        __grp = getSplashGroup(name);
+        add(__grp.showOnStrum(strum));
 
         // max 8 rendered splashes
         while(members.length > 8)

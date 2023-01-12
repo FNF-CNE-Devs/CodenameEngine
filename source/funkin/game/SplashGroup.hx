@@ -103,15 +103,17 @@ class SplashGroup extends FlxTypedGroup<FunkinSprite> {
         return animationNames[id][FlxG.random.int(0, animationNames[id].length-1)];
     }
 
+    var __splash:FunkinSprite;
     public function showOnStrum(strum:Strum) {
         if (!valid) return null;
-        var splash = recycle();
+        __splash = recycle();
 
-        splash.cameras = strum.lastDrawCameras;
-        splash.setPosition(strum.x + ((strum.width - splash.width) / 2), strum.y + ((strum.height - splash.height) / 2));
-        splash.active = splash.visible = true;
-        splash.playAnim(getSplashAnim(strum.ID), true);
+        __splash.cameras = strum.lastDrawCameras;
+        __splash.setPosition(strum.x + ((strum.width - __splash.width) / 2), strum.y + ((strum.height - __splash.height) / 2));
+        __splash.active = __splash.visible = true;
+        __splash.playAnim(getSplashAnim(strum.ID), true);
+        __splash.scrollFactor.set(strum.scrollFactor.x, strum.scrollFactor.y);
 
-        return splash;
+        return __splash;
     }
 }
