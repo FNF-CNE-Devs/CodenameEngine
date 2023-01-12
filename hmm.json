@@ -6,6 +6,11 @@
       "version": null
     },
     {
+      "name": "dox",
+      "type": "haxelib",
+      "version": null
+    },
+    {
       "name": "flixel-yc29",
       "type": "git",
       "dir": "flixel",

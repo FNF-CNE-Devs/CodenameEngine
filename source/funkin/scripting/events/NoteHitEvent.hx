@@ -76,6 +76,10 @@ class NoteHitEvent extends CancellableEvent {
      */
     public var rating:String = "sick";
     /**
+     * Whenever a splash should be shown when the note is hit.
+     */
+    public var showSplash:Bool = false;
+    /**
      * Scale of combo numbers.
      */
     public var numScale:Float = 0.5;

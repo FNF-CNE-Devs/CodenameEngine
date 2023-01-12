@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.game.SplashHandler;
 import funkin.editors.CharacterEditor;
 import funkin.scripting.DummyScript;
 import funkin.menus.StoryMenuState.WeekData;
@@ -189,6 +190,11 @@ class PlayState extends MusicBeatState
 	 * CPU strums.
 	 */
 	public var cpuStrums:FlxTypedGroup<Strum>;
+
+	/**
+	 * Note splashes container
+	 */
+	public var splashHandler:SplashHandler;
 
 	/**
 	 * Whenever the vocals should be muted when a note is missed.
@@ -581,6 +587,9 @@ class PlayState extends MusicBeatState
 		cpuStrums = new FlxTypedGroup<Strum>();
 		add(strumLineNotes);
 
+		splashHandler = new SplashHandler();
+		add(splashHandler);
+
 		generateSong(SONG);
 
 		if (prevCamFollow != null)
@@ -868,6 +877,8 @@ class PlayState extends MusicBeatState
 					swagNote.stepLength = stepCrochet;
 					notes.add(swagNote);
 				}
+
+				splashHandler.getSplashGroup(swagNote.splash);
 			}
 			daBeats += 1;
 		}
@@ -1450,43 +1461,40 @@ class PlayState extends MusicBeatState
 
 	function noteMiss(note:Note):Void
 	{
-		if (!boyfriend.stunned)
+		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, [boyfriend], true, note.noteType, "", "", "", note.strumID, -10, 0, -0.04, "shit"));
+
+		if (event.cancelled) return;
+		
+		health += event.healthGain;
+		if (gf != null && combo > 5 && gf.animOffsets.exists('sad'))
 		{
-			var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, [boyfriend], true, note.noteType, "", "", "", note.strumID, -10, 0, -0.04, "shit"));
-
-			if (event.cancelled) return;
-			
-			health += event.healthGain;
-			if (gf != null && combo > 5 && gf.animOffsets.exists('sad'))
-			{
-				gf.playAnim('sad', true, MISS);
-			}
-			combo = 0;
-
-			songScore -= 10;
-			misses++;
-
-			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
-
-			if (muteVocalsOnMiss) vocals.volume = 0;
-
-			if (event.accuracy != null) {
-				accuracyPressedNotes++;
-				totalAccuracyAmount += event.accuracy;
-
-				updateRating();
-			}
-
-			for(char in event.characters) {
-				if (char == null) continue;
-
-				char.stunned = true;
-				char.playSingAnim(note.strumID, "miss", MISS);
-			}
-			// boyfriend.stunned = true;
-
-			deleteNote(note);
+			gf.playAnim('sad', true, MISS);
 		}
+		combo = 0;
+
+		songScore -= 10;
+		misses++;
+
+		FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
+
+		if (muteVocalsOnMiss) vocals.volume = 0;
+
+		if (event.accuracy != null) {
+			accuracyPressedNotes++;
+			totalAccuracyAmount += event.accuracy;
+
+			updateRating();
+		}
+
+		for(char in event.characters) {
+			if (char == null) continue;
+
+			char.stunned = true;
+			char.playSingAnim(note.strumID, "miss", MISS);
+		}
+		// boyfriend.stunned = true;
+
+		deleteNote(note);
 	}
 
 	public function getNoteType(id:Int):String {
@@ -1529,9 +1537,9 @@ class PlayState extends MusicBeatState
 			var event:NoteHitEvent;
 			if (note.mustPress)
 				// event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(note, [boyfriend], true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, score, note.animSuffix, daRating, note.isSustainNote ? null : accuracy, "game/score/", ''));
-				event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, [boyfriend], true, note.noteType, "", "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating));
+				event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, [boyfriend], true, note.noteType, "", "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, daRating == "sick"));
 			else
-				event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, [dad], false, note.noteType, "", "game/score/", "", note.strumID, 0, null, 0, daRating));
+				event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, [dad], false, note.noteType, "", "game/score/", "", note.strumID, 0, null, 0, daRating, false));
 			
 			if (!event.cancelled) {
 				if (event.accuracy != null) {
@@ -1625,9 +1633,10 @@ class PlayState extends MusicBeatState
 						if (char != null)
 							char.playSingAnim(event.direction, event.animSuffix);
 	
-				if (!event.strumGlowCancelled) (event.player ? playerStrums : cpuStrums).forEach(function(str:Strum) {
+				(event.player ? playerStrums : cpuStrums).forEach(function(str:Strum) {
 					if (str.ID == Math.abs(note.strumID)) {
-						str.press(note.strumTime);
+						if (!event.strumGlowCancelled) str.press(note.strumTime);
+						if (event.showSplash) splashHandler.showSplash(note.splash, str);
 					}
 				});
 			}

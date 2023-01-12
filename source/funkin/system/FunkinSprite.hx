@@ -41,6 +41,18 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
     @:noCompletion public var atlasPlayingAnim:String;
     @:noCompletion public var atlasPath:String;
 
+    public static function copyFrom(source:FunkinSprite) {
+        var spr = new FunkinSprite();
+        spr.setPosition(source.x, source.y);
+        spr.frames = source.frames;
+        if (source.animateAtlas != null && source.atlasPath != null)
+            spr.loadSprite(source.atlasPath);
+        spr.animation.copyFrom(source.animation);
+        spr.visible = source.visible;
+        spr.alpha = source.alpha;
+        return spr;
+    }
+
     public override function update(elapsed:Float) {
         super.update(elapsed);
         if (animateAtlas != null)
