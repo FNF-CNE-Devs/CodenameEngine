@@ -68,9 +68,9 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			midpoint.x + (isPlayer ? -100 : 150) + globalOffset.x + cameraOffset.x,
 			midpoint.y - 100 + globalOffset.y + cameraOffset.y);
 		script.call("onGetCamPos", [event]);
+		midpoint.put();
 		// this event cannot be cancelled
 		return new FlxPoint(event.x, event.y);
-		
 	}
 
 	public function playSingAnim(direction:Int, suffix:String = "", Context:PlayAnimContext = SING, Reversed:Bool = false, Frame:Int = 0) {

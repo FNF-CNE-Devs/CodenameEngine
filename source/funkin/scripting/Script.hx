@@ -24,12 +24,12 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "Math"              => Math,
             "StringTools"       => StringTools,
             "Json"              => haxe.Json,
-    
+
             // OpenFL & Lime related stuff
             "Assets"            => openfl.utils.Assets,
             "Application"       => lime.app.Application,
             "window"            => lime.app.Application.current.window,
-    
+
             // Flixel related stuff
             "FlxG"              => flixel.FlxG,
             "FlxSprite"         => flixel.FlxSprite,
@@ -49,7 +49,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "FlxTimer"          => flixel.util.FlxTimer,
             "FlxPoint"          => CoolUtil.getMacroAbstractClass("flixel.math.FlxPoint"),
             "FlxAxes"           => CoolUtil.getMacroAbstractClass("flixel.util.FlxAxes"),
-    
+            "FlxColor"          => CoolUtil.getMacroAbstractClass("flixel.util.FlxColor"),
+
             // Engine related stuff
             "engine"            => {
                 build: funkin.macros.BuildCounterMacro.getBuildNumber(),
@@ -97,10 +98,13 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "hl" => #if hl true #else false #end,
             "neko" => #if neko true #else false #end,
             "linux" => #if linux true #else false #end,
+            "mac" => #if mac true #else false #end,
             "macos" => #if macos true #else false #end,
             "android" => #if android true #else false #end,
             "web" => #if web true #else false #end,
             "debug" => #if debug true #else false #end,
+            "release" => #if release true #else false #end,
+            "final" => #if final true #else false #end,
             "MOD_SUPPORT" => #if MOD_SUPPORT true #else false #end,
             "GLOBAL_SCRIPT" => #if GLOBAL_SCRIPT true #else false #end,
             "SOFTCODED_STATES" => #if SOFTCODED_STATES true #else false #end,

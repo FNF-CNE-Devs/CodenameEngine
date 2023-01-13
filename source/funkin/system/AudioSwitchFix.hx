@@ -8,7 +8,7 @@ import flixel.FlxG;
 
 /**
  * if youre stealing this keep this comment at least please lol
- * 
+ *
  * hi gray itsa me yoshicrafter29 i fixed it hehe
  */
 @:dox(hide)
@@ -30,9 +30,9 @@ class AudioSwitchFix {
 				}
 				if (FlxG.sound.music != null)
 					FlxG.sound.music.stop();
-				
-                AudioManager.shutdown();
-                AudioManager.init();
+
+				AudioManager.shutdown();
+				AudioManager.init();
 				// #if !lime_doc_gen
 				// if (AudioManager.context.type == OPENAL)
 				// {
@@ -45,7 +45,7 @@ class AudioSwitchFix {
 				// }
 				// #end
 				Main.changeID++;
-				
+
 				for(e in playingList) {
 					e.sound.play(e.time);
 				}
@@ -55,12 +55,12 @@ class AudioSwitchFix {
 		#end
 	}
 
-    public static function init() {
-        #if windows
+	public static function init() {
+		#if windows
 		WindowsAPI.registerAudio();
-        FlxG.signals.preStateCreate.add(onStateSwitch);
-        #end
-    }
+		FlxG.signals.preStateCreate.add(onStateSwitch);
+		#end
+	}
 }
 
 typedef PlayingSound = {

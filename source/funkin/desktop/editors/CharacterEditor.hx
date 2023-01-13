@@ -83,6 +83,7 @@ class CharacterEditor extends WindowContent {
         camFollow = new FlxObject(0, 0, 2, 2);
         camFollow.setPosition(charMidpoint.x, charMidpoint.y);
         add(camFollow);
+        charMidpoint.put();
         windowCamera.follow(camFollow, LOCKON, 999);
 
         // loading animations from character

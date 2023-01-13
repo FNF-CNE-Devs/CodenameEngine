@@ -38,7 +38,7 @@ import funkin.mods.ModsFolder;
 class Main extends Sprite
 {
 	public static var instance:Main;
-	
+
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
@@ -102,7 +102,7 @@ class Main extends Sprite
 		loadGameSettings();
 		// FlxG.switchState(new TitleState());
 		FlxG.switchState(new funkin.menus.BetaWarningState());
-		
+
 		#if !mobile
 		addChild(new FramerateField(10, 3, 0xFFFFFF));
 		#end
@@ -110,10 +110,10 @@ class Main extends Sprite
 
 	@:dox(hide)
 	public static var audioDisconnected:Bool = false;
-	
+
 	public static var changeID:Int = 0;
 
-	
+
 	private static var __threadCycle:Int = 0;
 	public static function execAsync(func:Void->Void) {
 		#if ALLOW_MULTITHREADING
@@ -152,18 +152,32 @@ class Main extends Sprite
 		#if GLOBAL_SCRIPT
 		funkin.scripting.GlobalScript.init();
 		#end
-		
+
 		#if sys
 		if (Sys.args().contains("-livereload")) {
+			var pathBack = #if windows
+				"../../../../"
+			#elseif mac
+				"../../../../../../../"
+			#else
+				""
+			#end;
+
 			#if USE_SOURCE_ASSETS
+			#if windows
 			trace("Used lime test windows. Switching into source assets.");
-			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './../../../../assets/', true));
+			#elseif mac
+			trace("Used lime test mac. Switching into source assets.");
+			#elseif linux
+			trace("Used lime test linux. Switching into source assets.");
+			#end
+			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './${pathBack}assets/', true));
 			Paths.assetsTree.sourceLibsAmount++;
 			#end
 
-			var buildNum:Int = Std.parseInt(File.getContent("./../../../../buildnumber.txt"));
+			var buildNum:Int = Std.parseInt(File.getContent('./${pathBack}buildnumber.txt'));
 			buildNum++;
-			File.saveContent("./../../../../buildnumber.txt", Std.string(buildNum));
+			File.saveContent('./${pathBack}buildnumber.txt', Std.string(buildNum));
 		} else {
 			#if USE_ADAPTED_ASSETS
 			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './assets/', true));
@@ -218,20 +232,20 @@ class Main extends Sprite
 			{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 	}
 
-    private static function onStateSwitch(newState:FlxState) {
-        // manual asset clearing since base openfl one doesnt clear lime one
-        // doesnt clear bitmaps since flixel fork does it auto
-        
-        var cache = cast(Assets.cache, AssetCache);
-        for (key=>font in cache.font)
-            cache.removeFont(key);
-        for (key=>sound in cache.sound)
-            cache.removeSound(key);
+	private static function onStateSwitch(newState:FlxState) {
+		// manual asset clearing since base openfl one doesnt clear lime one
+		// doesnt clear bitmaps since flixel fork does it auto
+
+		var cache = cast(Assets.cache, AssetCache);
+		for (key=>font in cache.font)
+			cache.removeFont(key);
+		for (key=>sound in cache.sound)
+			cache.removeSound(key);
 
 		Paths.assetsTree.clearCache();
 
 		#if cpp
 		cpp.vm.Gc.run(true);
 		#end
-    }
+	}
 }

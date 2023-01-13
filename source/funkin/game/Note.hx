@@ -242,4 +242,15 @@ class Note extends FlxSprite
 	public function setClipRect(rect:FlxRect) {
 		this.clipRect = rect;
 	}
+
+	@:noCompletion
+	override function set_clipRect(rect:FlxRect):FlxRect
+	{
+		clipRect = rect;
+
+		if (frames != null)
+			frame = frames.frames[animation.frameIndex];
+
+		return rect;
+	}
 }

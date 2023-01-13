@@ -54,7 +54,7 @@ class StateWindow extends Sprite {
 
     }
     
-    var oldSize = FlxPoint.get(FlxG.width, FlxG.height);
+    var oldSize = new FlxPoint(FlxG.width, FlxG.height);
     var oldCamList:Array<FlxCamera>;
     var oldCamDefaults:Array<FlxCamera>;
     var oldCam:FlxCamera;
