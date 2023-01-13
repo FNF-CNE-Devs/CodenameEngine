@@ -12,7 +12,7 @@ import openfl.utils.Assets;
 class Script extends FlxBasic implements IFlxDestroyable {
     /**
      * Use "static var thing = true;" in hscript to use those!!
-     * are reset every mod switch so once youre done with them make sure to make them null!!
+     * are reset every mod switch so once you're done with them make sure to make them null!!
      */
     public static var staticVariables:Map<String, Dynamic> = [];
 
@@ -155,7 +155,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
     /**
      * Creates a new instance of the script class.
-     * @param path 
+     * @param path
      */
     public function new(path:String) {
         super();
@@ -184,14 +184,14 @@ class Script extends FlxBasic implements IFlxDestroyable {
      * Sets the "public" variables map for ScriptPack
      */
     public function setPublicMap(map:Map<String, Dynamic>) {
-        
+
     }
 
     /**
      * Hot-reloads the script, if possible
      */
     public function reload() {
-        
+
     }
 
     /**
@@ -204,7 +204,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
         ], TRACE);
     }
 
-    
+
     /**
      * Calls the function `func` defined in the script.
      * @param func Name of the function
@@ -216,13 +216,13 @@ class Script extends FlxBasic implements IFlxDestroyable {
         curScript = this;
 
         var result = onCall(func, parameters == null ? [] : parameters);
-        
+
         curScript = oldScript;
         return result;
     }
 
     /**
-     * Sets a script's parent object so that its properties can be accessed easily. Ex: Passing `PlayState.instace` will allow `boyfriend` to be typed instead of `PlayState.instance.boyfriend`.
+     * Sets a script's parent object so that its properties can be accessed easily. Ex: Passing `PlayState.instance` will allow `boyfriend` to be typed instead of `PlayState.instance.boyfriend`.
      * @param variable Parent variable.
      */
     public function setParent(variable:Dynamic) {}

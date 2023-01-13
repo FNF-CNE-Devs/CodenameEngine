@@ -7,10 +7,10 @@ import flixel.FlxSprite;
 import openfl.display.BitmapData;
 
 /**
- * @author Ne_Eo 
+ * @author Ne_Eo
  * @see https://twitter.com/Ne_Eo_Twitch
- * 
- * @author lunarclient
+ *
+ * @author lunarcleint
  * @see https://twitter.com/lunarcleint
  */
 class FlxView3D extends FlxSprite
@@ -18,20 +18,20 @@ class FlxView3D extends FlxSprite
 	@:noCompletion private var bmp:BitmapData;
 
 	/**
-	 * The Away3D View 
+	 * The Away3D View
 	 */
 	public var view:View3D;
 
 	/**
 	 * Set this flag to true to force the View3D to update during the `draw()` call.
 	 */
-	 public var dirty3D:Bool = true;
+	public var dirty3D:Bool = true;
 
 	/**
 	 * Creates a new instance of a View3D from Away3D and renders it as a FlxSprite
 	 * ! Call Flx3DUtil.is3DAvailable(); to make sure a 3D stage is usable
-	 * @param x 
-	 * @param y 
+	 * @param x
+	 * @param y
 	 * @param width Leave as -1 for screen width
 	 * @param height Leave as -1 for screen height
 	 */
@@ -54,7 +54,7 @@ class FlxView3D extends FlxSprite
 
 	/**
 	 * Disposes (destroys) the asset and returns null
-	 * @param obj 
+	 * @param obj
 	 * @return T null
 	 */
 	public static function dispose<T:IAsset>(obj:Null<T>):T
@@ -76,12 +76,11 @@ class FlxView3D extends FlxSprite
 			bmp = null;
 		}
 
-		if (view != null) 
+		if (view != null)
 		{
 			view.dispose();
 			view = null;
 		}
-	
 	}
 
 	@:noCompletion override function draw()

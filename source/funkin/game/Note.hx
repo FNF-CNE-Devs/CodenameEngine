@@ -11,9 +11,6 @@ import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
 import funkin.system.Conductor;
 import funkin.scripting.events.*;
-#if polymod
-import polymod.format.ParseRules.TargetSignatureElement;
-#end
 
 using StringTools;
 

@@ -43,16 +43,16 @@
 	<set name="BUILD_DIR" value="latest/" if="beta" />
 
 	<classpath name="source" />
-	
+
 	<define name="PRELOAD_ALL" unless="web" />
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
-	
+
 	<library name="assets"    preload="true"  if="PRELOAD_ALL"/>
 	<library name="assets"    preload="false" if="NO_PRELOAD_ALL" />
-	
+
 	<assets path="assets/"    rename="assets"	exclude="*.ogg" if="web"/>
 	<assets path="assets/"    rename="assets"	exclude="*.mp3" unless="web"/>
-	
+
 	<assets path='mods' rename='mods' embed='false'/>
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 
@@ -60,13 +60,13 @@
 
 	<!--Enable the Flixel core recording system-->
 	<!--<haxedef name="FLX_RECORD" />-->
-	
+
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
 
-	<!--Enable this for Nape release builds for a serious peformance improvement-->
+	<!--Enable this for Nape release builds for a serious performance improvement-->
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
 	<!-- _________________________________ Custom _______________________________ -->
@@ -127,7 +127,7 @@
 
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
 	<define name="VIDEO_CUTSCENES" unless="web || linux || hl || mac" />
-	
+
 
 	<haxedef name="VIDEO_CUTSCENES" if="VIDEO_CUTSCENES" />
 	<haxedef name="UPDATE_CHECKING" if="UPDATE_CHECKING" />
@@ -135,12 +135,12 @@
 	<haxeflag name="--macro" value="funkin.macros.StdDeprecationsRemover.init()" />
 	<!-- _______________________________ Libraries ______________________________ -->
 
-	
+
 	<haxelib name="hxCodec" if="VIDEO_CUTSCENES" />
 	<haxelib name="away3d" />
 	<haxelib name="format" />
 	<haxelib name="flxanimate" />
-	
+
 	<haxelib name="flixel-yc29" rename="flixel" />
 	<haxedev set='webgl' />
 
@@ -148,11 +148,11 @@
 	<haxelib name="linc_discord-rpc" if="DISCORD_RPC"/>
 
 	<haxelib name="markdown" />
-	
+
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
-	
+
 	<!-- _________________________________ HScript classes _______________________________ -->
-	
+
 
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
@@ -160,7 +160,7 @@
 	</section>
 	<haxeflag name="--macro" value="exclude('funkin.updating')" unless="UPDATE_CHECKING"/>
 	<haxeflag name="--macro" value="exclude('funkin.multitasking')" unless="ALLOW_MULTITASKING"/>
-	
+
 	<!-- MACROS & DOCUMENTATION !-->
 	<haxeflag name="--macro" value="funkin.macros.BuildCounterMacro.getBuildNumber()" />
 

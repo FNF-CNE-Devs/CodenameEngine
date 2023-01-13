@@ -55,7 +55,7 @@ enum Device
 
 /**
  * Since, in many cases multiple actions should use similar keys, we don't want the
- * rebinding UI to list every action. ActionBinders are what the user percieves as
+ * rebinding UI to list every action. ActionBinders are what the user perceives as
  * an input so, for instance, they can't set jump-press and jump-release to different keys.
  */
 enum Control

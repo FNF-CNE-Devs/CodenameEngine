@@ -86,7 +86,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 			if (stateScript == null || stateScript is DummyScript) {
 				var className = Type.getClassName(Type.getClass(this));
 				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
-		
+
 				stateScript = Script.create(Paths.script('data/states/${scriptName}'));
 				stateScript.setParent(this);
 				stateScript.load();
@@ -144,7 +144,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 				Logs.trace('State script successfully reloaded', WARNING, GREEN);
 		}
 		call("update", [elapsed]);
-		
+
 		super.update(elapsed);
 	}
 
@@ -165,7 +165,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	 * @param v1 Value 1
 	 * @param v2 Value 2
 	 * @param ratio Ratio
-	 * @param fpsSensitive Whenever the ratio should not be adjusted to run at the same speed independant of framerate.
+	 * @param fpsSensitive Whenever the ratio should not be adjusted to run at the same speed independent of framerate.
 	 */
 	public function lerp(v1:Float, v2:Float, ratio:Float, fpsSensitive:Bool = false) {
 		if (fpsSensitive)
@@ -175,7 +175,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	}
 
 	/**
-	 * SCRIPTING STUFF 
+	 * SCRIPTING STUFF
 	 */
 	public override function openSubState(subState:FlxSubState) {
 		var e = event("onOpenSubState", EventManager.get(StateEvent).recycle(subState));
@@ -191,7 +191,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	public override function destroy() {
 		if (parentWindow == null)
 			super.destroy();
-		
+
 		call("onDestroy");
 		if (stateScript != null)
 			stateScript.destroy();

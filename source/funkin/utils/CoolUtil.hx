@@ -61,7 +61,7 @@ class CoolUtil
 			var f:Null<Dynamic> = Reflect.field(v, name);
 			if (f != null)
 				return cast f;
-		} 
+		}
 		Reflect.setField(v, name, defaultValue);
 		return defaultValue;
 	}
@@ -90,7 +90,7 @@ class CoolUtil
 	 * @param color1 Color 1
 	 * @param color2 Color 2
 	 * @param ratio Ratio
-	 * @param fpsSensitive Whenever the ratio should be case sentivive (adapted when game is running at 120 instead of 60)
+	 * @param fpsSensitive Whenever the ratio should be fps sensitive (adapted when game is running at 120 instead of 60)
 	 */
 	public static inline function lerpColor(color1:FlxColor, color2:FlxColor, ratio:Float, fpsSensitive:Bool = false) {
 		if (!fpsSensitive)
@@ -114,7 +114,7 @@ class CoolUtil
 	public static function getColorFromDynamic(c:Dynamic):Null<FlxColor> {
 		// -1
 		if (c is Int) return c;
-		
+
 		// -1.0
 		if (c is Float) return Std.int(c);
 
@@ -263,9 +263,9 @@ class CoolUtil
 	}
 
 	public static function loadWeek(weekData:WeekData, difficulty:String = "normal") {
-        PlayState.storyWeek = weekData;
-        PlayState.storyPlaylist = [for(e in weekData.songs) e.name];
-        PlayState.isStoryMode = true;
+		PlayState.storyWeek = weekData;
+		PlayState.storyPlaylist = [for(e in weekData.songs) e.name];
+		PlayState.isStoryMode = true;
 		PlayState.campaignScore = 0;
 		__loadSong(PlayState.storyPlaylist[0], difficulty);
 	}
@@ -331,10 +331,10 @@ class CoolUtil
 			return null;
 		return graph.imageFrame;
 	}
-	
+
 	public static function loadAnimatedGraphic(spr:FlxSprite, path:String) {
 		spr.frames = loadFrames(path);
-		
+
 		if (spr.frames != null && spr.frames.frames != null) {
 			spr.animation.add("idle", [for(i in 0...spr.frames.frames.length) i], 24, true);
 			spr.animation.play("idle");
@@ -376,7 +376,7 @@ class CoolUtil
 	public static function clear<T>(array:Array<T>):Array<T> {
 		while(array.length > 0)
 			array.shift();
-		return array;	
+		return array;
 	}
 
 	public static function pushGroup<T>(array:Array<T>, ...args:T):Array<T> {

@@ -14,7 +14,7 @@ class CancellableEvent implements IFlxDestroyable {
     public var data:Dynamic = {};
 
     /**
-     * Prevents default action from occuring.
+     * Prevents default action from occurring.
      * @param c Whenever the scripts following this one should be called or not. (Defaults to `true`)
      */
     public function preventDefault(c:Bool = false) {

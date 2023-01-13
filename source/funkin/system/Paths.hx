@@ -254,7 +254,7 @@ class Paths
 		var content:Array<String> = [];
 		#if MOD_SUPPORT
 		if (library is funkin.mods.ModsAssetLibrary) {
-			// easy task, can immediatly scan for files!
+			// easy task, can immediately scan for files!
 			var lib = cast(library, funkin.mods.ModsAssetLibrary);
 			content = lib.getFiles(libThing.symbolName);
 			if (addPath) 
