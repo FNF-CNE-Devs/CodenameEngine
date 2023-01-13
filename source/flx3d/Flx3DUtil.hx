@@ -14,7 +14,7 @@ import flixel.FlxG;
 class Flx3DUtil
 {
 	/**
-	 * Returns the total amount of 3D stages (not exculding the ones in use)
+	 * Returns the total amount of 3D stages (not excluding the ones in use)
 	 * @return Int
 	 */
 	public static inline function getTotal3D():Int
@@ -38,7 +38,7 @@ class Flx3DUtil
 
 	/**
 	 * Calls dispose() (destroy) on a Away3D asset
-	 * @param obj 
+	 * @param obj
 	 * @return null
 	 */
 	public static inline function dispose<T:IAsset>(obj:Null<T>):T

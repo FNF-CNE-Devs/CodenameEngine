@@ -17,7 +17,7 @@
             <line text="kawaisprite" />
             <line text="evilsk8er" />
         </text>
-    
+
         <text beat="3">
             <line text="ninjamuffin99" />
             <line text="phantomArcade" />
@@ -25,7 +25,7 @@
             <line text="evilsk8er" />
             <line text="presents" />
         </text>
-        
+
         <text beat="4" /> <!-- clears the screen !-->
 
         <text beat="5">
@@ -37,7 +37,7 @@
             <line text="In association" />
             <line text="with" />
             <line text="Newgrounds" />
-            <sprite path="titlescreen/newgrounds_logo" scale="0.8"/>
+            <sprite path="menus/titlescreen/newgrounds_logo" scale="0.8"/>
         </text>
 
         <text beat="8" /> <!-- clears the screen !-->
@@ -61,7 +61,7 @@
             <line text="Friday" />
             <line text="Night" />
         </text>
-        
+
         <text beat="15">
             <line text="Friday" />
             <line text="Night" />

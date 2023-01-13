@@ -92,6 +92,7 @@ class TitleState extends MusicBeatState
 		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(blackScreen);
 
+		#if !TITLESCREEN_XML
 		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadAnimatedGraphic(Paths.image('newgrounds_logo'));
 		add(ngSpr);
 		ngSpr.visible = false;
@@ -99,6 +100,7 @@ class TitleState extends MusicBeatState
 		ngSpr.updateHitbox();
 		ngSpr.screenCenter(X);
 		ngSpr.antialiasing = true;
+		#end
 
 		FlxG.mouse.visible = false;
 
@@ -213,7 +215,10 @@ class TitleState extends MusicBeatState
 
 	public function deleteCoolText()
 	{
-		while (textGroup.members.length > 0) textGroup.remove(textGroup.members[0], true);
+		while (textGroup.members.length > 0) {
+			textGroup.members[0].destroy();
+			textGroup.remove(textGroup.members[0], true);
+		}
 	}
 
 	override function beatHit(curBeat:Int)
@@ -258,7 +263,7 @@ class TitleState extends MusicBeatState
 		5 => new IntroText(['In association', 'with']),
 		7 => new IntroText(['In association', 'with', 'newgrounds', {
 			name: "newgroundsLogo",
-			path: "titlescreen/newgrounds_logo",
+			path: "menus/titlescreen/newgrounds_logo",
 			scale: 0.8
 		}]),
 		8 => new IntroText(),
@@ -330,7 +335,9 @@ class TitleState extends MusicBeatState
 	{
 		if (!skippedIntro)
 		{
+			#if !TITLESCREEN_XML
 			remove(ngSpr);
+			#end
 
 			FlxG.camera.flash(FlxColor.WHITE, 4);
 			remove(blackScreen);
@@ -363,7 +370,13 @@ class IntroText {
 
 				var scale:Float = CoolUtil.getDefault(image.scale, 1);
 
-				var sprite = new FlxSprite(0, 200).loadAnimatedGraphic(Paths.image(image.path));
+				var yPos:Float = 200;
+				if(state.textGroup.members.length > 0) {
+					var lastLine:FlxSprite = cast state.textGroup.members[state.textGroup.members.length-1];
+					yPos = lastLine.y + lastLine.height + 10;
+				}
+
+				var sprite = new FlxSprite(0, yPos).loadAnimatedGraphic(Paths.image(image.path));
 				sprite.flipX = CoolUtil.getDefault(image.flipX, false);
 				sprite.flipY = CoolUtil.getDefault(image.flipY, false);
 				sprite.scale.set(scale, scale);

@@ -17,7 +17,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 
-	
+
 	/**
 	 * Current step
 	 */
@@ -37,19 +37,19 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	 /**
 	  * Current song position (in milliseconds).
 	  */
-	 public var songPos(get, never):Float;
- 
-	 inline function get_curStep():Int
-		 return Conductor.curStep;
-	 inline function get_curBeat():Int
-		 return Conductor.curBeat;
-	 inline function get_curStepFloat():Float
-		 return Conductor.curStepFloat;
-	 inline function get_curBeatFloat():Float
-		 return Conductor.curBeatFloat;
-	 inline function get_songPos():Float
-		 return Conductor.songPosition;
-	 
+	public var songPos(get, never):Float;
+
+	inline function get_curStep():Int
+		return Conductor.curStep;
+	inline function get_curBeat():Int
+		return Conductor.curBeat;
+	inline function get_curStepFloat():Float
+		return Conductor.curStepFloat;
+	inline function get_curBeatFloat():Float
+		return Conductor.curBeatFloat;
+	inline function get_songPos():Float
+		return Conductor.songPosition;
+
 
 	/**
 	 * Current injected script attached to the state. To add one, create a file at path "data/states/stateName" (ex: "data/states/PauseMenuSubstate.hx")
@@ -81,7 +81,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 			if (stateScript == null || stateScript is DummyScript) {
 				var className = Type.getClassName(Type.getClass(this));
 				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
-		
+
 				stateScript = Script.create(Paths.script('data/states/${scriptName}'));
 				stateScript.setParent(this);
 				stateScript.load();
@@ -168,7 +168,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	 * @param v1 Value 1
 	 * @param v2 Value 2
 	 * @param ratio Ratio
-	 * @param fpsSensitive Whenever the ratio should not be adjusted to run at the same speed independant of framerate.
+	 * @param fpsSensitive Whenever the ratio should not be adjusted to run at the same speed independent of framerate.
 	 */
 	public function lerp(v1:Float, v2:Float, ratio:Float, fpsSensitive:Bool = false) {
 		if (fpsSensitive)
@@ -178,7 +178,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	}
 
 	/**
-	 * SCRIPTING STUFF 
+	 * SCRIPTING STUFF
 	 */
 	public override function openSubState(subState:FlxSubState) {
 		var e = event("onOpenSubState", EventManager.get(StateEvent).recycle(subState));

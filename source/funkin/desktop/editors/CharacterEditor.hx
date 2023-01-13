@@ -75,7 +75,7 @@ class CharacterEditor extends WindowContent {
         add(bg);
         add(stageFront);
         add(char);
-        
+
         title = 'Character Editor - ${char.curCharacter}.xml';
 
         // character setup & following
@@ -143,13 +143,13 @@ class CharacterEditor extends WindowContent {
                         callback: resetCamZoom
                     },
                     {
-                        name: "Show a Boyfriend Silouhette"
+                        name: "Show a Boyfriend Silhouette"
                     },
                     {
-                        name: "Show a Dad Silouhette"
+                        name: "Show a Dad Silhouette"
                     },
                     {
-                        name: "Show a Girlfriend Silouhette"
+                        name: "Show a Girlfriend Silhouette"
                     }
                 ]
             },
@@ -197,7 +197,7 @@ class CharacterEditor extends WindowContent {
         content.push(animPrefixInput = new InputBox(10, label.y + label.height, 380, ""));
 
         content.push(animLoopCheckbox = new Checkbox(10, animPrefixInput.y + animPrefixInput.height + 10, 380, "Loop"));
-        
+
         content.push(label = new WindowText(10, animLoopCheckbox.y + animLoopCheckbox.height + 10, 0, "Animation FPS (Frames per second)"));
         content.push(animFpsStepper = new NumericStepper(10, label.y + label.height, 380, 0));
 
@@ -207,7 +207,7 @@ class CharacterEditor extends WindowContent {
 
         for(e in [animOffsetX, animOffsetY])
             e.increment = 10;
-        
+
         for(spr in content)
             tabView.tabs[0].add(spr);
     }
@@ -221,18 +221,18 @@ class CharacterEditor extends WindowContent {
 
         content.push(label = new WindowText(10, content.last().y + content.last().height, 0, "Icon Name (images/icons/)"));
         content.push(charIconInput = new InputBox(10, label.y + label.height, 380, char.icon.getDefault("")));
-        
+
         content.push(charIsPlayerCheckbox = new Checkbox(10, content.last().y + content.last().height + 10, 380, "Playable character"));
         content.push(label = new WindowText(10, content.last().y + content.last().height, 380, "(Offsets are automatically fixed when playing as a non-playable character and vice versa)"));
         charIsPlayerCheckbox.checked = char.xml.getAtt("isPlayer") == "true";
-        
+
         content.push(charIsGFCheckbox = new Checkbox(10, content.last().y + content.last().height + 10, 380, "Is Girlfriend"));
         content.push(label = new WindowText(10, content.last().y + content.last().height, 380, "(Characters marked as Girlfriend will replace GF when used as opponent)"));
         charIsGFCheckbox.checked = char.isGF;
-        
+
         content.push(charFlipXCheckbox = new Checkbox(10, content.last().y + content.last().height + 10, 380, "Flip Horizontally"));
         charFlipXCheckbox.checked = char.__baseFlipped != char.isPlayer;
-        
+
         for(spr in content)
             tabView.tabs[1].add(spr);
     }
@@ -306,7 +306,7 @@ class CharacterEditor extends WindowContent {
     /**
      * =========== CONTEXT MENU OPTIONS ===========
      */
-    
+
     /**
      * View
      */

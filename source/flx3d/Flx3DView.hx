@@ -44,7 +44,7 @@ class Flx3DView extends FlxView3D {
         var model = Assets.getBytes(assetPath);
         if (model == null)
             throw 'Model at ${assetPath} was not found.';
-        
+
         var context = new AssetLoaderContext();
         var noExt = Path.withoutExtension(assetPath);
         trace(noExt);
@@ -113,7 +113,7 @@ class Flx3DView extends FlxView3D {
             if (onAssetCallback != null)
                 onAssetCallback(event);
         });
-        
+
         token.addEventListener(LoaderEvent.RESOURCE_COMPLETE, (_) -> {
             trace("Loader Finished...");
 

@@ -12,16 +12,16 @@ class NoteHitEvent extends CancellableEvent {
     @:dox(hide) public var autoHitLastSustain:Bool = true;
 
     /**
-        Whenever a miss should be added.
-    **/
+     * Whenever a miss should be added.
+     */
     public var misses:Bool = true;
     /**
-        Whenever a miss should be added.
-    **/
+     * Whenever a miss should be added.
+     */
     public var countAsCombo:Bool = true;
     /**
-        Whenever ratings should be shown or not.
-    **/
+     * Whenever ratings should be shown or not.
+     */
     public var showRating:Null<Bool> = null;
     /**
      * Note that has been pressed
@@ -141,7 +141,7 @@ class NoteHitEvent extends CancellableEvent {
     }
     @:dox(hide)
     public function cancelCamZooming() {preventCamZooming();}
-    
+
     /**
      * Prevents the sustain tail (the last one) from being automatically hit when the sustain before it is hit.
      */
@@ -150,7 +150,7 @@ class NoteHitEvent extends CancellableEvent {
     }
     @:dox(hide)
     public function cancelLastSustainHit() {preventLastSustainHit();}
-    
+
     /**
      * Prevents the strum from glowing after this note has been pressed.
      */
@@ -160,7 +160,7 @@ class NoteHitEvent extends CancellableEvent {
     @:dox(hide)
     public function cancelStrumGlow() {preventStrumGlow();}
 
-    private inline function get_character() 
+    private inline function get_character()
         return characters[0];
     private function set_character(char:Character) {
         characters = [char];
