@@ -10,6 +10,8 @@ import openfl.system.System;
 import openfl.display.Application;
 import flixel.math.FlxMath;
 import flixel.FlxG;
+import openfl.display._internal.stats.Context3DStats;
+import openfl.display._internal.stats.DrawCallContext;
 
 class FramerateField extends TextField {
     public var showFPS:Bool = true;
@@ -100,6 +102,13 @@ class FramerateField extends TextField {
                         text.push(Std.string(e));
                 }
             }
+            #if (gl_stats && !disable_cffi && (!html5 || !canvas))
+            text.push('=== STATS ===');
+            text.push("totalDC: " + Context3DStats.totalDrawCalls());
+            text.push("stageDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE));
+            text.push("stage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D));
+            #end
+
         }
         this.text = text.join("\n");
     }

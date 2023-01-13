@@ -815,10 +815,11 @@ class PlayState extends MusicBeatState
 		scripts.call("destroy");
 		super.destroy();
 		FlxDestroyUtil.destroy(scripts);
-		instance = null;
-		if (vocals != null) {
-			vocals.destroy();
+		@:privateAccess {
+			FlxG.sound.destroySound(inst);
+			FlxG.sound.destroySound(vocals);
 		}
+		instance = null;
 	}
 
 	public function generateNotes(songData:SwagSong) {
@@ -904,6 +905,8 @@ class PlayState extends MusicBeatState
 		if (SONG.needsVoices)
 			vocals.loadEmbedded(Paths.voices(PlayState.SONG.song));
 		FlxG.sound.list.add(vocals);
+
+		inst.persist = vocals.persist = false;
 
 		notes = new NoteGroup();
 		add(notes);
