@@ -13,9 +13,9 @@ class AudioSource
 {
 	public var onComplete = new Event<Void->Void>();
 	public var buffer:AudioBuffer;
-	public var currentTime(get, set):Int;
+	public var currentTime(get, set):Float;
 	public var gain(get, set):Float;
-	public var length(get, set):Int;
+	public var length(get, set):Float;
 	public var loops(get, set):Int;
 	public var pitch(get, set):Float;
 	public var offset:Int;
@@ -69,12 +69,12 @@ class AudioSource
 	}
 
 	// Get & Set Methods
-	@:noCompletion private function get_currentTime():Int
+	@:noCompletion private function get_currentTime():Float
 	{
 		return __backend.getCurrentTime();
 	}
 
-	@:noCompletion private function set_currentTime(value:Int):Int
+	@:noCompletion private function set_currentTime(value:Float):Float
 	{
 		return __backend.setCurrentTime(value);
 	}
@@ -89,12 +89,12 @@ class AudioSource
 		return __backend.setGain(value);
 	}
 
-	@:noCompletion private function get_length():Int
+	@:noCompletion private function get_length():Float
 	{
 		return __backend.getLength();
 	}
 
-	@:noCompletion private function set_length(value:Int):Int
+	@:noCompletion private function set_length(value:Float):Float
 	{
 		return __backend.setLength(value);
 	}

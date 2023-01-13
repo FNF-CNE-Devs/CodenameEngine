@@ -599,16 +599,16 @@ class Sound extends EventDispatcher
 		#end
 	}
 
-    var changeID:Int = 0;
-    public function regen() {
-        var audioBuffer = new AudioBuffer();
+	var changeID:Int = 0;
+	public function regen() {
+		var audioBuffer = new AudioBuffer();
 		audioBuffer.bitsPerSample = __buffer.bitsPerSample;
 		audioBuffer.channels = __buffer.channels;
 		audioBuffer.data = __buffer.data;
 		audioBuffer.sampleRate = __buffer.sampleRate;
 
 		__buffer = audioBuffer;
-    }
+	}
 
 	/**
 		Generates a new SoundChannel object to play back the sound. This method
@@ -636,10 +636,10 @@ class Sound extends EventDispatcher
 			return null;
 		}
 
-        if (changeID < funkin.system.Main.changeID) {
-            changeID = funkin.system.Main.changeID;
-            regen();
-        }
+		if (changeID < funkin.system.Main.changeID) {
+			changeID = funkin.system.Main.changeID;
+			regen();
+		}
 
 		if (sndTransform == null)
 		{
@@ -653,7 +653,7 @@ class Sound extends EventDispatcher
 		var pan = SoundMixer.__soundTransform.pan + sndTransform.pan;
 
 		if (pan > 1) pan = 1;
-		if (pan < -1) pan = -1;
+		else if (pan < -1) pan = -1;
 
 		var volume = SoundMixer.__soundTransform.volume * sndTransform.volume;
 
@@ -680,23 +680,29 @@ class Sound extends EventDispatcher
 		return new ID3Info();
 	}
 
-	@:noCompletion private function get_length():Int
+	@:noCompletion private function get_length():Float
 	{
 		#if lime
 		if (__buffer != null)
 		{
 			#if (js && html5 && howlerjs)
-			return Std.int(__buffer.src.duration() * 1000);
+			return __buffer.src.duration() * 1000;
 			#else
 			if (__buffer.data != null)
 			{
-				var samples = (__buffer.data.length * 8) / (__buffer.channels * __buffer.bitsPerSample);
-				return Std.int(samples / __buffer.sampleRate * 1000);
+				// var samples = (__buffer.data.length * 8) / (__buffer.channels * __buffer.bitsPerSample);
+				// return Std.int(samples / __buffer.sampleRate * 1000);
+				var samples = (Int64.make(0, __buffer.data.length) * Int64.ofInt(8)) / Int64.ofInt(__buffer.channels * __buffer.bitsPerSample);
+				var value = samples / Int64.ofInt(__buffer.sampleRate) * Int64.ofInt(1000);
+				return Int64.toInt(value);
 			}
 			else if (__buffer.__srcVorbisFile != null)
 			{
-				var samples = Int64.toInt(__buffer.__srcVorbisFile.pcmTotal());
-				return Std.int(samples / __buffer.sampleRate * 1000);
+				//var samples = Int64.toInt(__buffer.__srcVorbisFile.pcmTotal());
+				//return Std.int(samples / __buffer.sampleRate * 1000);
+				var samples = __buffer.__srcVorbisFile.pcmTotal();
+				var value = Int64.fromFloat(__buffer.__srcVorbisFile.timeTotal()) * 1000;
+				return Int64.toInt(value);
 			}
 			else
 			{
