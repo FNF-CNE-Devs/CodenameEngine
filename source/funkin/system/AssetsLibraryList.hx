@@ -95,16 +95,12 @@ class AssetsLibraryList extends AssetLibrary {
 
     public function getSpecificAsset(id:String, type:String, source:AssetSource = BOTH):Dynamic {
         try {
-            #if cpp
-            cpp.vm.Gc.enable(false);
-            #end
+            MemoryUtil.disable();
 
             if (!id.startsWith("assets/")) {
                 var ass = getSpecificAsset('assets/$id', type, source);
                 if (ass != null) {
-                    #if cpp
-                    cpp.vm.Gc.enable(true);
-                    #end
+                    MemoryUtil.enable();
                     return ass;
                 }
             }
@@ -113,22 +109,15 @@ class AssetsLibraryList extends AssetLibrary {
 
                 var asset = e.getAsset(id, type);
                 if (asset != null) {
-                    #if cpp
-                    cpp.vm.Gc.enable(true);
-                    #end
+                    MemoryUtil.enable();
                     return asset;
                 }
             }
-            
-            #if cpp
-            cpp.vm.Gc.enable(true);
-            #end
 
+            MemoryUtil.enable();
             return null;
         } catch(e) {
-            #if cpp
-            cpp.vm.Gc.enable(true);
-            #end
+            MemoryUtil.enable();
             throw e;
         }
         return null;

@@ -244,8 +244,6 @@ class Main extends Sprite
 
 		Paths.assetsTree.clearCache();
 
-		#if cpp
-		cpp.vm.Gc.run(true);
-		#end
+		MemoryUtil.clearMajor();
 	}
 }
