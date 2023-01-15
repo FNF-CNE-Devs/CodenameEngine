@@ -92,7 +92,7 @@
 	<define name="ALLOW_MULTITASKING" />
 
 	<!-- Comment this out to disable updates !-->
-	<define name="UPDATE_CHECKING" unless="web || hl || neko"/>
+	<!-- <define name="UPDATE_CHECKING" unless="web || hl || neko"/> -->
 
 	<!-- Comment this out to disable Discord RPC !-->
 	<define name="DISCORD_RPC" unless="web || hl || neko"/>
