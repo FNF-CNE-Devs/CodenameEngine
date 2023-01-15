@@ -161,6 +161,7 @@ class Note extends FlxSprite
 
 	public var lastScrollSpeed:Null<Float> = null;
 	public var angleOffsets:Bool = true;
+	public var useAntialiasingFix:Bool = false;
 
 	/**
 	 * Whenever the position of the note should be relative to the strum position or not.
@@ -173,8 +174,6 @@ class Note extends FlxSprite
 		@:privateAccess if (__strumCameras != null) FlxCamera._defaultCameras = __strumCameras;
 		
 		var negativeScroll = isSustainNote && nextSustain != null && lastScrollSpeed < 0;
-		if (antialiasing && nextSustain == null)
-			rotOffset.y += 2;
 		if (negativeScroll)	offset.y *= -1;
 
 		if (__strum != null && strumRelativePos) {
@@ -201,8 +200,6 @@ class Note extends FlxSprite
 		}
 
 		if (negativeScroll)	offset.y *= -1;
-		if (antialiasing && nextSustain == null)
-			rotOffset.y -= 2;
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
 	}
 
@@ -223,9 +220,9 @@ class Note extends FlxSprite
 
 			scale.y = (stepLength * (0.45 * FlxMath.roundDecimal(scrollSpeed, 2))) / frameHeight;
 			updateHitbox();
-			if (antialiasing && !FlxG.forceNoAntialiasing) {
+			if (useAntialiasingFix) {
 				// dumbass antialiasing
-				scale.y += 3 / frameHeight;
+				scale.y += 1 / frameHeight;
 			}
 		}
 
