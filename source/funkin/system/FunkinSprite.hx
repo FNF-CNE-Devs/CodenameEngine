@@ -69,6 +69,7 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
         if (Assets.exists('$noExt/Animation.json')
             && Assets.exists('$noExt/spritemap1.json')
             && Assets.exists('$noExt/spritemap1.png')) {
+                Assets.cache.clear(noExt);
                 atlasPath = noExt;
                 animateAtlas = new FlxAnimate(x, y, noExt);
             }
