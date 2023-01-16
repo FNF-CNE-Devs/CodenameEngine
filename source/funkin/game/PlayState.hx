@@ -1436,12 +1436,11 @@ class PlayState extends MusicBeatState
 		}
 
 		var notePerStrum = [for(i in 0...4) null];
-		var additionalNotes:Array<Note> = [];
 		if (__justPressed.contains(true)) {
 			__funcsToExec.push(function(note:Note) {
 				if (__justPressed[note.strumID] && !note.isSustainNote && note.mustPress && !note.wasGoodHit && note.canBeHit) {
 					if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;
-					else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 10) additionalNotes.push(note);
+					else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 5) deleteNote(note);
 					else if (note.strumTime < notePerStrum[note.strumID].strumTime)					notePerStrum[note.strumID] = note;
 				}
 			});
@@ -1454,7 +1453,6 @@ class PlayState extends MusicBeatState
 		}
 
 		for(e in notePerStrum) if (e != null) goodNoteHit(e);
-		for(e in additionalNotes) goodNoteHit(e);
 
 		playerStrums.forEach(function(str:Strum) {
 			str.updatePlayerInput(__pressed[str.ID], __justPressed[str.ID], __justReleased[str.ID]);
@@ -1539,8 +1537,7 @@ class PlayState extends MusicBeatState
 
 		var event:NoteHitEvent;
 		if (note.mustPress)
-			// event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(note, [boyfriend], true, note.noteType, note.strumID, note.noteData > 0 ? 0.023 : 0.004, score, note.animSuffix, daRating, note.isSustainNote ? null : accuracy, "game/score/", ''));
-			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, [boyfriend], true, note.noteType, "", "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, daRating == "sick"));
+			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, [boyfriend], true, note.noteType, "", "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, !note.isSustainNote && daRating == "sick"));
 		else
 			event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, [dad], false, note.noteType, "", "game/score/", "", note.strumID, 0, null, 0, daRating, false));
 
