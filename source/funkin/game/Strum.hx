@@ -16,14 +16,14 @@ class Strum extends FlxSprite {
     
     public var lastDrawCameras(default, null):Array<FlxCamera> = [];
 
-    public function getScrollSpeed(?note:Note) {
+    public inline function getScrollSpeed(?note:Note):Float {
         if (note != null && note.scrollSpeed != null) return note.scrollSpeed;
         if (scrollSpeed != null) return scrollSpeed;
         if (PlayState.instance != null) return PlayState.instance.scrollSpeed;
         return 1;
     }
     
-    public function getNotesAngle(?note:Note) {
+    public inline function getNotesAngle(?note:Note):Float {
         if (note != null && note.noteAngle != null) return note.noteAngle;
         if (noteAngle != null) return noteAngle;
         return angle;

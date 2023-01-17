@@ -129,6 +129,7 @@ class Main extends Sprite
 	}
 
 	public function loadGameSettings() {
+		MemoryUtil.init();
 		@:privateAccess
 		FlxG.game.getTimer = getTimer;
 		#if ALLOW_MULTITHREADING
@@ -244,6 +245,7 @@ class Main extends Sprite
 
 		Paths.assetsTree.clearCache();
 
+		MemoryUtil.destroyFlixelZombies();
 		MemoryUtil.clearMajor();
 	}
 }
