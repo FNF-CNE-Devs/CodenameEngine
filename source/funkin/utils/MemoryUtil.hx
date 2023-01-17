@@ -61,7 +61,7 @@ class MemoryUtil {
 
 	public static function destroyFlixelZombies() {
 		#if cpp
-		Gc.enterGCFreeZone();
+		// Gc.enterGCFreeZone();
 
 		while ((_zombie = Gc.getNextZombie()) != null) {
 			_nb++;
@@ -72,7 +72,7 @@ class MemoryUtil {
 		}
 		Sys.println('Zombies: ${_nb}; IFlxDestroyable Zombies: ${_nbD}');
 
-		Gc.exitGCFreeZone();
+		// Gc.exitGCFreeZone();
 		#end
 	}
 }
