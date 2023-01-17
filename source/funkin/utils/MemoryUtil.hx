@@ -14,7 +14,6 @@ import openfl.system.System;
 class MemoryUtil {
 	public static function init() {
 		#if cpp
-		// cpp.NativeGc.addFinalizable(new MemoryUtil(), false);
 		#end
 	}
 	public static function clearMinor() {
