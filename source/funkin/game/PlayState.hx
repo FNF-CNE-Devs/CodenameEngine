@@ -561,6 +561,9 @@ class PlayState extends MusicBeatState
 		for(content in Paths.getFolderContent('images/game/score/', true, true))
 			FlxG.bitmap.add(content);
 
+		for (i in 1...3)
+			FlxG.sound.cache(Paths.sound('missnote$i'), true);
+
 		/**
 		 * END OF PRECACHING
 		 */
