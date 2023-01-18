@@ -578,9 +578,6 @@ class PlayState extends MusicBeatState
 		if (dad != null) add(dad);
 		if (boyfriend != null) add(boyfriend);
 
-
-
-
 		strumLine = new FlxObject(0, 50, FlxG.width, 10);
 		strumLine.scrollFactor.set();
 
@@ -624,8 +621,8 @@ class PlayState extends MusicBeatState
 		health = maxHealth / 2;
 
 
-		iconP1 = new HealthIcon(boyfriend.getIcon(), true);
-		iconP2 = new HealthIcon(dad.getIcon(), false);
+		iconP1 = new HealthIcon(boyfriend != null ? boyfriend.getIcon() : "face", true);
+		iconP2 = new HealthIcon(dad != null ? dad.getIcon() : "face", false);
 		for(icon in [iconP1, iconP2]) {
 			icon.y = healthBar.y - (icon.height / 2);
 			add(icon);
@@ -1123,8 +1120,11 @@ class PlayState extends MusicBeatState
 			// gitaroo man easter egg
 			FlxG.switchState(new GitarooPause());
 		}
-		else
-			openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+		else {
+			var point:FlxPoint = boyfriend != null ? boyfriend.getScreenPosition() : FlxPoint.get();
+			openSubState(new PauseSubState(point.x, point.y));
+			point.put();
+		}
 
 		updateDiscordPresence();
 	}
@@ -1207,8 +1207,8 @@ class PlayState extends MusicBeatState
 
 		if (generatedMusic && curSection != null)
 		{
-			var dadPos = dad.getCameraPosition();
-			var bfPos = boyfriend.getCameraPosition();
+			var dadPos = dad != null ? dad.getCameraPosition() : FlxPoint.get(0,0);
+			var bfPos = boyfriend != null ? boyfriend.getCameraPosition() : FlxPoint.get(0,0);
 			var section = curSection;
 
 			// from dad to bf
@@ -1319,12 +1319,13 @@ class PlayState extends MusicBeatState
 	}
 
 	function gameOver(?character:String, ?gameOverSong:String, ?lossSFX:String, ?retrySFX:String) {
-		character = character.getDefault((boyfriend != null) ? boyfriend.gameOverCharacter : "bf-dead");
+		character = character.getDefault(boyfriend != null ? boyfriend.gameOverCharacter : "bf-dead");
 		gameOverSong = gameOverSong.getDefault(this.gameOverSong);
 		lossSFX = lossSFX.getDefault(this.lossSFX);
 		retrySFX = retrySFX.getDefault(this.retrySFX);
 
-		boyfriend.stunned = true;
+		if (boyfriend != null)
+			boyfriend.stunned = true;
 
 		persistentUpdate = false;
 		persistentDraw = false;
@@ -1334,7 +1335,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
-		openSubState(new GameOverSubstate(boyfriend.x, boyfriend.y, character, gameOverSong, lossSFX, retrySFX));
+		openSubState(new GameOverSubstate(boyfriend == null ? 0 : boyfriend.x, boyfriend == null ? 0 : boyfriend.y, character, gameOverSong, lossSFX, retrySFX));
 	}
 
 	function endSong():Void
