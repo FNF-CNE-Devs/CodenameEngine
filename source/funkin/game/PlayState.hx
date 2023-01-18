@@ -562,7 +562,7 @@ class PlayState extends MusicBeatState
 			FlxG.bitmap.add(content);
 
 		for (i in 1...3)
-			FlxG.sound.cache(Paths.sound('missnote$i'), true);
+			FlxG.sound.cache(Paths.sound('missnote$i'));
 
 		/**
 		 * END OF PRECACHING
