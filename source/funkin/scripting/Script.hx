@@ -110,13 +110,14 @@ class Script extends FlxBasic implements IFlxDestroyable {
             "SOFTCODED_STATES" => #if SOFTCODED_STATES true #else false #end,
             "USE_SOURCE_ASSETS" => #if USE_SOURCE_ASSETS true #else false #end,
             "USE_ADAPTED_ASSETS" => #if USE_ADAPTED_ASSETS true #else false #end,
+            "ENABLE_LUA" => #if ENABLE_LUA true #else false #end,
         ];
     }
     /**
      * All available script extensions
      */
     public static var scriptExtensions:Array<String> = [
-        "hx", "hscript", "hsc", "hxs", "lua" /** ACTUALLY NOT SUPPORTED, ONLY FOR THE MESSAGE **/
+        "hx", "hscript", "hsc", "hxs", "lua"
     ];
 
     /**
@@ -144,8 +145,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
                 case "hx" | "hscript" | "hsc" | "hxs":
                     new HScript(path);
                 case "lua":
-                    Logs.trace("Lua is not supported in this engine. Use HScript instead.", ERROR);
-                    new DummyScript(path);
+                    new LuaScript(path);
                 default:
                     new DummyScript(path);
             }
@@ -159,6 +159,10 @@ class Script extends FlxBasic implements IFlxDestroyable {
      */
     public function new(path:String) {
         super();
+
+        // #if cpp
+        // cpp.vm.Gc.setFinalizer(this, cpp.Callable.fromStaticFunction(onFinalize));
+        // #end
 
         fileName = Path.withoutDirectory(path);
         this.path = path;
@@ -263,10 +267,20 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
     public function onLoad() {}
 
-    public function onDestroy() {};
+    public function onDestroy() {}
 
     public override function destroy() {
         super.destroy();
         onDestroy();
+    }
+
+    private static var __scriptType:Class<Script>;
+    public static function onFinalize(s:Script) {
+        #if cpp
+        // destroy everything
+        Sys.println("GARBAGE COLLECTOR - FINALIZING");
+        s.destroy();
+        Sys.println("GARBAGE COLLECTOR - FINALIZING");
+        #end
     }
 }
