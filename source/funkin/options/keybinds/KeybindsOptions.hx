@@ -205,7 +205,7 @@ class KeybindsOptions extends MusicBeatSubstate {
                     close();
                 else
                     FlxG.switchState(new OptionsMenu());
-                controls.setKeyboardScheme(Solo);
+                Options.applyKeybinds();
                 Options.save();
                 return;
             }

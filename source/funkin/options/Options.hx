@@ -169,9 +169,15 @@ class Options
 	}
 
 	public static function applySettings() {
-		PlayerSettings.player1.setKeyboardScheme(Solo);
+		applyKeybinds();
 		FlxG.game.stage.quality = (FlxG.forceNoAntialiasing = !antialiasing) ? LOW : BEST;
 		FlxG.autoPause = autoPause;
+	}
+
+	public static function applyKeybinds() {
+		PlayerSettings.solo.setKeyboardScheme(Solo);
+		PlayerSettings.player1.setKeyboardScheme(Duo(true));
+		PlayerSettings.player2.setKeyboardScheme(Duo(false));
 	}
 
 	public static function save() {

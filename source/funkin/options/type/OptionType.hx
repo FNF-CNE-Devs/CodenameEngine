@@ -14,7 +14,7 @@ class OptionType extends FlxSpriteGroup {
         this.desc = desc;
     }
 
-    private function get_controls() {return PlayerSettings.player1.controls;}
+    private function get_controls() {return PlayerSettings.solo.controls;}
 
     public function onSelect() {
 

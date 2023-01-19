@@ -19,17 +19,17 @@ class Note extends FlxSprite
 	public var strumTime:Float = 0;
 
 	public var mustPress(get, never):Bool;
-	public var player(get, never):StrumLine;
-	private function get_player() {
+	public var strumLine(get, never):StrumLine;
+	private function get_strumLine() {
 		if (PlayState.instance != null)
-			return PlayState.instance.players[playerID];
+			return PlayState.instance.players[strumLineID];
 		return null;
 	}
 
 	private function get_mustPress():Bool {
 		if (PlayState.instance != null)
-			return PlayState.instance.players[playerID] != null && !PlayState.instance.players[playerID].cpu;
-		return playerID == 1;
+			return PlayState.instance.players[strumLineID] != null && !PlayState.instance.players[strumLineID].cpu;
+		return strumLineID == 1;
 	}
 	public var noteData:Int = 0;
 	public var canBeHit:Bool = false;
@@ -72,7 +72,7 @@ class Note extends FlxSprite
 	public var flipSustain:Bool = true;
 
 	public var noteTypeID:Int = 0;
-	public var playerID:Int = 0;
+	public var strumLineID:Int = 0;
 
 	// TO APPLY THOSE ON A SINGLE NOTE
 	public var scrollSpeed:Null<Float> = null;
@@ -93,7 +93,7 @@ class Note extends FlxSprite
 
 	public var animSuffix:String = "";
 
-	public function new(strumTime:Float, noteData:Int, noteType:Int = 0, playerID:Int = 1, ?prevNote:Note, ?sustainNote:Bool = false, animSuffix:String = "")
+	public function new(strumTime:Float, noteData:Int, noteType:Int = 0, strumLineID:Int = 1, ?prevNote:Note, ?sustainNote:Bool = false, animSuffix:String = "")
 	{
 		super();
 
@@ -101,7 +101,7 @@ class Note extends FlxSprite
 			prevNote = this;
 
 		this.prevNote = prevNote;
-		this.playerID = playerID;
+		this.strumLineID = strumLineID;
 		this.noteTypeID = noteType;
 		isSustainNote = sustainNote;
 
@@ -113,7 +113,7 @@ class Note extends FlxSprite
 		this.noteData = noteData;
 
 		var customType = Paths.image('game/notes/${this.noteType}');
-		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, noteTypeID, playerID, mustPress, Assets.exists(customType) ? 'game/notes/${this.noteType}' : 'game/NOTE_assets', 0.7, animSuffix);
+		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, noteTypeID, strumLineID, mustPress, Assets.exists(customType) ? 'game/notes/${this.noteType}' : 'game/NOTE_assets', 0.7, animSuffix);
 
 		if (PlayState.instance != null)
 			event = PlayState.instance.scripts.event("onNoteCreation", event);

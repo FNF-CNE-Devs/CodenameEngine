@@ -92,6 +92,14 @@ class PlayState extends MusicBeatState
 	 * Whenever the week is coming from the mods folder or not.
 	 */
 	public static var fromMods:Bool = false;
+	/**
+	 * Whenever the song has been started with opponent mode on.
+	 */
+	public static var opponentMode:Bool = false;
+	/**
+	//  * Whenever the song has been started with co-op mode on.
+	 */
+	public static var coopMode:Bool = false;
 
 	/**
 	 * Script Pack of all the scripts being ran.
@@ -123,7 +131,11 @@ class PlayState extends MusicBeatState
 	/**
 	 * Whenever the player can die.
 	 */
-	public var canDie:Bool = true;
+	public var canDie:Bool = !opponentMode && !coopMode;
+	/**
+	 * Whenever the opponent can die.
+	 */
+	public var canDadDie:Bool = opponentMode && !coopMode;
 	/**
 	 * Current scroll speed for all strums.
 	 * To set a scroll speed for a specific strum, use `strum.scrollSpeed`.
@@ -195,6 +207,14 @@ class PlayState extends MusicBeatState
 	 * CPU strums.
 	 */
 	public var cpuStrums:StrumLine;
+	/**
+	 * Shortcut to `playerStrums`.
+	 */
+	public var player(get, set):StrumLine;
+	/**
+	 * Shortcut to `cpuStrums`.
+	 */
+	public var cpu(get, set):StrumLine;
 
 	/**
 	 * Note splashes container
@@ -589,8 +609,8 @@ class PlayState extends MusicBeatState
 		strumLineNotes = new FlxTypedGroup<Strum>();
 		add(strumLineNotes);
 		
-		players.push(cpuStrums = new StrumLine([dad], 0.25, true, controls));
-		players.push(playerStrums = new StrumLine([boyfriend], 0.75, false, controls));
+		players.push(cpuStrums = new StrumLine([dad], 0.25, !coopMode && !opponentMode, true, coopMode ? controlsP2 : controls));
+		players.push(playerStrums = new StrumLine([boyfriend], 0.75, !coopMode && opponentMode, false, coopMode ? controlsP1 : controls));
 
 		splashHandler = new SplashHandler();
 		add(splashHandler);
@@ -621,7 +641,10 @@ class PlayState extends MusicBeatState
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, maxHealth);
 		healthBar.scrollFactor.set();
-		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		if (opponentMode)
+			healthBar.createFilledBar(0xFF66FF33, 0xFFFF0000); // switch the colors
+		else
+			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		add(healthBar);
 
 		health = maxHealth / 2;
@@ -1130,8 +1153,7 @@ class PlayState extends MusicBeatState
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0)) - iconOffset);
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0))) - (iconP2.width - iconOffset);
 
-		if (health > maxHealth)
-			health = maxHealth;
+		health = FlxMath.bound(health, 0, maxHealth);
 
 		iconP1.health = healthBar.percent / 100;
 		iconP2.health = 1 - (healthBar.percent / 100);
@@ -1199,6 +1221,8 @@ class PlayState extends MusicBeatState
 
 		if (health <= 0 && canDie)
 			gameOver();
+		if (health >= maxHealth && canDadDie)
+			gameOver();
 
 		if (generatedMusic) {
 			__updateNote_event = EventManager.get(NoteUpdateEvent);
@@ -1220,7 +1244,7 @@ class PlayState extends MusicBeatState
 	var __updateNote_event:NoteUpdateEvent = null;
 	function updateNote(daNote:Note)
 	{
-		for(e in players[daNote.playerID].members) {
+		for(e in players[daNote.strumLineID].members) {
 			if (e.ID == daNote.noteData % 4) {
 				__updateNote_strum = e;
 				break; //ing bad
@@ -1237,7 +1261,7 @@ class PlayState extends MusicBeatState
 					daNote.tooLate = true;
 			}
 
-			if (event.__autoCPUHit && (daNote.player == null || daNote.player.cpu) && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) goodNoteHit(daNote);
+			if (event.__autoCPUHit && (daNote.strumLine == null || daNote.strumLine.cpu) && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) goodNoteHit(daNote);
 
 			if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.stepLength) < Conductor.songPosition) {
 				deleteNote(daNote);
@@ -1377,7 +1401,7 @@ class PlayState extends MusicBeatState
 	
 			if (__pressed.contains(true)) {
 				__funcsToExec.push(function(note:Note) {
-					if (note.playerID == id && __pressed[note.strumID] && note.isSustainNote && note.canBeHit && !note.wasGoodHit) {
+					if (note.strumLineID == id && __pressed[note.strumID] && note.isSustainNote && note.canBeHit && !note.wasGoodHit) {
 						goodNoteHit(note);
 					}
 				});
@@ -1386,7 +1410,7 @@ class PlayState extends MusicBeatState
 			var notePerStrum = [for(i in 0...4) null];
 			if (__justPressed.contains(true)) {
 				__funcsToExec.push(function(note:Note) {
-					if (__justPressed[note.strumID] && !note.isSustainNote && note.playerID == id && !note.wasGoodHit && note.canBeHit) {
+					if (__justPressed[note.strumID] && !note.isSustainNote && note.strumLineID == id && !note.wasGoodHit && note.canBeHit) {
 						if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;
 						else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 5) deleteNote(note);
 						else if (note.strumTime < notePerStrum[note.strumID].strumTime)					notePerStrum[note.strumID] = note;
@@ -1411,11 +1435,11 @@ class PlayState extends MusicBeatState
 
 	function noteMiss(note:Note):Void
 	{
-		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, [boyfriend], true, note.noteType, "", "", "", note.strumID, -10, 0, -0.04, "shit"));
+		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, note.strumLine.characters, true, note.noteType, "", "", "", note.strumID, -10, 0, -0.04, "shit"));
 
 		if (event.cancelled) return;
 
-		health += event.healthGain;
+		if (event.note.strumLine != null) event.note.strumLine.addHealth(event.healthGain);
 		if (gf != null && combo > 5 && gf.animOffsets.exists('sad'))
 		{
 			gf.playAnim('sad', true, MISS);
@@ -1485,10 +1509,10 @@ class PlayState extends MusicBeatState
 		}
 
 		var event:NoteHitEvent;
-		if (note.player != null && !note.player.cpu)
-			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, note.player.characters, true, note.noteType, "", "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, !note.isSustainNote && daRating == "sick"));
+		if (note.strumLine != null && !note.strumLine.cpu)
+			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, note.strumLine.characters, true, note.noteType, "", "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, !note.isSustainNote && daRating == "sick"));
 		else
-			event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, note.player.characters, false, note.noteType, "", "game/score/", "", note.strumID, 0, null, 0, daRating, false));
+			event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, note.strumLine.characters, false, note.noteType, "", "game/score/", "", note.strumID, 0, null, 0, daRating, false));
 		scripts.event("onNoteHit", event);
 
 		if (!event.cancelled) {
@@ -1576,7 +1600,7 @@ class PlayState extends MusicBeatState
 				ratingNum += 1;
 			}
 
-			health += event.healthGain;
+			if (event.note.strumLine != null) event.note.strumLine.addHealth(event.healthGain);
 
 			if (!event.animCancelled)
 				for(char in event.characters)
@@ -1637,6 +1661,16 @@ class PlayState extends MusicBeatState
 
 		scripts.call("beatHit", [curBeat]);
 	}
+
+	private inline function get_player():StrumLine
+		return playerStrums;
+	private inline function set_player(s:StrumLine):StrumLine
+		return playerStrums = s;
+
+	private inline function get_cpu():StrumLine
+		return cpuStrums;
+	private inline function set_cpu(s:StrumLine):StrumLine
+		return cpuStrums = s;
 }
 
 class ComboRating {

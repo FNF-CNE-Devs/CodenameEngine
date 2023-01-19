@@ -26,7 +26,7 @@ class NoteCreationEvent extends CancellableEvent {
     /**
      * ID of the player.
      */
-    public var playerID:Int;
+    public var strumLineID:Int;
 
     /**
      * Whenever the note will need to be hit by the player

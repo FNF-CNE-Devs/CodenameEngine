@@ -17,20 +17,27 @@ class StrumLine extends FlxTypedGroup<Strum> {
      */
     public var cpu(default, set):Bool = false;
     /**
+     * Whenever this strumline is from the opponent side or the player side.
+     */
+    public var opponentSide:Bool = false;
+    /**
      * Controls assigned to this strumline.
      */
     public var controls:Controls = null;
 
     private var strumOffset:Float = 0.25;
 
-    public function new(characters:Array<Character>, strumOffset:Float = 0.25, cpu:Bool = false, ?controls:Controls) {
+    public function new(characters:Array<Character>, strumOffset:Float = 0.25, cpu:Bool = false, opponentSide:Bool = true, ?controls:Controls) {
         super();
         this.characters = characters;
         this.strumOffset = strumOffset;
         this.cpu = cpu;
+        this.opponentSide = opponentSide;
         this.controls = controls;
     }
 
+    public inline function addHealth(health:Float)
+        PlayState.instance.health += health * (opponentSide ? -1 : 1);
 
     public function generateStrums(amount:Int = 4) {
         for (i in 0...4)
