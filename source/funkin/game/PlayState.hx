@@ -99,6 +99,11 @@ class PlayState extends MusicBeatState
 	public var scripts:ScriptPack;
 
 	/**
+	 * Array of all the players in the stage.
+	 */
+	public var players:Array<StrumLine> = [];
+
+	/**
 	 * Game Over Song. (assets/music/gameOver.ogg)
 	 */
 	public var gameOverSong:String = "gameOver";
@@ -185,11 +190,11 @@ class PlayState extends MusicBeatState
 	/**
 	 * Player strums.
 	 */
-	public var playerStrums:FlxTypedGroup<Strum>;
+	public var playerStrums:StrumLine;
 	/**
 	 * CPU strums.
 	 */
-	public var cpuStrums:FlxTypedGroup<Strum>;
+	public var cpuStrums:StrumLine;
 
 	/**
 	 * Note splashes container
@@ -582,9 +587,10 @@ class PlayState extends MusicBeatState
 		strumLine.scrollFactor.set();
 
 		strumLineNotes = new FlxTypedGroup<Strum>();
-		playerStrums = new FlxTypedGroup<Strum>();
-		cpuStrums = new FlxTypedGroup<Strum>();
 		add(strumLineNotes);
+		
+		players.push(cpuStrums = new StrumLine([dad], 0.25, true, controls));
+		players.push(playerStrums = new StrumLine([boyfriend], 0.75, false, controls));
 
 		splashHandler = new SplashHandler();
 		add(splashHandler);
@@ -720,8 +726,7 @@ class PlayState extends MusicBeatState
 
 		inCutscene = false;
 
-		generateStaticArrows(0);
-		generateStaticArrows(1);
+		generateStrums();
 		scripts.call("onStartCountdown");
 
 		startedCountdown = true;
@@ -806,6 +811,8 @@ class PlayState extends MusicBeatState
 		inst.play();
 
 		updateDiscordPresence();
+		
+		scripts.call("onStartSong");
 	}
 
 	public override function destroy() {
@@ -820,6 +827,8 @@ class PlayState extends MusicBeatState
 	}
 
 	public function generateNotes(songData:SwagSong) {
+		// TODO: redo with proper chart parser & codename chart format
+
 		if (songData == null) return;
 		if (songData.noteTypes == null) songData.noteTypes = [];
 
@@ -858,7 +867,7 @@ class PlayState extends MusicBeatState
 				else
 					swagNote = null;
 
-				swagNote.nextNote = (swagNote = new Note(daStrumTime, daNoteData % 4, daNoteType, gottaHitNote, swagNote, false, section.altAnim ? "-alt" : ""));
+				swagNote.nextNote = (swagNote = new Note(daStrumTime, daNoteData % 4, daNoteType, gottaHitNote ? 1 : 0, swagNote, false, section.altAnim ? "-alt" : ""));
 				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
 				swagNote.stepLength = stepCrochet;
@@ -871,7 +880,7 @@ class PlayState extends MusicBeatState
 				// create sustains
 				for (susNote in 0...Math.floor(susLength))
 				{
-					swagNote = new Note(daStrumTime + (stepCrochet * susNote), daNoteData % 4, daNoteType, gottaHitNote, swagNote, true, section.altAnim ? "-alt" : "");
+					swagNote = new Note(daStrumTime + (stepCrochet * susNote), daNoteData % 4, daNoteType, gottaHitNote ? 1 : 0, swagNote, true, section.altAnim ? "-alt" : "");
 					swagNote.scrollFactor.set();
 					swagNote.stepLength = stepCrochet;
 					notes.add(swagNote);
@@ -942,72 +951,10 @@ class PlayState extends MusicBeatState
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
 
-	private function generateStaticArrows(player:Int):Void
+	private function generateStrums():Void
 	{
-		for (i in 0...4)
-		{
-			// FlxG.log.add(i);
-			var babyArrow:Strum = new Strum((FlxG.width * 0.25) + (Note.swagWidth * (i - 2)) + ((FlxG.width / 2) * player), strumLine.y);
-			babyArrow.ID = i;
-
-			var event = scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, player, i));
-
-			if (!event.cancelled) {
-				switch (curStage)
-				{
-					// case "school":
-					default:
-						babyArrow.frames = Paths.getFrames(event.sprite);
-						babyArrow.animation.addByPrefix('green', 'arrowUP');
-						babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
-						babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
-						babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
-
-						babyArrow.antialiasing = true;
-						babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
-
-						switch (babyArrow.ID % 4)
-						{
-							case 0:
-								babyArrow.animation.addByPrefix('static', 'arrowLEFT');
-								babyArrow.animation.addByPrefix('pressed', 'left press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'left confirm', 24, false);
-							case 1:
-								babyArrow.animation.addByPrefix('static', 'arrowDOWN');
-								babyArrow.animation.addByPrefix('pressed', 'down press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'down confirm', 24, false);
-							case 2:
-								babyArrow.animation.addByPrefix('static', 'arrowUP');
-								babyArrow.animation.addByPrefix('pressed', 'up press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'up confirm', 24, false);
-							case 3:
-								babyArrow.animation.addByPrefix('static', 'arrowRIGHT');
-								babyArrow.animation.addByPrefix('pressed', 'right press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'right confirm', 24, false);
-						}
-				}
-			}
-
-			babyArrow.updateHitbox();
-			babyArrow.scrollFactor.set();
-
-			if (event.__doAnimation)
-			{
-				babyArrow.y -= 10;
-				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
-			}
-
-
-			if (event.player == 1)
-				playerStrums.add(babyArrow);
-			else {
-				babyArrow.cpu = true;
-				cpuStrums.add(babyArrow);
-			}
-			babyArrow.animation.play('static');
-			strumLineNotes.add(babyArrow);
-		}
+		for(p in players)
+			p.generateStrums();
 	}
 
 	override function openSubState(SubState:FlxSubState)
@@ -1273,7 +1220,7 @@ class PlayState extends MusicBeatState
 	var __updateNote_event:NoteUpdateEvent = null;
 	function updateNote(daNote:Note)
 	{
-		for(e in (daNote.mustPress ? playerStrums : cpuStrums).members) {
+		for(e in players[daNote.playerID].members) {
 			if (e.ID == daNote.noteData % 4) {
 				__updateNote_strum = e;
 				break; //ing bad
@@ -1283,19 +1230,14 @@ class PlayState extends MusicBeatState
 		var event = PlayState.instance.scripts.event("onNoteUpdate", __updateNote_event.recycle(daNote, FlxG.elapsed, __updateNote_strum));
 		if (!event.cancelled) {
 			if (event.__updateHitWindow) {
-				if (daNote.mustPress)
-				{
-					daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (hitWindow * daNote.latePressWindow)
-						&& daNote.strumTime < Conductor.songPosition + (hitWindow * daNote.earlyPressWindow));
+				daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (hitWindow * daNote.latePressWindow)
+					&& daNote.strumTime < Conductor.songPosition + (hitWindow * daNote.earlyPressWindow));
 
-					if (daNote.strumTime < Conductor.songPosition - hitWindow && !daNote.wasGoodHit)
-						daNote.tooLate = true;
-				}
-				else
-					daNote.canBeHit = false;
+				if (daNote.strumTime < Conductor.songPosition - hitWindow && !daNote.wasGoodHit)
+					daNote.tooLate = true;
 			}
 
-			if (event.__autoCPUHit && !daNote.mustPress && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) goodNoteHit(daNote);
+			if (event.__autoCPUHit && (daNote.player == null || daNote.player.cpu) && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) goodNoteHit(daNote);
 
 			if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.stepLength) < Conductor.songPosition) {
 				deleteNote(daNote);
@@ -1411,54 +1353,60 @@ class PlayState extends MusicBeatState
 	var __justReleased:Array<Bool> = [];
 	private function keyShit():Void
 	{
-		__funcsToExec.clear();
-		__pressed.clear();
-		__justPressed.clear();
-		__justReleased.clear();
+		for(id=>p in players) {
+			if (p.cpu) continue;
 
-		__pressed.pushGroup(controls.NOTE_LEFT, controls.NOTE_DOWN, controls.NOTE_UP, controls.NOTE_RIGHT);
-		__justPressed.pushGroup(controls.NOTE_LEFT_P, controls.NOTE_DOWN_P, controls.NOTE_UP_P, controls.NOTE_RIGHT_P);
-		__justReleased.pushGroup(controls.NOTE_LEFT_R, controls.NOTE_DOWN_R, controls.NOTE_UP_R, controls.NOTE_RIGHT_R);
+			__funcsToExec.clear();
+			__pressed.clear();
+			__justPressed.clear();
+			__justReleased.clear();
 
-		var event = scripts.event("onKeyShit", EventManager.get(InputSystemEvent).recycle(__pressed, __justPressed, __justReleased));
-		if (event.cancelled) return;
-
-		__pressed = CoolUtil.getDefault(event.pressed, []);
-		__justPressed = CoolUtil.getDefault(event.justPressed, []);
-		__justReleased = CoolUtil.getDefault(event.justReleased, []);
-
-
-		if (__pressed.contains(true)) {
-			__funcsToExec.push(function(note:Note) {
-				if (__pressed[note.strumID] && note.isSustainNote && note.canBeHit && note.mustPress && !note.wasGoodHit) {
-					goodNoteHit(note);
-				}
+			// TODO: player identifier in event
+	
+			__pressed.pushGroup(p.controls.NOTE_LEFT, p.controls.NOTE_DOWN, p.controls.NOTE_UP, p.controls.NOTE_RIGHT);
+			__justPressed.pushGroup(p.controls.NOTE_LEFT_P, p.controls.NOTE_DOWN_P, p.controls.NOTE_UP_P, p.controls.NOTE_RIGHT_P);
+			__justReleased.pushGroup(p.controls.NOTE_LEFT_R, p.controls.NOTE_DOWN_R, p.controls.NOTE_UP_R, p.controls.NOTE_RIGHT_R);
+	
+			var event = scripts.event("onKeyShit", EventManager.get(InputSystemEvent).recycle(__pressed, __justPressed, __justReleased));
+			if (event.cancelled) return;
+	
+			__pressed = CoolUtil.getDefault(event.pressed, []);
+			__justPressed = CoolUtil.getDefault(event.justPressed, []);
+			__justReleased = CoolUtil.getDefault(event.justReleased, []);
+	
+	
+			if (__pressed.contains(true)) {
+				__funcsToExec.push(function(note:Note) {
+					if (note.playerID == id && __pressed[note.strumID] && note.isSustainNote && note.canBeHit && !note.wasGoodHit) {
+						goodNoteHit(note);
+					}
+				});
+			}
+	
+			var notePerStrum = [for(i in 0...4) null];
+			if (__justPressed.contains(true)) {
+				__funcsToExec.push(function(note:Note) {
+					if (__justPressed[note.strumID] && !note.isSustainNote && note.playerID == id && !note.wasGoodHit && note.canBeHit) {
+						if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;
+						else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 5) deleteNote(note);
+						else if (note.strumTime < notePerStrum[note.strumID].strumTime)					notePerStrum[note.strumID] = note;
+					}
+				});
+			}
+	
+			if (__funcsToExec.length > 0) {
+				notes.forEachAlive(function(note:Note) {
+					for(e in __funcsToExec) e(note);
+				});
+			}
+	
+			for(e in notePerStrum) if (e != null) goodNoteHit(e);
+	
+			p.forEach(function(str:Strum) {
+				str.updatePlayerInput(__pressed[str.ID], __justPressed[str.ID], __justReleased[str.ID]);
 			});
+			scripts.call("onPostKeyShit");
 		}
-
-		var notePerStrum = [for(i in 0...4) null];
-		if (__justPressed.contains(true)) {
-			__funcsToExec.push(function(note:Note) {
-				if (__justPressed[note.strumID] && !note.isSustainNote && note.mustPress && !note.wasGoodHit && note.canBeHit) {
-					if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;
-					else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 5) deleteNote(note);
-					else if (note.strumTime < notePerStrum[note.strumID].strumTime)					notePerStrum[note.strumID] = note;
-				}
-			});
-		}
-
-		if (__funcsToExec.length > 0) {
-			notes.forEachAlive(function(note:Note) {
-				for(e in __funcsToExec) e(note);
-			});
-		}
-
-		for(e in notePerStrum) if (e != null) goodNoteHit(e);
-
-		playerStrums.forEach(function(str:Strum) {
-			str.updatePlayerInput(__pressed[str.ID], __justPressed[str.ID], __justReleased[str.ID]);
-		});
-		scripts.call("onPostKeyShit");
 	}
 
 	function noteMiss(note:Note):Void
@@ -1537,10 +1485,11 @@ class PlayState extends MusicBeatState
 		}
 
 		var event:NoteHitEvent;
-		if (note.mustPress)
-			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, [boyfriend], true, note.noteType, "", "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, !note.isSustainNote && daRating == "sick"));
+		if (note.player != null && !note.player.cpu)
+			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, note.player.characters, true, note.noteType, "", "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, !note.isSustainNote && daRating == "sick"));
 		else
-			event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, [dad], false, note.noteType, "", "game/score/", "", note.strumID, 0, null, 0, daRating, false));
+			event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, note.player.characters, false, note.noteType, "", "game/score/", "", note.strumID, 0, null, 0, daRating, false));
+		scripts.event("onNoteHit", event);
 
 		if (!event.cancelled) {
 			if (event.accuracy != null) {
@@ -1634,12 +1583,8 @@ class PlayState extends MusicBeatState
 					if (char != null)
 						char.playSingAnim(event.direction, event.animSuffix);
 
-			(event.player ? playerStrums : cpuStrums).forEach(function(str:Strum) {
-				if (str.ID == Math.abs(note.strumID)) {
-					if (!event.strumGlowCancelled) str.press(note.strumTime);
-					if (event.showSplash) splashHandler.showSplash(note.splash, str);
-				}
-			});
+			if (!event.strumGlowCancelled) note.__strum.press(note.strumTime);
+			if (event.showSplash) splashHandler.showSplash(note.splash, note.__strum);
 		}
 
 		if (event.unmuteVocals) vocals.volume = 1;

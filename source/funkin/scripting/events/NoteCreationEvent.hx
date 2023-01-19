@@ -24,6 +24,11 @@ class NoteCreationEvent extends CancellableEvent {
     public var noteTypeID:Int;
 
     /**
+     * ID of the player.
+     */
+    public var playerID:Int;
+
+    /**
      * Whenever the note will need to be hit by the player
      */
     public var mustHit:Bool;
