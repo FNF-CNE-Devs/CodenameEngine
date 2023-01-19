@@ -7,7 +7,7 @@ function onDance(event) {
 }
 
 function onPlaySingAnim(event) {
-    dir = FlxG.random.int(0, 1) + (event.direction == 0 ? 1 : 3);
+    dir = FlxG.random.int(0, 1) + (event.direction == 0 ? 3 : 1);
     event.cancel();
 
     playAnim("shoot" + Std.string(dir), true);
