@@ -161,7 +161,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Dad character
 	 */
-	public var dad:Character;
+	public var dad(default, set):Character;
 	/**
 	 * Girlfriend character
 	 */
@@ -169,7 +169,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Boyfriend character
 	 */
-	public var boyfriend:Character;
+	public var boyfriend(default, set):Character;
 
 	/**
 	 * Group of all of the notes. Using `forEach` on this group will only loop through the first notes.
@@ -1671,6 +1671,17 @@ class PlayState extends MusicBeatState
 		return cpuStrums;
 	private inline function set_cpu(s:StrumLine):StrumLine
 		return cpuStrums = s;
+
+	private function set_boyfriend(bf:Character):Character {
+		if (players != null && players[1] != null)
+			players[1].characters = [bf];
+		return this.boyfriend = bf;
+	}
+	private function set_dad(dad:Character):Character {
+		if (players != null && players[0] != null)
+			players[0].characters = [dad];
+		return this.dad = dad;
+	}
 }
 
 class ComboRating {
