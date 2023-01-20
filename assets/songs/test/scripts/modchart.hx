@@ -3,6 +3,7 @@ function create() {
     pixelNotesForBF = false;
     enablePixelUI = true;
     enableCameraHacks = false;
+    playCutscenes = true;
 }
 
 function postCreate() {

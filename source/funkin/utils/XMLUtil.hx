@@ -170,6 +170,11 @@ class XMLUtil {
 		}
         return MISSING_PROPERTY;
 	}
+
+	public static inline function fixXMLText(text:String) {
+		var v:String;
+		return [for(l in text.split("\n")) if ((v = l.trim()) != "") v].join("\n");
+	}
 }
 
 typedef AnimData = {
