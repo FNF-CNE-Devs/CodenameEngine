@@ -1275,7 +1275,7 @@ class PlayState extends MusicBeatState
 				return;
 			}
 
-			if (daNote.tooLate) {
+			if (daNote.tooLate && !(daNote.strumLine != null && daNote.strumLine.cpu)) {
 				noteMiss(daNote);
 				return;
 			}
