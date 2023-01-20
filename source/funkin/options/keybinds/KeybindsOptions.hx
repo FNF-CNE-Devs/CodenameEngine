@@ -77,6 +77,15 @@ class KeybindsOptions extends MusicBeatSubstate {
                     control: 'PAUSE'
                 },
             ]
+        },
+        {
+            name: 'Engine',
+            settings: [
+                {
+                    name: 'Switch Mod',
+                    control: 'SWITCHMOD'
+                },
+            ]
         }
     ];
 
@@ -165,9 +174,9 @@ class KeybindsOptions extends MusicBeatSubstate {
             }
         }
         add(alphabets);
-        changeSelection(1);
-
         add(camFollow);
+
+        changeSelection(1);
     }
 
     public override function destroy() {

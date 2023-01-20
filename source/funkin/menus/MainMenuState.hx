@@ -122,7 +122,7 @@ class MainMenuState extends MusicBeatState
 
 			#if MOD_SUPPORT
 			// make it customisable
-			if (FlxG.keys.justPressed.TAB) {
+			if (controls.SWITCHMOD) {
 				openSubState(new ModSwitchMenu());
 				persistentUpdate = false;
 				persistentDraw = true;
