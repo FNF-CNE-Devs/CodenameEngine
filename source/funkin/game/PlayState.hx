@@ -445,6 +445,8 @@ class PlayState extends MusicBeatState
 	 */
 	public var hitWindow:Float = Options.hitWindow; // is calculated in create(), is safeFrames in milliseconds
 
+	@:noCompletion @:dox(hide) private var _startCountdownCalled:Bool = false;
+
 	@:dox(hide)
 	var __vocalOffsetViolation:Float = 0;
 
@@ -746,13 +748,15 @@ class PlayState extends MusicBeatState
 
 	public function startCountdown():Void
 	{
+		if (!_startCountdownCalled) {
+			_startCountdownCalled = true;
+			inCutscene = false;
 
-		inCutscene = false;
+			var e = scripts.event("onStartCountdown", new CancellableEvent());
+			if (e.cancelled) return;
+		}
 
 		generateStrums();
-
-		var e = scripts.event("onStartCountdown", new CancellableEvent());
-		if (e.cancelled) return;
 
 		startedCountdown = true;
 		Conductor.songPosition = 0;
