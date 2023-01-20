@@ -58,9 +58,19 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 		return Conductor.songPosition;
 
 	/**
-	 * Game Controls.
+	 * Game Controls. (All players / Solo)
 	 */
 	public var controls(get, never):Controls;
+
+	/**
+	 * Game Controls (Player 1 only)
+	 */
+	public var controlsP1(get, never):Controls;
+	
+	/**
+	 * Game Controls (Player 2 only)
+	 */
+	public var controlsP2(get, never):Controls;
 
 	/**
 	 * Current injected script attached to the state. To add one, create a file at path "data/states/stateName" (ex: data/states/FreeplayState)
@@ -72,7 +82,11 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	public var scriptName:String = null;
 
 	inline function get_controls():Controls
+		return PlayerSettings.solo.controls;
+	inline function get_controlsP1():Controls
 		return PlayerSettings.player1.controls;
+	inline function get_controlsP2():Controls
+		return PlayerSettings.player2.controls;
 
 	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
 		super();

@@ -16,10 +16,10 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 	{
 		if (alpha == 0 || colorTransform != null && (colorTransform.alphaMultiplier == 0 || colorTransform.alphaOffset == -255) || limb == null || limb.type == EMPTY)
 			return;
-		var matrix = new FlxMatrix();
-		matrix.concat(_matrix);
 		for (camera in cameras)
 		{
+			var matrix = new FlxMatrix();
+			matrix.concat(_matrix);
 			if (!camera.visible || !camera.exists || !limbOnScreen(limb, _matrix, camera))
 				return;
 

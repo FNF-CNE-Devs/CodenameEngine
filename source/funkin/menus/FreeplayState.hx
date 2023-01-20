@@ -36,9 +36,11 @@ class FreeplayState extends MusicBeatState
 	var selector:FlxText;
 	var curSelected:Int = 0;
 	var curDifficulty:Int = 1;
+	var curCoopMode:Int = 0;
 
 	var scoreText:FlxText;
 	var diffText:FlxText;
+	var coopText:FlxText;
 	var lerpScore:Int = 0;
 	var intendedScore:Int = 0;
 
@@ -99,10 +101,15 @@ class FreeplayState extends MusicBeatState
 		diffText.font = scoreText.font;
 		add(diffText);
 
+		coopText = new FlxText(diffText.x, diffText.y + diffText.height + 2, 0, "[TAB] Solo", 24);
+		coopText.font = scoreText.font;
+		add(coopText);
+
 		add(scoreText);
 
 		changeSelection(0, true);
-		changeDiff();
+		changeDiff(0, true);
+		changeCoopMode(0, true);
 
 		super.create();
 	}
@@ -130,15 +137,16 @@ class FreeplayState extends MusicBeatState
 
 		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
 		changeDiff((controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0));
+		changeCoopMode((FlxG.keys.justPressed.TAB ? 1 : 0));
 		// putting it before so that its actually smooth
 		updateOptionsAlpha();
 
 		scoreText.text = "PERSONAL BEST:" + lerpScore;
-		scoreBG.scale.set(Math.max(diffText.width, scoreText.width) + 8, 66);
+		scoreBG.scale.set(Math.max(diffText.width, scoreText.width) + 8, (coopText.visible ? coopText.y + coopText.height : 66));
 		scoreBG.updateHitbox();
 		scoreBG.x = FlxG.width - scoreBG.width;
 
-		scoreText.x = scoreBG.x + 4;
+		scoreText.x = coopText.x = scoreBG.x + 4;
 		diffText.x = Std.int(scoreBG.x + ((scoreBG.width - diffText.width) / 2));
 
 		bg.color = CoolUtil.lerpColor(bg.color, songs[curSelected].color, 0.0625);
@@ -164,7 +172,17 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.ACCEPT && !dontPlaySongThisFrame)
 		{
-			CoolUtil.loadSong(songs[curSelected].songName, songs[curSelected].difficulties[curDifficulty]);
+			var opponentMode:Bool = false;
+			var coopMode:Bool = false;
+			if (songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed) {
+				opponentMode = curCoopMode % 2 == 1;
+				coopMode = curCoopMode >= 2;
+			} else if (songs[curSelected].coopAllowed) {
+				coopMode = curCoopMode == 1;
+			} else if (songs[curSelected].opponentModeAllowed) {
+				opponentMode = curCoopMode == 1;
+			}
+			CoolUtil.loadSong(songs[curSelected].songName, songs[curSelected].difficulties[curDifficulty], opponentMode, coopMode);
 			FlxG.switchState(new PlayState());
 		}
 	}
@@ -187,6 +205,27 @@ class FreeplayState extends MusicBeatState
 			diffText.text = curSong.difficulties[curDifficulty];
 	}
 
+	private var coopLabels:Array<String> = [
+		"[TAB] Solo",
+		"[TAB] Opponent Mode",
+		"[TAB] Co-Op Mode",
+		"[TAB] Co-Op Mode (Switched)"
+	];
+	function changeCoopMode(change:Int = 0, force:Bool = false) {
+		if (change == 0 && !force) return;
+		if (!songs[curSelected].coopAllowed && !songs[curSelected].opponentModeAllowed) return;
+
+		var bothEnabled = songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed;
+
+		curCoopMode = FlxMath.wrap(curCoopMode + change, 0, bothEnabled ? 3 : 1);
+
+		if (bothEnabled) {
+			coopText.text = coopLabels[curCoopMode];
+		} else {
+			coopText.text = coopLabels[curCoopMode * (songs[curSelected].coopAllowed ? 2 : 1)];
+		}
+	}
+
 	function changeSelection(change:Int = 0, force:Bool = false)
 	{
 		if (change == 0 && !force) return;
@@ -200,6 +239,8 @@ class FreeplayState extends MusicBeatState
 			autoplayElapsed = 0;
 			songInstPlaying = false;
 		#end
+
+		coopText.visible = songs[curSelected].coopAllowed || songs[curSelected].opponentModeAllowed;
 	}
 
 	function updateOptionsAlpha() {
@@ -238,10 +279,16 @@ class FreeplaySonglist {
                     if (e.name == null) continue;
                     if (e.icon == null) e.icon = "bf";
                     if (e.color == null) e.color = FreeplayState.defaultColor;
+                    if (e.coopAllowed == null) e.coopAllowed = false;
+                    if (e.opponentModeAllowed == null) e.opponentModeAllowed = false;
 
-                    this.songs.push(new SongMetadata(e.name,
+					var meta = new SongMetadata(e.name,
                         e.icon.getDefault("bf"),
-                        CoolUtil.getColorFromDynamic(e.color).getDefault(FreeplayState.defaultColor), e.difficulties, source));
+                        CoolUtil.getColorFromDynamic(e.color).getDefault(FreeplayState.defaultColor), e.difficulties, source);
+					
+					meta.coopAllowed = e.coopAllowed;
+					meta.opponentModeAllowed = e.opponentModeAllowed;
+                    this.songs.push(meta);
                 }
             }
         }
@@ -305,6 +352,8 @@ typedef FreeplaySong = {
     public var ?icon:String;
     public var ?color:Dynamic;
 	public var ?difficulties:Array<String>;
+	public var ?coopAllowed:Bool;
+	public var ?opponentModeAllowed:Bool;
 }
 
 class SongMetadata
@@ -313,6 +362,8 @@ class SongMetadata
 	public var color:FlxColor = FreeplayState.defaultColor;
 	public var songCharacter:String = "";
 	public var difficulties:Array<String> = ["EASY", "NORMAL", "HARD"];
+	public var coopAllowed:Bool = false;
+	public var opponentModeAllowed:Bool = false;
 
 	public function new(song:String, songCharacter:String, color:FlxColor, ?difficulties:Array<String>, fromSource:Bool = false)
 	{

@@ -33,7 +33,6 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
         super();
         this.value = value;
         title = new Alphabet(0, 0, name, true);
-        title.setPosition(100, 0);
         add(title);
 
         var controlArrayP1:Array<FlxKey> = Reflect.field(Options, 'P1_${value}');
@@ -65,6 +64,8 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
             var min = Math.min(icon.scale.x, icon.scale.y);
             icon.scale.set(min, min);
             add(icon);
+            
+            title.setPosition(100, 0);
         }
         
         setPosition(x, y);
@@ -79,9 +80,7 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
     }
 
     public function changeKeybind(callback:Void->Void, cancelCallback:Void->Void, p2:Bool = false) {
-        
-        var flicker = FlxFlicker.flicker(this, 0, Options.flashingMenu ? 0.06 : 0.15, true, false, function(t) {
-        });
+        var flicker = FlxFlicker.flicker(this, 0, Options.flashingMenu ? 0.06 : 0.15, true, false, function(t) {});
 
         KeybindsOptions.instance.persistentDraw = true;
         KeybindsOptions.instance.persistentUpdate = false;

@@ -92,11 +92,24 @@ class PlayState extends MusicBeatState
 	 * Whenever the week is coming from the mods folder or not.
 	 */
 	public static var fromMods:Bool = false;
+	/**
+	 * Whenever the song has been started with opponent mode on.
+	 */
+	public static var opponentMode:Bool = false;
+	/**
+	//  * Whenever the song has been started with co-op mode on.
+	 */
+	public static var coopMode:Bool = false;
 
 	/**
 	 * Script Pack of all the scripts being ran.
 	 */
 	public var scripts:ScriptPack;
+
+	/**
+	 * Array of all the players in the stage.
+	 */
+	public var players:Array<StrumLine> = [];
 
 	/**
 	 * Game Over Song. (assets/music/gameOver.ogg)
@@ -118,7 +131,11 @@ class PlayState extends MusicBeatState
 	/**
 	 * Whenever the player can die.
 	 */
-	public var canDie:Bool = true;
+	public var canDie:Bool = !opponentMode && !coopMode;
+	/**
+	 * Whenever the opponent can die.
+	 */
+	public var canDadDie:Bool = opponentMode && !coopMode;
 	/**
 	 * Current scroll speed for all strums.
 	 * To set a scroll speed for a specific strum, use `strum.scrollSpeed`.
@@ -144,7 +161,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Dad character
 	 */
-	public var dad:Character;
+	public var dad(default, set):Character;
 	/**
 	 * Girlfriend character
 	 */
@@ -152,7 +169,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Boyfriend character
 	 */
-	public var boyfriend:Character;
+	public var boyfriend(default, set):Character;
 
 	/**
 	 * Group of all of the notes. Using `forEach` on this group will only loop through the first notes.
@@ -185,11 +202,19 @@ class PlayState extends MusicBeatState
 	/**
 	 * Player strums.
 	 */
-	public var playerStrums:FlxTypedGroup<Strum>;
+	public var playerStrums:StrumLine;
 	/**
 	 * CPU strums.
 	 */
-	public var cpuStrums:FlxTypedGroup<Strum>;
+	public var cpuStrums:StrumLine;
+	/**
+	 * Shortcut to `playerStrums`.
+	 */
+	public var player(get, set):StrumLine;
+	/**
+	 * Shortcut to `cpuStrums`.
+	 */
+	public var cpu(get, set):StrumLine;
 
 	/**
 	 * Note splashes container
@@ -420,6 +445,8 @@ class PlayState extends MusicBeatState
 	 */
 	public var hitWindow:Float = Options.hitWindow; // is calculated in create(), is safeFrames in milliseconds
 
+	@:noCompletion @:dox(hide) private var _startCountdownCalled:Bool = false;
+
 	@:dox(hide)
 	var __vocalOffsetViolation:Float = 0;
 
@@ -585,9 +612,10 @@ class PlayState extends MusicBeatState
 		strumLine.scrollFactor.set();
 
 		strumLineNotes = new FlxTypedGroup<Strum>();
-		playerStrums = new FlxTypedGroup<Strum>();
-		cpuStrums = new FlxTypedGroup<Strum>();
 		add(strumLineNotes);
+		
+		players.push(cpuStrums = new StrumLine([dad], 0.25, !coopMode && !opponentMode, true, coopMode ? controlsP2 : controls));
+		players.push(playerStrums = new StrumLine([boyfriend], 0.75, !coopMode && opponentMode, false, coopMode ? controlsP1 : controls));
 
 		splashHandler = new SplashHandler();
 		add(splashHandler);
@@ -618,7 +646,10 @@ class PlayState extends MusicBeatState
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, maxHealth);
 		healthBar.scrollFactor.set();
-		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		if (opponentMode)
+			healthBar.createFilledBar(0xFF66FF33, 0xFFFF0000); // switch the colors
+		else
+			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		add(healthBar);
 
 		health = maxHealth / 2;
@@ -668,9 +699,15 @@ class PlayState extends MusicBeatState
 		if (playCutscenes) {
 			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-cutscene');
 			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/cutscene.mp4');
+			var dialogue = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/dialogue.xml');
 			persistentUpdate = false;
 			if (cutscene != null) {
 				openSubState(new ScriptedCutscene(cutscene, function() {
+					startCountdown();
+				}));
+			} else if (Assets.exists(dialogue)) {
+			FlxTransitionableState.skipNextTransIn = true;
+				openSubState(new DialogueCutscene(dialogue, function() {
 					startCountdown();
 				}));
 			} else if (Assets.exists(videoCutsceneAlt)) {
@@ -679,7 +716,7 @@ class PlayState extends MusicBeatState
 					startCountdown();
 				}));
 				persistentDraw = false;
-			}else if (Assets.exists(videoCutscene)) {
+			} else if (Assets.exists(videoCutscene)) {
 			FlxTransitionableState.skipNextTransIn = true;
 				openSubState(new VideoCutscene(videoCutscene, function() {
 					startCountdown();
@@ -720,12 +757,15 @@ class PlayState extends MusicBeatState
 
 	public function startCountdown():Void
 	{
+		if (!_startCountdownCalled) {
+			_startCountdownCalled = true;
+			inCutscene = false;
 
-		inCutscene = false;
+			var e = scripts.event("onStartCountdown", new CancellableEvent());
+			if (e.cancelled) return;
+		}
 
-		generateStaticArrows(0);
-		generateStaticArrows(1);
-		scripts.call("onStartCountdown");
+		generateStrums();
 
 		startedCountdown = true;
 		Conductor.songPosition = 0;
@@ -809,6 +849,8 @@ class PlayState extends MusicBeatState
 		inst.play();
 
 		updateDiscordPresence();
+		
+		scripts.call("onStartSong");
 	}
 
 	public override function destroy() {
@@ -823,6 +865,8 @@ class PlayState extends MusicBeatState
 	}
 
 	public function generateNotes(songData:SwagSong) {
+		// TODO: redo with proper chart parser & codename chart format
+
 		if (songData == null) return;
 		if (songData.noteTypes == null) songData.noteTypes = [];
 
@@ -861,7 +905,7 @@ class PlayState extends MusicBeatState
 				else
 					swagNote = null;
 
-				swagNote.nextNote = (swagNote = new Note(daStrumTime, daNoteData % 4, daNoteType, gottaHitNote, swagNote, false, section.altAnim ? "-alt" : ""));
+				swagNote.nextNote = (swagNote = new Note(daStrumTime, daNoteData % 4, daNoteType, gottaHitNote ? 1 : 0, swagNote, false, section.altAnim ? "-alt" : ""));
 				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
 				swagNote.stepLength = stepCrochet;
@@ -874,7 +918,7 @@ class PlayState extends MusicBeatState
 				// create sustains
 				for (susNote in 0...Math.floor(susLength))
 				{
-					swagNote = new Note(daStrumTime + (stepCrochet * susNote), daNoteData % 4, daNoteType, gottaHitNote, swagNote, true, section.altAnim ? "-alt" : "");
+					swagNote = new Note(daStrumTime + (stepCrochet * susNote), daNoteData % 4, daNoteType, gottaHitNote ? 1 : 0, swagNote, true, section.altAnim ? "-alt" : "");
 					swagNote.scrollFactor.set();
 					swagNote.stepLength = stepCrochet;
 					notes.add(swagNote);
@@ -945,72 +989,10 @@ class PlayState extends MusicBeatState
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
 
-	private function generateStaticArrows(player:Int):Void
+	private function generateStrums():Void
 	{
-		for (i in 0...4)
-		{
-			// FlxG.log.add(i);
-			var babyArrow:Strum = new Strum((FlxG.width * 0.25) + (Note.swagWidth * (i - 2)) + ((FlxG.width / 2) * player), strumLine.y);
-			babyArrow.ID = i;
-
-			var event = scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, player, i));
-
-			if (!event.cancelled) {
-				switch (curStage)
-				{
-					// case "school":
-					default:
-						babyArrow.frames = Paths.getFrames(event.sprite);
-						babyArrow.animation.addByPrefix('green', 'arrowUP');
-						babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
-						babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
-						babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
-
-						babyArrow.antialiasing = true;
-						babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
-
-						switch (babyArrow.ID % 4)
-						{
-							case 0:
-								babyArrow.animation.addByPrefix('static', 'arrowLEFT');
-								babyArrow.animation.addByPrefix('pressed', 'left press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'left confirm', 24, false);
-							case 1:
-								babyArrow.animation.addByPrefix('static', 'arrowDOWN');
-								babyArrow.animation.addByPrefix('pressed', 'down press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'down confirm', 24, false);
-							case 2:
-								babyArrow.animation.addByPrefix('static', 'arrowUP');
-								babyArrow.animation.addByPrefix('pressed', 'up press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'up confirm', 24, false);
-							case 3:
-								babyArrow.animation.addByPrefix('static', 'arrowRIGHT');
-								babyArrow.animation.addByPrefix('pressed', 'right press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'right confirm', 24, false);
-						}
-				}
-			}
-
-			babyArrow.updateHitbox();
-			babyArrow.scrollFactor.set();
-
-			if (event.__doAnimation)
-			{
-				babyArrow.y -= 10;
-				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
-			}
-
-
-			if (event.player == 1)
-				playerStrums.add(babyArrow);
-			else {
-				babyArrow.cpu = true;
-				cpuStrums.add(babyArrow);
-			}
-			babyArrow.animation.play('static');
-			strumLineNotes.add(babyArrow);
-		}
+		for(p in players)
+			p.generateStrums();
 	}
 
 	override function openSubState(SubState:FlxSubState)
@@ -1186,8 +1168,7 @@ class PlayState extends MusicBeatState
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0)) - iconOffset);
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0))) - (iconP2.width - iconOffset);
 
-		if (health > maxHealth)
-			health = maxHealth;
+		health = FlxMath.bound(health, 0, maxHealth);
 
 		iconP1.health = healthBar.percent / 100;
 		iconP2.health = 1 - (healthBar.percent / 100);
@@ -1243,7 +1224,7 @@ class PlayState extends MusicBeatState
 
 
 		// RESET = Quick Game Over Screen
-		if (controls.RESET)
+		if (startedCountdown && controls.RESET)
 			health = 0;
 
 		// CHEAT = brandon's a pussy
@@ -1252,9 +1233,12 @@ class PlayState extends MusicBeatState
 			health += 1;
 			trace("User is cheating!");
 		}
-
+		
 		if (health <= 0 && canDie)
 			gameOver();
+		if (health >= maxHealth && canDadDie)
+			gameOver();
+	
 
 		if (generatedMusic) {
 			__updateNote_event = EventManager.get(NoteUpdateEvent);
@@ -1265,7 +1249,7 @@ class PlayState extends MusicBeatState
 			keyShit();
 
 		#if debug
-		if (FlxG.keys.justPressed.ONE)
+		if (generatedMusic && FlxG.keys.justPressed.ONE)
 			endSong();
 		#end
 
@@ -1276,7 +1260,7 @@ class PlayState extends MusicBeatState
 	var __updateNote_event:NoteUpdateEvent = null;
 	function updateNote(daNote:Note)
 	{
-		for(e in (daNote.mustPress ? playerStrums : cpuStrums).members) {
+		for(e in players[daNote.strumLineID].members) {
 			if (e.ID == daNote.noteData % 4) {
 				__updateNote_strum = e;
 				break; //ing bad
@@ -1286,26 +1270,21 @@ class PlayState extends MusicBeatState
 		var event = PlayState.instance.scripts.event("onNoteUpdate", __updateNote_event.recycle(daNote, FlxG.elapsed, __updateNote_strum));
 		if (!event.cancelled) {
 			if (event.__updateHitWindow) {
-				if (daNote.mustPress)
-				{
-					daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (hitWindow * daNote.latePressWindow)
-						&& daNote.strumTime < Conductor.songPosition + (hitWindow * daNote.earlyPressWindow));
+				daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (hitWindow * daNote.latePressWindow)
+					&& daNote.strumTime < Conductor.songPosition + (hitWindow * daNote.earlyPressWindow));
 
-					if (daNote.strumTime < Conductor.songPosition - hitWindow && !daNote.wasGoodHit)
-						daNote.tooLate = true;
-				}
-				else
-					daNote.canBeHit = false;
+				if (daNote.strumTime < Conductor.songPosition - hitWindow && !daNote.wasGoodHit)
+					daNote.tooLate = true;
 			}
 
-			if (event.__autoCPUHit && !daNote.mustPress && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) goodNoteHit(daNote);
+			if (event.__autoCPUHit && (daNote.strumLine == null || daNote.strumLine.cpu) && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) goodNoteHit(daNote);
 
 			if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.stepLength) < Conductor.songPosition) {
 				deleteNote(daNote);
 				return;
 			}
 
-			if (daNote.tooLate) {
+			if (daNote.tooLate && !(daNote.strumLine != null && daNote.strumLine.cpu)) {
 				noteMiss(daNote);
 				return;
 			}
@@ -1414,63 +1393,69 @@ class PlayState extends MusicBeatState
 	var __justReleased:Array<Bool> = [];
 	private function keyShit():Void
 	{
-		__funcsToExec.clear();
-		__pressed.clear();
-		__justPressed.clear();
-		__justReleased.clear();
+		for(id=>p in players) {
+			if (p.cpu) continue;
 
-		__pressed.pushGroup(controls.NOTE_LEFT, controls.NOTE_DOWN, controls.NOTE_UP, controls.NOTE_RIGHT);
-		__justPressed.pushGroup(controls.NOTE_LEFT_P, controls.NOTE_DOWN_P, controls.NOTE_UP_P, controls.NOTE_RIGHT_P);
-		__justReleased.pushGroup(controls.NOTE_LEFT_R, controls.NOTE_DOWN_R, controls.NOTE_UP_R, controls.NOTE_RIGHT_R);
+			__funcsToExec.clear();
+			__pressed.clear();
+			__justPressed.clear();
+			__justReleased.clear();
 
-		var event = scripts.event("onKeyShit", EventManager.get(InputSystemEvent).recycle(__pressed, __justPressed, __justReleased));
-		if (event.cancelled) return;
-
-		__pressed = CoolUtil.getDefault(event.pressed, []);
-		__justPressed = CoolUtil.getDefault(event.justPressed, []);
-		__justReleased = CoolUtil.getDefault(event.justReleased, []);
-
-
-		if (__pressed.contains(true)) {
-			__funcsToExec.push(function(note:Note) {
-				if (__pressed[note.strumID] && note.isSustainNote && note.canBeHit && note.mustPress && !note.wasGoodHit) {
-					goodNoteHit(note);
-				}
+			// TODO: player identifier in event
+	
+			__pressed.pushGroup(p.controls.NOTE_LEFT, p.controls.NOTE_DOWN, p.controls.NOTE_UP, p.controls.NOTE_RIGHT);
+			__justPressed.pushGroup(p.controls.NOTE_LEFT_P, p.controls.NOTE_DOWN_P, p.controls.NOTE_UP_P, p.controls.NOTE_RIGHT_P);
+			__justReleased.pushGroup(p.controls.NOTE_LEFT_R, p.controls.NOTE_DOWN_R, p.controls.NOTE_UP_R, p.controls.NOTE_RIGHT_R);
+	
+			var event = scripts.event("onKeyShit", EventManager.get(InputSystemEvent).recycle(__pressed, __justPressed, __justReleased));
+			if (event.cancelled) return;
+	
+			__pressed = CoolUtil.getDefault(event.pressed, []);
+			__justPressed = CoolUtil.getDefault(event.justPressed, []);
+			__justReleased = CoolUtil.getDefault(event.justReleased, []);
+	
+	
+			if (__pressed.contains(true)) {
+				__funcsToExec.push(function(note:Note) {
+					if (note.strumLineID == id && __pressed[note.strumID] && note.isSustainNote && note.canBeHit && !note.wasGoodHit) {
+						goodNoteHit(note);
+					}
+				});
+			}
+	
+			var notePerStrum = [for(i in 0...4) null];
+			if (__justPressed.contains(true)) {
+				__funcsToExec.push(function(note:Note) {
+					if (__justPressed[note.strumID] && !note.isSustainNote && note.strumLineID == id && !note.wasGoodHit && note.canBeHit) {
+						if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;
+						else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 5) deleteNote(note);
+						else if (note.strumTime < notePerStrum[note.strumID].strumTime)					notePerStrum[note.strumID] = note;
+					}
+				});
+			}
+	
+			if (__funcsToExec.length > 0) {
+				notes.forEachAlive(function(note:Note) {
+					for(e in __funcsToExec) e(note);
+				});
+			}
+	
+			for(e in notePerStrum) if (e != null) goodNoteHit(e);
+	
+			p.forEach(function(str:Strum) {
+				str.updatePlayerInput(__pressed[str.ID], __justPressed[str.ID], __justReleased[str.ID]);
 			});
+			scripts.call("onPostKeyShit");
 		}
-
-		var notePerStrum = [for(i in 0...4) null];
-		if (__justPressed.contains(true)) {
-			__funcsToExec.push(function(note:Note) {
-				if (__justPressed[note.strumID] && !note.isSustainNote && note.mustPress && !note.wasGoodHit && note.canBeHit) {
-					if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;
-					else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 5) deleteNote(note);
-					else if (note.strumTime < notePerStrum[note.strumID].strumTime)					notePerStrum[note.strumID] = note;
-				}
-			});
-		}
-
-		if (__funcsToExec.length > 0) {
-			notes.forEachAlive(function(note:Note) {
-				for(e in __funcsToExec) e(note);
-			});
-		}
-
-		for(e in notePerStrum) if (e != null) goodNoteHit(e);
-
-		playerStrums.forEach(function(str:Strum) {
-			str.updatePlayerInput(__pressed[str.ID], __justPressed[str.ID], __justReleased[str.ID]);
-		});
-		scripts.call("onPostKeyShit");
 	}
 
 	function noteMiss(note:Note):Void
 	{
-		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, [boyfriend], true, note.noteType, "", "", "", note.strumID, -10, 0, -0.04, "shit"));
+		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, note.strumLine.characters, true, note.noteType, "", "", "", note.strumID, -10, 0, -0.04, "shit"));
 
 		if (event.cancelled) return;
 
-		health += event.healthGain;
+		if (event.note.strumLine != null) event.note.strumLine.addHealth(event.healthGain);
 		if (gf != null && combo > 5 && gf.animOffsets.exists('sad'))
 		{
 			gf.playAnim('sad', true, MISS);
@@ -1540,10 +1525,11 @@ class PlayState extends MusicBeatState
 		}
 
 		var event:NoteHitEvent;
-		if (note.mustPress)
-			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, [boyfriend], true, note.noteType, "", "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, !note.isSustainNote && daRating == "sick"));
+		if (note.strumLine != null && !note.strumLine.cpu)
+			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, note.strumLine.characters, true, note.noteType, "", "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, !note.isSustainNote && daRating == "sick"));
 		else
-			event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, [dad], false, note.noteType, "", "game/score/", "", note.strumID, 0, null, 0, daRating, false));
+			event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, note.strumLine.characters, false, note.noteType, "", "game/score/", "", note.strumID, 0, null, 0, daRating, false));
+		scripts.event("onNoteHit", event);
 
 		if (!event.cancelled) {
 			if (event.accuracy != null) {
@@ -1630,19 +1616,15 @@ class PlayState extends MusicBeatState
 				ratingNum += 1;
 			}
 
-			health += event.healthGain;
+			if (event.note.strumLine != null) event.note.strumLine.addHealth(event.healthGain);
 
 			if (!event.animCancelled)
 				for(char in event.characters)
 					if (char != null)
 						char.playSingAnim(event.direction, event.animSuffix);
 
-			(event.player ? playerStrums : cpuStrums).forEach(function(str:Strum) {
-				if (str.ID == Math.abs(note.strumID)) {
-					if (!event.strumGlowCancelled) str.press(note.strumTime);
-					if (event.showSplash) splashHandler.showSplash(note.splash, str);
-				}
-			});
+			if (!event.strumGlowCancelled) note.__strum.press(note.strumTime);
+			if (event.showSplash) splashHandler.showSplash(note.splash, note.__strum);
 		}
 
 		if (event.unmuteVocals) vocals.volume = 1;
@@ -1694,6 +1676,27 @@ class PlayState extends MusicBeatState
 			gf.tryDance();
 
 		scripts.call("beatHit", [curBeat]);
+	}
+
+	private inline function get_player():StrumLine
+		return playerStrums;
+	private inline function set_player(s:StrumLine):StrumLine
+		return playerStrums = s;
+
+	private inline function get_cpu():StrumLine
+		return cpuStrums;
+	private inline function set_cpu(s:StrumLine):StrumLine
+		return cpuStrums = s;
+
+	private function set_boyfriend(bf:Character):Character {
+		if (players != null && players[1] != null)
+			players[1].characters = [bf];
+		return this.boyfriend = bf;
+	}
+	private function set_dad(dad:Character):Character {
+		if (players != null && players[0] != null)
+			players[0].characters = [dad];
+		return this.dad = dad;
 	}
 }
 

@@ -269,9 +269,11 @@ class CoolUtil
 		PlayState.campaignScore = 0;
 		__loadSong(PlayState.storyPlaylist[0], difficulty);
 	}
-	public static function loadSong(name:String, difficulty:String = "normal") {
+	public static function loadSong(name:String, difficulty:String = "normal", opponentMode:Bool = false, coopMode:Bool = false) {
 		PlayState.campaignScore = 0;
 		PlayState.isStoryMode = false;
+		PlayState.opponentMode = opponentMode;
+		PlayState.coopMode = coopMode;
 		__loadSong(name, difficulty);
 	}
 	public static function __loadSong(name:String, difficulty:String) {

@@ -6,6 +6,7 @@ import openfl.Lib;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 
+@:build(funkin.macros.OptionsMacro.build())
 class Options
 {
 	@:dox(hide) public static var __save:FlxSave;
@@ -41,6 +42,7 @@ class Options
 	public static var P1_BACK:Array<FlxKey> = [BACKSPACE];
 	public static var P1_PAUSE:Array<FlxKey> = [ENTER];
 	public static var P1_RESET:Array<FlxKey> = [R];
+	public static var P1_SWITCHMOD:Array<FlxKey> = [TAB];
 
 	/**
 	 * PLAYER 2 CONTROLS (ALT)
@@ -57,6 +59,7 @@ class Options
 	public static var P2_BACK:Array<FlxKey> = [ESCAPE];
 	public static var P2_PAUSE:Array<FlxKey> = [ESCAPE];
 	public static var P2_RESET:Array<FlxKey> = [];
+	public static var P2_SWITCHMOD:Array<FlxKey> = [];
 
 	/**
 	 * SOLO GETTERS
@@ -73,82 +76,8 @@ class Options
 	public static var SOLO_BACK(get, null):Array<FlxKey>;
 	public static var SOLO_PAUSE(get, null):Array<FlxKey>;
 	public static var SOLO_RESET(get, null):Array<FlxKey>;
+	public static var SOLO_SWITCHMOD(get, null):Array<FlxKey>;
 
-	// GETTERS REGION
-	#if REGION
-	private static function get_SOLO_LEFT() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_LEFT) a.push(e);
-		for(e in P2_LEFT) a.push(e);
-		return a;
-	}
-	private static function get_SOLO_DOWN() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_DOWN) a.push(e);
-		for(e in P2_DOWN) a.push(e);
-		return a;
-	}
-	private static function get_SOLO_UP() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_UP) a.push(e);
-		for(e in P2_UP) a.push(e);
-		return a;
-	}
-	private static function get_SOLO_RIGHT() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_RIGHT) a.push(e);
-		for(e in P2_RIGHT) a.push(e);
-		return a;
-	}
-	private static function get_SOLO_NOTE_LEFT() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_NOTE_LEFT) a.push(e);
-		for(e in P2_NOTE_LEFT) a.push(e);
-		return a;
-	}
-	private static function get_SOLO_NOTE_DOWN() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_NOTE_DOWN) a.push(e);
-		for(e in P2_NOTE_DOWN) a.push(e);
-		return a;
-	}
-	private static function get_SOLO_NOTE_UP() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_NOTE_UP) a.push(e);
-		for(e in P2_NOTE_UP) a.push(e);
-		return a;
-	}
-	private static function get_SOLO_NOTE_RIGHT() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_NOTE_RIGHT) a.push(e);
-		for(e in P2_NOTE_RIGHT) a.push(e);
-		return a;
-	}
-	private static function get_SOLO_ACCEPT() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_ACCEPT) a.push(e);
-		for(e in P2_ACCEPT) a.push(e);
-		return a;
-	}
-	private static function get_SOLO_BACK() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_BACK) a.push(e);
-		for(e in P2_BACK) a.push(e);
-		return a;
-	}
-	private static function get_SOLO_PAUSE() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_PAUSE) a.push(e);
-		for(e in P2_PAUSE) a.push(e);
-		return a;
-	}
-	private static function get_SOLO_RESET() {
-		var a:Array<FlxKey> = [];
-		for(e in P1_RESET) a.push(e);
-		for(e in P2_RESET) a.push(e);
-		return a;
-	}
-	#end
 	public static function load() {
 		if (__save == null) __save = new FlxSave();
 		__save.bind("options");
@@ -169,9 +98,15 @@ class Options
 	}
 
 	public static function applySettings() {
-		PlayerSettings.player1.setKeyboardScheme(Solo);
+		applyKeybinds();
 		FlxG.game.stage.quality = (FlxG.forceNoAntialiasing = !antialiasing) ? LOW : BEST;
 		FlxG.autoPause = autoPause;
+	}
+
+	public static function applyKeybinds() {
+		PlayerSettings.solo.setKeyboardScheme(Solo);
+		PlayerSettings.player1.setKeyboardScheme(Duo(true));
+		PlayerSettings.player2.setKeyboardScheme(Duo(false));
 	}
 
 	public static function save() {

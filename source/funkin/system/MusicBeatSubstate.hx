@@ -60,13 +60,27 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 
 	public var scriptName:String = null;
 
+	/**
+	 * Game Controls. (All players / Solo)
+	 */
+	 public var controls(get, never):Controls;
+
 	 /**
-	  * Game Controls.
+	  * Game Controls (Player 1 only)
 	  */
-	public var controls(get, never):Controls;
+	 public var controlsP1(get, never):Controls;
+	 
+	 /**
+	  * Game Controls (Player 2 only)
+	  */
+	 public var controlsP2(get, never):Controls;
 
 	inline function get_controls():Controls
+		return PlayerSettings.solo.controls;
+	inline function get_controlsP1():Controls
 		return PlayerSettings.player1.controls;
+	inline function get_controlsP2():Controls
+		return PlayerSettings.player2.controls;
 
 
 	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
