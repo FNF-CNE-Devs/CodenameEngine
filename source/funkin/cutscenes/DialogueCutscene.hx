@@ -18,13 +18,14 @@ class DialogueCutscene extends Cutscene {
     public var dialogueBox:DialogueBox;
 
     public var nextSFX:FlxSound;
+    public var dialogueCamera:FlxCamera;
 
     public function new(dialoguePath:String, callback:Void->Void) {
         super(callback);
         this.dialoguePath = dialoguePath;
-        camera = new FlxCamera();
-        camera.bgColor = 0;
-        FlxG.cameras.add(camera, false);
+        camera = dialogueCamera = new FlxCamera();
+        dialogueCamera.bgColor = 0;
+        FlxG.cameras.add(dialogueCamera, false);
     }
 
     public override function create() {
@@ -56,6 +57,8 @@ class DialogueCutscene extends Cutscene {
             dialogueBox = new DialogueBox(dialogueData.getAtt("box").getDefault("default"));
             add(dialogueBox);
 
+            
+
             next();
         } catch(e) {
             Logs.trace('Error while loading dialogue at ${dialoguePath}', ERROR);
@@ -75,11 +78,9 @@ class DialogueCutscene extends Cutscene {
             return;
         }
 
-        for(c in charMap) {
-            if (c.visible) {
-                // TODO: remove character smoothly
-            }
-        }
+        for(k=>c in charMap)
+            if (k != curLine.char)
+                c.hide();
 
         if (charMap[curLine.char] != null)
             dialogueBox.popupChar(charMap[curLine.char]);
@@ -88,7 +89,7 @@ class DialogueCutscene extends Cutscene {
 
     public override function destroy() {
         super.destroy();
-        FlxG.cameras.remove(camera);
+        FlxG.cameras.remove(dialogueCamera);
     }
 }
 

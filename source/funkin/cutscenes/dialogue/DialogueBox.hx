@@ -9,6 +9,9 @@ class DialogueBox extends FunkinSprite {
     public var dialogueBoxData:Access;
     public var positions:Map<String, CharPosDef> = [];
 
+    public var textTypeSFX:String = Paths.sound('dialogue/text');
+    public var nextSFX:String = Paths.sound('dialogue/next');
+
     public function new(name:String) {
         super();
         try {
@@ -30,6 +33,9 @@ class DialogueBox extends FunkinSprite {
                 };
             }
 
+            if (dialogueBoxData.has.textSound) textTypeSFX = Paths.sound(dialogueBoxData.att.textSound);
+            if (dialogueBoxData.has.nextSound) nextSFX = Paths.sound(dialogueBoxData.att.nextSound);
+
             antialiasing = dialogueBoxData.getAtt("antialiasing").getDefault("true") == "true";
             screenCenter(X);
             y = FlxG.height - height;
@@ -40,6 +46,8 @@ class DialogueBox extends FunkinSprite {
             active = false;
             Logs.trace('Couldn\'t load dialogue box "$name": ${e.toString()}', ERROR);
         }
+        FlxG.sound.cache(nextSFX);
+        FlxG.sound.cache(textTypeSFX);
     }
 
     public function popupChar(char:DialogueCharacter) {
@@ -47,20 +55,25 @@ class DialogueBox extends FunkinSprite {
         var pos = positions[char.positionName];
         if (pos == null) return;
 
-        if (!char.visible) {
-            char.alpha = 0;
-            char.visible = true;
-            char.setPosition(pos.x, pos.y + 100);
-            char.show(pos.y);
-        }
+        char.show((FlxG.width / 2) + pos.x, FlxG.height - pos.y);
     }
 
     public function playBubbleAnim(bubble:String) {
+        FlxG.sound.play(nextSFX);
         if (hasAnimation('$bubble-open'))
             playAnim('$bubble-open', true);
         else
             playAnim(bubble);
         visible = true;
+    }
+
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+        if (isAnimFinished()) {
+            var animName = getAnimName();
+            if (animName.endsWith("-open"))
+                playAnim(animName.substr(0, animName.length - 5));
+        }
     }
 
     public override function destroy() {
