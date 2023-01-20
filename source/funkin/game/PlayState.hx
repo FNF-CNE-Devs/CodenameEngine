@@ -750,7 +750,9 @@ class PlayState extends MusicBeatState
 		inCutscene = false;
 
 		generateStrums();
-		scripts.call("onStartCountdown");
+
+		var e = scripts.event("onStartCountdown", new CancellableEvent());
+		if (e.cancelled) return;
 
 		startedCountdown = true;
 		Conductor.songPosition = 0;
@@ -1209,7 +1211,7 @@ class PlayState extends MusicBeatState
 
 
 		// RESET = Quick Game Over Screen
-		if (controls.RESET)
+		if (startedCountdown && controls.RESET)
 			health = 0;
 
 		// CHEAT = brandon's a pussy
@@ -1218,11 +1220,12 @@ class PlayState extends MusicBeatState
 			health += 1;
 			trace("User is cheating!");
 		}
-
+		
 		if (health <= 0 && canDie)
 			gameOver();
 		if (health >= maxHealth && canDadDie)
 			gameOver();
+	
 
 		if (generatedMusic) {
 			__updateNote_event = EventManager.get(NoteUpdateEvent);
@@ -1233,7 +1236,7 @@ class PlayState extends MusicBeatState
 			keyShit();
 
 		#if debug
-		if (FlxG.keys.justPressed.ONE)
+		if (generatedMusic && FlxG.keys.justPressed.ONE)
 			endSong();
 		#end
 
