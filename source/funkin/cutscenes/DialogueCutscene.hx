@@ -56,7 +56,7 @@ class DialogueCutscene extends Cutscene {
             // Add dialogue box
             dialogueBox = new DialogueBox(dialogueData.getAtt("box").getDefault("default"));
             add(dialogueBox);
-
+            add(dialogueBox.text);
             
 
             next();
@@ -84,7 +84,7 @@ class DialogueCutscene extends Cutscene {
 
         if (charMap[curLine.char] != null)
             dialogueBox.popupChar(charMap[curLine.char]);
-        dialogueBox.playBubbleAnim(curLine.bubble);
+        dialogueBox.playBubbleAnim(curLine.bubble, curLine.text, curLine.speed);
     }
 
     public override function destroy() {
