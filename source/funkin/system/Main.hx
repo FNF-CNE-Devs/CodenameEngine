@@ -245,7 +245,7 @@ class Main extends Sprite
 
 		Paths.assetsTree.clearCache();
 
-		MemoryUtil.destroyFlixelZombies();
+		// MemoryUtil.destroyFlixelZombies();
 		MemoryUtil.clearMajor();
 	}
 }
