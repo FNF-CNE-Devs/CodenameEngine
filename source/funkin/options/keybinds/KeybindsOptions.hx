@@ -152,7 +152,7 @@ class KeybindsOptions extends MusicBeatSubstate {
                 var sparrowIcon:String = null;
                 var sparrowAnim:String = null;
                 if (e.name.startsWith('{note')) {// is actually a note!!
-                    sparrowIcon = "game/NOTE_assets";
+                    sparrowIcon = "game/notes/default";
                     sparrowAnim = switch(e.name) {
                         case '{noteLeft}':
                             "purple0";

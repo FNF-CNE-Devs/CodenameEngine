@@ -937,14 +937,14 @@ class PlayState extends MusicBeatState
 
 		curSong = songData.song.toLowerCase();
 
-		inst = FlxG.sound.load(Paths.inst(PlayState.SONG.song));
+		inst = FlxG.sound.load(Paths.inst(SONG.song, difficulty));
 		vocals = FlxG.sound.list.recycle(FlxSound);
 		@:privateAccess {
 			vocals.reset();
 			vocals.exists = true;
 		}
 		if (SONG.needsVoices)
-			vocals.loadEmbedded(Paths.voices(PlayState.SONG.song));
+			vocals.loadEmbedded(Paths.voices(SONG.song, difficulty));
 		FlxG.sound.list.add(vocals);
 
 		inst.persist = vocals.persist = false;
