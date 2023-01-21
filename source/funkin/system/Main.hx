@@ -209,7 +209,7 @@ class Main extends Sprite
 		FlxG.signals.preStateCreate.add(onStateSwitch);
 
 		#if MOD_SUPPORT
-		ModsFolder.switchMod("introMod");
+		ModsFolder.switchMod(Options.lastLoadedMod);
 		#end
 
 		initTransition();

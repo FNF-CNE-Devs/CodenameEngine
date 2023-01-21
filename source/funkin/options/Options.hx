@@ -27,6 +27,8 @@ class Options
 	public static var betaUpdates:Bool = false;
 	public static var hitWindow:Float = 250;
 
+	public static var lastLoadedMod:String = null;
+
 	/**
 	 * PLAYER 1 CONTROLS
 	 */
