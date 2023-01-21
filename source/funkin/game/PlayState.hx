@@ -1490,7 +1490,7 @@ class PlayState extends MusicBeatState
 
 	function goodNoteHit(note:Note):Void
 	{
-		if(note.wasGoodHit) return;
+		if(note == null || note.wasGoodHit) return;
 
 		note.wasGoodHit = true;
 

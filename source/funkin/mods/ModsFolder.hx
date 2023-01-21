@@ -76,6 +76,7 @@ class ModsFolder {
         Options.lastLoadedMod = ModsFolder.currentModFolder = mod;
         Options.save();
         if (ModsFolder.currentModFolder == null) return;
+        
         Paths.assetsTree.addLibrary(loadMod(ModsFolder.currentModFolder));
 
         Main.refreshAssets();
