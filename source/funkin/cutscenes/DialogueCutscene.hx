@@ -49,7 +49,7 @@ class DialogueCutscene extends Cutscene {
                     char: node.getAtt('char').getDefault('boyfriend'),
                     bubble: node.getAtt('bubble').getDefault('normal'),
                     callback: node.getAtt('callback'),
-                    speed: node.has.speed ? Std.parseFloat(node.att.speed).getDefault(0.02) : 0.02
+                    speed: node.has.speed ? Std.parseFloat(node.att.speed).getDefault(0.05) : 0.05
                 });
             }
 
