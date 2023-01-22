@@ -1620,8 +1620,10 @@ class PlayState extends MusicBeatState
 					if (char != null)
 						char.playSingAnim(event.direction, event.animSuffix);
 
-			if (!event.strumGlowCancelled) note.__strum.press(note.strumTime);
-			if (event.showSplash) splashHandler.showSplash(note.splash, note.__strum);
+			if (note.__strum != null) {
+				if (!event.strumGlowCancelled) note.__strum.press(note.strumTime);
+				if (event.showSplash) splashHandler.showSplash(note.splash, note.__strum);
+			}
 		}
 
 		if (event.unmuteVocals) vocals.volume = 1;
