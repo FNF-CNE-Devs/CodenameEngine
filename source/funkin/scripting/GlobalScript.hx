@@ -1,5 +1,6 @@
 package funkin.scripting;
 
+import funkin.scripting.events.CancellableEvent;
 import funkin.system.Conductor;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -78,6 +79,12 @@ class GlobalScript {
         });
 
         onModSwitch(#if MOD_SUPPORT ModsFolder.currentModFolder #else null #end);
+    }
+
+    public static function event<T:CancellableEvent>(name:String, event:T):T {
+        if (script == null) return event;
+        script.call(name, [event]);
+        return event;
     }
 
     public static function call(name:String, ?args:Array<Dynamic>) {

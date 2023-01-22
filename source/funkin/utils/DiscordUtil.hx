@@ -1,5 +1,8 @@
 package funkin.utils;
 
+import funkin.scripting.events.DiscordPresenceUpdateEvent;
+import haxe.Json;
+import openfl.utils.Assets;
 #if DISCORD_RPC
 import discord_rpc.DiscordRpc;
 import sys.thread.Thread;
@@ -12,16 +15,11 @@ class DiscordUtil {
     public static var currentID:String = null;
     public static var discordThread:#if DISCORD_RPC Thread #else Dynamic #end = null;
     public static var ready:Bool = false;
-    
-    /**
-     * CHANGE SETTINGS HERE FOR CUSTOM DISCORD RPC ON SOURCE
-     */
-    public static final defaultClientID:String = "1027994136193810442";
-    public static final logoKey:String = "icon";
+    public static var data:DiscordJson = null;
 
     public static function init() {
         #if DISCORD_RPC
-        changeClientID(defaultClientID);
+        reloadJsonData();
         discordThread = Thread.create(function() {
             while (true)
             {
@@ -37,6 +35,26 @@ class DiscordUtil {
 		Application.current.onExit.add(function(exitCode) {
 			shutdown();
 		});
+        #end
+    }
+
+    public static function reloadJsonData() {
+        #if DISCORD_RPC
+        data = {};
+        var jsonPath = Paths.json("config/discord");
+        if (Assets.exists(jsonPath)) {
+            try {
+                data = Json.parse(Assets.getText(jsonPath));
+            } catch(e) {
+                Logs.trace('Couldn\'t load Discord RPC configuration: ${e.toString()}', ERROR);
+            }
+        }
+        trace(data);
+        data.setFieldDefault("clientID", "1027994136193810442");
+        data.setFieldDefault("logoKey", "icon");
+        data.setFieldDefault("logoText", Application.current.meta.get('title'));
+
+        changeClientID(data.clientID);
         #end
     }
 
@@ -75,10 +93,15 @@ class DiscordUtil {
         if (data == null) return;
 
         if (data.largeImageKey == null)
-            data.largeImageKey = logoKey;
+            data.largeImageKey = DiscordUtil.data.logoKey;
         if (data.largeImageText == null)
-            data.largeImageText = Application.current.meta.get('title');
+            data.largeImageText = DiscordUtil.data.logoText;
         
+        #if GLOBAL_SCRIPT
+        var event = funkin.scripting.GlobalScript.event("onDiscordPresenceUpdate", EventManager.get(DiscordPresenceUpdateEvent).recycle(data));
+        if (event.cancelled) return;
+        
+        #end
         DiscordRpc.presence(data);
         #end
     }
@@ -121,4 +144,10 @@ class DiscordUtil {
         Logs.trace('Discord RPC Disconnected: ${_message} (Code: $_code)', WARNING);
     }
     #end
+}
+
+typedef DiscordJson = {
+    var ?clientID:String;
+    var ?logoKey:String;
+    var ?logoText:String;
 }
