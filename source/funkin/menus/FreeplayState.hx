@@ -16,6 +16,7 @@ import funkin.ui.Alphabet;
 import funkin.game.HealthIcon;
 import funkin.game.Highscore;
 import haxe.Json;
+import funkin.scripting.events.*;
 
 using StringTools;
 
@@ -31,28 +32,81 @@ class FreeplayState extends MusicBeatState
 	 */
 	public inline static var timeUntilAutoplay:Float = 1;
 
-	var songs:Array<SongMetadata> = [];
+	/**
+	 * Array containing all of the songs metadatas
+	 */
+	public var songs:Array<SongMetadata> = [];
 
-	var selector:FlxText;
-	var curSelected:Int = 0;
-	var curDifficulty:Int = 1;
-	var curCoopMode:Int = 0;
+	/**
+	 * Currently selected song
+	 */
+	public var curSelected:Int = 0;
+	/**
+	 * Currently selected difficulty
+	 */
+	public var curDifficulty:Int = 1;
+	/**
+	 * Currently selected coop/opponent mode
+	 */
+	public var curCoopMode:Int = 0;
 
-	var scoreText:FlxText;
-	var diffText:FlxText;
-	var coopText:FlxText;
-	var lerpScore:Int = 0;
-	var intendedScore:Int = 0;
+	/**
+	 * Text containing the score info (PERSONAL BEST: 0)
+	 */
+	public var scoreText:FlxText;
+	
+	/**
+	 * Text containing the current difficulty (< HARD >)
+	 */
+	public var diffText:FlxText;
+	
+	/**
+	 * Text containing the current coop/opponent mode ([TAB] Co-Op mode)
+	 */
+	public var coopText:FlxText;
+	
+	/**
+	 * Currently lerped score. Is updated to go towards `intendedScore`.
+	 */
+	public var lerpScore:Int = 0;
+	/**
+	 * Destination for the currently lerped score.
+	 */
+	public var intendedScore:Int = 0;
 
-	var songList:FreeplaySonglist;
-	var scoreBG:FlxSprite;
+	/**
+	 * Assigned FreeplaySonglist item.
+	 */
+	public var songList:FreeplaySonglist;
+	/**
+	 * Black background around the score, the difficulty text and the co-op text.
+	 */
+	public var scoreBG:FlxSprite;
 
-	var bg:FlxSprite;
+	/**
+	 * Background.
+	 */
+	public var bg:FlxSprite;
 
-	private var grpSongs:FlxTypedGroup<Alphabet>;
-	private var curPlaying:Bool = false;
+	/**
+	 * Whenever the player can navigate and select
+	 */
+	public var canSelect:Bool = true;
 
-	private var iconArray:Array<HealthIcon> = [];
+	/**
+	 * Group containing all of the alphabets
+	 */
+	public var grpSongs:FlxTypedGroup<Alphabet>;
+
+	/**
+	 * Whenever the currently selected song is playing.
+	 */
+	public var curPlaying:Bool = false;
+
+	/**
+	 * Array containing all of the icons.
+	 */
+	public var iconArray:Array<HealthIcon> = [];
 
 	override function create()
 	{
@@ -116,9 +170,18 @@ class FreeplayState extends MusicBeatState
 	
 
 	#if PRELOAD_ALL
-	var autoplayElapsed:Float = 0;
-	var songInstPlaying:Bool = true;
-	var curPlayingInst:String = null;
+	/**
+	 * Time elapsed since last autoplay. If this time exceeds `timeUntilAutoplay`, the currently selected song will play.
+	 */
+	public var autoplayElapsed:Float = 0;
+	/**
+	 * Whenever the currently selected song instrumental is playing.
+	 */
+	public var songInstPlaying:Bool = true;
+	/**
+	 * Path to the currently playing song instrumental.
+	 */
+	public var curPlayingInst:String = null;
 	#end
 
 	override function update(elapsed:Float)
@@ -135,11 +198,13 @@ class FreeplayState extends MusicBeatState
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
 
-		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
-		changeDiff((controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0));
-		changeCoopMode((FlxG.keys.justPressed.TAB ? 1 : 0));
-		// putting it before so that its actually smooth
-		updateOptionsAlpha();
+		if (canSelect) {
+			changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
+			changeDiff((controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0));
+			changeCoopMode((FlxG.keys.justPressed.TAB ? 1 : 0));
+			// putting it before so that its actually smooth
+			updateOptionsAlpha();
+		}
 
 		scoreText.text = "PERSONAL BEST:" + lerpScore;
 		scoreBG.scale.set(Math.max(diffText.width, scoreText.width) + 8, (coopText.visible ? coopText.y + coopText.height : 66));
@@ -171,28 +236,47 @@ class FreeplayState extends MusicBeatState
 		}
 
 		if (controls.ACCEPT && !dontPlaySongThisFrame)
-		{
-			var opponentMode:Bool = false;
-			var coopMode:Bool = false;
-			if (songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed) {
-				opponentMode = curCoopMode % 2 == 1;
-				coopMode = curCoopMode >= 2;
-			} else if (songs[curSelected].coopAllowed) {
-				coopMode = curCoopMode == 1;
-			} else if (songs[curSelected].opponentModeAllowed) {
-				opponentMode = curCoopMode == 1;
-			}
-			CoolUtil.loadSong(songs[curSelected].songName, songs[curSelected].difficulties[curDifficulty], opponentMode, coopMode);
-			FlxG.switchState(new PlayState());
-		}
+			select();
 	}
 
-	function changeDiff(change:Int = 0, force:Bool = false)
+	/**
+	 * Selects the current song.
+	 */
+	public function select() {
+		var opponentMode:Bool = false;
+		var coopMode:Bool = false;
+		if (songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed) {
+			opponentMode = curCoopMode % 2 == 1;
+			coopMode = curCoopMode >= 2;
+		} else if (songs[curSelected].coopAllowed) {
+			coopMode = curCoopMode == 1;
+		} else if (songs[curSelected].opponentModeAllowed) {
+			opponentMode = curCoopMode == 1;
+		}
+
+		var event = event("onSelect", EventManager.get(FreeplaySongSelectEvent).recycle(songs[curSelected].songName, songs[curSelected].difficulties[curDifficulty], opponentMode, coopMode));
+
+		if (event.cancelled) return;
+
+		CoolUtil.loadSong(event.song, event.difficulty, event.opponentMode, event.coopMode);
+		FlxG.switchState(new PlayState());
+	}
+
+	/**
+	 * Changes the current difficulty
+	 * @param change How much to change.
+	 * @param force Force the change if `change` is equal to 0
+	 */
+	public function changeDiff(change:Int = 0, force:Bool = false)
 	{
 		if (change == 0 && !force) return;
 
 		var curSong = songs[curSelected];
-		curDifficulty = FlxMath.wrap(curDifficulty + change, 0, curSong.difficulties.length-1);
+		var event = event("onChangeDiff", EventManager.get(MenuChangeEvent).recycle(curDifficulty, FlxMath.wrap(curDifficulty + change, 0, curSong.difficulties.length-1), change));
+
+		if (event.cancelled) return;
+
+		curDifficulty = event.value;
 
 		#if !switch
 		intendedScore = Highscore.getScore(curSong.songName, curSong.difficulties[curDifficulty]).score;
@@ -205,19 +289,32 @@ class FreeplayState extends MusicBeatState
 			diffText.text = curSong.difficulties[curDifficulty];
 	}
 
-	private var coopLabels:Array<String> = [
+	/**
+	 * Array containing all labels for Co-Op / Opponent modes.
+	 */
+	public var coopLabels:Array<String> = [
 		"[TAB] Solo",
 		"[TAB] Opponent Mode",
 		"[TAB] Co-Op Mode",
 		"[TAB] Co-Op Mode (Switched)"
 	];
-	function changeCoopMode(change:Int = 0, force:Bool = false) {
+
+	/**
+	 * Change the current coop mode context.
+	 * @param change How much to change
+	 * @param force Force the change, even if `change` is equal to 0.
+	 */
+	 public function changeCoopMode(change:Int = 0, force:Bool = false) {
 		if (change == 0 && !force) return;
 		if (!songs[curSelected].coopAllowed && !songs[curSelected].opponentModeAllowed) return;
 
 		var bothEnabled = songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed;
+		var event = event("onChangeCoopMode", EventManager.get(MenuChangeEvent).recycle(curCoopMode, FlxMath.wrap(curCoopMode + change, 0, bothEnabled ? 3 : 1), change));
 
-		curCoopMode = FlxMath.wrap(curCoopMode + change, 0, bothEnabled ? 3 : 1);
+		if (event.cancelled) return;
+
+
+		curCoopMode = event.value;
 
 		if (bothEnabled) {
 			coopText.text = coopLabels[curCoopMode];
@@ -226,12 +323,21 @@ class FreeplayState extends MusicBeatState
 		}
 	}
 
-	function changeSelection(change:Int = 0, force:Bool = false)
+	/**
+	 * Change the current selection.
+	 * @param change How much to change
+	 * @param force Force the change, even if `change` is equal to 0.
+	 */
+	public function changeSelection(change:Int = 0, force:Bool = false)
 	{
 		if (change == 0 && !force) return;
-        CoolUtil.playMenuSFX(0, 0.7);
+		
 
-		curSelected = FlxMath.wrap(curSelected + change, 0, songs.length-1);
+		var bothEnabled = songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed;
+		var event = event("onChangeSelection", EventManager.get(MenuChangeEvent).recycle(curSelected, FlxMath.wrap(curSelected + change, 0, songs.length-1), change));
+		if (event.cancelled) return;
+
+        if (event.playMenuSFX) CoolUtil.playMenuSFX(0, 0.7);
 
 		changeDiff(0, true);
 		
