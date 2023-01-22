@@ -167,7 +167,6 @@ class FreeplayState extends MusicBeatState
 
 		super.create();
 	}
-	
 
 	#if PRELOAD_ALL
 	/**
@@ -231,7 +230,7 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			CoolUtil.playMenuSFX(2, 0.7);
+			CoolUtil.playMenuSFX(CANCEL, 0.7);
 			FlxG.switchState(new MainMenuState());
 		}
 
@@ -282,7 +281,6 @@ class FreeplayState extends MusicBeatState
 		intendedScore = Highscore.getScore(curSong.songName, curSong.difficulties[curDifficulty]).score;
 		#end
 
-		
 		if (curSong.difficulties.length > 1)
 			diffText.text = '< ${curSong.difficulties[curDifficulty]} >';
 		else
@@ -332,15 +330,14 @@ class FreeplayState extends MusicBeatState
 	{
 		if (change == 0 && !force) return;
 		
-
 		var bothEnabled = songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed;
 		var event = event("onChangeSelection", EventManager.get(MenuChangeEvent).recycle(curSelected, FlxMath.wrap(curSelected + change, 0, songs.length-1), change));
 		if (event.cancelled) return;
 
-        if (event.playMenuSFX) CoolUtil.playMenuSFX(0, 0.7);
+        if (event.playMenuSFX) CoolUtil.playMenuSFX(SCROLL, 0.7);
 
 		changeDiff(0, true);
-		
+
 		#if PRELOAD_ALL
 			autoplayElapsed = 0;
 			songInstPlaying = false;
@@ -391,7 +388,7 @@ class FreeplaySonglist {
 					var meta = new SongMetadata(e.name,
                         e.icon.getDefault("bf"),
                         CoolUtil.getColorFromDynamic(e.color).getDefault(FreeplayState.defaultColor), e.difficulties, source);
-					
+
 					meta.coopAllowed = e.coopAllowed;
 					meta.opponentModeAllowed = e.opponentModeAllowed;
                     this.songs.push(meta);

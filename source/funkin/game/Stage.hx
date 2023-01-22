@@ -18,17 +18,17 @@ class Stage extends FlxBasic implements IBeatReceiver {
     public var stagePath:String;
     public var stageSprites:Map<String, FlxSprite> = [];
     public var stageScript:Script;
-    
+
     public function getSprite(name:String) {
         return stageSprites[name];
     }
 
     public function new(stage:String, ?state:FlxState) {
         super();
-        
+
         if (state == null) state = PlayState.instance;
         if (state == null) state = FlxG.state;
-        
+
         stagePath = Paths.xml('stages/$stage');
         try {
             if (Assets.exists(stagePath)) stageXML = new Access(Xml.parse(Assets.getText(stagePath)).firstElement());
@@ -49,7 +49,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
                 spritesParentFolder = stageXML.att.folder;
                 if (spritesParentFolder.charAt(spritesParentFolder.length-1) != "/") spritesParentFolder = spritesParentFolder + "/";
             }
-        
+
             for(node in stageXML.elements) {
                 var sprite:Dynamic = switch(node.name) {
                     case "sprite" | "spr" | "sparrow":
@@ -59,8 +59,26 @@ class Stage extends FlxBasic implements IBeatReceiver {
 
                         if (!node.has.zoomfactor && PlayState.instance != null)
                             spr.initialZoom = PlayState.instance.defaultCamZoom;
-    
+
                         stageSprites.set(spr.name, spr);
+                        state.add(spr);
+                        spr;
+                    case "box":
+                        trace('HOLY FUCK BOX DETECTED'); // TODO: someone help this aint doing shit!! >:(
+                        if ( !node.has.name || !node.has.width || !node.has.height) continue;
+
+                        var spr = new FlxSprite(
+                            (node.has.x) ? Std.parseFloat(node.att.x) : 0,
+                            (node.has.y) ? Std.parseFloat(node.att.y) : 0
+                        ).makeGraphic(
+                            Std.parseInt(node.att.width),
+                            Std.parseInt(node.att.height),
+                            (node.has.color) ? Std.parseInt(node.att.color) : 0xFFFFFFFF
+                        );
+
+                        trace(node.att.name, node.att.width, node.att.height);
+
+                        stageSprites.set(node.getAtt("name"), spr);
                         state.add(spr);
                         spr;
                     case "boyfriend" | "bf":
@@ -102,7 +120,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
         }
         PlayState.instance.scripts.add(stageScript);
     }
-    
+
 
     private static function doCharNodeShit(char:Character, node:Access) {
         if (node.has.x) {

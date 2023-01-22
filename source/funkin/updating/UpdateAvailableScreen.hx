@@ -16,7 +16,7 @@ import flixel.FlxG;
 
 class UpdateAvailableScreen extends MusicBeatState {
     public var bg:FlxSprite;
-    
+
     public var versionCheckBG:FlxSprite;
     public var title:Alphabet;
     public var versionDifferenceLabel:FunkinText;
@@ -38,7 +38,7 @@ class UpdateAvailableScreen extends MusicBeatState {
         super.create();
         FlxTransitionableState.skipNextTransIn = true;
         FlxG.mouse.visible = true;
-        
+
         FlxG.camera.flash(0xFF000000, 0.25);
 
         bg = new FlxSprite().loadAnimatedGraphic(Paths.image("menus/menuDesat"));
@@ -85,7 +85,7 @@ class UpdateAvailableScreen extends MusicBeatState {
         installButton.scrollFactor.set();
         skipButton.scrollFactor.set();
         optionsBG.scrollFactor.set();
-        
+
         add(changeLogText);
 
         add(versionCheckBG);
@@ -129,17 +129,17 @@ class UpdateAvailableScreen extends MusicBeatState {
 
     public function select() {
         if (installSelected) {
-            CoolUtil.playMenuSFX(1);
+            CoolUtil.playMenuSFX(CONFIRM);
             FlxG.switchState(new UpdateScreen(check));
         } else {
-            CoolUtil.playMenuSFX(2);
+            CoolUtil.playMenuSFX(CANCEL);
             FlxG.switchState(new MainMenuState());
         }
     }
 
 
     public function changeSelection() {
-        CoolUtil.playMenuSFX(0, 0.7);
+        CoolUtil.playMenuSFX(SCROLL, 0.7);
         if (installSelected) {
             installButton.text = "> INSTALL <";
             skipButton.text = "SKIP";

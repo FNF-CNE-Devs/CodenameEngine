@@ -39,7 +39,7 @@ class BetaWarningState extends MusicBeatState {
 
         if (controls.ACCEPT && !transitioning) {
             transitioning = true;
-            CoolUtil.playMenuSFX(1);
+            CoolUtil.playMenuSFX(CONFIRM);
             FlxG.camera.flash(FlxColor.WHITE, 1, function() {
                 FlxG.camera.fade(FlxColor.BLACK, 2.5, false, function() {
                     FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
