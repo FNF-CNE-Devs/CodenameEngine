@@ -329,11 +329,12 @@ class FreeplayState extends MusicBeatState
 	public function changeSelection(change:Int = 0, force:Bool = false)
 	{
 		if (change == 0 && !force) return;
-		
+
 		var bothEnabled = songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed;
 		var event = event("onChangeSelection", EventManager.get(MenuChangeEvent).recycle(curSelected, FlxMath.wrap(curSelected + change, 0, songs.length-1), change));
 		if (event.cancelled) return;
 
+		curSelected = event.value;
         if (event.playMenuSFX) CoolUtil.playMenuSFX(SCROLL, 0.7);
 
 		changeDiff(0, true);
