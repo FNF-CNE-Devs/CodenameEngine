@@ -63,6 +63,24 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         stageSprites.set(spr.name, spr);
                         state.add(spr);
                         spr;
+                    case "box":
+                        trace('HOLY FUCK BOX DETECTED'); // TODO: someone help this aint doing shit!! >:(
+                        if ( !node.has.name || !node.has.width || !node.has.height) continue;
+
+                        var spr = new FlxSprite(
+                            (node.has.x) ? Std.parseInt(node.att.x) : 0,
+                            (node.has.y) ? Std.parseInt(node.att.y) : 0
+                        ).makeGraphic(
+                            node.att.width,
+                            node.att.height,
+                            (node.has.color) ? Std.parseInt(node.att.color) : 0xFFFFFFFF
+                        );
+
+                        trace(node.att.name, node.att.width, node.att.height);
+    
+                        stageSprites.set(node.getAtt("name"), spr);
+                        state.add(spr);
+                        spr;
                     case "boyfriend" | "bf":
                         if (PlayState.instance == null || PlayState.instance.boyfriend == null) continue;
                         doCharNodeShit(PlayState.instance.boyfriend, node);
