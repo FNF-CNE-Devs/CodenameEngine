@@ -146,7 +146,7 @@ class KeybindsOptions extends MusicBeatSubstate {
             var title = new Alphabet(0, k * 75, category.name, true);
             title.screenCenter(X);
             add(title);
-            
+
             k++;
             for(e in category.settings) {
                 var sparrowIcon:String = null;
@@ -165,7 +165,7 @@ class KeybindsOptions extends MusicBeatSubstate {
                     };
                     e.name = e.name.substring(5, e.name.length - 1);
                 }
-                        
+
                 var text = new KeybindSetting(100, k * 75, e.name, e.control, sparrowIcon, sparrowAnim);
                 if (!isSubState)
                     text.bind1.color = text.bind2.color = FlxColor.BLACK;
@@ -199,18 +199,17 @@ class KeybindsOptions extends MusicBeatSubstate {
                     coloredBG.color = noteColors[curSelected];
                 else
                     coloredBG.color = CoolUtil.lerpColor(coloredBG.color, noteColors[curSelected], 0.0625);
-    
+
                 coloredBG.alpha = lerp(coloredBG.alpha, 1, 0.0625);
             } else
                 coloredBG.alpha = lerp(coloredBG.alpha, 0, 0.0625);
         }
 
-            
         if (canSelect) {
             changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
             if (controls.BACK) {
                 FlxTransitionableState.skipNextTransIn = true;
-                if (isSubState) 
+                if (isSubState)
                     close();
                 else
                     FlxG.switchState(new OptionsMenu());
@@ -222,7 +221,7 @@ class KeybindsOptions extends MusicBeatSubstate {
             if (controls.ACCEPT && !skipThisFrame) {
                 if (alphabets.members[curSelected] != null) {
                     canSelect = false;
-                    CoolUtil.playMenuSFX(1);
+                    CoolUtil.playMenuSFX(CONFIRM);
                     alphabets.members[curSelected].changeKeybind(function() {
                         canSelect = true;
                     }, function() {
@@ -231,10 +230,10 @@ class KeybindsOptions extends MusicBeatSubstate {
                 }
                 return;
             }
-    
+
             if (controls.LEFT_P || controls.RIGHT_P) {
                 if (alphabets.members[curSelected] != null) {
-                    CoolUtil.playMenuSFX(0, 0.7);
+                    CoolUtil.playMenuSFX(SCROLL, 0.7);
                     alphabets.members[curSelected].p2Selected = (p2Selected = !p2Selected);
                 }
             }
@@ -243,10 +242,10 @@ class KeybindsOptions extends MusicBeatSubstate {
         skipThisFrame = false;
 
     }
-    
+
     public function changeSelection(change:Int) {
         if (change == 0) return;
-        CoolUtil.playMenuSFX(0, 0.4);
+        CoolUtil.playMenuSFX(SCROLL, 0.4);
         curSelected = FlxMath.wrap(curSelected + change, 0, alphabets.length-1);
         alphabets.forEach(function(e) {
             e.alpha = 0.55;

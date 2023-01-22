@@ -18,7 +18,7 @@ class MiscOptions extends OptionsScreen {
                     if (report.newUpdate) {
                         FlxG.switchState(new funkin.updating.UpdateAvailableScreen(report));
                     } else {
-                        CoolUtil.playMenuSFX(2);
+                        CoolUtil.playMenuSFX(CANCEL);
                         updateDescText("No update found.");
                     }
             }),

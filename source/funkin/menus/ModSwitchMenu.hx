@@ -19,7 +19,7 @@ class ModSwitchMenu extends MusicBeatSubstate {
 
     public override function create() {
         super.create();
-        
+
         var bg = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFF000000);
         bg.scale.set(FlxG.width, FlxG.height);
         bg.updateHitbox();
@@ -69,7 +69,7 @@ class ModSwitchMenu extends MusicBeatSubstate {
 
         curSelected = FlxMath.wrap(curSelected + change, 0, alphabets.length-1);
 
-        CoolUtil.playMenuSFX(0, 0.7);
+        CoolUtil.playMenuSFX(SCROLL, 0.7);
 
         for(k=>alphabet in alphabets.members) {
             alphabet.alpha = 0.6;

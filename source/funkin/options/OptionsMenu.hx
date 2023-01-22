@@ -83,14 +83,14 @@ class OptionsMenu extends MusicBeatState {
         if (!canSelect) return;
         changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
         if (controls.ACCEPT && alphabets.members[curSelected] != null) {
-            CoolUtil.playMenuSFX(1);
+            CoolUtil.playMenuSFX(CONFIRM);
             canSelect = false;
             FlxFlicker.flicker(alphabets.members[curSelected], 1, Options.flashingMenu ? 0.06 : 0.15, false, false, function(flick:FlxFlicker)
             {
                 FlxTransitionableState.skipNextTransOut = true;
                 if (options[curSelected].state is FlxState)
                     FlxG.switchState(options[curSelected].state);
-                else 
+                else
                     FlxG.switchState(Type.createInstance(options[curSelected].state, []));
             });
         } else if (controls.BACK) {
@@ -100,10 +100,10 @@ class OptionsMenu extends MusicBeatState {
                 FlxG.switchState(new MainMenuState());
         }
     }
-    
+
     public function changeSelection(change:Int) {
         if (change == 0) return;
-        CoolUtil.playMenuSFX(0, 0.7);
+        CoolUtil.playMenuSFX(CANCEL, 0.7);
         curSelected = FlxMath.wrap(curSelected + change, 0, options.length-1);
         alphabets.forEach(function(e) {
             e.alpha = 0.6;
