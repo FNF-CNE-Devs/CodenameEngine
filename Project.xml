@@ -128,10 +128,14 @@
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
 	<define name="VIDEO_CUTSCENES" unless="web || linux || hl || mac" />
 
+	<!-- Comment this out to disable build number on FPS -->
+	<define name="SHOW_BUILD_ON_FPS" />
+
 
 	<haxedef name="VIDEO_CUTSCENES" if="VIDEO_CUTSCENES" />
 	<haxedef name="UPDATE_CHECKING" if="UPDATE_CHECKING" />
 	<haxedef name="DISCORD_RPC" if="DISCORD_RPC" />
+	<haxedef name="SHOW_BUILD_ON_FPS" if="SHOW_BUILD_ON_FPS" />
 	<haxeflag name="--macro" value="funkin.macros.StdDeprecationsRemover.init()" />
 	<!-- _______________________________ Libraries ______________________________ -->
 
@@ -149,7 +153,7 @@
 
 	<haxelib name="markdown" />
 
-	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
+	<haxelib name="hxcpp-debug-server" if="desktop debug"/>
 
 	<!-- _________________________________ HScript classes _______________________________ -->
 

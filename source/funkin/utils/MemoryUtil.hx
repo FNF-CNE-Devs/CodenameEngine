@@ -12,6 +12,23 @@ import neko.vm.Gc;
 import openfl.system.System;
 
 class MemoryUtil {
+	public static var disableCount:Int = 0;
+
+	public static function askDisable() {
+		disableCount++;
+		if (disableCount > 0)
+			disable();
+		else
+			enable();
+	}
+	public static function askEnable() {
+		disableCount--;
+		if (disableCount > 0)
+			disable();
+		else
+			enable();
+	}
+
 	public static function init() {
 		#if cpp
 		#end

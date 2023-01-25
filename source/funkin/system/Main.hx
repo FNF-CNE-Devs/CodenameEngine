@@ -104,7 +104,8 @@ class Main extends Sprite
 		FlxG.switchState(new funkin.menus.BetaWarningState());
 
 		#if !mobile
-		addChild(new FramerateField(10, 3, 0xFFFFFF));
+		// addChild(new FramerateField(10, 3, 0xFFFFFF));
+		addChild(new funkin.system.framerate.Framerate());
 		#end
 	}
 
@@ -245,7 +246,7 @@ class Main extends Sprite
 
 		Paths.assetsTree.clearCache();
 
-		// MemoryUtil.destroyFlixelZombies();
+		MemoryUtil.clearMinor();
 		MemoryUtil.clearMajor();
 	}
 }
