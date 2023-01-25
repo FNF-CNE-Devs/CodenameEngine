@@ -11,6 +11,8 @@ class FramerateCategory extends Sprite {
 
     public var bgSprite:Sprite;
 
+    private var _text:String = "";
+
     public function new(title:String, text:String = "") {
         super();
 
@@ -41,6 +43,7 @@ class FramerateCategory extends Sprite {
     }
 
     public override function __enterFrame(t:Int) {
+        if (alpha <= 0.05) return;
         super.__enterFrame(t);
 
         var width = Math.max(this.title.width, this.text.width) + (Framerate.instance.x * 2);

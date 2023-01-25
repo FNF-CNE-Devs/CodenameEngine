@@ -31,6 +31,7 @@ class MemoryCounter extends Sprite {
     }
 
     public override function __enterFrame(t:Int) {
+        if (alpha <= 0.05) return;
         super.__enterFrame(t);
 
         memory = MemoryUtil.currentMemUsage();

@@ -10,6 +10,7 @@ class AssetTreeInfo extends FramerateCategory {
     }
 
     public override function __enterFrame(t:Int) {
+        if (alpha <= 0.05) return;
         var text = 'Not initialized yet\n';
         if (Paths.assetsTree != null){
             text = "";

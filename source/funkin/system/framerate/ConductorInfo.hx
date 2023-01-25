@@ -8,13 +8,14 @@ class ConductorInfo extends FramerateCategory {
     }
 
     public override function __enterFrame(t:Int) {
-        var text = 'Current Song Position: ${Conductor.songPosition}';
-        text += '\n - ${Conductor.curBeat} beats';
-        text += '\n - ${Conductor.curStep} steps';
-        text += '\nCurrent BPM: ${Conductor.bpm}';
-        text += '\nCurrent speed: ${FlxMath.roundDecimal(Conductor.speed, 2)}x';
+        if (alpha <= 0.05) return;
+        _text = 'Current Song Position: ${Conductor.songPosition}';
+        _text += '\n - ${Conductor.curBeat} beats';
+        _text += '\n - ${Conductor.curStep} steps';
+        _text += '\nCurrent BPM: ${Conductor.bpm}';
+        _text += '\nCurrent speed: ${FlxMath.roundDecimal(Conductor.speed, 2)}x';
         
-        this.text.text = text;
+        this.text.text = _text;
         super.__enterFrame(t);
     }
 }

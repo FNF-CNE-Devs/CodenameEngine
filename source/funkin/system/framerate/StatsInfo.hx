@@ -10,11 +10,12 @@ class StatsInfo extends FramerateCategory {
     }
 
     public override function __enterFrame(t:Int) {
-        var text = "totalDC: " + Context3DStats.totalDrawCalls();
-        text += "\nstageDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE);
-        text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
+        if (alpha <= 0.05) return;
+        _text = "totalDC: " + Context3DStats.totalDrawCalls();
+        _text += "\nstageDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE);
+        _text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
         
-        this.text.text = text;
+        this.text.text = _text;
         super.__enterFrame(t);
     }
 }

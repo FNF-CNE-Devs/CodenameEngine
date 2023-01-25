@@ -150,9 +150,6 @@ class Main extends Sprite
 		ModsFolder.init();
 		DesktopMain.init();
 		DiscordUtil.init();
-		#if ALLOW_MULTITASKING
-		funkin.multitasking.MultiTaskingHandler.init();
-		#end
 		#if GLOBAL_SCRIPT
 		funkin.scripting.GlobalScript.init();
 		#end
@@ -242,6 +239,14 @@ class Main extends Sprite
 		// manual asset clearing since base openfl one doesnt clear lime one
 		// doesnt clear bitmaps since flixel fork does it auto
 
+		@:privateAccess {
+			// clear uint8 pools since it causes memory leak with openfl textfield
+			for(length=>pool in openfl.display3D.utils.UInt8Buff._pools) {
+				for(b in pool.clear())
+					b.destroy();
+			}
+			openfl.display3D.utils.UInt8Buff._pools.clear();
+		}
 		scaleMode.resetSize();
 
 		var cache = cast(Assets.cache, AssetCache);
@@ -252,7 +257,6 @@ class Main extends Sprite
 
 		Paths.assetsTree.clearCache();
 
-		MemoryUtil.clearMinor();
 		MemoryUtil.clearMajor();
 	}
 }

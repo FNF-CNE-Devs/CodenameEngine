@@ -189,6 +189,8 @@ class Conductor
 		if (FlxG.sound.music == null)
 			reset();
 	}
+	private static var __lastChange:BPMChangeEvent;
+	private static var __updateBeat:Bool;
 	private static function update() {
 		if (FlxG.state != null && FlxG.state is MusicBeatState && cast(FlxG.state, MusicBeatState).cancelConductorUpdate) return;
 
@@ -198,28 +200,28 @@ class Conductor
 
 		if (bpm > 0) {
 			// updates curbeat and stuff
-			var lastChange:BPMChangeEvent = {
+			__lastChange = {
 				stepTime: 0,
 				songTime: 0,
 				bpm: 0
-			}
+			};
 			for (change in Conductor.bpmChangeMap)
 			{
 				if (Conductor.songPosition >= change.songTime)
-					lastChange = change;
+					__lastChange = change;
 			}
 	
-			if (lastChange.bpm > 0 && bpm != lastChange.bpm) changeBPM(lastChange.bpm);
+			if (__lastChange.bpm > 0 && bpm != __lastChange.bpm) changeBPM(__lastChange.bpm);
 
-			curStepFloat = lastChange.stepTime + ((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
+			curStepFloat = __lastChange.stepTime + ((Conductor.songPosition - __lastChange.songTime) / Conductor.stepCrochet);
 			curBeatFloat = curStepFloat / 4;
 
 			if (curStep != (curStep = Std.int(curStepFloat))) {
 				// updates step
-				var updateBeat = curBeat != (curBeat = Std.int(curBeatFloat));
+				var __updateBeat = curBeat != (curBeat = Std.int(curBeatFloat));
 
 				onStepHit.dispatch(curStep);
-				if (updateBeat)
+				if (__updateBeat)
 					onBeatHit.dispatch(curBeat);
 
 				if (FlxG.state is IBeatReceiver) {
@@ -228,7 +230,7 @@ class Conductor
 						if (state is IBeatReceiver && (state.subState == null || state.subState.persistentUpdate)) {
 							var st = cast(state, IBeatReceiver);
 							st.stepHit(curStep);
-							if (updateBeat)
+							if (__updateBeat)
 								st.beatHit(curBeat);
 						}
 						state = state.subState;

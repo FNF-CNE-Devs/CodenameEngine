@@ -29,10 +29,8 @@ class MemoryUtil {
 			enable();
 	}
 
-	public static function init() {
-		#if cpp
-		#end
-	}
+	public static function init() {}
+	
 	public static function clearMinor() {
 		#if (cpp || java || neko)
 		Gc.run(false);

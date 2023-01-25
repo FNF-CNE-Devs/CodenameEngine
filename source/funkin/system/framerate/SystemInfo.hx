@@ -9,12 +9,13 @@ class SystemInfo extends FramerateCategory {
     }
 
     public override function __enterFrame(t:Int) {
-        var text = 'System: ${lime.system.System.platformLabel} ${lime.system.System.platformVersion}';
-        text += '\nObjs in state: ${FlxG.state.members.length}';
-        text += '\nNb cameras: ${FlxG.cameras.list.length}';
-        text += '\nCurrent state: ${Type.getClassName(Type.getClass(FlxG.state))}';
+        if (alpha <= 0.05) return;
+        _text = 'System: ${lime.system.System.platformLabel} ${lime.system.System.platformVersion}';
+        _text += '\nObjs in state: ${FlxG.state.members.length}';
+        _text += '\nNb cameras: ${FlxG.cameras.list.length}';
+        _text += '\nCurrent state: ${Type.getClassName(Type.getClass(FlxG.state))}';
         
-        this.text.text = text;
+        this.text.text = _text;
         super.__enterFrame(t);
     }
 }

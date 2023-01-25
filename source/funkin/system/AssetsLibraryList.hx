@@ -95,12 +95,9 @@ class AssetsLibraryList extends AssetLibrary {
 
     public function getSpecificAsset(id:String, type:String, source:AssetSource = BOTH):Dynamic {
         try {
-            MemoryUtil.askDisable();
-
             if (!id.startsWith("assets/")) {
                 var ass = getSpecificAsset('assets/$id', type, source);
                 if (ass != null) {
-                    MemoryUtil.askEnable();
                     return ass;
                 }
             }
@@ -109,15 +106,11 @@ class AssetsLibraryList extends AssetLibrary {
 
                 var asset = e.getAsset(id, type);
                 if (asset != null) {
-                    MemoryUtil.askEnable();
                     return asset;
                 }
             }
-
-            MemoryUtil.askEnable();
             return null;
         } catch(e) {
-            MemoryUtil.askEnable();
             throw e;
         }
         return null;

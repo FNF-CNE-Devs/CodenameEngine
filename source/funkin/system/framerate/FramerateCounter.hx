@@ -28,6 +28,7 @@ class FramerateCounter extends Sprite {
     }
 
     public override function __enterFrame(t:Int) {
+        if (alpha <= 0.05) return;
         super.__enterFrame(t);
 
         lastFPS = CoolUtil.fpsLerp(lastFPS, FlxG.elapsed == 0 ? 0 : (1 / FlxG.elapsed), 0.25);

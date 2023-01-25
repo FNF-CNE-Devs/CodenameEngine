@@ -14,9 +14,6 @@ import funkin.options.PlayerSettings;
 
 class MusicBeatState extends FlxUIState implements IBeatReceiver
 {
-	#if ALLOW_MULTITASKING
-	public var parentWindow:funkin.multitasking.StateWindow;
-	#end
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 
@@ -203,9 +200,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	}
 
 	public override function destroy() {
-		if (parentWindow == null)
-			super.destroy();
-
+		super.destroy();
 		call("onDestroy");
 		if (stateScript != null)
 			stateScript.destroy();

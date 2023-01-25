@@ -103,13 +103,9 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
-			if (canAccessDebugMenus) {
+			if (canAccessDebugMenus)
 				if (FlxG.keys.justPressed.SEVEN)
 					FlxG.switchState(new funkin.desktop.DesktopMain());
-
-				if (FlxG.keys.justPressed.F1)
-					funkin.multitasking.MultiTaskingHandler.openWindow("FreeplayState", new FreeplayState());
-			}
 
 			if (controls.UP_P)
 				changeItem(-1);
