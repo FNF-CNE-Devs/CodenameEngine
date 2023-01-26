@@ -12,8 +12,10 @@ class ConductorInfo extends FramerateCategory {
         _text = 'Current Song Position: ${Conductor.songPosition}';
         _text += '\n - ${Conductor.curBeat} beats';
         _text += '\n - ${Conductor.curStep} steps';
+        _text += '\n - ${Conductor.curMeasure} measures';
         _text += '\nCurrent BPM: ${Conductor.bpm}';
         _text += '\nCurrent speed: ${FlxMath.roundDecimal(Conductor.speed, 2)}x';
+        _text += '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}';
         
         this.text.text = _text;
         super.__enterFrame(t);

@@ -27,6 +27,10 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	  */
 	 public var curBeat(get, never):Int;
 	 /**
+	  * Current beat
+	  */
+	 public var curMeasure(get, never):Int;
+	 /**
 	  * Current step, as a `Float` (ex: 4.94, instead of 4)
 	  */
 	 public var curStepFloat(get, never):Float;
@@ -35,20 +39,28 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	  */
 	 public var curBeatFloat(get, never):Float;
 	 /**
+	  * Current beat, as a `Float` (ex: 1.24, instead of 1)
+	  */
+	 public var curMeasureFloat(get, never):Float;
+	 /**
 	  * Current song position (in milliseconds).
 	  */
-	public var songPos(get, never):Float;
-
-	inline function get_curStep():Int
-		return Conductor.curStep;
-	inline function get_curBeat():Int
-		return Conductor.curBeat;
-	inline function get_curStepFloat():Float
-		return Conductor.curStepFloat;
-	inline function get_curBeatFloat():Float
-		return Conductor.curBeatFloat;
-	inline function get_songPos():Float
-		return Conductor.songPosition;
+	 public var songPos(get, never):Float;
+ 
+	 inline function get_curStep():Int
+		 return Conductor.curStep;
+	 inline function get_curBeat():Int
+		 return Conductor.curBeat;
+	 inline function get_curMeasure():Int
+		 return Conductor.curMeasure;
+	 inline function get_curStepFloat():Float
+		 return Conductor.curStepFloat;
+	 inline function get_curBeatFloat():Float
+		 return Conductor.curBeatFloat;
+	 inline function get_curMeasureFloat():Float
+		 return Conductor.curMeasureFloat;
+	 inline function get_songPos():Float
+		 return Conductor.songPosition;
 
 
 	/**
@@ -175,6 +187,12 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	{
 		for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).beatHit(curBeat);
 		call("beatHit", [curBeat]);
+	}
+
+	@:dox(hide) public function measureHit(curMeasure:Int):Void
+	{
+		for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).measureHit(curMeasure);
+		call("measureHit", [curMeasure]);
 	}
 
 	/**

@@ -86,6 +86,7 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
         }
     }
     public function stepHit(curBeat:Int) {}
+	public function measureHit(curMeasure:Int) {}
 
     public override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect {
         __doPreZoomScaleProcedure(camera);

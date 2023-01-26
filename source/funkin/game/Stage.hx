@@ -144,4 +144,6 @@ class Stage extends FlxBasic implements IBeatReceiver {
     public function beatHit(curBeat:Int) {}
 
     public function stepHit(curStep:Int) {}
+
+	public function measureHit(curMeasure:Int) {}
 }

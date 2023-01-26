@@ -933,6 +933,8 @@ class PlayState extends MusicBeatState
 		if (songData.maxHealth != null && songData.maxHealth > 0)
 			maxHealth = songData.maxHealth;
 
+		camZoomingInterval = cast songData.beatsPerMesure.getDefault(4);
+
 		Conductor.changeBPM(songData.bpm);
 
 		curSong = songData.song.toLowerCase();
@@ -1084,7 +1086,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public function get_curSection() {
-		return PlayState.SONG.notes[Std.int(curStep / 16)];
+		return PlayState.SONG.notes[curMeasure];
 	}
 
 

@@ -24,6 +24,8 @@ typedef SwagSong =
 
 	// ADDITIONAL STUFF THAT MAY NOT BE PRESENT IN CHART
 	var ?maxHealth:Float;
+	var ?beatsPerMesure:Float;
+	var ?stepsPerBeat:Float;
 }
 
 class Song
