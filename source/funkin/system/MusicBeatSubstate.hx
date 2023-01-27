@@ -108,7 +108,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 				var className = Type.getClassName(Type.getClass(this));
 				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
 
-				stateScript = Script.create(Paths.script('data/states/${scriptName}'));
+				stateScript = Script.create(Paths.script('data/substates/${scriptName}'));
 				stateScript.setParent(this);
 				stateScript.load();
 			} else
