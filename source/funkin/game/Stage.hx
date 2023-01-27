@@ -139,6 +139,10 @@ class Stage extends FlxBasic implements IBeatReceiver {
             var y:Null<Float> = Std.parseFloat(node.att.camyoffset);
             if (y != null) char.cameraOffset.y += y;
         }
+        if (node.has.scroll) {
+            var scroll:Null<Float> = Std.parseFloat(node.att.scroll);
+            if (scroll != null) char.scrollFactor.set(scroll, scroll);
+        }
     }
 
     public function beatHit(curBeat:Int) {}
