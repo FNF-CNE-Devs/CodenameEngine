@@ -1656,6 +1656,12 @@ class PlayState extends MusicBeatState
 		scripts.call("stepHit", [curStep]);
 	}
 
+	override function measureHit(curMeasure:Int)
+	{
+		super.measureHit(curMeasure);
+		scripts.call("measureHit", [curMeasure]);
+	}
+
 	override function beatHit(curBeat:Int)
 	{
 		super.beatHit(curBeat);

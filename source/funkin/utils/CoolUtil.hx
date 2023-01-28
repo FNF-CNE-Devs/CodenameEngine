@@ -167,10 +167,21 @@ class CoolUtil
 		var infoPath = '${Path.withoutExtension(path)}.ini';
 		if (Assets.exists(infoPath)) {
 			var musicInfo = IniUtil.parseAsset(infoPath, [
-				"BPM" => null
+				"BPM" => null,
+				"TimeSignature" => "2/2"
 			]);
+
+			var timeSignParsed:Array<Null<Float>> = musicInfo["TimeSignature"] == null ? [] : [for(s in musicInfo["TimeSignature"].split("/")) Std.parseFloat(s)];
+			var beatsPerMesure:Float = 4;
+			var stepsPerBeat:Float = 4;
+
+			if (timeSignParsed.length == 2 && !timeSignParsed.contains(null)) {
+				beatsPerMesure = timeSignParsed[0] == null || timeSignParsed[0] <= 0 ? 4 : cast timeSignParsed[0];
+				stepsPerBeat = timeSignParsed[1] == null || timeSignParsed[1] <= 0 ? 4 : cast timeSignParsed[1];
+			}
+
 			var parsedBPM:Null<Float> = Std.parseFloat(musicInfo["BPM"]);
-			Conductor.changeBPM(parsedBPM == null ? DefaultBPM : parsedBPM);
+			Conductor.changeBPM(parsedBPM == null ? DefaultBPM : parsedBPM, beatsPerMesure, stepsPerBeat);
 		} else
 			Conductor.changeBPM(DefaultBPM);
 	}
