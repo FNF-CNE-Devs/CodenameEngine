@@ -94,6 +94,9 @@ class DesktopMain extends MusicBeatState {
             windows.add(new Window(new EditorPlayState()));
 
         FlxG.sound.enableVolumeChanges = !(currentFocus is IDesktopInputObject);
+        
+        // TEMPORARY ESCAPE KEY UNTIL TASKBAR IS ADDED
+        if (FlxG.keys.justPressed.ESCAPE) FlxG.switchState(new funkin.menus.MainMenuState());
     }
 
     public function openWindow(content:WindowContent) {
