@@ -697,24 +697,26 @@ class PlayState extends MusicBeatState
 			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-cutscene');
 			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/cutscene.mp4');
 			var dialogue = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/dialogue.xml');
-			persistentUpdate = false;
+			persistentUpdate = true;
 			if (cutscene != null) {
 				openSubState(new ScriptedCutscene(cutscene, function() {
 					startCountdown();
 				}));
 			} else if (Assets.exists(dialogue)) {
-			FlxTransitionableState.skipNextTransIn = true;
+				FlxTransitionableState.skipNextTransIn = true;
 				openSubState(new DialogueCutscene(dialogue, function() {
 					startCountdown();
 				}));
 			} else if (Assets.exists(videoCutsceneAlt)) {
-			FlxTransitionableState.skipNextTransIn = true;
+				FlxTransitionableState.skipNextTransIn = true;
+				persistentUpdate = false;
 				openSubState(new VideoCutscene(videoCutsceneAlt, function() {
 					startCountdown();
 				}));
 				persistentDraw = false;
 			} else if (Assets.exists(videoCutscene)) {
-			FlxTransitionableState.skipNextTransIn = true;
+				FlxTransitionableState.skipNextTransIn = true;
+				persistentUpdate = false;
 				openSubState(new VideoCutscene(videoCutscene, function() {
 					startCountdown();
 				}));
@@ -730,17 +732,27 @@ class PlayState extends MusicBeatState
 		if (playCutscenes) {
 			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-end-cutscene');
 			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/end-cutscene.mp4');
-			persistentUpdate = false;
+			var dialogue = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/end-dialogue.xml');
+			persistentUpdate = true;
 			if (endCutscene != null) {
 				openSubState(new ScriptedCutscene(endCutscene, function() {
 					nextSong();
 				}));
+			} else if (Assets.exists(dialogue)) {
+				FlxTransitionableState.skipNextTransIn = true;
+				openSubState(new DialogueCutscene(dialogue, function() {
+					startCountdown();
+				}));
 			} else if (Assets.exists(videoCutsceneAlt)) {
+				FlxTransitionableState.skipNextTransIn = true;
+				persistentUpdate = false;
 				openSubState(new VideoCutscene(videoCutsceneAlt, function() {
 					nextSong();
 				}));
 				persistentDraw = false;
 			} else if (Assets.exists(videoCutscene)) {
+				FlxTransitionableState.skipNextTransIn = true;
+				persistentUpdate = false;
 				openSubState(new VideoCutscene(videoCutscene, function() {
 					nextSong();
 				}));
