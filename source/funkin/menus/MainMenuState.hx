@@ -103,9 +103,20 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
-			if (canAccessDebugMenus)
+			if (canAccessDebugMenus) {
+				
 				if (FlxG.keys.justPressed.SEVEN)
 					FlxG.switchState(new funkin.desktop.DesktopMain());
+				if (FlxG.keys.justPressed.EIGHT) {
+					var scr = new funkin.desktop.DesktopScreen();
+					var camList = [for(c in FlxG.cameras.list) c];
+					for(c in camList) {
+						FlxG.cameras.remove(c, false);
+						scr.addCamera(c);
+					}
+					cameras = camList;
+				}
+			}
 
 			if (controls.UP_P)
 				changeItem(-1);

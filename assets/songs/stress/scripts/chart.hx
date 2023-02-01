@@ -3,7 +3,7 @@ import openfl.utils.Assets;
 function onNoteCreation(event) {
     if (event.noteType != null || event.note.noteTypeID > 0) {
         // event.note.visible = false;
-        event.note.playerID = 2;
+        event.note.strumLineID = 2;
     }
 }
 
