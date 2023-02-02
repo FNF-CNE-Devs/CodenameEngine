@@ -680,7 +680,7 @@ class PlayState extends MusicBeatState
 		super.create();
 	}
 	public override function createPost() {
-		startCutscene();
+		startCutscene("", cutscene);
 		super.createPost();
 
 		updateDiscordPresence();
@@ -692,41 +692,44 @@ class PlayState extends MusicBeatState
 		DiscordUtil.changeSongPresence(detailsText, (paused ? "Paused - " : "") + SONG.song + " (" + difficulty + ")", inst, getIconRPC());
 	}
 
-	public function startCutscene(prefix:String = "") {
+	public function startCutscene(prefix:String = "", ?cutsceneScriptPath:String, ?callback:Void->Void) {
+		if (callback == null)
+			callback = startCountdown;
+
 		if (playCutscenes) {
 			inCutscene = true;
 			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-${prefix}cutscene');
 			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/${prefix}cutscene.mp4');
 			var dialogue = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/${prefix}dialogue.xml');
 			persistentUpdate = true;
-			if (cutscene != null) {
-				openSubState(new ScriptedCutscene(cutscene, function() {
-					startCountdown();
+			if (cutsceneScriptPath != null) {
+				openSubState(new ScriptedCutscene(cutsceneScriptPath, function() {
+					callback();
 				}));
 			} else if (Assets.exists(dialogue)) {
 				FlxTransitionableState.skipNextTransIn = true;
 				openSubState(new DialogueCutscene(dialogue, function() {
-					startCountdown();
+					callback();
 				}));
 			} else if (Assets.exists(videoCutsceneAlt)) {
 				FlxTransitionableState.skipNextTransIn = true;
 				persistentUpdate = false;
 				openSubState(new VideoCutscene(videoCutsceneAlt, function() {
-					startCountdown();
+					callback();
 				}));
 				persistentDraw = false;
 			} else if (Assets.exists(videoCutscene)) {
 				FlxTransitionableState.skipNextTransIn = true;
 				persistentUpdate = false;
 				openSubState(new VideoCutscene(videoCutscene, function() {
-					startCountdown();
+					callback();
 				}));
 				persistentDraw = false;
 			} else {
-				startCountdown();
+				callback();
 			}
 		} else
-			startCountdown();
+			callback();
 	}
 
 	public function startCountdown():Void
@@ -735,11 +738,13 @@ class PlayState extends MusicBeatState
 			_startCountdownCalled = true;
 			inCutscene = false;
 
-			var e = scripts.event("onStartCountdown", new CancellableEvent());
-			if (e.cancelled) return;
+			if (scripts.event("onStartCountdown", new CancellableEvent()).cancelled) return;
 		}
 
-		generateStrums();
+		if (!scripts.event("onPreGenerateStrums", new CancellableEvent()).cancelled) {
+			generateStrums();
+			scripts.call("onPostGenerateStrums");
+		}
 
 		startedCountdown = true;
 		Conductor.songPosition = 0;
@@ -752,6 +757,7 @@ class PlayState extends MusicBeatState
 		{
 			countdown(swagCounter++);
 		}, introLength);
+		scripts.call("onPostStartCountdown");
 	}
 
 	/**
@@ -1321,7 +1327,7 @@ class PlayState extends MusicBeatState
 			#end
 		}
 
-		startCutscene("end-");
+		startCutscene("end-", endCutscene, nextSong);
 	}
 
 	public function nextSong() {

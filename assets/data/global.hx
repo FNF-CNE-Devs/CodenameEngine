@@ -1,3 +1,3 @@
 function update(elapsed)
-    if (FlxG.keys.justPressed.ONE)
-        FlxG.state.endSong();
+    if (FlxG.keys.justPressed.F5)
+        FlxG.resetState();

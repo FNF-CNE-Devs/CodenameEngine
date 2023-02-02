@@ -10,7 +10,7 @@ function create() {
     tankman = new FunkinSprite(game.dad.x + game.dad.globalOffset.x + 520, game.dad.y + game.dad.globalOffset.y + 225);
     tankman.antialiasing = true;
     tankman.loadSprite(Paths.image('game/cutscenes/tank/guns-tankman'));
-    tankman.animateAtlas.anim.addBySymbol('tank', 'TANK TALK 2', 24, false);
+    tankman.animateAtlas.anim.addBySymbol('tank', 'TANK TALK 2', 0, false);
 
     game.insert(game.members.indexOf(game.dad), tankman);
     game.dad.visible = false;
@@ -32,7 +32,7 @@ function create() {
     {
         FlxTween.tween(FlxG.camera, {zoom: game.defaultCamZoom * 1.4}, 0.4, {ease: FlxEase.quadOut});
         FlxTween.tween(FlxG.camera, {zoom: game.defaultCamZoom * 1.3}, 0.7, {ease: FlxEase.quadInOut, startDelay: 0.45});
-        game.gf.playAnim('sad');
+        game.gf.playAnim('sad', false, "DANCE");
     });
 
     new FlxTimer().start(11, function(tmr:FlxTimer)
@@ -56,9 +56,6 @@ function focusOn(char) {
 }
 
 function update(elapsed:Float) {
-    if (FlxG.keys.justPressed.F5)
-        FlxG.resetState();
-    
     lipSync(tankTalk);
 }
 
