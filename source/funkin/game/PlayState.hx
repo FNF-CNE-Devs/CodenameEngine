@@ -692,11 +692,12 @@ class PlayState extends MusicBeatState
 		DiscordUtil.changeSongPresence(detailsText, (paused ? "Paused - " : "") + SONG.song + " (" + difficulty + ")", inst, getIconRPC());
 	}
 
-	public function startCutscene() {
+	public function startCutscene(prefix:String = "") {
 		if (playCutscenes) {
-			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-cutscene');
-			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/cutscene.mp4');
-			var dialogue = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/dialogue.xml');
+			inCutscene = true;
+			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-${prefix}cutscene');
+			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/${prefix}cutscene.mp4');
+			var dialogue = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/${prefix}dialogue.xml');
 			persistentUpdate = true;
 			if (cutscene != null) {
 				openSubState(new ScriptedCutscene(cutscene, function() {
@@ -726,42 +727,6 @@ class PlayState extends MusicBeatState
 			}
 		} else
 			startCountdown();
-	}
-
-	public function startEndCutscene() {
-		if (playCutscenes) {
-			var videoCutscene = Paths.video('${PlayState.SONG.song.toLowerCase()}-end-cutscene');
-			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/end-cutscene.mp4');
-			var dialogue = Paths.file('songs/${PlayState.SONG.song.toLowerCase()}/end-dialogue.xml');
-			persistentUpdate = true;
-			if (endCutscene != null) {
-				openSubState(new ScriptedCutscene(endCutscene, function() {
-					nextSong();
-				}));
-			} else if (Assets.exists(dialogue)) {
-				FlxTransitionableState.skipNextTransIn = true;
-				openSubState(new DialogueCutscene(dialogue, function() {
-					startCountdown();
-				}));
-			} else if (Assets.exists(videoCutsceneAlt)) {
-				FlxTransitionableState.skipNextTransIn = true;
-				persistentUpdate = false;
-				openSubState(new VideoCutscene(videoCutsceneAlt, function() {
-					nextSong();
-				}));
-				persistentDraw = false;
-			} else if (Assets.exists(videoCutscene)) {
-				FlxTransitionableState.skipNextTransIn = true;
-				persistentUpdate = false;
-				openSubState(new VideoCutscene(videoCutscene, function() {
-					nextSong();
-				}));
-				persistentDraw = false;
-			} else {
-				nextSong();
-			}
-		} else
-			nextSong();
 	}
 
 	public function startCountdown():Void
@@ -1130,6 +1095,11 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 		scripts.call("update", [elapsed]);
 
+		if (inCutscene) {
+			scripts.call("postUpdate", [elapsed]);
+			return;
+		}
+
 		scoreTxt.text = 'Score:$songScore';
 		missesTxt.text = '${comboBreaks ? "Combo Breaks" : "Misses"}:$misses';
 		var acc = accuracy;
@@ -1351,7 +1321,7 @@ class PlayState extends MusicBeatState
 			#end
 		}
 
-		startEndCutscene();
+		startCutscene("end-");
 	}
 
 	public function nextSong() {
