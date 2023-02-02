@@ -10,8 +10,8 @@ function create() {
     tankman = new FunkinSprite(game.dad.x + game.dad.globalOffset.x + 520, game.dad.y + game.dad.globalOffset.y + 225);
     tankman.antialiasing = true;
     tankman.loadSprite(Paths.image('game/cutscenes/tank/ugh-tankman'));
-    tankman.animateAtlas.anim.addBySymbol('1', 'TANK TALK 1 P1', 24, false);
-    tankman.animateAtlas.anim.addBySymbol('2', 'TANK TALK 1 P2', 24, false);
+    tankman.animateAtlas.anim.addBySymbol('1', 'TANK TALK 1 P1', 0, false);
+    tankman.animateAtlas.anim.addBySymbol('2', 'TANK TALK 1 P2', 0, false);
 
     game.insert(game.members.indexOf(game.dad), tankman);
     game.dad.visible = false;
@@ -52,7 +52,7 @@ function create() {
                     game.camHUD.visible = true;
                     game.dad.visible = true;
                     distorto.fadeOut((Conductor.crochet / 1000) * 5, 0);
-                    
+
                     close();
                 }, 1);
             }, 1);
@@ -67,13 +67,10 @@ function focusOn(char) {
 }
 
 function update(elapsed:Float) {
-    if (FlxG.keys.justPressed.F5)
-        FlxG.resetState();
-    
     if (tankTalk1.playing) lipSync(tankTalk1);
     if (tankTalk2.playing) lipSync(tankTalk2);
 }
 
 function lipSync(sound:FlxSound) {
-    tankman.animateAtlas.anim.curFrame = Std.int(tankman.animateAtlas.anim.length / sound.length * sound.time);
+    tankman.animateAtlas.anim.curFrame = Std.int(tankman.animateAtlas.anim.length / (sound.length-1) * sound.time);
 }
