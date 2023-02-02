@@ -62,6 +62,9 @@ class ModSwitchMenu extends MusicBeatSubstate {
             ModsFolder.switchMod(mods[curSelected]);
             close();
         }
+
+        if (controls.BACK)
+            close();
     }
 
     public function changeSelection(change:Int, force:Bool = false) {
