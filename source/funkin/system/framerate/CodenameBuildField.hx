@@ -10,6 +10,6 @@ class CodenameBuildField extends TextField {
         defaultTextFormat = Framerate.textFormat;
         autoSize = LEFT;
         multiline = wordWrap = false;
-        text = 'Codename Engine Beta\nBuild ${Main.buildNum}';
+        text = 'Codename Engine Beta\nBuild ${funkin.macros.BuildCounterMacro.getBuildNumber()}';
     }
 }

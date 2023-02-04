@@ -513,10 +513,11 @@ class PlayState extends MusicBeatState
 
 		downscroll = Options.downscroll;
 
-		persistentUpdate = persistentDraw = true;
+		persistentUpdate = true;
+		persistentDraw = true;
 
 		if (SONG == null)
-			SONG = Song.loadFromJson('test', 'normal');
+			SONG = Song.loadFromJson('tutorial', 'normal');
 
 		scrollSpeed = SONG.speed;
 
@@ -1140,6 +1141,9 @@ class PlayState extends MusicBeatState
 				FlxG.switchState(new CharacterEditor(SONG.player1));
 		}
 
+		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
+		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
+
 		iconP1.scale.set(lerp(iconP1.scale.x, 1, 0.33), lerp(iconP1.scale.y, 1, 0.33));
 		iconP2.scale.set(lerp(iconP2.scale.x, 1, 0.33), lerp(iconP2.scale.y, 1, 0.33));
 
@@ -1205,9 +1209,17 @@ class PlayState extends MusicBeatState
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
 
+
 		// RESET = Quick Game Over Screen
 		if (startedCountdown && controls.RESET)
 			health = 0;
+
+		// CHEAT = brandon's a pussy
+		if (controls.CHEAT)
+		{
+			health += 1;
+			trace("User is cheating!");
+		}
 		
 		if (health <= 0 && canDie)
 			gameOver();
@@ -1306,11 +1318,13 @@ class PlayState extends MusicBeatState
 
 		if (SONG.validScore)
 		{
+			#if !switch
 			Highscore.saveScore(SONG.song, {
 				score: songScore,
 				misses: misses,
 				accuracy: accuracy
 			}, difficulty);
+			#end
 		}
 
 		startCutscene("end-", endCutscene, nextSong);
