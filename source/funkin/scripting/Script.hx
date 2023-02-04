@@ -53,7 +53,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
             // Engine related stuff
             "engine"            => {
-                build: funkin.macros.BuildCounterMacro.getBuildNumber(),
+                build: Main.buildNum,
                 name: "Codename Engine"
             },
             "ModState"          => funkin.scripting.ModState,

@@ -116,6 +116,7 @@ class Main extends Sprite
 
 	public static var changeID:Int = 0;
 
+	public static var buildNum:Int = 0;
 
 	private static var __threadCycle:Int = 0;
 	public static function execAsync(func:Void->Void) {
@@ -176,7 +177,7 @@ class Main extends Sprite
 			Paths.assetsTree.sourceLibsAmount++;
 			#end
 
-			var buildNum:Int = Std.parseInt(File.getContent('./${pathBack}buildnumber.txt'));
+			buildNum = Std.parseInt(File.getContent('./${pathBack}buildnumber.txt'));
 			buildNum++;
 			File.saveContent('./${pathBack}buildnumber.txt', Std.string(buildNum));
 		} else {
