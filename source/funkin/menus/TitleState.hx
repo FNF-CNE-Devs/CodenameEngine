@@ -28,6 +28,7 @@ import funkin.system.Conductor;
 import openfl.Assets;
 import funkin.ui.Alphabet;
 import haxe.xml.Access;
+import flixel.input.keyboard.FlxKey;
 
 using StringTools;
 
@@ -54,6 +55,8 @@ class TitleState extends MusicBeatState
 		super.create();
 
 		startIntro();
+
+		FlxG.sound.muteKeys = [FlxKey.ZERO];
 	}
 
 	var logoBl:FlxSprite;
