@@ -39,6 +39,8 @@ class Main extends Sprite
 {
 	public static var instance:Main;
 
+	public static var scaleMode:FunkinRatioScaleMode;
+
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
@@ -98,13 +100,14 @@ class Main extends Sprite
 		}
 
 
-		addChild(new FlxGame(gameWidth, gameHeight, null, zoom, framerate, framerate, skipSplash, startFullscreen));
+		addChild(new FunkinGame(gameWidth, gameHeight, null, zoom, framerate, framerate, skipSplash, startFullscreen));
 		loadGameSettings();
 		// FlxG.switchState(new TitleState());
 		FlxG.switchState(new funkin.menus.BetaWarningState());
 
 		#if !mobile
-		addChild(new FramerateField(10, 3, 0xFFFFFF));
+		// addChild(new FramerateField(10, 3, 0xFFFFFF));
+		addChild(new funkin.system.framerate.Framerate());
 		#end
 	}
 
@@ -147,9 +150,6 @@ class Main extends Sprite
 		ModsFolder.init();
 		DesktopMain.init();
 		DiscordUtil.init();
-		#if ALLOW_MULTITASKING
-		funkin.multitasking.MultiTaskingHandler.init();
-		#end
 		#if GLOBAL_SCRIPT
 		funkin.scripting.GlobalScript.init();
 		#end
@@ -202,6 +202,8 @@ class Main extends Sprite
 
 		refreshAssets();
 
+		FlxG.scaleMode = scaleMode = new FunkinRatioScaleMode();
+
 		Conductor.init();
 		AudioSwitchFix.init();
 		WindowsAPI.setDarkMode(true);
@@ -237,6 +239,16 @@ class Main extends Sprite
 		// manual asset clearing since base openfl one doesnt clear lime one
 		// doesnt clear bitmaps since flixel fork does it auto
 
+		@:privateAccess {
+			// clear uint8 pools since it causes memory leak with openfl textfield
+			for(length=>pool in openfl.display3D.utils.UInt8Buff._pools) {
+				for(b in pool.clear())
+					b.destroy();
+			}
+			openfl.display3D.utils.UInt8Buff._pools.clear();
+		}
+		scaleMode.resetSize();
+
 		var cache = cast(Assets.cache, AssetCache);
 		for (key=>font in cache.font)
 			cache.removeFont(key);
@@ -245,7 +257,6 @@ class Main extends Sprite
 
 		Paths.assetsTree.clearCache();
 
-		MemoryUtil.destroyFlixelZombies();
 		MemoryUtil.clearMajor();
 	}
 }

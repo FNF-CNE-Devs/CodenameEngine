@@ -47,7 +47,7 @@ class CreditsCodename extends MusicBeatState {
     public override function update(elapsed:Float) {
         super.update(elapsed);
         if (controls.BACK) {
-            CoolUtil.playMenuSFX(2);
+            CoolUtil.playMenuSFX(CANCEL);
             FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
             FlxG.switchState(new MainMenuState());
         }

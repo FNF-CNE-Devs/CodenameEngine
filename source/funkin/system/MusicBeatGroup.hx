@@ -11,4 +11,7 @@ class MusicBeatGroup extends FlxTypedSpriteGroup<FlxSprite> implements IBeatRece
     public function stepHit(curStep:Int) {
         for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).stepHit(curStep);
     }
+    public function measureHit(curMeasure:Int) {
+        for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).measureHit(curMeasure);
+    }
 }

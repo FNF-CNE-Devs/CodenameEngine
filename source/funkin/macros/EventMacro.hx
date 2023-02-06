@@ -1,7 +1,10 @@
 package funkin.macros;
 
 #if macro
-
+/**
+ * Macro that generates all additional fields, making events much easier to code in.
+ * It adds the `recycle` function, which allows you to "reset" an event's values.
+ */
 class EventMacro {
     public static function build():Array<Field> {
         var fields = Context.getBuildFields();

@@ -167,23 +167,36 @@ class CoolUtil
 		var infoPath = '${Path.withoutExtension(path)}.ini';
 		if (Assets.exists(infoPath)) {
 			var musicInfo = IniUtil.parseAsset(infoPath, [
-				"BPM" => null
+				"BPM" => null,
+				"TimeSignature" => "2/2"
 			]);
+
+			var timeSignParsed:Array<Null<Float>> = musicInfo["TimeSignature"] == null ? [] : [for(s in musicInfo["TimeSignature"].split("/")) Std.parseFloat(s)];
+			var beatsPerMesure:Float = 4;
+			var stepsPerBeat:Float = 4;
+
+			if (timeSignParsed.length == 2 && !timeSignParsed.contains(null)) {
+				beatsPerMesure = timeSignParsed[0] == null || timeSignParsed[0] <= 0 ? 4 : cast timeSignParsed[0];
+				stepsPerBeat = timeSignParsed[1] == null || timeSignParsed[1] <= 0 ? 4 : cast timeSignParsed[1];
+			}
+
 			var parsedBPM:Null<Float> = Std.parseFloat(musicInfo["BPM"]);
-			Conductor.changeBPM(parsedBPM == null ? DefaultBPM : parsedBPM);
+			Conductor.changeBPM(parsedBPM == null ? DefaultBPM : parsedBPM, beatsPerMesure, stepsPerBeat);
 		} else
 			Conductor.changeBPM(DefaultBPM);
 	}
+
 	/**
 	 * Plays a specified Menu SFX.
 	 * @param menuSFX Menu SFX to play
 	 * @param volume At which volume it should play
 	 */
-	public static function playMenuSFX(menuSFX:Int = 0, volume:Float = 1) {
+	public static function playMenuSFX(menuSFX:CoolSfx = SCROLL, volume:Float = 1) {
 		FlxG.sound.play(Paths.sound(switch(menuSFX) {
-			case 1:		'menu/confirm';
-			case 2:		'menu/cancel';
-			default: 	'menu/scroll';
+			case CONFIRM:	'menu/confirm';
+			case CANCEL:	'menu/cancel';
+			case SCROLL:	'menu/scroll';
+			default: 		'menu/scroll';
 		}), volume);
 	}
 
@@ -192,7 +205,7 @@ class CoolUtil
 		return [for(e in Assets.getText(path).trim().split('\n')) e.trim()];
 	}
 
-	public static inline function numberArray(max:Int, ?min = 0):Array<Int>
+	public static inline function numberArray(max:Int, ?min:Int = 0):Array<Int>
 	{
 		return [for (i in min...max) i];
 	}
@@ -258,7 +271,7 @@ class CoolUtil
 			case Y:
 				obj.y = (cam.height - obj.height) / 2;
 			case NONE:
-				
+
 		}
 	}
 
@@ -301,7 +314,7 @@ class CoolUtil
 			var frames = FlxAtlasFrames.findFrame(graphic);
 			if (frames != null)
 				return frames;
-			
+
 			trace("no frames yet for multiple atlases!!");
 			var spritesheets = [];
 			var cur = 1;
@@ -386,4 +399,10 @@ class CoolUtil
 			array.push(a);
 		return array;
 	}
+}
+
+enum abstract CoolSfx(Int) from Int {
+	var SCROLL = 0;
+	var CONFIRM = 1;
+	var CANCEL = 2;
 }

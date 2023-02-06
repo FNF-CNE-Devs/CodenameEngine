@@ -76,6 +76,7 @@ class ModsFolder {
         Options.lastLoadedMod = ModsFolder.currentModFolder = mod;
         Options.save();
         if (ModsFolder.currentModFolder == null) return;
+        
         Paths.assetsTree.addLibrary(loadMod(ModsFolder.currentModFolder));
 
         Main.refreshAssets();
@@ -84,8 +85,9 @@ class ModsFolder {
             FlxG.sound.music.fadeOut(0.25, 0, function(t) {
                 FlxG.sound.music.stop();
             });
+        DiscordUtil.reloadJsonData();
         TitleState.initialized = false;
-        FlxG.switchState(new TitleState());
+        FlxG.switchState(new TitleState()); 
     }
 
     public static function unloadMod(mod:String) {

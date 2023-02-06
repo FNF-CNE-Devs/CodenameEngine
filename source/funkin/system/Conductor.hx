@@ -44,6 +44,16 @@ class Conductor
 	 */
 	public static var stepCrochet:Float = crochet / 4; // steps in milliseconds
 
+	/**
+	 * Number of beats per mesure (top number in time signature). Defaults to 4.
+	 */
+	public static var beatsPerMesure:Float = 4;
+	
+	/**
+	 * Number of steps per beat (bottom number in time signature). Defaults to 4.
+	 */
+	public static var stepsPerBeat:Float = 4;
+
 	
 	/**
 	 * Current position of the song, in milliseconds.
@@ -60,6 +70,11 @@ class Conductor
 	  * Current beat
 	  */
 	public static var curBeat:Int = 0;
+	
+	 /**
+	  * Current measure
+	  */
+	public static var curMeasure:Int = 0;
  
 	 
 	 /**
@@ -71,6 +86,11 @@ class Conductor
 	  * Current beat, as a `Float` (ex: 1.24, instead of 1)
 	  */
 	public static var curBeatFloat:Float = 0;
+ 
+	 /**
+	  * Current measure, as a `Float` (ex: 1.24, instead of 1)
+	  */
+	public static var curMeasureFloat:Float = 0;
 
 	
 	@:dox(hide) public static var lastSongPos:Float = 0;
@@ -104,7 +124,7 @@ class Conductor
 	public static function setupSong(SONG:SwagSong) {
 		reset();
 		mapBPMChanges(SONG);
-		changeBPM(SONG.bpm);
+		changeBPM(SONG.bpm, cast SONG.beatsPerMesure.getDefault(4), cast SONG.stepsPerBeat.getDefault(4));
 	}
 	/**
 	 * Maps BPM changes from a song.
@@ -189,6 +209,10 @@ class Conductor
 		if (FlxG.sound.music == null)
 			reset();
 	}
+	private static var __lastChange:BPMChangeEvent;
+	private static var __updateBeat:Bool;
+	private static var __updateMeasure:Bool;
+
 	private static function update() {
 		if (FlxG.state != null && FlxG.state is MusicBeatState && cast(FlxG.state, MusicBeatState).cancelConductorUpdate) return;
 
@@ -198,38 +222,42 @@ class Conductor
 
 		if (bpm > 0) {
 			// updates curbeat and stuff
-			var lastChange:BPMChangeEvent = {
+			__lastChange = {
 				stepTime: 0,
 				songTime: 0,
 				bpm: 0
-			}
+			};
 			for (change in Conductor.bpmChangeMap)
 			{
 				if (Conductor.songPosition >= change.songTime)
-					lastChange = change;
+					__lastChange = change;
 			}
 	
-			if (lastChange.bpm > 0 && bpm != lastChange.bpm) changeBPM(lastChange.bpm);
+			if (__lastChange.bpm > 0 && bpm != __lastChange.bpm) changeBPM(__lastChange.bpm);
 
-			curStepFloat = lastChange.stepTime + ((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
-			curBeatFloat = curStepFloat / 4;
+			curStepFloat = __lastChange.stepTime + ((Conductor.songPosition - __lastChange.songTime) / Conductor.stepCrochet);
+			curBeatFloat = curStepFloat / stepsPerBeat;
+			curMeasureFloat = curBeatFloat / beatsPerMesure;
 
 			if (curStep != (curStep = Std.int(curStepFloat))) {
 				// updates step
-				var updateBeat = curBeat != (curBeat = Std.int(curBeatFloat));
+				__updateBeat = curBeat != (curBeat = Std.int(curBeatFloat));
+				__updateMeasure = __updateBeat && (curMeasure != (curMeasure = Std.int(curMeasureFloat)));
 
 				onStepHit.dispatch(curStep);
-				if (updateBeat)
+				if (__updateBeat)
 					onBeatHit.dispatch(curBeat);
 
 				if (FlxG.state is IBeatReceiver) {
 					var state = FlxG.state;
 					while(state != null) {
-						if (state is IBeatReceiver && (state.subState == null || state.subState.persistentUpdate)) {
+						if (state is IBeatReceiver && (state.subState == null || state.persistentUpdate)) {
 							var st = cast(state, IBeatReceiver);
 							st.stepHit(curStep);
-							if (updateBeat)
+							if (__updateBeat)
 								st.beatHit(curBeat);
+							if (__updateMeasure)
+								st.measureHit(curMeasure);
 						}
 						state = state.subState;
 					}
@@ -239,12 +267,16 @@ class Conductor
 		}
 	}
 
-	public static function changeBPM(newBpm:Float)
+	public static function changeBPM(newBpm:Float, beatsPerMesure:Float = 4, stepsPerBeat:Float = 4)
 	{
 		bpm = newBpm;
 
 		crochet = ((60 / bpm) * 1000);
-		stepCrochet = crochet / 4;
+		stepCrochet = crochet / stepsPerBeat;
+
+		Conductor.beatsPerMesure = beatsPerMesure;
+		Conductor.stepsPerBeat = stepsPerBeat;
+		
 
 		onBPMChange.dispatch(bpm);
 	}

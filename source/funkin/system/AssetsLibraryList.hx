@@ -95,12 +95,9 @@ class AssetsLibraryList extends AssetLibrary {
 
     public function getSpecificAsset(id:String, type:String, source:AssetSource = BOTH):Dynamic {
         try {
-            MemoryUtil.disable();
-
             if (!id.startsWith("assets/")) {
                 var ass = getSpecificAsset('assets/$id', type, source);
                 if (ass != null) {
-                    MemoryUtil.enable();
                     return ass;
                 }
             }
@@ -109,15 +106,11 @@ class AssetsLibraryList extends AssetLibrary {
 
                 var asset = e.getAsset(id, type);
                 if (asset != null) {
-                    MemoryUtil.enable();
                     return asset;
                 }
             }
-
-            MemoryUtil.enable();
             return null;
         } catch(e) {
-            MemoryUtil.enable();
             throw e;
         }
         return null;
@@ -162,17 +155,6 @@ class AssetsLibraryList extends AssetLibrary {
 
     public override function isLocal(id:String, type:String) {
         return true;
-        // for(l in libraries) {
-        //     var lib:AssetLibrary = l;
-        //     if (lib is openfl.utils.AssetLibrary) {
-        //         var openflLib = cast(lib, openfl.utils.AssetLibrary);
-        //         @:privateAccess
-        //         if (openflLib.__proxy != null) lib = openflLib.__proxy;
-        //     }
-        //     if (lib.exists(id, type) && lib.isLocal(id, type))
-        //         return true;
-        // }
-        // return false;
     }
 
     public function new(?base:AssetLibrary) {

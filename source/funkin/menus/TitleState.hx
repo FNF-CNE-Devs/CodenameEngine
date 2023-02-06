@@ -50,7 +50,7 @@ class TitleState extends MusicBeatState
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
 		FlxTransitionableState.skipNextTransIn = true;
-		
+
 		super.create();
 
 		startIntro();
@@ -173,7 +173,7 @@ class TitleState extends MusicBeatState
 		titleText.animation.play('press');
 
 		FlxG.camera.flash(FlxColor.WHITE, 1);
-		CoolUtil.playMenuSFX(1, 0.7);
+		CoolUtil.playMenuSFX(CONFIRM, 0.7);
 
 		transitioning = true;
 		// FlxG.sound.music.stop();

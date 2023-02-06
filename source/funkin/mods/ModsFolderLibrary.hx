@@ -132,8 +132,18 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
     private function __isCacheValid(cache:Map<String, Dynamic>, asset:String, isLocalCache:Bool = false) {
         if (!editedTimes.exists(asset))
             return false;
-        if (editedTimes[asset] == null) return false;
-        if (editedTimes[asset] < FileSystem.stat(getPath(asset)).mtime.getTime()) return false;
+        if (editedTimes[asset] == null || editedTimes[asset] < FileSystem.stat(getPath(asset)).mtime.getTime()) {
+            // destroy already existing to prevent memory leak!!!
+            var asset = cache[asset];
+            if (asset != null) {
+                switch(Type.getClass(asset)) {
+                    case lime.graphics.Image:
+                        trace("getting rid of image cause replaced");
+                        cast(asset, lime.graphics.Image);
+                }
+            }
+            return false;
+        }
 
         if (!isLocalCache) asset = '$libName:$asset';
 

@@ -43,7 +43,7 @@ class MainMenuState extends MusicBeatState
 	override function create()
 	{
 		super.create();
-		
+
 		DiscordUtil.changePresence("In the Menus", null);
 
 		CoolUtil.playMenuSong();
@@ -66,7 +66,7 @@ class MainMenuState extends MusicBeatState
 			bg.screenCenter();
 			bg.antialiasing = true;
 		}
-		
+
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
@@ -99,16 +99,23 @@ class MainMenuState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		if (FlxG.sound.music.volume < 0.8)
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
+			FlxG.sound.music.volume += 0.5 * elapsed;
 
 		if (!selectedSomethin)
 		{
 			if (canAccessDebugMenus) {
+				
 				if (FlxG.keys.justPressed.SEVEN)
 					FlxG.switchState(new funkin.desktop.DesktopMain());
-	
-				if (FlxG.keys.justPressed.F1)
-					funkin.multitasking.MultiTaskingHandler.openWindow("FreeplayState", new FreeplayState());
+				if (FlxG.keys.justPressed.EIGHT) {
+					var scr = new funkin.desktop.DesktopScreen();
+					var camList = [for(c in FlxG.cameras.list) c];
+					for(c in camList) {
+						FlxG.cameras.remove(c, false);
+						scr.addCamera(c);
+					}
+					cameras = camList;
+				}
 			}
 
 			if (controls.UP_P)
@@ -143,7 +150,6 @@ class MainMenuState extends MusicBeatState
 		});
 	}
 
-	
 	public override function switchTo(nextState:FlxState):Bool {
 		try {
 			menuItems.forEach(function(spr:FlxSprite) {
@@ -155,7 +161,7 @@ class MainMenuState extends MusicBeatState
 
 	function selectItem() {
 		selectedSomethin = true;
-		CoolUtil.playMenuSFX(1);
+		CoolUtil.playMenuSFX(CONFIRM);
 
 		if (Options.flashingMenu) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
@@ -192,7 +198,7 @@ class MainMenuState extends MusicBeatState
 		curSelected = event.value;
 
 		if (event.playMenuSFX)
-			CoolUtil.playMenuSFX(0, 0.7);
+			CoolUtil.playMenuSFX(SCROLL, 0.7);
 
 		menuItems.forEach(function(spr:FlxSprite)
 		{

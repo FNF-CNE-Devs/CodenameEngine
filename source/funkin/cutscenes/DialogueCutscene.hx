@@ -7,6 +7,9 @@ import openfl.utils.Assets;
 import funkin.cutscenes.dialogue.*;
 import haxe.xml.Access;
 
+/**
+ * Substate made for dialogue cutscenes. To use it in a scripted cutscene, call `startDialogue`.
+ */
 class DialogueCutscene extends Cutscene {
     public var dialoguePath:String;
     public var dialogueData:Access;
@@ -49,7 +52,7 @@ class DialogueCutscene extends Cutscene {
                     char: node.getAtt('char').getDefault('boyfriend'),
                     bubble: node.getAtt('bubble').getDefault('normal'),
                     callback: node.getAtt('callback'),
-                    speed: node.has.speed ? Std.parseFloat(node.att.speed).getDefault(0.02) : 0.02
+                    speed: node.has.speed ? Std.parseFloat(node.att.speed).getDefault(0.05) : 0.05
                 });
             }
 

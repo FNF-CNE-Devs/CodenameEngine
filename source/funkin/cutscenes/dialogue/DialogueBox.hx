@@ -58,6 +58,7 @@ class DialogueBox extends FunkinSprite {
             text.size = Std.parseInt(textNode.att.size).getDefault(20);
             text.font = Paths.font('${textNode.getAtt("font").getDefault("vcr")}.ttf');
             text.antialiasing = textNode.getAtt("antialiasing").getDefault("false") == "true";
+            text.sounds = [FlxG.sound.load(textTypeSFX)];
         } catch(e) {
             active = false;
             Logs.trace('Couldn\'t load dialogue box "$name": ${e.toString()}', ERROR);
@@ -76,7 +77,7 @@ class DialogueBox extends FunkinSprite {
 
     private var __nextText:String;
     private var __speed:Float;
-    public function playBubbleAnim(bubble:String, text:String, speed:Float = 0.02) {
+    public function playBubbleAnim(bubble:String, text:String, speed:Float = 0.05) {
         this.__nextText = text;
         this.__speed = speed;
         this.text.resetText(text);
