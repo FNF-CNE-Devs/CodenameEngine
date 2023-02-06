@@ -73,10 +73,10 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		return new FlxPoint(event.x, event.y);
 	}
 
-	public function playSingAnim(direction:Int, suffix:String = "", Context:PlayAnimContext = SING, Reversed:Bool = false, Frame:Int = 0) {
+	public function playSingAnim(direction:Int, suffix:String = "", Context:PlayAnimContext = SING, Force:Bool = true, Reversed:Bool = false, Frame:Int = 0) {
 		var anims = ["singLEFT", "singDOWN", "singUP", "singRIGHT"];
 
-		var event = EventManager.get(DirectionAnimEvent).recycle('${anims[direction]}$suffix', direction, suffix, Context, Reversed, Frame);
+		var event = EventManager.get(DirectionAnimEvent).recycle('${anims[direction]}$suffix', direction, suffix, Context, Reversed, Frame, Force);
 		script.call("onPlaySingAnim", [event]);
 		if (!event.cancelled) playAnim(event.animName, event.force, Context, event.reversed, event.frame);
 	}

@@ -208,7 +208,8 @@ class Main extends Sprite
 		AudioSwitchFix.init();
 		WindowsAPI.setDarkMode(true);
 		EventManager.init();
-		FlxG.signals.preStateCreate.add(onStateSwitch);
+		FlxG.signals.preStateSwitch.add(onStateSwitch);
+		FlxG.signals.postStateSwitch.add(onStateSwitchPost);
 
 		#if MOD_SUPPORT
 		ModsFolder.switchMod(Options.lastLoadedMod);
@@ -235,28 +236,33 @@ class Main extends Sprite
 			{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 	}
 
-	private static function onStateSwitch(newState:FlxState) {
+	private static function onStateSwitch() {
+		scaleMode.resetSize();
+	}
+
+	private static function onStateSwitchPost() {
 		// manual asset clearing since base openfl one doesnt clear lime one
 		// doesnt clear bitmaps since flixel fork does it auto
 
 		@:privateAccess {
-			// clear uint8 pools since it causes memory leak with openfl textfield
+			// clear uint8 pools
 			for(length=>pool in openfl.display3D.utils.UInt8Buff._pools) {
 				for(b in pool.clear())
 					b.destroy();
 			}
 			openfl.display3D.utils.UInt8Buff._pools.clear();
 		}
-		scaleMode.resetSize();
 
 		var cache = cast(Assets.cache, AssetCache);
-		for (key=>font in cache.font)
+		for (key=>_ in cache.font)
 			cache.removeFont(key);
-		for (key=>sound in cache.sound)
+		for (key=>_ in cache.sound)
 			cache.removeSound(key);
 
 		Paths.assetsTree.clearCache();
 
 		MemoryUtil.clearMajor();
+
+		FlxG.bitmap.dumpCache();
 	}
 }

@@ -52,7 +52,6 @@ import openfl.filters.ShaderFilter;
 import funkin.system.Conductor;
 import funkin.system.Song;
 import funkin.editors.ChartingState;
-import funkin.debug.AnimationDebug;
 import funkin.cutscenes.*;
 
 import funkin.menus.*;
@@ -1452,7 +1451,7 @@ class PlayState extends MusicBeatState
 		if (event.note.strumLine != null) event.note.strumLine.addHealth(event.healthGain);
 		if (gf != null && combo > 5 && gf.animOffsets.exists('sad'))
 		{
-			gf.playAnim('sad', true, MISS);
+			gf.playAnim('sad', event.forceAnim, MISS);
 		}
 		combo = 0;
 
@@ -1615,7 +1614,7 @@ class PlayState extends MusicBeatState
 			if (!event.animCancelled)
 				for(char in event.characters)
 					if (char != null)
-						char.playSingAnim(event.direction, event.animSuffix);
+						char.playSingAnim(event.direction, event.animSuffix, SING, event.forceAnim);
 
 			if (event.note.__strum != null) {
 				if (!event.strumGlowCancelled) event.note.__strum.press(event.note.strumTime);

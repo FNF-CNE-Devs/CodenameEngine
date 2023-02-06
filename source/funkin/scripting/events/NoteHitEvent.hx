@@ -95,6 +95,10 @@ class NoteHitEvent extends CancellableEvent {
      * Whenever antialiasing should be enabled on ratings.
      */
     public var ratingAntialiasing:Bool = true;
+    /**
+     * Whenever the animation should be forced to play.
+     */
+    public var forceAnim:Bool = true;
 
     /**
      * Prevents the default sing animation from being played.
