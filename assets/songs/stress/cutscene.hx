@@ -8,7 +8,7 @@ var stressCutscene:FlxSound;
 var step:Int = 0;
 
 function create() {
-    FlxG.camera.zoom = 1;
+    // FlxTween.tween(FlxG.camera, {zoom: 1}, 0.7, {ease: FlxEase.quadInOut});
     game.camHUD.visible = false;
     game.persistentUpdate = true;
 

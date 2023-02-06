@@ -5,6 +5,9 @@ import haxe.macro.Context;
 import haxe.macro.Compiler;
 import haxe.macro.Expr;
 
+/**
+ * Macros containing additional help functions to expand HScript capabilities.
+ */
 class ScriptsMacro {
     public static function addAdditionalClasses() {
         Compiler.include("flixel");

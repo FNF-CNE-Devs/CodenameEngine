@@ -125,6 +125,9 @@
 	<!-- Comment this out to use the default OpenFL assets system for the assets/ folder. !-->
 	<haxedef name="USE_ADAPTED_ASSETS" />
 
+	<!-- Comment this out to disable support for custom ndlls. !-->
+	<haxedef name="NDLLS_SUPPORTED" />
+
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
 	<define name="VIDEO_CUTSCENES" unless="web || linux || hl || mac" />
 

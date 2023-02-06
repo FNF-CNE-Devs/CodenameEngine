@@ -100,7 +100,7 @@ class Main extends Sprite
 		}
 
 
-		addChild(new FlxGame(gameWidth, gameHeight, null, zoom, framerate, framerate, skipSplash, startFullscreen));
+		addChild(new FunkinGame(gameWidth, gameHeight, null, zoom, framerate, framerate, skipSplash, startFullscreen));
 		loadGameSettings();
 		// FlxG.switchState(new TitleState());
 		FlxG.switchState(new funkin.menus.BetaWarningState());

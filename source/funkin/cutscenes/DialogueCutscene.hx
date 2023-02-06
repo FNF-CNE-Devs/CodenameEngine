@@ -7,6 +7,9 @@ import openfl.utils.Assets;
 import funkin.cutscenes.dialogue.*;
 import haxe.xml.Access;
 
+/**
+ * Substate made for dialogue cutscenes. To use it in a scripted cutscene, call `startDialogue`.
+ */
 class DialogueCutscene extends Cutscene {
     public var dialoguePath:String;
     public var dialogueData:Access;

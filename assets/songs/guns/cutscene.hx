@@ -4,7 +4,7 @@ var tankman:FunkinSprite;
 var tankTalk1, distorto:FlxSound;
 
 function create() {
-    FlxG.camera.zoom = 1;
+    FlxTween.tween(FlxG.camera, {zoom: 1}, 0.7, {ease: FlxEase.quadInOut});
     game.camHUD.visible = false;
 
     tankman = new FunkinSprite(game.dad.x + game.dad.globalOffset.x + 520, game.dad.y + game.dad.globalOffset.y + 225);
