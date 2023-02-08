@@ -631,6 +631,7 @@ class PlayState extends MusicBeatState
 			FlxG.camera.scroll.set(smoothTransitionData.camX, smoothTransitionData.camY);
 			FlxG.camera.zoom = smoothTransitionData.camZoom;
 			FlxTransitionableState.skipNextTransIn = true;
+			camFollow.setPosition(smoothTransitionData.camFollowX, smoothTransitionData.camFollowY);
 		} else {
 			FlxG.camera.focusOn(camFollow.getPosition());
 		}
@@ -1383,14 +1384,16 @@ class PlayState extends MusicBeatState
 					stage: curStage,
 					camX: FlxG.camera.scroll.x,
 					camY: FlxG.camera.scroll.y,
+					camFollowX: camFollow.x,
+					camFollowY: camFollow.y,
 					camZoom: FlxG.camera.zoom
 				};
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;
 
-
-				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase(), difficulty);
 				FlxG.sound.music.stop();
+
+				CoolUtil.__loadSong(PlayState.storyPlaylist[0].toLowerCase(), difficulty);
 
 				FlxG.switchState(new PlayState());
 			}
@@ -1753,5 +1756,7 @@ typedef PlayStateTransitionData = {
 	var stage:String;
 	var camX:Float;
 	var camY:Float;
+	var camFollowX:Float;
+	var camFollowY:Float;
 	var camZoom:Float;
 }

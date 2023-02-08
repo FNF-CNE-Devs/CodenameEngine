@@ -27,6 +27,7 @@ import flash.geom.ColorTransform;
 
 using StringTools;
 
+@:allow(funkin.game.PlayState)
 class CoolUtil
 {
 	/*
@@ -280,6 +281,7 @@ class CoolUtil
 		PlayState.storyPlaylist = [for(e in weekData.songs) e.name];
 		PlayState.isStoryMode = true;
 		PlayState.campaignScore = 0;
+		PlayState.opponentMode = PlayState.coopMode = false;
 		__loadSong(PlayState.storyPlaylist[0], difficulty);
 	}
 	public static function loadSong(name:String, difficulty:String = "normal", opponentMode:Bool = false, coopMode:Bool = false) {
