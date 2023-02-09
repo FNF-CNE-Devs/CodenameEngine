@@ -132,6 +132,10 @@ class PlayState extends MusicBeatState
 	 */
 	public var canDie:Bool = !opponentMode && !coopMode;
 	/**
+	 * Whenever Ghost Tapping is enabled.
+	 */
+	public var ghostTapping:Bool = Options.ghostTapping;
+	/**
 	 * Whenever the opponent can die.
 	 */
 	public var canDadDie:Bool = opponentMode && !coopMode;
@@ -277,7 +281,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Whenever the misses should show "Combo Breaks" instead of "Misses"
 	 */
-	public var comboBreaks:Bool = false;
+	public var comboBreaks:Bool = !Options.ghostTapping;
 	/**
 	 * Health bar background.
 	 */
@@ -1458,6 +1462,10 @@ class PlayState extends MusicBeatState
 				});
 			}
 	
+			if (!p.ghostTapping) for(k=>p in __justPressed) if (p && notePerStrum[k] == null) {
+				// FUCK YOU
+				noteMiss(null, k, id);
+			}
 			for(e in notePerStrum) if (e != null) goodNoteHit(e);
 	
 			p.forEach(function(str:Strum) {
@@ -1470,14 +1478,21 @@ class PlayState extends MusicBeatState
 	/**
 	 * Misses a note
 	 * @param note Note to miss.
+	 * @param direction Specify a custom direction in case note is null.
+	 * @param player Specify a custom player in case note is null.
 	 */
-	public function noteMiss(note:Note):Void
+	public function noteMiss(note:Note, ?direction:Int, ?player:Int):Void
 	{
-		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, note.strumLine.characters, true, note.noteType, "", "", "", note.strumID, -10, 0, -0.04, "shit"));
+		var playerID:Null<Int> = note == null ? player : note.strumLineID;
+		var directionID:Null<Int> = note == null ? direction : note.strumID;
+		if (playerID == null || directionID == null) return;
+
+		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, players[player].characters, true, note != null ? note.noteType : null, "", "", "", directionID, -10, 0, -0.04, "shit"));
 
 		if (event.cancelled) return;
 
-		if (event.note.strumLine != null) event.note.strumLine.addHealth(event.healthGain);
+
+		if (event.note != null && event.note.strumLine != null) event.note.strumLine.addHealth(event.healthGain);
 		if (gf != null && combo > 5 && gf.hasAnimation('sad'))
 			gf.playAnim('sad', event.forceAnim, MISS);
 		combo = 0;
@@ -1500,7 +1515,7 @@ class PlayState extends MusicBeatState
 			if (char == null) continue;
 
 			char.stunned = true;
-			char.playSingAnim(note.strumID, "miss", MISS);
+			char.playSingAnim(directionID, "miss", MISS);
 		}
 		// boyfriend.stunned = true;
 
@@ -1671,6 +1686,7 @@ class PlayState extends MusicBeatState
 	 * @param note Note to delete
 	 */
 	public function deleteNote(note:Note) {
+		if (note == null) return;
 		var event:SimpleNoteEvent = scripts.event("onNoteDelete", EventManager.get(SimpleNoteEvent).recycle(note));
 		if (!event.cancelled) {
 			scripts.call("onNoteDelete", [note]);

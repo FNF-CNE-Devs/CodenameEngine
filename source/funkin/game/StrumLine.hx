@@ -24,7 +24,20 @@ class StrumLine extends FlxTypedGroup<Strum> {
      * Controls assigned to this strumline.
      */
     public var controls:Controls = null;
+    /**
+     * Whenever Ghost Tapping is enabled.
+     */
+    @:isVar public var ghostTapping(get, set):Null<Bool> = false;
 
+    private function get_ghostTapping() {
+        if (this.ghostTapping != null) return this.ghostTapping;
+        if (PlayState.instance != null) return PlayState.instance.ghostTapping;
+        return false;
+    }
+
+    private inline function set_ghostTapping(b:Bool):Bool
+        return this.ghostTapping = b;
+    
     private var strumOffset:Float = 0.25;
 
     public function new(characters:Array<Character>, strumOffset:Float = 0.25, cpu:Bool = false, opponentSide:Bool = true, ?controls:Controls) {

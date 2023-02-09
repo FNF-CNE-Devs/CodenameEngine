@@ -262,7 +262,5 @@ class Main extends Sprite
 		Paths.assetsTree.clearCache();
 
 		MemoryUtil.clearMajor();
-
-		// FlxG.bitmap.dumpCache();
 	}
 }
