@@ -263,6 +263,6 @@ class Main extends Sprite
 
 		MemoryUtil.clearMajor();
 
-		FlxG.bitmap.dumpCache();
+		// FlxG.bitmap.dumpCache();
 	}
 }
