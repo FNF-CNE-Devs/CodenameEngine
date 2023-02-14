@@ -19,6 +19,19 @@ class GameplayOptions extends OptionsScreen {
                 "Camera Zoom on Beat",
                 "If unchecked, will disable camera zooming every 4 beats",
                 "camZoomOnBeat"),
+            new NumberOption(
+                "FPS",
+                "The framerate at which the game runs at.",
+                "FPS",
+                60,
+                240,
+                20),
+            new NumberOption(
+                "Hit Window",
+                "The \"window\" of time that you can hit a note.",
+                "hitWindow",
+                60,
+                240)
         ];
         super.create();
     }
