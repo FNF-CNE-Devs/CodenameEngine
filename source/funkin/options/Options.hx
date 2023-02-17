@@ -27,6 +27,7 @@ class Options
 	public static var week6PixelPerfect:Bool = true;
 	public static var betaUpdates:Bool = false;
 	public static var hitWindow:Float = 250;
+	public static var framerate:Int = 1000;
 
 	public static var lastLoadedMod:String = null;
 
@@ -104,6 +105,7 @@ class Options
 		applyKeybinds();
 		FlxG.game.stage.quality = (FlxG.forceNoAntialiasing = !antialiasing) ? LOW : BEST;
 		FlxG.autoPause = autoPause;
+		FlxG.drawFramerate = FlxG.updateFramerate = framerate;
 	}
 
 	public static function applyKeybinds() {

@@ -13,7 +13,7 @@ class ScriptsMacro {
         Compiler.include("flixel");
         Compiler.include("away3d");
         Compiler.include("flx3d");
-        #if sys
+        #if (sys && !web)
         Compiler.include("sys");
         #end
 
@@ -24,7 +24,9 @@ class ScriptsMacro {
         Compiler.include("haxe.crypto");
         Compiler.include("haxe.display");
         Compiler.include("haxe.exceptions");
+        #if !web
         Compiler.include("haxe.extern");
+        #end
         
         Compiler.include("scripting");
 

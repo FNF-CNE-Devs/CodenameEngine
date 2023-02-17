@@ -27,7 +27,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
     /**
      * Whenever Ghost Tapping is enabled.
      */
-    @:isVar public var ghostTapping(get, set):Null<Bool> = false;
+    @:isVar public var ghostTapping(get, set):Null<Bool> = null;
 
     private function get_ghostTapping() {
         if (this.ghostTapping != null) return this.ghostTapping;
