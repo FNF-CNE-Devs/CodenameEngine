@@ -922,7 +922,9 @@ class PlayState extends MusicBeatState
 					notes.add(swagNote);
 				}
 
-				splashHandler.getSplashGroup(swagNote.splash);
+				// preload splash
+				if (Options.splashesEnabled)
+					splashHandler.getSplashGroup(swagNote.splash);
 			}
 		}
 		notes.sortNotes();
@@ -1564,7 +1566,7 @@ class PlayState extends MusicBeatState
 
 		var event:NoteHitEvent;
 		if (note.strumLine != null && !note.strumLine.cpu)
-			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, note.strumLine.characters, true, note.noteType, note.animSuffix, "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, !note.isSustainNote && daRating == "sick"));
+			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, note.strumLine.characters, true, note.noteType, note.animSuffix, "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, Options.splashesEnabled && !note.isSustainNote && daRating == "sick"));
 		else
 			event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, note.strumLine.characters, false, note.noteType, note.animSuffix, "game/score/", "", note.strumID, 0, null, 0, daRating, false));
 		scripts.event("onNoteHit", event);

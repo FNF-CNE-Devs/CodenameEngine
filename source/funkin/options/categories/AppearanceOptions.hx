@@ -12,6 +12,10 @@ class AppearanceOptions extends OptionsScreen {
                 "If checked, Week 6 will have a pixel perfect effect to it enabled, aligning every pixel on the screen.",
                 "week6PixelPerfect"),
             new Checkbox(
+                "Enable splashes",
+                "If checked, the game will show a note impact effect everytime you hit a note with a Sick! rating.",
+                "splashesEnabled"),
+            new Checkbox(
                 "Flashing Menu",
                 "If unchecked, will disable menu flashing when you select an option in the Main Menu, and other flashs will be slower",
                 "flashingMenu"),
