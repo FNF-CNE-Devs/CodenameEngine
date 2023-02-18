@@ -1,6 +1,6 @@
 package funkin.options.categories;
 
-class BehaviourOptions extends OptionsScreen {
+class AppearanceOptions extends OptionsScreen {
     public override function create() {
         options = [
             new Checkbox(
@@ -15,6 +15,10 @@ class BehaviourOptions extends OptionsScreen {
                 "Flashing Menu",
                 "If unchecked, will disable menu flashing when you select an option in the Main Menu, and other flashs will be slower",
                 "flashingMenu"),
+            new Checkbox(
+                "Low Memory Mode",
+                "If checked, will disable certain background elements in stages to reduce memory usage.",
+                "lowMemoryMode"),
             new Checkbox(
                 "Auto Pause",
                 "If checked, switching windows will pause the game",

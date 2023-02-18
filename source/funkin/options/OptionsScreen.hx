@@ -93,7 +93,7 @@ class OptionsScreen extends MusicBeatState {
         FlxG.camera.scroll.y = lerp(FlxG.camera.scroll.y, scrollDest.y, 0.25);
 
         for(option in options) {
-            var angle = Math.cos((option.y + (optionHeight / 2) - (FlxG.camera.scroll.y + (FlxG.height / 2))) / FlxG.height * Math.PI);
+            var angle = Math.cos((option.y + (optionHeight / 2) - (FlxG.camera.scroll.y + (FlxG.height / 2))) / (FlxG.height * 1.25) * Math.PI);
 
             option.x = -50 + (Math.abs(angle) * 150);
         }

@@ -52,7 +52,7 @@ class CreditsCodename extends OptionsScreen {
 
     public override function createAdditional() {
         for(k=>c in contributors) {
-            var spr = new FlxSprite(0, k * 96);
+            var spr = new FlxSprite(0, (OptionsScreen.optionHeight * (k+0.5)) - 48);
             spr.antialiasing = true;
             spr.setUnstretchedGraphicSize(96, 96, false);
             spr.updateHitbox();
@@ -87,7 +87,6 @@ class CreditsCodename extends OptionsScreen {
         for(k=>spr in contributorsSprites) {
             var alpha = options[k];
             spr.x = alpha.x - 10;
-            spr.y = alpha.y - ((alpha.height - spr.height) / 2);
         }
     }
 

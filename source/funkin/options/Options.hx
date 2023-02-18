@@ -25,9 +25,10 @@ class Options
 	public static var antialiasing:Bool = true;
 	public static var volume:Float = 1;
 	public static var week6PixelPerfect:Bool = true;
+	public static var lowMemoryMode:Bool = false;
 	public static var betaUpdates:Bool = false;
 	public static var hitWindow:Float = 250;
-	public static var framerate:Int = 1000;
+	public static var framerate:Int = 120;
 
 	public static var lastLoadedMod:String = null;
 

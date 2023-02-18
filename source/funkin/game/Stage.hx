@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.options.Options;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
@@ -50,7 +51,16 @@ class Stage extends FlxBasic implements IBeatReceiver {
                 if (spritesParentFolder.charAt(spritesParentFolder.length-1) != "/") spritesParentFolder = spritesParentFolder + "/";
             }
 
+            var elems = [];
             for(node in stageXML.elements) {
+                if (node.name == "high-memory" && !Options.lowMemoryMode)
+                    for(e in node.elements)
+                        elems.push(e);
+                else
+                    elems.push(node);
+            }
+
+            for(node in elems) {
                 var sprite:Dynamic = switch(node.name) {
                     case "sprite" | "spr" | "sparrow":
                         if (!node.has.sprite || !node.has.name || !node.has.x || !node.has.y) continue;

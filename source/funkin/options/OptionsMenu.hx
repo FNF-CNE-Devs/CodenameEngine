@@ -32,9 +32,9 @@ class OptionsMenu extends MusicBeatState {
             state: GameplayOptions
         },
         {
-            name: 'Behaviour',
-            desc: 'Change Behaviour options such as Flashing menus...',
-            state: BehaviourOptions
+            name: 'Appearance',
+            desc: 'Change Appearance options such as Flashing menus...',
+            state: AppearanceOptions
         },
         {
             name: 'Miscellaneous',

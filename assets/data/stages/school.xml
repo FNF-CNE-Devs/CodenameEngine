@@ -9,14 +9,17 @@
     <sprite name="bgStreet" x="-204" y="0" sprite="weebStreet"
         antialiasing="false" scale="6" scroll="0.95" updateHitbox="true"/>
 
+
     <sprite name="fgTrees" x="-30" y="130" sprite="weebTreesBack"
         antialiasing="false" scale="4.8" scroll="0.9" updateHitbox="true" type="loop"/>
 
     <sprite name="bgTrees" x="-1180" y="-1600" sprite="weebTrees"
         antialiasing="false" scale="8.4" scroll="0.85" updateHitbox="true" type="loop"/>
 
-    <sprite name="treeLeaves" x="-200" y="-40" sprite="petals"
-        antialiasing="false" scale="6" scroll="0.85" updateHitbox="true" type="loop"/>
+    <high-memory>
+        <sprite name="treeLeaves" x="-200" y="-40" sprite="petals"
+            antialiasing="false" scale="6" scroll="0.85" updateHitbox="true" type="loop"/>
+    </high-memory>
 
     <sprite name="bgGirls" x="-100" y="190" sprite="bgFreaks" scroll="0.9" scale="6" antialiasing="false" updateHitbox="true">
         <anim name="danceLeft" anim="BG girls group" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13" fps="24" loop="false"/>
