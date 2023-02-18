@@ -51,6 +51,14 @@ class OptionsScreen extends MusicBeatState {
         bg.antialiasing = true;
         add(bg);
 
+
+        for(k=>option in options) {
+            option.setPosition(k * 20, 10 + (k * optionHeight));
+            add(option);
+        }
+
+        createAdditional();
+
         descText = new FunkinText(0, 0);
         descText.alignment = CENTER;
         descText.scrollFactor.set();
@@ -65,14 +73,10 @@ class OptionsScreen extends MusicBeatState {
         add(descDrop);
 
         descText.antialiasing = descDrop.antialiasing = true;
-
-        for(k=>option in options) {
-            option.setPosition(k * 20, 10 + (k * optionHeight));
-            add(option);
-        }
         changeSelection(1);
     }
 
+    public function createAdditional() {}
     public var scrollDest:FlxPoint = FlxPoint.get(0, 0);
     public override function update(elapsed:Float) {
         super.update(elapsed);

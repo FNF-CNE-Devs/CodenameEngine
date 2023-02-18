@@ -14,11 +14,7 @@ class CreditsMain extends OptionsScreen {
                 FlxG.switchState(new CreditsCodename());
             }),
             new TextOption("Friday Night Funkin'", "Select this to open the itch.io page of the original game to donate!", function() {
-                #if linux
-                Sys.command('/usr/bin/xdg-open', ["https://ninja-muffin24.itch.io/funkin", "&"]);
-                #else
-                FlxG.openURL('https://ninja-muffin24.itch.io/funkin');
-                #end
+                CoolUtil.openURL("https://ninja-muffin24.itch.io/funkin");
             })
         ];
         super.create();

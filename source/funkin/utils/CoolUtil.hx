@@ -401,6 +401,14 @@ class CoolUtil
 			array.push(a);
 		return array;
 	}
+
+	public static function openURL(url:String) {
+		#if linux
+		Sys.command('/usr/bin/xdg-open', [url, "&"]);
+		#else
+		FlxG.openURL(url);
+		#end
+	}
 }
 
 enum abstract CoolSfx(Int) from Int {
