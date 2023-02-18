@@ -64,7 +64,6 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         state.add(spr);
                         spr;
                     case "box":
-                        trace('HOLY FUCK BOX DETECTED'); // TODO: someone help this aint doing shit!! >:(
                         if ( !node.has.name || !node.has.width || !node.has.height) continue;
 
                         var spr = new FlxSprite(
@@ -73,10 +72,8 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         ).makeGraphic(
                             Std.parseInt(node.att.width),
                             Std.parseInt(node.att.height),
-                            (node.has.color) ? Std.parseInt(node.att.color) : 0xFFFFFFFF
+                            (node.has.color) ? CoolUtil.getColorFromDynamic(node.att.color) : 0xFFFFFFFF
                         );
-
-                        trace(node.att.name, node.att.width, node.att.height);
 
                         stageSprites.set(node.getAtt("name"), spr);
                         state.add(spr);

@@ -1,5 +1,7 @@
 package funkin.scripting.events;
 
+import funkin.game.StrumLine;
+
 class InputSystemEvent extends CancellableEvent {
     /**
      * Array containing whenever a specific control is pressed or not.
@@ -18,4 +20,14 @@ class InputSystemEvent extends CancellableEvent {
      * For example, `justReleased[0]` will return whenever the left strum was just released.
      */
     public var justReleased:Array<Bool>;
+
+    /**
+     * Strumline which input is being processed.
+     */
+    public var strumLine:StrumLine;
+
+    /**
+     * ID of the Strumline.
+     */
+    public var strumLineID:Int;
 }

@@ -23,4 +23,8 @@ class CreditsMain extends OptionsScreen {
         ];
         super.create();
     }
+
+    public override function exit() {
+        FlxG.switchState(new MainMenuState());
+    }
 }

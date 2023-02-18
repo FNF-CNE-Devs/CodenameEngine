@@ -78,13 +78,15 @@ class TitleState extends MusicBeatState
 		loadXML();
 		#end
 
-		titleText = new FlxSprite(100, FlxG.height * 0.8);
-		titleText.frames = Paths.getFrames('menus/titlescreen/titleEnter');
-		titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
-		titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
-		titleText.antialiasing = true;
-		titleText.animation.play('idle');
-		titleText.updateHitbox();
+		if (titleText == null) {
+			titleText = new FlxSprite(100, FlxG.height * 0.8);
+			titleText.frames = Paths.getFrames('menus/titlescreen/titleEnter');
+			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
+			titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
+			titleText.antialiasing = true;
+			titleText.animation.play('idle');
+			titleText.updateHitbox();
+		}
 		add(titleText);
 
 		textGroup = new FlxGroup();
@@ -287,7 +289,8 @@ class TitleState extends MusicBeatState
 					for(sprNode in node.elements) {
 						var spr = XMLUtil.createSpriteFromXML(sprNode, parentFolder);
 						switch(node.name) {
-							// TODO: press enter to begin customisation
+							case "press-enter":
+								titleText = spr;
 							default:
 								titleScreenSprites.add(spr);
 						}

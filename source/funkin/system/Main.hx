@@ -32,12 +32,13 @@ import sys.thread.Thread;
 #if sys
 import sys.io.File;
 #end
-// TODO: REMOVE TEST
 import funkin.mods.ModsFolder;
 
 class Main extends Sprite
 {
 	public static var instance:Main;
+
+	public static var modToLoad:String = null;
 
 	public static var scaleMode:FunkinRatioScaleMode;
 
@@ -212,7 +213,7 @@ class Main extends Sprite
 		FlxG.signals.postStateSwitch.add(onStateSwitchPost);
 
 		#if MOD_SUPPORT
-		ModsFolder.switchMod(Options.lastLoadedMod);
+		ModsFolder.switchMod(modToLoad.getDefault(Options.lastLoadedMod));
 		#end
 
 		initTransition();
