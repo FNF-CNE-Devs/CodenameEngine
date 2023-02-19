@@ -10,7 +10,7 @@ import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.effects.FlxFlicker;
 import funkin.menus.MainMenuState;
-
+import funkin.options.keybinds.KeybindsOptions;
 import funkin.options.categories.*;
 
 typedef OptionCategory = {
@@ -24,7 +24,7 @@ class OptionsMenu extends MusicBeatState {
         {
             name: 'Controls',
             desc: 'Change Controls for Player 1 and Player 2!',
-            state: funkin.options.keybinds.KeybindsOptions
+            state: KeybindsOptions
         },
         {
             name: 'Gameplay',
