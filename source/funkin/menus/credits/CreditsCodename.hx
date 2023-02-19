@@ -1,5 +1,6 @@
 package funkin.menus.credits;
 
+import flixel.util.FlxColor;
 import funkin.shaders.CustomShader;
 import flixel.math.FlxMath;
 import funkin.options.type.TextOption;
@@ -13,21 +14,18 @@ import funkin.github.GitHub;
 import funkin.github.GitHubContributor;
 import funkin.menus.MainMenuState;
 
+using funkin.utils.BitmapUtil;
+
 class CreditsCodename extends OptionsScreen {
     public var contributorsSprites:Array<FlxSprite> = [];
     public var contributorsAvatars:Array<FlxGraphic> = [];
+    public var contributorsColors:Array<FlxColor> = [];
     public var avatarLoadListId:Int = 0;
     public var contributors:Array<GitHubContributor>;
 
-    public override function create() {
+    public var interpColor:FlxInterpolateColor;
 
-		var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBGBlue'));
-        bg.scrollFactor.set();
-		bg.scale.set(1.15, 1.15);
-		bg.updateHitbox();
-		bg.screenCenter();
-		bg.antialiasing = true;
-		add(bg);
+    public override function create() {
 
         contributors = GitHub.getContributors("YoshiCrafter29", "CodenameEngine", function(e) {
             trace(e);
@@ -48,6 +46,7 @@ class CreditsCodename extends OptionsScreen {
 
 
         super.create();
+        interpColor = new FlxInterpolateColor(bg.color);
     }
 
     public override function createAdditional() {
@@ -66,7 +65,9 @@ class CreditsCodename extends OptionsScreen {
             for(k=>c in contributors) {
                 var bytes = GitHub.__requestBytesOnGitHubServers('${c.avatar_url}&size=96');
                 var bmap = BitmapData.fromBytes(bytes);
+                var color = bmap.getMostPresentSaturatedColor();
                 contributorsAvatars.push(FlxG.bitmap.add(bmap, false, 'GITHUB-USER:${c.login}'));
+                contributorsColors.push(color);
                 if (destroyed) return;
             }
         });
@@ -88,9 +89,16 @@ class CreditsCodename extends OptionsScreen {
             var alpha = options[k];
             spr.x = alpha.x - 10;
         }
+
+        interpColor.fpsLerpTo(contributorsColors[curSelected], 0.0625);
+        bg.color = interpColor.color;
     }
 
     public override function destroy() {
         super.destroy();
+    }
+
+    public override function exit() {
+        FlxG.switchState(new CreditsMain());
     }
 }

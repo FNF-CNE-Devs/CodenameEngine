@@ -86,7 +86,7 @@ class Options
 
 	public static function load() {
 		if (__save == null) __save = new FlxSave();
-		__save.bind("options");
+		__save.bind("options", "CodenameEngine");
 		for(field in Reflect.fields(__save.data)) {
 			var obj = Reflect.field(__save.data, field);
 			Reflect.setProperty(Options, field, obj);

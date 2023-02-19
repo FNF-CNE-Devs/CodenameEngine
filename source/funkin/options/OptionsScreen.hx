@@ -19,7 +19,6 @@ class OptionsScreen extends MusicBeatState {
     public static var instance:OptionsScreen;
     public static var optionHeight:Float = 120;
 
-    // public var bgColor:FlxColor = 0xFFFDE871;
     public var bg:FlxSprite;
 
     public var descDrop:FlxBackdrop;
@@ -43,11 +42,12 @@ class OptionsScreen extends MusicBeatState {
         FlxTransitionableState.skipNextTransIn = true;
         super.create();
         
-        bg = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBG'));
+        bg = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuDesat'));
         bg.scrollFactor.set();
         bg.scale.set(1.15, 1.15);
         bg.updateHitbox();
         bg.screenCenter();
+        bg.color = defaultBGColor;
         bg.antialiasing = true;
         add(bg);
 

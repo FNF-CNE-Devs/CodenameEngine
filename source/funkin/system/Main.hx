@@ -195,7 +195,7 @@ class Main extends Sprite
 		Assets.registerLibrary('default', lib);
 
 		funkin.options.PlayerSettings.init();
-		FlxG.save.bind('Codename-Engine');
+		FlxG.save.bind('save', 'CodenameEngine');
 		Options.load();
 		Highscore.load();
 
