@@ -103,6 +103,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
             }
 
             add(babyArrow);
+            PlayState.instance.strumLineNotes.add(babyArrow);
 
             babyArrow.playAnim('static');
         }
