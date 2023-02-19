@@ -29,9 +29,11 @@ import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
 using StringTools;
 
 @:allow(funkin.desktop.editors.CharacterEditor)
+@:allow(funkin.game.StrumLine)
 class Character extends FunkinSprite implements IBeatReceiver implements IOffsetCompatible
 {
 	private var __stunnedTime:Float = 0;
+	private var __lockAnimThisFrame:Bool = false;
 	public var stunned(default, set):Bool = false;
 
 	private function set_stunned(b:Bool) {
@@ -206,6 +208,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			if (__stunnedTime > 5 / 60)
 				stunned = false;
 		}
+		__lockAnimThisFrame = false;
 	}
 
 	private var danced:Bool = false;
@@ -256,7 +259,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 	public override function beatHit(curBeat:Int) {
 		script.call("beatHit", [curBeat]);
-		if (danceOnBeat) {
+		if (danceOnBeat && !__lockAnimThisFrame) {
 			tryDance();
 		}
 	}

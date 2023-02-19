@@ -506,6 +506,8 @@ class PlayState extends MusicBeatState
 
 	@:dox(hide) override public function create()
 	{
+		// SCRIPTING & DATA INITIALISATION
+		#if REGION
 		instance = this;
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
@@ -538,8 +540,10 @@ class PlayState extends MusicBeatState
 
 		// String for when the game is paused
 		detailsPausedText = "Paused - " + detailsText;
+		#end
 
-
+		// CHARACTER INITIALISATION
+		#if REGION
 		// Updating Discord Rich Presence.
 		dad = new Character(100, 100, SONG.player2);
 
@@ -563,8 +567,10 @@ class PlayState extends MusicBeatState
 		comboGroup = new FlxSpriteGroup(FlxG.width * 0.55, (FlxG.height * 0.5) - 60);
 
 		boyfriend = new Character(770, 100, SONG.player1, true);
+		#end
 
-
+		// SCRIPTS & STAGE INITIALISATION
+		#if REGION
 		if (SONG.stage == null || SONG.stage.trim() == "") SONG.stage = "stage";
 		add(stage = new Stage(SONG.stage));
 
@@ -587,17 +593,6 @@ class PlayState extends MusicBeatState
 				}
 		}
 
-		/**
-		 * PRECACHING
-		 */
-
-		for(content in Paths.getFolderContent('images/game/score/', true, true))
-			FlxG.bitmap.add(content);
-
-		/**
-		 * END OF PRECACHING
-		 */
-
 		scripts.load();
 		scripts.call("create");
 
@@ -610,7 +605,16 @@ class PlayState extends MusicBeatState
 
 		if (dad != null) add(dad);
 		if (boyfriend != null) add(boyfriend);
+		#end
 
+		// PRECACHING
+		#if REGION
+		for(content in Paths.getFolderContent('images/game/score/', true, true))
+			FlxG.bitmap.add(content);
+		#end
+
+		// STRUMS & NOTES INITIALISATION
+		#if REGION
 		strumLine = new FlxObject(0, 50, FlxG.width, 10);
 		strumLine.scrollFactor.set();
 
@@ -624,7 +628,10 @@ class PlayState extends MusicBeatState
 		add(splashHandler);
 
 		generateSong(SONG);
+		#end
 
+		// CAMERA & HUD INITIALISATION
+		#if REGION
 		camFollow = new FlxObject(0, 0, 2, 2);
 		camFollow.setPosition(camPos.x, camPos.y);
 		add(camFollow);
@@ -681,6 +688,7 @@ class PlayState extends MusicBeatState
 
 		for(e in [strumLineNotes, notes, healthBar, healthBarBG, iconP1, iconP2, scoreTxt, missesTxt, accuracyTxt])
 			e.cameras = [camHUD];
+		#end
 
 		startingSong = true;
 
@@ -1450,7 +1458,7 @@ class PlayState extends MusicBeatState
 				__funcsToExec.push(function(note:Note) {
 					if (__justPressed[note.strumID] && !note.isSustainNote && note.strumLineID == id && !note.wasGoodHit && note.canBeHit) {
 						if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;
-						else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 2) deleteNote(note);
+						else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 2)  deleteNote(note);
 						else if (note.strumTime < notePerStrum[note.strumID].strumTime)					notePerStrum[note.strumID] = note;
 					}
 				});

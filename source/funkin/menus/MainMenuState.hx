@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import haxe.Json;
 import funkin.ui.FunkinText;
 import funkin.options.Options;
 import flixel.FlxG;
@@ -108,13 +109,9 @@ class MainMenuState extends MusicBeatState
 				if (FlxG.keys.justPressed.SEVEN)
 					FlxG.switchState(new funkin.desktop.DesktopMain());
 				if (FlxG.keys.justPressed.EIGHT) {
-					var scr = new funkin.desktop.DesktopScreen();
-					var camList = [for(c in FlxG.cameras.list) c];
-					for(c in camList) {
-						FlxG.cameras.remove(c, false);
-						scr.addCamera(c);
-					}
-					cameras = camList;
+					#if sys
+					sys.io.File.saveContent("chart.json", Json.stringify(funkin.chart.Chart.parse("dadbattle", "hard")));
+					#end
 				}
 			}
 
