@@ -1,5 +1,8 @@
 package funkin.game;
 
+import funkin.scripting.events.SimpleNoteEvent;
+import funkin.system.Conductor;
+import funkin.chart.Chart.ChartStrumLine;
 import funkin.system.Controls;
 import funkin.scripting.events.StrumCreationEvent;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -28,6 +31,10 @@ class StrumLine extends FlxTypedGroup<Strum> {
      * Whenever Ghost Tapping is enabled.
      */
     @:isVar public var ghostTapping(get, set):Null<Bool> = null;
+	/**
+	 * Group of all of the notes in this strumline. Using `forEach` on this group will only loop through the first notes for performance reasons.
+	 */
+	public var notes:NoteGroup;
 
     private function get_ghostTapping() {
         if (this.ghostTapping != null) return this.ghostTapping;
@@ -47,6 +54,70 @@ class StrumLine extends FlxTypedGroup<Strum> {
         this.cpu = cpu;
         this.opponentSide = opponentSide;
         this.controls = controls;
+        this.notes = new NoteGroup();
+    }
+
+    public function generate(strumLine:ChartStrumLine) {
+        if (strumLine.notes != null) for(note in strumLine.notes) {
+            notes.add(new Note(this, note, false));
+        }
+        notes.sortNotes();
+    }
+
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+        notes.update(elapsed);
+    }
+
+    public override function draw() {
+        super.draw();
+        notes.cameras = cameras;
+        notes.draw();
+    }
+
+    public function updateNotes() {
+        notes.forEach(updateNote);
+    }
+    
+    var __updateNote_strum:Strum;
+    public function updateNote(daNote:Note) {
+        
+        for(e in members) {
+            if (e.ID == daNote.noteData % 4) {
+                __updateNote_strum = e;
+                break; //ing bad
+            }
+        }
+        PlayState.instance.scripts.event("onNoteUpdate", PlayState.instance.__updateNote_event.recycle(daNote, FlxG.elapsed, __updateNote_strum));
+        if (PlayState.instance.__updateNote_event.cancelled) return;
+
+        if (PlayState.instance.__updateNote_event.__updateHitWindow) {
+            daNote.canBeHit = (daNote.strumTime > Conductor.songPosition - (PlayState.instance.hitWindow * daNote.latePressWindow)
+                && daNote.strumTime < Conductor.songPosition + (PlayState.instance.hitWindow * daNote.earlyPressWindow));
+
+            if (daNote.strumTime < Conductor.songPosition - PlayState.instance.hitWindow && !daNote.wasGoodHit)
+                daNote.tooLate = true;
+        }
+
+        if (PlayState.instance.__updateNote_event.__autoCPUHit && cpu && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) PlayState.instance.goodNoteHit(this, daNote);
+
+        if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.stepLength) < Conductor.songPosition) {
+            deleteNote(daNote);
+            return;
+        }
+
+        if (daNote.tooLate && !cpu) {
+            PlayState.instance.noteMiss(this, daNote);
+            return;
+        }
+
+
+        if (PlayState.instance.__updateNote_event.strum == null) return;
+
+        if (PlayState.instance.__updateNote_event.__reposNote) PlayState.instance.__updateNote_event.strum.updateNotePosition(daNote);
+        PlayState.instance.__updateNote_event.strum.updateSustain(daNote);
+
+        PlayState.instance.scripts.event("onNotePostUpdate", PlayState.instance.__updateNote_event);
     }
 
     public inline function addHealth(health:Float)
@@ -103,11 +174,24 @@ class StrumLine extends FlxTypedGroup<Strum> {
             }
 
             add(babyArrow);
-            PlayState.instance.strumLineNotes.add(babyArrow);
 
             babyArrow.playAnim('static');
         }
     }
+
+	/**
+	 * Deletes a note from this strumline.
+	 * @param note Note to delete
+	 */
+	public function deleteNote(note:Note) {
+		if (note == null) return;
+		var event:SimpleNoteEvent = PlayState.instance.scripts.event("onNoteDelete", EventManager.get(SimpleNoteEvent).recycle(note));
+		if (!event.cancelled) {
+			note.kill();
+			notes.remove(note, true);
+			note.destroy();
+		}
+	}
 
     /**
      * SETTERS & GETTERS

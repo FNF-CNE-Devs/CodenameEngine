@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.chart.Chart.ChartNote;
 import openfl.utils.Assets;
 import flixel.FlxG;
 import flixel.FlxCamera;
@@ -19,17 +20,21 @@ class Note extends FlxSprite
 	public var strumTime:Float = 0;
 
 	public var mustPress(get, never):Bool;
-	public var strumLine(get, never):StrumLine;
-	private function get_strumLine() {
-		if (PlayState.instance != null)
-			return PlayState.instance.players[strumLineID];
-		return null;
+	public var strumLine(default, set):StrumLine;
+	private function set_strumLine(strLine:StrumLine) {
+		if (this.strumLine != null) {
+			if (this.strumLine.notes != null)
+				this.strumLine.notes.remove(this, true);
+			strLine.notes.add(this);
+			strLine.notes.sortNotes();
+		}
+		return strumLine = strLine;
 	}
 
 	private function get_mustPress():Bool {
-		if (PlayState.instance != null)
-			return PlayState.instance.players[strumLineID] != null && !PlayState.instance.players[strumLineID].cpu;
-		return strumLineID == 1;
+		// if (PlayState.instance != null)
+		// 	return PlayState.instance.players[strumLineID] != null && !PlayState.instance.players[strumLineID].cpu;
+		return false;
 	}
 	public var noteData:Int = 0;
 	public var canBeHit:Bool = false;
@@ -72,7 +77,6 @@ class Note extends FlxSprite
 	public var flipSustain:Bool = true;
 
 	public var noteTypeID:Int = 0;
-	public var strumLineID:Int = 0;
 
 	// TO APPLY THOSE ON A SINGLE NOTE
 	public var scrollSpeed:Null<Float> = null;
@@ -93,27 +97,25 @@ class Note extends FlxSprite
 
 	public var animSuffix:String = "";
 
-	public function new(strumTime:Float, noteData:Int, noteType:Int = 0, strumLineID:Int = 1, ?prevNote:Note, ?sustainNote:Bool = false, animSuffix:String = "")
+	public function new(strumLine:StrumLine, noteData:ChartNote, isSustainNote:Bool)
 	{
 		super();
 
-		if (prevNote == null)
-			prevNote = this;
-
-		this.prevNote = prevNote;
-		this.strumLineID = strumLineID;
-		this.noteTypeID = noteType;
-		isSustainNote = sustainNote;
+		// TODO: Sustain note
+		this.prevNote = strumLine.notes.members.last();
+		this.noteTypeID = noteData.type.getDefault(0);
+		this.isSustainNote = false;
+		this.strumLine = strumLine;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
-		this.strumTime = strumTime;
+		this.strumTime = noteData.time.getDefault(0);
 
-		this.noteData = noteData;
+		this.noteData = noteData.id.getDefault(0);
 
 		var customType = Paths.image('game/notes/${this.noteType}');
-		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, noteTypeID, strumLineID, mustPress, Assets.exists(customType) ? 'game/notes/${this.noteType}' : 'game/notes/default', 0.7, animSuffix);
+		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, noteTypeID, PlayState.instance.players.indexOf(strumLine), mustPress, Assets.exists(customType) ? 'game/notes/${this.noteType}' : 'game/notes/default', 0.7, animSuffix);
 
 		if (PlayState.instance != null)
 			event = PlayState.instance.scripts.event("onNoteCreation", event);

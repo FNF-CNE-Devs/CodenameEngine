@@ -24,6 +24,7 @@ import flixel.util.FlxAxes;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flash.geom.ColorTransform;
+import funkin.chart.Chart;
 
 using StringTools;
 
@@ -294,7 +295,8 @@ class CoolUtil
 	public static function __loadSong(name:String, difficulty:String) {
 		PlayState.difficulty = difficulty;
 
-		PlayState.SONG = Song.loadFromJson(name, difficulty);
+		PlayState.SONG = Chart.parse(name, difficulty);
+		PlayState.fromMods = PlayState.SONG.fromMods;
 	}
 	public static function setSpriteSize(sprite:FlxSprite, width:Float, height:Float) {
 		sprite.scale.set(width / sprite.frameWidth, height / sprite.frameHeight);

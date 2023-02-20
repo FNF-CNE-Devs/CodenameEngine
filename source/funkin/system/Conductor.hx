@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.chart.Chart;
 import flixel.math.FlxMath;
 import openfl.Lib;
 import flixel.FlxState;
@@ -121,10 +122,10 @@ class Conductor
 		changeBPM(0);
 	}
 
-	public static function setupSong(SONG:SwagSong) {
+	public static function setupSong(SONG:ChartData) {
 		reset();
-		mapBPMChanges(SONG);
-		changeBPM(SONG.bpm, cast SONG.beatsPerMesure.getDefault(4), cast SONG.stepsPerBeat.getDefault(4));
+		// mapBPMChanges(SONG); // TODO!!!
+		changeBPM(SONG.meta.bpm, cast SONG.meta.beatsPerMesure.getDefault(4), cast SONG.meta.stepsPerBeat.getDefault(4));
 	}
 	/**
 	 * Maps BPM changes from a song.

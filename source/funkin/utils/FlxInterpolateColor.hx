@@ -3,6 +3,10 @@ package funkin.utils;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 
+/**
+ * Additional class for FlxColor lerping.
+ * Gets rid of precision issues with `FlxColor.interpolate`
+ */
 class FlxInterpolateColor {
     public var red:Float = 0;
     public var green:Float = 0;
