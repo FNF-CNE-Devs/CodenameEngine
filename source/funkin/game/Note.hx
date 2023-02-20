@@ -97,20 +97,21 @@ class Note extends FlxSprite
 
 	public var animSuffix:String = "";
 
-	public function new(strumLine:StrumLine, noteData:ChartNote, isSustainNote:Bool)
+	public function new(strumLine:StrumLine, noteData:ChartNote, sustain:Bool = false, sustainLength:Float = 0, sustainOffset:Float = 0)
 	{
 		super();
 
 		// TODO: Sustain note
 		this.prevNote = strumLine.notes.members.last();
 		this.noteTypeID = noteData.type.getDefault(0);
-		this.isSustainNote = false;
+		this.isSustainNote = sustain;
+		this.sustainLength = sustainLength;
 		this.strumLine = strumLine;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
-		this.strumTime = noteData.time.getDefault(0);
+		this.strumTime = noteData.time.getDefault(0) + sustainOffset;
 
 		this.noteData = noteData.id.getDefault(0);
 
@@ -172,6 +173,16 @@ class Note extends FlxSprite
 
 		if (PlayState.instance != null)
 			PlayState.instance.scripts.event("onPostNoteCreation", event);
+
+		if (!isSustainNote && noteData.sustainLength > Conductor.stepCrochet * 0.75) {
+			var len:Float = noteData.sustainLength;
+			var curLen:Float = 0;
+			while(len > 10) {
+				curLen = Math.min(len, Conductor.stepCrochet);
+				len -= curLen;
+				strumLine.notes.add(new Note(strumLine, noteData, true, curLen, noteData.sustainLength - len));
+			}
+		}
 	}
 
 	public var lastScrollSpeed:Null<Float> = null;
