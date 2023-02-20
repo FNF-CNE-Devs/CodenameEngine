@@ -590,11 +590,10 @@ class PlayState extends MusicBeatState
 			var strOffset:Float = strumLine.strumLinePos == null ? (strumLine.opponent ? 0.25 : 0.75) : strumLine.strumLinePos;
 			var strLine = new StrumLine(chars, strOffset, !coopMode && (strumLine.opponent != opponentMode), strumLine.opponent, coopMode ? (strumLine.opponent ? controlsP2 : controlsP1) : controls);
 			strLine.cameras = [camHUD];
+			strLine.data = strumLine;
 			players.push(strLine);
 			if (strumLine.visible != false)
 				add(strLine);
-
-			strLine.generate(strumLine);
 		}
 
 		splashHandler = new SplashHandler();
@@ -606,6 +605,9 @@ class PlayState extends MusicBeatState
 
 		// CAMERA & HUD INITIALISATION
 		#if REGION
+		for(str in players)
+			str.generate(str.data);
+
 		camFollow = new FlxObject(0, 0, 2, 2);
 		camFollow.setPosition(camPos.x, camPos.y);
 		add(camFollow);
@@ -1304,6 +1306,9 @@ class PlayState extends MusicBeatState
 	
 			var notePerStrum = [for(_ in 0...4) null];
 			if (__justPressed.contains(true)) {
+				for(c in p.characters)
+					c.__lockAnimThisFrame = true;
+
 				__funcsToExec.push(function(note:Note) {
 					if (__justPressed[note.strumID] && !note.isSustainNote && !note.wasGoodHit && note.canBeHit) {
 						if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;

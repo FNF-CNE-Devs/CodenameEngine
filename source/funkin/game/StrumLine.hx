@@ -28,6 +28,10 @@ class StrumLine extends FlxTypedGroup<Strum> {
      */
     public var controls:Controls = null;
     /**
+     * Chart JSON data assigned to this StrumLine (Codename format)
+     */
+    public var data:ChartStrumLine = null;
+    /**
      * Whenever Ghost Tapping is enabled.
      */
     @:isVar public var ghostTapping(get, set):Null<Bool> = null;

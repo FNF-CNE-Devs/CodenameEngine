@@ -17,4 +17,16 @@ class FunkinGame extends FlxGame {
             _total = ticks = getTicks();
         super.onEnterFrame(t);
     }
+
+    public override function draw() {
+        MemoryUtil.askDisable();
+        super.draw();
+        MemoryUtil.askEnable();
+    }
+
+    public override function update() {
+        MemoryUtil.askDisable();
+        super.update();
+        MemoryUtil.askEnable();
+    }
 }

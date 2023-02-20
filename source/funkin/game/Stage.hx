@@ -92,13 +92,22 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         state.add(spr);
                         spr;
                     case "boyfriend" | "bf":
-                        addCharPos("boyfriend", node);
+                        addCharPos("boyfriend", node, {
+                            x: 770,
+                            y: 100
+                        });
                         null;
                     case "girlfriend" | "gf":
-                        addCharPos("girlfriend", node);
+                        addCharPos("girlfriend", node, {
+                            x: 400,
+                            y: 130
+                        });
                         null;
                     case "dad" | "opponent":
-                        addCharPos("dad", node);
+                        addCharPos("dad", node, {
+                            x: 100,
+                            y: 100
+                        });
                         null;
                     case "character":
                         if (!node.has.name) continue;
@@ -165,11 +174,10 @@ class Stage extends FlxBasic implements IBeatReceiver {
             state.add(char);
         else {
             var charPos = characterPoses[posName];
-            if (charPos.node != null) {
-                doCharNodeShit(char, charPos.node);
-            } else if (charPos.nonXMLInfo != null) {
+            if (charPos.nonXMLInfo != null)
                 char.setPosition(charPos.nonXMLInfo.x, charPos.nonXMLInfo.y);
-            }
+            if (charPos.node != null)
+                doCharNodeShit(char, charPos.node);
             state.insert(state.members.indexOf(charPos.dummy), char);
         }
     }

@@ -2,6 +2,7 @@ package funkin.system.framerate;
 
 import flixel.FlxG;
 import flixel.math.FlxMath;
+import funkin.utils.MemoryUtil;
 
 class SystemInfo extends FramerateCategory {
     public function new() {
@@ -14,6 +15,7 @@ class SystemInfo extends FramerateCategory {
         _text += '\nObjs in state: ${FlxG.state.members.length}';
         _text += '\nNb cameras: ${FlxG.cameras.list.length}';
         _text += '\nCurrent state: ${Type.getClassName(Type.getClass(FlxG.state))}';
+        _text += '\nGarbage Collector: ${MemoryUtil.disableCount > 0 ? "OFF" : "ON"} (${MemoryUtil.disableCount})';
         
         this.text.text = _text;
         super.__enterFrame(t);

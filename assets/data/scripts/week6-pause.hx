@@ -11,7 +11,7 @@ var hand:FlxSprite;
 
 var texts:Array<FlxText> = [];
 
-var isThorns = PlayState.SONG.song.toLowerCase() == "thorns";
+var isThorns = PlayState.SONG.meta.name.toLowerCase() == "thorns";
 
 function create(event) {
     // cancel default pause menu!!

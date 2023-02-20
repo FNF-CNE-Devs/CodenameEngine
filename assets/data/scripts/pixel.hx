@@ -16,8 +16,8 @@ static var daPixelZoom = 6;
  * UI
  */
 function onNoteCreation(event) {
-    if (event.note.mustPress && !pixelNotesForBF) return;
-    if (!event.note.mustPress && !pixelNotesForDad) return;
+    if (event.note.strumLine == playerStrums && !pixelNotesForBF) return;
+    if (event.note.strumLine == cpuStrums && !pixelNotesForDad) return;
     
     event.cancel();
 
@@ -105,14 +105,12 @@ function onStartCountdown() {
     FlxG.cameras.add(newNoteCamera, false);
 
     var pixelSwagWidth = Note.swagWidth + (daPixelZoom - (Note.swagWidth % daPixelZoom));
-    // TODO: multikey support??
-    for(s in 0...4) {
+
+    for(p in players) {
         var i = 0;
-        for(str in [cpuStrums.members[s], playerStrums.members[s]]) {
-            // TODO: middlescroll???
-            str.x = (FlxG.width * (0.25 + (0.5 * i))) + (pixelSwagWidth * (s - 2));
+        for(str in p.members) {
+            str.x = (FlxG.width * strumOffset) + (pixelSwagWidth * (i - 2));
             str.x -= str.x % daPixelZoom;
-            str.cameras = [newNoteCamera];
             i++;
         }
     }
@@ -153,10 +151,11 @@ function postUpdate(elapsed) {
             e.downscroll = camHUD.downscroll;
     }
     if (enableCameraHacks) {
-        notes.forEach(function(n) {
-            n.y -= n.y % daPixelZoom;
-            n.x -= n.x % daPixelZoom;
-        });
+        for(p in players)
+            p.notes.forEach(function(n) {
+                n.y -= n.y % daPixelZoom;
+                n.x -= n.x % daPixelZoom;
+            });
     }
     
     for(e in pixellyCameras) {
