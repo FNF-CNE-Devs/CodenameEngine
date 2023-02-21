@@ -72,7 +72,6 @@ class Note extends FlxSprite
 	}
 
 	public var sustainLength:Float = 0;
-	public var stepLength:Float = 0;
 	public var isSustainNote:Bool = false;
 	public var flipSustain:Bool = true;
 
@@ -173,16 +172,6 @@ class Note extends FlxSprite
 
 		if (PlayState.instance != null)
 			PlayState.instance.scripts.event("onPostNoteCreation", event);
-
-		if (!isSustainNote && noteData.sustainLength > Conductor.stepCrochet * 0.75) {
-			var len:Float = noteData.sustainLength;
-			var curLen:Float = 0;
-			while(len > 10) {
-				curLen = Math.min(len, Conductor.stepCrochet);
-				len -= curLen;
-				strumLine.notes.add(new Note(strumLine, noteData, true, curLen, noteData.sustainLength - len));
-			}
-		}
 	}
 
 	public var lastScrollSpeed:Null<Float> = null;
@@ -194,6 +183,11 @@ class Note extends FlxSprite
 	 * For example, if this is true, a note at the position 0; 0 will be on the strum, instead of at the top left of the screen.
 	 */
 	public var strumRelativePos:Bool = true;
+
+	override function drawComplex(camera:FlxCamera) {
+		flipY = flipSustain && ((camera is HudCamera ? cast(camera, HudCamera).downscroll : false) != (__strum != null && __strum.getScrollSpeed(this) < 0));
+		super.drawComplex(camera);
+	}
 
 	override function draw() {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
@@ -244,7 +238,7 @@ class Note extends FlxSprite
 			// is long sustain
 			lastScrollSpeed = scrollSpeed;
 
-			scale.y = (stepLength * (0.45 * FlxMath.roundDecimal(scrollSpeed, 2))) / frameHeight;
+			scale.y = (sustainLength * (0.45 * FlxMath.roundDecimal(scrollSpeed, 2))) / frameHeight;
 			updateHitbox();
 			if (useAntialiasingFix) {
 				// dumbass antialiasing
