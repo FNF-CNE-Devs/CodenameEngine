@@ -1,22 +1,77 @@
 package funkin.chart;
 
+import flixel.util.FlxColor;
+import haxe.io.Path;
 import funkin.system.Song.SwagSong;
 import haxe.Json;
 import openfl.utils.Assets;
 
 class Chart {
+    public static function loadChartMeta(songName:String, difficulty:String = "normal") {
+        var metaPath = Paths.file('songs/${songName.toLowerCase()}/meta.json');
+        var metaDiffPath = Paths.file('songs/${songName.toLowerCase()}/meta-${difficulty.toLowerCase()}.json');
+
+        var data:ChartMetaData = null;
+        var fromMods:Bool = false;
+        for(path in [metaDiffPath, metaPath]) {
+            if (Assets.exists(path)) {
+                fromMods = Paths.assetsTree.existsSpecific(path, "TEXT", MODS);
+                try {
+                    data = Json.parse(Assets.getText(path));
+                } catch(e) {
+                    Logs.trace('Failed to load song metadata for ${songName} ($path): ${Std.string(e)}', ERROR);
+                }
+                if (data != null) break;
+            }
+        }
+
+        if (data == null)
+            data = {
+                name: songName,
+                bpm: 100
+            };
+        data.setFieldDefault("name", songName);
+        data.setFieldDefault("beatsPerMesure", 4);
+        data.setFieldDefault("stepsPerBeat", 4);
+        data.setFieldDefault("needsVoices", true);
+        data.setFieldDefault("icon", "face");
+        data.setFieldDefault("difficulties", []);
+        data.setFieldDefault("coopAllowed", false);
+        data.setFieldDefault("opponentModeAllowed", false);
+        data.setFieldDefault("displayName", data.name);
+        data.setFieldDefault("parsedColor", data.color.getColorFromDynamic());
+
+        if (data.difficulties.length <= 0) {
+            data.difficulties = [for(f in Paths.getFolderContent('songs/${songName.toLowerCase()}/charts/', false, !fromMods)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
+			if (data.difficulties.length == 3) {
+				var hasHard = false, hasNormal = false, hasEasy = false;
+				for(d in data.difficulties) {
+					switch(d) {
+						case "EASY":	hasEasy = true;
+						case "NORMAL":	hasNormal = true;
+						case "HARD":	hasHard = true;
+					}
+				}
+				if (hasHard && hasNormal && hasEasy) {
+					data.difficulties[0] = "EASY";
+					data.difficulties[1] = "NORMAL";
+					data.difficulties[2] = "HARD";
+				}
+			}
+        }
+        if (data.difficulties.length <= 0)
+            data.difficulties.push("CHART MISSING");
+
+        return data;
+    }
+
     public static function parse(songName:String, difficulty:String = "normal"):ChartData {
         var chartPath = Paths.chart(songName, difficulty);
         var base:ChartData = {
             strumLines: [],
             noteTypes: [],
             events: [],
-            meta: {
-                name: songName,
-                bpm: 0,
-                beatsPerMesure: 4,
-                stepsPerBeat: 4
-            },
+            meta: null,
             scrollSpeed: 2,
             stage: "stage",
             codenameChart: true,
@@ -47,8 +102,6 @@ class Chart {
 
             base.scrollSpeed = data.speed;
             base.stage = data.stage;
-            base.meta.name = data.song;
-            base.meta.bpm = data.bpm;
 
             base.strumLines.push({
                 characters: [data.player2],
@@ -127,6 +180,9 @@ class Chart {
                 curTime += curCrochet * beatsPerMesure;
             }
         }
+
+        if (base.meta == null)
+            base.meta = loadChartMeta(songName, difficulty);
         return base;
     }
 
@@ -158,6 +214,7 @@ typedef ChartData = {
 typedef ChartMetaData = {
     public var name:String;
     public var bpm:Float;
+    public var ?displayName:String;
     public var ?beatsPerMesure:Float;
     public var ?stepsPerBeat:Float;
     public var ?needsVoices:Bool;
@@ -166,6 +223,9 @@ typedef ChartMetaData = {
 	public var ?difficulties:Array<String>;
 	public var ?coopAllowed:Bool;
 	public var ?opponentModeAllowed:Bool;
+
+    // NOT TO BE EXPORTED
+	public var ?parsedColor:FlxColor;
 }
 
 typedef ChartStrumLine = {

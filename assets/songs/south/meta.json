@@ -1,0 +1,8 @@
+{
+    "displayName": "South",
+    "bpm": 165.0,
+    "icon": "spooky",
+    "color": "#223344",
+    "coopAllowed": true,
+    "opponentModeAllowed": true
+}

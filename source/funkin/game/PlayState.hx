@@ -685,7 +685,7 @@ class PlayState extends MusicBeatState
 	 * This function is dynamic, which means you can do `updateDiscordPresence = function() {}` in scripts.
 	 */
 	public dynamic function updateDiscordPresence()
-		DiscordUtil.changeSongPresence(detailsText, (paused ? "Paused - " : "") + SONG.meta.name + " (" + difficulty + ")", inst, getIconRPC());
+		DiscordUtil.changeSongPresence(detailsText, (paused ? "Paused - " : "") + SONG.meta.displayName + " (" + difficulty + ")", inst, getIconRPC());
 
 	/**
 	 * Starts a cutscene.
