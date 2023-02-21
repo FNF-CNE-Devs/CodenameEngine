@@ -19,6 +19,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	public var gameOverSong:String;
 	public var lossSFXName:String;
 	public var retrySFX:String;
+	public var player:Bool;
 	var camFollow:FlxObject;
 
 	var x:Float = 0;
@@ -26,11 +27,12 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	public var lossSFX:FlxSound;
 
-	public function new(x:Float, y:Float, character:String = "bf-dead", gameOverSong:String = "gameOver", lossSFX:String = "gameOverSFX", retrySFX:String = "gameOverEnd") {
+	public function new(x:Float, y:Float, character:String = "bf-dead", player:Bool = true, gameOverSong:String = "gameOver", lossSFX:String = "gameOverSFX", retrySFX:String = "gameOverEnd") {
 		super();
 		this.x = x;
 		this.y = y;
 		this.characterName = character;
+		this.player = player;
 		this.gameOverSong = gameOverSong;
 		this.lossSFXName = lossSFX;
 		this.retrySFX = retrySFX;
@@ -42,7 +44,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
-		character = new Character(x, y, characterName, true);
+		character = new Character(x, y, characterName, player);
 		character.danceOnBeat = false;
 		character.playAnim('firstDeath');
 		add(character);
@@ -55,7 +57,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		lossSFX = FlxG.sound.play(Paths.sound(lossSFXName));
 		Conductor.changeBPM(100);
 
-		DiscordUtil.changePresence('Game Over', PlayState.SONG.song + " (" + PlayState.difficulty + ")");
+		DiscordUtil.changePresence('Game Over', PlayState.SONG.meta.name + " (" + PlayState.difficulty + ")");
 	}
 
 	override function update(elapsed:Float)

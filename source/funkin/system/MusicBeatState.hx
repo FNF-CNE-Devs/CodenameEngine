@@ -14,9 +14,6 @@ import funkin.options.PlayerSettings;
 
 class MusicBeatState extends FlxUIState implements IBeatReceiver
 {
-	#if ALLOW_MULTITASKING
-	public var parentWindow:funkin.multitasking.StateWindow;
-	#end
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 
@@ -34,6 +31,10 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	 */
 	public var curBeat(get, never):Int;
 	/**
+	 * Current beat
+	 */
+	public var curMeasure(get, never):Int;
+	/**
 	 * Current step, as a `Float` (ex: 4.94, instead of 4)
 	 */
 	public var curStepFloat(get, never):Float;
@@ -41,6 +42,10 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	 * Current beat, as a `Float` (ex: 1.24, instead of 1)
 	 */
 	public var curBeatFloat(get, never):Float;
+	/**
+	 * Current beat, as a `Float` (ex: 1.24, instead of 1)
+	 */
+	public var curMeasureFloat(get, never):Float;
 	/**
 	 * Current song position (in milliseconds).
 	 */
@@ -50,10 +55,14 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 		return Conductor.curStep;
 	inline function get_curBeat():Int
 		return Conductor.curBeat;
+	inline function get_curMeasure():Int
+		return Conductor.curMeasure;
 	inline function get_curStepFloat():Float
 		return Conductor.curStepFloat;
 	inline function get_curBeatFloat():Float
 		return Conductor.curBeatFloat;
+	inline function get_curMeasureFloat():Float
+		return Conductor.curMeasureFloat;
 	inline function get_songPos():Float
 		return Conductor.songPosition;
 
@@ -174,6 +183,12 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 		call("beatHit", [curBeat]);
 	}
 
+	@:dox(hide) public function measureHit(curMeasure:Int):Void
+	{
+		for(e in members) if (e != null && e is IBeatReceiver) cast(e, IBeatReceiver).measureHit(curMeasure);
+		call("measureHit", [curMeasure]);
+	}
+
 	/**
 	 * Shortcut to `FlxMath.lerp` or `CoolUtil.lerp`, depending on `fpsSensitive`
 	 * @param v1 Value 1
@@ -203,9 +218,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	}
 
 	public override function destroy() {
-		if (parentWindow == null)
-			super.destroy();
-
+		super.destroy();
 		call("onDestroy");
 		if (stateScript != null)
 			stateScript.destroy();

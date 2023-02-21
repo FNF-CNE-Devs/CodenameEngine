@@ -41,6 +41,9 @@ class Paths
 	static public function video(key:String) {
 		return getPath('videos/$key.mp4', BINARY, null);
 	}
+	static public function ndll(key:String) {
+		return getPath('ndlls/$key.ndll', BINARY, null);
+	}
 
 	static public function getLibraryPath(file:String, library = "default")
 	{

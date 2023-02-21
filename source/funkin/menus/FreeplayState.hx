@@ -108,6 +108,12 @@ class FreeplayState extends MusicBeatState
 	 */
 	public var iconArray:Array<HealthIcon> = [];
 
+	/**
+	 * FlxInterpolateColor object for smooth transition between Freeplay colors.
+	 */
+	public var interpColor:FlxInterpolateColor;
+
+
 	override function create()
 	{
 		songList = FreeplaySonglist.get();
@@ -165,6 +171,7 @@ class FreeplayState extends MusicBeatState
 		changeDiff(0, true);
 		changeCoopMode(0, true);
 
+		interpColor = new FlxInterpolateColor(bg.color);
 		super.create();
 	}
 
@@ -213,7 +220,8 @@ class FreeplayState extends MusicBeatState
 		scoreText.x = coopText.x = scoreBG.x + 4;
 		diffText.x = Std.int(scoreBG.x + ((scoreBG.width - diffText.width) / 2));
 
-		bg.color = CoolUtil.lerpColor(bg.color, songs[curSelected].color, 0.0625);
+		interpColor.fpsLerpTo(songs[curSelected].color, 0.0625);
+		bg.color = interpColor.color;
 
 
 		var dontPlaySongThisFrame = false;

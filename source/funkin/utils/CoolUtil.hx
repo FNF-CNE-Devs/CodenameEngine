@@ -24,9 +24,11 @@ import flixel.util.FlxAxes;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flash.geom.ColorTransform;
+import funkin.chart.Chart;
 
 using StringTools;
 
+@:allow(funkin.game.PlayState)
 class CoolUtil
 {
 	/*
@@ -167,10 +169,21 @@ class CoolUtil
 		var infoPath = '${Path.withoutExtension(path)}.ini';
 		if (Assets.exists(infoPath)) {
 			var musicInfo = IniUtil.parseAsset(infoPath, [
-				"BPM" => null
+				"BPM" => null,
+				"TimeSignature" => "2/2"
 			]);
+
+			var timeSignParsed:Array<Null<Float>> = musicInfo["TimeSignature"] == null ? [] : [for(s in musicInfo["TimeSignature"].split("/")) Std.parseFloat(s)];
+			var beatsPerMesure:Float = 4;
+			var stepsPerBeat:Float = 4;
+
+			if (timeSignParsed.length == 2 && !timeSignParsed.contains(null)) {
+				beatsPerMesure = timeSignParsed[0] == null || timeSignParsed[0] <= 0 ? 4 : cast timeSignParsed[0];
+				stepsPerBeat = timeSignParsed[1] == null || timeSignParsed[1] <= 0 ? 4 : cast timeSignParsed[1];
+			}
+
 			var parsedBPM:Null<Float> = Std.parseFloat(musicInfo["BPM"]);
-			Conductor.changeBPM(parsedBPM == null ? DefaultBPM : parsedBPM);
+			Conductor.changeBPM(parsedBPM == null ? DefaultBPM : parsedBPM, beatsPerMesure, stepsPerBeat);
 		} else
 			Conductor.changeBPM(DefaultBPM);
 	}
@@ -269,6 +282,7 @@ class CoolUtil
 		PlayState.storyPlaylist = [for(e in weekData.songs) e.name];
 		PlayState.isStoryMode = true;
 		PlayState.campaignScore = 0;
+		PlayState.opponentMode = PlayState.coopMode = false;
 		__loadSong(PlayState.storyPlaylist[0], difficulty);
 	}
 	public static function loadSong(name:String, difficulty:String = "normal", opponentMode:Bool = false, coopMode:Bool = false) {
@@ -281,7 +295,8 @@ class CoolUtil
 	public static function __loadSong(name:String, difficulty:String) {
 		PlayState.difficulty = difficulty;
 
-		PlayState.SONG = Song.loadFromJson(name, difficulty);
+		PlayState.SONG = Chart.parse(name, difficulty);
+		PlayState.fromMods = PlayState.SONG.fromMods;
 	}
 	public static function setSpriteSize(sprite:FlxSprite, width:Float, height:Float) {
 		sprite.scale.set(width / sprite.frameWidth, height / sprite.frameHeight);
@@ -387,6 +402,14 @@ class CoolUtil
 		for(a in args)
 			array.push(a);
 		return array;
+	}
+
+	public static function openURL(url:String) {
+		#if linux
+		Sys.command('/usr/bin/xdg-open', [url, "&"]);
+		#else
+		FlxG.openURL(url);
+		#end
 	}
 }
 

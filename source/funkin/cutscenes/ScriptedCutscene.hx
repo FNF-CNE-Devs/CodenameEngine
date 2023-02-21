@@ -4,6 +4,10 @@ import funkin.scripting.DummyScript;
 import flixel.addons.transition.FlxTransitionableState;
 import funkin.scripting.Script;
 
+/**
+ * Substate made for scripted cutscenes.
+ * To add cutscenes to your songs, add a `cutscene.hx` file in your song's directory (ex: `songs/song/cutscene.hx`)
+ */
 class ScriptedCutscene extends Cutscene {
     var script:Script;
 

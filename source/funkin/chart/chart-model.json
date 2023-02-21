@@ -1,0 +1,40 @@
+{
+    "meta": {
+        "song": "Test",
+        "bpm": 120
+    },
+    "strumLines": [
+        {
+            "characters": ["bf-pixel"],
+            "opponent": true,
+            "notes": [
+                {
+                    "time": 1500,
+                    "id": 1,
+                    "type": 0,
+                    "sustainLength": 1500
+                }
+            ]
+        },
+        {
+            "characters": ["bf"],
+            "opponent": false,
+            "notes": [
+                {
+                    "time": 1500,
+                    "id": 1,
+                    "type": 0,
+                    "sustainLength": 1500
+                }
+            ]
+        }
+    ],
+    "events": [
+        {
+            "time": 1500,
+            "type": -1,
+            "params": ["changeShit", true, false]
+        }
+    ],
+    "codenameChart": true
+}

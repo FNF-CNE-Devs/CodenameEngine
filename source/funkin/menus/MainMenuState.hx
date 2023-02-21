@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import haxe.Json;
 import funkin.ui.FunkinText;
 import funkin.options.Options;
 import flixel.FlxG;
@@ -104,11 +105,14 @@ class MainMenuState extends MusicBeatState
 		if (!selectedSomethin)
 		{
 			if (canAccessDebugMenus) {
+				
 				if (FlxG.keys.justPressed.SEVEN)
 					FlxG.switchState(new funkin.desktop.DesktopMain());
-
-				if (FlxG.keys.justPressed.F1)
-					funkin.multitasking.MultiTaskingHandler.openWindow("FreeplayState", new FreeplayState());
+				if (FlxG.keys.justPressed.EIGHT) {
+					#if sys
+					sys.io.File.saveContent("chart.json", Json.stringify(funkin.chart.Chart.parse("dadbattle", "hard")));
+					#end
+				}
 			}
 
 			if (controls.UP_P)

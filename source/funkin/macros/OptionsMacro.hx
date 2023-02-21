@@ -3,6 +3,10 @@ package funkin.macros;
 #if macro
 using StringTools;
 
+
+/**
+ * Macro used in the options class to add getters for the SOLO keybinds.
+ */
 class OptionsMacro {
     public static function build():Array<Field> {
         var fields = Context.getBuildFields();

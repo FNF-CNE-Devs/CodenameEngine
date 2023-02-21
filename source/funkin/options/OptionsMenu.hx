@@ -32,9 +32,9 @@ class OptionsMenu extends MusicBeatState {
             state: GameplayOptions
         },
         {
-            name: 'Behaviour',
-            desc: 'Change Behaviour options such as Flashing menus...',
-            state: BehaviourOptions
+            name: 'Appearance',
+            desc: 'Change Appearance options such as Flashing menus...',
+            state: AppearanceOptions
         },
         {
             name: 'Miscellaneous',
@@ -103,7 +103,7 @@ class OptionsMenu extends MusicBeatState {
 
     public function changeSelection(change:Int) {
         if (change == 0) return;
-        CoolUtil.playMenuSFX(CANCEL, 0.7);
+        CoolUtil.playMenuSFX(SCROLL, 0.7);
         curSelected = FlxMath.wrap(curSelected + change, 0, options.length-1);
         alphabets.forEach(function(e) {
             e.alpha = 0.6;

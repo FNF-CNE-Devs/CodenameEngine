@@ -2,10 +2,10 @@ package funkin.scripting;
 
 #if ALLOW_MULTITHREADING
 import sys.thread.Thread;
-import flixel.util.FlxDestroyUtil;
 #end
 
 import hscript.IHScriptCustomBehaviour;
+import flixel.util.FlxDestroyUtil;
 
 class MultiThreadedScript implements IFlxDestroyable implements IHScriptCustomBehaviour {
     var thread:#if ALLOW_MULTITHREADING Thread #else Dynamic #end;
@@ -47,10 +47,12 @@ class MultiThreadedScript implements IFlxDestroyable implements IHScriptCustomBe
 
         script.load();
 
+        #if ALLOW_MULTITHREADING
         thread = Thread.createWithEventLoop(function() {
             // Prevent the thread from being auto deleted
             Thread.current().events.promise();
         });
+        #end
 
         __variables = Type.getInstanceFields(Type.getClass(this));
     }
@@ -67,11 +69,16 @@ class MultiThreadedScript implements IFlxDestroyable implements IHScriptCustomBe
     }
 
     public function call(func:String, args:Array<Dynamic>) {
+        #if ALLOW_MULTITHREADING
         thread.events.run(function() {
             callEnded = false;
             returnValue = script.call(func, args);
             callEnded = true;
         });
+        #else
+        returnValue = script.call(func, args);
+        callEnded = true;
+        #end
     }
 
     public function destroy() {
@@ -80,10 +87,12 @@ class MultiThreadedScript implements IFlxDestroyable implements IHScriptCustomBe
             script.destroy();
         }
 
+        #if ALLOW_MULTITHREADING
         if (thread != null) {
             thread.events.runPromised(function() {
                 // close the thing
             });
         }
+        #end
     }
 }

@@ -17,6 +17,7 @@ class Options
 	 */
 	public static var naughtyness:Bool = true;
 	public static var downscroll:Bool = false;
+	public static var ghostTapping:Bool = true;
 	public static var flashingMenu:Bool = true;
 	public static var camZoomOnBeat:Bool = true;
 	public static var fpsCounter:Bool = true;
@@ -24,8 +25,11 @@ class Options
 	public static var antialiasing:Bool = true;
 	public static var volume:Float = 1;
 	public static var week6PixelPerfect:Bool = true;
+	public static var lowMemoryMode:Bool = false;
 	public static var betaUpdates:Bool = false;
+	public static var splashesEnabled:Bool = true;
 	public static var hitWindow:Float = 250;
+	public static var framerate:Int = 120;
 
 	public static var lastLoadedMod:String = null;
 
@@ -82,7 +86,7 @@ class Options
 
 	public static function load() {
 		if (__save == null) __save = new FlxSave();
-		__save.bind("options");
+		__save.bind("options", "CodenameEngine");
 		for(field in Reflect.fields(__save.data)) {
 			var obj = Reflect.field(__save.data, field);
 			Reflect.setProperty(Options, field, obj);
@@ -103,6 +107,7 @@ class Options
 		applyKeybinds();
 		FlxG.game.stage.quality = (FlxG.forceNoAntialiasing = !antialiasing) ? LOW : BEST;
 		FlxG.autoPause = autoPause;
+		FlxG.drawFramerate = FlxG.updateFramerate = framerate;
 	}
 
 	public static function applyKeybinds() {

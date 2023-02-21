@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.options.Options;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
@@ -18,6 +19,8 @@ class Stage extends FlxBasic implements IBeatReceiver {
     public var stagePath:String;
     public var stageSprites:Map<String, FlxSprite> = [];
     public var stageScript:Script;
+    public var state:FlxState;
+    public var characterPoses:Map<String, StageCharPos> = [];
 
     public function getSprite(name:String) {
         return stageSprites[name];
@@ -28,6 +31,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 
         if (state == null) state = PlayState.instance;
         if (state == null) state = FlxG.state;
+        this.state = state;
 
         stagePath = Paths.xml('stages/$stage');
         try {
@@ -50,7 +54,16 @@ class Stage extends FlxBasic implements IBeatReceiver {
                 if (spritesParentFolder.charAt(spritesParentFolder.length-1) != "/") spritesParentFolder = spritesParentFolder + "/";
             }
 
+            var elems = [];
             for(node in stageXML.elements) {
+                if (node.name == "high-memory" && !Options.lowMemoryMode)
+                    for(e in node.elements)
+                        elems.push(e);
+                else
+                    elems.push(node);
+            }
+
+            for(node in elems) {
                 var sprite:Dynamic = switch(node.name) {
                     case "sprite" | "spr" | "sparrow":
                         if (!node.has.sprite || !node.has.name || !node.has.x || !node.has.y) continue;
@@ -64,7 +77,6 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         state.add(spr);
                         spr;
                     case "box":
-                        trace('HOLY FUCK BOX DETECTED'); // TODO: someone help this aint doing shit!! >:(
                         if ( !node.has.name || !node.has.width || !node.has.height) continue;
 
                         var spr = new FlxSprite(
@@ -73,24 +85,34 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         ).makeGraphic(
                             Std.parseInt(node.att.width),
                             Std.parseInt(node.att.height),
-                            (node.has.color) ? Std.parseInt(node.att.color) : 0xFFFFFFFF
+                            (node.has.color) ? CoolUtil.getColorFromDynamic(node.att.color) : 0xFFFFFFFF
                         );
-
-                        trace(node.att.name, node.att.width, node.att.height);
 
                         stageSprites.set(node.getAtt("name"), spr);
                         state.add(spr);
                         spr;
                     case "boyfriend" | "bf":
-                        if (PlayState.instance == null || PlayState.instance.boyfriend == null) continue;
-                        doCharNodeShit(PlayState.instance.boyfriend, node);
-                        PlayState.instance.add(PlayState.instance.boyfriend);
-                        PlayState.instance.boyfriend;
+                        addCharPos("boyfriend", node, {
+                            x: 770,
+                            y: 100
+                        });
+                        null;
                     case "girlfriend" | "gf":
-                        if (PlayState.instance == null || PlayState.instance.gf == null) continue;
-                        doCharNodeShit(PlayState.instance.gf, node);
-                        PlayState.instance.add(PlayState.instance.gf);
-                        PlayState.instance.gf;
+                        addCharPos("girlfriend", node, {
+                            x: 400,
+                            y: 130
+                        });
+                        null;
+                    case "dad" | "opponent":
+                        addCharPos("dad", node, {
+                            x: 100,
+                            y: 100
+                        });
+                        null;
+                    case "character":
+                        if (!node.has.name) continue;
+                        addCharPos(node.att.name, node);
+                        null;
                     case "ratings" | "combo":
                         if (PlayState.instance == null) continue;
                         PlayState.instance.comboGroup.setPosition(
@@ -99,11 +121,6 @@ class Stage extends FlxBasic implements IBeatReceiver {
                         );
                         PlayState.instance.add(PlayState.instance.comboGroup);
                         PlayState.instance.comboGroup;
-                    case "dad" | "opponent":
-                        if (PlayState.instance == null || PlayState.instance.dad == null || PlayState.instance.dad.isGF) continue;
-                        doCharNodeShit(PlayState.instance.dad, node);
-                        PlayState.instance.add(PlayState.instance.dad);
-                        PlayState.instance.dad;
                     default: null;
                 }
                 if (sprite != null) {
@@ -113,6 +130,24 @@ class Stage extends FlxBasic implements IBeatReceiver {
             }
         }
 
+        if (characterPoses["girlfriend"] == null)
+            addCharPos("girlfriend", null, {
+                x: 400,
+                y: 130
+            });
+
+        if (characterPoses["dad"] == null)
+            addCharPos("dad", null, {
+                x: 100,
+                y: 100
+            });
+
+        if (characterPoses["boyfriend"] == null)
+            addCharPos("boyfriend", null, {
+                x: 770,
+                y: 100
+            });
+
         if (PlayState.instance == null) return;
         stageScript = Script.create(Paths.script('data/stages/$stage'));
         for(k=>e in stageSprites) {
@@ -121,7 +156,31 @@ class Stage extends FlxBasic implements IBeatReceiver {
         PlayState.instance.scripts.add(stageScript);
     }
 
+    public function addCharPos(name:String, node:Access, ?nonXMLInfo:StageCharPosInfo) {
+        var dummyBasic:FlxBasic = new FlxBasic();
+        dummyBasic.active = false;
+        state.add(dummyBasic);
 
+        characterPoses[name] = {
+            node: node,
+            nonXMLInfo: nonXMLInfo,
+            dummy: dummyBasic
+        };
+
+    }
+
+    public function applyCharStuff(char:Character, posName:String) {
+        if (characterPoses[posName] == null)
+            state.add(char);
+        else {
+            var charPos = characterPoses[posName];
+            if (charPos.nonXMLInfo != null)
+                char.setPosition(charPos.nonXMLInfo.x, charPos.nonXMLInfo.y);
+            if (charPos.node != null)
+                doCharNodeShit(char, charPos.node);
+            state.insert(state.members.indexOf(charPos.dummy), char);
+        }
+    }
     private static function doCharNodeShit(char:Character, node:Access) {
         if (node.has.x) {
             var x:Null<Float> = Std.parseFloat(node.att.x);
@@ -139,9 +198,26 @@ class Stage extends FlxBasic implements IBeatReceiver {
             var y:Null<Float> = Std.parseFloat(node.att.camyoffset);
             if (y != null) char.cameraOffset.y += y;
         }
+        if (node.has.scroll) {
+            var scroll:Null<Float> = Std.parseFloat(node.att.scroll);
+            if (scroll != null) char.scrollFactor.set(scroll, scroll);
+        }
     }
 
     public function beatHit(curBeat:Int) {}
 
     public function stepHit(curStep:Int) {}
+
+	public function measureHit(curMeasure:Int) {}
+}
+
+typedef StageCharPos = {
+    var node:Access;
+    var dummy:FlxBasic;
+    var ?nonXMLInfo:StageCharPosInfo;
+}
+
+typedef StageCharPosInfo = {
+    var x:Float;
+    var y:Float;
 }

@@ -3,12 +3,12 @@ package funkin.utils;
 import funkin.scripting.events.DiscordPresenceUpdateEvent;
 import haxe.Json;
 import openfl.utils.Assets;
+import flixel.system.FlxSound;
 #if DISCORD_RPC
 import discord_rpc.DiscordRpc;
 import sys.thread.Thread;
 import Sys;
 import lime.app.Application;
-import flixel.system.FlxSound;
 #end
 
 class DiscordUtil {

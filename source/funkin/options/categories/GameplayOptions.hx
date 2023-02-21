@@ -8,6 +8,10 @@ class GameplayOptions extends OptionsScreen {
                 "If checked, notes will go from up to down instead of down to up, like if they were falling",
                 "downscroll"),
             new Checkbox(
+                "Ghost Tapping",
+                "If unchecked, trying to hit any strum that have no note that can be hit will cause a miss.",
+                "ghostTapping"),
+            new Checkbox(
                 "Naughtyness",
                 "If unchecked, will censor Week 7 cutscenes",
                 "naughtyness"),

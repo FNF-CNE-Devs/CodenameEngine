@@ -1,5 +1,6 @@
 package funkin.utils;
 
+#if sys
 #if (!macro && sys)
 import openfl.display.BitmapData;
 #end
@@ -264,3 +265,4 @@ class StrNameLabel {
         this.label = label;
     }
 }
+#end

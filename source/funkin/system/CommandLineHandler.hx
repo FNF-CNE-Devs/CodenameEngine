@@ -25,7 +25,7 @@ class CommandLineHandler {
                         Sys.println("[ERROR] You need to specify the mod name");
                         Sys.exit(0);
                     } else {
-                        // TODO
+                        Main.modToLoad = arg.trim();
                     }
                 case "-modfolder":
                     i++;
