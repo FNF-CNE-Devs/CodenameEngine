@@ -171,6 +171,7 @@ class StoryMenuState extends MusicBeatState {
 			e.targetY = k - curWeek;
 		}
 		tracklist.text = 'TRACKS\n\n${[for(e in weeks[curWeek].songs) if (!e.hide) e.name.toUpperCase()].join('\n')}';
+		weekTitle.text = weeks[curWeek].name.getDefault("");
 
 		for(i in 0...3)
 			characterSprites.members[i].changeCharacter(characters[weeks[curWeek].chars[i]]);
@@ -227,6 +228,7 @@ class StoryMenuState extends MusicBeatState {
 			}
 			var weekObj:WeekData = {
 				name: week.att.name,
+				id: weekName,
 				sprite: week.getAtt('sprite').getDefault(weekName),
 				chars: [null, null, null],
 				songs: [],
@@ -344,27 +346,11 @@ class StoryMenuState extends MusicBeatState {
 		});
 		weekSprites.members[curWeek].startFlashing();
 	}
-
-	public function loadXML(xmlPath:String) {
-		try {
-			var xml = new Access(Xml.parse(Assets.getText(xmlPath)).firstElement());
-
-			for(el in xml.elements) {
-				switch(el.name) {
-					case 'characters':
-						
-					case 'weeks':
-						
-				}
-			}
-		} catch(e) {
-			Logs.trace('Failed to parse data/weeks.xml: $e', ERROR);
-		}
-	}
 }
 
 typedef WeekData = {
 	var name:String;
+	var id:String;
 	var sprite:String;
 	var chars:Array<String>;
 	var songs:Array<WeekSong>;

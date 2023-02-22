@@ -1229,7 +1229,7 @@ class PlayState extends MusicBeatState
 				if (validScore)
 				{
 					// TODO: more week info saving
-					Highscore.saveWeekScore(storyWeek.name, {
+					Highscore.saveWeekScore(storyWeek.id, {
 						score: campaignScore
 					}, difficulty);
 				}
