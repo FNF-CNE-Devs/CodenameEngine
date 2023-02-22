@@ -1,13 +1,14 @@
 @echo OFF
+set /p msg="Commit message: "
 echo ==============================
 echo Adding all files...
 echo ==============================
 git add .
 echo ==============================
-echo Commiting with the message %1...
+echo Commiting with the message %msg%...
 echo ==============================
-git commit -m "%1"
+git commit -m "%msg%"
 echo ==============================
 echo Pushing...
 echo ==============================
-git push -u dev main
+git push -u origin main
