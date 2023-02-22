@@ -29,7 +29,6 @@ class CreditsCodename extends OptionsScreen {
     public var errorMessage:String = "";
 
     public override function create() {
-
         contributors = GitHub.getContributors("YoshiCrafter29", "CodenameEngine", function(e) {
             errorMessage = Std.string(e);
         });
