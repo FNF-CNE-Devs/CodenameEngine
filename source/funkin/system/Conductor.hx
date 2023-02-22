@@ -1,6 +1,7 @@
 package funkin.system;
 
 import funkin.chart.Chart;
+import funkin.chart.ChartData;
 import flixel.math.FlxMath;
 import openfl.Lib;
 import flixel.FlxState;

@@ -2,7 +2,6 @@ package funkin.cutscenes.dialogue;
 
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import openfl.utils.Assets;
 import haxe.xml.Access;
 
 class DialogueCharacter extends FunkinSprite {

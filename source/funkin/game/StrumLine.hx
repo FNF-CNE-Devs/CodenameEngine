@@ -2,7 +2,8 @@ package funkin.game;
 
 import funkin.scripting.events.SimpleNoteEvent;
 import funkin.system.Conductor;
-import funkin.chart.Chart.ChartStrumLine;
+import funkin.chart.Chart;
+import funkin.chart.ChartData;
 import funkin.system.Controls;
 import funkin.scripting.events.StrumCreationEvent;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -65,12 +66,12 @@ class StrumLine extends FlxTypedGroup<Strum> {
         if (strumLine.notes != null) for(note in strumLine.notes) {
             notes.add(new Note(this, note, false));
             
-            if (note.sustainLength > Conductor.stepCrochet * 0.75) {
-                var len:Float = note.sustainLength;
+            if (note.sLen > Conductor.stepCrochet * 0.75) {
+                var len:Float = note.sLen;
                 var curLen:Float = 0;
                 while(len > 10) {
                     curLen = Math.min(len, Conductor.stepCrochet);
-                    notes.add(new Note(this, note, true, curLen, note.sustainLength - len));
+                    notes.add(new Note(this, note, true, curLen, note.sLen - len));
                     len -= curLen;
                 }
             }

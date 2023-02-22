@@ -14,7 +14,6 @@ import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxRect;
 
-import openfl.utils.Assets;
 import haxe.xml.Access;
 import haxe.Exception;
 import haxe.io.Path;
@@ -258,9 +257,17 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	 */
 	public var danceOnBeat:Bool = true;
 
+	/**
+	 * Interval at which the character will dance (higher number = slower dance)
+	 */
+	public var danceInterval:Int = 1;
+
 	public override function beatHit(curBeat:Int) {
 		script.call("beatHit", [curBeat]);
-		if (danceOnBeat && !__lockAnimThisFrame) {
+		if (danceInterval < 1)
+			danceInterval = 1;
+
+		if (danceOnBeat && curBeat % danceInterval == 0 && !__lockAnimThisFrame) {
 			tryDance();
 		}
 	}

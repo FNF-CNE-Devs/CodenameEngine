@@ -7,7 +7,6 @@ import flixel.graphics.frames.FlxFramesCollection;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import funkin.game.Highscore;
 import flixel.tweens.FlxTween;
-import openfl.utils.Assets;
 import flixel.FlxG;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;

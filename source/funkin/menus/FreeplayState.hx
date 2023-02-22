@@ -1,7 +1,7 @@
 package funkin.menus;
 
 import funkin.chart.Chart;
-import funkin.chart.Chart.ChartMetaData;
+import funkin.chart.ChartData;
 import haxe.io.Path;
 import flash.text.TextField;
 import flixel.FlxG;
@@ -244,6 +244,9 @@ class FreeplayState extends MusicBeatState
 			FlxG.switchState(new MainMenuState());
 		}
 
+		if (FlxG.keys.justPressed.EIGHT && Sys.args().contains("-livereload"))
+			convertChart();
+
 		if (controls.ACCEPT && !dontPlaySongThisFrame)
 			select();
 	}
@@ -269,6 +272,12 @@ class FreeplayState extends MusicBeatState
 
 		CoolUtil.loadSong(event.song, event.difficulty, event.opponentMode, event.coopMode);
 		FlxG.switchState(new PlayState());
+	}
+
+	public function convertChart() {
+		trace('Converting ${songs[curSelected].name} (${songs[curSelected].difficulties[curDifficulty]}) to Codename format...');
+		var chart = Chart.parse(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty]);
+		Chart.save('${Main.pathBack}assets/songs/${songs[curSelected].name}', chart, songs[curSelected].difficulties[curDifficulty].toLowerCase());
 	}
 
 	/**

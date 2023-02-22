@@ -1,6 +1,5 @@
 package funkin.ui;
 
-import openfl.utils.Assets;
 import openfl.utils.AssetLibrary;
 import haxe.xml.Access;
 import funkin.mods.LimeLibrarySymbol;

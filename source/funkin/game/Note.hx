@@ -1,7 +1,7 @@
 package funkin.game;
 
-import funkin.chart.Chart.ChartNote;
-import openfl.utils.Assets;
+import funkin.chart.Chart;
+import funkin.chart.ChartData;
 import flixel.FlxG;
 import flixel.FlxCamera;
 import flixel.FlxSprite;

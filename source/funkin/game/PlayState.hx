@@ -1,6 +1,7 @@
 package funkin.game;
 
 import funkin.chart.Chart;
+import funkin.chart.ChartData;
 import funkin.game.SplashHandler;
 import funkin.scripting.DummyScript;
 import funkin.menus.StoryMenuState.WeekData;
@@ -234,7 +235,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Interval at which Girlfriend dances.
 	 */
-	public var gfSpeed:Int = 1;
+	public var gfSpeed(get, set):Int;
 
 	/**
 	 * Current health. Goes from 0 to maxHealth (defaults to 2)
@@ -937,7 +938,7 @@ class PlayState extends MusicBeatState
 	 * Returns the Discord RPC icon.
 	 */
 	public inline function getIconRPC():String
-		return (dad != null ? (dad.icon != null ? dad.icon : dad.curCharacter) : null);
+		return SONG.meta.icon;
 
 	var __songPlaying:Bool = false;
 	var __wasAutoPause:Bool = false;
@@ -1579,9 +1580,6 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		if (gf != null && curBeat % gfSpeed == 0)
-			gf.tryDance();
-
 		scripts.call("beatHit", [curBeat]);
 	}
 
@@ -1629,6 +1627,13 @@ class PlayState extends MusicBeatState
 		return players[0];
 	private inline function get_playerStrums():StrumLine
 		return players[1];
+	private inline function get_gfSpeed():Int
+		return (players[2] != null && players[2].characters[0] != null) ? players[2].characters[0].danceInterval : 1;
+	private inline function set_gfSpeed(v:Int):Int {
+		if (players[2] != null && players[2].characters[0] != null)
+			players[2].characters[0].danceInterval = v;
+		return v;
+	}
 }
 
 class ComboRating {

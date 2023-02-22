@@ -2,7 +2,6 @@ package funkin.cutscenes.dialogue;
 
 import flixel.addons.text.FlxTypeText;
 import flixel.text.FlxText;
-import openfl.utils.Assets;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 import haxe.xml.Access;

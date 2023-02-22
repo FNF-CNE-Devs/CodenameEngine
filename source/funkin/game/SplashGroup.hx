@@ -1,7 +1,6 @@
 package funkin.game;
 
 import flixel.FlxG;
-import openfl.utils.Assets;
 import haxe.xml.Access;
 import flixel.group.FlxGroup.FlxTypedGroup;
 

@@ -1,7 +1,6 @@
 package funkin.system;
 
 import funkin.mods.ModsAssetLibrary;
-import openfl.utils.Assets;
 import lime.utils.AssetLibrary;
 
 class AssetsLibraryList extends AssetLibrary {

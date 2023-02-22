@@ -116,6 +116,14 @@ class Main extends Sprite
 	public static var audioDisconnected:Bool = false;
 
 	public static var changeID:Int = 0;
+	public static var pathBack = #if windows
+			"../../../../"
+		#elseif mac
+			"../../../../../../../"
+		#else
+			""
+		#end;
+	public static var startedFromSource:Bool = false;
 
 
 	private static var __threadCycle:Int = 0;
@@ -156,15 +164,7 @@ class Main extends Sprite
 		#end
 
 		#if sys
-		if (Sys.args().contains("-livereload")) {
-			var pathBack = #if windows
-				"../../../../"
-			#elseif mac
-				"../../../../../../../"
-			#else
-				""
-			#end;
-
+		if (startedFromSource = Sys.args().contains("-livereload")) {
 			#if USE_SOURCE_ASSETS
 			#if windows
 			trace("Used lime test windows. Switching into source assets.");

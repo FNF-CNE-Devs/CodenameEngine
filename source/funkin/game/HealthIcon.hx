@@ -1,7 +1,6 @@
 package funkin.game;
 
 import flixel.FlxSprite;
-import openfl.utils.Assets;
 
 class HealthIcon extends FlxSprite
 {

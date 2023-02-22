@@ -1,6 +1,5 @@
 package funkin.utils;
 
-import openfl.utils.Assets;
 
 /**
  * DOESNT SUPPORT CATEGORIES YET!!
