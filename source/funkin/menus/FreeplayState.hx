@@ -399,7 +399,7 @@ class FreeplaySonglist {
 		var songsFound:Array<String> = [];
 		if (Paths.assetsTree.existsSpecific(path, "TEXT", source)) {
 			var trim = "";
-			songsFound = [for(line in Assets.getText(path).split("\n")) if ((trim = line.trim()) != "" && !trim.startsWith("#")) trim];
+			songsFound = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 		} else {
 			songsFound = Paths.getFolderDirectories('songs', false, source);
 		}
