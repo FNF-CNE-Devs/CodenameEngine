@@ -1,5 +1,6 @@
 package funkin.menus.credits;
 
+import funkin.ui.FunkinText;
 import flixel.util.FlxColor;
 import funkin.shaders.CustomShader;
 import flixel.math.FlxMath;
@@ -25,11 +26,14 @@ class CreditsCodename extends OptionsScreen {
 
     public var interpColor:FlxInterpolateColor;
 
+    public var errorMessage:String = "";
+
     public override function create() {
 
         contributors = GitHub.getContributors("YoshiCrafter29", "CodenameEngine", function(e) {
-            trace(e);
+            errorMessage = Std.string(e);
         });
+
 
         var totalContributions = 0;
         
@@ -49,7 +53,29 @@ class CreditsCodename extends OptionsScreen {
         interpColor = new FlxInterpolateColor(bg.color);
     }
 
+    public override function changeSelection(change:Int) {
+        if (contributors.length <= 0)
+            return;
+        super.changeSelection(change);
+    }
+
     public override function createAdditional() {
+        if (contributors.length <= 0) {
+            var t = new FunkinText(0, 0, FlxG.width, 'Could not load engine contributors.\nMake sure you\'re connected to the Internet.\n\n${errorMessage}\n\nPress BACK to go back.', 40, true);
+            t.alignment = CENTER;
+            t.borderSize *= 1.75;
+            t.screenCenter();
+
+            var bg = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFF000000);
+            bg.alpha = 0.5;
+            bg.scale.set(FlxG.width - 80, t.height + 40);
+            bg.updateHitbox();
+            bg.screenCenter();
+            add(bg);
+            add(t);
+            return;
+        }
+
         for(k=>c in contributors) {
             var spr = new FlxSprite(0, (OptionsScreen.optionHeight * (k+0.5)) - 48);
             spr.antialiasing = true;
@@ -75,6 +101,13 @@ class CreditsCodename extends OptionsScreen {
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
+
+        if (contributors.length <= 0) {
+            if (controls.BACK)
+                exit();
+            return;
+        }
+
         if (avatarLoadListId < contributorsAvatars.length) {
             for(i in avatarLoadListId...contributorsAvatars.length) {
                 var v = contributorsSprites[i];
@@ -99,6 +132,7 @@ class CreditsCodename extends OptionsScreen {
     }
 
     public override function exit() {
+        FlxTransitionableState.skipNextTransOut = true;
         FlxG.switchState(new CreditsMain());
     }
 }

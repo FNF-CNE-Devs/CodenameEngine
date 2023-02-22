@@ -85,15 +85,15 @@ class OptionsScreen extends MusicBeatState {
             options[curSelected].onSelect();
         }
         if (controls.BACK) {
-            Options.applySettings();
             Options.save();
+            Options.applySettings();
             exit();
         }
         FlxG.camera.scroll.x = lerp(FlxG.camera.scroll.x, scrollDest.x, 0.25);
         FlxG.camera.scroll.y = lerp(FlxG.camera.scroll.y, scrollDest.y, 0.25);
 
         for(option in options) {
-            var angle = Math.cos((option.y + (optionHeight / 2) - (FlxG.camera.scroll.y + (FlxG.height / 2))) / (FlxG.height * 1.25) * Math.PI);
+            var angle = Math.cos((option.y + (optionHeight / 2) - (FlxG.camera.scroll.y + ((FlxG.height - descBG.height) / 2))) / (FlxG.height * 1.25) * Math.PI);
 
             option.x = -50 + (Math.abs(angle) * 150);
         }
@@ -115,7 +115,7 @@ class OptionsScreen extends MusicBeatState {
             for(e in options)
                 e.selected = false;
             options[curSelected].selected = true;
-            scrollDest.set(-50, -(FlxG.height / 2) + ((curSelected + 0.5) * optionHeight));
+            scrollDest.set(-50, -((FlxG.height - descBG.height) / 2) + ((curSelected + 0.5) * optionHeight));
             updateDesc();
         }
     }
