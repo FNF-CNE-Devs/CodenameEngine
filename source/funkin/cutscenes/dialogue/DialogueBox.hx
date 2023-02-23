@@ -55,7 +55,7 @@ class DialogueBox extends FunkinSprite {
                 textNode.has.width ? Std.parseInt(textNode.att.width).getDefault(FlxG.width) : FlxG.width, "");
             text.color = textNode.getAtt("color").getColorFromDynamic().getDefault(0xFF000000);
             text.size = Std.parseInt(textNode.att.size).getDefault(20);
-            text.font = Paths.font('${textNode.getAtt("font").getDefault("vcr")}.ttf');
+            text.font = Paths.font('${textNode.getAtt("font").getDefault("vcr.ttf")}');
             text.antialiasing = textNode.getAtt("antialiasing").getDefault("false") == "true";
             text.sounds = [FlxG.sound.load(textTypeSFX)];
         } catch(e) {

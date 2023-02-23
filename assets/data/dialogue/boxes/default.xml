@@ -3,7 +3,7 @@
     <!--
         Node containing all text settings
      -->
-    <text font="vcr" x="107" y="206" width="1053" color="#000000" size="40"/>
+    <text font="vcr.ttf" x="107" y="206" width="1053" color="#000000" size="40"/>
 
     <!--
         All positions for characters

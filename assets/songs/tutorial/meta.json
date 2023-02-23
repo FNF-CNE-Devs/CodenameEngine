@@ -4,5 +4,6 @@
     "icon": "gf",
     "color": "#9271FD",
     "coopAllowed": true,
-    "opponentModeAllowed": true
+    "opponentModeAllowed": true,
+    "needsVoices": false
 }
