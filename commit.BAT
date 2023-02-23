@@ -1,4 +1,5 @@
 @echo OFF
+git add .
 echo ==============================
 echo Commiting with the message %1...
 echo ==============================
