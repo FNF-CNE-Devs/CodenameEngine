@@ -38,6 +38,8 @@ class BaseGameParser {
             });
         }
 
+        result.meta.bpm = data.bpm;
+
         var camFocusedBF:Bool = false;
         var beatsPerMesure:Float = data.beatsPerMesure.getDefault(4);
         var curBPM:Float = data.bpm;

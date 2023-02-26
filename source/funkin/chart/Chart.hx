@@ -78,7 +78,9 @@ class Chart {
             strumLines: [],
             noteTypes: [],
             events: [],
-            meta: null,
+            meta: {
+                name: null
+            },
             scrollSpeed: 2,
             stage: "stage",
             codenameChart: true,
@@ -106,6 +108,15 @@ class Chart {
 
         if (base.meta == null)
             base.meta = loadChartMeta(songName, difficulty, base.fromMods);
+        else {
+            var loadedMeta = loadChartMeta(songName, difficulty, base.fromMods);
+            for(field in Reflect.fields(base.meta)) {
+                var f = Reflect.field(base.meta, field);
+                if (f != null)
+                    Reflect.setField(loadedMeta, field, f);
+            }
+            base.meta = loadedMeta;
+        }
         return base;
     }
 
