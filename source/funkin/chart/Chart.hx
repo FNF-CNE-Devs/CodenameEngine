@@ -14,12 +14,12 @@ import sys.FileSystem;
 using StringTools;
 
 class Chart {
-    public static function loadChartMeta(songName:String, difficulty:String = "normal") {
+    public static function loadChartMeta(songName:String, difficulty:String = "normal", fromMods:Bool = true) {
         var metaPath = Paths.file('songs/${songName.toLowerCase()}/meta.json');
         var metaDiffPath = Paths.file('songs/${songName.toLowerCase()}/meta-${difficulty.toLowerCase()}.json');
 
         var data:ChartMetaData = null;
-        var fromMods:Bool = false;
+        var fromMods:Bool = fromMods;
         for(path in [metaDiffPath, metaPath]) {
             if (Assets.exists(path)) {
                 fromMods = Paths.assetsTree.existsSpecific(path, "TEXT", MODS);
@@ -97,103 +97,19 @@ class Chart {
         }
 
         if (Reflect.hasField(data, "codenameChart") && Reflect.field(data, "codenameChart") == true) {
+            // codename chart
             base = data;
         } else {
-            // base fnf chart parsing
-            var data:SwagSong = data;
-            if (Reflect.hasField(data, "song")) {
-                var field:Dynamic = Reflect.field(data, "song");
-                if (!(field is String))
-                    data = field;
-            }
-
-            base.scrollSpeed = data.speed;
-            base.stage = data.stage;
-
-            base.strumLines.push({
-                characters: [data.player2],
-                opponent: true,
-                position: "dad",
-                notes: []
-            });
-            base.strumLines.push({
-                characters: [data.player1],
-                opponent: false,
-                position: "boyfriend",
-                notes: []
-            });
-            if (data.gf != "none") {
-                base.strumLines.push({
-                    characters: [data.gf != null ? data.gf : "gf"],
-                    opponent: true,
-                    position: "girlfriend",
-                    notes: [],
-                    visible: false,
-                    strumLinePos: 0.5
-                });
-            }
-
-            var camFocusedBF:Bool = false;
-            var beatsPerMesure:Float = data.beatsPerMesure.getDefault(4);
-            var curBPM:Float = data.bpm;
-            var curTime:Float = 0;
-            var curCrochet:Float = ((60 / curBPM) * 1000);
-
-            if (data.notes != null) for(section in data.notes) {
-                if (section == null) {
-                    curTime += curCrochet * beatsPerMesure;
-                    continue; // Yoshi Engine charts crash fix
-                }
-
-                if (camFocusedBF != (camFocusedBF = section.mustHitSection)) {
-                    base.events.push({
-                        time: curTime,
-                        type: CAM_MOVEMENT,
-                        params: [camFocusedBF ? 1 : 0]
-                    });
-                }
-
-                if (section.sectionNotes != null) for(note in section.sectionNotes) {
-                    if (note[1] < 0) continue;
-
-                    var daStrumTime:Float = note[0];
-				    var daNoteData:Int = Std.int(note[1] % 8);
-                    var daNoteType:Int = Std.int(note[1] / 8);
-                    var gottaHitNote:Bool = daNoteData >= 4 ? !section.mustHitSection : section.mustHitSection;
-
-                    if (note.length > 2) {
-                        if (note[3] is Int)
-                            daNoteType = addNoteType(base, data.noteTypes[Std.int(note[3])-1]);
-                        else if (note[3] is String)
-                            daNoteType = addNoteType(base, note[3]);
-                    } else {
-                        daNoteType = addNoteType(base, data.noteTypes[daNoteType-1]);
-                    }
-
-                    
-                    base.strumLines[gottaHitNote ? 1 : 0].notes.push({
-                        time: daStrumTime,
-                        id: daNoteData % 4,
-                        type: daNoteType,
-                        sLen: note[2]
-                    });
-                }
-
-                if (section.changeBPM && section.bpm != curBPM) {
-                    // TODO: BPM CHANGE EVENT
-                    curCrochet = ((60 / (curBPM = section.bpm)) * 1000);
-                }
-
-                curTime += curCrochet * beatsPerMesure;
-            }
+            // base game chart
+            BaseGameParser.parse(data, base);
         }
 
         if (base.meta == null)
-            base.meta = loadChartMeta(songName, difficulty);
+            base.meta = loadChartMeta(songName, difficulty, base.fromMods);
         return base;
     }
 
-    private static function addNoteType(chart:ChartData, noteTypeName:String):Int {
+    public static function addNoteType(chart:ChartData, noteTypeName:String):Int {
         switch(noteTypeName.trim()) {
             case "Default Note" | null | "":
                 return 0;

@@ -52,8 +52,8 @@ class Strum extends FlxSprite {
         daNote.__strumCameras = lastDrawCameras;
         daNote.__strum = this;
         daNote.scrollFactor.set(scrollFactor.x, scrollFactor.y);
-        var noteAngle = daNote.__noteAngle = getNotesAngle(daNote);
-        daNote.angle = daNote.isSustainNote ? noteAngle : angle;
+        daNote.__noteAngle = getNotesAngle(daNote);
+        daNote.angle = daNote.isSustainNote ? daNote.__noteAngle : angle;
 
         if (daNote.strumRelativePos) {
             daNote.setPosition(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (daNote.strumTime - Conductor.songPosition) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
@@ -64,9 +64,9 @@ class Strum extends FlxSprite {
 
             if (daNote.isSustainNote) offset.y -= N_WIDTHDIV2;
             
-            if (Std.int(noteAngle % 360) != 0) {
-                var noteAngleCos = FlxMath.fastCos(noteAngle / PIX180);
-                var noteAngleSin = FlxMath.fastSin(noteAngle / PIX180);
+            if (Std.int(daNote.__noteAngle % 360) != 0) {
+                var noteAngleCos = FlxMath.fastCos(daNote.__noteAngle / PIX180);
+                var noteAngleSin = FlxMath.fastSin(daNote.__noteAngle / PIX180);
 
                 var aOffset:FlxPoint = FlxPoint.get(
                     (daNote.origin.x / daNote.scale.x) - daNote.offset.x,

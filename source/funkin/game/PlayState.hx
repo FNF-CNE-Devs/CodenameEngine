@@ -1086,10 +1086,9 @@ class PlayState extends MusicBeatState
 
 		if (generatedMusic && players[curCameraTarget] != null)
 		{
-			var strumLine = players[curCameraTarget];
 			var pos = FlxPoint.get();
 			var r = 0;
-			for(c in strumLine.characters) {
+			for(c in players[curCameraTarget].characters) {
 				if (c == null) continue;
 				var cpos = c.getCameraPosition();
 				pos.x += cpos.x;
@@ -1101,7 +1100,7 @@ class PlayState extends MusicBeatState
 				pos.x /= r;
 				pos.y /= r;
 
-				var event = scripts.event("onCameraMove", EventManager.get(CamMoveEvent).recycle(pos, strumLine, r));
+				var event = scripts.event("onCameraMove", EventManager.get(CamMoveEvent).recycle(pos, players[curCameraTarget], r));
 				if (!event.cancelled)
 					camFollow.setPosition(pos.x, pos.y);
 			}
