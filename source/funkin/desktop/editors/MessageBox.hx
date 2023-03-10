@@ -3,7 +3,6 @@ package funkin.desktop.editors;
 import flixel.util.typeLimit.OneOfTwo;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.addons.ui.FlxUIText;
-import flixel.FlxG;
 
 class MessageBox extends WindowContent {
     public var caption:String;

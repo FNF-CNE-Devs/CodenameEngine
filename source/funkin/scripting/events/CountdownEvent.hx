@@ -1,7 +1,6 @@
 package funkin.scripting.events;
 
 import flixel.tweens.FlxTween;
-import flixel.FlxSprite;
 import flixel.system.FlxSound;
 
 class CountdownEvent extends CancellableEvent {

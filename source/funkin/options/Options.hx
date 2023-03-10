@@ -1,6 +1,5 @@
 package funkin.options;
 
-import flixel.FlxG;
 import funkin.system.Controls;
 import openfl.Lib;
 import flixel.util.FlxSave;

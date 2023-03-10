@@ -4,17 +4,12 @@ import funkin.chart.Chart;
 import funkin.chart.ChartData;
 import haxe.io.Path;
 import flash.text.TextField;
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.display.FlxGridOverlay;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
 import funkin.system.Song;
-import funkin.ui.Alphabet;
 import funkin.game.HealthIcon;
 import funkin.game.Highscore;
 import haxe.Json;
@@ -390,9 +385,7 @@ class FreeplayState extends MusicBeatState
 class FreeplaySonglist {
     public var songs:Array<ChartMetaData> = [];
 
-    public function new() {
-
-    }
+    public function new() {}
 
 	public function getSongsFromSource(source:funkin.system.AssetsLibraryList.AssetSource) {
 		var path:String = Paths.txt('freeplaySonglist');

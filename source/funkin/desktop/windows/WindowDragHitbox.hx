@@ -1,8 +1,5 @@
 package funkin.desktop.windows;
 
-import flixel.FlxG;
-import flixel.FlxObject;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 
 class WindowDragHitbox extends FlxObject {

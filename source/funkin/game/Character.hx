@@ -7,9 +7,6 @@ import funkin.interfaces.IBeatReceiver;
 import funkin.interfaces.IOffsetCompatible;
 import funkin.utils.XMLUtil;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxCamera;
 import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxRect;

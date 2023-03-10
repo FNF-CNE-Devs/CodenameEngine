@@ -1,6 +1,5 @@
 package funkin.desktop.sprites;
 
-import flixel.math.FlxMath;
 
 // TODO: FIX MEMORY GOING BRRRRRRRRRRRRRRRRRRRRR
 class NumericStepper extends InputBox {

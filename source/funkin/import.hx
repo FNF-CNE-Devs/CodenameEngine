@@ -11,6 +11,18 @@ import funkin.scripting.EventManager;
 
 import openfl.utils.Assets;
 
+import flixel.FlxSprite;
+import flixel.FlxG;
+import flixel.FlxBasic;
+import flixel.FlxCamera;
+import flixel.FlxObject;
+import flixel.math.FlxMath;
+import flixel.tweens.FlxEase;
+
+import funkin.ui.Alphabet;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+
 using StringTools;
 using funkin.utils.CoolUtil;
 #end

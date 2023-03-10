@@ -1,16 +1,12 @@
 package funkin.system;
 
-import flixel.FlxG;
 import haxe.io.Path;
 import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
 import funkin.interfaces.IOffsetCompatible;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
-import flixel.FlxCamera;
-import flixel.math.FlxMath;
 import funkin.interfaces.IBeatReceiver;
-import flixel.FlxSprite;
 import flixel.util.FlxDestroyUtil;
 
 @:enum
@@ -68,7 +64,6 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
         if (Assets.exists('$noExt/Animation.json')
             && Assets.exists('$noExt/spritemap1.json')
             && Assets.exists('$noExt/spritemap1.png')) {
-                Assets.cache.clear(noExt);
                 atlasPath = noExt;
                 animateAtlas = new FlxAnimate(x, y, noExt);
             }
@@ -158,13 +153,7 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
 
     public override function destroy() {
         super.destroy();
-        if (animateAtlas != null) {
-            for(f in animateAtlas.frames.frames)
-                FlxG.bitmap.remove(f.parent);
-            Assets.cache.clear(atlasPath);
-            animateAtlas = FlxDestroyUtil.destroy(animateAtlas);
-        }
-        
+        animateAtlas = FlxDestroyUtil.destroy(animateAtlas);        
     }
     #end
 

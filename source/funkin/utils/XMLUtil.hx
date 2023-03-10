@@ -3,11 +3,9 @@ package funkin.utils;
 import funkin.system.FunkinSprite;
 import funkin.system.ErrorCode;
 import funkin.system.FunkinSprite.XMLAnimType;
-import flixel.math.FlxMath;
 import funkin.interfaces.IBeatReceiver;
 import haxe.xml.Access;
 import funkin.interfaces.IOffsetCompatible;
-import flixel.FlxSprite;
 
 using StringTools;
 /**

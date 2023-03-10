@@ -1,8 +1,6 @@
 package funkin.system;
 
-import flixel.FlxSprite;
 import funkin.interfaces.IBeatReceiver;
-import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 
 class MusicBeatGroup extends FlxTypedSpriteGroup<FlxSprite> implements IBeatReceiver {
     public function beatHit(curBeat:Int) {

@@ -1,13 +1,11 @@
 package funkin.system.framerate;
 
-import flixel.math.FlxMath;
 import openfl.events.KeyboardEvent;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.ui.Keyboard;
-import flixel.FlxG;
 
 class Framerate extends Sprite {
     public static var instance:Framerate;

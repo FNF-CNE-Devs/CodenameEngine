@@ -1,16 +1,10 @@
 package funkin.menus;
 
 #if MOD_SUPPORT
-import flixel.math.FlxMath;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import funkin.ui.Alphabet;
 import haxe.io.Path;
 import funkin.mods.ModsFolder;
 import sys.FileSystem;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.FlxSprite;
-import flixel.FlxG;
 
 class ModSwitchMenu extends MusicBeatSubstate {
     var mods:Array<String> = [];

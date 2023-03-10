@@ -1,9 +1,7 @@
 package funkin.desktop.sprites;
 
 import flixel.math.FlxRect;
-import flixel.FlxSprite;
 import flixel.text.FlxText;
-import flixel.FlxObject;
 
 class Checkbox extends WindowText {
     public var checked:CheckState = UNCHECKED;

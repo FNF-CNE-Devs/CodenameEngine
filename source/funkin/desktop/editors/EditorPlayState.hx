@@ -1,7 +1,5 @@
 package funkin.desktop.editors;
 
-import flixel.FlxG;
-import flixel.FlxCamera;
 import flixel.math.FlxPoint;
 
 class EditorPlayState extends WindowContent {

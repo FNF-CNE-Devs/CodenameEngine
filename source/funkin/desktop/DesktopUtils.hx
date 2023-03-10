@@ -1,6 +1,5 @@
 package funkin.desktop;
 
-import flixel.FlxObject;
 
 class DesktopUtils {
     public static inline function copyProperties(spr1:FlxObject, spr2:FlxObject) {

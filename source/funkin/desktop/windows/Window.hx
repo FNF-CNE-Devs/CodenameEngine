@@ -2,18 +2,11 @@ package funkin.desktop.windows;
 
 import flixel.math.FlxRect;
 import flixel.addons.ui.FlxUIText;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.FlxBasic;
 import openfl.geom.Point;
 import flixel.group.FlxSpriteGroup;
 import openfl.geom.Rectangle;
 import flixel.addons.ui.FlxUI9SliceSprite;
-import flixel.FlxSprite;
-import flixel.FlxCamera;
-import flixel.FlxG;
 import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
-import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import funkin.desktop.sprites.*;
 import funkin.desktop.editors.MessageBox.MessageBoxIcon;
 import funkin.desktop.editors.MessageBox;

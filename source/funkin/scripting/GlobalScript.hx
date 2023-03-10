@@ -2,7 +2,6 @@ package funkin.scripting;
 
 import funkin.scripting.events.CancellableEvent;
 import funkin.system.Conductor;
-import flixel.FlxG;
 import flixel.FlxState;
 import funkin.mods.ModsFolder;
 #if GLOBAL_SCRIPT

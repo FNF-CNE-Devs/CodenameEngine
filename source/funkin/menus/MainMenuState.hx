@@ -3,19 +3,13 @@ package funkin.menus;
 import haxe.Json;
 import funkin.ui.FunkinText;
 import funkin.options.Options;
-import flixel.FlxG;
 import funkin.menus.credits.CreditsMain;
-import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import lime.app.Application;
 import funkin.scripting.events.*;
@@ -105,7 +99,12 @@ class MainMenuState extends MusicBeatState
 		if (!selectedSomethin)
 		{
 			if (canAccessDebugMenus) {
-				
+				if (FlxG.keys.justPressed.SEVEN) {
+					persistentUpdate = false;
+					persistentDraw = true;
+					openSubState(new funkin.editors.EditorPicker());
+				}
+				/*
 				if (FlxG.keys.justPressed.SEVEN)
 					FlxG.switchState(new funkin.desktop.DesktopMain());
 				if (FlxG.keys.justPressed.EIGHT) {
@@ -113,6 +112,7 @@ class MainMenuState extends MusicBeatState
 					sys.io.File.saveContent("chart.json", Json.stringify(funkin.chart.Chart.parse("dadbattle", "hard")));
 					#end
 				}
+				*/
 			}
 
 			if (controls.UP_P)

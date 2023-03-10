@@ -4,7 +4,6 @@ import lime.media.AudioManager;
 import flixel.system.FlxSound;
 import flixel.FlxState;
 import funkin.windows.WindowsAPI;
-import flixel.FlxG;
 
 /**
  * if youre stealing this keep this comment at least please lol

@@ -1,7 +1,6 @@
 package funkin.editors;
 
 import funkin.desktop.DesktopMain;
-import flixel.FlxG;
 import flixel.FlxState;
 import funkin.game.*;
 

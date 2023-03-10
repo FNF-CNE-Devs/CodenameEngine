@@ -6,8 +6,6 @@ import flixel.util.FlxTimer;
 import funkin.options.PlayerSettings;
 import openfl.events.Event;
 import flixel.FlxState;
-import flixel.FlxG;
-import flixel.FlxSprite;
 
 class MP4Handler
 {

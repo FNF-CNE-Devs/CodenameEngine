@@ -2,7 +2,6 @@ package funkin.menus.credits;
 
 import flixel.addons.transition.FlxTransitionableState;
 import funkin.options.OptionsScreen;
-import flixel.FlxG;
 import funkin.options.type.*;
 
 class CreditsMain extends OptionsScreen {

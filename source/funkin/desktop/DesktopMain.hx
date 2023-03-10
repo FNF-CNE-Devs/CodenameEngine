@@ -2,15 +2,10 @@ package funkin.desktop;
 
 import flixel.math.FlxRect;
 import openfl.geom.Rectangle;
-import flixel.FlxObject;
 import lime.app.Application;
 import openfl.display.BitmapData;
 import flixel.system.scaleModes.BaseScaleMode;
 import flixel.system.scaleModes.FixedScaleAdjustSizeScaleMode;
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxBasic;
-import flixel.FlxCamera;
 import flixel.math.FlxPoint;
 import flixel.util.FlxDestroyUtil;
 import funkin.desktop.editors.*;

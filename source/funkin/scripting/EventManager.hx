@@ -1,6 +1,5 @@
 package funkin.scripting;
 
-import flixel.FlxG;
 import flixel.FlxState;
 import funkin.scripting.events.*;
 

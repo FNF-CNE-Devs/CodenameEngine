@@ -1,6 +1,5 @@
 package funkin.options.categories;
 
-import flixel.FlxG;
 
 class MiscOptions extends OptionsScreen {
     public override function create() {

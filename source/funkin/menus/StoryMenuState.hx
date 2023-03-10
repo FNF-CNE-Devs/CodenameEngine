@@ -5,15 +5,11 @@ import funkin.scripting.events.*;
 import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import funkin.game.Highscore;
 import flixel.tweens.FlxTween;
-import flixel.FlxG;
-import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import funkin.ui.FunkinText;
 import haxe.xml.Access;
-import flixel.FlxSprite;
 import flixel.text.FlxText;
 
 class StoryMenuState extends MusicBeatState {

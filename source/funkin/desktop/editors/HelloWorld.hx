@@ -2,7 +2,6 @@ package funkin.desktop.editors;
 
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import flixel.addons.ui.FlxUIText;
-import flixel.FlxG;
 
 class HelloWorld extends WindowContent {
     public override function new() {

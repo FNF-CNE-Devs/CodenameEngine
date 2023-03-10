@@ -1,9 +1,7 @@
 package funkin.desktop.sprites;
 
-import flixel.math.FlxMath;
 import openfl.ui.Keyboard;
 import openfl.events.KeyboardEvent;
-import flixel.FlxG;
 import lime.app.Application;
 
 class InputBox extends Button implements IDesktopInputObject {

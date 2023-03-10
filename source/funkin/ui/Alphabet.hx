@@ -4,11 +4,8 @@ import openfl.utils.AssetLibrary;
 import haxe.xml.Access;
 import funkin.mods.LimeLibrarySymbol;
 import funkin.mods.ModsAssetLibrary;
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
-import flixel.math.FlxMath;
 import flixel.util.FlxTimer;
 import flixel.util.FlxColor;
 

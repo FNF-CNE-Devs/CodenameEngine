@@ -1,7 +1,5 @@
 package funkin.system.framerate;
 
-import flixel.FlxG;
-import flixel.math.FlxMath;
 import funkin.utils.MemoryUtil;
 
 class SystemInfo extends FramerateCategory {

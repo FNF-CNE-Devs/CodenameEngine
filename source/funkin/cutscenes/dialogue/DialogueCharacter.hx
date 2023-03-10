@@ -1,6 +1,5 @@
 package funkin.cutscenes.dialogue;
 
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import haxe.xml.Access;
 

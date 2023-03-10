@@ -3,16 +3,11 @@ package funkin.updating;
 import funkin.utils.MarkdownUtil;
 import funkin.menus.MainMenuState;
 import flixel.math.FlxPoint;
-import flixel.math.FlxMath;
-import flixel.FlxSprite;
 import funkin.updating.UpdateUtil.UpdateCheckCallback;
 import funkin.ui.FunkinText;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import funkin.ui.Alphabet;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.FlxTween;
-import flixel.FlxG;
 
 class UpdateAvailableScreen extends MusicBeatState {
     public var bg:FlxSprite;

@@ -1,6 +1,5 @@
 package funkin.game;
 
-import flixel.FlxG;
 
 class Highscore
 {

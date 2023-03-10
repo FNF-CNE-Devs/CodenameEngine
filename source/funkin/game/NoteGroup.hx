@@ -1,9 +1,7 @@
 package funkin.game;
 
 import flixel.util.FlxSort;
-import flixel.FlxCamera;
 import funkin.system.Conductor;
-import flixel.group.FlxGroup.FlxTypedGroup;
 
 class NoteGroup extends FlxTypedGroup<Note> {
     var __loopSprite:Note;

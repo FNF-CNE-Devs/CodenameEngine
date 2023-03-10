@@ -1,11 +1,6 @@
 package funkin.desktop.editors;
 
-import flixel.FlxBasic;
 import funkin.game.Character;
-import flixel.FlxSprite;
-import flixel.FlxObject;
-import flixel.FlxCamera;
-import flixel.FlxG;
 
 using funkin.utils.XMLUtil;
 

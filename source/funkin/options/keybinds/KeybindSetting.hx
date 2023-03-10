@@ -1,19 +1,11 @@
 package funkin.options.keybinds;
 
-import flixel.FlxCamera;
 import flixel.effects.FlxFlicker;
 import funkin.system.Controls;
 import funkin.options.Options;
-import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import funkin.ui.Alphabet;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
-import flixel.math.FlxMath;
-import flixel.FlxObject;
-import flixel.FlxSprite;
-import flixel.FlxG;
 
 using StringTools;
 

@@ -2,9 +2,7 @@ package funkin.desktop.sprites;
 
 import funkin.desktop.DesktopMain.IDesktopFocusableObject;
 import funkin.desktop.theme.Theme;
-import flixel.FlxObject;
 import flixel.addons.ui.FlxUIText;
-import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import funkin.desktop.windows.WindowGroup;
 

@@ -1,9 +1,7 @@
 package funkin.desktop;
 
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.FlxCamera;
 import openfl.events.Event;
-import flixel.FlxG;
 import lime.app.Application;
 import lime.ui.Window;
 

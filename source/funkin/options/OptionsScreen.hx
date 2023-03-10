@@ -3,12 +3,9 @@ package funkin.options;
 import flixel.addons.display.FlxBackdrop;
 import funkin.ui.FunkinText;
 import flixel.text.FlxText;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.FlxSprite;
-import flixel.FlxG;
 import funkin.options.type.OptionType;
 /**
  * Direct replica from Week 7 lol

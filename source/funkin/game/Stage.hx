@@ -1,12 +1,8 @@
 package funkin.game;
 
 import funkin.options.Options;
-import flixel.FlxG;
 import flixel.FlxState;
-import flixel.FlxSprite;
 import haxe.xml.Access;
-import flixel.FlxBasic;
-import flixel.math.FlxMath;
 import funkin.interfaces.IBeatReceiver;
 import funkin.scripting.Script;
 import haxe.io.Path;

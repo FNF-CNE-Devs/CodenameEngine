@@ -3,11 +3,6 @@ package funkin.options;
 import flixel.util.typeLimit.OneOfTwo;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import funkin.ui.Alphabet;
-import flixel.math.FlxMath;
-import flixel.FlxSprite;
-import flixel.FlxG;
 import flixel.effects.FlxFlicker;
 import funkin.menus.MainMenuState;
 

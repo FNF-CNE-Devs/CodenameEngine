@@ -6,10 +6,7 @@ import funkin.chart.Chart;
 import funkin.chart.ChartData;
 import funkin.system.Controls;
 import funkin.scripting.events.StrumCreationEvent;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.FlxG;
 
 class StrumLine extends FlxTypedGroup<Strum> {
     /**

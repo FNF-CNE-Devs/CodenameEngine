@@ -1,6 +1,5 @@
 package funkin.desktop.windows;
 
-import flixel.FlxSprite;
 
 class WindowCaptionButton extends FlxSprite {
     public var icon:FlxSprite;

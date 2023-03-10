@@ -2,8 +2,6 @@ package funkin.game;
 
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.system.FlxSound;
-import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSubState;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;

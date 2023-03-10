@@ -2,11 +2,9 @@ package funkin.system;
 
 import funkin.chart.Chart;
 import funkin.chart.ChartData;
-import flixel.math.FlxMath;
 import openfl.Lib;
 import flixel.FlxState;
 import funkin.interfaces.IBeatReceiver;
-import flixel.FlxG;
 import funkin.system.Song.SwagSong;
 import flixel.util.FlxSignal.FlxTypedSignal;
 

@@ -1,8 +1,6 @@
 package funkin.game;
 
-import flixel.FlxG;
 import haxe.xml.Access;
-import flixel.group.FlxGroup.FlxTypedGroup;
 
 class SplashGroup extends FlxTypedGroup<FunkinSprite> {
     /**

@@ -1,15 +1,11 @@
 package funkin.system;
 
-import flixel.math.FlxMath;
 import openfl.geom.ColorTransform;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxAngle;
 import flixel.math.FlxRect;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
-import flixel.FlxG;
-import flixel.FlxCamera;
-import flixel.FlxBasic;
 
 class FlxAnimate extends flxanimate.FlxAnimate {
 	override function drawLimb(limb:FlxFrame, _matrix:FlxMatrix, ?colorTransform:ColorTransform)

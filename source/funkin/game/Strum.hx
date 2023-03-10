@@ -1,8 +1,5 @@
 package funkin.game;
 
-import flixel.FlxSprite;
-import flixel.FlxCamera;
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import funkin.options.Options;
 import funkin.system.Conductor;

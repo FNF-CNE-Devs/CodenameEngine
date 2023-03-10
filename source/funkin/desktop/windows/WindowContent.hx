@@ -1,9 +1,5 @@
 package funkin.desktop.windows;
 
-import flixel.FlxBasic;
-import flixel.FlxSprite;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.FlxCamera;
 
 class WindowContent extends WindowGroup<FlxBasic> {
     public var winX(default, set):Float = 0;

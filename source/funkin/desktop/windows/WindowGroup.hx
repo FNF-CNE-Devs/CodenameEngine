@@ -1,11 +1,6 @@
 package funkin.desktop.windows;
 
-import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.FlxObject;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.FlxBasic;
-import flixel.FlxCamera;
 
 class WindowGroup<T:FlxBasic> extends FlxTypedGroup<T> {
     public var x:Float = 0;

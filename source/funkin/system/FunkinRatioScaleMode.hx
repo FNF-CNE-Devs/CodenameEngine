@@ -1,6 +1,5 @@
 package funkin.system;
 
-import flixel.FlxG;
 import flixel.system.scaleModes.RatioScaleMode;
 
 class FunkinRatioScaleMode extends RatioScaleMode {

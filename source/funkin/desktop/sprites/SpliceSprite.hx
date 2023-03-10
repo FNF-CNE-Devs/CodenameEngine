@@ -3,8 +3,6 @@ package funkin.desktop.sprites;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
 import openfl.geom.Point;
-import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class SpliceSprite extends FlxObject {

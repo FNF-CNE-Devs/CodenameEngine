@@ -1,6 +1,5 @@
 package funkin.game;
 
-import flixel.FlxCamera;
 
 import lime.app.Application;
 import flixel.graphics.tile.FlxGraphicsShader;
@@ -16,7 +15,6 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
 import flixel.graphics.tile.FlxDrawTrianglesItem;
-import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;

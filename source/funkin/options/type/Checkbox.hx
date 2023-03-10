@@ -1,6 +1,5 @@
 package funkin.options.type;
 
-import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 
 @:allow()

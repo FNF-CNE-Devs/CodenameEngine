@@ -1,6 +1,5 @@
 package funkin.system.framerate;
 
-import flixel.math.FlxMath;
 
 class ConductorInfo extends FramerateCategory {
     public function new() {

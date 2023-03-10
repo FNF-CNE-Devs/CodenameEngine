@@ -1,8 +1,6 @@
 package funkin.system.framerate;
 
 import funkin.mods.ModsAssetLibrary;
-import flixel.FlxG;
-import flixel.math.FlxMath;
 
 class AssetTreeInfo extends FramerateCategory {
     public function new() {

@@ -2,11 +2,7 @@ package funkin.game;
 
 import funkin.chart.Chart;
 import funkin.chart.ChartData;
-import flixel.FlxG;
-import flixel.FlxCamera;
-import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.math.FlxRect;
 import flixel.math.FlxPoint;

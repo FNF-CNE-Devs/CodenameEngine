@@ -1,6 +1,5 @@
 package funkin.system.framerate;
 
-import flixel.FlxG;
 import openfl.text.TextFormat;
 import openfl.display.Sprite;
 import openfl.text.TextField;

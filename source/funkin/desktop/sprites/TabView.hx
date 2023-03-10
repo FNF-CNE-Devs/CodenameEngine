@@ -1,9 +1,6 @@
 package funkin.desktop.sprites;
 
-import flixel.FlxObject;
 import flixel.math.FlxRect;
-import flixel.FlxSprite;
-import flixel.FlxBasic;
 import funkin.desktop.windows.WindowGroup;
 
 class TabView extends WindowGroup<FlxBasic> {

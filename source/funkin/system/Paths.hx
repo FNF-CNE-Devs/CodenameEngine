@@ -3,7 +3,6 @@ package funkin.system;
 import flixel.graphics.frames.FlxFramesCollection;
 import haxe.io.Path;
 import funkin.mods.LimeLibrarySymbol;
-import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;

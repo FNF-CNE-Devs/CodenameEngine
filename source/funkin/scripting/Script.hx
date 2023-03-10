@@ -2,7 +2,6 @@ package funkin.scripting;
 
 import lime.app.Application;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
-import flixel.FlxBasic;
 import haxe.io.Path;
 
 /**

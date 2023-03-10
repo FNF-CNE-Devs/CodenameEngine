@@ -1,11 +1,7 @@
 package funkin.desktop.windows;
 
-import flixel.FlxCamera;
 import flixel.util.FlxDestroyUtil;
-import flixel.FlxSprite;
 import funkin.desktop.sprites.*;
-import flixel.FlxObject;
-import flixel.FlxG;
 
 class ContextMenu extends WindowGroup<FlxObject> {
     public var bg:SpliceSprite;

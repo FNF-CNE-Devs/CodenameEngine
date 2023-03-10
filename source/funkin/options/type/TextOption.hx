@@ -1,6 +1,5 @@
 package funkin.options.type;
 
-import funkin.ui.Alphabet;
 
 class TextOption extends OptionType {
     public var selectCallback:Void->Void;

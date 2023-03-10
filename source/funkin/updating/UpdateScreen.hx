@@ -6,8 +6,6 @@ import funkin.ui.FunkinText;
 import funkin.menus.TitleState;
 import flixel.math.FlxRect;
 import flixel.system.FlxSound;
-import flixel.FlxSprite;
-import flixel.FlxG;
 import flixel.ui.FlxBar;
 import funkin.updating.UpdateUtil.UpdateCheckCallback;
 

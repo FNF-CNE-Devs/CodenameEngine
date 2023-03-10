@@ -1,9 +1,6 @@
 package funkin.desktop.sprites;
 
-import flixel.FlxG;
 import flixel.math.FlxPoint;
-import flixel.FlxSprite;
-import flixel.FlxBasic;
 import funkin.desktop.windows.WindowGroup;
 
 class MenuBar extends WindowGroup<FlxBasic> {

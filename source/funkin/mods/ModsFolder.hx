@@ -9,13 +9,11 @@ import openfl.utils.AssetManifest;
 import openfl.utils.AssetLibrary;
 import flixel.graphics.FlxGraphic;
 import flixel.util.FlxSignal.FlxTypedSignal;
-import flixel.FlxG;
 
 #if MOD_SUPPORT
 import sys.FileSystem;
 #end
 
-import flixel.FlxG;
 import flixel.FlxState;
 import haxe.io.Path;
 
