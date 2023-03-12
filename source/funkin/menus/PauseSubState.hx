@@ -138,7 +138,7 @@ class PauseSubState extends MusicBeatSubstate
 				persistentDraw = false;
 				openSubState(new KeybindsOptions());
 			case "Options":
-				FlxG.switchState(new OptionsMenu(true));
+				FlxG.switchState(new OptionsMenu());
 			case "Exit to menu":
 				FlxG.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
 				CoolUtil.playMenuSong();		

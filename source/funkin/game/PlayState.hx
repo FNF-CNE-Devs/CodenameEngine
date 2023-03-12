@@ -1291,6 +1291,9 @@ class PlayState extends MusicBeatState
 	
 	
 			if (__pressed.contains(true)) {
+				for(c in p.characters)
+					c.__lockAnimThisFrame = true;
+
 				__funcsToExec.push(function(note:Note) {
 					if (__pressed[note.strumID] && note.isSustainNote && note.canBeHit && !note.wasGoodHit) {
 						goodNoteHit(p, note);
@@ -1300,9 +1303,6 @@ class PlayState extends MusicBeatState
 	
 			var notePerStrum = [for(_ in 0...4) null];
 			if (__justPressed.contains(true)) {
-				for(c in p.characters)
-					c.__lockAnimThisFrame = true;
-
 				__funcsToExec.push(function(note:Note) {
 					if (__justPressed[note.strumID] && !note.isSustainNote && !note.wasGoodHit && note.canBeHit) {
 						if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;

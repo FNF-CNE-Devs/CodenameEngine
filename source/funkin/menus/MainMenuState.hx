@@ -3,7 +3,7 @@ package funkin.menus;
 import haxe.Json;
 import funkin.ui.FunkinText;
 import funkin.options.Options;
-import funkin.menus.credits.CreditsMain;
+// import funkin.menus.credits.CreditsMain;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
@@ -179,11 +179,13 @@ class MainMenuState extends MusicBeatState
 					trace("Freeplay Menu Selected");
 
 				case 'donate':
+					/*
 					FlxG.switchState(new CreditsMain());
 					trace("Credits Menu Selected");
+					*/
 
 				case 'options':
-					FlxG.switchState(new OptionsMenu(false));
+					FlxG.switchState(new OptionsMenu());
 			}
 		});
 	}

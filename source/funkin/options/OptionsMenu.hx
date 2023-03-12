@@ -1,25 +1,20 @@
 package funkin.options;
 
-import flixel.util.typeLimit.OneOfTwo;
-import flixel.FlxState;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.effects.FlxFlicker;
+import funkin.options.OptionsScreen;
 import funkin.menus.MainMenuState;
-
+import funkin.options.type.TextOption;
+import flixel.util.typeLimit.OneOfTwo;
+import funkin.options.type.OptionType;
 import funkin.options.categories.*;
 
-typedef OptionCategory = {
-    var name:String;
-    var desc:String;
-    var state:OneOfTwo<Class<FlxState>, FlxState>;
-}
 class OptionsMenu extends MusicBeatState {
-    public static var fromPlayState:Bool = false;
-    public var options:Array<OptionCategory> = [
+    
+    public static var mainOptions:Array<OptionCategory> = [
         {
             name: 'Controls',
             desc: 'Change Controls for Player 1 and Player 2!',
-            state: funkin.options.keybinds.KeybindsOptions
+            state: null,
+            substate: funkin.options.keybinds.KeybindsOptions
         },
         {
             name: 'Gameplay',
@@ -42,67 +37,93 @@ class OptionsMenu extends MusicBeatState {
             state: DebugOptions
         }
     ];
-
-    public var curSelected:Int = -1;
-    public var canSelect:Bool = true;
-    public var alphabets:FlxTypedGroup<Alphabet>;
-
-    public function new(?fromPlayState:Bool) {
+    
+    public var options:Array<OptionTypeDef>;
+    public var optionsTree:OptionsTree;
+    public function new(?options:Array<OptionTypeDef>) {
         super();
-        if (fromPlayState != null) OptionsMenu.fromPlayState = fromPlayState;
     }
+
     public override function create() {
-		var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBGBlue'));
-        bg.scrollFactor.set();
+        super.create();
+
+        var optionSprites:Array<OptionType> = [];
+        if (options == null) {
+            optionSprites = [for(o in mainOptions) new TextOption(o.name, o.desc, function() {
+                if (o.substate != null) {
+                    persistentUpdate = false;
+                    persistentDraw = true;
+                    if (o.substate is MusicBeatSubstate) {
+                        openSubState(o.substate);
+                    } else {
+                        openSubState(Type.createInstance(o.substate, []));
+                    }
+                } else {
+                    if (o.state is OptionsScreen) {
+                        optionsTree.add(o.state);
+                    } else {
+                        optionsTree.add(Type.createInstance(o.state, []));
+                    }
+                }
+            })];
+        } else {
+            optionSprites = [for(o in options) Type.createInstance(o.type, o.args)];
+        }
+
+        var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBGBlue'));
+        // bg.scrollFactor.set();
 		bg.scale.set(1.15, 1.15);
 		bg.updateHitbox();
 		bg.screenCenter();
+        bg.scrollFactor.set();
 		bg.antialiasing = true;
 		add(bg);
 
-        super.create();
-        alphabets = new FlxTypedGroup<Alphabet>();
-        for(k=>e in options) {
-            var alphabet = new Alphabet(0, (k+1) * (100), e.name, true, false);
-            alphabet.screenCenter(X);
-            alphabets.add(alphabet);
-        }
-        add(alphabets);
-        changeSelection(1);
+        optionsTree = new OptionsTree();
+        optionsTree.onMenuChange = onMenuChange;
+        optionsTree.onMenuClose = onMenuClose;
+        var mainOptionScreen:OptionsScreen = new OptionsScreen();
+        for(o in optionSprites)
+            mainOptionScreen.add(o);
+        optionsTree.add(mainOptionScreen);
+        add(optionsTree);
 
-        CoolUtil.playMenuSong();
+        FlxG.camera.scroll.set(-FlxG.width, 0);
+    }
+
+    public function onMenuChange() {
+        if (optionsTree.members.length <= 0) {
+            exit();
+        } else {
+            // TODO: update top info
+        }
+    }
+
+    public function exit() {
+        Options.save();
+        Options.applySettings();
+        FlxG.switchState(new MainMenuState());
+    }
+
+    public function onMenuClose(m:OptionsScreen) {
+        CoolUtil.playMenuSFX(CANCEL);
     }
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
-        if (!canSelect) return;
-        changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
-        if (controls.ACCEPT && alphabets.members[curSelected] != null) {
-            CoolUtil.playMenuSFX(CONFIRM);
-            canSelect = false;
-            FlxFlicker.flicker(alphabets.members[curSelected], 1, Options.flashingMenu ? 0.06 : 0.15, false, false, function(flick:FlxFlicker)
-            {
-                FlxTransitionableState.skipNextTransOut = true;
-                if (options[curSelected].state is FlxState)
-                    FlxG.switchState(options[curSelected].state);
-                else
-                    FlxG.switchState(Type.createInstance(options[curSelected].state, []));
-            });
-        } else if (controls.BACK) {
-            if (fromPlayState)
-                FlxG.switchState(new PlayState());
-            else
-                FlxG.switchState(new MainMenuState());
-        }
-    }
 
-    public function changeSelection(change:Int) {
-        if (change == 0) return;
-        CoolUtil.playMenuSFX(SCROLL, 0.7);
-        curSelected = FlxMath.wrap(curSelected + change, 0, options.length-1);
-        alphabets.forEach(function(e) {
-            e.alpha = 0.6;
-        });
-        if (alphabets.members[curSelected] != null) alphabets.members[curSelected].alpha = 1;
+        FlxG.camera.scroll.x = lerp(FlxG.camera.scroll.x, FlxG.width * Math.max(0, (optionsTree.members.length-1)), 0.2);
     }
+}
+
+typedef OptionCategory = {
+    var name:String;
+    var desc:String;
+    var state:OneOfTwo<OptionsScreen, Class<OptionsScreen>>;
+    var ?substate:OneOfTwo<MusicBeatSubstate, Class<MusicBeatSubstate>>;
+}
+
+typedef OptionTypeDef = {
+    var type:Class<OptionType>;
+    var args:Array<Dynamic>;
 }

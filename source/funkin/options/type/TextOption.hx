@@ -1,5 +1,6 @@
 package funkin.options.type;
 
+import flixel.effects.FlxFlicker;
 
 class TextOption extends OptionType {
     public var selectCallback:Void->Void;
@@ -16,8 +17,15 @@ class TextOption extends OptionType {
         add(__text = new Alphabet(100, 20, text, true));
     }
 
+    public override function draw() {
+        super.draw();
+    }
     public override function onSelect() {
         super.onSelect();
+        CoolUtil.playMenuSFX(CONFIRM);
+        FlxFlicker.flicker(this, 1, Options.flashingMenu ? 0.06 : 0.15, true, false, function(t) {
+
+        });
         selectCallback();
     }
 }
