@@ -1,5 +1,6 @@
 package funkin.options;
 
+import flixel.tweens.FlxTween;
 import funkin.options.OptionsScreen;
 import funkin.menus.MainMenuState;
 import funkin.options.type.TextOption;
@@ -95,6 +96,14 @@ class OptionsMenu extends MusicBeatState {
         if (optionsTree.members.length <= 0) {
             exit();
         } else {
+            if (menuChangeTween != null) {
+                menuChangeTween.cancel();
+            }
+
+            menuChangeTween = FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width * Math.max(0, (optionsTree.members.length-1))}, 1.5, {ease: menuTransitionEase, onComplete: function(t) {
+                optionsTree.clearLastMenu();
+                menuChangeTween = null;
+            }});
             // TODO: update top info
         }
     }
@@ -109,11 +118,13 @@ class OptionsMenu extends MusicBeatState {
         CoolUtil.playMenuSFX(CANCEL);
     }
 
+    var menuChangeTween:FlxTween;
     public override function update(elapsed:Float) {
         super.update(elapsed);
-
-        FlxG.camera.scroll.x = lerp(FlxG.camera.scroll.x, FlxG.width * Math.max(0, (optionsTree.members.length-1)), 0.2);
     }
+
+    public static inline function menuTransitionEase(e:Float)
+        return FlxEase.quintInOut(FlxEase.cubeOut(e));
 }
 
 typedef OptionCategory = {

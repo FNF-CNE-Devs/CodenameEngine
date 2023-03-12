@@ -1115,8 +1115,6 @@ class PlayState extends MusicBeatState
 			gameOver(boyfriend);
 		else if (health >= maxHealth && canDadDie)
 			gameOver(dad);
-	
-
 
 		if (!inCutscene)
 			keyShit();

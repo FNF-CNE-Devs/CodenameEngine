@@ -1,6 +1,7 @@
 package funkin.options;
 
 class OptionsTree extends FlxTypedGroup<OptionsScreen> {
+    public var lastMenu:OptionsScreen;
     public override function new() {
         super();
 
@@ -12,9 +13,18 @@ class OptionsTree extends FlxTypedGroup<OptionsScreen> {
             last.update(elapsed);
     }
 
+
+    public override function draw() {
+        super.draw();
+        if (lastMenu != null) {
+            lastMenu.draw();
+        }
+    }
+
     public override function add(m:OptionsScreen) {
         super.add(m);
         setup(m);
+        clearLastMenu();
         onMenuChange();
         return m;
     }
@@ -31,12 +41,22 @@ class OptionsTree extends FlxTypedGroup<OptionsScreen> {
         m.onClose = __subMenuClose;
         m.id = members.indexOf(m);
         m.parent = this;
+        m.update(0);
     }
 
     function __subMenuClose(m:OptionsScreen) {
+        clearLastMenu();
+        lastMenu = m;
         remove(m, true);
         onMenuChange();
         onMenuClose(m);
+    }
+
+    public function clearLastMenu() {
+        if (lastMenu != null) {
+            lastMenu.destroy();
+            lastMenu = null;
+        }
     }
 
     public dynamic function onMenuChange() {
