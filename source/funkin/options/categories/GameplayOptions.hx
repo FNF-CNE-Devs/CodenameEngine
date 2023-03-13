@@ -2,7 +2,7 @@ package funkin.options.categories;
 
 class GameplayOptions extends OptionsScreen {
     public override function new() {
-        super();
+        super("Gameplay", 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...');
         add(new Checkbox(
             "Downscroll",
             "If checked, notes will go from up to down instead of down to up, like if they were falling",

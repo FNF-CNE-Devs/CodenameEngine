@@ -1,5 +1,6 @@
 package funkin.options;
 
+import flixel.util.FlxDestroyUtil;
 class OptionsTree extends FlxTypedGroup<OptionsScreen> {
     public var lastMenu:OptionsScreen;
     public override function new() {
@@ -57,6 +58,11 @@ class OptionsTree extends FlxTypedGroup<OptionsScreen> {
             lastMenu.destroy();
             lastMenu = null;
         }
+    }
+
+    public override function destroy() {
+        super.destroy();
+        lastMenu = FlxDestroyUtil.destroy(lastMenu);
     }
 
     public dynamic function onMenuChange() {

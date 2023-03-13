@@ -1,15 +1,15 @@
 package funkin.options;
 
+import funkin.options.type.Checkbox;
+import haxe.xml.Access;
 import flixel.tweens.FlxTween;
-import funkin.options.OptionsScreen;
 import funkin.menus.MainMenuState;
-import funkin.options.type.TextOption;
 import flixel.util.typeLimit.OneOfTwo;
-import funkin.options.type.OptionType;
+import funkin.options.type.*;
 import funkin.options.categories.*;
+import funkin.options.TreeMenu;
 
-class OptionsMenu extends MusicBeatState {
-    
+class OptionsMenu extends TreeMenu {
     public static var mainOptions:Array<OptionCategory> = [
         {
             name: 'Controls',
@@ -38,38 +38,9 @@ class OptionsMenu extends MusicBeatState {
             state: DebugOptions
         }
     ];
-    
-    public var options:Array<OptionTypeDef>;
-    public var optionsTree:OptionsTree;
-    public function new(?options:Array<OptionTypeDef>) {
-        super();
-    }
 
     public override function create() {
         super.create();
-
-        var optionSprites:Array<OptionType> = [];
-        if (options == null) {
-            optionSprites = [for(o in mainOptions) new TextOption(o.name, o.desc, function() {
-                if (o.substate != null) {
-                    persistentUpdate = false;
-                    persistentDraw = true;
-                    if (o.substate is MusicBeatSubstate) {
-                        openSubState(o.substate);
-                    } else {
-                        openSubState(Type.createInstance(o.substate, []));
-                    }
-                } else {
-                    if (o.state is OptionsScreen) {
-                        optionsTree.add(o.state);
-                    } else {
-                        optionsTree.add(Type.createInstance(o.state, []));
-                    }
-                }
-            })];
-        } else {
-            optionSprites = [for(o in options) Type.createInstance(o.type, o.args)];
-        }
 
         var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBGBlue'));
         // bg.scrollFactor.set();
@@ -80,61 +51,76 @@ class OptionsMenu extends MusicBeatState {
 		bg.antialiasing = true;
 		add(bg);
 
-        optionsTree = new OptionsTree();
-        optionsTree.onMenuChange = onMenuChange;
-        optionsTree.onMenuClose = onMenuClose;
-        var mainOptionScreen:OptionsScreen = new OptionsScreen();
-        for(o in optionSprites)
-            mainOptionScreen.add(o);
-        optionsTree.add(mainOptionScreen);
-        add(optionsTree);
-
-        FlxG.camera.scroll.set(-FlxG.width, 0);
-    }
-
-    public function onMenuChange() {
-        if (optionsTree.members.length <= 0) {
-            exit();
-        } else {
-            if (menuChangeTween != null) {
-                menuChangeTween.cancel();
+        main = new OptionsScreen("Options", "Select a category to continue.", [for(o in mainOptions) new TextOption(o.name, o.desc, function() {
+            if (o.substate != null) {
+                persistentUpdate = false;
+                persistentDraw = true;
+                if (o.substate is MusicBeatSubstate) {
+                    openSubState(o.substate);
+                } else {
+                    openSubState(Type.createInstance(o.substate, []));
+                }
+            } else {
+                if (o.state is OptionsScreen) {
+                    optionsTree.add(o.state);
+                } else {
+                    optionsTree.add(Type.createInstance(o.state, []));
+                }
             }
-
-            menuChangeTween = FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width * Math.max(0, (optionsTree.members.length-1))}, 1.5, {ease: menuTransitionEase, onComplete: function(t) {
-                optionsTree.clearLastMenu();
-                menuChangeTween = null;
-            }});
-            // TODO: update top info
+        })]);
+        
+        var xmlPath = Paths.xml("config/options");
+        for(source in [funkin.system.AssetsLibraryList.AssetSource.SOURCE, funkin.system.AssetsLibraryList.AssetSource.MODS]) {
+            if (Paths.assetsTree.existsSpecific(xmlPath, "TEXT", source)) {
+                var access:Access = null;
+                try {
+                    access = new Access(Xml.parse(Paths.assetsTree.getSpecificAsset(xmlPath, "TEXT", source)));
+                } catch(e) {
+                    Logs.trace('Error while parsing options.xml: ${Std.string(e)}', ERROR);
+                }
+                
+                if (access != null)
+                    for(o in parseOptionsFromXML(access))
+                        main.add(o);
+            }
         }
+        
     }
 
-    public function exit() {
+    public override function exit() {
         Options.save();
         Options.applySettings();
-        FlxG.switchState(new MainMenuState());
+        super.exit();
     }
 
-    public function onMenuClose(m:OptionsScreen) {
-        CoolUtil.playMenuSFX(CANCEL);
+    /**
+     * XML STUFF
+     */
+    public function parseOptionsFromXML(xml:Access):Array<OptionType> {
+        var options:Array<OptionType> = [];
+
+        for(node in xml.elements) {
+            if (!node.has.name) {
+                Logs.trace("An option node requires a name attribute.", WARNING);
+                continue;
+            }
+            var name = node.getAtt("name");
+            var desc = node.getAtt("desc").getDefault("No Description");
+
+            switch(node.name) {
+                case "checkbox":
+                    if (!node.has.id) {
+                        Logs.trace("A checkbox option requires an \"id\" for option saving.", WARNING);
+                        continue;
+                    }
+                    options.push(new Checkbox(name, desc, node.att.id, FlxG.save.data));
+                case "menu":
+                    options.push(new TextOption(name, desc, function() {
+                        optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node)));
+                    }));
+            }
+        }
+
+        return options;
     }
-
-    var menuChangeTween:FlxTween;
-    public override function update(elapsed:Float) {
-        super.update(elapsed);
-    }
-
-    public static inline function menuTransitionEase(e:Float)
-        return FlxEase.quintInOut(FlxEase.cubeOut(e));
-}
-
-typedef OptionCategory = {
-    var name:String;
-    var desc:String;
-    var state:OneOfTwo<OptionsScreen, Class<OptionsScreen>>;
-    var ?substate:OneOfTwo<MusicBeatSubstate, Class<MusicBeatSubstate>>;
-}
-
-typedef OptionTypeDef = {
-    var type:Class<OptionType>;
-    var args:Array<Dynamic>;
 }

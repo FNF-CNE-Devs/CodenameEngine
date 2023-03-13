@@ -4,7 +4,7 @@ import funkin.windows.WindowsAPI;
 
 class DebugOptions extends OptionsScreen {
     public override function new() {
-        super();
+        super("Debug Options", "Use this menu to change debug options.");
         #if windows
         add(new TextOption(
             "Show Console",

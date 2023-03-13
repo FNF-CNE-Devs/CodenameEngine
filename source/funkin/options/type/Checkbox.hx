@@ -8,6 +8,8 @@ class Checkbox extends TextOption {
     public var checkbox:FlxSprite;
     public var checked:Bool;
 
+    public var parent:Dynamic;
+
     private function get_selected() {
 
     }
@@ -20,8 +22,13 @@ class Checkbox extends TextOption {
     ];
     private var baseCheckboxOffset:FlxPoint = FlxPoint.get();
 
-    public function new(text:String, desc:String, optionName:String) {
+    public function new(text:String, desc:String, optionName:String, ?parent:Dynamic) {
         super(text, desc, null);
+
+        if (parent == null)
+            parent = Options;
+
+        this.parent = parent;
 
         checkbox = new FlxSprite(10, -40);
         checkbox.frames = Paths.getFrames('menus/options/checkboxThingie');
@@ -36,7 +43,7 @@ class Checkbox extends TextOption {
         baseCheckboxOffset.set(checkbox.offset.x, checkbox.offset.y);
 
         this.optionName = optionName;
-        checked = Reflect.field(Options, optionName);
+        checked = Reflect.field(parent, optionName);
     }
 
     public override function update(elapsed:Float) {
@@ -52,7 +59,7 @@ class Checkbox extends TextOption {
     }
 
     public override function onSelect() {
-        Reflect.setField(Options, optionName, checked = !checked);
+        Reflect.setField(parent, optionName, checked = !checked);
         checkbox.animation.play("checking", true, !checked);
     }
 

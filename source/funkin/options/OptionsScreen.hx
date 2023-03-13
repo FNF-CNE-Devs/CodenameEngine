@@ -12,9 +12,14 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 
     private var __firstFrame:Bool = true;
 
-    public function new() {
+    public var name:String;
+    public var desc:String;
+
+    public function new(name:String, desc:String, ?options:Array<OptionType>) {
         super();
-        // EXTEND then add options
+        this.name = name;
+        this.desc = desc;
+        if (options != null) for(o in options) add(o);
     }
 
     public override function update(elapsed:Float) {

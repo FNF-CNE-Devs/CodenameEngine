@@ -1,0 +1,96 @@
+<!DOCTYPE codename-mod-options>
+<!-- NOT WORKING YET -->
+<menu name="Mod Options" desc="Modify mod options here">
+    <checkbox id="levelOfIdk" name="Level of idk" />
+    <choice id="levelOfChoice" name="Level of choice">
+        <value name="Disabled" value="disabled" />
+        <value name="This Only" value="thisonly" />
+        <value name="All" value="all" />
+    </choice>
+
+    <menu name="Submenu" desc="Submenu test">
+        <checkbox id="levelOfIdk2" name="Level of idk" />
+        <choice id="levelOfChoice" name="Level of choice">
+            <value name="Disabled" value="disabled" />
+            <value name="This Only" value="thisonly" />
+            <value name="All" value="all" />
+        </choice>
+    </menu>
+</menu>
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />
+<menu name="Mod Options" desc="Modify mod options here" />

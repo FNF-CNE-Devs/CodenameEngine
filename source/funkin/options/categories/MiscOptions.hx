@@ -3,7 +3,7 @@ package funkin.options.categories;
 
 class MiscOptions extends OptionsScreen {
     public override function new() {
-        super();
+        super("Miscellaneous", "Use this menu to reset save data or engine settings.");
         #if UPDATE_CHECKING
         add(new Checkbox(
             "Enable Beta Updates",

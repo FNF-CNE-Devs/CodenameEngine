@@ -2,7 +2,7 @@ package funkin.options.categories;
 
 class AppearanceOptions extends OptionsScreen {
     public override function new() {
-        super();
+        super("Appearance", "Change Appearance options such as Flashing menus...");
         add(new Checkbox(
             "Antialiasing",
             "If unchecked, will disable antialiasing on every sprite. Can boost performances at the cost of sharper, more pixely sprites",
