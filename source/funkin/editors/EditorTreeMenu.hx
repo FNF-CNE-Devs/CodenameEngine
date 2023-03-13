@@ -1,0 +1,24 @@
+package funkin.editors;
+
+import flixel.addons.display.FlxBackdrop;
+import funkin.options.*;
+
+class EditorTreeMenu extends TreeMenu {
+    public var bg:FlxBackdrop;
+    public var bgType:String = "default";
+
+    public override function create() {
+        super.create();
+
+        bg = new FlxBackdrop();
+        bg.loadGraphic(Paths.image('editors/bgs/${bgType}'));
+        bg.antialiasing = true;
+        add(bg);
+    }
+
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+        bg.x += elapsed * 125;
+        bg.y += elapsed * 125;
+    }
+}

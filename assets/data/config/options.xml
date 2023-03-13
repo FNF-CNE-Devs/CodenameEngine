@@ -1,19 +1,14 @@
 <!DOCTYPE codename-mod-options>
-<!-- NOT WORKING YET -->
+<!-- TEMPLATE FOR CUSTOM OPTIONS!!! -->
 <menu name="Mod Options" desc="Modify mod options here">
-    <checkbox id="levelOfIdk" name="Level of idk" />
-    <choice id="levelOfChoice" name="Level of choice">
+    <checkbox id="checkboxExample" name="Checkbox example" />
+    <choice id="choiceExample" name="Choice Example">
         <value name="Disabled" value="disabled" />
         <value name="This Only" value="thisonly" />
         <value name="All" value="all" />
     </choice>
 
-    <menu name="Submenu" desc="Submenu test">
+    <menu name="Submenu Example" desc="Submenu test">
         <checkbox id="levelOfIdk2" name="Level of idk" />
-        <choice id="levelOfChoice" name="Level of choice">
-            <value name="Disabled" value="disabled" />
-            <value name="This Only" value="thisonly" />
-            <value name="All" value="all" />
-        </choice>
     </menu>
 </menu>

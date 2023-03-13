@@ -12,7 +12,7 @@ class EditorPicker extends MusicBeatSubstate {
         {
             name: "Chart Editor",
             iconID: 0,
-            state: null
+            state: funkin.editors.charter.CharterSelection
         },
         {
             name: "Character Editor",
