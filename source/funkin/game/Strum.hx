@@ -91,7 +91,6 @@ class Strum extends FlxSprite {
 
     public function updateSustain(daNote:Note) {
         if (!daNote.isSustainNote) return;
-        daNote.flipY = daNote.flipSustain && (PlayState.instance.downscroll != (getScrollSpeed(daNote) < 0));
         daNote.updateSustain(this);
     }
 

@@ -1,0 +1,8 @@
+{
+    "displayName": "High",
+    "bpm": 125.0,
+    "icon": "mom",
+    "color": "#FC96D7",
+    "coopAllowed": true,
+    "opponentModeAllowed": true
+}

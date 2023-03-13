@@ -7,8 +7,9 @@ import funkin.system.FunkinSprite;
 import funkin.utils.*;
 import funkin.system.Logs;
 import funkin.game.PlayState;
-
 import funkin.scripting.EventManager;
+
+import openfl.utils.Assets;
 
 using StringTools;
 using funkin.utils.CoolUtil;

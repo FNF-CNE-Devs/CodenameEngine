@@ -2,7 +2,8 @@ package funkin.game;
 
 import funkin.scripting.events.SimpleNoteEvent;
 import funkin.system.Conductor;
-import funkin.chart.Chart.ChartStrumLine;
+import funkin.chart.Chart;
+import funkin.chart.ChartData;
 import funkin.system.Controls;
 import funkin.scripting.events.StrumCreationEvent;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -64,6 +65,16 @@ class StrumLine extends FlxTypedGroup<Strum> {
     public function generate(strumLine:ChartStrumLine) {
         if (strumLine.notes != null) for(note in strumLine.notes) {
             notes.add(new Note(this, note, false));
+            
+            if (note.sLen > Conductor.stepCrochet * 0.75) {
+                var len:Float = note.sLen;
+                var curLen:Float = 0;
+                while(len > 10) {
+                    curLen = Math.min(len, Conductor.stepCrochet);
+                    notes.add(new Note(this, note, true, curLen, note.sLen - len));
+                    len -= curLen;
+                }
+            }
         }
         notes.sortNotes();
     }
@@ -105,7 +116,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 
         if (PlayState.instance.__updateNote_event.__autoCPUHit && cpu && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) PlayState.instance.goodNoteHit(this, daNote);
 
-        if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.stepLength) < Conductor.songPosition) {
+        if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.sustainLength) < Conductor.songPosition) {
             deleteNote(daNote);
             return;
         }

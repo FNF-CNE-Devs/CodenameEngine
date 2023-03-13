@@ -5,7 +5,6 @@ import funkin.menus.TitleState;
 import funkin.system.Main;
 import openfl.utils.AssetCache;
 import flixel.util.FlxSignal.FlxTypedSignal;
-import openfl.utils.Assets;
 import openfl.utils.AssetManifest;
 import openfl.utils.AssetLibrary;
 import flixel.graphics.FlxGraphic;

@@ -1,22 +1,84 @@
 package funkin.chart;
 
+import funkin.chart.ChartData;
+import flixel.util.FlxColor;
+import haxe.io.Path;
 import funkin.system.Song.SwagSong;
 import haxe.Json;
-import openfl.utils.Assets;
+
+#if sys
+import sys.io.File;
+import sys.FileSystem;
+#end
+
+using StringTools;
 
 class Chart {
+    public static function loadChartMeta(songName:String, difficulty:String = "normal") {
+        var metaPath = Paths.file('songs/${songName.toLowerCase()}/meta.json');
+        var metaDiffPath = Paths.file('songs/${songName.toLowerCase()}/meta-${difficulty.toLowerCase()}.json');
+
+        var data:ChartMetaData = null;
+        var fromMods:Bool = false;
+        for(path in [metaDiffPath, metaPath]) {
+            if (Assets.exists(path)) {
+                fromMods = Paths.assetsTree.existsSpecific(path, "TEXT", MODS);
+                try {
+                    data = Json.parse(Assets.getText(path));
+                } catch(e) {
+                    Logs.trace('Failed to load song metadata for ${songName} ($path): ${Std.string(e)}', ERROR);
+                }
+                if (data != null) break;
+            }
+        }
+
+        if (data == null)
+            data = {
+                name: songName,
+                bpm: 100
+            };
+        data.setFieldDefault("name", songName);
+        data.setFieldDefault("beatsPerMesure", 4);
+        data.setFieldDefault("stepsPerBeat", 4);
+        data.setFieldDefault("needsVoices", true);
+        data.setFieldDefault("icon", "face");
+        data.setFieldDefault("difficulties", []);
+        data.setFieldDefault("coopAllowed", false);
+        data.setFieldDefault("opponentModeAllowed", false);
+        data.setFieldDefault("displayName", data.name);
+        data.setFieldDefault("parsedColor", data.color.getColorFromDynamic());
+
+        if (data.difficulties.length <= 0) {
+            data.difficulties = [for(f in Paths.getFolderContent('songs/${songName.toLowerCase()}/charts/', false, !fromMods)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];
+			if (data.difficulties.length == 3) {
+				var hasHard = false, hasNormal = false, hasEasy = false;
+				for(d in data.difficulties) {
+					switch(d) {
+						case "EASY":	hasEasy = true;
+						case "NORMAL":	hasNormal = true;
+						case "HARD":	hasHard = true;
+					}
+				}
+				if (hasHard && hasNormal && hasEasy) {
+					data.difficulties[0] = "EASY";
+					data.difficulties[1] = "NORMAL";
+					data.difficulties[2] = "HARD";
+				}
+			}
+        }
+        if (data.difficulties.length <= 0)
+            data.difficulties.push("CHART MISSING");
+
+        return data;
+    }
+
     public static function parse(songName:String, difficulty:String = "normal"):ChartData {
         var chartPath = Paths.chart(songName, difficulty);
         var base:ChartData = {
             strumLines: [],
             noteTypes: [],
             events: [],
-            meta: {
-                name: songName,
-                bpm: 0,
-                beatsPerMesure: 4,
-                stepsPerBeat: 4
-            },
+            meta: null,
             scrollSpeed: 2,
             stage: "stage",
             codenameChart: true,
@@ -35,7 +97,7 @@ class Chart {
         }
 
         if (Reflect.hasField(data, "codenameChart") && Reflect.field(data, "codenameChart") == true) {
-            return cast data;
+            base = data;
         } else {
             // base fnf chart parsing
             var data:SwagSong = data;
@@ -47,8 +109,6 @@ class Chart {
 
             base.scrollSpeed = data.speed;
             base.stage = data.stage;
-            base.meta.name = data.song;
-            base.meta.bpm = data.bpm;
 
             base.strumLines.push({
                 characters: [data.player2],
@@ -115,7 +175,7 @@ class Chart {
                         time: daStrumTime,
                         id: daNoteData % 4,
                         type: daNoteType,
-                        sustainLength: note[2]
+                        sLen: note[2]
                     });
                 }
 
@@ -127,6 +187,9 @@ class Chart {
                 curTime += curCrochet * beatsPerMesure;
             }
         }
+
+        if (base.meta == null)
+            base.meta = loadChartMeta(songName, difficulty);
         return base;
     }
 
@@ -142,85 +205,61 @@ class Chart {
                 return chart.noteTypes.length;
         }
     }
-}
-
-typedef ChartData = {
-    public var strumLines:Array<ChartStrumLine>;
-    public var events:Array<ChartEvent>;
-    public var meta:ChartMetaData;
-    public var codenameChart:Bool;
-    public var stage:String;
-    public var scrollSpeed:Float;
-    public var fromMods:Bool;
-    public var noteTypes:Array<String>;
-}
-
-typedef ChartMetaData = {
-    public var name:String;
-    public var bpm:Float;
-    public var ?beatsPerMesure:Float;
-    public var ?stepsPerBeat:Float;
-    public var ?needsVoices:Bool;
-    public var ?icon:String;
-    public var ?color:Dynamic;
-	public var ?difficulties:Array<String>;
-	public var ?coopAllowed:Bool;
-	public var ?opponentModeAllowed:Bool;
-}
-
-typedef ChartStrumLine = {
-    var characters:Array<String>;
-    var opponent:Bool;
-    var notes:Array<ChartNote>;
-    var position:String;
-    var ?strumLinePos:Float; // 0.25 = default opponent pos, 0.75 = default boyfriend pos
-    var ?visible:Null<Bool>;
-}
-
-typedef ChartNote = {
-    var time:Float; // time at which the note will be hit (ms)
-    var id:Int; // strum id of the note
-    var type:Int; // type (int) of the note
-    var sustainLength:Float; // sustain length of the note (ms)
-}
-
-typedef ChartEvent = {
-    var time:Float;
-    var type:ChartEventType;
-    var params:Array<Dynamic>;
-}
-
-@:enum
-abstract ChartEventType(Int) from Int to Int {
-    /**
-     * CUSTOM EVENT
-     * Params:
-     *  - Function Name (String)
-     *  - Function Parameters...
-     */
-    var CUSTOM = -1;
-    /**
-     * NO EVENT, MADE FOR UNKNOWN EVENTS / EVENTS THAT CANNOT BE PARSED
-     */
-    var NONE = 0;
-    /**
-     * CAMERA MOVEMENT EVENT
-     * Params:
-     *  - Target Strumline ID (Int)
-     */
-    var CAM_MOVEMENT = 1;
 
     /**
-     * BPM CHANGE EVENT
-     * Params:
-     *  - Target BPM (Float)
+     * Saves the chart to the specific song folder path.
+     * @param songFolderPath Path to the song folder (ex: `mods/your mod/songs/song/`)
+     * @param chart Chart to save
+     * @param difficulty Name of the difficulty
+     * @param saveSettings
+     * @return Filtered chart used for saving.
      */
-    var BPM_CHANGE = 2;
-    /**
-     * ALT ANIM TOGGLE
-     * Params:
-     *  - Strum Line which is going to be toggled (Int)
-     *  - Whenever its going to be toggled or not (Bool)
-     */
-    var ALT_ANIM_TOGGLE = 3;
+    public static function save(songFolderPath:String, chart:ChartData, difficulty:String = "normal", ?saveSettings:ChartSaveSettings):ChartData {
+        if (saveSettings == null) saveSettings = {};
+
+        var filteredChart = filterChartForSaving(chart, saveSettings.saveMetaInChart);
+        var meta = filteredChart.meta;
+        
+        // idk how null reacts to it so better be sure
+
+        #if sys
+        if (!FileSystem.exists('${songFolderPath}\\charts\\'))
+            FileSystem.createDirectory('${songFolderPath}\\charts\\');
+
+        var chartPath = '${songFolderPath}\\charts\\${difficulty.trim()}.json';
+        var metaPath = '${songFolderPath}\\meta.json';
+
+        File.saveContent(chartPath, Json.stringify(filteredChart, null, saveSettings.prettyPrint == true ? "\t" : null));
+
+        if (saveSettings.overrideExistingMeta == true || !FileSystem.exists(metaPath))
+            File.saveContent(metaPath, Json.stringify(meta, null, saveSettings.prettyPrint == true ? "\t" : null));
+        #end
+        return filteredChart;
+    }
+
+    public static function filterChartForSaving(chart:ChartData, ?saveMetaInChart:Null<Bool>):ChartData {
+        var data = Reflect.copy(chart); // make a copy of the chart to leave the OG intact
+        if (saveMetaInChart != true) {
+            data.meta = null;
+        } else {
+            data.meta = Reflect.copy(chart.meta); // also make a copy of the metadata to leave the OG intact.
+            if (data.meta != null) data.meta.parsedColor = null;
+        }
+
+        data.fromMods = null;
+
+        var sortedData:Dynamic = {};
+        for(f in Reflect.fields(data)) {
+            var v = Reflect.field(data, f);
+            if (v != null)
+                Reflect.setField(sortedData, f, v);
+        }
+        return sortedData;
+    }
+}
+
+typedef ChartSaveSettings = {
+    var ?overrideExistingMeta:Bool;
+    var ?saveMetaInChart:Bool;
+    var ?prettyPrint:Bool;
 }

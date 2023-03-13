@@ -204,7 +204,8 @@ class CoolUtil
 
 	public static function coolTextFile(path:String):Array<String>
 	{
-		return [for(e in Assets.getText(path).trim().split('\n')) e.trim()];
+		var trim:String;
+		return [for(line in Assets.getText(path).split("\n")) if ((trim = line.trim()) != "" && !trim.startsWith("#")) trim];
 	}
 
 	public static inline function numberArray(max:Int, ?min:Int = 0):Array<Int>

@@ -3,7 +3,6 @@ package funkin.cutscenes;
 import flixel.system.FlxSound;
 import flixel.FlxG;
 import flixel.FlxCamera;
-import openfl.utils.Assets;
 import funkin.cutscenes.dialogue.*;
 import haxe.xml.Access;
 

@@ -4,7 +4,6 @@ import funkin.options.Options;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
-import openfl.utils.Assets;
 import haxe.xml.Access;
 import flixel.FlxBasic;
 import flixel.math.FlxMath;

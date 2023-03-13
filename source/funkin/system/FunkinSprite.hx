@@ -1,7 +1,6 @@
 package funkin.system;
 
 import flixel.FlxG;
-import openfl.utils.Assets;
 import haxe.io.Path;
 import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
 import funkin.interfaces.IOffsetCompatible;
