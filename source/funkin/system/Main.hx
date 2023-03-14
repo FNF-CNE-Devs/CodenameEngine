@@ -1,6 +1,5 @@
 package funkin.system;
 
-import funkin.desktop.DesktopMain;
 import openfl.utils.AssetLibrary;
 import openfl.utils.AssetCache;
 import openfl.text.TextFormat;
@@ -156,7 +155,6 @@ class Main extends Sprite
 		Logs.init();
 		Paths.init();
 		ModsFolder.init();
-		DesktopMain.init();
 		DiscordUtil.init();
 		#if GLOBAL_SCRIPT
 		funkin.scripting.GlobalScript.init();
