@@ -50,7 +50,7 @@ class EditorPicker extends MusicBeatSubstate {
 
         camera = new FlxCamera();
         camera.bgColor = 0;
-        FlxG.cameras.add(camera);
+        FlxG.cameras.add(camera, false);
 
         bg = new FlxSprite().makeGraphic(1, 1, 0xFF000000);
         bg.scrollFactor.set();

@@ -5,6 +5,8 @@ import funkin.options.TreeMenu;
 class DebugOptions extends TreeMenu {
     public override function create() {
         super.create();
+
+        FlxG.camera.fade(0xFF000000, 0.5, true);
         
 
         var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBGBlue'));

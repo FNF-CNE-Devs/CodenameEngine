@@ -31,11 +31,6 @@ class OptionsMenu extends TreeMenu {
             name: 'Miscellaneous',
             desc: 'Use this menu to reset save data or engine settings.',
             state: MiscOptions
-        },
-        {
-            name: 'Debug Options',
-            desc: 'Use this menu to change debug options.',
-            state: DebugOptions
         }
     ];
 

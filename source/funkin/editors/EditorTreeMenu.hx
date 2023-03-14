@@ -10,6 +10,8 @@ class EditorTreeMenu extends TreeMenu {
     public override function create() {
         super.create();
 
+        FlxG.camera.fade(0xFF000000, 0.5, true);
+
         bg = new FlxBackdrop();
         bg.loadGraphic(Paths.image('editors/bgs/${bgType}'));
         bg.antialiasing = true;
