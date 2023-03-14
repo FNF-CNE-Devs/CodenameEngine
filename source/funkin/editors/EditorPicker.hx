@@ -25,19 +25,9 @@ class EditorPicker extends MusicBeatSubstate {
             state: null
         },
         {
-            name: "Unknown Editor",
-            iconID: 3,
-            state: null
-        },
-        {
-            name: "Unknown Editor",
-            iconID: 3,
-            state: null
-        },
-        {
-            name: "Unknown Editor",
-            iconID: 3,
-            state: null
+            name: "Debug Options",
+            iconID: 4,
+            state: DebugOptions
         }
     ];
 
