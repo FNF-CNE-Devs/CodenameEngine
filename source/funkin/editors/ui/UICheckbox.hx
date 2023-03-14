@@ -33,7 +33,7 @@ class UICheckbox extends UISprite {
         pressed = false;
 
         // CHECKMARK HANDLING
-        check.visible = checked;
+        check.alpha = checked ? 1 : 0;
         check.scale.x = CoolUtil.fpsLerp(check.scale.x, 1, 0.25);
         check.scale.y = CoolUtil.fpsLerp(check.scale.y, 1, 0.25);
 
@@ -44,6 +44,8 @@ class UICheckbox extends UISprite {
     }
 
     public inline function updatePositions() {
+        check.cameras = field.cameras = cameras;
+        
         field.setPosition(x + 30, y);
         check.setPosition(x, y);
     }
