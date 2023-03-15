@@ -132,7 +132,7 @@
 	<define name="VIDEO_CUTSCENES" unless="web || linux || hl || mac" />
 
 	<!-- Comment this out to disable build number on FPS -->
-	<define name="SHOW_BUILD_ON_FPS" />
+	<!-- <define name="SHOW_BUILD_ON_FPS" /> -->
 
 
 	<haxedef name="VIDEO_CUTSCENES" if="VIDEO_CUTSCENES" />
