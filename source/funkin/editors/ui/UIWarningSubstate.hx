@@ -46,6 +46,8 @@ class UIWarningSubstate extends MusicBeatSubstate {
 
         FlxTween.tween(camera, {alpha: 1}, 0.25, {ease: FlxEase.cubeOut});
         FlxTween.tween(camera, {zoom: 1}, 0.66, {ease: FlxEase.elasticOut});
+
+        CoolUtil.playMenuSFX(WARNING);
     }
 
     public override function destroy() {

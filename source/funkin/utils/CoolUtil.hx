@@ -195,6 +195,7 @@ class CoolUtil
 			case SCROLL:	'menu/scroll';
 			case CHECKED:	'menu/checkboxChecked';
 			case UNCHECKED:	'menu/checkboxUnchecked';
+			case WARNING:	'menu/warningMenu';
 			default: 		'menu/scroll';
 		}), volume);
 	}
@@ -417,4 +418,5 @@ enum abstract CoolSfx(Int) from Int {
 	var CANCEL = 2;
 	var CHECKED = 3;
 	var UNCHECKED = 4;
+	var WARNING = 5;
 }
