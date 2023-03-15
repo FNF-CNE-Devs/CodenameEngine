@@ -6,7 +6,7 @@ class UICheckbox extends UISprite {
     public var checked:Bool = false;
     public var onChecked:Bool->Void = null;
 
-    public var field:FunkinText;
+    public var field:UIText;
     public var check:FlxSprite;
 
     public function new(x:Float, y:Float, text:String, checked:Bool = false, w:Int = 0) {
@@ -17,7 +17,7 @@ class UICheckbox extends UISprite {
 
         this.checked = checked;
 
-        field = new UIText(x, y, w, text, 14, false);
+        field = new UIText(x, y, w, text);
         check = new FlxSprite().loadGraphicFromSprite(this);
         check.animation.play("checkmark");
 
@@ -41,10 +41,8 @@ class UICheckbox extends UISprite {
     }
 
     public inline function updatePositions() {
-        check.cameras = field.cameras = cameras;
-
-        field.setPosition(x + 25, y);
-        check.setPosition(x, y);
+        check.follow(this);
+        field.follow(this, 25, 0);
     }
 
     public override function draw() {

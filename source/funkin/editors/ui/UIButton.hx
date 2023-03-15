@@ -7,15 +7,19 @@ class UIButton extends UISprite {
     public var bHeight:Int = 20;
     public var callback:Void->Void = null;
 
+    public var field:UIText;
+
     public function resize(w:Int, h:Int) {
         bWidth = w;
         bHeight = h;
+        field.fieldWidth = w;
     }
 
-    public override function new(x:Float, y:Float, t:String, callback:Void->Void, w:Float = 120, h:Float = 20) {
+    public override function new(x:Float, y:Float, text:String, callback:Void->Void, w:Float = 120, h:Float = 20) {
         super(x, y);
         frames = CoolUtil.loadFrames(Paths.image('editors/ui/button'));
         this.callback = callback;
+        members.push(field = new UIText(x, y, w, text));
     }
 
     public override function updateButton() {
@@ -33,6 +37,7 @@ class UIButton extends UISprite {
     }
 
     public override function draw() {
+        field.follow(this, 0, ((height - field.height) / 2));
         var x:Float = this.x;
         var y:Float = this.y;
         var offset:Int = hovered ? (pressed ? 18 : 9) : 0;
