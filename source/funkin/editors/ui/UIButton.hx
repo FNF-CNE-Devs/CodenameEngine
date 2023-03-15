@@ -20,6 +20,7 @@ class UIButton extends UISprite {
         frames = CoolUtil.loadFrames(Paths.image('editors/ui/button'));
         this.callback = callback;
         members.push(field = new UIText(x, y, w, text));
+        field.alignment = CENTER;
     }
 
     public override function updateButton() {
@@ -57,59 +58,60 @@ class UIButton extends UISprite {
             frame = topleft;
             setPosition(x, y);
             __setSize(topleft.frame.width, topleft.frame.height);
-            super.draw();
+            super.drawSuper();
     
             // TOP
             frame = top;
             setPosition(x + topleft.frame.width, y);
             __setSize(bWidth - topleft.frame.width - topright.frame.width, top.frame.height);
-            super.draw();
+            super.drawSuper();
 
             // TOP RIGHT
             frame = topright;
             setPosition(x + bWidth - topright.frame.width, y);
             __setSize(topright.frame.width, topright.frame.height);
-            super.draw();
+            super.drawSuper();
 
             // MIDDLE LEFT
             frame = middleleft;
             setPosition(x, y + top.frame.height);
             __setSize(middleleft.frame.width, bHeight - topleft.frame.height - bottomleft.frame.height);
-            super.draw();
+            super.drawSuper();
     
             // MIDDLE
             frame = middle;
             setPosition(x + topleft.frame.width, y + top.frame.height);
             __setSize(bWidth - middleleft.frame.width - middleright.frame.width, bHeight - topleft.frame.height - bottomleft.frame.height);
-            super.draw();
+            super.drawSuper();
 
             // MIDDLE RIGHT
             frame = middleright;
             setPosition(x + bWidth - topright.frame.width, y + top.frame.height);
             __setSize(middleright.frame.width, bHeight - topleft.frame.height - bottomleft.frame.height);
-            super.draw();
+            super.drawSuper();
 
             // BOTTOM LEFT
             frame = bottomleft;
             setPosition(x, y + bHeight - bottom.frame.height);
             __setSize(bottomleft.frame.width, bottomleft.frame.height);
-            super.draw();
+            super.drawSuper();
     
             // BOTTOM
             frame = bottom;
             setPosition(x + bottomleft.frame.width, y + bHeight - bottom.frame.height);
             __setSize(bWidth - bottomleft.frame.width - bottomright.frame.width, bottom.frame.height);
-            super.draw();
+            super.drawSuper();
 
             // BOTTOM RIGHT
             frame = bottomright;
             setPosition(x + bWidth - bottomright.frame.width, y + bHeight - bottom.frame.height);
             __setSize(bottomright.frame.width, bottomright.frame.height);
-            super.draw();
+            super.drawSuper();
         }
 
-
         setPosition(x, y);
+
+        super.drawMembers();
     }
 
     private function __setSize(Width:Float, Height:Float) {

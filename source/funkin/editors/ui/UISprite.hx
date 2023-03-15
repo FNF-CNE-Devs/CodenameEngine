@@ -34,7 +34,16 @@ class UISprite extends FlxSprite {
     }
 
     public override function draw() {
+        drawSuper();
+        drawMembers();
+    }
+
+    public function drawSuper() {
         super.draw();
+        __lastDrawCameras = [for(c in cameras) c];
+    }
+
+    public function drawMembers() {
         
         @:privateAccess {
             __oldDefCams = FlxCamera._defaultCameras;
@@ -45,9 +54,7 @@ class UISprite extends FlxSprite {
             
             FlxCamera._defaultCameras = __oldDefCams;
         }
-        __lastDrawCameras = [for(c in cameras) c];
     }
-
     
     public override function destroy() {
         super.destroy();
