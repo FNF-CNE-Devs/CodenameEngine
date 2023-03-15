@@ -1,6 +1,5 @@
 package funkin.mods;
 
-import funkin.options.Options;
 import funkin.menus.TitleState;
 import funkin.system.Main;
 import openfl.utils.AssetCache;

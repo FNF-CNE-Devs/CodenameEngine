@@ -6,6 +6,7 @@ import funkin.system.MusicBeatGroup;
 import funkin.system.FunkinSprite;
 import funkin.utils.*;
 import funkin.system.Logs;
+import funkin.options.Options;
 import funkin.game.PlayState;
 import funkin.scripting.EventManager;
 

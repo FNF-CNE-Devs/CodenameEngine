@@ -8,7 +8,6 @@ import funkin.windows.WindowsAPI;
 import funkin.menus.BetaWarningState;
 import funkin.menus.TitleState;
 import funkin.game.Highscore;
-import funkin.options.Options;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;

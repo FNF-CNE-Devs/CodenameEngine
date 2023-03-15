@@ -33,6 +33,12 @@ class Options
 	public static var lastLoadedMod:String = null;
 
 	/**
+	 * EDITORS SETTINGS
+	 */
+	public static var editorSFX:Bool = true;
+	public static var resizableEditors:Bool = true;
+
+	/**
 	 * PLAYER 1 CONTROLS
 	 */
 	public static var P1_NOTE_LEFT:Array<FlxKey> = [A];

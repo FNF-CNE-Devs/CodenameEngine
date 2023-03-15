@@ -1,7 +1,6 @@
 package funkin.game;
 
 import flixel.math.FlxPoint;
-import funkin.options.Options;
 import funkin.system.Conductor;
 
 class Strum extends FlxSprite {

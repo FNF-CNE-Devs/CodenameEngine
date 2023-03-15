@@ -2,7 +2,6 @@ package funkin.options.keybinds;
 
 import flixel.effects.FlxFlicker;
 import funkin.system.Controls;
-import funkin.options.Options;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;

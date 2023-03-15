@@ -5,7 +5,7 @@ import funkin.editors.ui.*;
 class UIDebugState extends UIState {
     public override function create() {
         super.create();
-        var bg = new FlxSprite().makeGraphic(0xFF888888);
+        var bg = new FlxSprite().makeGraphic(1, 1, 0xFF888888);
         bg.scale.set(FlxG.width, FlxG.height);
         bg.updateHitbox();
         bg.scrollFactor.set();

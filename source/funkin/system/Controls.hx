@@ -1,6 +1,5 @@
 package funkin.system;
 
-import funkin.options.Options;
 import flixel.input.FlxInput;
 import flixel.input.actions.FlxAction;
 import flixel.input.actions.FlxActionInput;

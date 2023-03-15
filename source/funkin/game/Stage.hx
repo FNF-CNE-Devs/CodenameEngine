@@ -1,6 +1,5 @@
 package funkin.game;
 
-import funkin.options.Options;
 import flixel.FlxState;
 import haxe.xml.Access;
 import funkin.interfaces.IBeatReceiver;

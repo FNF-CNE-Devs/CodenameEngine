@@ -1,6 +1,5 @@
 package funkin.updating;
 
-import funkin.options.Options;
 import sys.FileSystem;
 import haxe.io.Path;
 import funkin.github.GitHubRelease;

@@ -18,7 +18,7 @@ class UICheckbox extends UISprite {
 
         this.checked = checked;
 
-        field = new FunkinText(x, y, text, w);
+        field = new FunkinText(x, y, w, text, 14, false);
         check = new FlxSprite().loadGraphicFromSprite(this);
         check.animation.play("checkmark");
 
@@ -45,8 +45,8 @@ class UICheckbox extends UISprite {
 
     public inline function updatePositions() {
         check.cameras = field.cameras = cameras;
-        
-        field.setPosition(x + 30, y);
+
+        field.setPosition(x + 25, y);
         check.setPosition(x, y);
     }
 
@@ -63,6 +63,9 @@ class UICheckbox extends UISprite {
             // clicked
             checked = !checked;
             check.scale.set(1.25, 1.25);
+
+            if (Options.editorSFX)
+                CoolUtil.playMenuSFX(checked ? CHECKED : UNCHECKED, 0.5);
         }
     }
 

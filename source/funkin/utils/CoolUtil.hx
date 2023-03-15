@@ -193,6 +193,8 @@ class CoolUtil
 			case CONFIRM:	'menu/confirm';
 			case CANCEL:	'menu/cancel';
 			case SCROLL:	'menu/scroll';
+			case CHECKED:	'menu/checkboxChecked';
+			case UNCHECKED:	'menu/checkboxUnchecked';
 			default: 		'menu/scroll';
 		}), volume);
 	}
@@ -413,4 +415,6 @@ enum abstract CoolSfx(Int) from Int {
 	var SCROLL = 0;
 	var CONFIRM = 1;
 	var CANCEL = 2;
+	var CHECKED = 3;
+	var UNCHECKED = 4;
 }

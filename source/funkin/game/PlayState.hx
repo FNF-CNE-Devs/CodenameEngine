@@ -7,7 +7,6 @@ import funkin.scripting.DummyScript;
 import funkin.menus.StoryMenuState.WeekData;
 import funkin.ui.FunkinText;
 import flixel.group.FlxSpriteGroup;
-import funkin.options.Options;
 import funkin.scripting.Script;
 import flixel.util.FlxDestroyUtil;
 import funkin.scripting.ScriptPack;
