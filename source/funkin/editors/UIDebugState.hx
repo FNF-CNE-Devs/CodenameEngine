@@ -15,6 +15,6 @@ class UIDebugState extends UIState {
         add(new UICheckbox(10, 40, "Test checked", true));
         add(new UIButton(10, 70, "Test button", function() {
             trace("Hello, World!");
-        }, 120, 20));
+        }, 120, 32));
     }
 }

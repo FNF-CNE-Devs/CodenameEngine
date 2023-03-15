@@ -44,7 +44,6 @@ class UISprite extends FlxSprite {
     }
 
     public function drawMembers() {
-        
         @:privateAccess {
             __oldDefCams = FlxCamera._defaultCameras;
             FlxCamera._defaultCameras = cameras;
