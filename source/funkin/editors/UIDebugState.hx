@@ -16,5 +16,21 @@ class UIDebugState extends UIState {
         add(new UIButton(10, 70, "Test button", function() {
             trace("Hello, World!");
         }, 120, 32));
+        add(new UIButton(10, 110, "Warning test", function() {
+            openSubState(new UIWarningSubstate("Test", "This is a test message", [
+                {
+                    label: "Alt. Choice",
+                    onClick: function(t) {
+
+                    }
+                },
+                {
+                    label: "OK",
+                    onClick: function(t) {
+
+                    }
+                }
+            ]));
+        }, 120, 32));
     }
 }

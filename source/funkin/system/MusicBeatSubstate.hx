@@ -243,4 +243,18 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 		super.onFocusLost();
 		call("onFocusLost");
 	}
+
+	public var parent:FlxState;
+
+	public function onSubstateOpen() {
+		
+	}
+
+	public override function resetSubState() {
+		super.resetSubState();
+		if (subState != null && subState is MusicBeatSubstate) {
+			cast(subState, MusicBeatSubstate).parent = this;
+			cast(subState, MusicBeatSubstate).onSubstateOpen();
+		}
+	}
 }

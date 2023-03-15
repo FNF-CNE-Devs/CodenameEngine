@@ -242,4 +242,12 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 		super.onFocusLost();
 		call("onFocusLost");
 	}
+
+	public override function resetSubState() {
+		super.resetSubState();
+		if (subState != null && subState is MusicBeatSubstate) {
+			cast(subState, MusicBeatSubstate).parent = this;
+			cast(subState, MusicBeatSubstate).onSubstateOpen();
+		}
+	}
 }
