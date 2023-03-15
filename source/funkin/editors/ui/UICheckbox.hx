@@ -3,13 +3,12 @@ package funkin.editors.ui;
 import funkin.ui.FunkinText;
 
 class UICheckbox extends UISprite {
+    public var checked:Bool = false;
+    public var onChecked:Bool->Void = null;
+
     public var field:FunkinText;
     public var check:FlxSprite;
 
-    public var checked:Bool = false;
-
-    var hovered:Bool = false;
-    var pressed:Bool = false;
     public function new(x:Float, y:Float, text:String, checked:Bool = false, w:Int = 0) {
         super(x, y);
         loadGraphic(Paths.image('editors/ui/checkbox'), true, 20, 20);
@@ -29,8 +28,6 @@ class UICheckbox extends UISprite {
     public override function update(elapsed:Float) {
         // ANIMATION HANDLING
         animation.play(hovered ? (pressed ? "pressed" : "hover") : "normal");
-        hovered = false;
-        pressed = false;
 
         // CHECKMARK HANDLING
         check.alpha = checked ? 1 : 0;
@@ -56,9 +53,7 @@ class UICheckbox extends UISprite {
     }
 
     public override function onHovered() {
-        hovered = true;
-        if (FlxG.mouse.pressed)
-            pressed = true;
+        super.onHovered();
         if (FlxG.mouse.justReleased) {
             // clicked
             checked = !checked;
@@ -66,6 +61,8 @@ class UICheckbox extends UISprite {
 
             if (Options.editorSFX)
                 CoolUtil.playMenuSFX(checked ? CHECKED : UNCHECKED, 0.5);
+            if (onChecked != null)
+                onChecked(checked);
         }
     }
 

@@ -28,7 +28,6 @@ class UIState extends MusicBeatState {
         updateRectButtonHandler(spr, spr.__rect, buttonHandler);
     }
 
-
     public function updateRectButtonHandler(spr:UISprite, rect:FlxRect, buttonHandler:Void->Void) {
         var pos = FlxG.mouse.getScreenPosition(camera);
         for(camera in spr.__lastDrawCameras) {

@@ -12,6 +12,9 @@ class UISprite extends FlxSprite {
 
     private var __oldDefCams:Array<FlxCamera>;
 
+    var hovered:Bool = false;
+    var pressed:Bool = false;
+
     public override function update(elapsed:Float) {
         super.update(elapsed);
         updateButton();
@@ -25,6 +28,9 @@ class UISprite extends FlxSprite {
 
             FlxCamera._defaultCameras = __oldDefCams;
         }
+        
+        hovered = false;
+        pressed = false;
     }
 
     public override function draw() {
@@ -56,6 +62,8 @@ class UISprite extends FlxSprite {
      * Called whenever the sprite is being hovered by the mouse.
      */
     public function onHovered() {
-
+        hovered = true;
+        if (FlxG.mouse.pressed)
+            pressed = true;
     }
 }
