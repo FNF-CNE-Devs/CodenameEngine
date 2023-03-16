@@ -30,9 +30,13 @@ class UIButton extends UISpliceSprite {
             callback();
     }
 
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+        field.follow(this, 0, (bHeight - field.height) / 2);
+    }
+
     public override function draw() {
         framesOffset = hovered ? (pressed ? 18 : 9) : 0;
-        field.follow(this, x, (bHeight - field.height) / 2);
         super.draw();
     }
 }

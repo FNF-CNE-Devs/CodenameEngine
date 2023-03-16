@@ -46,8 +46,8 @@ class UIState extends MusicBeatState {
         }
     }
 
-    public override function update(elapsed:Float) {
-        super.update(elapsed);
+    public override function tryUpdate(elapsed:Float) {
+        super.tryUpdate(elapsed);
 
         if (buttonHandler != null) {
             buttonHandler();

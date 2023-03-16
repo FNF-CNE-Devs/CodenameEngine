@@ -20,6 +20,6 @@ void main() {
         }
     }
     */
-    color /= steps * stepsInside * 1.25;
+    color /= steps * stepsInside;
     gl_FragColor = color;
 }

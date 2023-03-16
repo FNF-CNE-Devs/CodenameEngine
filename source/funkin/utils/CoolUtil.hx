@@ -410,6 +410,9 @@ class CoolUtil
 		FlxG.openURL(url);
 		#end
 	}
+
+	public static inline function maxInt(p1:Int, p2:Int)
+		return p1 < p2 ? p2 : p1;
 }
 
 enum abstract CoolSfx(Int) from Int {

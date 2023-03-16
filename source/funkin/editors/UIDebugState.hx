@@ -21,7 +21,7 @@ class UIDebugState extends UIState {
                 {
                     label: "Alt. Choice",
                     onClick: function(t) {
-
+                        trace("Alt. Choice clicked!");
                     }
                 },
                 {
@@ -32,5 +32,51 @@ class UIDebugState extends UIState {
                 }
             ]));
         }, 120, 32));
+        add(new UIButton(10, 150, "Warning test (Overflowing)", function() {
+            openSubState(new UIWarningSubstate("Test", "This is a test message", [
+                {
+                    label: "Alt. Choice",
+                    onClick: function(t) {
+                        trace("Alt. Choice clicked!");
+                    }
+                },
+                {
+                    label: "OK",
+                    onClick: function(t) {}
+                },
+                {
+                    label: "1",
+                    onClick: function(t) {}
+                },
+                {
+                    label: "2",
+                    onClick: function(t) {}
+                },
+                {
+                    label: "3",
+                    onClick: function(t) {}
+                },
+                {
+                    label: "4",
+                    onClick: function(t) {}
+                },
+                {
+                    label: "5",
+                    onClick: function(t) {}
+                },
+                {
+                    label: "6",
+                    onClick: function(t) {}
+                },
+                {
+                    label: "7",
+                    onClick: function(t) {}
+                },
+                {
+                    label: "8",
+                    onClick: function(t) {}
+                }
+            ]));
+        }, 120, 64));
     }
 }

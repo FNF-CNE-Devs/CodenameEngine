@@ -15,6 +15,8 @@ class UIWarningSubstate extends MusicBeatSubstate {
     var titleSpr:UIText;
     var messageSpr:UIText;
 
+    var warnCam:FlxCamera;
+
     public override function onSubstateOpen() {
         super.onSubstateOpen();
         parent.persistentUpdate = false;
@@ -27,13 +29,13 @@ class UIWarningSubstate extends MusicBeatSubstate {
             c.addShader(blurShader);
         }
 
-        camera = new FlxCamera();
-        camera.bgColor = 0;
-        camera.alpha = 0;
-        camera.zoom = 0.1;
-        FlxG.cameras.add(camera, false);
+        camera = warnCam = new FlxCamera();
+        warnCam.bgColor = 0;
+        warnCam.alpha = 0;
+        warnCam.zoom = 0.1;
+        FlxG.cameras.add(warnCam, false);
 
-        var spr = new UISpliceSprite(0, 0, 560, 280, "editors/ui/warning-popup");
+        var spr = new UISpliceSprite(0, 0, CoolUtil.maxInt(560, 30 + (170 * buttons.length)), 280, "editors/ui/warning-popup");
         spr.x = (FlxG.width - spr.bWidth) / 2;
         spr.y = (FlxG.height - spr.bHeight) / 2;
         add(spr);
@@ -43,6 +45,15 @@ class UIWarningSubstate extends MusicBeatSubstate {
         titleSpr.y = spr.y + ((30 - titleSpr.height) / 2);
         
         add(messageSpr = new UIText(spr.x + 10, spr.y + 40, spr.bWidth - 20, message, 15, 0xFF000000));
+
+        var xPos = (FlxG.width - (30 + (170 * buttons.length))) / 2;
+        for(k=>b in buttons) {
+            var button = new UIButton(xPos + 20 + (170 * k), spr.y + spr.bHeight - 40, b.label, function() {
+                b.onClick(this);
+                close();
+            }, 160, 30);
+            add(button);
+        }
 
         FlxTween.tween(camera, {alpha: 1}, 0.25, {ease: FlxEase.cubeOut});
         FlxTween.tween(camera, {zoom: 1}, 0.66, {ease: FlxEase.elasticOut});
@@ -55,7 +66,7 @@ class UIWarningSubstate extends MusicBeatSubstate {
         for(e in camShaders)
             e.removeShader(blurShader);
 
-        FlxG.cameras.remove(camera);
+        FlxG.cameras.remove(warnCam);
     }
 
     public function new(title:String, message:String, buttons:Array<WarningButton>) {

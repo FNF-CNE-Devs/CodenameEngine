@@ -4,6 +4,7 @@ import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxRect;
 
 @:allow(funkin.editors.ui.UIState)
+@:allow(funkin.editors.ui.UIUtil)
 class UISprite extends FlxSprite {
     public var members:Array<FlxBasic> = [];
 
