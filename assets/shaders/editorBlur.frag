@@ -13,13 +13,7 @@ void main() {
             color += flixel_texture2D(bitmap, openfl_TextureCoordv + vec2(strength * (inside / stepsInside) * cos(fi / fsteps * (PI * 2.0)), strength * (inside / stepsInside) * sin(fi / fsteps * (PI * 2.0))));
         }
     }
-    /*
-    for(int x = -steps; x < steps+1; x++) {
-        for(int y = -steps; y < steps+1; y++) {
-            color += flixel_texture2D(bitmap, openfl_TextureCoordv + vec2(strength / steps * x, strength / steps * y));
-        }
-    }
-    */
+    
     color /= steps * stepsInside;
     gl_FragColor = color;
 }
