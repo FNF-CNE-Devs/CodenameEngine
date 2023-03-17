@@ -88,19 +88,22 @@ class Stage extends FlxBasic implements IBeatReceiver {
                     case "boyfriend" | "bf":
                         addCharPos("boyfriend", node, {
                             x: 770,
-                            y: 100
+                            y: 100,
+                            flip: true
                         });
                         null;
                     case "girlfriend" | "gf":
                         addCharPos("girlfriend", node, {
                             x: 400,
-                            y: 130
+                            y: 130,
+                            flip: false
                         });
                         null;
                     case "dad" | "opponent":
                         addCharPos("dad", node, {
                             x: 100,
-                            y: 100
+                            y: 100,
+                            flip: false
                         });
                         null;
                     case "character":
@@ -127,19 +130,22 @@ class Stage extends FlxBasic implements IBeatReceiver {
         if (characterPoses["girlfriend"] == null)
             addCharPos("girlfriend", null, {
                 x: 400,
-                y: 130
+                y: 130,
+                flip: false
             });
 
         if (characterPoses["dad"] == null)
             addCharPos("dad", null, {
                 x: 100,
-                y: 100
+                y: 100,
+                flip: false
             });
 
         if (characterPoses["boyfriend"] == null)
             addCharPos("boyfriend", null, {
                 x: 770,
-                y: 100
+                y: 100,
+                flip: true
             });
 
         if (PlayState.instance == null) return;
@@ -161,6 +167,17 @@ class Stage extends FlxBasic implements IBeatReceiver {
             dummy: dummyBasic
         };
 
+    }
+
+    public function isCharFlipped(posName:String, def:Bool = false) {
+        if (characterPoses[posName] != null) {
+            var charPos = characterPoses[posName];
+            if (charPos.node != null && charPos.node.has.flip)
+                return charPos.node.att.flip == "true";
+            if (charPos.nonXMLInfo != null)
+                return characterPoses[posName].nonXMLInfo.flip;
+        }
+        return def;
     }
 
     public function applyCharStuff(char:Character, posName:String) {
@@ -214,4 +231,5 @@ typedef StageCharPos = {
 typedef StageCharPosInfo = {
     var x:Float;
     var y:Float;
+    var flip:Bool;
 }

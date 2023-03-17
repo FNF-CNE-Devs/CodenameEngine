@@ -33,7 +33,7 @@ typedef ChartMetaData = {
 
 typedef ChartStrumLine = {
     var characters:Array<String>;
-    var opponent:Bool;
+    var type:ChartStrumLineType;
     var notes:Array<ChartNote>;
     var position:String;
     var ?strumLinePos:Float; // 0.25 = default opponent pos, 0.75 = default boyfriend pos
@@ -53,6 +53,21 @@ typedef ChartEvent = {
     var params:Array<Dynamic>;
 }
 
+@:enum
+abstract ChartStrumLineType(Int) from Int to Int {
+    /**
+     * STRUMLINE IS MARKED AS OPPONENT - WILL BE PLAYED BY CPU, OR PLAYED BY PLAYER IF OPPONENT MODE IS ON
+     */
+    var OPPONENT = 0;
+    /**
+     * STRUMLINE IS MARKED AS PLAYER - WILL BE PLAYED AS PLAYER, OR PLAYED AS CPU IF OPPONENT MODE IS ON
+     */
+    var PLAYER = 1;
+    /**
+     * STRUMLINE IS MARKED AS ADDITIONAL - WILL BE PLAYED AS CPU EVEN IF OPPONENT MODE IS ENABLED
+     */
+    var ADDITIONAL = 2;
+}
 @:enum
 abstract ChartEventType(Int) from Int to Int {
     /**

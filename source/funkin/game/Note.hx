@@ -28,8 +28,6 @@ class Note extends FlxSprite
 	}
 
 	private function get_mustPress():Bool {
-		// if (PlayState.instance != null)
-		// 	return PlayState.instance.players[strumLineID] != null && !PlayState.instance.players[strumLineID].cpu;
 		return false;
 	}
 	public var noteData:Int = 0;
@@ -111,7 +109,7 @@ class Note extends FlxSprite
 		this.noteData = noteData.id.getDefault(0);
 
 		var customType = Paths.image('game/notes/${this.noteType}');
-		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, noteTypeID, PlayState.instance.players.indexOf(strumLine), mustPress, Assets.exists(customType) ? 'game/notes/${this.noteType}' : 'game/notes/default', 0.7, animSuffix);
+		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, noteTypeID, PlayState.instance.strumLines.indexOf(strumLine), mustPress, Assets.exists(customType) ? 'game/notes/${this.noteType}' : 'game/notes/default', 0.7, animSuffix);
 
 		if (PlayState.instance != null)
 			event = PlayState.instance.scripts.event("onNoteCreation", event);

@@ -17,20 +17,20 @@ class BaseGameParser {
 
         result.strumLines.push({
             characters: [data.player2],
-            opponent: true,
+            type: 0,
             position: "dad",
             notes: []
         });
         result.strumLines.push({
             characters: [data.player1],
-            opponent: false,
+            type: 1,
             position: "boyfriend",
             notes: []
         });
         if (data.gf != "none") {
             result.strumLines.push({
                 characters: [data.gf != null ? data.gf : "gf"],
-                opponent: true,
+                type: 2,
                 position: "girlfriend",
                 notes: [],
                 visible: false,

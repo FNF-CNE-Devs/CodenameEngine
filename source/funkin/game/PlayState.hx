@@ -80,7 +80,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Array of all the players in the stage.
 	 */
-	public var players:Array<StrumLine> = [];
+	public var strumLines:Array<StrumLine> = [];
 
 	/**
 	 * Game Over Song. (assets/music/gameOver.ogg)
@@ -573,19 +573,23 @@ class PlayState extends MusicBeatState
 			if (strumLine == null) continue;
 
 			var chars = [];
-			var charPosName:String = strumLine.position == null ? (strumLine.opponent ? "dad" : "boyfriend") : strumLine.position;
+			var charPosName:String = strumLine.position == null ? (switch(strumLine.type) {
+				case 0: "dad";
+				case 1: "boyfriend";
+				case 2: "girlfriend";
+			}) : strumLine.position;
 			if (strumLine.characters != null) for(k=>charName in strumLine.characters) {
-				var char = new Character(0, 0, charName, !strumLine.opponent);
+				var char = new Character(0, 0, charName, stage.isCharFlipped(charPosName, strumLine.type == 1));
 				stage.applyCharStuff(char, charPosName);
 				char.x += k * 50;
 				chars.push(char);
 			}
 
-			var strOffset:Float = strumLine.strumLinePos == null ? (strumLine.opponent ? 0.25 : 0.75) : strumLine.strumLinePos;
-			var strLine = new StrumLine(chars, strOffset, !coopMode && (strumLine.opponent != opponentMode), strumLine.opponent, coopMode ? (strumLine.opponent ? controlsP2 : controlsP1) : controls);
+			var strOffset:Float = strumLine.strumLinePos == null ? (strumLine.type == 1 ? 0.75 : 0.25) : strumLine.strumLinePos;
+			var strLine = new StrumLine(chars, strOffset, !coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode)), strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls);
 			strLine.cameras = [camHUD];
 			strLine.data = strumLine;
-			players.push(strLine);
+			strumLines.push(strLine);
 			if (strumLine.visible != false)
 				add(strLine);
 		}
@@ -599,7 +603,7 @@ class PlayState extends MusicBeatState
 
 		// CAMERA & HUD INITIALISATION
 		#if REGION
-		for(str in players)
+		for(str in strumLines)
 			str.generate(str.data);
 
 		camFollow = new FlxObject(0, 0, 2, 2);
@@ -876,7 +880,7 @@ class PlayState extends MusicBeatState
 
 	@:dox(hide) 
 	private inline function generateStrums():Void 
-		for(p in players)
+		for(p in strumLines)
 			p.generateStrums();
 
 	@:dox(hide) 
@@ -1077,11 +1081,11 @@ class PlayState extends MusicBeatState
 		while(events.length > 0 && events[0].time <= Conductor.songPosition)
 			executeEvent(events.shift());
 
-		if (generatedMusic && players[curCameraTarget] != null)
+		if (generatedMusic && strumLines[curCameraTarget] != null)
 		{
 			var pos = FlxPoint.get();
 			var r = 0;
-			for(c in players[curCameraTarget].characters) {
+			for(c in strumLines[curCameraTarget].characters) {
 				if (c == null) continue;
 				var cpos = c.getCameraPosition();
 				pos.x += cpos.x;
@@ -1093,7 +1097,7 @@ class PlayState extends MusicBeatState
 				pos.x /= r;
 				pos.y /= r;
 
-				var event = scripts.event("onCameraMove", EventManager.get(CamMoveEvent).recycle(pos, players[curCameraTarget], r));
+				var event = scripts.event("onCameraMove", EventManager.get(CamMoveEvent).recycle(pos, strumLines[curCameraTarget], r));
 				if (!event.cancelled)
 					camFollow.setPosition(pos.x, pos.y);
 			}
@@ -1265,7 +1269,7 @@ class PlayState extends MusicBeatState
 			__updateNote_event = EventManager.get(NoteUpdateEvent);
 		}
 
-		for(id=>p in players) {
+		for(id=>p in strumLines) {
 			p.updateNotes();
 
 			if (p.cpu) continue;
@@ -1336,11 +1340,12 @@ class PlayState extends MusicBeatState
 	 */
 	public function noteMiss(strumLine:StrumLine, note:Note, ?direction:Int, ?player:Int):Void
 	{
-		var playerID:Null<Int> = note == null ? player : players.indexOf(strumLine);
+		var playerID:Null<Int> = note == null ? player : strumLines.indexOf(strumLine);
 		var directionID:Null<Int> = note == null ? direction : note.strumID;
 		if (playerID == null || directionID == null) return;
 
-		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, players[playerID].characters, true, note != null ? note.noteType : null, "", "", "", directionID, -10, 0, -0.04, "shit"));
+		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, strumLines[playerID].characters, true, note != null ? note.noteType : null, "", "", "", directionID, -10, 0, -0.04, "shit"));
+		strumLine.onMiss.dispatch(event);
 		if (event.cancelled) return;
 
 
@@ -1422,6 +1427,7 @@ class PlayState extends MusicBeatState
 			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, strumLine.characters, true, note.noteType, note.animSuffix, "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, Options.splashesEnabled && !note.isSustainNote && daRating == "sick"));
 		else
 			event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, strumLine.characters, false, note.noteType, note.animSuffix, "game/score/", "", note.strumID, 0, null, 0, daRating, false));
+		strumLine.onHit.dispatch(event);
 		scripts.event("onNoteHit", event);
 
 		if (!event.cancelled) {
@@ -1584,44 +1590,44 @@ class PlayState extends MusicBeatState
 		return cpuStrums = s;
 
 	private function get_boyfriend():Character {
-		if (players != null && players[1] != null)
-			return players[1].characters[0];
+		if (strumLines != null && strumLines[1] != null)
+			return strumLines[1].characters[0];
 		return null;
 	}
 	private function set_boyfriend(bf:Character):Character {
-		if (players != null && players[1] != null)
-			players[1].characters = [bf];
+		if (strumLines != null && strumLines[1] != null)
+			strumLines[1].characters = [bf];
 		return bf;
 	}
 	private function get_dad():Character {
-		if (players != null && players[0] != null)
-			return players[0].characters[0];
+		if (strumLines != null && strumLines[0] != null)
+			return strumLines[0].characters[0];
 		return null;
 	}
 	private function set_dad(dad:Character):Character {
-		if (players != null && players[0] != null)
-			players[0].characters = [dad];
+		if (strumLines != null && strumLines[0] != null)
+			strumLines[0].characters = [dad];
 		return dad;
 	}
 	private function get_gf():Character {
-		if (players != null && players[2] != null)
-			return players[2].characters[0];
+		if (strumLines != null && strumLines[2] != null)
+			return strumLines[2].characters[0];
 		return null;
 	}
 	private function set_gf(gf:Character):Character {
-		if (players != null && players[2] != null)
-			players[2].characters = [gf];
+		if (strumLines != null && strumLines[2] != null)
+			strumLines[2].characters = [gf];
 		return gf;
 	}
 	private inline function get_cpuStrums():StrumLine
-		return players[0];
+		return strumLines[0];
 	private inline function get_playerStrums():StrumLine
-		return players[1];
+		return strumLines[1];
 	private inline function get_gfSpeed():Int
-		return (players[2] != null && players[2].characters[0] != null) ? players[2].characters[0].danceInterval : 1;
+		return (strumLines[2] != null && strumLines[2].characters[0] != null) ? strumLines[2].characters[0].danceInterval : 1;
 	private inline function set_gfSpeed(v:Int):Int {
-		if (players[2] != null && players[2].characters[0] != null)
-			players[2].characters[0].danceInterval = v;
+		if (strumLines[2] != null && strumLines[2].characters[0] != null)
+			strumLines[2].characters[0].danceInterval = v;
 		return v;
 	}
 }

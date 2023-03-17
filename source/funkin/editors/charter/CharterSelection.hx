@@ -13,7 +13,7 @@ class CharterSelection extends EditorTreeMenu {
 
         super.create();
 
-        freeplayList = FreeplaySonglist.get();
+        freeplayList = FreeplaySonglist.get(false);
 
         main = new OptionsScreen("Chart Editor", "Select a song to modify the charts from.", [
             for(s in freeplayList.songs) new IconOption(s.name, "Press ACCEPT to choose a difficulty to edit.", s.icon, function() {

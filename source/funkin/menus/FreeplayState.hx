@@ -387,11 +387,10 @@ class FreeplaySonglist {
 
     public function new() {}
 
-	public function getSongsFromSource(source:funkin.system.AssetsLibraryList.AssetSource) {
+	public function getSongsFromSource(source:funkin.system.AssetsLibraryList.AssetSource, useTxt:Bool = true) {
 		var path:String = Paths.txt('freeplaySonglist');
 		var songsFound:Array<String> = [];
-		if (Paths.assetsTree.existsSpecific(path, "TEXT", source)) {
-			var trim = "";
+		if (useTxt && Paths.assetsTree.existsSpecific(path, "TEXT", source)) {
 			songsFound = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 		} else {
 			songsFound = Paths.getFolderDirectories('songs', false, source);
@@ -405,11 +404,11 @@ class FreeplaySonglist {
 		return true;
 	}
 
-    public static function get() {
+    public static function get(useTxt:Bool = true) {
         var songList = new FreeplaySonglist();
 
-		if (songList.getSongsFromSource(MODS))
-			songList.getSongsFromSource(SOURCE);
+		if (songList.getSongsFromSource(MODS, useTxt))
+			songList.getSongsFromSource(SOURCE, useTxt);
 
         return songList;
     }

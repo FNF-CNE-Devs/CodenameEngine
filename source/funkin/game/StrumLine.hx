@@ -1,14 +1,32 @@
 package funkin.game;
 
-import funkin.scripting.events.SimpleNoteEvent;
+import flixel.util.FlxSignal.FlxTypedSignal;
+
+import funkin.scripting.events.*;
 import funkin.system.Conductor;
-import funkin.chart.Chart;
 import funkin.chart.ChartData;
 import funkin.system.Controls;
-import funkin.scripting.events.StrumCreationEvent;
 import flixel.tweens.FlxTween;
 
 class StrumLine extends FlxTypedGroup<Strum> {
+    /**
+     * Signal that triggers whenever a note is hit. Similar to onPlayerHit and onDadHit, except strumline specific.
+     * To add a listener, do
+     * `strumLine.onHit.add(function(e:NoteHitEvent) {});`
+     */
+    public var onHit:FlxTypedSignal<NoteHitEvent->Void> = new FlxTypedSignal<NoteHitEvent->Void>();
+    /**
+     * Signal that triggers whenever a note is missed. Similar to onPlayerMiss and onDadMiss, except strumline specific.
+     * To add a listener, do
+     * `strumLine.onMiss.add(function(e:NoteHitEvent) {});`
+     */
+    public var onMiss:FlxTypedSignal<NoteHitEvent->Void> = new FlxTypedSignal<NoteHitEvent->Void>();
+    /**
+     * Signal that triggers whenever a note is being updated. Similar to onNoteUpdate, except strumline specific.
+     * To add a listener, do
+     * `strumLine.onNoteUpdate.add(function(e:NoteUpdateEvent) {});`
+     */
+    public var onNoteUpdate:FlxTypedSignal<NoteUpdateEvent->Void> = new FlxTypedSignal<NoteUpdateEvent->Void>();
     /**
      * Array containing all of the characters "attached" to those strums.
      */
@@ -101,6 +119,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
             }
         }
         PlayState.instance.scripts.event("onNoteUpdate", PlayState.instance.__updateNote_event.recycle(daNote, FlxG.elapsed, __updateNote_strum));
+        onNoteUpdate.dispatch(PlayState.instance.__updateNote_event);
         if (PlayState.instance.__updateNote_event.cancelled) return;
 
         if (PlayState.instance.__updateNote_event.__updateHitWindow) {
@@ -141,7 +160,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
             var babyArrow:Strum = new Strum((FlxG.width * strumOffset) + (Note.swagWidth * (i - 2)), PlayState.instance.strumLine.y);
             babyArrow.ID = i;
 
-            var event = PlayState.instance.scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, PlayState.instance.players.indexOf(this), i));
+            var event = PlayState.instance.scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, PlayState.instance.strumLines.indexOf(this), i));
 
             if (!event.cancelled) {
                 babyArrow.frames = Paths.getFrames(event.sprite);
