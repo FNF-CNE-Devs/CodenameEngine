@@ -34,6 +34,11 @@ class UIContextMenu extends MusicBeatSubstate {
 
         contextCam.alpha = CoolUtil.fpsLerp(contextCam.alpha, 1, 0.25);
     }
+
+    public override function destroy() {
+        super.destroy();
+        FlxG.cameras.remove(contextCam);
+    }
 }
 
 typedef UIContextMenuOption = {

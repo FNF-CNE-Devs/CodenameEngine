@@ -20,6 +20,10 @@ class UISprite extends FlxSprite {
     public var hoverCallback:Void->Void = null;
 
     public override function update(elapsed:Float) {
+        hovered = false;
+        pressed = false;
+        hoveredByChild = false;
+
         super.update(elapsed);
         updateButton();
 
@@ -33,9 +37,6 @@ class UISprite extends FlxSprite {
             FlxCamera._defaultCameras = __oldDefCams;
         }
         
-        hovered = false;
-        pressed = false;
-        hoveredByChild = false;
     }
 
     public override function draw() {

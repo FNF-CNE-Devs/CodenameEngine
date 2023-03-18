@@ -12,7 +12,10 @@ vec4 getColor(vec2 pos) {
     return textureCam(bitmap, pos);
 }
 void main() {
+    return;
     vec2 camPos = getCamPos(openfl_TextureCoordv);
+    if (camPos.x < 0 || camPos.x > 1 || camPos.y < 0 || camPos.y > 1)
+        return;
 
     vec4 color = getColor(camPos);
     float fsteps = steps;
