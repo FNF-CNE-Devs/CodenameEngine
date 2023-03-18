@@ -24,6 +24,8 @@ class UIWarningSubstate extends MusicBeatSubstate {
     }
 
     public override function create() {
+        UIUtil.focusedUI = [];
+
         for(c in FlxG.cameras.list) {
             camShaders.push(c);
             c.addShader(blurShader);
@@ -53,6 +55,8 @@ class UIWarningSubstate extends MusicBeatSubstate {
                 close();
             }, 160, 30);
             add(button);
+
+            UIUtil.focusedUI.push(button);
         }
 
         FlxTween.tween(camera, {alpha: 1}, 0.25, {ease: FlxEase.cubeOut});
@@ -62,6 +66,7 @@ class UIWarningSubstate extends MusicBeatSubstate {
     }
 
     public override function destroy() {
+        UIUtil.focusedUI = UIState.state.uiElements;
         super.destroy();
         for(e in camShaders)
             e.removeShader(blurShader);

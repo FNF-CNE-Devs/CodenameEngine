@@ -1,5 +1,6 @@
 package funkin.editors.ui;
 
+import openfl.ui.Mouse;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -7,6 +8,7 @@ import flixel.math.FlxRect;
 class UIState extends MusicBeatState {
     public static var state(get, null):UIState;
 
+    public var uiElements:Array<UISprite> = [];
     public var buttonHandler:Void->Void = null;
 
     private var __rect:FlxRect;
@@ -19,6 +21,11 @@ class UIState extends MusicBeatState {
         __rect = new FlxRect();
         __mousePos = FlxPoint.get();
         super.create();
+
+        memberAdded.add((basic:FlxBasic) -> {
+            if (basic is UISprite) uiElements.push(cast basic);
+            UIUtil.focusedUI = uiElements;
+        });
     }
 
     public function updateButtonHandler(spr:UISprite, buttonHandler:Void->Void) {
@@ -56,6 +63,8 @@ class UIState extends MusicBeatState {
             buttonHandler();
             buttonHandler = null;
         }
+
+        UIUtil.updateCursor();
     }
 
     public override function destroy() {
@@ -70,8 +79,6 @@ class UIState extends MusicBeatState {
 
         state.persistentDraw = true;
         state.persistentUpdate = true;
-
-        
 
         openSubState(new UIContextMenu(options, x.getDefault(__mousePos.x), y.getDefault(__mousePos.y)));
     }
