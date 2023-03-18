@@ -16,6 +16,8 @@ class UIButton extends UISpliceSprite {
         field.borderSize = 1;
         field.alignment = CENTER;
         field.fieldWidth = w;
+        
+        cursor = BUTTON;
     }
 
     public override function resize(w:Int, h:Int) {

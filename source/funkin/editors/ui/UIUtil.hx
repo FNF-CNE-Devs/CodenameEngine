@@ -8,13 +8,4 @@ class UIUtil {
         spr.setPosition(target.x + x, target.y + y);
         spr.scrollFactor.set(target.scrollFactor.x, target.scrollFactor.y);
     }
-
-    public static var focusedUI:Array<UISprite> = [];
-
-    public static function updateCursor() {
-        for (element in focusedUI)
-            if (element.hovered) {Mouse.cursor = BUTTON; return;}
-        
-        Mouse.cursor = ARROW;
-    }
 }

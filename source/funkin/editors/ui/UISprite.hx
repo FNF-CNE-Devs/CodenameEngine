@@ -2,6 +2,7 @@ package funkin.editors.ui;
 
 import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxRect;
+import openfl.ui.MouseCursor;
 
 @:allow(funkin.editors.ui.UIState)
 @:allow(funkin.editors.ui.UIUtil)
@@ -18,6 +19,8 @@ class UISprite extends FlxSprite {
     public var pressed:Bool = false;
 
     public var hoverCallback:Void->Void = null;
+
+    public var cursor:MouseCursor = ARROW;
 
     public override function update(elapsed:Float) {
         hovered = false;

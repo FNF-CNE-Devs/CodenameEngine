@@ -8,8 +8,8 @@ import flixel.math.FlxRect;
 class UIState extends MusicBeatState {
     public static var state(get, null):UIState;
 
-    public var uiElements:Array<UISprite> = [];
     public var buttonHandler:Void->Void = null;
+    public var hoveredSprite:UISprite = null;
 
     private var __rect:FlxRect;
     private var __mousePos:FlxPoint;
@@ -21,11 +21,6 @@ class UIState extends MusicBeatState {
         __rect = new FlxRect();
         __mousePos = FlxPoint.get();
         super.create();
-
-        memberAdded.add((basic:FlxBasic) -> {
-            if (basic is UISprite) uiElements.push(cast basic);
-            UIUtil.focusedUI = uiElements;
-        });
     }
 
     public function updateButtonHandler(spr:UISprite, buttonHandler:Void->Void) {
@@ -50,6 +45,7 @@ class UIState extends MusicBeatState {
             
             if (((__mousePos.x > __rect.x) && (__mousePos.x < __rect.x + rect.width)) && ((__mousePos.y > __rect.y) && (__mousePos.y < __rect.y + __rect.height))) {
                 spr.hoveredByChild = true;
+                this.hoveredSprite = spr;
                 this.buttonHandler = buttonHandler;
                 return;
             }
@@ -64,7 +60,12 @@ class UIState extends MusicBeatState {
             buttonHandler = null;
         }
 
-        UIUtil.updateCursor();
+        if (hoveredSprite != null) {
+            Mouse.cursor = hoveredSprite.cursor;
+            hoveredSprite = null;
+        } else {
+            Mouse.cursor = ARROW;
+        }
     }
 
     public override function destroy() {
