@@ -424,8 +424,6 @@ class System
 	#if sys
 	private static function __parseArguments(attributes:WindowAttributes):Void
 	{
-		// TODO: Handle default arguments, like --window-fps=60
-
 		var arguments = Sys.args();
 		var stripQuotes = ~/^['"](.*)['"]$/;
 		var equals, argValue, parameters = null;

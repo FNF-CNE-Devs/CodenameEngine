@@ -152,8 +152,8 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
     }
 
     public override function destroy() {
-        super.destroy();
-        animateAtlas = FlxDestroyUtil.destroy(animateAtlas);        
+        animateAtlas = FlxDestroyUtil.destroy(animateAtlas);    
+        super.destroy();    
     }
     #end
 

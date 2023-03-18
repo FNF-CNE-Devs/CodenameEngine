@@ -271,7 +271,7 @@ import lime.math.Vector2;
 	@:noCompletion private var __enableErrorChecking:Bool;
 	@:noCompletion private var __fragmentConstants:Float32Array;
 	@:noCompletion private var __frontBufferTexture:RectangleTexture;
-	@:noCompletion private var __positionScale:Float32Array; // TODO: Better approach?
+	@:noCompletion private var __positionScale:Float32Array;
 	@:noCompletion private var __present:Bool;
 	@:noCompletion private var __programs:Map<String, Program3D>;
 	@:noCompletion private var __quadIndexBuffer:IndexBuffer3D;
@@ -1000,8 +1000,6 @@ import lime.math.Vector2;
 	**/
 	public function dispose(recreate:Bool = true):Void
 	{
-		// TODO: Dispose all related buffers
-
 		gl = null;
 		__dispose();
 	}
@@ -1073,9 +1071,6 @@ import lime.math.Vector2;
 
 			__flushGLFramebuffer();
 			__flushGLViewport();
-
-			// TODO: Read less pixels if srcRect is smaller
-
 			//! EDITED BY NE_EO TO REDUCE GARBAGE MEMORY
 			var buffer = UInt8Buff.get(backBufferWidth * backBufferHeight * 4); // new UInt8Array(backBufferWidth * backBufferHeight * 4);
 			var data = buffer.buffer;
@@ -1177,14 +1172,12 @@ import lime.math.Vector2;
 		#if !openfl_disable_display_render
 		if (__state.renderToTexture == null)
 		{
-			// TODO: Make sure state is correct for this?
 			if (__stage.context3D == this && !__stage.__renderer.__cleared)
 			{
 				__stage.__renderer.__clear();
 			}
 			else if (!__cleared)
 			{
-				// TODO: Throw error if error reporting is enabled?
 				clear(0, 0, 0, 0, 1, 0, Context3DClearMask.COLOR);
 			}
 		}
@@ -1230,7 +1223,7 @@ import lime.math.Vector2;
 			if (!__cleared)
 			{
 				// Make sure texture is initialized
-				// TODO: Throw error if error reporting is enabled?
+				// BASE-TODO: Throw error if error reporting is enabled?
 				clear(0, 0, 0, 0, 1, 0, Context3DClearMask.COLOR);
 			}
 
@@ -1291,7 +1284,7 @@ import lime.math.Vector2;
 		__state.blendSourceAlphaFactor = sourceAlphaFactor;
 		__state.blendDestinationAlphaFactor = destinationAlphaFactor;
 
-		// TODO: Better way to handle this?
+		// BASE-TODO: Better way to handle this?
 		__setGLBlendEquation(gl.FUNC_ADD);
 	}
 
@@ -1370,7 +1363,7 @@ import lime.math.Vector2;
 	public function setProgram(program:Program3D):Void
 	{
 		__state.program = program;
-		__state.shader = null; // TODO: Merge this logic
+		__state.shader = null; // BASE-TODO: Merge this logic
 
 		if (program != null)
 		{
@@ -1414,11 +1407,11 @@ import lime.math.Vector2;
 
 		if (__state.program != null && __state.program.__format == GLSL)
 		{
-			// TODO
+			// BASE-TODO
 		}
 		else
 		{
-			// TODO: Cleanup?
+			// BASE-TODO: Cleanup?
 
 			if (numRegisters == -1)
 			{
@@ -1472,7 +1465,7 @@ import lime.math.Vector2;
 		{
 			__flushGLProgram();
 
-			// TODO: Cache value, prevent need to copy
+			// BASE-TODO: Cache value, prevent need to copy
 			var data = new Float32Array(16);
 			for (i in 0...16)
 			{
@@ -1937,7 +1930,7 @@ import lime.math.Vector2;
 
 	@:noCompletion private function __bindGLTexture2D(texture:GLTexture):Void
 	{
-		// TODO: Need to consider activeTexture ID
+		// BASE-TODO: Need to consider activeTexture ID
 
 		// if (#if openfl_disable_context_cache true #else __contextState.__currentGLTexture2D != texture #end) {
 
@@ -1949,7 +1942,7 @@ import lime.math.Vector2;
 
 	@:noCompletion private function __bindGLTextureCubeMap(texture:GLTexture):Void
 	{
-		// TODO: Need to consider activeTexture ID
+		// BASE-TODO: Need to consider activeTexture ID
 
 		// if (#if openfl_disable_context_cache true #else __contextState.__currentGLTextureCubeMap != texture #end) {
 
@@ -1988,14 +1981,14 @@ import lime.math.Vector2;
 		#if !openfl_disable_display_render
 		if (__state.renderToTexture == null)
 		{
-			// TODO: Make sure state is correct for this?
+			// BASE-TODO: Make sure state is correct for this?
 			if (__stage.context3D == this && !__stage.__renderer.__cleared)
 			{
 				__stage.__renderer.__clear();
 			}
 			else if (!__cleared)
 			{
-				// TODO: Throw error if error reporting is enabled?
+				// BASE-TODO: Throw error if error reporting is enabled?
 				clear(0, 0, 0, 0, 1, 0, Context3DClearMask.COLOR);
 			}
 		}
@@ -2191,7 +2184,7 @@ import lime.math.Vector2;
 
 		if (#if openfl_disable_context_cache true #else __contextState.shader != shader #end)
 		{
-			// TODO: Merge this logic
+			// BASE-TODO: Merge this logic
 
 			if (__contextState.shader != null)
 			{
@@ -2319,7 +2312,7 @@ import lime.math.Vector2;
 			{
 				// if (#if openfl_disable_context_cache true #else texture != __contextState.textures[i] #end) {
 
-				// TODO: Cleaner approach?
+				// BASE-TODO: Cleaner approach?
 				if (texture.__textureTarget == gl.TEXTURE_2D)
 				{
 					__bindGLTexture2D(texture.__getTexture());
@@ -2330,7 +2323,7 @@ import lime.math.Vector2;
 				}
 
 				#if (desktop && !html5)
-				// TODO: Cache?
+				// BASE-TODO: Cache?
 				gl.enable(gl.TEXTURE_2D);
 				#end
 
@@ -2364,7 +2357,7 @@ import lime.math.Vector2;
 					gl.uniform1i(__state.program.__agalAlphaSamplerEnabled[sampler].location, 1);
 
 					#if (desktop && !html5)
-					// TODO: Cache?
+					// BASE-TODO: Cache?
 					gl.enable(gl.TEXTURE_2D);
 					#end
 				}
@@ -2384,7 +2377,7 @@ import lime.math.Vector2;
 
 	@:noCompletion private function __flushGLViewport():Void
 	{
-		// TODO: Cache
+		// BASE-TODO: Cache
 
 		if (__state.renderToTexture == null)
 		{
@@ -2403,7 +2396,7 @@ import lime.math.Vector2;
 		{
 			var width = 0, height = 0;
 
-			// TODO: Avoid use of Std.is
+			// BASE-TODO: Avoid use of Std.is
 			if ((__state.renderToTexture is Texture))
 			{
 				var texture2D:Texture = cast __state.renderToTexture;
@@ -2467,7 +2460,7 @@ import lime.math.Vector2;
 			case GREATER: gl.GREATER;
 			case GREATER_EQUAL: gl.GEQUAL;
 			case LESS: gl.LESS;
-			case LESS_EQUAL: gl.LEQUAL; // TODO : wrong value
+			case LESS_EQUAL: gl.LEQUAL; // BASE-TODO : wrong value
 			case NEVER: gl.NEVER;
 			case NOT_EQUAL: gl.NOTEQUAL;
 			default: gl.EQUAL;
@@ -2662,7 +2655,7 @@ import lime.math.Vector2;
 	{
 		if (__glMemoryCurrentAvailable != -1)
 		{
-			// TODO: Return amount used by this application only
+			// BASE-TODO: Return amount used by this application only
 			var current = gl.getParameter(__glMemoryCurrentAvailable);
 			var total = gl.getParameter(__glMemoryTotalAvailable);
 

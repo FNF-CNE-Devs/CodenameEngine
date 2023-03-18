@@ -15,7 +15,7 @@ import flixel.util.FlxSignal.FlxTypedSignal;
 
 typedef BPMChangeEvent =
 {
-	var stepTime:Int;
+	var stepTime:Float;
 	var songTime:Float;
 	var bpm:Float;
 }
@@ -115,37 +115,35 @@ class Conductor
 
 	public static function setupSong(SONG:ChartData) {
 		reset();
-		// mapBPMChanges(SONG); // TODO!!!
+		mapBPMChanges(SONG);
 		changeBPM(SONG.meta.bpm, cast SONG.meta.beatsPerMesure.getDefault(4), cast SONG.meta.stepsPerBeat.getDefault(4));
 	}
 	/**
 	 * Maps BPM changes from a song.
 	 * @param song Song to map BPM changes from.
 	 */
-	public static function mapBPMChanges(song:SwagSong)
+	public static function mapBPMChanges(song:ChartData)
 	{
 		bpmChangeMap = [];
 
-		var curBPM:Float = song.bpm;
-		var totalSteps:Int = 0;
-		var totalPos:Float = 0;
-		for (i=>notes in song.notes)
-		{
-			if (notes == null) continue;
-			if (notes.changeBPM && notes.bpm != curBPM)
-			{
-				curBPM = notes.bpm;
-				var event:BPMChangeEvent = {
-					stepTime: totalSteps,
-					songTime: totalPos,
-					bpm: curBPM
-				};
-				bpmChangeMap.push(event);
-			}
+		if (song.events == null) return;
 
-			var deltaSteps:Int = notes.lengthInSteps;
-			totalSteps += deltaSteps;
-			totalPos += ((60 / curBPM) * 1000 / 4) * deltaSteps;
+		var curBPM:Float = song.meta.bpm;
+		var songTime:Float = 0;
+		var stepTime:Float = 0;
+
+		for(e in song.events) if (e.type == BPM_CHANGE && e.params != null && e.params[0] is Float) {
+			if (e.params[0] == curBPM) continue;
+			var steps = (e.time - songTime) / ((60 / curBPM) * 1000 / 4);
+			stepTime += steps;
+			songTime = e.time;
+			curBPM = e.params[0];
+
+			bpmChangeMap.push({
+				stepTime: stepTime,
+				songTime: songTime,
+				bpm: curBPM
+			});
 		}
 	}
 

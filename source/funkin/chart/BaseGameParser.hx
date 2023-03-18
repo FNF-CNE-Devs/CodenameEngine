@@ -87,8 +87,13 @@ class BaseGameParser {
             }
 
             if (section.changeBPM && section.bpm != curBPM) {
-                // TODO: BPM CHANGE EVENT
                 curCrochet = ((60 / (curBPM = section.bpm)) * 1000);
+
+                result.events.push({
+                    time: curTime,
+                    type: BPM_CHANGE,
+                    params: [section.bpm]
+                });
             }
 
             curTime += curCrochet * beatsPerMesure;

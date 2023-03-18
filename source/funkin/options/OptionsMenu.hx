@@ -18,17 +18,17 @@ class OptionsMenu extends TreeMenu {
             substate: funkin.options.keybinds.KeybindsOptions
         },
         {
-            name: 'Gameplay',
+            name: 'Gameplay >',
             desc: 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...',
             state: GameplayOptions
         },
         {
-            name: 'Appearance',
+            name: 'Appearance >',
             desc: 'Change Appearance options such as Flashing menus...',
             state: AppearanceOptions
         },
         {
-            name: 'Miscellaneous',
+            name: 'Miscellaneous >',
             desc: 'Use this menu to reset save data or engine settings.',
             state: MiscOptions
         }
@@ -112,7 +112,7 @@ class OptionsMenu extends TreeMenu {
                     }
                     options.push(new Checkbox(name, desc, node.att.id, FlxG.save.data));
                 case "menu":
-                    options.push(new TextOption(name, desc, function() {
+                    options.push(new TextOption(name + " >", desc, function() {
                         optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node)));
                     }));
             }

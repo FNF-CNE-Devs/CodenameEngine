@@ -94,7 +94,6 @@ class Note extends FlxSprite
 	{
 		super();
 
-		// TODO: Sustain note
 		this.prevNote = strumLine.notes.members.last();
 		this.noteTypeID = noteData.type.getDefault(0);
 		this.isSustainNote = sustain;

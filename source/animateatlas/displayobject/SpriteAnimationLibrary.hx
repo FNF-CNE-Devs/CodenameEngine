@@ -100,7 +100,6 @@ class SpriteAnimationLibrary {
 	}
 
 	// # region Pooling
-	// todo migrate this to lime pool
 
 	@:access(animateatlas)
 	@:allow(AtlasFrameMaker)

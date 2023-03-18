@@ -561,7 +561,6 @@ class PlayState extends MusicBeatState
 		
 		generateSong(SONG);
 
-		trace(SONG.noteTypes);
 		for(noteType in SONG.noteTypes) {
 			var scriptPath = Paths.script('data/notes/${noteType}');
 			if (Assets.exists(scriptPath) && !scripts.contains(scriptPath)) {
