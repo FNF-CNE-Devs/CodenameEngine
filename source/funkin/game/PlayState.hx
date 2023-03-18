@@ -1305,7 +1305,8 @@ class PlayState extends MusicBeatState
 	
 			if (__pressed.contains(true)) {
 				for(c in p.characters)
-					c.__lockAnimThisFrame = true;
+					if (c.lastAnimContext != DANCE)
+						c.__lockAnimThisFrame = true;
 
 				__funcsToExec.push(function(note:Note) {
 					if (__pressed[note.strumID] && note.isSustainNote && note.canBeHit && !note.wasGoodHit) {
