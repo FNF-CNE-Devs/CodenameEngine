@@ -13,8 +13,11 @@ class UISprite extends FlxSprite {
 
     private var __oldDefCams:Array<FlxCamera>;
 
-    var hovered:Bool = false;
-    var pressed:Bool = false;
+    public var hovered:Bool = false;
+    public var hoveredByChild:Bool = false;
+    public var pressed:Bool = false;
+
+    public var hoverCallback:Void->Void = null;
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
@@ -32,6 +35,7 @@ class UISprite extends FlxSprite {
         
         hovered = false;
         pressed = false;
+        hoveredByChild = false;
     }
 
     public override function draw() {
@@ -72,5 +76,7 @@ class UISprite extends FlxSprite {
         hovered = true;
         if (FlxG.mouse.pressed)
             pressed = true;
+        if (hoverCallback != null)
+            hoverCallback();
     }
 }

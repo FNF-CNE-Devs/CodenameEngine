@@ -63,4 +63,35 @@ class UIDebugState extends UIState {
             ]));
         }, 130, 48));
     }
+
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+        if (FlxG.mouse.justReleasedRight) {
+            openContextMenu([
+                {
+                    label: "Test 1",
+                    onSelect: function() {
+
+                    }
+                },
+                {
+                    label: "Test 2",
+                    onSelect: function() {
+
+                    }
+                },
+                {
+                    label: "Test 3",
+                    childs: [
+                        {
+                            label: "Test 2",
+                            onSelect: function() {
+        
+                            }
+                        }
+                    ]
+                }
+            ]);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package funkin.editors.ui;
 
+import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 
@@ -29,7 +30,8 @@ class UIState extends MusicBeatState {
     }
 
     public function updateRectButtonHandler(spr:UISprite, rect:FlxRect, buttonHandler:Void->Void) {
-        var pos = FlxG.mouse.getScreenPosition(camera);
+        FlxG.mouse.getScreenPosition(camera, __mousePos);
+        
         for(camera in spr.__lastDrawCameras) {
             __rect.x = rect.x;
             __rect.y = rect.y;
@@ -39,7 +41,8 @@ class UIState extends MusicBeatState {
             __rect.x -= camera.scroll.x * spr.scrollFactor.x;
             __rect.y -= camera.scroll.y * spr.scrollFactor.y;
             
-            if (((pos.x > __rect.x) && (pos.x < __rect.x + rect.width)) && ((pos.y > __rect.y) && (pos.y < __rect.y + __rect.height))) {
+            if (((__mousePos.x > __rect.x) && (__mousePos.x < __rect.x + rect.width)) && ((__mousePos.y > __rect.y) && (__mousePos.y < __rect.y + __rect.height))) {
+                spr.hoveredByChild = true;
                 this.buttonHandler = buttonHandler;
                 return;
             }
@@ -58,5 +61,18 @@ class UIState extends MusicBeatState {
     public override function destroy() {
         super.destroy();
         __mousePos.put();
+    }
+
+    public function openContextMenu(options:Array<UIContextMenuOption>, ?x:Float, ?y:Float) {
+        var state = FlxG.state;
+        while(state.subState != null)
+            state = state.subState;
+
+        state.persistentDraw = true;
+        state.persistentUpdate = true;
+
+        
+
+        openSubState(new UIContextMenu(options, x.getDefault(__mousePos.x), y.getDefault(__mousePos.y)));
     }
 }
