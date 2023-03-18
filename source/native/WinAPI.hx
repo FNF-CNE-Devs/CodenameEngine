@@ -26,7 +26,6 @@ import funkin.windows.WindowsAPI.MessageBoxIcon;
 #include <wingdi.h>
 #include <shellapi.h>
 #include <uxtheme.h>
-#include <ShellScalingApi.h>
 
 #define SAFE_RELEASE(punk)  \\
               if ((punk) != NULL)  \\
@@ -177,7 +176,6 @@ class WinAPI {
 
     @:functionCode('
         SetProcessDPIAware();
-        // SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE);
     ')
     public static function registerAsDPICompatible() {}
 }

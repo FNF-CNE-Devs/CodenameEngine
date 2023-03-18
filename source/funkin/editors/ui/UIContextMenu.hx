@@ -50,8 +50,11 @@ typedef UIContextMenuOption = {
 
 class UIContextMenuOptionSpr extends UISpliceSprite {
     public var label:UIText;
-    public function new(x:Float, y:Float, t:String) {
-        label = new UIText(20, 2, 0, t);
+    public var option:UIContextMenuOption;
+
+    public function new(x:Float, y:Float, option:UIContextMenuOption) {
+        label = new UIText(20, 2, 0, option.label);
+        this.option = option;
 
         super(x, y, label.frameWidth + 22, label.frameHeight + 4, 'editors/ui/button');
         members.push(label);
