@@ -47,3 +47,19 @@ typedef UIContextMenuOption = {
     var ?onSelect:Void->Void;
     var ?childs:Array<UIContextMenuOption>;
 }
+
+class UIContextMenuOptionSpr extends UISpliceSprite {
+    public var label:UIText;
+    public function new(x:Float, y:Float, t:String) {
+        label = new UIText(20, 2, 0, t);
+
+        super(x, y, label.frameWidth + 22, label.frameHeight + 4, 'editors/ui/button');
+        members.push(label);
+    }
+
+    public override function draw() {
+        alpha = hovered ? 1 : 0;
+        label.follow(this, 20, 2);
+        super.draw();
+    }
+}

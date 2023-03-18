@@ -12,6 +12,12 @@ class WindowsAPI {
         native.WinAPI.registerAudio();
         #end
     }
+
+    @:dox(hide) public static function registerAsDPICompatible() {
+        #if windows
+        native.WinAPI.registerAsDPICompatible();
+        #end
+    }
     
     /**
      * Allocates a new console. The console will automatically be opened

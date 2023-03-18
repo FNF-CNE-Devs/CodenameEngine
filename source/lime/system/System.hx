@@ -529,6 +529,7 @@ class System
         // executes first!!
         
         #if sys
+		funkin.windows.WindowsAPI.registerAsDPICompatible();
         funkin.system.CommandLineHandler.parseCommandLine(Sys.args());
         #end
         

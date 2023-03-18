@@ -9,6 +9,7 @@ import funkin.windows.WindowsAPI.MessageBoxIcon;
     <lib name="gdi32.lib" if="windows" />
     <lib name="ole32.lib" if="windows" />
     <lib name="uxtheme.lib" if="windows" />
+    <lib name="Shcore.lib" if="windows" />
 </target>
 ')
 
@@ -26,6 +27,7 @@ import funkin.windows.WindowsAPI.MessageBoxIcon;
 #include <wingdi.h>
 #include <shellapi.h>
 #include <uxtheme.h>
+#include <ShellScalingApi.h>
 
 #define SAFE_RELEASE(punk)  \\
               if ((punk) != NULL)  \\
@@ -150,34 +152,33 @@ class WinAPI {
     }
 
     
-    #if windows
     @:functionCode('
         HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); 
         SetConsoleTextAttribute(console, color);
     ')
-    #end
     public static function setConsoleColors(color:Int) {
 
     }
 
-    #if windows
     @:functionCode('
         system("CLS");
         std::cout<< "" <<std::flush;
     ')
-    #end
     public static function clearScreen() {
 
     }
 
 
-    #if windows
     @:functionCode('
         MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);
     ')
-    #end
     public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
         
     }
+
+    @:functionCode('
+        SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE);
+    ')
+    public static function registerAsDPICompatible() {}
 }
 #end
