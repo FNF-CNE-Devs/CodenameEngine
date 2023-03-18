@@ -5,6 +5,9 @@ import funkin.editors.ui.*;
 class UIDebugState extends UIState {
     public override function create() {
         super.create();
+
+        FlxG.mouse.useSystemCursor = FlxG.mouse.visible = true;
+
         var bg = new FlxSprite().makeGraphic(1, 1, 0xFF444444);
         bg.scale.set(FlxG.width, FlxG.height);
         bg.updateHitbox();
