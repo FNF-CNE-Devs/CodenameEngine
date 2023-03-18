@@ -9,7 +9,6 @@ import funkin.windows.WindowsAPI.MessageBoxIcon;
     <lib name="gdi32.lib" if="windows" />
     <lib name="ole32.lib" if="windows" />
     <lib name="uxtheme.lib" if="windows" />
-    <lib name="Shcore.lib" if="windows" />
 </target>
 ')
 
@@ -177,7 +176,8 @@ class WinAPI {
     }
 
     @:functionCode('
-        SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE);
+        SetProcessDPIAware();
+        // SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE);
     ')
     public static function registerAsDPICompatible() {}
 }
