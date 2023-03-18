@@ -8631,7 +8631,5 @@
     ],
     "codenameChart": true,
     "stage": "tank",
-    "noteTypes": [
-        "Pico Speaker Note"
-    ]
+    "noteTypes": []
 }
