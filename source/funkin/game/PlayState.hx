@@ -548,6 +548,10 @@ class PlayState extends MusicBeatState
 		#if REGION
 		for(content in Paths.getFolderContent('images/game/score/', true, true))
 			FlxG.bitmap.add(content);
+		
+		for(i in 1...4) {
+			FlxG.sound.load(Paths.sound('missnote' + Std.string(i)));
+		}
 		#end
 
 		// STRUMS & NOTES INITIALISATION
@@ -586,7 +590,7 @@ class PlayState extends MusicBeatState
 			}
 
 			var strOffset:Float = strumLine.strumLinePos == null ? (strumLine.type == 1 ? 0.75 : 0.25) : strumLine.strumLinePos;
-			var strLine = new StrumLine(chars, strOffset, !coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode)), strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls);
+			var strLine = new StrumLine(chars, strOffset, strumLine.type == 2 || (!coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode))), strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls);
 			strLine.cameras = [camHUD];
 			strLine.data = strumLine;
 			strumLines.push(strLine);
@@ -849,6 +853,14 @@ class PlayState extends MusicBeatState
 		if (songData == null) songData = SONG;
 
 		events = songData.events != null ? [for(e in songData.events) e] : [];
+		// get first camera focus
+		for(e in events) {
+			if (e.time > 10) break;
+			if (e.type == CAM_MOVEMENT) {
+				executeEvent(e);
+				break;
+			}
+		}
 		events.sort(function(p1, p2) {
 			return FlxSort.byValues(FlxSort.ASCENDING, p1.time, p2.time);
 		});

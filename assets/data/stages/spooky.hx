@@ -4,12 +4,12 @@ public var lightningOffset:Int = 8;
 public var thunderSFXamount:Int = 2;
 
 function create() {
-    for(i in 0...2)
+    for(i in 1...thunderSFXamount+1)
         FlxG.sound.load(Paths.sound('thunder_' + Std.string(i)));
 }
 public function lightningStrikeShit():Void
 {
-    FlxG.sound.play(Paths.soundRandom('thunder_', 1, 2));
+    FlxG.sound.play(Paths.soundRandom('thunder_', 1, thunderSFXamount));
     bg.animation.play('lightning');
 
     lightningStrikeBeat = curBeat;
