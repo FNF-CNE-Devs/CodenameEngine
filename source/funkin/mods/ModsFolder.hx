@@ -88,6 +88,7 @@ class ModsFolder {
 
     public static function unloadMod(mod:String) {
         if (mod == null) return;
+        
         Paths.assetsTree.clearCache();
         FlxG.bitmap.reset();
         Paths.assetsTree.removeLibrary(loadedMods[mod]);
