@@ -2,7 +2,7 @@ package funkin.editors.ui;
 
 import flixel.graphics.frames.FlxFrame;
 
-class UISpliceSprite extends UISprite {
+class UISliceSprite extends UISprite {
     public var bWidth:Int = 120;
     public var bHeight:Int = 20;
     public var framesOffset:Int = 0;

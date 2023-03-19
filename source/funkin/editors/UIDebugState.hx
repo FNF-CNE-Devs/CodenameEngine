@@ -14,12 +14,45 @@ class UIDebugState extends UIState {
         bg.scrollFactor.set();
         add(bg);
 
-        add(new UICheckbox(10, 10, "Test unchecked", false));
-        add(new UICheckbox(10, 40, "Test checked", true));
-        add(new UIButton(10, 70, "Test button", function() {
+        add(new UITopMenu([
+            {
+                label: "Chart",
+                childs: [
+                    {
+                        label: "New"
+                    },
+                    {
+                        label: "Open"
+                    },
+                    {
+                        label: "Save"
+                    },
+                    {
+                        label: "Save As..."
+                    },
+                    null,
+                    {
+                        label: "Exit"
+                    }
+                ]
+            },
+            {
+                label: "Edit"
+            },
+            {
+                label: "View"
+            },
+            {
+                label: "Help"
+            }
+        ]));
+
+        add(new UICheckbox(10, 40, "Test unchecked", false));
+        add(new UICheckbox(10, 70, "Test checked", true));
+        add(new UIButton(10, 100, "Test button", function() {
             trace("Hello, World!");
         }, 130, 32));
-        add(new UIButton(10, 110, "Warning test", function() {
+        add(new UIButton(10, 140, "Warning test", function() {
             openSubState(new UIWarningSubstate("Test", "This is a test message", [
                 {
                     label: "Alt. Choice",
@@ -35,7 +68,7 @@ class UIDebugState extends UIState {
                 }
             ]));
         }, 130, 32));
-        add(new UIButton(10, 150, "Warning test (Overflowing)", function() {
+        add(new UIButton(10, 180, "Warning test (Overflowing)", function() {
             openSubState(new UIWarningSubstate("Test", "This is a test message", [
                 {
                     label: "Alt. Choice",

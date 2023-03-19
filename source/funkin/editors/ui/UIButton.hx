@@ -2,7 +2,7 @@ package funkin.editors.ui;
 
 import flixel.graphics.frames.FlxFrame;
 
-class UIButton extends UISpliceSprite {
+class UIButton extends UISliceSprite {
     public var callback:Void->Void = null;
 
     public var field:UIText;

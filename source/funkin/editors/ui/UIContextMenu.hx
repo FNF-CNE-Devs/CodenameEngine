@@ -6,10 +6,11 @@ class UIContextMenu extends MusicBeatSubstate {
     var y:Float;
     var contextCam:FlxCamera;
 
-    var bg:UISpliceSprite;
+    var bg:UISliceSprite;
     var callback:UIContextMenuCallback;
 
     public var contextMenuOptions:Array<UIContextMenuOptionSpr> = [];
+    public var separators:Array<FlxSprite> = [];
 
     public function new(options:Array<UIContextMenuOption>, callback:UIContextMenuCallback, x:Float, y:Float) {
         super();
@@ -26,11 +27,19 @@ class UIContextMenu extends MusicBeatSubstate {
         contextCam.alpha = 0;
         FlxG.cameras.add(contextCam, false);
 
-        bg = new UISpliceSprite(x, y, 100, 100, 'editors/ui/context-bg');
+        bg = new UISliceSprite(x, y, 100, 100, 'editors/ui/context-bg');
         add(bg);
 
         var lastY:Float = bg.y + 4;
         for(o in options) {
+            if (o == null) {
+                var spr = new FlxSprite(bg.x + 8, lastY + 2).makeGraphic(1, 1, -1);
+                spr.alpha = 0.3;
+                separators.push(spr);
+                add(spr);
+                lastY += 5;
+                continue;
+            }
             var spr = new UIContextMenuOptionSpr(bg.x + 4, lastY, o, this);
             lastY = spr.y + spr.bHeight;
             contextMenuOptions.push(spr);
@@ -45,6 +54,10 @@ class UIContextMenu extends MusicBeatSubstate {
         
         for(o in contextMenuOptions)
             o.bWidth = maxW;
+        for(o in separators) {
+            o.scale.set(maxW - 8, 1);
+            o.updateHitbox();
+        }
         bg.bWidth = maxW + 8;
         bg.bHeight = Std.int(lastY - bg.y + 4);
     }
@@ -81,7 +94,7 @@ typedef UIContextMenuOption = {
     var ?childs:Array<UIContextMenuOption>;
 }
 
-class UIContextMenuOptionSpr extends UISpliceSprite {
+class UIContextMenuOptionSpr extends UISliceSprite {
     public var label:UIText;
     public var option:UIContextMenuOption;
 

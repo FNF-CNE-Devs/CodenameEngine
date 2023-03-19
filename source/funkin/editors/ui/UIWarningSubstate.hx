@@ -35,7 +35,7 @@ class UIWarningSubstate extends MusicBeatSubstate {
         warnCam.zoom = 0.1;
         FlxG.cameras.add(warnCam, false);
 
-        var spr = new UISpliceSprite(0, 0, CoolUtil.maxInt(560, 30 + (170 * buttons.length)), 280, "editors/ui/warning-popup");
+        var spr = new UISliceSprite(0, 0, CoolUtil.maxInt(560, 30 + (170 * buttons.length)), 280, "editors/ui/warning-popup");
         spr.x = (FlxG.width - spr.bWidth) / 2;
         spr.y = (FlxG.height - spr.bHeight) / 2;
         add(spr);
