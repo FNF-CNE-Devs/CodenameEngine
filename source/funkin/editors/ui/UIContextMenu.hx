@@ -31,6 +31,7 @@ class UIContextMenu extends MusicBeatSubstate {
         camera = contextCam = new FlxCamera();
         contextCam.bgColor = 0;
         contextCam.alpha = 0;
+        contextCam.scroll.set(0, 7.5);
         FlxG.cameras.add(contextCam, false);
 
         bg = new UISliceSprite(x, y, 100, 100, 'editors/ui/context-bg');
@@ -85,6 +86,7 @@ class UIContextMenu extends MusicBeatSubstate {
 
         super.update(elapsed);
 
+        contextCam.scroll.y = CoolUtil.fpsLerp(contextCam.scroll.y, 0, 0.5);
         contextCam.alpha = CoolUtil.fpsLerp(contextCam.alpha, 1, 0.25);
     }
 

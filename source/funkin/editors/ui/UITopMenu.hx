@@ -53,7 +53,7 @@ class UITopMenuButton extends UISliceSprite {
     }
 
     public override function update(elapsed:Float) {
-        label.follow(this, 4, 0);
+        label.follow(this, 4, Std.int((bHeight - label.height) / 2));
         super.update(elapsed);
 
         var opened = curMenu.contextMenuOpened();

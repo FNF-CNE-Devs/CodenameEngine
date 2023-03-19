@@ -11,6 +11,12 @@ Build instructions are below. Press TAB on the main menu to switch mods (make su
 
 Also, `lime test windows` uses the source assets folder instead of the export one for easier development.
 
+## Codename Engine
+
+Codename Engine is a new Friday Night Funkin' Engine aimed for easier modding, along with extensiblity and ease of use.
+
+### It includes many new features, as seen [here](FEATURES.md)
+
 ## How to download
 
 Latest builds for the engine can be found in the [Actions](https://github.com/YoshiCrafter29/CodenameEngine/actions) tab.
