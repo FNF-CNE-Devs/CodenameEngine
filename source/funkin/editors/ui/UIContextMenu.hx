@@ -1,7 +1,7 @@
 package funkin.editors.ui;
 
 class UIContextMenu extends MusicBeatSubstate {
-    var options:Array<UIContextMenuOption>;
+    public var options:Array<UIContextMenuOption>;
     var x:Float;
     var y:Float;
     var contextCam:FlxCamera;
@@ -11,6 +11,12 @@ class UIContextMenu extends MusicBeatSubstate {
 
     public var contextMenuOptions:Array<UIContextMenuOptionSpr> = [];
     public var separators:Array<FlxSprite> = [];
+
+    private var __oobDeletion:Bool = true;
+
+    public inline function preventOutOfBoxClickDeletion() {
+        __oobDeletion = false;
+    }
 
     public function new(options:Array<UIContextMenuOption>, callback:UIContextMenuCallback, x:Float, y:Float) {
         super();
@@ -72,8 +78,10 @@ class UIContextMenu extends MusicBeatSubstate {
     }
 
     public override function update(elapsed:Float) {
-        if (FlxG.mouse.pressed && !bg.hoveredByChild)
+        if (__oobDeletion && FlxG.mouse.pressed && !bg.hoveredByChild)
             close();
+
+        __oobDeletion = true;
 
         super.update(elapsed);
 
@@ -83,6 +91,8 @@ class UIContextMenu extends MusicBeatSubstate {
     public override function destroy() {
         super.destroy();
         FlxG.cameras.remove(contextCam);
+        if (UIState.state.curContextMenu == this)
+            UIState.state.curContextMenu = null;
     }
 }
 
@@ -105,7 +115,7 @@ class UIContextMenuOptionSpr extends UISliceSprite {
         this.option = option;
         this.parent = parent;
 
-        super(x, y, label.frameWidth + 22, label.frameHeight, 'editors/ui/button');
+        super(x, y, label.frameWidth + 22, label.frameHeight, 'editors/ui/menu-item');
         members.push(label);
     }
 

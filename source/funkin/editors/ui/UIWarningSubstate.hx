@@ -66,6 +66,7 @@ class UIWarningSubstate extends MusicBeatSubstate {
         for(e in camShaders)
             e.removeShader(blurShader);
 
+        FlxTween.cancelTweensOf(warnCam);
         FlxG.cameras.remove(warnCam);
     }
 

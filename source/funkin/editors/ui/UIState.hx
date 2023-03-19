@@ -7,6 +7,9 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 
 class UIState extends MusicBeatState {
+
+    public var curContextMenu:UIContextMenu = null;
+
     public static var state(get, null):UIState;
 
     public var buttonHandler:Void->Void = null;
@@ -82,6 +85,7 @@ class UIState extends MusicBeatState {
         state.persistentDraw = true;
         state.persistentUpdate = true;
 
-        openSubState(new UIContextMenu(options, callback, x.getDefault(__mousePos.x), y.getDefault(__mousePos.y)));
+        openSubState(curContextMenu = new UIContextMenu(options, callback, x.getDefault(__mousePos.x), y.getDefault(__mousePos.y)));
+        return curContextMenu;
     }
 }

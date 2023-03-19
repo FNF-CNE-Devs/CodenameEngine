@@ -16,7 +16,7 @@ class UIDebugState extends UIState {
 
         add(new UITopMenu([
             {
-                label: "Chart",
+                label: "File",
                 childs: [
                     {
                         label: "New"
