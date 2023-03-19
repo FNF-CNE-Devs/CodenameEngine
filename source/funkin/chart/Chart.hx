@@ -3,7 +3,6 @@ package funkin.chart;
 import funkin.chart.ChartData;
 import flixel.util.FlxColor;
 import haxe.io.Path;
-import funkin.system.Song.SwagSong;
 import haxe.Json;
 
 #if sys
@@ -98,6 +97,10 @@ class Chart {
             Logs.trace('Could not parse chart for song ${songName} ($difficulty): ${Std.string(e)}', ERROR, RED);
         }
 
+        /**
+         * CHART CONVERSION
+         */
+        #if REGION
         if (Reflect.hasField(data, "codenameChart") && Reflect.field(data, "codenameChart") == true) {
             // codename chart
             base = data;
@@ -105,6 +108,7 @@ class Chart {
             // base game chart
             BaseGameParser.parse(data, base);
         }
+        #end
 
         if (base.meta == null)
             base.meta = loadChartMeta(songName, difficulty, base.fromMods);

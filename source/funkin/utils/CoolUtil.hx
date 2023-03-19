@@ -1,6 +1,5 @@
 package funkin.utils;
 
-import funkin.system.Song;
 import funkin.system.Conductor;
 import flixel.system.FlxSoundGroup;
 import animateatlas.AtlasFrameMaker;

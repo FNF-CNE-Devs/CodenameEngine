@@ -9,7 +9,6 @@ import flixel.addons.display.FlxGridOverlay;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
-import funkin.system.Song;
 import funkin.game.HealthIcon;
 import funkin.game.Highscore;
 import haxe.Json;

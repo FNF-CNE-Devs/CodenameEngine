@@ -1,7 +1,5 @@
 package funkin.chart;
 
-import funkin.system.Song.SwagSong;
-
 class BaseGameParser {
     public static function parse(data:Dynamic, result:ChartData) {
         // base fnf chart parsing
@@ -18,7 +16,7 @@ class BaseGameParser {
         result.strumLines.push({
             characters: [data.player2],
             type: 0,
-            position: "dad",
+            position: data.player2.startsWith("gf") ? "girlfriend" : "dad",
             notes: []
         });
         result.strumLines.push({
@@ -99,4 +97,35 @@ class BaseGameParser {
             curTime += curCrochet * beatsPerMesure;
         }
     }
+}
+typedef SwagSong =
+{
+	var song:String;
+	var notes:Array<SwagSection>;
+	var bpm:Float;
+	var needsVoices:Bool;
+	var speed:Float;
+	var stage:String;
+	var noteTypes:Array<String>;
+
+	var player1:String;
+	var player2:String;
+	var gf:String;
+	var validScore:Bool;
+
+	// ADDITIONAL STUFF THAT MAY NOT BE PRESENT IN CHART
+	var ?maxHealth:Float;
+	var ?beatsPerMesure:Float;
+	var ?stepsPerBeat:Float;
+}
+
+typedef SwagSection =
+{
+	var sectionNotes:Array<Dynamic>;
+	var lengthInSteps:Int;
+	var mustHitSection:Bool;
+	var bpm:Float;
+	var changeBPM:Bool;
+	var altAnim:Bool;
+	@:optional var camTarget:Null<Float>;
 }
