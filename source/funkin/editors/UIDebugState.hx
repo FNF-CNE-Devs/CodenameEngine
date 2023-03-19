@@ -74,22 +74,22 @@ class UIDebugState extends UIState {
                 {
                     label: "Test 1",
                     onSelect: function() {
-
+                        trace("Test 1 clicked");
                     }
                 },
                 {
                     label: "Test 2",
                     onSelect: function() {
-
+                        trace("Test 2 clicked");
                     }
                 },
                 {
                     label: "Test 3",
                     childs: [
                         {
-                            label: "Test 2",
+                            label: "Test 4",
                             onSelect: function() {
-        
+                                trace("Test 4 clicked");
                             }
                         }
                     ]

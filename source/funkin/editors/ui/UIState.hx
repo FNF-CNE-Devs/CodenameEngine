@@ -1,5 +1,6 @@
 package funkin.editors.ui;
 
+import funkin.editors.ui.UIContextMenu.UIContextMenuCallback;
 import openfl.ui.Mouse;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import flixel.math.FlxPoint;
@@ -73,7 +74,7 @@ class UIState extends MusicBeatState {
         __mousePos.put();
     }
 
-    public function openContextMenu(options:Array<UIContextMenuOption>, ?x:Float, ?y:Float) {
+    public function openContextMenu(options:Array<UIContextMenuOption>, ?callback:UIContextMenuCallback, ?x:Float, ?y:Float) {
         var state = FlxG.state;
         while(state.subState != null)
             state = state.subState;
@@ -81,6 +82,6 @@ class UIState extends MusicBeatState {
         state.persistentDraw = true;
         state.persistentUpdate = true;
 
-        openSubState(new UIContextMenu(options, x.getDefault(__mousePos.x), y.getDefault(__mousePos.y)));
+        openSubState(new UIContextMenu(options, callback, x.getDefault(__mousePos.x), y.getDefault(__mousePos.y)));
     }
 }
