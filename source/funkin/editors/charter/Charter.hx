@@ -195,12 +195,17 @@ class Charter extends UIState {
                         selection = [n];
                 }
                 if (FlxG.mouse.justReleasedRight) {
+                    if (!selection.contains(n))
+                        selection = [n];
                     openContextMenu(topMenu[1].childs);
                 }
             }
         });
         for(n in selection)
             n.selected = true;
+
+        if (gridBackdropDummy.hovered && FlxG.mouse.justReleasedRight)
+            openContextMenu(topMenu[2].childs);
 
         super.update(elapsed);
 

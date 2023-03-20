@@ -343,13 +343,13 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
         var cl = Std.string(Type.getClass(field));
 
         // cant do "field is ShaderInput" for some reason
-        if (cl.startsWith("openfl.display.ShaderInput")) {
-            var si = cast(field, ShaderInput<Dynamic>);
-            return si.input;
-        } else if (field is ShaderParameter) {
+        if (field is ShaderParameter) {
             var sp = cast(field, ShaderParameter<Dynamic>);
             @:privateAccess
             return (sp.__length > 1) ? sp.value : sp.value[0];
+        } else if (cl.startsWith("openfl.display.ShaderInput")) {
+            var si = cast(field, ShaderInput<Dynamic>);
+            return si.input;
         }
         return field;
     }
