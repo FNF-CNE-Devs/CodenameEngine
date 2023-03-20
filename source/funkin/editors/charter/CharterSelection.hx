@@ -19,8 +19,7 @@ class CharterSelection extends EditorTreeMenu {
             for(s in freeplayList.songs) new IconOption(s.name, "Press ACCEPT to choose a difficulty to edit.", s.icon, function() {
                 optionsTree.add(new OptionsScreen(s.name, "Select a difficulty to continue, or press 1 to add a new one.", [
                     for(d in s.difficulties) new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
-                        trace(s.name);
-                        trace(d);
+                        FlxG.switchState(new Charter(s.name, d));
                     })
                 ]));
             })
