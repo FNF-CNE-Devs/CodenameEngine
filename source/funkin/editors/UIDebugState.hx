@@ -32,7 +32,8 @@ class UIDebugState extends UIState {
                     },
                     null,
                     {
-                        label: "Exit"
+                        label: "Exit",
+                        onSelect: () -> {FlxG.switchState(new funkin.menus.MainMenuState());}
                     }
                 ]
             },
