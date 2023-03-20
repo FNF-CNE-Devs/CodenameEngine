@@ -13,34 +13,34 @@ using StringTools;
  */
 class XMLUtil {
 
-    /**
-     * Applies a property XML node to an object.
-     * @param object Object to which the xml property will be applied
-     * @param property `property` node.
-     */
-    public static function applyXMLProperty(object:Dynamic, property:Access):ErrorCode {
-        if (!property.has.name || !property.has.type || !property.has.value) {
-            Logs.trace('Failed to apply XML property: XML Element misses name, type, or value attributes.', WARNING);
-            return MISSING_PROPERTY;
-        }
+	/**
+	 * Applies a property XML node to an object.
+	 * @param object Object to which the xml property will be applied
+	 * @param property `property` node.
+	 */
+	public static function applyXMLProperty(object:Dynamic, property:Access):ErrorCode {
+		if (!property.has.name || !property.has.type || !property.has.value) {
+			Logs.trace('Failed to apply XML property: XML Element misses name, type, or value attributes.', WARNING);
+			return MISSING_PROPERTY;
+		}
 
-        var value:Dynamic = switch(property.att.type.toLowerCase()) {
-            case "float" | "number":            Std.parseFloat(property.att.value);
-            case "int" | "integer" | "color":   Std.parseInt(property.att.value);
-            case "string" | "str" | "text":     property.att.value;
-            case "bool" | "boolean":            property.att.value.toLowerCase() == "true";
-            default:                            return TYPE_INCORRECT;
-        }
-        if (value == null) return VALUE_NULL;
+		var value:Dynamic = switch(property.att.type.toLowerCase()) {
+			case "float" | "number":            Std.parseFloat(property.att.value);
+			case "int" | "integer" | "color":   Std.parseInt(property.att.value);
+			case "string" | "str" | "text":     property.att.value;
+			case "bool" | "boolean":            property.att.value.toLowerCase() == "true";
+			default:                            return TYPE_INCORRECT;
+		}
+		if (value == null) return VALUE_NULL;
 
-        try {
-            Reflect.setProperty(object, property.att.name, value);
-        } catch(e) {
-            Logs.trace('Failed to apply XML property: $e on ${Type.getClass(object)}', WARNING);
-            return REFLECT_ERROR;   
-        }
-        return OK;
-    }
+		try {
+			Reflect.setProperty(object, property.att.name, value);
+		} catch(e) {
+			Logs.trace('Failed to apply XML property: $e on ${Type.getClass(object)}', WARNING);
+			return REFLECT_ERROR;
+		}
+		return OK;
+	}
 
 	/**
 	 * Creates a new sprite based on a XML node.
@@ -69,11 +69,11 @@ class XMLUtil {
 			if (node.has.scrollx) {
 				var scroll:Null<Float> = Std.parseFloat(node.att.scrollx);
 				if (scroll != null) spr.scrollFactor.x = scroll;
-			} 
+			}
 			if (node.has.scrolly) {
 				var scroll:Null<Float> = Std.parseFloat(node.att.scrolly);
 				if (scroll != null) spr.scrollFactor.y = scroll;
-			} 
+			}
 		}
 		if (node.has.antialiasing) spr.antialiasing = node.att.antialiasing == "true";
 		if (node.has.scale) {
@@ -83,7 +83,7 @@ class XMLUtil {
 		if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
 
 		spr.zoomFactor = Std.parseFloat(node.getAtt("zoomfactor")).getDefault(spr.zoomFactor);
-		
+
 		for(anim in node.nodes.anim)
 			addXMLAnimation(spr, anim);
 
@@ -116,7 +116,7 @@ class XMLUtil {
 				if (i != null)
 					animData.indices.push(i);
 			}
-		} 
+		}
 
 		return animData;
 	}
@@ -164,9 +164,9 @@ class XMLUtil {
 						// nothing
 				}
 			}
-            return OK;
+			return OK;
 		}
-        return MISSING_PROPERTY;
+		return MISSING_PROPERTY;
 	}
 
 	public static inline function fixXMLText(text:String) {

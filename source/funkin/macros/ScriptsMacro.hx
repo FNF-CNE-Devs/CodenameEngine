@@ -27,7 +27,7 @@ class ScriptsMacro {
         #if !web
         Compiler.include("haxe.extern");
         #end
-        
+
         Compiler.include("scripting");
 
         // FOR ABSTRACTS

@@ -10,7 +10,7 @@ class Options
 {
 	@:dox(hide) public static var __save:FlxSave;
 	@:dox(hide) private static var __eventAdded = false;
-	
+
 	/**
 	 * SETTINGS
 	 */

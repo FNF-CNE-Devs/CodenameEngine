@@ -40,7 +40,6 @@ class Flx3DCamera extends FlxCamera {
         super(X, Y, Width, Height, DefaultZoom);
         __cur3DStageID = __3DIDS++;
 
-        
 		view = new View3D();
         view.width = this.width;
         view.height = this.height;
