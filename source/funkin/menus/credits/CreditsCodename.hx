@@ -77,7 +77,7 @@ class CreditsCodename extends OptionsScreen {
             spr.antialiasing = true;
             spr.setUnstretchedGraphicSize(96, 96, false);
             spr.updateHitbox();
-            spr.shader = new CustomShader('circleProfilePicture');
+            spr.shader = new CustomShader('engine/circleProfilePicture');
             contributorsSprites.push(spr);
             add(spr);
         }

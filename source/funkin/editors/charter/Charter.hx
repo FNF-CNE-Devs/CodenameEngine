@@ -1,5 +1,8 @@
 package funkin.editors.charter;
 
+import funkin.system.Conductor;
+import funkin.chart.*;
+import funkin.chart.ChartData;
 import openfl.display.BitmapData;
 import flixel.util.FlxColor;
 import flixel.addons.display.FlxBackdrop;
@@ -10,11 +13,16 @@ class Charter extends UIState {
     var __song:String;
     var __diff:String;
 
+    var chart(get, null):ChartData;
+    private function get_chart() 
+        return PlayState.SONG;
+
     /**
-     * CONFIG (might make this customizable later)
+     * CONFIG & UI (might make this customizable later)
      */
-    private var gridColor1:FlxColor = 0xFF404040; // white
-    private var gridColor2:FlxColor = 0xFF212121; // gray
+    public var uiGroup:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
+    private var gridColor1:FlxColor = 0xFF272727; // white
+    private var gridColor2:FlxColor = 0xFF545454; // gray
 
     public var topMenu:Array<UIContextMenuOption> = [
         {
@@ -101,7 +109,21 @@ class Charter extends UIState {
     ];
 
     public var topMenuSpr:UITopMenu;
-    public var gridBackdrop:FlxBackdrop;
+    public var gridBackdrop:CharterBackdrop;
+
+    /**
+     * ACTUAL CHART DATA
+     */
+    public var strumLines:Array<ChartStrumLine> = [];
+    public var notesGroup:FlxTypedGroup<CharterNote> = new FlxTypedGroup<CharterNote>();
+
+    /**
+     * CAMERAS
+     */
+    // camera for the chart itself so that it can be unzoomed/zoomed in again
+    public var charterCamera:FlxCamera;
+    // camera for the ui
+    public var uiCamera:FlxCamera;
 
     public function new(song:String, diff:String) {
         super();
@@ -112,29 +134,52 @@ class Charter extends UIState {
     public override function create() {
         super.create();
         trace('Entering Charter for song $__song with difficulty $__diff.');
+
+
+        charterCamera = FlxG.camera;
+        uiCamera = new FlxCamera();
+        uiCamera.bgColor = 0;
+        FlxG.cameras.add(uiCamera);
+
+        
+        gridBackdrop = new CharterBackdrop(); 
+        gridBackdrop.setPosition(0, 0);
+        notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
+
+
+        topMenuSpr = new UITopMenu(topMenu);
+        topMenuSpr.cameras = uiGroup.cameras = [uiCamera];
+
+
+        // adds grid and notes so that they're ALWAYS behind the UI
+        add(gridBackdrop);
+        add(notesGroup);
+        // add the ui group
+        add(uiGroup);
+        // add the top menu last OUT of the ui group so that it stays on top
+        add(topMenuSpr);
+        
+        loadSong();
+    }
+
+    public function loadSong() {
         CoolUtil.loadSong(__song, __diff, false, false);
 
-        gridBackdrop = new FlxBackdrop(null, 1, 1, true, true);
-        gridBackdrop.makeGraphic(4, 4, gridColor1, true);
-        gridBackdrop.pixels.lock();
-        for(y in 0...4)
-            for(x in 0...2)
-                gridBackdrop.pixels.setPixel32((x*2)+(y%2), y, gridColor2);
-        gridBackdrop.pixels.unlock();
-        gridBackdrop.scale.set(40, 40);
-        gridBackdrop.updateHitbox();
-        gridBackdrop.loadFrame(gridBackdrop.frame);
-        gridBackdrop.cameras = cameras;
-        add(gridBackdrop);
-
-
-        // ALWAYS ADD LAST
-        topMenuSpr = new UITopMenu(topMenu);
-        add(topMenuSpr);
+        Conductor.setupSong(PlayState.SONG);
+        
+        for(strID=>strL in PlayState.SONG.strumLines) {
+            for(note in strL.notes) {
+                var n = new CharterNote();
+                n.updatePos(Conductor.getStepForTime(note.time), (strID * 4) + note.id, note.sLen, note.type);
+                notesGroup.add(n);
+            }
+        }
     }
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
+
+        gridBackdrop.strumlinesAmount = 3;
         // TODO: remove this bs!!
         if (controls.BACK)
             FlxG.switchState(new funkin.menus.MainMenuState());
