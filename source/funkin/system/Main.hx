@@ -56,6 +56,7 @@ class Main extends Sprite
 
 	public static function main():Void
 	{
+		#if windows WindowsAPI.setDarkMode(true); #end
 		Lib.current.addChild(instance = new Main());
 	}
 
@@ -204,7 +205,6 @@ class Main extends Sprite
 
 		Conductor.init();
 		AudioSwitchFix.init();
-		WindowsAPI.setDarkMode(true);
 		EventManager.init();
 		FlxG.signals.preStateSwitch.add(onStateSwitch);
 		FlxG.signals.postStateSwitch.add(onStateSwitchPost);
