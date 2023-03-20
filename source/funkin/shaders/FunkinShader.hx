@@ -343,7 +343,7 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
         var cl = Std.string(Type.getClass(field));
 
         // cant do "field is ShaderInput" for some reason
-        if (field is ShaderParameter) {
+        if (cl.startsWith("openfl.display.ShaderParameter")) {
             var sp = cast(field, ShaderParameter<Dynamic>);
             @:privateAccess
             return (sp.__length > 1) ? sp.value : sp.value[0];
@@ -368,14 +368,7 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
             var cl = Std.string(Type.getClass(field));
 
             // cant do "field is ShaderInput" for some reason
-            if (cl.startsWith("openfl.display.ShaderInput")) {
-                // shader input!!
-                if (!(val is BitmapData)) {
-                    throw new ShaderTypeException(v, Type.getClass(val), BitmapData);
-                    return null;
-                }
-                field.input = cast val;
-            } else if (cl.startsWith("openfl.display.ShaderParameter")) {
+            if (cl.startsWith("openfl.display.ShaderParameter")) {
                 @:privateAccess
                 if (field.__length <= 1) {
                     // that means we wait for a single number, instead of an array
@@ -402,6 +395,13 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
                     }
                     return field.value = val;
                 }
+            } else if (cl.startsWith("openfl.display.ShaderInput")) {
+                // shader input!!
+                if (!(val is BitmapData)) {
+                    throw new ShaderTypeException(v, Type.getClass(val), BitmapData);
+                    return null;
+                }
+                field.input = cast val;
             }
         }
 
