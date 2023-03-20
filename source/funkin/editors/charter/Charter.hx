@@ -143,7 +143,7 @@ class Charter extends UIState {
 
         
         gridBackdrop = new CharterBackdrop(); 
-        gridBackdrop.setPosition(0, 0);
+        // gridBackdrop.setPosition(-78, 1);
         notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
 
 
@@ -183,5 +183,14 @@ class Charter extends UIState {
         // TODO: remove this bs!!
         if (controls.BACK)
             FlxG.switchState(new funkin.menus.MainMenuState());
+
+        if (controls.LEFT)
+            FlxG.camera.scroll.x -= 100 * elapsed;
+        if (controls.RIGHT)
+            FlxG.camera.scroll.x += 100 * elapsed;
+        if (controls.UP)
+            FlxG.camera.scroll.y -= 100 * elapsed;
+        if (controls.DOWN)
+            FlxG.camera.scroll.y += 100 * elapsed;
     }
 }
