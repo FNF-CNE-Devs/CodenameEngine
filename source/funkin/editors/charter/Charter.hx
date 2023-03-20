@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.editors.charter.CharterBackdrop.CharterBackdropDummy;
 import funkin.system.Conductor;
 import funkin.chart.*;
 import funkin.chart.ChartData;
@@ -24,92 +25,11 @@ class Charter extends UIState {
     private var gridColor1:FlxColor = 0xFF272727; // white
     private var gridColor2:FlxColor = 0xFF545454; // gray
 
-    public var topMenu:Array<UIContextMenuOption> = [
-        {
-            label: "File",
-            childs: [
-                {
-                    label: "New"
-                },
-                null,
-                {
-                    label: "Exit",
-                    onSelect: function() {
-                        FlxG.switchState(new CharterSelection());
-                    }
-                }
-            ]
-        },
-        {
-            label: "Edit",
-            childs: [
-                {
-                    label: "Undo"
-                },
-                {
-                    label: "Redo"
-                },
-                null,
-                {
-                    label: "Cut"
-                },
-                {
-                    label: "Copy"
-                },
-                {
-                    label: "Paste"
-                },
-                null,
-                {
-                    label: "Delete"
-                }
-            ]
-        },
-        {
-            label: "Chart",
-            childs: [
-                {
-                    label: "Playtest"
-                },
-                {
-                    label: "Playtest here"
-                },
-                null,
-                {
-                    label: "Playtest as opponent"
-                },
-                {
-                    label: "Playtest as opponent here"
-                },
-                null,
-                {
-                    label: "Edit metadata information"
-                }
-            ]
-        },
-        {
-            label: "Playback",
-            childs: [
-                {
-                    label: "Play/Pause"
-                },
-                null,
-                {
-                    label: "Go back a section"
-                },
-                {
-                    label: "Go forward a section"
-                },
-                null,
-                {
-                    label: "Go back to the start"
-                }
-            ]
-        }
-    ];
+    public var topMenu:Array<UIContextMenuOption>;
 
     public var topMenuSpr:UITopMenu;
     public var gridBackdrop:CharterBackdrop;
+    public var gridBackdropDummy:CharterBackdropDummy;
 
     /**
      * ACTUAL CHART DATA
@@ -125,6 +45,8 @@ class Charter extends UIState {
     // camera for the ui
     public var uiCamera:FlxCamera;
 
+    public var selection:Array<CharterNote> = [];
+
     public function new(song:String, diff:String) {
         super();
         __song = song;
@@ -133,6 +55,90 @@ class Charter extends UIState {
 
     public override function create() {
         super.create();
+
+        topMenu = [
+            {
+                label: "File",
+                childs: [
+                    {
+                        label: "New"
+                    },
+                    null,
+                    {
+                        label: "Exit",
+                        onSelect: _file_exit
+                    }
+                ]
+            },
+            {
+                label: "Edit",
+                childs: [
+                    {
+                        label: "Undo"
+                    },
+                    {
+                        label: "Redo"
+                    },
+                    null,
+                    {
+                        label: "Cut"
+                    },
+                    {
+                        label: "Copy"
+                    },
+                    {
+                        label: "Paste"
+                    },
+                    null,
+                    {
+                        label: "Delete",
+                        onSelect: _edit_delete
+                    }
+                ]
+            },
+            {
+                label: "Chart",
+                childs: [
+                    {
+                        label: "Playtest"
+                    },
+                    {
+                        label: "Playtest here"
+                    },
+                    null,
+                    {
+                        label: "Playtest as opponent"
+                    },
+                    {
+                        label: "Playtest as opponent here"
+                    },
+                    null,
+                    {
+                        label: "Edit metadata information"
+                    }
+                ]
+            },
+            {
+                label: "Playback",
+                childs: [
+                    {
+                        label: "Play/Pause"
+                    },
+                    null,
+                    {
+                        label: "Go back a section"
+                    },
+                    {
+                        label: "Go forward a section"
+                    },
+                    null,
+                    {
+                        label: "Go back to the start"
+                    }
+                ]
+            }
+        ];
+
         trace('Entering Charter for song $__song with difficulty $__diff.');
 
 
@@ -142,9 +148,10 @@ class Charter extends UIState {
         FlxG.cameras.add(uiCamera);
 
         
-        gridBackdrop = new CharterBackdrop(); 
-        // gridBackdrop.setPosition(-78, 1);
+        gridBackdrop = new CharterBackdrop();
         notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
+
+        add(gridBackdropDummy = new CharterBackdropDummy(gridBackdrop));
 
 
         topMenuSpr = new UITopMenu(topMenu);
@@ -177,20 +184,61 @@ class Charter extends UIState {
     }
 
     public override function update(elapsed:Float) {
+        // TODO: do optimization like NoteGroup
+        notesGroup.forEach(function(n) {
+            n.selected = false;
+            if (n.hovered) {
+                if (FlxG.mouse.justReleased) {
+                    if (FlxG.keys.pressed.CONTROL)
+                        selection.push(n);
+                    else
+                        selection = [n];
+                }
+                if (FlxG.mouse.justReleasedRight) {
+                    openContextMenu(topMenu[1].childs);
+                }
+            }
+        });
+        for(n in selection)
+            n.selected = true;
+
         super.update(elapsed);
 
         gridBackdrop.strumlinesAmount = 3;
-        // TODO: remove this bs!!
-        if (controls.BACK)
-            FlxG.switchState(new funkin.menus.MainMenuState());
 
-        if (controls.LEFT)
-            FlxG.camera.scroll.x -= 100 * elapsed;
-        if (controls.RIGHT)
-            FlxG.camera.scroll.x += 100 * elapsed;
-        if (controls.UP)
-            FlxG.camera.scroll.y -= 100 * elapsed;
-        if (controls.DOWN)
-            FlxG.camera.scroll.y += 100 * elapsed;
+        // TODO: canTypeText in case an ui input element is focused
+        if (true) {
+            if (controls.LEFT)
+                FlxG.camera.scroll.x -= 100 * elapsed;
+            if (controls.RIGHT)
+                FlxG.camera.scroll.x += 100 * elapsed;
+            if (controls.UP)
+                FlxG.camera.scroll.y -= 100 * elapsed;
+            if (controls.DOWN)
+                FlxG.camera.scroll.y += 100 * elapsed;
+
+            if (FlxG.keys.justPressed.DELETE)
+                _edit_delete();
+        }
     }
+
+    public function deleteNote(note:CharterNote):CharterNote {
+        notesGroup.remove(note, true);
+        note.kill();
+        note.destroy();
+        return null;
+    }
+
+
+    // TOP MENU OPTIONS
+    #if REGION
+    function _file_exit() {
+        FlxG.switchState(new CharterSelection());
+    }
+    function _edit_delete() {
+        if (selection == null) return;
+        for(s in selection)
+            deleteNote(s);
+    }
+    #end
 }

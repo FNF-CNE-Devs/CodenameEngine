@@ -29,3 +29,25 @@ class CharterBackdrop extends FlxBackdrop {
         x = ogX;
     }
 }
+
+class CharterBackdropDummy extends UISprite {
+    var parent:CharterBackdrop;
+    public function new(parent:CharterBackdrop) {
+        super();
+        this.parent = parent;
+        cameras = parent.cameras;
+    }
+    
+    public override function updateButton() {
+        __rect.x = parent.x;
+        __rect.y = 0 - (FlxG.height * (1 - (1 / FlxG.camera.zoom)));
+        __rect.width = parent.frameWidth * parent.scale.x * parent.strumlinesAmount;
+        __rect.height = FlxG.height / FlxG.camera.zoom;
+        UIState.state.updateRectButtonHandler(this, __rect, onHovered);
+    }
+
+    public override function draw() {
+        @:privateAccess
+        __lastDrawCameras = [for(c in cameras) c];
+    }
+}

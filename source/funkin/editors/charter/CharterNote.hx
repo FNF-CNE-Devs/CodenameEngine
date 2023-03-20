@@ -7,6 +7,8 @@ import flixel.util.FlxColor;
 class CharterNote extends UISprite {
     var angleTween:FlxTween;
 
+    public var selected:Bool = false;
+
     public function new() {
         super();
         antialiasing = true;
@@ -16,6 +18,8 @@ class CharterNote extends UISprite {
         this.setUnstretchedGraphicSize(40, 40, false);
 
         angle = 45; // green-red inbetween
+
+        cursor = BUTTON;
     }
 
     public function updatePos(step:Float, id:Int, susLength:Float = 0, type:Int = 0) {
@@ -33,5 +37,11 @@ class CharterNote extends UISprite {
         }}, 2/3, {ease: function(t) {
             return ((Math.sin(t * Math.PI) * 0.35) * 3 * t * Math.sqrt(1 - t)) + t;
         }});
+    }
+
+    public override function update(elapsed:Float) {
+        super.update(elapsed);
+        colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;
+        colorTransform.redOffset = colorTransform.greenOffset = colorTransform.blueOffset = selected ? 96 : 0;
     }
 }
