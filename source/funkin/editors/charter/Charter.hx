@@ -9,6 +9,7 @@ import flixel.util.FlxColor;
 import flixel.addons.display.FlxBackdrop;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UIState;
+import openfl.net.FileReference;
 
 class Charter extends UIState {
     var __song:String;
