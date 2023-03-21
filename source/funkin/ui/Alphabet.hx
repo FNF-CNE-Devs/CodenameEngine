@@ -142,7 +142,7 @@ class Alphabet extends FlxSpriteGroup
 				letter.createLetter(character);
 
 			// anim not found
-			if (!letter.visible) 
+			if (!letter.visible)
 				xPos += 40;
 
 			letter.setColor(color, isBold);
@@ -190,7 +190,7 @@ class Alphabet extends FlxSpriteGroup
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		
+
 		if (isMenuItem)
 		{
 			var scaledY = FlxMath.remapToRange(targetY, 0, 1, 0, 1.3);

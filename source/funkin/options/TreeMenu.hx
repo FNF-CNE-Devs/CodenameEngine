@@ -1,5 +1,6 @@
 package funkin.options;
 
+import flixel.FlxState;
 import funkin.ui.FunkinText;
 import flixel.tweens.FlxTween;
 import funkin.menus.MainMenuState;
@@ -15,6 +16,8 @@ class TreeMenu extends MusicBeatState {
     public var pathLabel:FunkinText;
     public var pathDesc:FunkinText;
     public var pathBG:FlxSprite;
+
+	public var lastState:Class<FlxState> = Type.getClass(FlxG.state);
 
     public function new() {
         super();
@@ -76,7 +79,7 @@ class TreeMenu extends MusicBeatState {
     }
 
     public function exit() {
-        FlxG.switchState(new MainMenuState());
+        FlxG.switchState((lastState != null) ? Type.createInstance(lastState, []) : new MainMenuState());
     }
 
     public function onMenuClose(m:OptionsScreen) {

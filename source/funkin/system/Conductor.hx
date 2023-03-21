@@ -250,4 +250,32 @@ class Conductor
 
 		onBPMChange.dispatch(bpm);
 	}
+
+	public static function getTimeForStep(step:Float) {
+		var bpmChange:BPMChangeEvent = {
+			stepTime: 0,
+			songTime: 0,
+			bpm: bpm
+		};
+
+		for(change in bpmChangeMap)
+			if (change.stepTime < step && change.stepTime >= bpmChange.stepTime)
+				bpmChange = change;
+
+		return bpmChange.songTime + ((step - bpmChange.stepTime) * ((60 / bpmChange.bpm) * 250));
+	}
+
+	public static function getStepForTime(time:Float) {
+		var bpmChange:BPMChangeEvent = {
+			stepTime: 0,
+			songTime: 0,
+			bpm: bpm
+		};
+
+		for(change in bpmChangeMap)
+			if (change.songTime < time && change.songTime >= bpmChange.songTime)
+				bpmChange = change;
+
+		return bpmChange.stepTime + ((time - bpmChange.songTime) / ((60 / bpmChange.bpm) * 250));
+	}
 }

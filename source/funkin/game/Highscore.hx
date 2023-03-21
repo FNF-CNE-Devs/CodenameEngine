@@ -85,13 +85,12 @@ class Highscore
 	{
 		songScores = CoolUtil.getDefault(FlxG.save.data.songScores, new Map<String, SongScore>());
 		weekScores = CoolUtil.getDefault(FlxG.save.data.weekScores, new Map<String, SongScore>());
-		
+
 		for(k=>e in songScores)
 			if (e is Int)
 				songScores.remove(k);
 	}
 }
-
 
 typedef SongScore = {
 	@:optional var score:Int;

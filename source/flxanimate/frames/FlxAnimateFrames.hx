@@ -38,14 +38,14 @@ class FlxAnimateFrames extends FlxAtlasFrames
     public var parents:Array<FlxGraphic>;
     /**
      * Parses the spritemaps into small sprites to use in the animation.
-     * 
+     *
      * @param Path          Where the Sprites are, normally you use it once when calling FlxAnimate already
      * @return              new sliced limbs for you to use ;)
      */
     public static function fromTextureAtlas(Path:String):FlxAtlasFrames
     {
         var frames:FlxAnimateFrames = new FlxAnimateFrames();
-        
+
         if (zip != null || haxe.io.Path.extension(Path) == "zip")
         {
             #if html5
@@ -54,7 +54,7 @@ class FlxAnimateFrames extends FlxAtlasFrames
             #end
             var imagemap:Map<String, Bytes> = new Map();
             var jsonMap:Map<String, AnimateAtlas> = new Map();
-            var thing = (zip != null) ? zip :  Zip.unzip(Zip.readZip(Assets.getBytes(Path)));
+            var thing = (zip != null) ? zip : Zip.unzip(Zip.readZip(Assets.getBytes(Path)));
 			for (list in thing)
 			{
                 if (haxe.io.Path.extension(list.fileName) == "json")
@@ -182,7 +182,7 @@ class FlxAnimateFrames extends FlxAtlasFrames
 			var rotated = (texture.has.rotated && texture.att.rotated == "true");
 			var flipX = (texture.has.flipX && texture.att.flipX == "true");
 			var flipY = (texture.has.flipY && texture.att.flipY == "true");
-            
+
 			var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(width),
 				Std.parseFloat(height));
 
@@ -203,7 +203,7 @@ class FlxAnimateFrames extends FlxAtlasFrames
 		return frames;
 	}
     /**
-     * 
+     *
      * @param Path the Json in specific, can be the path of it or the actual json
      * @param Image the image which the file is referencing **WARNING:** if you set the path as a json, it's obligatory to set the image!
      * @return A new instance of `FlxAtlasFrames`
@@ -294,7 +294,7 @@ class FlxAnimateFrames extends FlxAtlasFrames
                 return null;
             }
         }
-        
+
 
         var graphic:FlxGraphic = FlxG.bitmap.add(Image, false);
 		if (graphic == null)
@@ -438,7 +438,7 @@ class FlxAnimateFrames extends FlxAtlasFrames
 
         Frames.addAtlasFrame(frameRect, sourceSize, offset, name, angle);
     }
-    
+
     static function starlingHelper(FrameName:String, FrameData:Dynamic, Frames:FlxAtlasFrames):Void
     {
         var rotated:Bool = FrameData.rotated;
@@ -474,7 +474,7 @@ class FlxAnimateFrames extends FlxAtlasFrames
             matrix.translate(0, height);
         }
         sprite.draw(SpriteMap, matrix);
-    
+
         @:privateAccess
         var curFrame = new FlxFrame(FlxG.bitmap.add(sprite));
         curFrame.name = limb.name;
@@ -482,7 +482,7 @@ class FlxAnimateFrames extends FlxAtlasFrames
         curFrame.frame = new FlxRect(0,0, width, height);
         return curFrame;
     }
-    
+
     static function texturePackerHelper(FrameName:String, FrameData:Dynamic, Frames:FlxAtlasFrames):Void
 	{
 		var rotated:Bool = FrameData.rotated;
@@ -508,7 +508,7 @@ class FlxAnimateFrames extends FlxAtlasFrames
 		return a < b ? b : a;
 }
 // code made by noonat 11 years ago, not mine lol
-class PropertyList 
+class PropertyList
 {
     static var _dateRegex:EReg = ~/(\d{4}-\d{2}-\d{2})(?:T(\d{2}:\d{2}:\d{2})Z)?/;
 
@@ -517,20 +517,20 @@ class PropertyList
      * the property list is empty, an empty object will be returned.
      * @param text Text contents of the property list file.
      */
-    static public function parse(text:String):Dynamic 
+    static public function parse(text:String):Dynamic
     {
         var fast = new Access(Xml.parse(text).firstElement());
         return fast.hasNode.dict ? parseDict(fast.node.dict) : {};
     }
 
-    static function parseDate(text:String):Date 
+    static function parseDate(text:String):Date
     {
-        if (!_dateRegex.match(text)) 
+        if (!_dateRegex.match(text))
         {
             throw 'Invalid date "' + text + '" (only yyyy-mm-dd and yyyy-mm-ddThh:mm:ssZ supported)';
         }
         text = _dateRegex.matched(1);
-        if (_dateRegex.matched(2) != null) 
+        if (_dateRegex.matched(2) != null)
         {
             text += ' ' + _dateRegex.matched(2);
         }
@@ -541,12 +541,12 @@ class PropertyList
     {
         var key:String = null;
         var result:Dynamic = {};
-        for (childNode in node.elements) 
+        for (childNode in node.elements)
         {
-            if (childNode.name == 'key') 
+            if (childNode.name == 'key')
             {
                 key = childNode.innerData;
-            } else if (key != null) 
+            } else if (key != null)
             {
                 Reflect.setField(result, key, parseValue(childNode));
             }
@@ -557,21 +557,21 @@ class PropertyList
     static function parseValue(node:Access):Dynamic
     {
         var value:Dynamic = null;
-        switch (node.name) 
+        switch (node.name)
         {
             case 'array':
             value = new Array<Dynamic>();
-            for (childNode in node.elements) 
+            for (childNode in node.elements)
             {
                 value.push(parseValue(childNode));
             }
-            
+
             case 'dict':
             value = parseDict(node);
-            
+
             case 'date':
             value = parseDate(node.innerData);
-            
+
             case 'string':
             var thing:Dynamic = node.innerData;
             if (thing.charAt(0) == "{")
@@ -583,16 +583,16 @@ class PropertyList
             value = thing;
             case 'data':
             value = node.innerData;
-            
+
             case 'true':
             value = true;
-            
+
             case 'false':
             value = false;
-            
+
             case 'real':
             value = Std.parseFloat(node.innerData);
-            
+
             case 'integer':
             value = Std.parseInt(node.innerData);
         }
@@ -602,7 +602,7 @@ class PropertyList
 typedef JSJson =
 {
     var images:Array<String>;
-    var frames:Array<Array<Int>>; 
+    var frames:Array<Array<Int>>;
 }
 typedef FlxSparrow = OneOfTwo<String, Xml>;
 typedef FlxJson = OneOfTwo<String, JsonNormal>;
@@ -612,7 +612,7 @@ typedef JsonNormal =
 	frames:Dynamic,
     meta:Meta
 }
-typedef Plist = 
+typedef Plist =
 {
     frames:Dynamic,
     metadata:Dynamic
