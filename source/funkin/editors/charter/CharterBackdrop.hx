@@ -36,6 +36,7 @@ class CharterBackdropDummy extends UISprite {
         super();
         this.parent = parent;
         cameras = parent.cameras;
+		scrollFactor.set(1, 0);
     }
     
     public override function updateButton() {

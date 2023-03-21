@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import flixel.math.FlxPoint;
 import funkin.editors.charter.CharterBackdrop.CharterBackdropDummy;
 import funkin.system.Conductor;
 import funkin.chart.*;
@@ -45,6 +46,8 @@ class Charter extends UIState {
     public var charterCamera:FlxCamera;
     // camera for the ui
     public var uiCamera:FlxCamera;
+	// selection box for the ui
+	public var selectionBox:UISliceSprite;
 
     public var selection:Array<CharterNote> = [];
 
@@ -150,9 +153,15 @@ class Charter extends UIState {
 
         
         gridBackdrop = new CharterBackdrop();
-        notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
 
         add(gridBackdropDummy = new CharterBackdropDummy(gridBackdrop));
+
+		selectionBox = new UISliceSprite(0, 0, 2, 2, 'editors/ui/selection');
+		selectionBox.visible = false;
+		selectionBox.scrollFactor.set(1, 1);
+		selectionBox.incorporeal = true;
+
+		selectionBox.cameras = notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
 
 
         topMenuSpr = new UITopMenu(topMenu);
@@ -162,6 +171,7 @@ class Charter extends UIState {
         // adds grid and notes so that they're ALWAYS behind the UI
         add(gridBackdrop);
         add(notesGroup);
+		add(selectionBox);
         // add the ui group
         add(uiGroup);
         // add the top menu last OUT of the ui group so that it stays on top
@@ -184,11 +194,17 @@ class Charter extends UIState {
         }
     }
 
-    public override function update(elapsed:Float) {
-        // TODO: do optimization like NoteGroup
-        notesGroup.forEach(function(n) {
+	/**
+	 * NOTE AND CHARTER GRID LOGIC HERE
+	 */
+	#if REGION
+	var selectionBoxEnabled:Bool = false;
+	var dragStartPos:FlxPoint = new FlxPoint();
+
+	public function updateNoteLogic(elapsed:Float) {
+		notesGroup.forEach(function(n) {
             n.selected = false;
-            if (n.hovered) {
+            if (n.hovered && !selectionBoxEnabled) {
                 if (FlxG.mouse.justReleased) {
                     if (FlxG.keys.pressed.CONTROL)
                         selection.push(n);
@@ -205,8 +221,55 @@ class Charter extends UIState {
         for(n in selection)
             n.selected = true;
 
-        if (gridBackdropDummy.hovered && FlxG.mouse.justReleasedRight)
-            openContextMenu(topMenu[2].childs);
+        if (gridBackdropDummy.hovered || (selectionBoxEnabled && gridBackdropDummy.hoveredByChild)) {
+			var mousePos = FlxG.mouse.getWorldPosition(charterCamera);
+			if (FlxG.mouse.justPressed) {
+				selectionBoxEnabled = false;
+				FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
+			}
+			if (FlxG.mouse.pressed) {
+				if (Math.abs(mousePos.x - dragStartPos.x) > 20 || Math.abs(mousePos.y - dragStartPos.y) > 20) {
+					selectionBoxEnabled = true;
+				}
+				if (selectionBoxEnabled) {
+					selectionBox.x = Math.min(mousePos.x, dragStartPos.x);
+					selectionBox.y = Math.min(mousePos.y, dragStartPos.y);
+					selectionBox.bWidth = Std.int(Math.abs(mousePos.x - dragStartPos.x));
+					selectionBox.bHeight = Std.int(Math.abs(mousePos.y - dragStartPos.y));
+				}
+			}
+			if (FlxG.mouse.justReleased) {
+				if (selectionBoxEnabled) {
+					var minX = Std.int(Math.round(selectionBox.x / 40));
+					var minY = Math.round(selectionBox.y / 40) - 1;
+					var maxX = Std.int(Math.round((selectionBox.x + selectionBox.bWidth) / 40));
+					var maxY = Math.round((selectionBox.y + selectionBox.bHeight) / 40);
+
+					selection = [];
+					notesGroup.forEach(function(n) {
+						if (n.id >= minX && n.id <= maxX && n.step >= minY && n.step <= maxY)
+							selection.push(n);
+					});
+
+					selectionBoxEnabled = false;
+				} else {
+					// place note
+					var note = new CharterNote();
+					note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Std.int(mousePos.y / 40), Std.int(mousePos.x / 40), 0, 0);
+					notesGroup.add(note);
+					selection = [note];
+				}
+			}
+			if (FlxG.mouse.justReleasedRight)
+				openContextMenu(topMenu[2].childs);
+		}
+		selectionBox.visible = selectionBoxEnabled;
+	}
+	#end
+    public override function update(elapsed:Float) {
+        // TODO: do optimization like NoteGroup
+		updateNoteLogic(elapsed);
+        
 
         super.update(elapsed);
 
@@ -215,13 +278,13 @@ class Charter extends UIState {
         // TODO: canTypeText in case an ui input element is focused
         if (true) {
             if (controls.LEFT)
-                FlxG.camera.scroll.x -= 100 * elapsed;
+                FlxG.camera.scroll.x -= 250 * elapsed;
             if (controls.RIGHT)
-                FlxG.camera.scroll.x += 100 * elapsed;
+                FlxG.camera.scroll.x += 250 * elapsed;
             if (controls.UP)
-                FlxG.camera.scroll.y -= 100 * elapsed;
+                FlxG.camera.scroll.y -= 250 * elapsed;
             if (controls.DOWN)
-                FlxG.camera.scroll.y += 100 * elapsed;
+                FlxG.camera.scroll.y += 250 * elapsed;
 
             if (FlxG.keys.justPressed.DELETE)
                 _edit_delete();

@@ -22,7 +22,18 @@ class CharterNote extends UISprite {
         cursor = BUTTON;
     }
 
+
+	public var step:Float;
+	public var id:Int;
+	public var susLength:Float;
+	public var type:Int;
+
     public function updatePos(step:Float, id:Int, susLength:Float = 0, type:Int = 0) {
+		this.step = step;
+		this.id = id;
+		this.susLength = susLength;
+		this.type = type;
+		
         x = id * 40;
         y = step * 40;
 
@@ -42,6 +53,7 @@ class CharterNote extends UISprite {
     public override function update(elapsed:Float) {
         super.update(elapsed);
         colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;
-        colorTransform.redOffset = colorTransform.greenOffset = colorTransform.blueOffset = selected ? 96 : 0;
+        colorTransform.redOffset = colorTransform.greenOffset = selected ? 96 : 0;
+		colorTransform.blueOffset = selected ? 168 : 0;
     }
 }

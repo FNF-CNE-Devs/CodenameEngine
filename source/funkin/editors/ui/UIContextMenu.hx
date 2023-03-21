@@ -67,6 +67,12 @@ class UIContextMenu extends MusicBeatSubstate {
         }
         bg.bWidth = maxW + 8;
         bg.bHeight = Std.int(lastY - bg.y + 4);
+
+		if (bg.y + bg.bHeight > FlxG.height) {
+			bg.y -= bg.bHeight;
+			for(o in contextMenuOptions)
+				o.y -= bg.bHeight;
+		}
     }
 
     public function select(option:UIContextMenuOption) {
@@ -123,7 +129,7 @@ class UIContextMenuOptionSpr extends UISliceSprite {
 
     public override function draw() {
         alpha = hovered ? 1 : 0;
-        label.follow(this, 20, 0);
+        label.follow(this, 20, 2);
         super.draw();
     }
 

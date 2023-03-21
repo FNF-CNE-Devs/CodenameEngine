@@ -7,6 +7,8 @@ class UISliceSprite extends UISprite {
     public var bHeight:Int = 20;
     public var framesOffset:Int = 0;
 
+	public var incorporeal:Bool = false;
+
     public function new(x:Float, y:Float, w:Int, h:Int, path:String) {
         super(x, y);
         
@@ -15,6 +17,7 @@ class UISliceSprite extends UISprite {
     }
 
     public override function updateButton() {
+		if (incorporeal) return;
         __rect.x = x;
         __rect.y = y;
         __rect.width = bWidth;
@@ -41,7 +44,7 @@ class UISliceSprite extends UISprite {
         var bottom:FlxFrame = frames.frames[framesOffset + 7];
         var bottomright:FlxFrame = frames.frames[framesOffset + 8];
 
-        @:privateAccess {
+        @:privateAccess if (visible) {
             // TOP LEFT
             frame = topleft;
             setPosition(x, y);
@@ -49,10 +52,12 @@ class UISliceSprite extends UISprite {
             super.drawSuper();
     
             // TOP
-            frame = top;
-            setPosition(x + topleft.frame.width, y);
-            __setSize(bWidth - topleft.frame.width - topright.frame.width, top.frame.height);
-            super.drawSuper();
+			if (bWidth > topleft.frame.width + topright.frame.width) {
+				frame = top;
+				setPosition(x + topleft.frame.width, y);
+				__setSize(bWidth - topleft.frame.width - topright.frame.width, top.frame.height);
+				super.drawSuper();
+			}
 
             // TOP RIGHT
             frame = topright;
@@ -61,22 +66,26 @@ class UISliceSprite extends UISprite {
             super.drawSuper();
 
             // MIDDLE LEFT
-            frame = middleleft;
-            setPosition(x, y + top.frame.height);
-            __setSize(middleleft.frame.width, bHeight - topleft.frame.height - bottomleft.frame.height);
-            super.drawSuper();
-    
-            // MIDDLE
-            frame = middle;
-            setPosition(x + topleft.frame.width, y + top.frame.height);
-            __setSize(bWidth - middleleft.frame.width - middleright.frame.width, bHeight - topleft.frame.height - bottomleft.frame.height);
-            super.drawSuper();
+			if (bHeight > top.frame.height + bottom.frame.height) {
+				frame = middleleft;
+				setPosition(x, y + top.frame.height);
+				__setSize(middleleft.frame.width, bHeight - topleft.frame.height - bottomleft.frame.height);
+				super.drawSuper();
+		
+				if (bWidth > middleleft.frame.width + middleright.frame.width) {
+					// MIDDLE
+					frame = middle;
+					setPosition(x + topleft.frame.width, y + top.frame.height);
+					__setSize(bWidth - middleleft.frame.width - middleright.frame.width, bHeight - topleft.frame.height - bottomleft.frame.height);
+					super.drawSuper();
+				}
 
-            // MIDDLE RIGHT
-            frame = middleright;
-            setPosition(x + bWidth - topright.frame.width, y + top.frame.height);
-            __setSize(middleright.frame.width, bHeight - topleft.frame.height - bottomleft.frame.height);
-            super.drawSuper();
+				// MIDDLE RIGHT
+				frame = middleright;
+				setPosition(x + bWidth - topright.frame.width, y + top.frame.height);
+				__setSize(middleright.frame.width, bHeight - topleft.frame.height - bottomleft.frame.height);
+				super.drawSuper();
+			}
 
             // BOTTOM LEFT
             frame = bottomleft;
@@ -84,11 +93,13 @@ class UISliceSprite extends UISprite {
             __setSize(bottomleft.frame.width, bottomleft.frame.height);
             super.drawSuper();
     
-            // BOTTOM
-            frame = bottom;
-            setPosition(x + bottomleft.frame.width, y + bHeight - bottom.frame.height);
-            __setSize(bWidth - bottomleft.frame.width - bottomright.frame.width, bottom.frame.height);
-            super.drawSuper();
+			if (bWidth > bottomleft.frame.width + bottomright.frame.width) {
+				// BOTTOM
+				frame = bottom;
+				setPosition(x + bottomleft.frame.width, y + bHeight - bottom.frame.height);
+				__setSize(bWidth - bottomleft.frame.width - bottomright.frame.width, bottom.frame.height);
+				super.drawSuper();
+			}
 
             // BOTTOM RIGHT
             frame = bottomright;
