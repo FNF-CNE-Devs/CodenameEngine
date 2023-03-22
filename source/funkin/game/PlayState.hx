@@ -1012,9 +1012,7 @@ class PlayState extends MusicBeatState
 			FlxG.switchState(new GitarooPause());
 		}
 		else {
-			var point:FlxPoint = boyfriend != null ? boyfriend.getScreenPosition() : FlxPoint.get();
-			openSubState(new PauseSubState(point.x, point.y));
-			point.put();
+			openSubState(new PauseSubState());
 		}
 
 		updateDiscordPresence();

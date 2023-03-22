@@ -31,9 +31,13 @@ class PauseSubState extends MusicBeatSubstate
 
 	private var __cancelDefault:Bool = false;
 
-	public function new(x:Float, y:Float)
-	{
+	public function new(x:Float = 0, y:Float = 0) {
 		super();
+	}
+
+	override function create()
+	{
+		super.create();
 
 		pauseScript = Script.create(Paths.script(script));
 		pauseScript.setParent(this);
