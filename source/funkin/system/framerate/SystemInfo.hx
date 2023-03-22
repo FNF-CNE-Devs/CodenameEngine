@@ -19,7 +19,7 @@ class SystemInfo extends FramerateCategory {
         var process = new sys.io.Process("wmic", ["cpu", "get", "name"]);
         if (process.exitCode() == 0) cpuName = process.stdout.readAll().toString().trim().split("\n")[1].trim();
 		#elseif (mac)
-		var process = new sys.io.Process("sysctl -a | grep brand");
+		var process = new sys.io.Process("sysctl -a | grep brand_string");
 		if (process.exitCode() == 0) cpuName = process.stdout.readAll().toString().trim().split(":")[1].trim();
 		#else
 		var process = new sys.io.Process("cat", ["/proc/cpuinfo"]);
