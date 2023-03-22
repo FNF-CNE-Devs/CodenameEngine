@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import flixel.util.FlxSort;
 import flixel.math.FlxPoint;
 import funkin.editors.charter.CharterBackdrop.CharterBackdropDummy;
 import funkin.system.Conductor;
@@ -51,6 +52,9 @@ class Charter extends UIState {
 
     public var selection:Array<CharterNote> = [];
 
+	public var undoList:Array<CharterChange> = [];
+	public var redoList:Array<CharterChange> = [];
+
     public function new(song:String, diff:String) {
         super();
         __song = song;
@@ -78,10 +82,12 @@ class Charter extends UIState {
                 label: "Edit",
                 childs: [
                     {
-                        label: "Undo"
+                        label: "Undo",
+						onSelect: _edit_undo
                     },
                     {
-                        label: "Redo"
+                        label: "Redo",
+						onSelect: _edit_redo
                     },
                     null,
                     {
@@ -258,6 +264,7 @@ class Charter extends UIState {
 					note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Std.int(mousePos.y / 40), Std.int(mousePos.x / 40), 0, 0);
 					notesGroup.add(note);
 					selection = [note];
+					addToUndo(CPlaceNote(note));
 				}
 			}
 			if (FlxG.mouse.justReleasedRight)
@@ -265,6 +272,88 @@ class Charter extends UIState {
 		}
 		selectionBox.visible = selectionBoxEnabled;
 	}
+
+    public function deleteNote(note:CharterNote):CharterNote {
+		if (note == null) return note;
+
+        notesGroup.remove(note, true);
+        note.kill();
+		addToUndo(CDeleteNotes([note]));
+        return null;
+    }
+
+	public function deleteNotes(notes:Array<CharterNote>) {
+		if (notes.length <= 0) return [];
+
+		for(note in notes) {
+			notesGroup.remove(note, true);
+			note.kill();
+		}
+		addToUndo(CDeleteNotes(notes));
+		return [];
+	}
+
+	// UNDO/REDO LOGIC
+	#if REGION
+	public inline function addToUndo(c:CharterChange) {
+		redoList = [];
+		undoList.insert(0, c);
+		while(undoList.length > Options.maxUndos)
+			undoList.pop();
+	}
+	
+	function _edit_undo() {
+		selection = [];
+		var v = undoList.shift();
+		switch(v) {
+			case null:
+				// do nothing
+			case CCreateNotes(notes):
+				for(n in notes) {
+					notesGroup.remove(n, true);
+					n.kill();
+				}
+			case CDeleteNotes(notes):
+				for(n in notes) {
+					notesGroup.add(n);
+					n.revive();
+				}
+				sortNotes();
+			case CPlaceNote(note):
+				notesGroup.remove(note, true);
+				note.kill();
+		}
+		if (v != null)
+			redoList.insert(0, v);
+	}
+
+	function _edit_redo() {
+		selection = [];
+		var v = redoList.shift();
+		switch(v) {
+			case null:
+				// do nothing
+			case CCreateNotes(notes):
+				for(n in notes) {
+					notesGroup.add(n);
+					n.revive();
+				}
+			case CDeleteNotes(notes):
+				for(n in notes) {
+					notesGroup.remove(n, true);
+					n.kill();
+				}
+			case CPlaceNote(note):
+				notesGroup.add(note);
+				note.revive();
+		}
+		if (v != null)
+			undoList.insert(0, v);
+	}
+	#end
+
+	public inline function sortNotes()
+		notesGroup.sort((i, c1, c2) -> FlxSort.byValues(i, c1.step, c2.step), FlxSort.ASCENDING);
 	#end
     public override function update(elapsed:Float) {
         // TODO: do optimization like NoteGroup
@@ -288,14 +377,14 @@ class Charter extends UIState {
 
             if (FlxG.keys.justPressed.DELETE)
                 _edit_delete();
-        }
-    }
 
-    public function deleteNote(note:CharterNote):CharterNote {
-        notesGroup.remove(note, true);
-        note.kill();
-        note.destroy();
-        return null;
+			if (FlxG.keys.pressed.CONTROL) {
+				if (FlxG.keys.justPressed.Z)
+					_edit_undo();
+				if (FlxG.keys.justPressed.Y)
+					_edit_redo();
+			}
+        }
     }
 
 
@@ -306,8 +395,13 @@ class Charter extends UIState {
     }
     function _edit_delete() {
         if (selection == null) return;
-        for(s in selection)
-            deleteNote(s);
+		selection = deleteNotes(selection);
     }
     #end
+}
+
+enum CharterChange {
+	CPlaceNote(note:CharterNote);
+	CCreateNotes(notes:Array<CharterNote>);
+	CDeleteNotes(notes:Array<CharterNote>);
 }
