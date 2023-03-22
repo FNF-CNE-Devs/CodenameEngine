@@ -34,6 +34,7 @@ class Charter extends UIState {
     public var topMenuSpr:UITopMenu;
     public var gridBackdrop:CharterBackdrop;
     public var gridBackdropDummy:CharterBackdropDummy;
+	public var conductorFollowerSpr:FlxSprite;
 
 	public var hitsound:FlxSound;
 	public var metronome:FlxSound;
@@ -145,14 +146,17 @@ class Charter extends UIState {
                     },
                     null,
                     {
-                        label: "Go back a section"
+                        label: "Go back a section",
+						onSelect: _playback_back
                     },
                     {
-                        label: "Go forward a section"
+                        label: "Go forward a section",
+						onSelect: _playback_forward
                     },
                     null,
                     {
-                        label: "Go back to the start"
+                        label: "Go back to the start",
+						onSelect: _playback_start
                     },
                     null,
                     {
@@ -185,7 +189,11 @@ class Charter extends UIState {
 		selectionBox.scrollFactor.set(1, 1);
 		selectionBox.incorporeal = true;
 
-		selectionBox.cameras = notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
+		conductorFollowerSpr = new FlxSprite(0, 0).makeGraphic(1, 1, -1);
+		conductorFollowerSpr.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, 4);
+		conductorFollowerSpr.updateHitbox();
+
+		conductorFollowerSpr.cameras = selectionBox.cameras = notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
 
 
         topMenuSpr = new UITopMenu(topMenu);
@@ -195,6 +203,7 @@ class Charter extends UIState {
         // adds grid and notes so that they're ALWAYS behind the UI
         add(gridBackdrop);
         add(notesGroup);
+		add(conductorFollowerSpr);
 		add(selectionBox);
         // add the ui group
         add(uiGroup);
@@ -397,6 +406,8 @@ class Charter extends UIState {
 	public inline function sortNotes()
 		notesGroup.sort((i, c1, c2) -> FlxSort.byValues(i, c1.step, c2.step), FlxSort.ASCENDING);
 	#end
+
+	var __crochet:Float;
     public override function update(elapsed:Float) {
         // TODO: do optimization like NoteGroup
 		updateNoteLogic(elapsed);
@@ -419,7 +430,24 @@ class Charter extends UIState {
 
 			if (FlxG.keys.justPressed.SPACE)
 				_playback_play(null);
+
+			__crochet = ((60 / Conductor.bpm) * 1000);
+			Conductor.songPosition -= __crochet * FlxG.mouse.wheel;
+
+			if (FlxG.keys.justPressed.D)
+				_playback_forward(null);
+			if (FlxG.keys.justPressed.A)
+				_playback_back(null);
+			if (FlxG.keys.justPressed.HOME)
+				_playback_start(null);
+			if (FlxG.keys.justPressed.END)
+				_playback_end(null);
         }
+
+		Conductor.songPosition = FlxMath.bound(Conductor.songPosition, 0, FlxG.sound.music.length);
+
+		conductorFollowerSpr.y = curStepFloat * 40;
+		charterCamera.scroll.set(conductorFollowerSpr.x + conductorFollowerSpr.scale.x - (FlxG.width / 2), conductorFollowerSpr.y - (FlxG.height * 0.25));
     }
 
 
@@ -432,6 +460,18 @@ class Charter extends UIState {
         if (selection == null) return;
 		selection = deleteNotes(selection);
     }
+	function _playback_back(_) {
+		Conductor.songPosition -= Conductor.beatsPerMesure * __crochet;
+	}
+	function _playback_forward(_) {
+		Conductor.songPosition += Conductor.beatsPerMesure * __crochet;
+	}
+	function _playback_start(_) {
+		Conductor.songPosition = 0;
+	}
+	function _playback_end(_) {
+		Conductor.songPosition = FlxG.sound.music.time;
+	}
     #end
 }
 
