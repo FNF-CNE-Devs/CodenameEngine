@@ -1,5 +1,6 @@
 package funkin.utils;
 
+import flixel.system.FlxSound;
 import funkin.system.Conductor;
 import flixel.system.FlxSoundGroup;
 import animateatlas.AtlasFrameMaker;
@@ -408,6 +409,12 @@ class CoolUtil
 		#else
 		FlxG.openURL(url);
 		#end
+	}
+
+	public static function replay(sound:FlxSound) {
+		sound.stop();
+		sound.time = 0;
+		sound.play();
 	}
 
 	public static inline function maxInt(p1:Int, p2:Int)

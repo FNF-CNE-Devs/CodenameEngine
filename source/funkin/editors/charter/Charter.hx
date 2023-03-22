@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import flixel.system.FlxSound;
 import flixel.util.FlxSort;
 import flixel.math.FlxPoint;
 import funkin.editors.charter.CharterBackdrop.CharterBackdropDummy;
@@ -34,6 +35,11 @@ class Charter extends UIState {
     public var gridBackdrop:CharterBackdrop;
     public var gridBackdropDummy:CharterBackdropDummy;
 
+	public var hitsound:FlxSound;
+	public var metronome:FlxSound;
+
+	public var vocals:FlxSound;
+
     /**
      * ACTUAL CHART DATA
      */
@@ -63,6 +69,8 @@ class Charter extends UIState {
 
     public override function create() {
         super.create();
+
+        trace('Entering Charter for song $__song with difficulty $__diff.');
 
         topMenu = [
             {
@@ -132,7 +140,8 @@ class Charter extends UIState {
                 label: "Playback",
                 childs: [
                     {
-                        label: "Play/Pause"
+                        label: "Play/Pause",
+						onSelect: _playback_play
                     },
                     null,
                     {
@@ -144,13 +153,22 @@ class Charter extends UIState {
                     null,
                     {
                         label: "Go back to the start"
+                    },
+                    null,
+                    {
+                        label: "Metronome",
+						onSelect: _playback_metronome
+                    },
+                    {
+                        label: "Visual metronome"
                     }
                 ]
             }
         ];
 
-        trace('Entering Charter for song $__song with difficulty $__diff.');
 
+		hitsound = FlxG.sound.load(Paths.sound('editors/charter/hitsound'));
+		metronome = FlxG.sound.load(Paths.sound('editors/charter/metronome'));
 
         charterCamera = FlxG.camera;
         uiCamera = new FlxCamera();
@@ -190,6 +208,9 @@ class Charter extends UIState {
         CoolUtil.loadSong(__song, __diff, false, false);
 
         Conductor.setupSong(PlayState.SONG);
+
+		FlxG.sound.music = FlxG.sound.load(Paths.inst(__song, __diff));
+		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
         
         for(strID=>strL in PlayState.SONG.strumLines) {
             for(note in strL.notes) {
@@ -199,6 +220,12 @@ class Charter extends UIState {
             }
         }
     }
+
+	public override function beatHit(curBeat:Int) {
+		super.beatHit(curBeat);
+		if (Options.charterMetronomeEnabled)
+			metronome.replay();
+	}
 
 	/**
 	 * NOTE AND CHARTER GRID LOGIC HERE
@@ -302,7 +329,7 @@ class Charter extends UIState {
 			undoList.pop();
 	}
 	
-	function _edit_undo() {
+	function _edit_undo(_) {
 		selection = [];
 		var v = undoList.shift();
 		switch(v) {
@@ -327,7 +354,18 @@ class Charter extends UIState {
 			redoList.insert(0, v);
 	}
 
-	function _edit_redo() {
+	function _playback_play(_) {
+		if (FlxG.sound.music.playing) {
+			FlxG.sound.music.pause();
+			vocals.pause();
+		} else {
+			FlxG.sound.music.time = vocals.time = Conductor.songPosition;
+			FlxG.sound.music.play();
+			vocals.play();
+		}
+	}
+
+	function _edit_redo(_) {
 		selection = [];
 		var v = redoList.shift();
 		switch(v) {
@@ -350,6 +388,10 @@ class Charter extends UIState {
 		if (v != null)
 			undoList.insert(0, v);
 	}
+
+	function _playback_metronome(t) {
+		t.icon = (Options.charterMetronomeEnabled = !Options.charterMetronomeEnabled) ? 1 : 0;
+	}
 	#end
 
 	public inline function sortNotes()
@@ -358,7 +400,6 @@ class Charter extends UIState {
     public override function update(elapsed:Float) {
         // TODO: do optimization like NoteGroup
 		updateNoteLogic(elapsed);
-        
 
         super.update(elapsed);
 
@@ -366,34 +407,28 @@ class Charter extends UIState {
 
         // TODO: canTypeText in case an ui input element is focused
         if (true) {
-            if (controls.LEFT)
-                FlxG.camera.scroll.x -= 250 * elapsed;
-            if (controls.RIGHT)
-                FlxG.camera.scroll.x += 250 * elapsed;
-            if (controls.UP)
-                FlxG.camera.scroll.y -= 250 * elapsed;
-            if (controls.DOWN)
-                FlxG.camera.scroll.y += 250 * elapsed;
-
             if (FlxG.keys.justPressed.DELETE)
-                _edit_delete();
+                _edit_delete(null);
 
 			if (FlxG.keys.pressed.CONTROL) {
 				if (FlxG.keys.justPressed.Z)
-					_edit_undo();
+					_edit_undo(null);
 				if (FlxG.keys.justPressed.Y)
-					_edit_redo();
+					_edit_redo(null);
 			}
+
+			if (FlxG.keys.justPressed.SPACE)
+				_playback_play(null);
         }
     }
 
 
     // TOP MENU OPTIONS
     #if REGION
-    function _file_exit() {
+    function _file_exit(_) {
         FlxG.switchState(new CharterSelection());
     }
-    function _edit_delete() {
+    function _edit_delete(_) {
         if (selection == null) return;
 		selection = deleteNotes(selection);
     }

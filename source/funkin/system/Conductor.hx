@@ -93,9 +93,6 @@ class Conductor
 
 	
 	@:dox(hide) public static var lastSongPos:Float = 0;
-	@:dox(hide) public static var lastSongPosTime:Float = 0;
-	@:dox(hide) public static var speed:Float = 0;
-	@:dox(hide) public static var destSpeed:Float = 0;
 	@:dox(hide) public static var offset:Float = 0;
 
 	/**
@@ -107,7 +104,6 @@ class Conductor
 
 	public static function reset() {
 		songPosition = lastSongPos = curBeatFloat = curStepFloat = curBeat = curStep = 0;
-		speed = 1;
 		bpmChangeMap = [];
 		changeBPM(0);
 	}
@@ -154,27 +150,18 @@ class Conductor
 		reset();
 	}
 
-	private static var __timeUntilUpdate:Float;
-	private static var __elapsedAL:Float;
-	private static function __updateSongPos(elapsed:Float, mainTime:Float) {
+	private static function __updateSongPos(elapsed:Float) {
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
-			speed = destSpeed = 1;
 			lastSongPos = FlxG.sound.music != null ? FlxG.sound.music.time : 0;
-			lastSongPosTime = mainTime;
 			return;
 		}
 
-		var lastPos = lastSongPos;
 		if (lastSongPos != (lastSongPos = FlxG.sound.music.time)) {
 			// update conductor
-			__timeUntilUpdate = -(lastSongPosTime - (lastSongPosTime = mainTime));
-			__elapsedAL = (lastSongPos - lastPos);
-			destSpeed = FlxMath.bound(__timeUntilUpdate / __elapsedAL, 0.925, 1.075);
 			songPosition = lastSongPos;
 		} else {
-			songPosition += elapsed * 1000 * speed;
+			songPosition += elapsed * 1000;
 		}
-		speed = FlxMath.lerp(speed, destSpeed, FlxMath.bound(elapsed, 0, 1));
 	}
 
 	private static function onStateSwitch(newState:FlxState) {
@@ -188,7 +175,7 @@ class Conductor
 	private static function update() {
 		if (FlxG.state != null && FlxG.state is MusicBeatState && cast(FlxG.state, MusicBeatState).cancelConductorUpdate) return;
 
-		__updateSongPos(FlxG.elapsed, Main.time);
+		__updateSongPos(FlxG.elapsed);
 
 		if (bpm > 0) {
 			// updates curbeat and stuff
