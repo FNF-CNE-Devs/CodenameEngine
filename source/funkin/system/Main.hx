@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.system.framerate.SystemInfo;
 import openfl.utils.AssetLibrary;
 import openfl.utils.AssetCache;
 import openfl.text.TextFormat;
@@ -107,6 +108,7 @@ class Main extends Sprite
 		#if !mobile
 		// addChild(new FramerateField(10, 3, 0xFFFFFF));
 		addChild(new funkin.system.framerate.Framerate());
+		SystemInfo.init();
 		#end
 
 		trace("Hello", "World");

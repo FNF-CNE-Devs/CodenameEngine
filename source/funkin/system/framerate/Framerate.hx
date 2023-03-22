@@ -54,6 +54,7 @@ class Framerate extends Sprite {
         __addToList(codenameBuildField = new CodenameBuildField());
         #end
         __addCategory(new ConductorInfo());
+        __addCategory(new FlixelInfo());
         __addCategory(new SystemInfo());
         __addCategory(new AssetTreeInfo());
         
