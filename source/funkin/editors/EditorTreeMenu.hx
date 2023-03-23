@@ -1,5 +1,6 @@
 package funkin.editors;
 
+import funkin.menus.MainMenuState;
 import flixel.addons.display.FlxBackdrop;
 import funkin.options.*;
 
