@@ -51,7 +51,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
             // Engine related stuff
             "engine"            => {
-                build: funkin.macros.BuildCounterMacro.getBuildNumber(),
+				commit: funkin.macros.GitCommitMacro.commitNumber,
+                build: 2675, // 2675 being the last build num before it was removed
                 name: "Codename Engine"
             },
             "ModState"          => funkin.scripting.ModState,
@@ -91,7 +92,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
         return [
             "CODENAME_ENGINE" => true,
             "CODENAME_VER" => Application.current.meta.get('version'),
-            "CODENAME_BUILD" => funkin.macros.BuildCounterMacro.getBuildNumber(),
+            "CODENAME_BUILD" => 2675,
+            "CODENAME_COMMIT" => funkin.macros.GitCommitMacro.commitNumber,
             "desktop" => #if desktop true #else false #end,
             "windows" => #if windows true #else false #end,
             "hl" => #if hl true #else false #end,

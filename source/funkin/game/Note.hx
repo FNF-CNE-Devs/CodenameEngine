@@ -93,6 +93,8 @@ class Note extends FlxSprite
 	public function new(strumLine:StrumLine, noteData:ChartNote, sustain:Bool = false, sustainLength:Float = 0, sustainOffset:Float = 0)
 	{
 		super();
+		
+		moves = false;
 
 		this.prevNote = strumLine.notes.members.last();
 		this.noteTypeID = noteData.type.getDefault(0);

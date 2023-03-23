@@ -45,7 +45,7 @@ class Charter extends UIState {
      * ACTUAL CHART DATA
      */
     public var strumLines:Array<ChartStrumLine> = [];
-    public var notesGroup:FlxTypedGroup<CharterNote> = new FlxTypedGroup<CharterNote>();
+    public var notesGroup:CharterNoteGroup = new CharterNoteGroup();
 
     /**
      * CAMERAS
@@ -308,12 +308,13 @@ class Charter extends UIState {
 					}
 
 					selectionBoxEnabled = false;
+				} else if (selection.length > 0) {
+					selection = [];
 				} else {
 					// place note
 					var note = new CharterNote();
 					note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Std.int(mousePos.y / 40), Std.int(mousePos.x / 40), 0, 0);
 					notesGroup.add(note);
-					selection = [note];
 					addToUndo(CPlaceNote(note));
 				}
 			}
@@ -362,6 +363,7 @@ class Charter extends UIState {
 				for(n in notes) {
 					notesGroup.remove(n, true);
 					n.kill();
+					selection.remove(n);
 				}
 			case CDeleteNotes(notes):
 				for(n in notes) {
@@ -372,6 +374,7 @@ class Charter extends UIState {
 			case CPlaceNote(note):
 				notesGroup.remove(note, true);
 				note.kill();
+				selection.remove(note);
 		}
 		if (v != null)
 			redoList.insert(0, v);
@@ -460,8 +463,12 @@ class Charter extends UIState {
 
 		Conductor.songPosition = FlxMath.bound(Conductor.songPosition, 0, FlxG.sound.music.length);
 
-		conductorFollowerSpr.y = curStepFloat * 40;
-		charterCamera.scroll.set(conductorFollowerSpr.x + conductorFollowerSpr.scale.x - (FlxG.width / 2), conductorFollowerSpr.y - (FlxG.height * 0.25));
+		if (FlxG.sound.music.playing) {
+			conductorFollowerSpr.y = curStepFloat * 40;
+		} else {
+			conductorFollowerSpr.y = lerp(conductorFollowerSpr.y, curStepFloat * 40, 1/3);
+		}
+		charterCamera.scroll.set(conductorFollowerSpr.x + conductorFollowerSpr.scale.x - (FlxG.width / 2), conductorFollowerSpr.y - (FlxG.height * 0.5));
     }
 
 
@@ -475,16 +482,20 @@ class Charter extends UIState {
 		selection = deleteNotes(selection);
     }
 	function _playback_back(_) {
+		if (FlxG.sound.music.playing) return;
 		Conductor.songPosition -= Conductor.beatsPerMesure * __crochet;
 	}
 	function _playback_forward(_) {
+		if (FlxG.sound.music.playing) return;
 		Conductor.songPosition += Conductor.beatsPerMesure * __crochet;
 	}
 	function _playback_start(_) {
+		if (FlxG.sound.music.playing) return;
 		Conductor.songPosition = 0;
 	}
 	function _playback_end(_) {
-		Conductor.songPosition = FlxG.sound.music.time;
+		if (FlxG.sound.music.playing) return;
+		Conductor.songPosition = FlxG.sound.music.length;
 	}
     #end
 }

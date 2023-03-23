@@ -20,6 +20,8 @@ class CharterNote extends UISprite {
         angle = 45; // green-red inbetween
 
         cursor = BUTTON;
+
+		moves = false;
     }
 
 
@@ -65,7 +67,8 @@ class CharterNote extends UISprite {
 	}
 
     public override function update(elapsed:Float) {
-        super.update(elapsed);
+		super.update(elapsed);
+		
         colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;
         colorTransform.redOffset = colorTransform.greenOffset = selected ? 96 : 0;
 		colorTransform.blueOffset = selected ? 168 : 0;

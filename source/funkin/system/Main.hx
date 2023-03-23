@@ -178,10 +178,6 @@ class Main extends Sprite
 			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './${pathBack}assets/', true));
 			Paths.assetsTree.sourceLibsAmount++;
 			#end
-
-			var buildNum:Int = Std.parseInt(File.getContent('./${pathBack}buildnumber.txt'));
-			buildNum++;
-			File.saveContent('./${pathBack}buildnumber.txt', Std.string(buildNum));
 		} else {
 			#if USE_ADAPTED_ASSETS
 			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './assets/', true));
