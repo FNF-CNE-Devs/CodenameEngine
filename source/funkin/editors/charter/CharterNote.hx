@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.system.Conductor;
 import flixel.tweens.FlxTween;
 import funkin.shaders.CustomShader;
 import flixel.util.FlxColor;
@@ -22,6 +23,14 @@ class CharterNote extends UISprite {
         cursor = BUTTON;
 
 		moves = false;
+    }
+
+    public override function updateButton() {
+        __rect.x = x;
+        __rect.y = y;
+        __rect.width = 40;
+        __rect.height = 40;
+        UIState.state.updateRectButtonHandler(this, __rect, onHovered);
     }
 
 
@@ -66,8 +75,16 @@ class CharterNote extends UISprite {
 		super.kill();
 	}
 
+	var __passed:Bool = false;
     public override function update(elapsed:Float) {
 		super.update(elapsed);
+
+		if (__passed != (__passed = step < Conductor.curStepFloat)) {
+			alpha = __passed ? 0.6 : 1;
+			if (__passed && FlxG.sound.music.playing) {
+				
+			}
+		}
 		
         colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;
         colorTransform.redOffset = colorTransform.greenOffset = selected ? 96 : 0;

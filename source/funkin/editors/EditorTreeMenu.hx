@@ -17,6 +17,10 @@ class EditorTreeMenu extends TreeMenu {
         bg.antialiasing = true;
         add(bg);
     }
+	
+	public override function exit() {
+		FlxG.switchState(new MainMenuState());
+	}
 
     public override function update(elapsed:Float) {
         super.update(elapsed);

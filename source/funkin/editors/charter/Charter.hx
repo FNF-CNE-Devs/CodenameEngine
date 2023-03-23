@@ -71,8 +71,6 @@ class Charter extends UIState {
     public override function create() {
         super.create();
 
-        trace('Entering Charter for song $__song with difficulty $__diff.');
-
         topMenu = [
             {
                 label: "File",
@@ -92,25 +90,31 @@ class Charter extends UIState {
                 childs: [
                     {
                         label: "Undo",
+						keybind: "Ctrl+Z",
 						onSelect: _edit_undo
                     },
                     {
                         label: "Redo",
+						keybind: "Ctrl+Y",
 						onSelect: _edit_redo
                     },
                     null,
                     {
-                        label: "Cut"
+                        label: "Cut",
+						keybind: "Ctrl+X"
                     },
                     {
-                        label: "Copy"
+                        label: "Copy",
+						keybind: "Ctrl+C"
                     },
                     {
-                        label: "Paste"
+                        label: "Paste",
+						keybind: "Ctrl+V"
                     },
                     null,
                     {
                         label: "Delete",
+						keybind: "Del",
                         onSelect: _edit_delete
                     }
                 ]
@@ -119,17 +123,21 @@ class Charter extends UIState {
                 label: "Chart",
                 childs: [
                     {
-                        label: "Playtest"
+                        label: "Playtest",
+						keybind: "Enter"
                     },
                     {
-                        label: "Playtest here"
+                        label: "Playtest here",
+						keybind: "Shift+Enter"
                     },
                     null,
                     {
-                        label: "Playtest as opponent"
+                        label: "Playtest as opponent",
+						keybind: "Ctrl+Enter"
                     },
                     {
-                        label: "Playtest as opponent here"
+                        label: "Playtest as opponent here",
+						keybind: "Ctrl+Shift+Enter"
                     },
                     null,
                     {
@@ -142,21 +150,30 @@ class Charter extends UIState {
                 childs: [
                     {
                         label: "Play/Pause",
+						keybind: "Space",
 						onSelect: _playback_play
                     },
                     null,
                     {
                         label: "Go back a section",
+						keybind: "A",
 						onSelect: _playback_back
                     },
                     {
                         label: "Go forward a section",
+						keybind: "D",
 						onSelect: _playback_forward
                     },
                     null,
                     {
                         label: "Go back to the start",
+						keybind: "Home",
 						onSelect: _playback_start
+                    },
+                    {
+                        label: "Go to the end",
+						keybind: "End",
+						onSelect: _playback_end
                     },
                     null,
                     {
@@ -439,13 +456,13 @@ class Charter extends UIState {
                 _edit_delete(null);
 
 			if (FlxG.keys.pressed.CONTROL) {
-				if (FlxG.keys.justPressed.Z)
-					_edit_undo(null);
-				if (FlxG.keys.justPressed.Y)
+				if (FlxG.keys.justPressed.Y || (FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.Z)) // CTRL+Y or CTRL+SHIFT+Z
 					_edit_redo(null);
+				else if (FlxG.keys.justPressed.Z) // CTRL+Z
+					_edit_undo(null);
 			}
 
-			if (FlxG.keys.justPressed.SPACE)
+			if (FlxG.keys.justPressed.SPACE) // SPACE
 				_playback_play(null);
 
 			__crochet = ((60 / Conductor.bpm) * 1000);

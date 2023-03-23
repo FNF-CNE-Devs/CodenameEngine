@@ -107,6 +107,7 @@ class UIContextMenu extends MusicBeatSubstate {
 typedef UIContextMenuCallback = UIContextMenu->Int->UIContextMenuOption->Void;
 typedef UIContextMenuOption = {
     var label:String;
+    var ?keybind:String;
     var ?icon:Int;
     var ?onSelect:UIContextMenuOption->Void;
     var ?childs:Array<UIContextMenuOption>;
@@ -114,6 +115,8 @@ typedef UIContextMenuOption = {
 
 class UIContextMenuOptionSpr extends UISliceSprite {
     public var label:UIText;
+    public var labelKeybind:UIText;
+	public var icon:FlxSprite;
     public var option:UIContextMenuOption;
 
     var parent:UIContextMenu;
@@ -123,13 +126,32 @@ class UIContextMenuOptionSpr extends UISliceSprite {
         this.option = option;
         this.parent = parent;
 
-        super(x, y, label.frameWidth + 22, label.frameHeight, 'editors/ui/menu-item');
+		if (option.icon != null && option.icon > 0) {
+			icon = new FlxSprite(0, 0).loadGraphic(Paths.image('editors/ui/context-icons'), true, 20, 20);
+			icon.animation.add('icon', [option.icon-1], 0, true);
+			icon.animation.play('icon');
+		}
+
+		if (option.keybind != null) {
+			labelKeybind = new UIText(label.x + label.frameWidth + 10, 2, 0, option.keybind);
+			labelKeybind.alpha = 0.75;
+		}
+
+        super(x, y, labelKeybind != null ? Std.int(labelKeybind.x + labelKeybind.frameWidth + 10) : (label.frameWidth + 22), label.frameHeight, 'editors/ui/menu-item');
         members.push(label);
+        if (icon != null)
+			members.push(icon);
+        if (labelKeybind != null)
+			members.push(labelKeybind);
     }
 
     public override function draw() {
         alpha = hovered ? 1 : 0;
         label.follow(this, 20, 2);
+		if (icon != null)
+			icon.follow(this, 0, 0);
+		if (labelKeybind != null)
+			labelKeybind.follow(this, bWidth - 10 - labelKeybind.frameWidth, 2);
         super.draw();
     }
 
