@@ -35,6 +35,7 @@ class UIContextMenu extends MusicBeatSubstate {
         FlxG.cameras.add(contextCam, false);
 
         bg = new UISliceSprite(x, y, 100, 100, 'editors/ui/context-bg');
+		bg.cameras = [contextCam];
         add(bg);
 
         var lastY:Float = bg.y + 4;
@@ -48,6 +49,7 @@ class UIContextMenu extends MusicBeatSubstate {
                 continue;
             }
             var spr = new UIContextMenuOptionSpr(bg.x + 4, lastY, o, this);
+			spr.cameras = [contextCam];
             lastY = spr.y + spr.bHeight;
             contextMenuOptions.push(spr);
             add(spr);
@@ -71,6 +73,8 @@ class UIContextMenu extends MusicBeatSubstate {
 		if (bg.y + bg.bHeight > FlxG.height) {
 			bg.y -= bg.bHeight;
 			for(o in contextMenuOptions)
+				o.y -= bg.bHeight;
+			for(o in separators)
 				o.y -= bg.bHeight;
 		}
     }

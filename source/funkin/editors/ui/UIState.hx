@@ -36,9 +36,10 @@ class UIState extends MusicBeatState {
     }
 
     public function updateRectButtonHandler(spr:UISprite, rect:FlxRect, buttonHandler:Void->Void) {
-        FlxG.mouse.getScreenPosition(camera, __mousePos);
+        
         
         for(camera in spr.__lastDrawCameras) {
+			var pos = FlxG.mouse.getScreenPosition(camera, FlxPoint.get());
             __rect.x = rect.x;
             __rect.y = rect.y;
             __rect.width = rect.width;
@@ -47,16 +48,20 @@ class UIState extends MusicBeatState {
             __rect.x -= camera.scroll.x * spr.scrollFactor.x;
             __rect.y -= camera.scroll.y * spr.scrollFactor.y;
             
-            if (((__mousePos.x > __rect.x) && (__mousePos.x < __rect.x + rect.width)) && ((__mousePos.y > __rect.y) && (__mousePos.y < __rect.y + __rect.height))) {
+            if (((pos.x > __rect.x) && (pos.x < __rect.x + rect.width)) && ((pos.y > __rect.y) && (pos.y < __rect.y + __rect.height))) {
                 spr.hoveredByChild = true;
                 this.hoveredSprite = spr;
                 this.buttonHandler = buttonHandler;
+				pos.put();
                 return;
             }
+			pos.put();
         }
     }
 
     public override function tryUpdate(elapsed:Float) {
+		FlxG.mouse.getScreenPosition(FlxG.camera, __mousePos);
+
         super.tryUpdate(elapsed);
 
         if (buttonHandler != null) {

@@ -22,6 +22,11 @@ class Charter extends UIState {
     private function get_chart() 
         return PlayState.SONG;
 
+	public static var instance(get, null):Charter;
+
+	private static inline function get_instance()
+		return FlxG.state is Charter ? cast FlxG.state : null;
+
     /**
      * CONFIG & UI (might make this customizable later)
      */
@@ -44,7 +49,7 @@ class Charter extends UIState {
     /**
      * ACTUAL CHART DATA
      */
-    public var strumLines:Array<ChartStrumLine> = [];
+    public var strumLines:Array<CharterStrumline> = [];
     public var notesGroup:CharterNoteGroup = new CharterNoteGroup();
 
     /**
@@ -138,6 +143,22 @@ class Charter extends UIState {
                     {
                         label: "Playtest as opponent here",
 						keybind: "Ctrl+Shift+Enter"
+                    },
+                    null,
+                    {
+                        label: "Zoom in",
+						keybind: "Ctrl+[+]",
+						onSelect: _chart_zoomin
+                    },
+                    {
+                        label: "Zoom out",
+						keybind: "Ctrl+[-]",
+						onSelect: _chart_zoomout
+                    },
+                    {
+                        label: "Reset zoom",
+						keybind: "Ctrl+[0]",
+						onSelect: _chart_zoomreset
                     },
                     null,
                     {
@@ -244,13 +265,20 @@ class Charter extends UIState {
                 n.updatePos(Conductor.getStepForTime(note.time), (strID * 4) + note.id, note.sLen, note.type);
                 notesGroup.add(n);
             }
+
+			strumLines.push({
+				strumLine: strL,
+				hitsounds: true
+			});
         }
     }
 
 	public override function beatHit(curBeat:Int) {
 		super.beatHit(curBeat);
-		if (Options.charterMetronomeEnabled)
-			metronome.replay();
+		if (FlxG.sound.music.playing) {
+			if (Options.charterMetronomeEnabled)
+				metronome.replay();
+		}
 	}
 
 	/**
@@ -402,7 +430,7 @@ class Charter extends UIState {
 			FlxG.sound.music.pause();
 			vocals.pause();
 		} else {
-			FlxG.sound.music.time = vocals.time = Conductor.songPosition;
+			vocals.time = FlxG.sound.music.time = Conductor.songPosition;
 			FlxG.sound.music.play();
 			vocals.play();
 		}
@@ -448,34 +476,14 @@ class Charter extends UIState {
 
         super.update(elapsed);
 
-        gridBackdrop.strumlinesAmount = 3;
+        if (gridBackdrop.strumlinesAmount != (gridBackdrop.strumlinesAmount = strumLines.length)) {
+			conductorFollowerSpr.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, 4);
+			conductorFollowerSpr.updateHitbox();
+		}
 
         // TODO: canTypeText in case an ui input element is focused
         if (true) {
-            if (FlxG.keys.justPressed.DELETE)
-                _edit_delete(null);
-
-			if (FlxG.keys.pressed.CONTROL) {
-				if (FlxG.keys.justPressed.Y || (FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.Z)) // CTRL+Y or CTRL+SHIFT+Z
-					_edit_redo(null);
-				else if (FlxG.keys.justPressed.Z) // CTRL+Z
-					_edit_undo(null);
-			}
-
-			if (FlxG.keys.justPressed.SPACE) // SPACE
-				_playback_play(null);
-
-			__crochet = ((60 / Conductor.bpm) * 1000);
-			Conductor.songPosition -= __crochet * FlxG.mouse.wheel;
-
-			if (FlxG.keys.justPressed.D)
-				_playback_forward(null);
-			if (FlxG.keys.justPressed.A)
-				_playback_back(null);
-			if (FlxG.keys.justPressed.HOME)
-				_playback_start(null);
-			if (FlxG.keys.justPressed.END)
-				_playback_end(null);
+			handleShortcuts();
         }
 
 		Conductor.songPosition = FlxMath.bound(Conductor.songPosition, 0, FlxG.sound.music.length);
@@ -485,9 +493,45 @@ class Charter extends UIState {
 		} else {
 			conductorFollowerSpr.y = lerp(conductorFollowerSpr.y, curStepFloat * 40, 1/3);
 		}
-		charterCamera.scroll.set(conductorFollowerSpr.x + conductorFollowerSpr.scale.x - (FlxG.width / 2), conductorFollowerSpr.y - (FlxG.height * 0.5));
+		charterCamera.scroll.set(conductorFollowerSpr.x + ((conductorFollowerSpr.scale.x - FlxG.width) / 2), conductorFollowerSpr.y - (FlxG.height * 0.5));
+		charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125);
     }
 
+	public function handleShortcuts() {
+		if (FlxG.keys.justPressed.DELETE) // DELETE
+			_edit_delete(null);
+
+		if (FlxG.keys.pressed.CONTROL) {
+			if (FlxG.keys.justPressed.Y || (FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.Z)) // CTRL+Y or CTRL+SHIFT+Z
+				_edit_redo(null);
+			else if (FlxG.keys.justPressed.Z) // CTRL+Z
+				_edit_undo(null);
+			else if (FlxG.keys.justPressed.NUMPADPLUS) // CTRL+[+]
+				_chart_zoomin(null);
+			else if (FlxG.keys.justPressed.NUMPADMINUS) // CTRL+[-]
+				_chart_zoomout(null);
+			else if (FlxG.keys.justPressed.NUMPADZERO) // CTRL+[0]
+				_chart_zoomreset(null);
+		}
+
+		if (FlxG.keys.justPressed.SPACE) // SPACE
+			_playback_play(null);
+
+		__crochet = ((60 / Conductor.bpm) * 1000);
+		Conductor.songPosition -= __crochet * FlxG.mouse.wheel;
+
+		if (FlxG.keys.justPressed.D)
+			_playback_forward(null);
+		if (FlxG.keys.justPressed.A)
+			_playback_back(null);
+		if (FlxG.keys.justPressed.HOME)
+			_playback_start(null);
+		if (FlxG.keys.justPressed.END)
+			_playback_end(null);
+	}
+
+	var zoom:Float = 0;
+	var __camZoom:Float = 1;
 
     // TOP MENU OPTIONS
     #if REGION
@@ -514,11 +558,31 @@ class Charter extends UIState {
 		if (FlxG.sound.music.playing) return;
 		Conductor.songPosition = FlxG.sound.music.length;
 	}
+	function _chart_zoomin(_) {
+		zoom += 0.25;
+		__camZoom = Math.pow(2, zoom);
+	}
+	function _chart_zoomout(_) {
+		zoom -= 0.25;
+		__camZoom = Math.pow(2, zoom);
+	}
+	function _chart_zoomreset(_) {
+		zoom = 0;
+		__camZoom = Math.pow(2, zoom);
+	}
     #end
+	
+	public inline function hitsoundsEnabled(id:Int)
+		return strumLines[Std.int(id / 4)] != null && strumLines[Std.int(id / 4)].hitsounds;
 }
 
 enum CharterChange {
 	CPlaceNote(note:CharterNote);
 	CCreateNotes(notes:Array<CharterNote>);
 	CDeleteNotes(notes:Array<CharterNote>);
+}
+
+typedef CharterStrumline = {
+	var strumLine:ChartStrumLine;
+	var hitsounds:Bool;
 }

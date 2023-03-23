@@ -81,9 +81,8 @@ class CharterNote extends UISprite {
 
 		if (__passed != (__passed = step < Conductor.curStepFloat)) {
 			alpha = __passed ? 0.6 : 1;
-			if (__passed && FlxG.sound.music.playing) {
-				
-			}
+			if (__passed && FlxG.sound.music.playing && Charter.instance.hitsoundsEnabled(id))
+				Charter.instance.hitsound.replay();
 		}
 		
         colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;
