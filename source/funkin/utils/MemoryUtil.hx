@@ -132,10 +132,39 @@ class MemoryUtil {
 
 	public static function getMemType():String {
 		#if windows
-		if (Assets.exists(Paths.ps1("powershell/ramtype"))) {
-			var process = new HiddenProcess("powershell", ["-ExecutionPolicy", "ByPass", "-File", (Sys.getCwd() + Paths.ps1("powershell/ramtype")).replace("/", "\\")]);
-			if (process.exitCode() == 0) return process.stdout.readAll().toString().trim().split("\n")[0].trim();
-		}
+		var memoryMap:Map<Int, String> = [
+			0 => "Unknown",
+			1 => "Other",
+			2 => "DRAM",
+			3 => "Synchronous DRAM",
+			4 => "Cache DRAM",
+			5 => "EDO",
+			6 => "EDRAM",
+			7 => "VRAM",
+			8 => "SRAM",
+			9 => "RAM",
+			10 => "ROM",
+			11 => "Flash",
+			12 => "EEPROM",
+			13 => "FEPROM",
+			14 => "EPROM",
+			15 => "CDRAM",
+			16 => "3DRAM",
+			17 => "SDRAM",
+			18 => "SGRAM",
+			19 => "RDRAM",
+			20 => "DDR",
+			21 => "DDR2",
+			22 => "DDR2 FB-DIMM",
+			24 => "DDR3",
+			25 => "FBD2",
+			26 => "DDR4"
+		];
+		var memoryOutput:Int = -1;
+
+		var process = new HiddenProcess("wmic", ["memorychip", "get", "SMBIOSMemoryType"]);
+		if (process.exitCode() == 0) memoryOutput = Std.int(Std.parseFloat(process.stdout.readAll().toString().trim().split("\n")[1]));
+		if (memoryOutput != -1) return memoryMap[memoryOutput];
 		#elseif mac
 		var process = new HiddenProcess("system_profiler", ["SPMemoryDataType"]);
 		if (process.exitCode() == 0) return process.stdout.readAll().toString().match(/Type: (.+)/)[1];
