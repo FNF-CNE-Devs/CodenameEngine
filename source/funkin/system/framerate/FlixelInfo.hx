@@ -1,7 +1,5 @@
 package funkin.system.framerate;
 
-import funkin.utils.MemoryUtil;
-
 class FlixelInfo extends FramerateCategory {
     public function new() {
         super("Flixel Info");
