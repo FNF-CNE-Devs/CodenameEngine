@@ -83,7 +83,7 @@ class KeybindsOptions extends MusicBeatSubstate {
     public var settingCam:FlxCamera;
 
     public var p2Selected:Bool = false;
-    public var curSelected:Int = -1;
+    public var curSelected:Int = 0;
     public var canSelect:Bool = true;
     public var alphabets:FlxTypedGroup<KeybindSetting>;
     public var bg:FlxSprite;
@@ -101,7 +101,6 @@ class KeybindsOptions extends MusicBeatSubstate {
     public override function create() {
         super.create();
         instance = this;
-
 
         isSubState = FlxG.state != this;
         alphabets = new FlxTypedGroup<KeybindSetting>();
@@ -166,8 +165,6 @@ class KeybindsOptions extends MusicBeatSubstate {
         }
         add(alphabets);
         add(camFollow);
-
-        changeSelection(1);
     }
 
     public override function destroy() {
@@ -197,7 +194,8 @@ class KeybindsOptions extends MusicBeatSubstate {
         }
 
         if (canSelect) {
-            changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
+			changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
+            
             if (controls.BACK) {
                 FlxTransitionableState.skipNextTransIn = true;
                 if (isSubState)
@@ -235,11 +233,11 @@ class KeybindsOptions extends MusicBeatSubstate {
     }
 
     public function changeSelection(change:Int) {
-        if (change == 0) return;
-        CoolUtil.playMenuSFX(SCROLL, 0.4);
+		if (change != 0) CoolUtil.playMenuSFX(SCROLL, 0.4);
+
         curSelected = FlxMath.wrap(curSelected + change, 0, alphabets.length-1);
         alphabets.forEach(function(e) {
-            e.alpha = 0.55;
+            e.alpha = 0.2;
         });
         if (alphabets.members[curSelected] != null) {
             var alphabet = alphabets.members[curSelected];

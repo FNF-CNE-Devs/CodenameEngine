@@ -64,8 +64,8 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
 
     public override function update(elapsed:Float) {
         super.update(elapsed);
-        bind1.alpha = (p2Selected ? 0.55 : 1) / alpha;
-        bind2.alpha = (p2Selected ? 1 : 0.55) / alpha;
+        bind1.alpha = (p2Selected ? 0.2 : 1) / alpha;
+        bind2.alpha = (p2Selected ? 1 : 0.2) / alpha;
         bind1.alpha *= alpha;
         bind2.alpha *= alpha;
     }
