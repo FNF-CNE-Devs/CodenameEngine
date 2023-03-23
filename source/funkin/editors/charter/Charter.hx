@@ -1,5 +1,7 @@
 package funkin.editors.charter;
 
+import flixel.system.FlxSound;
+import flixel.util.FlxSort;
 import flixel.math.FlxPoint;
 import funkin.editors.charter.CharterBackdrop.CharterBackdropDummy;
 import funkin.system.Conductor;
@@ -32,6 +34,12 @@ class Charter extends UIState {
     public var topMenuSpr:UITopMenu;
     public var gridBackdrop:CharterBackdrop;
     public var gridBackdropDummy:CharterBackdropDummy;
+	public var conductorFollowerSpr:FlxSprite;
+
+	public var hitsound:FlxSound;
+	public var metronome:FlxSound;
+
+	public var vocals:FlxSound;
 
     /**
      * ACTUAL CHART DATA
@@ -51,6 +59,9 @@ class Charter extends UIState {
 
     public var selection:Array<CharterNote> = [];
 
+	public var undoList:Array<CharterChange> = [];
+	public var redoList:Array<CharterChange> = [];
+
     public function new(song:String, diff:String) {
         super();
         __song = song;
@@ -59,6 +70,8 @@ class Charter extends UIState {
 
     public override function create() {
         super.create();
+
+        trace('Entering Charter for song $__song with difficulty $__diff.');
 
         topMenu = [
             {
@@ -78,10 +91,12 @@ class Charter extends UIState {
                 label: "Edit",
                 childs: [
                     {
-                        label: "Undo"
+                        label: "Undo",
+						onSelect: _edit_undo
                     },
                     {
-                        label: "Redo"
+                        label: "Redo",
+						onSelect: _edit_redo
                     },
                     null,
                     {
@@ -126,25 +141,38 @@ class Charter extends UIState {
                 label: "Playback",
                 childs: [
                     {
-                        label: "Play/Pause"
+                        label: "Play/Pause",
+						onSelect: _playback_play
                     },
                     null,
                     {
-                        label: "Go back a section"
+                        label: "Go back a section",
+						onSelect: _playback_back
                     },
                     {
-                        label: "Go forward a section"
+                        label: "Go forward a section",
+						onSelect: _playback_forward
                     },
                     null,
                     {
-                        label: "Go back to the start"
+                        label: "Go back to the start",
+						onSelect: _playback_start
+                    },
+                    null,
+                    {
+                        label: "Metronome",
+						onSelect: _playback_metronome
+                    },
+                    {
+                        label: "Visual metronome"
                     }
                 ]
             }
         ];
 
-        trace('Entering Charter for song $__song with difficulty $__diff.');
 
+		hitsound = FlxG.sound.load(Paths.sound('editors/charter/hitsound'));
+		metronome = FlxG.sound.load(Paths.sound('editors/charter/metronome'));
 
         charterCamera = FlxG.camera;
         uiCamera = new FlxCamera();
@@ -161,7 +189,11 @@ class Charter extends UIState {
 		selectionBox.scrollFactor.set(1, 1);
 		selectionBox.incorporeal = true;
 
-		selectionBox.cameras = notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
+		conductorFollowerSpr = new FlxSprite(0, 0).makeGraphic(1, 1, -1);
+		conductorFollowerSpr.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, 4);
+		conductorFollowerSpr.updateHitbox();
+
+		conductorFollowerSpr.cameras = selectionBox.cameras = notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
 
 
         topMenuSpr = new UITopMenu(topMenu);
@@ -171,6 +203,7 @@ class Charter extends UIState {
         // adds grid and notes so that they're ALWAYS behind the UI
         add(gridBackdrop);
         add(notesGroup);
+		add(conductorFollowerSpr);
 		add(selectionBox);
         // add the ui group
         add(uiGroup);
@@ -184,6 +217,9 @@ class Charter extends UIState {
         CoolUtil.loadSong(__song, __diff, false, false);
 
         Conductor.setupSong(PlayState.SONG);
+
+		FlxG.sound.music = FlxG.sound.load(Paths.inst(__song, __diff));
+		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
         
         for(strID=>strL in PlayState.SONG.strumLines) {
             for(note in strL.notes) {
@@ -193,6 +229,12 @@ class Charter extends UIState {
             }
         }
     }
+
+	public override function beatHit(curBeat:Int) {
+		super.beatHit(curBeat);
+		if (Options.charterMetronomeEnabled)
+			metronome.replay();
+	}
 
 	/**
 	 * NOTE AND CHARTER GRID LOGIC HERE
@@ -208,6 +250,8 @@ class Charter extends UIState {
                 if (FlxG.mouse.justReleased) {
                     if (FlxG.keys.pressed.CONTROL)
                         selection.push(n);
+                    else if (FlxG.keys.pressed.SHIFT)
+                        selection.remove(n);
                     else
                         selection = [n];
                 }
@@ -240,16 +284,28 @@ class Charter extends UIState {
 			}
 			if (FlxG.mouse.justReleased) {
 				if (selectionBoxEnabled) {
-					var minX = Std.int(Math.round(selectionBox.x / 40));
-					var minY = Math.round(selectionBox.y / 40) - 1;
-					var maxX = Std.int(Math.round((selectionBox.x + selectionBox.bWidth) / 40));
-					var maxY = Math.round((selectionBox.y + selectionBox.bHeight) / 40);
+					var minX = Std.int(selectionBox.x / 40);
+					var minY = Std.int(selectionBox.y / 40);
+					var maxX = Std.int(Math.ceil((selectionBox.x + selectionBox.bWidth) / 40));
+					var maxY = Math.ceil((selectionBox.y + selectionBox.bHeight) / 40);
 
-					selection = [];
-					notesGroup.forEach(function(n) {
-						if (n.id >= minX && n.id <= maxX && n.step >= minY && n.step <= maxY)
-							selection.push(n);
-					});
+					if (FlxG.keys.pressed.SHIFT) {
+						notesGroup.forEach(function(n) {
+							if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY && selection.contains(n))
+								selection.remove(n);
+						});
+					} else if (FlxG.keys.pressed.CONTROL) {
+						notesGroup.forEach(function(n) {
+							if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY && !selection.contains(n))
+								selection.push(n);
+						});
+					} else {
+						selection = [];
+						notesGroup.forEach(function(n) {
+							if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY)
+								selection.push(n);
+						});
+					}
 
 					selectionBoxEnabled = false;
 				} else {
@@ -258,6 +314,7 @@ class Charter extends UIState {
 					note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Std.int(mousePos.y / 40), Std.int(mousePos.x / 40), 0, 0);
 					notesGroup.add(note);
 					selection = [note];
+					addToUndo(CPlaceNote(note));
 				}
 			}
 			if (FlxG.mouse.justReleasedRight)
@@ -265,11 +322,109 @@ class Charter extends UIState {
 		}
 		selectionBox.visible = selectionBoxEnabled;
 	}
+
+    public function deleteNote(note:CharterNote):CharterNote {
+		if (note == null) return note;
+
+        notesGroup.remove(note, true);
+        note.kill();
+		addToUndo(CDeleteNotes([note]));
+        return null;
+    }
+
+	public function deleteNotes(notes:Array<CharterNote>) {
+		if (notes.length <= 0) return [];
+
+		for(note in notes) {
+			notesGroup.remove(note, true);
+			note.kill();
+		}
+		addToUndo(CDeleteNotes(notes));
+		return [];
+	}
+
+	// UNDO/REDO LOGIC
+	#if REGION
+	public inline function addToUndo(c:CharterChange) {
+		redoList = [];
+		undoList.insert(0, c);
+		while(undoList.length > Options.maxUndos)
+			undoList.pop();
+	}
+	
+	function _edit_undo(_) {
+		selection = [];
+		var v = undoList.shift();
+		switch(v) {
+			case null:
+				// do nothing
+			case CCreateNotes(notes):
+				for(n in notes) {
+					notesGroup.remove(n, true);
+					n.kill();
+				}
+			case CDeleteNotes(notes):
+				for(n in notes) {
+					notesGroup.add(n);
+					n.revive();
+				}
+				sortNotes();
+			case CPlaceNote(note):
+				notesGroup.remove(note, true);
+				note.kill();
+		}
+		if (v != null)
+			redoList.insert(0, v);
+	}
+
+	function _playback_play(_) {
+		if (FlxG.sound.music.playing) {
+			FlxG.sound.music.pause();
+			vocals.pause();
+		} else {
+			FlxG.sound.music.time = vocals.time = Conductor.songPosition;
+			FlxG.sound.music.play();
+			vocals.play();
+		}
+	}
+
+	function _edit_redo(_) {
+		selection = [];
+		var v = redoList.shift();
+		switch(v) {
+			case null:
+				// do nothing
+			case CCreateNotes(notes):
+				for(n in notes) {
+					notesGroup.add(n);
+					n.revive();
+				}
+			case CDeleteNotes(notes):
+				for(n in notes) {
+					notesGroup.remove(n, true);
+					n.kill();
+				}
+			case CPlaceNote(note):
+				notesGroup.add(note);
+				note.revive();
+		}
+		if (v != null)
+			undoList.insert(0, v);
+	}
+
+	function _playback_metronome(t) {
+		t.icon = (Options.charterMetronomeEnabled = !Options.charterMetronomeEnabled) ? 1 : 0;
+	}
 	#end
+
+	public inline function sortNotes()
+		notesGroup.sort((i, c1, c2) -> FlxSort.byValues(i, c1.step, c2.step), FlxSort.ASCENDING);
+	#end
+
+	var __crochet:Float;
     public override function update(elapsed:Float) {
         // TODO: do optimization like NoteGroup
 		updateNoteLogic(elapsed);
-        
 
         super.update(elapsed);
 
@@ -277,37 +432,65 @@ class Charter extends UIState {
 
         // TODO: canTypeText in case an ui input element is focused
         if (true) {
-            if (controls.LEFT)
-                FlxG.camera.scroll.x -= 250 * elapsed;
-            if (controls.RIGHT)
-                FlxG.camera.scroll.x += 250 * elapsed;
-            if (controls.UP)
-                FlxG.camera.scroll.y -= 250 * elapsed;
-            if (controls.DOWN)
-                FlxG.camera.scroll.y += 250 * elapsed;
-
             if (FlxG.keys.justPressed.DELETE)
-                _edit_delete();
-        }
-    }
+                _edit_delete(null);
 
-    public function deleteNote(note:CharterNote):CharterNote {
-        notesGroup.remove(note, true);
-        note.kill();
-        note.destroy();
-        return null;
+			if (FlxG.keys.pressed.CONTROL) {
+				if (FlxG.keys.justPressed.Z)
+					_edit_undo(null);
+				if (FlxG.keys.justPressed.Y)
+					_edit_redo(null);
+			}
+
+			if (FlxG.keys.justPressed.SPACE)
+				_playback_play(null);
+
+			__crochet = ((60 / Conductor.bpm) * 1000);
+			Conductor.songPosition -= __crochet * FlxG.mouse.wheel;
+
+			if (FlxG.keys.justPressed.D)
+				_playback_forward(null);
+			if (FlxG.keys.justPressed.A)
+				_playback_back(null);
+			if (FlxG.keys.justPressed.HOME)
+				_playback_start(null);
+			if (FlxG.keys.justPressed.END)
+				_playback_end(null);
+        }
+
+		Conductor.songPosition = FlxMath.bound(Conductor.songPosition, 0, FlxG.sound.music.length);
+
+		conductorFollowerSpr.y = curStepFloat * 40;
+		charterCamera.scroll.set(conductorFollowerSpr.x + conductorFollowerSpr.scale.x - (FlxG.width / 2), conductorFollowerSpr.y - (FlxG.height * 0.25));
     }
 
 
     // TOP MENU OPTIONS
     #if REGION
-    function _file_exit() {
+    function _file_exit(_) {
         FlxG.switchState(new CharterSelection());
     }
-    function _edit_delete() {
+    function _edit_delete(_) {
         if (selection == null) return;
-        for(s in selection)
-            deleteNote(s);
+		selection = deleteNotes(selection);
     }
+	function _playback_back(_) {
+		Conductor.songPosition -= Conductor.beatsPerMesure * __crochet;
+	}
+	function _playback_forward(_) {
+		Conductor.songPosition += Conductor.beatsPerMesure * __crochet;
+	}
+	function _playback_start(_) {
+		Conductor.songPosition = 0;
+	}
+	function _playback_end(_) {
+		Conductor.songPosition = FlxG.sound.music.time;
+	}
     #end
+}
+
+enum CharterChange {
+	CPlaceNote(note:CharterNote);
+	CCreateNotes(notes:Array<CharterNote>);
+	CDeleteNotes(notes:Array<CharterNote>);
 }

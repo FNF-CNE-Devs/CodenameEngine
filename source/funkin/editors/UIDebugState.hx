@@ -33,7 +33,7 @@ class UIDebugState extends UIState {
                     null,
                     {
                         label: "Exit",
-                        onSelect: () -> {FlxG.switchState(new funkin.menus.MainMenuState());}
+                        onSelect: (t) -> {FlxG.switchState(new funkin.menus.MainMenuState());}
                     }
                 ]
             },
@@ -107,13 +107,13 @@ class UIDebugState extends UIState {
             openContextMenu([
                 {
                     label: "Test 1",
-                    onSelect: function() {
+                    onSelect: function(t) {
                         trace("Test 1 clicked");
                     }
                 },
                 {
                     label: "Test 2",
-                    onSelect: function() {
+                    onSelect: function(t) {
                         trace("Test 2 clicked");
                     }
                 },
@@ -122,7 +122,7 @@ class UIDebugState extends UIState {
                     childs: [
                         {
                             label: "Test 4",
-                            onSelect: function() {
+                            onSelect: function(t) {
                                 trace("Test 4 clicked");
                             }
                         }

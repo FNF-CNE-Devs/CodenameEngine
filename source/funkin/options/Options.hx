@@ -37,6 +37,10 @@ class Options
 	 */
 	public static var editorSFX:Bool = true;
 	public static var resizableEditors:Bool = true;
+	public static var maxUndos:Int = 120;
+
+	// CHARTER
+	public static var charterMetronomeEnabled:Bool = false;
 
 	/**
 	 * PLAYER 1 CONTROLS

@@ -50,6 +50,20 @@ class CharterNote extends UISprite {
         }});
     }
 
+	public override function kill() {
+		if (angleTween != null) {
+			angleTween.cancel();
+			angle = switch(animation.curAnim.curFrame = (id % 4)) {
+				case 0: -90;
+				case 1: 180;
+				case 2: 0;
+				case 3: 90;
+				default: 0; // how is that even possible
+			};
+		}
+		super.kill();
+	}
+
     public override function update(elapsed:Float) {
         super.update(elapsed);
         colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;

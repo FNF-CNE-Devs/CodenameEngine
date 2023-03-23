@@ -78,7 +78,7 @@ class UIContextMenu extends MusicBeatSubstate {
     public function select(option:UIContextMenuOption) {
         var index = options.indexOf(option);
         if (option.onSelect != null)
-            option.onSelect();
+            option.onSelect(option);
         if (callback != null)
             callback(this, index, option);
         close();
@@ -108,7 +108,7 @@ typedef UIContextMenuCallback = UIContextMenu->Int->UIContextMenuOption->Void;
 typedef UIContextMenuOption = {
     var label:String;
     var ?icon:Int;
-    var ?onSelect:Void->Void;
+    var ?onSelect:UIContextMenuOption->Void;
     var ?childs:Array<UIContextMenuOption>;
 }
 
