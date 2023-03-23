@@ -35,15 +35,22 @@ class BetaWarningState extends MusicBeatState {
     public override function update(elapsed:Float) {
         super.update(elapsed);
 
+		if (controls.ACCEPT && transitioning) {
+			FlxG.camera.stopFX(); FlxG.camera.visible = false;
+			goToTitle();
+		}
+
         if (controls.ACCEPT && !transitioning) {
             transitioning = true;
             CoolUtil.playMenuSFX(CONFIRM);
             FlxG.camera.flash(FlxColor.WHITE, 1, function() {
-                FlxG.camera.fade(FlxColor.BLACK, 2.5, false, function() {
-                    FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
-                    FlxG.switchState(new TitleState());
-                });
+                FlxG.camera.fade(FlxColor.BLACK, 2.5, false, goToTitle);
             });
         }
     }
+
+	private function goToTitle() {
+		FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
+		FlxG.switchState(new TitleState());
+	}
 }
