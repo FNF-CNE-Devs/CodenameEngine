@@ -250,6 +250,8 @@ class Charter extends UIState {
                 if (FlxG.mouse.justReleased) {
                     if (FlxG.keys.pressed.CONTROL)
                         selection.push(n);
+                    else if (FlxG.keys.pressed.SHIFT)
+                        selection.remove(n);
                     else
                         selection = [n];
                 }
@@ -282,16 +284,28 @@ class Charter extends UIState {
 			}
 			if (FlxG.mouse.justReleased) {
 				if (selectionBoxEnabled) {
-					var minX = Std.int(Math.round(selectionBox.x / 40));
-					var minY = Math.round(selectionBox.y / 40) - 1;
-					var maxX = Std.int(Math.round((selectionBox.x + selectionBox.bWidth) / 40));
-					var maxY = Math.round((selectionBox.y + selectionBox.bHeight) / 40);
+					var minX = Std.int(selectionBox.x / 40);
+					var minY = Std.int(selectionBox.y / 40);
+					var maxX = Std.int(Math.ceil((selectionBox.x + selectionBox.bWidth) / 40));
+					var maxY = Math.ceil((selectionBox.y + selectionBox.bHeight) / 40);
 
-					selection = [];
-					notesGroup.forEach(function(n) {
-						if (n.id >= minX && n.id <= maxX && n.step >= minY && n.step <= maxY)
-							selection.push(n);
-					});
+					if (FlxG.keys.pressed.SHIFT) {
+						notesGroup.forEach(function(n) {
+							if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY && selection.contains(n))
+								selection.remove(n);
+						});
+					} else if (FlxG.keys.pressed.CONTROL) {
+						notesGroup.forEach(function(n) {
+							if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY && !selection.contains(n))
+								selection.push(n);
+						});
+					} else {
+						selection = [];
+						notesGroup.forEach(function(n) {
+							if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY)
+								selection.push(n);
+						});
+					}
 
 					selectionBoxEnabled = false;
 				} else {
