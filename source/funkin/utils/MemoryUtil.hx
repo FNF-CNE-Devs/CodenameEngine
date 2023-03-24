@@ -98,8 +98,6 @@ class MemoryUtil {
         (unsigned long long)vm_stats.free_count) * (unsigned long long)page_size;
 
         return total_memory / (1024*1024);
-    } else {
-        return -1024;
     }
 	#endif
 
