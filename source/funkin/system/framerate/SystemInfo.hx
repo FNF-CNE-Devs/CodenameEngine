@@ -14,7 +14,7 @@ class SystemInfo extends FramerateCategory {
 	public static var memType:String = "Unknown";
 
     public static inline function init() {
-        osInfo = '${lime.system.System.platformLabel.replace(lime.system.System.platformVersion, "")} ${lime.system.System.platformVersion}';
+        osInfo = '${lime.system.System.platformLabel.replace(lime.system.System.platformVersion, "").trim()} ${lime.system.System.platformVersion}';
 
         #if windows
         var process = new HiddenProcess("wmic", ["cpu", "get", "name"]);

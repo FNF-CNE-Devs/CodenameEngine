@@ -80,42 +80,48 @@ class MemoryUtil {
 
 	#if cpp
     @:functionCode("
-#if defined(HX_WINDOWS)
-	unsigned long long allocatedRAM = 0;
-	GetPhysicallyInstalledSystemMemory(&allocatedRAM);
-	return (allocatedRAM / 1024);
-#endif
+	#if defined(HX_WINDOWS)
+		unsigned long long allocatedRAM = 0;
+		GetPhysicallyInstalledSystemMemory(&allocatedRAM);
+		return (allocatedRAM / 1024);
+	#endif
 
-#if defined(HX_MAC)
-    int mib [] = { CTL_HW, HW_MEMSIZE };
-    int64_t value = 0;
-    size_t length = sizeof(value);
+	#if defined(HX_MAC)
+	vm_size_t page_size;
+    host_page_size(mach_host_self(), &page_size);
+    vm_statistics64_data_t vm_stats;
+    mach_msg_type_number_t info_count = HOST_VM_INFO64_COUNT;
+    if (host_statistics64(mach_host_self(), HOST_VM_INFO64, (host_info64_t)&vm_stats, &info_count) == KERN_SUCCESS) {
+        unsigned long long total_memory = ((unsigned long long)vm_stats.active_count +
+        (unsigned long long)vm_stats.inactive_count +
+        (unsigned long long)vm_stats.wire_count +
+        (unsigned long long)vm_stats.free_count) * (unsigned long long)page_size;
 
-    if(-1 == sysctl(mib, 2, &value, &length, NULL, 0))
-        return -1; // An error occurred
+        return total_memory / (1024*1024);
+    } else {
+        return -1024;
+    }
+	#endif
 
-    return value / 1024 / 1024;
-#endif
+	#if defined(HX_LINUX)
+		FILE *meminfo = fopen('/proc/meminfo', 'r');
 
-#if defined(HX_LINUX)
-	FILE *meminfo = fopen('/proc/meminfo', 'r');
+		if(meminfo == NULL) return -1;
 
-	if(meminfo == NULL) return -1;
-
-	char line[256];
-	while(fgets(line, sizeof(line), meminfo))
-	{
-		int ram;
-		if(sscanf(line, 'MemTotal: %d kB', &ram) == 1)
+		char line[256];
+		while(fgets(line, sizeof(line), meminfo))
 		{
-			fclose(meminfo);
-			return (ram / 1024);
+			int ram;
+			if(sscanf(line, 'MemTotal: %d kB', &ram) == 1)
+			{
+				fclose(meminfo);
+				return (ram / 1024);
+			}
 		}
-	}
 
-	fclose(meminfo);
-	return -1;
-#endif
+		fclose(meminfo);
+		return -1;
+	#endif
 	")
     public static function getTotalMem():Float
     {
