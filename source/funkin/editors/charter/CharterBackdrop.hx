@@ -7,7 +7,7 @@ class CharterBackdrop extends FlxBackdrop {
     public var strumlinesAmount:Int = 1;
     
     public function new() {
-        super(null, 1, 1, false, true);
+        super(null, Y, 0, 0);
 
         makeGraphic(160, 160, 0xFF272727, true);
         pixels.lock();
@@ -17,7 +17,7 @@ class CharterBackdrop extends FlxBackdrop {
         pixels.fillRect(new Rectangle(0, 0, 1, 160), 0xFFDDDDDD);
         pixels.fillRect(new Rectangle(159, 0, 1, 160), 0xFFDDDDDD);
         pixels.unlock();
-        loadFrame(frame);
+        // loadFrame(frame);
     }
 
     public override function draw() {
@@ -40,10 +40,7 @@ class CharterBackdropDummy extends UISprite {
     }
     
     public override function updateButton() {
-        __rect.x = parent.x;
-        __rect.y = 0 - (FlxG.height * (1 - (1 / FlxG.camera.zoom)));
-        __rect.width = parent.frameWidth * parent.scale.x * parent.strumlinesAmount;
-        __rect.height = FlxG.height / FlxG.camera.zoom;
+		camera.getViewRect(__rect);
         UIState.state.updateRectButtonHandler(this, __rect, onHovered);
     }
 

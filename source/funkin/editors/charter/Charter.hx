@@ -203,6 +203,15 @@ class Charter extends UIState {
                     },
                     {
                         label: "Visual metronome"
+                    },
+                    null,
+                    {
+                        label: "Mute instrumental",
+						onSelect: _playback_muteinst
+                    },
+                    {
+                        label: "Mute voices",
+						onSelect: _playback_mutevoices
                     }
                 ]
             }
@@ -357,10 +366,13 @@ class Charter extends UIState {
 					selection = [];
 				} else {
 					// place note
-					var note = new CharterNote();
-					note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Std.int(mousePos.y / 40), Std.int(mousePos.x / 40), 0, 0);
-					notesGroup.add(note);
-					addToUndo(CPlaceNote(note));
+					var id = Std.int(mousePos.x / 40);
+					if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount) {
+						var note = new CharterNote();
+						note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Std.int(mousePos.y / 40), id, 0, 0);
+						notesGroup.add(note);
+						addToUndo(CPlaceNote(note));
+					}
 				}
 			}
 			if (FlxG.mouse.justReleasedRight)
@@ -463,6 +475,14 @@ class Charter extends UIState {
 	function _playback_metronome(t) {
 		t.icon = (Options.charterMetronomeEnabled = !Options.charterMetronomeEnabled) ? 1 : 0;
 	}
+	function _playback_muteinst(t) {
+		FlxG.sound.music.volume = FlxG.sound.music.volume > 0 ? 0 : 1;
+		t.icon = 1 - Std.int(Math.ceil(FlxG.sound.music.volume));
+	}
+	function _playback_mutevoices(t) {
+		vocals.volume = vocals.volume > 0 ? 0 : 1;
+		t.icon = 1 - Std.int(Math.ceil(vocals.volume));
+	}
 	#end
 
 	public inline function sortNotes()
@@ -494,12 +514,16 @@ class Charter extends UIState {
 			conductorFollowerSpr.y = lerp(conductorFollowerSpr.y, curStepFloat * 40, 1/3);
 		}
 		charterCamera.scroll.set(conductorFollowerSpr.x + ((conductorFollowerSpr.scale.x - FlxG.width) / 2), conductorFollowerSpr.y - (FlxG.height * 0.5));
-		charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125);
+		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125))) {
+
+		}
     }
 
 	public function handleShortcuts() {
 		if (FlxG.keys.justPressed.DELETE) // DELETE
 			_edit_delete(null);
+
+		__crochet = ((60 / Conductor.bpm) * 1000);
 
 		if (FlxG.keys.pressed.CONTROL) {
 			if (FlxG.keys.justPressed.Y || (FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.Z)) // CTRL+Y or CTRL+SHIFT+Z
@@ -512,13 +536,21 @@ class Charter extends UIState {
 				_chart_zoomout(null);
 			else if (FlxG.keys.justPressed.NUMPADZERO) // CTRL+[0]
 				_chart_zoomreset(null);
+			
+
+			if (FlxG.mouse.wheel != 0) {
+				zoom += 0.25 * FlxG.mouse.wheel;
+				__camZoom = Math.pow(2, zoom);
+			}
+		} else {
+			if (!FlxG.sound.music.playing) {
+				Conductor.songPosition -= __crochet * FlxG.mouse.wheel;
+			}
 		}
 
 		if (FlxG.keys.justPressed.SPACE) // SPACE
 			_playback_play(null);
 
-		__crochet = ((60 / Conductor.bpm) * 1000);
-		Conductor.songPosition -= __crochet * FlxG.mouse.wheel;
 
 		if (FlxG.keys.justPressed.D)
 			_playback_forward(null);
