@@ -26,6 +26,14 @@ class UIUtil {
 				var pressed = true;
 				var justPressed = false;
 				for(keybind in o.keybind) {
+					var k = switch(keybind) {
+						#if mac
+						case CONTROL:
+							WINDOWS;
+						#end
+						default:
+							keybind;
+					}
 					if (FlxG.keys.checkStatus(keybind, JUST_PRESSED)) {
 						justPressed = true;
 					} else if (!FlxG.keys.checkStatus(keybind, PRESSED)) {
@@ -49,7 +57,8 @@ class UIUtil {
 
 	public static function toUIString(key:FlxKey):String {
 		return switch(key) {
-			case CONTROL: 		#if mac "Cmd" #else "Ctrl" #end;
+			case CONTROL: 		#if mac "Cmd" #else "Ctrl" #end; // ⌘
+			case ALT:			#if mac "Option" #else "Alt" #end;
 			case HOME:			"Home";
 			case ENTER:			"Enter";
 			case DELETE:		"Del";
@@ -67,11 +76,21 @@ class UIUtil {
 			case NUMPADNINE:	"[9]";
 			case NUMPADPLUS:	"[+]";
 			case NUMPADMINUS:	"[-]";
+			case ZERO:			"0";
+			case ONE:			"1";
+			case TWO:			"2";
+			case THREE:			"3";
+			case FOUR:			"4";
+			case FIVE:			"5";
+			case SIX:			"6";
+			case SEVEN:			"7";
+			case EIGHT:			"8";
+			case NINE:			"9";
 			default: prettify(key.toString());
 		}
 	}
 
-	public static function prettify(str:String) {
+	public static inline function prettify(str:String) {
 		return [for(s in str.split(" ")) [for(k=>l in s.split("")) k == 0 ? l.toUpperCase() : l.toLowerCase()].join("")].join(" ");
 	}
 }
