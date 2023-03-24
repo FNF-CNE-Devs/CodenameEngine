@@ -21,12 +21,11 @@ using StringTools;
 #endif
 
 #if defined(HX_MAC)
-	#include <mach/host_info.h>
-	#include <mach/mach_host.h>
+	#include <sys/sysctl.h>
 #endif
 
 #if defined(HX_LINUX)
-	#include <sys/sysctl.h>
+	#include <stdio.h>
 #endif
 ")
 #end
@@ -88,18 +87,14 @@ class MemoryUtil {
 	#endif
 
 	#if defined(HX_MAC)
-	vm_size_t page_size;
-    host_page_size(mach_host_self(), &page_size);
-    vm_statistics64_data_t vm_stats;
-    mach_msg_type_number_t info_count = HOST_VM_INFO64_COUNT;
-    if (host_statistics64(mach_host_self(), HOST_VM_INFO64, (host_info64_t)&vm_stats, &info_count) == KERN_SUCCESS) {
-        unsigned long long total_memory = ((unsigned long long)vm_stats.active_count +
-        (unsigned long long)vm_stats.inactive_count +
-        (unsigned long long)vm_stats.wire_count +
-        (unsigned long long)vm_stats.free_count) * (unsigned long long)page_size;
+		int mib [] = { CTL_HW, HW_MEMSIZE };
+		int64_t value = 0;
+		size_t length = sizeof(value);
 
-        return total_memory / (1024*1024);
-    }
+		if(-1 == sysctl(mib, 2, &value, &length, NULL, 0))
+			return -1; // An error occurred
+
+		return value / 1024 / 1024;
 	#endif
 
 	#if defined(HX_LINUX)
