@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import flixel.input.keyboard.FlxKey;
 import flixel.system.FlxSound;
 import flixel.util.FlxSort;
 import flixel.math.FlxPoint;
@@ -100,7 +101,7 @@ class Charter extends UIState {
 					},
 					{
 						label: "Redo",
-						keybind: [CONTROL, Y],
+						keybinds: [[CONTROL, Y], [CONTROL, SHIFT, Z]],
 						onSelect: _edit_redo
 					},
 					null,

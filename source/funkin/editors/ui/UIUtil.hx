@@ -16,37 +16,51 @@ class UIUtil {
 
 	/**
 	 * Process all options with shortcuts present in a `Array<UIContextMenuOption>`. Also checks childrens.
-	 * @param topMenuOptions 
+	 * @param topMenuOptions
 	 */
 	public static function processShortcuts(topMenuOptions:Array<UIContextMenuOption>) {
 		for(o in topMenuOptions) {
 			if (o == null) continue;
 
-			if (o.keybind != null) {
-				var pressed = true;
-				var justPressed = false;
-				for(keybind in o.keybind) {
-					var k = switch(keybind) {
-						#if mac
-						case CONTROL:
-							WINDOWS;
-						#end
-						default:
-							keybind;
-					}
-					if (FlxG.keys.checkStatus(k, JUST_PRESSED)) {
-						justPressed = true;
-					} else if (!FlxG.keys.checkStatus(k, PRESSED)) {
-						pressed = false;
-						break;
-					}
+			if (o.keybinds == null) {
+				if (o.keybind != null) {
+					o.keybinds = [o.keybind];
 				}
-				if (!pressed || !justPressed) continue;
+			}
 
-				if (o.onSelect != null)
-					o.onSelect(o);
+			if (o.keybinds != null) {
+				for (keybind in o.keybinds) {
+					var pressed = true;
+					var justPressed = false;
+					var needsShift = keybind.contains(SHIFT);
 
-				return true;
+					for (key in keybind) {
+						var shouldPress = Std.int(key) > 0;
+						if(!shouldPress) key = -key;
+
+						var k = switch(key) {
+							#if mac
+							case CONTROL:
+								WINDOWS;
+							#end
+							default:
+								key;
+						}
+						if (FlxG.keys.checkStatus(k, shouldPress ? JUST_PRESSED : JUST_RELEASED)) {
+							justPressed = true;
+						} else if (!FlxG.keys.checkStatus(k, shouldPress ? PRESSED : RELEASED)) {
+							pressed = false;
+							break;
+						}
+					}
+					if (!needsShift && FlxG.keys.pressed.SHIFT) continue;
+					if (!pressed || !justPressed) continue;
+
+					if (o.onSelect != null)
+						o.onSelect(o);
+
+					return true;
+				}
 			}
 
 			if (o.childs != null && processShortcuts(o.childs))
