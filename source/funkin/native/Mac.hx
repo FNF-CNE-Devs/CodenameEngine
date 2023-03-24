@@ -1,6 +1,7 @@
 package funkin.native;
 
 #if mac
+@:cppFileCode("#include <sys/sysctl.h>")
 class Mac {
 	@:functionCode('
 	int mib [] = { CTL_HW, HW_MEMSIZE };

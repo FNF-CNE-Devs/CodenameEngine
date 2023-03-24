@@ -1,6 +1,7 @@
 package funkin.native;
 
 #if linux
+@:cppFileCode("#include <stdio.h>")
 class Linux {
 	@:functionCode('
 		FILE *meminfo = fopen("/proc/meminfo", "r");
