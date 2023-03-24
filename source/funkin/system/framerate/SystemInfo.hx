@@ -1,5 +1,6 @@
 package funkin.system.framerate;
 
+import ExternalCode;
 import native.HiddenProcess;
 import funkin.utils.MemoryUtil;
 
@@ -14,7 +15,7 @@ class SystemInfo extends FramerateCategory {
 	public static var memType:String = "Unknown";
 
     public static inline function init() {
-        osInfo = '${lime.system.System.platformLabel.replace(lime.system.System.platformVersion, "")} ${lime.system.System.platformVersion}';
+        osInfo = '${lime.system.System.platformLabel.replace(lime.system.System.platformVersion, "").trim()} ${lime.system.System.platformVersion}';
 
         #if windows
         var process = new HiddenProcess("wmic", ["cpu", "get", "name"]);
@@ -39,8 +40,10 @@ class SystemInfo extends FramerateCategory {
             vRAM = CoolUtil.getSizeString(cast(flixel.FlxG.stage.context3D.gl.getParameter(openfl.display3D.Context3D.__glMemoryTotalAvailable), UInt) * 1000);
         }
 
-		#if cpp 
-		totalMem = Std.string(MemoryUtil.getTotalMem() / 1024) + " GB";
+		#if cpp
+		var total = ExternalCode.getTotalRam();
+		trace("Total Ram: " + total);
+		totalMem = Std.string(total / 1024) + " GB";
 		#end
 		memType = MemoryUtil.getMemType();
     }
