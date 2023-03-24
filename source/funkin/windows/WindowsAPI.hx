@@ -2,6 +2,8 @@
 
 package funkin.windows;
 
+import funkin.native.*;
+
 /**
  * Class for Windows-only functions, such as transparent windows, message boxes, and more.
  * Does not have any effect on other platforms.
@@ -9,13 +11,13 @@ package funkin.windows;
 class WindowsAPI {
 	@:dox(hide) public static function registerAudio() {
 		#if windows
-		native.WinAPI.registerAudio();
+		Windows.registerAudio();
 		#end
 	}
 
 	@:dox(hide) public static function registerAsDPICompatible() {
 		#if windows
-		native.WinAPI.registerAsDPICompatible();
+		Windows.registerAsDPICompatible();
 		#end
 	}
 
@@ -24,8 +26,8 @@ class WindowsAPI {
 	 */
 	public static function allocConsole() {
 		#if windows
-		native.WinAPI.allocConsole();
-		native.WinAPI.clearScreen();
+		Windows.allocConsole();
+		Windows.clearScreen();
 		#end
 	}
 
@@ -34,7 +36,7 @@ class WindowsAPI {
 	 */
 	public static function setDarkMode(enable:Bool) {
 		#if windows
-		native.WinAPI.setDarkMode(enable);
+		Windows.setDarkMode(enable);
 		#end
 	}
 
@@ -43,7 +45,7 @@ class WindowsAPI {
 	 */
 	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
 		#if windows
-		native.WinAPI.showMessageBox(caption, message, icon);
+		Windows.showMessageBox(caption, message, icon);
 		#else
 		lime.app.Application.current.window.alert(message, caption);
 		#end
@@ -56,7 +58,19 @@ class WindowsAPI {
 		#if windows
 		var fg = cast(foregroundColor, Int);
 		var bg = cast(backgroundColor, Int);
-		native.WinAPI.setConsoleColors((bg * 16) + fg);
+		Windows.setConsoleColors((bg * 16) + fg);
+		#end
+	}
+
+	public static function getTotalRam() {
+		#if windows
+		return Windows.getTotalRam();
+		#elseif mac
+		return Mac.getTotalRam();
+		#elseif linux
+		return Linux.getTotalRam();
+		#else
+		return 0;
 		#end
 	}
 

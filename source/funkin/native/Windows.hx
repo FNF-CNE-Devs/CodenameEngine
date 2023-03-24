@@ -1,4 +1,4 @@
-package native;
+package funkin.native;
 
 import funkin.windows.WindowsAPI.MessageBoxIcon;
 #if windows
@@ -113,7 +113,7 @@ class AudioFixClient : public IMMNotificationClient {
 AudioFixClient *curAudioFix;
 ')
 @:dox(hide)
-class WinAPI {
+class Windows {
 
     public static var __audioChangeCallback:Void->Void = function() {
         trace("test");
@@ -178,5 +178,16 @@ class WinAPI {
         SetProcessDPIAware();
     ')
     public static function registerAsDPICompatible() {}
+
+	@:functionCode("
+		// simple but effective code
+		unsigned long long allocatedRAM = 0;
+		GetPhysicallyInstalledSystemMemory(&allocatedRAM);
+		return (allocatedRAM / 1024);
+	")
+	public static function getTotalRam():Float
+	{
+		return 0;
+	}
 }
 #end

@@ -1,6 +1,6 @@
 package funkin.utils;
 
-import native.HiddenProcess;
+import funkin.native.HiddenProcess;
 #if cpp
 import cpp.vm.Gc;
 #elseif hl

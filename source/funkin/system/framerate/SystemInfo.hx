@@ -1,7 +1,7 @@
 package funkin.system.framerate;
 
-import ExternalCode;
-import native.HiddenProcess;
+import funkin.windows.WindowsAPI;
+import funkin.native.HiddenProcess;
 import funkin.utils.MemoryUtil;
 
 using StringTools;
@@ -41,7 +41,7 @@ class SystemInfo extends FramerateCategory {
         }
 
 		#if cpp
-		var total = ExternalCode.getTotalRam();
+		var total = WindowsAPI.getTotalRam();
 		trace("Total Ram: " + total);
 		totalMem = Std.string(total / 1024) + " GB";
 		#end
