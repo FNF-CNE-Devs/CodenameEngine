@@ -1,5 +1,6 @@
 package funkin.system.framerate;
 
+import ExternalCode;
 import native.HiddenProcess;
 import funkin.utils.MemoryUtil;
 
@@ -39,8 +40,10 @@ class SystemInfo extends FramerateCategory {
             vRAM = CoolUtil.getSizeString(cast(flixel.FlxG.stage.context3D.gl.getParameter(openfl.display3D.Context3D.__glMemoryTotalAvailable), UInt) * 1000);
         }
 
-		#if cpp 
-		totalMem = Std.string(MemoryUtil.getTotalMem() / 1024) + " GB";
+		#if cpp
+		var total = ExternalCode.getTotalRam();
+		trace("Total Ram: " + total);
+		totalMem = Std.string(total / 1024) + " GB";
 		#end
 		memType = MemoryUtil.getMemType();
     }
