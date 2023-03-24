@@ -4,15 +4,15 @@ import flixel.input.keyboard.FlxKey;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 
 class UIUtil {
-    public static function follow(spr:FlxSprite, target:FlxSprite, x:Float = 0, y:Float = 0) {
-        spr.cameras = target is UISprite ? cast(target, UISprite).__lastDrawCameras : target.cameras;
-        spr.setPosition(target.x + x, target.y + y);
-        spr.scrollFactor.set(target.scrollFactor.x, target.scrollFactor.y);
-    }
+	public static function follow(spr:FlxSprite, target:FlxSprite, x:Float = 0, y:Float = 0) {
+		spr.cameras = target is UISprite ? cast(target, UISprite).__lastDrawCameras : target.cameras;
+		spr.setPosition(target.x + x, target.y + y);
+		spr.scrollFactor.set(target.scrollFactor.x, target.scrollFactor.y);
+	}
 
-    public static function contextMenuOpened(contextMenu:UIContextMenu) {
-        return contextMenu != null && UIState.state.curContextMenu == contextMenu;
-    }
+	public static function contextMenuOpened(contextMenu:UIContextMenu) {
+		return contextMenu != null && UIState.state.curContextMenu == contextMenu;
+	}
 
 	/**
 	 * Process all options with shortcuts present in a `Array<UIContextMenuOption>`. Also checks childrens.
@@ -34,9 +34,9 @@ class UIUtil {
 						default:
 							keybind;
 					}
-					if (FlxG.keys.checkStatus(keybind, JUST_PRESSED)) {
+					if (FlxG.keys.checkStatus(k, JUST_PRESSED)) {
 						justPressed = true;
-					} else if (!FlxG.keys.checkStatus(keybind, PRESSED)) {
+					} else if (!FlxG.keys.checkStatus(k, PRESSED)) {
 						pressed = false;
 						break;
 					}

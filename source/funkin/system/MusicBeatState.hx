@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.system.framerate.Framerate;
 import funkin.scripting.DummyScript;
 import flixel.FlxState;
 import flixel.FlxSubState;
@@ -73,7 +74,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	 * Game Controls (Player 1 only)
 	 */
 	public var controlsP1(get, never):Controls;
-	
+
 	/**
 	 * Game Controls (Player 2 only)
 	 */
@@ -136,6 +137,7 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	}
 	override function create()
 	{
+		Framerate.offset.y = 0;
 		super.create();
 		call("create");
 	}
