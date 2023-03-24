@@ -95,31 +95,31 @@ class Charter extends UIState {
                 childs: [
                     {
                         label: "Undo",
-						keybind: "Ctrl+Z",
+						keybind: [CONTROL, Z],
 						onSelect: _edit_undo
                     },
                     {
                         label: "Redo",
-						keybind: "Ctrl+Y",
+						keybind: [CONTROL, Y],
 						onSelect: _edit_redo
                     },
                     null,
                     {
                         label: "Cut",
-						keybind: "Ctrl+X"
+						keybind: [CONTROL, X]
                     },
                     {
                         label: "Copy",
-						keybind: "Ctrl+C"
+						keybind: [CONTROL, C]
                     },
                     {
                         label: "Paste",
-						keybind: "Ctrl+V"
+						keybind: [CONTROL, V]
                     },
                     null,
                     {
                         label: "Delete",
-						keybind: "Del",
+						keybind: [DELETE],
                         onSelect: _edit_delete
                     }
                 ]
@@ -129,35 +129,35 @@ class Charter extends UIState {
                 childs: [
                     {
                         label: "Playtest",
-						keybind: "Enter"
+						keybind: [ENTER]
                     },
                     {
                         label: "Playtest here",
-						keybind: "Shift+Enter"
+						keybind: [SHIFT, ENTER]
                     },
                     null,
                     {
                         label: "Playtest as opponent",
-						keybind: "Ctrl+Enter"
+						keybind: [CONTROL, ENTER]
                     },
                     {
                         label: "Playtest as opponent here",
-						keybind: "Ctrl+Shift+Enter"
+						keybind: [CONTROL, SHIFT, ENTER]
                     },
                     null,
                     {
                         label: "Zoom in",
-						keybind: "Ctrl+[+]",
+						keybind: [CONTROL, NUMPADPLUS],
 						onSelect: _chart_zoomin
                     },
                     {
                         label: "Zoom out",
-						keybind: "Ctrl+[-]",
+						keybind: [CONTROL, NUMPADMINUS],
 						onSelect: _chart_zoomout
                     },
                     {
                         label: "Reset zoom",
-						keybind: "Ctrl+[0]",
+						keybind: [CONTROL, NUMPADZERO],
 						onSelect: _chart_zoomreset
                     },
                     null,
@@ -171,29 +171,29 @@ class Charter extends UIState {
                 childs: [
                     {
                         label: "Play/Pause",
-						keybind: "Space",
+						keybind: [SPACE],
 						onSelect: _playback_play
                     },
                     null,
                     {
                         label: "Go back a section",
-						keybind: "A",
+						keybind: [A],
 						onSelect: _playback_back
                     },
                     {
                         label: "Go forward a section",
-						keybind: "D",
+						keybind: [D],
 						onSelect: _playback_forward
                     },
                     null,
                     {
                         label: "Go back to the start",
-						keybind: "Home",
+						keybind: [HOME],
 						onSelect: _playback_start
                     },
                     {
                         label: "Go to the end",
-						keybind: "End",
+						keybind: [END],
 						onSelect: _playback_end
                     },
                     null,
@@ -503,7 +503,20 @@ class Charter extends UIState {
 
         // TODO: canTypeText in case an ui input element is focused
         if (true) {
-			handleShortcuts();
+			__crochet = ((60 / Conductor.bpm) * 1000);
+
+			UIUtil.processShortcuts(topMenu);
+
+			if (FlxG.keys.pressed.CONTROL) {
+				if (FlxG.mouse.wheel != 0) {
+					zoom += 0.25 * FlxG.mouse.wheel;
+					__camZoom = Math.pow(2, zoom);
+				}
+			} else {
+				if (!FlxG.sound.music.playing) {
+					Conductor.songPosition -= __crochet * FlxG.mouse.wheel;
+				}
+			}
         }
 
 		Conductor.songPosition = FlxMath.bound(Conductor.songPosition, 0, FlxG.sound.music.length);
@@ -518,49 +531,6 @@ class Charter extends UIState {
 
 		}
     }
-
-	public function handleShortcuts() {
-		if (FlxG.keys.justPressed.DELETE) // DELETE
-			_edit_delete(null);
-
-		__crochet = ((60 / Conductor.bpm) * 1000);
-
-		if (FlxG.keys.pressed.CONTROL) {
-			if (FlxG.keys.justPressed.Y || (FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.Z)) // CTRL+Y or CTRL+SHIFT+Z
-				_edit_redo(null);
-			else if (FlxG.keys.justPressed.Z) // CTRL+Z
-				_edit_undo(null);
-			else if (FlxG.keys.justPressed.NUMPADPLUS) // CTRL+[+]
-				_chart_zoomin(null);
-			else if (FlxG.keys.justPressed.NUMPADMINUS) // CTRL+[-]
-				_chart_zoomout(null);
-			else if (FlxG.keys.justPressed.NUMPADZERO) // CTRL+[0]
-				_chart_zoomreset(null);
-			
-
-			if (FlxG.mouse.wheel != 0) {
-				zoom += 0.25 * FlxG.mouse.wheel;
-				__camZoom = Math.pow(2, zoom);
-			}
-		} else {
-			if (!FlxG.sound.music.playing) {
-				Conductor.songPosition -= __crochet * FlxG.mouse.wheel;
-			}
-		}
-
-		if (FlxG.keys.justPressed.SPACE) // SPACE
-			_playback_play(null);
-
-
-		if (FlxG.keys.justPressed.D)
-			_playback_forward(null);
-		if (FlxG.keys.justPressed.A)
-			_playback_back(null);
-		if (FlxG.keys.justPressed.HOME)
-			_playback_start(null);
-		if (FlxG.keys.justPressed.END)
-			_playback_end(null);
-	}
 
 	var zoom:Float = 0;
 	var __camZoom:Float = 1;

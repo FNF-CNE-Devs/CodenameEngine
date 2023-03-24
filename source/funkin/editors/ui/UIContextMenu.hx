@@ -1,5 +1,7 @@
 package funkin.editors.ui;
 
+import flixel.input.keyboard.FlxKey;
+
 class UIContextMenu extends MusicBeatSubstate {
     public var options:Array<UIContextMenuOption>;
     var x:Float;
@@ -111,7 +113,7 @@ class UIContextMenu extends MusicBeatSubstate {
 typedef UIContextMenuCallback = UIContextMenu->Int->UIContextMenuOption->Void;
 typedef UIContextMenuOption = {
     var label:String;
-    var ?keybind:String;
+    var ?keybind:Array<FlxKey>;
     var ?icon:Int;
     var ?onSelect:UIContextMenuOption->Void;
     var ?childs:Array<UIContextMenuOption>;
@@ -137,7 +139,9 @@ class UIContextMenuOptionSpr extends UISliceSprite {
 		}
 
 		if (option.keybind != null) {
-			labelKeybind = new UIText(label.x + label.frameWidth + 10, 2, 0, option.keybind);
+			var text = "";
+			text += [for(o in option.keybind) o.toUIString()].join("+");
+			labelKeybind = new UIText(label.x + label.frameWidth + 10, 2, 0, text);
 			labelKeybind.alpha = 0.75;
 		}
 
