@@ -21,7 +21,8 @@ using StringTools;
 #endif
 
 #if defined(HX_MAC)
-	#include <stdio.h>
+	#include <mach/host_info.h>
+	#include <mach/mach_host.h>
 #endif
 
 #if defined(HX_LINUX)
