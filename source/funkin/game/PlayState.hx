@@ -475,6 +475,7 @@ class PlayState extends MusicBeatState
 
 	@:dox(hide) override public function create()
 	{
+		Note.__customNoteTypeExists = [];
 		// SCRIPTING & DATA INITIALISATION
 		#if REGION
 		instance = this;
@@ -845,6 +846,8 @@ class PlayState extends MusicBeatState
 			FlxG.sound.destroySound(vocals);
 		}
 		instance = null;
+		
+		Note.__customNoteTypeExists = [];
 	}
 
 	@:dox(hide) private function generateSong(?songData:ChartData):Void

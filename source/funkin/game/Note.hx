@@ -11,6 +11,7 @@ import funkin.scripting.events.*;
 
 using StringTools;
 
+@:allow(funkin.game.PlayState)
 class Note extends FlxSprite
 {
 	public var strumTime:Float = 0;
@@ -88,8 +89,16 @@ class Note extends FlxSprite
 
 	public static var swagWidth:Float = 160 * 0.7;
 
+	private static var __customNoteTypeExists:Map<String, Bool> = [];
+
 	public var animSuffix:String = "";
 
+
+	private static function customTypePathExists(path:String) {
+		if (__customNoteTypeExists.exists(path))
+			return __customNoteTypeExists[path];
+		return __customNoteTypeExists[path] = Assets.exists(path);
+	}
 	public function new(strumLine:StrumLine, noteData:ChartNote, sustain:Bool = false, sustainLength:Float = 0, sustainOffset:Float = 0)
 	{
 		super();
@@ -110,7 +119,8 @@ class Note extends FlxSprite
 		this.noteData = noteData.id.getDefault(0);
 
 		var customType = Paths.image('game/notes/${this.noteType}');
-		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, noteTypeID, PlayState.instance.strumLines.indexOf(strumLine), mustPress, Assets.exists(customType) ? 'game/notes/${this.noteType}' : 'game/notes/default', 0.7, animSuffix);
+		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, noteTypeID, PlayState.instance.strumLines.indexOf(strumLine), mustPress,
+			(this.noteType != null && customTypePathExists(customType)) ? 'game/notes/${this.noteType}' : 'game/notes/default', 0.7, animSuffix);
 
 		if (PlayState.instance != null)
 			event = PlayState.instance.scripts.event("onNoteCreation", event);
