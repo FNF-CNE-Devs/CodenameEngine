@@ -137,6 +137,7 @@ class PauseSubState extends MusicBeatSubstate
 			case "Resume":
 				close();
 			case "Restart Song":
+				PlayState.instance.registerSmoothTransition();
 				FlxG.resetState();
 			case "Change Controls":
 				persistentDraw = false;

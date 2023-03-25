@@ -624,6 +624,7 @@ class PlayState extends MusicBeatState
 		} else {
 			FlxG.camera.focusOn(camFollow.getPosition());
 		}
+		smoothTransitionData = null;
 
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
@@ -1246,16 +1247,7 @@ class PlayState extends MusicBeatState
 				trace('LOADING NEXT SONG');
 				trace(PlayState.storyPlaylist[0].toLowerCase(), difficulty);
 
-				smoothTransitionData = {
-					stage: curStage,
-					camX: FlxG.camera.scroll.x,
-					camY: FlxG.camera.scroll.y,
-					camFollowX: camFollow.x,
-					camFollowY: camFollow.y,
-					camZoom: FlxG.camera.zoom
-				};
-				FlxTransitionableState.skipNextTransIn = true;
-				FlxTransitionableState.skipNextTransOut = true;
+				registerSmoothTransition();
 
 				FlxG.sound.music.stop();
 
@@ -1269,6 +1261,19 @@ class PlayState extends MusicBeatState
 			trace('WENT BACK TO FREEPLAY??');
 			FlxG.switchState(new FreeplayState());
 		}
+	}
+
+	public function registerSmoothTransition() {
+		smoothTransitionData = {
+			stage: curStage,
+			camX: FlxG.camera.scroll.x,
+			camY: FlxG.camera.scroll.y,
+			camFollowX: camFollow.x,
+			camFollowY: camFollow.y,
+			camZoom: FlxG.camera.zoom
+		};
+		FlxTransitionableState.skipNextTransIn = true;
+		FlxTransitionableState.skipNextTransOut = true;
 	}
 
 	var __funcsToExec:Array<Note->Void> = [];
