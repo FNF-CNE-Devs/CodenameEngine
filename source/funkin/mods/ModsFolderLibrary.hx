@@ -37,60 +37,42 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
     }
 
     public override function getAudioBuffer(id:String):AudioBuffer {
-        if (__isCacheValid(LimeAssets.cache.audio, id)) {
-            trace("CACHE FOUND!!");
-            return LimeAssets.cache.audio.get('$libName:$id');
-        }
-        else {
-            if (!exists(id, "SOUND")) 
-                return null;
-            var path = getAssetPath();
-            editedTimes[id] = FileSystem.stat(path).mtime.getTime();
-            var e = AudioBuffer.fromFile(path);
-            // LimeAssets.cache.audio.set('$libName:$id', e);
-            return e;
-        }
+		if (!exists(id, "SOUND")) 
+			return null;
+		var path = getAssetPath();
+		editedTimes[id] = FileSystem.stat(path).mtime.getTime();
+		var e = AudioBuffer.fromFile(path);
+		// LimeAssets.cache.audio.set('$libName:$id', e);
+		return e;
     }
 
     public override function getBytes(id:String):Bytes {
-        if (__isCacheValid(cachedBytes, id, true))
-            return cachedBytes.get(id);
-        else {
-            if (!exists(id, "BINARY"))
-                return null;
-            var path = getAssetPath();
-            editedTimes[id] = FileSystem.stat(path).mtime.getTime();
-            var e = Bytes.fromFile(path);
-            cachedBytes.set(id, e);
-            return e;
-        }
+		if (!exists(id, "BINARY"))
+			return null;
+		var path = getAssetPath();
+		editedTimes[id] = FileSystem.stat(path).mtime.getTime();
+		var e = Bytes.fromFile(path);
+		cachedBytes.set(id, e);
+		return e;
     }
 
     public override function getFont(id:String):Font {
-        if (__isCacheValid(LimeAssets.cache.font, id))
-            return LimeAssets.cache.font.get(id);
-        else {
-            if (!exists(id, "FONT"))
-                return null;
-            var path = getAssetPath();
-            editedTimes[id] = FileSystem.stat(path).mtime.getTime();
-            var e = Font.fromFile(path);
-            return e;
-        }
+		if (!exists(id, "FONT"))
+			return null;
+		var path = getAssetPath();
+		editedTimes[id] = FileSystem.stat(path).mtime.getTime();
+		var e = Font.fromFile(path);
+		return e;
     }
 
     public override function getImage(id:String):Image {
-        if (useImageCache && __isCacheValid(LimeAssets.cache.image, id))
-            return LimeAssets.cache.image.get('$libName:$id');
-        else {
-            if (!exists(id, "IMAGE"))
-                return null;
-            var path = getAssetPath();
-            editedTimes[id] = FileSystem.stat(path).mtime.getTime();
+		if (!exists(id, "IMAGE"))
+			return null;
+		var path = getAssetPath();
+		editedTimes[id] = FileSystem.stat(path).mtime.getTime();
 
-            var e = Image.fromFile(path);
-            return e;
-        }
+		var e = Image.fromFile(path);
+		return e;
     }
 
     public override function getPath(id:String):String {
