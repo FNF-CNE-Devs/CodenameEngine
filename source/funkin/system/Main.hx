@@ -150,6 +150,7 @@ class Main extends Sprite
 		for(i in 0...4)
 			gameThreads.push(Thread.createWithEventLoop(function() {Thread.current().events.promise();}));
 		#end
+		FunkinCache.init();
 		Paths.assetsTree = new AssetsLibraryList();
 
 		#if UPDATE_CHECKING
@@ -252,12 +253,6 @@ class Main extends Sprite
 			}
 			openfl.display3D.utils.UInt8Buff._pools.clear();
 		}
-
-		var cache = cast(Assets.cache, AssetCache);
-		for (key=>_ in cache.font)
-			cache.removeFont(key);
-		for (key=>_ in cache.sound)
-			cache.removeSound(key);
 
 		Paths.assetsTree.clearCache();
 
