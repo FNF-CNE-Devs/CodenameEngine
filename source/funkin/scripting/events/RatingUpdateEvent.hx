@@ -1,13 +1,13 @@
 package funkin.scripting.events;
 
 class RatingUpdateEvent extends CancellableEvent {
-    /**
-        New combo
-    **/
-    public var rating:ComboRating;
-    /**
-        Old combo (may be null)
-    **/
-    public var oldRating:ComboRating;
+	/**
+		New combo
+	**/
+	public var rating:ComboRating;
+	/**
+		Old combo (may be null)
+	**/
+	public var oldRating:ComboRating;
 
 }

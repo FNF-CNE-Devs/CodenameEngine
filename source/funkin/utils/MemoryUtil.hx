@@ -79,7 +79,7 @@ class MemoryUtil {
 	}
 
 	#if cpp
-    @:functionCode("
+	@:functionCode("
 	#if defined(HX_WINDOWS)
 		unsigned long long allocatedRAM = 0;
 		GetPhysicallyInstalledSystemMemory(&allocatedRAM);
@@ -117,10 +117,10 @@ class MemoryUtil {
 		return -1;
 	#endif
 	")
-    public static function getTotalMem():Float
-    {
-        return 0;
-    }
+	public static function getTotalMem():Float
+	{
+		return 0;
+	}
 	#end
 
 	public static inline function currentMemUsage() {

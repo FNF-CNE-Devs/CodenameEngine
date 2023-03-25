@@ -76,22 +76,22 @@ class WindowsAPI {
 
 	public static function consoleColorToOpenFL(color:ConsoleColor) {
 		return switch(color) {
-			case BLACK:         0xFF000000;
-			case DARKBLUE:      0xFF000088;
-			case DARKGREEN:     0xFF008800;
-			case DARKCYAN:      0xFF008888;
-			case DARKRED:       0xFF880000;
+			case BLACK:		 0xFF000000;
+			case DARKBLUE:	  0xFF000088;
+			case DARKGREEN:	 0xFF008800;
+			case DARKCYAN:	  0xFF008888;
+			case DARKRED:	   0xFF880000;
 			case DARKMAGENTA:   0xFF880000;
-			case DARKYELLOW:    0xFF888800;
-			case LIGHTGRAY:     0xFFBBBBBB;
-			case GRAY:          0xFF888888;
-			case BLUE:          0xFF0000FF;
-			case GREEN:         0xFF00FF00;
-			case CYAN:          0xFF00FFFF;
-			case RED:           0xFFFF0000;
-			case MAGENTA:       0xFFFF00FF;
-			case YELLOW:        0xFFFFFF00;
-			case WHITE | _:     0xFFFFFFFF;
+			case DARKYELLOW:	0xFF888800;
+			case LIGHTGRAY:	 0xFFBBBBBB;
+			case GRAY:		  0xFF888888;
+			case BLUE:		  0xFF0000FF;
+			case GREEN:		 0xFF00FF00;
+			case CYAN:		  0xFF00FFFF;
+			case RED:		   0xFFFF0000;
+			case MAGENTA:	   0xFFFF00FF;
+			case YELLOW:		0xFFFFFF00;
+			case WHITE | _:	 0xFFFFFFFF;
 		}
 	}
 }

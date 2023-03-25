@@ -14,18 +14,18 @@ import haxe.macro.Compiler;
  * `<haxeflag name="--macro" value="funkin.macros.StdDeprecationsRemover.init()" />`
  */
 class StdDeprecationsRemover {
-    public static function init() {
-        Compiler.addGlobalMetadata('Std', '@:build(funkin.macros.StdDeprecationsRemover.build())');
-    }
+	public static function init() {
+		Compiler.addGlobalMetadata('Std', '@:build(funkin.macros.StdDeprecationsRemover.build())');
+	}
 
-    public static function build():Array<Field> {
-        var fields:Array<Field> = Context.getBuildFields();
+	public static function build():Array<Field> {
+		var fields:Array<Field> = Context.getBuildFields();
 
-        for(f in fields)
-            if (f.name == "is")
-                f.meta = [for(e in f.meta) if (e.name != ":deprecated") e];
+		for(f in fields)
+			if (f.name == "is")
+				f.meta = [for(e in f.meta) if (e.name != ":deprecated") e];
 
-        return fields;
-    }
+		return fields;
+	}
 }
 #end

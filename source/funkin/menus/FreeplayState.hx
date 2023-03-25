@@ -348,7 +348,7 @@ class FreeplayState extends MusicBeatState
 		if (event.cancelled) return;
 
 		curSelected = event.value;
-        if (event.playMenuSFX) CoolUtil.playMenuSFX(SCROLL, 0.7);
+		if (event.playMenuSFX) CoolUtil.playMenuSFX(SCROLL, 0.7);
 
 		changeDiff(0, true);
 
@@ -382,9 +382,9 @@ class FreeplayState extends MusicBeatState
 }
 
 class FreeplaySonglist {
-    public var songs:Array<ChartMetaData> = [];
+	public var songs:Array<ChartMetaData> = [];
 
-    public function new() {}
+	public function new() {}
 
 	public function getSongsFromSource(source:funkin.system.AssetsLibraryList.AssetSource, useTxt:Bool = true) {
 		var path:String = Paths.txt('freeplaySonglist');
@@ -403,12 +403,12 @@ class FreeplaySonglist {
 		return true;
 	}
 
-    public static function get(useTxt:Bool = true) {
-        var songList = new FreeplaySonglist();
+	public static function get(useTxt:Bool = true) {
+		var songList = new FreeplaySonglist();
 
 		if (songList.getSongsFromSource(MODS, useTxt))
 			songList.getSongsFromSource(SOURCE, useTxt);
 
-        return songList;
-    }
+		return songList;
+	}
 }

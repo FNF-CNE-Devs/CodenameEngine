@@ -7,80 +7,80 @@ import openfl.ui.MouseCursor;
 @:allow(funkin.editors.ui.UIState)
 @:allow(funkin.editors.ui.UIUtil)
 class UISprite extends FlxSprite {
-    public var members:Array<FlxBasic> = [];
+	public var members:Array<FlxBasic> = [];
 
-    private var __lastDrawCameras:Array<FlxCamera> = [];
-    private var __rect:FlxRect = new FlxRect();
+	private var __lastDrawCameras:Array<FlxCamera> = [];
+	private var __rect:FlxRect = new FlxRect();
 
-    private var __oldDefCams:Array<FlxCamera>;
+	private var __oldDefCams:Array<FlxCamera>;
 
-    public var hovered:Bool = false;
-    public var hoveredByChild:Bool = false;
-    public var pressed:Bool = false;
+	public var hovered:Bool = false;
+	public var hoveredByChild:Bool = false;
+	public var pressed:Bool = false;
 
-    public var hoverCallback:Void->Void = null;
+	public var hoverCallback:Void->Void = null;
 
-    public var cursor:MouseCursor = ARROW;
+	public var cursor:MouseCursor = ARROW;
 
-    public override function update(elapsed:Float) {
-        hovered = false;
-        pressed = false;
-        hoveredByChild = false;
+	public override function update(elapsed:Float) {
+		hovered = false;
+		pressed = false;
+		hoveredByChild = false;
 
-        super.update(elapsed);
-        updateButton();
+		super.update(elapsed);
+		updateButton();
 
-        @:privateAccess {
-            __oldDefCams = FlxCamera._defaultCameras;
-            FlxCamera._defaultCameras = cameras;
+		@:privateAccess {
+			__oldDefCams = FlxCamera._defaultCameras;
+			FlxCamera._defaultCameras = cameras;
 
-            for(m in members)
-                m.update(elapsed);
+			for(m in members)
+				m.update(elapsed);
 
-            FlxCamera._defaultCameras = __oldDefCams;
-        }
-        
-    }
+			FlxCamera._defaultCameras = __oldDefCams;
+		}
+		
+	}
 
-    public override function draw() {
-        drawSuper();
-        drawMembers();
-    }
+	public override function draw() {
+		drawSuper();
+		drawMembers();
+	}
 
-    public function drawSuper() {
-        super.draw();
-        __lastDrawCameras = [for(c in cameras) c];
-    }
+	public function drawSuper() {
+		super.draw();
+		__lastDrawCameras = [for(c in cameras) c];
+	}
 
-    public function drawMembers() {
-        @:privateAccess {
-            __oldDefCams = FlxCamera._defaultCameras;
-            FlxCamera._defaultCameras = cameras;
+	public function drawMembers() {
+		@:privateAccess {
+			__oldDefCams = FlxCamera._defaultCameras;
+			FlxCamera._defaultCameras = cameras;
 
-            for(m in members)
-                m.draw();
-            
-            FlxCamera._defaultCameras = __oldDefCams;
-        }
-    }
-    
-    public override function destroy() {
-        super.destroy();
-        members = FlxDestroyUtil.destroyArray(members);
-    }
+			for(m in members)
+				m.draw();
+			
+			FlxCamera._defaultCameras = __oldDefCams;
+		}
+	}
+	
+	public override function destroy() {
+		super.destroy();
+		members = FlxDestroyUtil.destroyArray(members);
+	}
 
-    public function updateButton() {
-        UIState.state.updateButtonHandler(this, onHovered);
-    }
+	public function updateButton() {
+		UIState.state.updateButtonHandler(this, onHovered);
+	}
 
-    /**
-     * Called whenever the sprite is being hovered by the mouse.
-     */
-    public function onHovered() {
-        hovered = true;
-        if (FlxG.mouse.pressed)
-            pressed = true;
-        if (hoverCallback != null)
-            hoverCallback();
-    }
+	/**
+	 * Called whenever the sprite is being hovered by the mouse.
+	 */
+	public function onHovered() {
+		hovered = true;
+		if (FlxG.mouse.pressed)
+			pressed = true;
+		if (hoverCallback != null)
+			hoverCallback();
+	}
 }

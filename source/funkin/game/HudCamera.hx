@@ -29,20 +29,20 @@ import openfl.filters.ShaderFilter;
 import openfl.Vector;
 
 class HudCamera extends FlxCamera {
-    public var downscroll:Bool = false;
-    public override function update(elapsed:Float) {
-        super.update(elapsed);
-        flipY = downscroll;
-    }
+	public var downscroll:Bool = false;
+	public override function update(elapsed:Float) {
+		super.update(elapsed);
+		flipY = downscroll;
+	}
 
 
-    public override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
-        ?shader:FlxShader):Void
-    {
-        if (downscroll) {
-            matrix.scale(1, -1);
-            matrix.translate(0, height);
-        }
-        super.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
-    }
+	public override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
+		?shader:FlxShader):Void
+	{
+		if (downscroll) {
+			matrix.scale(1, -1);
+			matrix.translate(0, height);
+		}
+		super.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+	}
 }

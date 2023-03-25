@@ -526,13 +526,13 @@ class System
 
 	@:noCompletion private static function __registerEntryPoint(projectName:String, entryPoint:Function):Void
 	{
-        // executes first!!
-        
-        #if sys
+		// executes first!!
+		
+		#if sys
 		funkin.windows.WindowsAPI.registerAsDPICompatible();
-        funkin.system.CommandLineHandler.parseCommandLine(Sys.args());
-        #end
-        
+		funkin.system.CommandLineHandler.parseCommandLine(Sys.args());
+		#end
+		
 		if (__applicationEntryPoint == null)
 		{
 			__applicationEntryPoint = new Map();

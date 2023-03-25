@@ -4,11 +4,11 @@ import funkin.windows.WindowsAPI.MessageBoxIcon;
 #if windows
 @:buildXml('
 <target id="haxe">
-    <lib name="dwmapi.lib" if="windows" />
-    <lib name="shell32.lib" if="windows" />
-    <lib name="gdi32.lib" if="windows" />
-    <lib name="ole32.lib" if="windows" />
-    <lib name="uxtheme.lib" if="windows" />
+	<lib name="dwmapi.lib" if="windows" />
+	<lib name="shell32.lib" if="windows" />
+	<lib name="gdi32.lib" if="windows" />
+	<lib name="ole32.lib" if="windows" />
+	<lib name="uxtheme.lib" if="windows" />
 </target>
 ')
 
@@ -28,86 +28,86 @@ import funkin.windows.WindowsAPI.MessageBoxIcon;
 #include <uxtheme.h>
 
 #define SAFE_RELEASE(punk)  \\
-              if ((punk) != NULL)  \\
-                { (punk)->Release(); (punk) = NULL; }
+			  if ((punk) != NULL)  \\
+				{ (punk)->Release(); (punk) = NULL; }
 
 static long lastDefId = 0;
 
 class AudioFixClient : public IMMNotificationClient {
-    LONG _cRef;
-    IMMDeviceEnumerator *_pEnumerator;
-    
-    public:
-    AudioFixClient() :
-        _cRef(1),
-        _pEnumerator(NULL)
-    {
-        HRESULT result = CoCreateInstance(__uuidof(MMDeviceEnumerator),
-                              NULL, CLSCTX_INPROC_SERVER,
-                              __uuidof(IMMDeviceEnumerator),
-                              (void**)&_pEnumerator);
-        if (result == S_OK) {
-            _pEnumerator->RegisterEndpointNotificationCallback(this);
-        }
-    }
+	LONG _cRef;
+	IMMDeviceEnumerator *_pEnumerator;
+	
+	public:
+	AudioFixClient() :
+		_cRef(1),
+		_pEnumerator(NULL)
+	{
+		HRESULT result = CoCreateInstance(__uuidof(MMDeviceEnumerator),
+							  NULL, CLSCTX_INPROC_SERVER,
+							  __uuidof(IMMDeviceEnumerator),
+							  (void**)&_pEnumerator);
+		if (result == S_OK) {
+			_pEnumerator->RegisterEndpointNotificationCallback(this);
+		}
+	}
 
-    ~AudioFixClient()
-    {
-        SAFE_RELEASE(_pEnumerator);
-    }
+	~AudioFixClient()
+	{
+		SAFE_RELEASE(_pEnumerator);
+	}
 
-    ULONG STDMETHODCALLTYPE AddRef()
-    {
-        return InterlockedIncrement(&_cRef);
-    }
+	ULONG STDMETHODCALLTYPE AddRef()
+	{
+		return InterlockedIncrement(&_cRef);
+	}
 
-    ULONG STDMETHODCALLTYPE Release()
-    {
-        ULONG ulRef = InterlockedDecrement(&_cRef);
-        if (0 == ulRef)
-        {
-            delete this;
-        }
-        return ulRef;
-    }
+	ULONG STDMETHODCALLTYPE Release()
+	{
+		ULONG ulRef = InterlockedDecrement(&_cRef);
+		if (0 == ulRef)
+		{
+			delete this;
+		}
+		return ulRef;
+	}
 
-    HRESULT STDMETHODCALLTYPE QueryInterface(
-                                REFIID riid, VOID **ppvInterface)
-    {
-        return S_OK;
-    }
+	HRESULT STDMETHODCALLTYPE QueryInterface(
+								REFIID riid, VOID **ppvInterface)
+	{
+		return S_OK;
+	}
 
-    HRESULT STDMETHODCALLTYPE OnDeviceAdded(LPCWSTR pwstrDeviceId)
-    {
-        return S_OK;
-    };
+	HRESULT STDMETHODCALLTYPE OnDeviceAdded(LPCWSTR pwstrDeviceId)
+	{
+		return S_OK;
+	};
 
-    HRESULT STDMETHODCALLTYPE OnDeviceRemoved(LPCWSTR pwstrDeviceId)
-    {
-        return S_OK;
-    }
+	HRESULT STDMETHODCALLTYPE OnDeviceRemoved(LPCWSTR pwstrDeviceId)
+	{
+		return S_OK;
+	}
 
-    HRESULT STDMETHODCALLTYPE OnDeviceStateChanged(
-                                LPCWSTR pwstrDeviceId,
-                                DWORD dwNewState)
-    {
-        return S_OK;
-    }
+	HRESULT STDMETHODCALLTYPE OnDeviceStateChanged(
+								LPCWSTR pwstrDeviceId,
+								DWORD dwNewState)
+	{
+		return S_OK;
+	}
 
-    HRESULT STDMETHODCALLTYPE OnPropertyValueChanged(
-                                LPCWSTR pwstrDeviceId,
-                                const PROPERTYKEY key)
-    {
-        return S_OK;
-    }
+	HRESULT STDMETHODCALLTYPE OnPropertyValueChanged(
+								LPCWSTR pwstrDeviceId,
+								const PROPERTYKEY key)
+	{
+		return S_OK;
+	}
 
-    HRESULT STDMETHODCALLTYPE OnDefaultDeviceChanged(
-        EDataFlow flow, ERole role,
-        LPCWSTR pwstrDeviceId)
-    {
-        ::funkin::_hx_system::Main_obj::audioDisconnected = true;
-        return S_OK;
-    };
+	HRESULT STDMETHODCALLTYPE OnDefaultDeviceChanged(
+		EDataFlow flow, ERole role,
+		LPCWSTR pwstrDeviceId)
+	{
+		::funkin::_hx_system::Main_obj::audioDisconnected = true;
+		return S_OK;
+	};
 };
 
 AudioFixClient *curAudioFix;
@@ -115,69 +115,69 @@ AudioFixClient *curAudioFix;
 @:dox(hide)
 class Windows {
 
-    public static var __audioChangeCallback:Void->Void = function() {
-        trace("test");
-    };
+	public static var __audioChangeCallback:Void->Void = function() {
+		trace("test");
+	};
 
 
-    @:functionCode('
-    if (!curAudioFix) curAudioFix = new AudioFixClient();
-    ')
-    public static function registerAudio() {
-        funkin.system.Main.audioDisconnected = false;
-    }
+	@:functionCode('
+	if (!curAudioFix) curAudioFix = new AudioFixClient();
+	')
+	public static function registerAudio() {
+		funkin.system.Main.audioDisconnected = false;
+	}
 
-    @:functionCode('
-        int darkMode = enable ? 1 : 0;
-        HWND window = GetActiveWindow();
-        if (S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
-            DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
-        }
-    ')
-    public static function setDarkMode(enable:Bool) {}
+	@:functionCode('
+		int darkMode = enable ? 1 : 0;
+		HWND window = GetActiveWindow();
+		if (S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
+			DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
+		}
+	')
+	public static function setDarkMode(enable:Bool) {}
 
-    @:functionCode('
-    // https://stackoverflow.com/questions/15543571/allocconsole-not-displaying-cout
+	@:functionCode('
+	// https://stackoverflow.com/questions/15543571/allocconsole-not-displaying-cout
 
-    if (!AllocConsole())
-        return;
+	if (!AllocConsole())
+		return;
 
-    freopen("CONIN$", "r", stdin);
-    freopen("CONOUT$", "w", stdout);
-    freopen("CONOUT$", "w", stderr);
-    ')
-    public static function allocConsole() {
-    }
+	freopen("CONIN$", "r", stdin);
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+	')
+	public static function allocConsole() {
+	}
 
-    
-    @:functionCode('
-        HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); 
-        SetConsoleTextAttribute(console, color);
-    ')
-    public static function setConsoleColors(color:Int) {
+	
+	@:functionCode('
+		HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); 
+		SetConsoleTextAttribute(console, color);
+	')
+	public static function setConsoleColors(color:Int) {
 
-    }
+	}
 
-    @:functionCode('
-        system("CLS");
-        std::cout<< "" <<std::flush;
-    ')
-    public static function clearScreen() {
+	@:functionCode('
+		system("CLS");
+		std::cout<< "" <<std::flush;
+	')
+	public static function clearScreen() {
 
-    }
+	}
 
 
-    @:functionCode('
-        MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);
-    ')
-    public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
-        
-    }
+	@:functionCode('
+		MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);
+	')
+	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
+		
+	}
 
-    @:functionCode('
-        SetProcessDPIAware();
-    ')
-    public static function registerAsDPICompatible() {}
+	@:functionCode('
+		SetProcessDPIAware();
+	')
+	public static function registerAsDPICompatible() {}
 
 	@:functionCode("
 		// simple but effective code

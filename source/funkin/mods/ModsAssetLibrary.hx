@@ -22,20 +22,20 @@ import sys.FileSystem;
 using StringTools;
 
 interface ModsAssetLibrary {
-    public var prefix:String;
-    public var libName:String;
-    
-    #if MOD_SUPPORT
-    public var _parsedAsset:String;
+	public var prefix:String;
+	public var libName:String;
+	
+	#if MOD_SUPPORT
+	public var _parsedAsset:String;
 
-    private function getAssetPath():String;
+	private function getAssetPath():String;
 
-    private function __isCacheValid(cache:Map<String, Dynamic>, asset:String, isLocal:Bool = false):Bool;
+	private function __isCacheValid(cache:Map<String, Dynamic>, asset:String, isLocal:Bool = false):Bool;
 
-    private function __parseAsset(asset:String):Bool;
+	private function __parseAsset(asset:String):Bool;
 
-    public function getFiles(folder:String):Array<String>;
-    
-    public function getFolders(folder:String):Array<String>;
-    #end
+	public function getFiles(folder:String):Array<String>;
+	
+	public function getFolders(folder:String):Array<String>;
+	#end
 }

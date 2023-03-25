@@ -10,102 +10,102 @@ import funkin.options.type.OptionType;
 import funkin.options.categories.*;
 
 class TreeMenu extends MusicBeatState {
-    
-    public var main:OptionsScreen;
-    public var optionsTree:OptionsTree;
-    public var pathLabel:FunkinText;
-    public var pathDesc:FunkinText;
-    public var pathBG:FlxSprite;
+	
+	public var main:OptionsScreen;
+	public var optionsTree:OptionsTree;
+	public var pathLabel:FunkinText;
+	public var pathDesc:FunkinText;
+	public var pathBG:FlxSprite;
 
 	public var lastState:Class<FlxState> = Type.getClass(FlxG.state);
 
-    public function new() {
-        super();
-    }
+	public function new() {
+		super();
+	}
 
-    public override function createPost() {
-        if (main == null) throw "\"main\" variable has not been set in extended class!";
+	public override function createPost() {
+		if (main == null) throw "\"main\" variable has not been set in extended class!";
 
-        FlxG.camera.scroll.set(-FlxG.width, 0);
+		FlxG.camera.scroll.set(-FlxG.width, 0);
 
-        pathLabel = new FunkinText(4, 4, FlxG.width - 8, "> Tree Menu", 32, false);
-        pathLabel.scrollFactor.set();
+		pathLabel = new FunkinText(4, 4, FlxG.width - 8, "> Tree Menu", 32, false);
+		pathLabel.scrollFactor.set();
 
-        pathDesc = new FunkinText(4, pathLabel.y + pathLabel.height + 2, FlxG.width - 8, "Current Tree Menu Description", 16, false);
-        pathDesc.scrollFactor.set();
+		pathDesc = new FunkinText(4, pathLabel.y + pathLabel.height + 2, FlxG.width - 8, "Current Tree Menu Description", 16, false);
+		pathDesc.scrollFactor.set();
 
-        pathBG = new FlxSprite().makeGraphic(1, 1, 0xFF000000);
-        pathBG.scale.set(FlxG.width, pathDesc.y + pathDesc.height + 2);
-        pathBG.updateHitbox();
-        pathBG.alpha = 0.25;
-        pathBG.scrollFactor.set();
-        
-        optionsTree = new OptionsTree();
-        optionsTree.onMenuChange = onMenuChange;
-        optionsTree.onMenuClose = onMenuClose;
-        optionsTree.add(main);
-
-
-        add(optionsTree);
-        add(pathBG);
-        add(pathLabel);
-        add(pathDesc);
+		pathBG = new FlxSprite().makeGraphic(1, 1, 0xFF000000);
+		pathBG.scale.set(FlxG.width, pathDesc.y + pathDesc.height + 2);
+		pathBG.updateHitbox();
+		pathBG.alpha = 0.25;
+		pathBG.scrollFactor.set();
+		
+		optionsTree = new OptionsTree();
+		optionsTree.onMenuChange = onMenuChange;
+		optionsTree.onMenuClose = onMenuClose;
+		optionsTree.add(main);
 
 
-        super.createPost();
-    }
+		add(optionsTree);
+		add(pathBG);
+		add(pathLabel);
+		add(pathDesc);
 
-    public function onMenuChange() {
-        if (optionsTree.members.length <= 0) {
-            exit();
-        } else {
-            if (menuChangeTween != null)
-                menuChangeTween.cancel();
 
-            menuChangeTween = FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width * Math.max(0, (optionsTree.members.length-1))}, 1.5, {ease: menuTransitionEase, onComplete: function(t) {
-                optionsTree.clearLastMenu();
-                menuChangeTween = null;
-            }});
+		super.createPost();
+	}
 
-            var t = "";
-            for(o in optionsTree.members)
-                t += '${o.name} > ';
-            pathLabel.text = t;
+	public function onMenuChange() {
+		if (optionsTree.members.length <= 0) {
+			exit();
+		} else {
+			if (menuChangeTween != null)
+				menuChangeTween.cancel();
 
-            pathDesc.text = optionsTree.members.last().desc;
-            pathBG.scale.set(FlxG.width, pathDesc.y + pathDesc.height + 2);
-            pathBG.updateHitbox();
-        }
-    }
+			menuChangeTween = FlxTween.tween(FlxG.camera.scroll, {x: FlxG.width * Math.max(0, (optionsTree.members.length-1))}, 1.5, {ease: menuTransitionEase, onComplete: function(t) {
+				optionsTree.clearLastMenu();
+				menuChangeTween = null;
+			}});
 
-    public function exit() {
-        FlxG.switchState((lastState != null) ? Type.createInstance(lastState, []) : new MainMenuState());
-    }
+			var t = "";
+			for(o in optionsTree.members)
+				t += '${o.name} > ';
+			pathLabel.text = t;
 
-    public function onMenuClose(m:OptionsScreen) {
-        CoolUtil.playMenuSFX(CANCEL);
-    }
+			pathDesc.text = optionsTree.members.last().desc;
+			pathBG.scale.set(FlxG.width, pathDesc.y + pathDesc.height + 2);
+			pathBG.updateHitbox();
+		}
+	}
 
-    var menuChangeTween:FlxTween;
-    public override function update(elapsed:Float) {
-        super.update(elapsed);
+	public function exit() {
+		FlxG.switchState((lastState != null) ? Type.createInstance(lastState, []) : new MainMenuState());
+	}
 
-        // in case path gets so long it goes offscreen
-        pathLabel.x = lerp(pathLabel.x, Math.max(0, FlxG.width - 4 - pathLabel.width), 0.125);
-    }
+	public function onMenuClose(m:OptionsScreen) {
+		CoolUtil.playMenuSFX(CANCEL);
+	}
 
-    public static inline function menuTransitionEase(e:Float)
-        return FlxEase.quintInOut(FlxEase.cubeOut(e));
+	var menuChangeTween:FlxTween;
+	public override function update(elapsed:Float) {
+		super.update(elapsed);
+
+		// in case path gets so long it goes offscreen
+		pathLabel.x = lerp(pathLabel.x, Math.max(0, FlxG.width - 4 - pathLabel.width), 0.125);
+	}
+
+	public static inline function menuTransitionEase(e:Float)
+		return FlxEase.quintInOut(FlxEase.cubeOut(e));
 }
 
 typedef OptionCategory = {
-    var name:String;
-    var desc:String;
-    var state:OneOfTwo<OptionsScreen, Class<OptionsScreen>>;
-    var ?substate:OneOfTwo<MusicBeatSubstate, Class<MusicBeatSubstate>>;
+	var name:String;
+	var desc:String;
+	var state:OneOfTwo<OptionsScreen, Class<OptionsScreen>>;
+	var ?substate:OneOfTwo<MusicBeatSubstate, Class<MusicBeatSubstate>>;
 }
 
 typedef OptionTypeDef = {
-    var type:Class<OptionType>;
-    var args:Array<Dynamic>;
+	var type:Class<OptionType>;
+	var args:Array<Dynamic>;
 }

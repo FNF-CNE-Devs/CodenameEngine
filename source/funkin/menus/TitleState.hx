@@ -323,7 +323,7 @@ class TitleState extends MusicBeatState
 				}
 			}
 		} catch(e) {
-            Logs.trace('Failed to load titlescreen XML: $e', ERROR);
+			Logs.trace('Failed to load titlescreen XML: $e', ERROR);
 		}
 	}
 	#end

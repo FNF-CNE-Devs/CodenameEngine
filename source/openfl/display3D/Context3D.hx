@@ -1831,13 +1831,13 @@ import lime.math.Vector2;
 		As an example, a programmer might define each vertex with the following data:
 
 		```
-		position:  x    float32
-				   y    float32
-				   z    float32
-		color:     r    unsigned byte
-				   g    unsigned byte
-				   b    unsigned byte
-				   a    unsigned byte
+		position:  x	float32
+				   y	float32
+				   z	float32
+		color:	 r	unsigned byte
+				   g	unsigned byte
+				   b	unsigned byte
+				   a	unsigned byte
 		```
 
 		Assuming the vertex was defined in a VertexBuffer3D object named buffer, it
@@ -1845,7 +1845,7 @@ import lime.math.Vector2;
 
 		```haxe
 		setVertexBufferAt(0, buffer, 0, Context3DVertexBufferFormat.FLOAT_3);   // attribute #0 will contain the position information
-		setVertexBufferAt(1, buffer, 3, Context3DVertexBufferFormat.BYTES_4);    // attribute #1 will contain the color information
+		setVertexBufferAt(1, buffer, 3, Context3DVertexBufferFormat.BYTES_4);	// attribute #1 will contain the color information
 		```
 
 		@param	index	the index of the attribute register in the vertex shader (0

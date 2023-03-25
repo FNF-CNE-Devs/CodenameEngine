@@ -8,91 +8,91 @@ import hscript.IHScriptCustomBehaviour;
 import flixel.util.FlxDestroyUtil;
 
 class MultiThreadedScript implements IFlxDestroyable implements IHScriptCustomBehaviour {
-    var thread:#if ALLOW_MULTITHREADING Thread #else Dynamic #end;
+	var thread:#if ALLOW_MULTITHREADING Thread #else Dynamic #end;
 
-    /**
-     * Script being ran.
-     */
-    public var script:Script;
+	/**
+	 * Script being ran.
+	 */
+	public var script:Script;
 
-    private var __variables:Array<String>;
+	private var __variables:Array<String>;
 
-    /**
-     * Return value of the last call.
-     */
-    public var returnValue:Dynamic = null;
+	/**
+	 * Return value of the last call.
+	 */
+	public var returnValue:Dynamic = null;
 
-    /**
-     * Whenever the current call has ended.
-     */
-    public var callEnded:Bool = true;
+	/**
+	 * Whenever the current call has ended.
+	 */
+	public var callEnded:Bool = true;
 
 
 
-    public function new(path:String, ?parentScript:Script) {
-        script = Script.create(path);
+	public function new(path:String, ?parentScript:Script) {
+		script = Script.create(path);
 
-        if (parentScript != null) {
-            if (script is HScript && parentScript is HScript) {
-                var hscript = cast(script, HScript);
-                var parentHScript = cast(parentScript, HScript);
+		if (parentScript != null) {
+			if (script is HScript && parentScript is HScript) {
+				var hscript = cast(script, HScript);
+				var parentHScript = cast(parentScript, HScript);
 
-                hscript.interp.variables = parentHScript.interp.variables;
-                hscript.interp.publicVariables = parentHScript.interp.publicVariables;
-                hscript.interp.staticVariables = parentHScript.interp.staticVariables;
+				hscript.interp.variables = parentHScript.interp.variables;
+				hscript.interp.publicVariables = parentHScript.interp.publicVariables;
+				hscript.interp.staticVariables = parentHScript.interp.staticVariables;
 
-                script.setParent(parentHScript.interp.scriptObject);
-            }
-        }
+				script.setParent(parentHScript.interp.scriptObject);
+			}
+		}
 
-        script.load();
+		script.load();
 
-        #if ALLOW_MULTITHREADING
-        thread = Thread.createWithEventLoop(function() {
-            // Prevent the thread from being auto deleted
-            Thread.current().events.promise();
-        });
-        #end
+		#if ALLOW_MULTITHREADING
+		thread = Thread.createWithEventLoop(function() {
+			// Prevent the thread from being auto deleted
+			Thread.current().events.promise();
+		});
+		#end
 
-        __variables = Type.getInstanceFields(Type.getClass(this));
-    }
+		__variables = Type.getInstanceFields(Type.getClass(this));
+	}
 
-    public inline function hget(name:String):Dynamic
-        return __variables.contains(name) ? Reflect.getProperty(this, name) : script.get(name);
+	public inline function hget(name:String):Dynamic
+		return __variables.contains(name) ? Reflect.getProperty(this, name) : script.get(name);
 
-    public inline function hset(name:String, val:Dynamic):Dynamic {
-        if (__variables.contains(name))
-            Reflect.setProperty(this, name, val);
-        else
-            script.set(name, val);
-        return val;
-    }
+	public inline function hset(name:String, val:Dynamic):Dynamic {
+		if (__variables.contains(name))
+			Reflect.setProperty(this, name, val);
+		else
+			script.set(name, val);
+		return val;
+	}
 
-    public function call(func:String, args:Array<Dynamic>) {
-        #if ALLOW_MULTITHREADING
-        thread.events.run(function() {
-            callEnded = false;
-            returnValue = script.call(func, args);
-            callEnded = true;
-        });
-        #else
-        returnValue = script.call(func, args);
-        callEnded = true;
-        #end
-    }
+	public function call(func:String, args:Array<Dynamic>) {
+		#if ALLOW_MULTITHREADING
+		thread.events.run(function() {
+			callEnded = false;
+			returnValue = script.call(func, args);
+			callEnded = true;
+		});
+		#else
+		returnValue = script.call(func, args);
+		callEnded = true;
+		#end
+	}
 
-    public function destroy() {
-        if (script != null) {
-            script.call("onDestroy");
-            script.destroy();
-        }
+	public function destroy() {
+		if (script != null) {
+			script.call("onDestroy");
+			script.destroy();
+		}
 
-        #if ALLOW_MULTITHREADING
-        if (thread != null) {
-            thread.events.runPromised(function() {
-                // close the thing
-            });
-        }
-        #end
-    }
+		#if ALLOW_MULTITHREADING
+		if (thread != null) {
+			thread.events.runPromised(function() {
+				// close the thing
+			});
+		}
+		#end
+	}
 }

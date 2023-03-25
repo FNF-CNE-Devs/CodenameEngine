@@ -25,11 +25,11 @@ class XMLUtil {
 		}
 
 		var value:Dynamic = switch(property.att.type.toLowerCase()) {
-			case "float" | "number":            Std.parseFloat(property.att.value);
+			case "float" | "number":			Std.parseFloat(property.att.value);
 			case "int" | "integer" | "color":   Std.parseInt(property.att.value);
-			case "string" | "str" | "text":     property.att.value;
-			case "bool" | "boolean":            property.att.value.toLowerCase() == "true";
-			default:                            return TYPE_INCORRECT;
+			case "string" | "str" | "text":	 property.att.value;
+			case "bool" | "boolean":			property.att.value.toLowerCase() == "true";
+			default:							return TYPE_INCORRECT;
 		}
 		if (value == null) return VALUE_NULL;
 
