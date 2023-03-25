@@ -19,6 +19,11 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 		FlxG.signals.preStateSwitch.add(onSwitch);
 	}
 
+	public override function destroy() {
+		FlxG.bitmap.remove(graphic);
+		super.destroy();
+	}
+
 	private static function onSwitch() {
 		for(p in loadedPaths) {
 			Assets.cache.clear(p);

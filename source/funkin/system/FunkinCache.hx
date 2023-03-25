@@ -55,6 +55,7 @@ class FunkinCache extends AssetCache {
 
 	public function clearSecondLayer() {
 		for(k=>b in bitmapData2) {
+			FlxG.bitmap.removeByKey(k);
 			LimeAssets.cache.image.remove(k);
 		}
 		for(k=>f in font2) {
@@ -68,8 +69,6 @@ class FunkinCache extends AssetCache {
 		font2 = [];
 		sound2 = [];
 	}
-
-	
 
 	/**
 		Retrieves a cached BitmapData.
@@ -159,5 +158,46 @@ class FunkinCache extends AssetCache {
 	public override function hasSound(id:String):Bool
 	{
 		return sound.exists(id) || sound2.exists(id);
+	}
+	/**
+		Removes a BitmapData from the cache.
+
+		@param	id	The ID of a BitmapData asset
+		@return	`true` if the asset was removed, `false` if it was not in the cache
+	**/
+	public override function removeBitmapData(id:String):Bool
+	{
+		#if lime
+		LimeAssets.cache.image.remove(id);
+		#end
+		return bitmapData.remove(id) || bitmapData2.remove(id);
+	}
+
+	/**
+		Removes a Font from the cache.
+
+		@param	id	The ID of a Font asset
+		@return	`true` if the asset was removed, `false` if it was not in the cache
+	**/
+	public override function removeFont(id:String):Bool
+	{
+		#if lime
+		LimeAssets.cache.font.remove(id);
+		#end
+		return font.remove(id) || font2.remove(id);
+	}
+
+	/**
+		Removes a Sound from the cache.
+
+		@param	id	The ID of a Sound asset
+		@return	`true` if the asset was removed, `false` if it was not in the cache
+	**/
+	public override function removeSound(id:String):Bool
+	{
+		#if lime
+		LimeAssets.cache.audio.remove(id);
+		#end
+		return sound.remove(id) || sound2.remove(id);
 	}
 }

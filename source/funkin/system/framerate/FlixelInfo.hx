@@ -10,6 +10,8 @@ class FlixelInfo extends FramerateCategory {
 		_text = 'State: ${Type.getClassName(Type.getClass(FlxG.state))}';
         _text += '\nObject Count: ${FlxG.state.members.length}';
         _text += '\nCamera Count: ${FlxG.cameras.list.length}';
+		@:privateAccess
+        _text += '\nFlxG.game Childs Count: ${FlxG.game.numChildren}';
         
         this.text.text = _text;
         super.__enterFrame(t);
