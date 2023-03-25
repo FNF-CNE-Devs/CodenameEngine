@@ -164,7 +164,6 @@ class Main extends Sprite
 		#if GLOBAL_SCRIPT
 		funkin.scripting.GlobalScript.init();
 		#end
-		funkin.system.FlxAnimate.init();
 
 		#if sys
 		if (startedFromSource = Sys.args().contains("-livereload")) {

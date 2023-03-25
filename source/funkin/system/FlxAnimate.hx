@@ -9,26 +9,7 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
 
 class FlxAnimate extends flxanimate.FlxAnimate {
-	public static var loadedPaths:Array<String> = [];
-	public override function loadAtlas(Path:String) {
-		super.loadAtlas(Path);
-		loadedPaths.push(Path);
-	}
 
-	public static function init() {
-		FlxG.signals.preStateSwitch.add(onSwitch);
-	}
-
-	public override function destroy() {
-		FlxG.bitmap.remove(graphic);
-		super.destroy();
-	}
-
-	private static function onSwitch() {
-		for(p in loadedPaths) {
-			Assets.cache.clear(p);
-		}
-	}
 	override function drawLimb(limb:FlxFrame, _matrix:FlxMatrix, ?colorTransform:ColorTransform)
 	{
 		if (alpha == 0 || colorTransform != null && (colorTransform.alphaMultiplier == 0 || colorTransform.alphaOffset == -255) || limb == null || limb.type == EMPTY)
