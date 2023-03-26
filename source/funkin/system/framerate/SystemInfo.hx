@@ -53,7 +53,9 @@ class SystemInfo extends FramerateCategory {
 		if (alpha <= 0.05) return;
 		_text = 'System: $osInfo';
 		_text += '\nCPU: ${cpuName} ${openfl.system.Capabilities.cpuArchitecture} ${(openfl.system.Capabilities.supports64BitProcesses ? '64-Bit' : '32-Bit')}';
-		if (gpuName != cpuName) _text += '\nGPU: ${gpuName} | VRAM $vRAM'; // 1000 bytes of vram (apus)
+		if (gpuName != cpuName) _text += '\nGPU: ${gpuName}'; // 1000 bytes of vram (apus)
+		if (FlxG.stage != null && FlxG.stage.context3D != null)
+			_text += '\nVRAM: ${CoolUtil.getSizeString(cast(FlxG.stage.context3D.totalGPUMemory, UInt))} / $vRAM';
 		_text += '\nTotal MEM: ${totalMem} $memType';
 		_text += '\nGarbage Collector: ${MemoryUtil.disableCount > 0 ? "OFF" : "ON"} (${MemoryUtil.disableCount})';
 
