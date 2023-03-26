@@ -100,7 +100,10 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			isEnding = true;
 			character.playAnim('deathConfirm', true);
-			FlxG.sound.music.stop();
+			if (FlxG.sound.music != null)
+				FlxG.sound.music.stop();
+			FlxG.sound.music = null;
+
 			var sound = FlxG.sound.play(Paths.sound(retrySFX));
 
 			var secsLength:Float = sound.length / 1000;
