@@ -62,18 +62,6 @@ class WindowsAPI {
 		#end
 	}
 
-	public static function getTotalRam() {
-		#if windows
-		return Windows.getTotalRam();
-		#elseif mac
-		return Mac.getTotalRam();
-		#elseif linux
-		return Linux.getTotalRam();
-		#else
-		return 0;
-		#end
-	}
-
 	public static function consoleColorToOpenFL(color:ConsoleColor) {
 		return switch(color) {
 			case BLACK:		 0xFF000000;
