@@ -196,25 +196,45 @@ class Conductor
 			curBeatFloat = curStepFloat / stepsPerBeat;
 			curMeasureFloat = curBeatFloat / beatsPerMesure;
 
+			var oldStep = curStep;
+			var oldBeat = curBeat;
+			var oldMeasure = curMeasure;
 			if (curStep != (curStep = Std.int(curStepFloat))) {
 				// updates step
 				__updateBeat = curBeat != (curBeat = Std.int(curBeatFloat));
 				__updateMeasure = __updateBeat && (curMeasure != (curMeasure = Std.int(curMeasureFloat)));
 
-				onStepHit.dispatch(curStep);
-				if (__updateBeat)
-					onBeatHit.dispatch(curBeat);
+				if (curStep > oldStep) {
+					for(i in oldStep...curStep) {
+						onStepHit.dispatch(i+1);
+					}
+				}
+				if (__updateBeat && curBeat > oldBeat) {
+					for(i in oldBeat...curBeat) {
+						onBeatHit.dispatch(i+1);
+					}
+				}
 
 				if (FlxG.state is IBeatReceiver) {
 					var state = FlxG.state;
 					while(state != null) {
 						if (state is IBeatReceiver && (state.subState == null || state.persistentUpdate)) {
 							var st = cast(state, IBeatReceiver);
-							st.stepHit(curStep);
-							if (__updateBeat)
-								st.beatHit(curBeat);
-							if (__updateMeasure)
-								st.measureHit(curMeasure);
+							if (curStep > oldStep) {
+								for(i in oldStep...curStep) {
+									st.stepHit(i+1);
+								}
+							}
+							if (__updateBeat && curBeat > oldBeat) {
+								for(i in oldBeat...curBeat) {
+									st.beatHit(i+1);
+								}
+							}
+							if (__updateMeasure && curMeasure > oldMeasure) {
+								for(i in oldMeasure...curMeasure) {
+									st.measureHit(i+1);
+								}
+							}
 						}
 						state = state.subState;
 					}

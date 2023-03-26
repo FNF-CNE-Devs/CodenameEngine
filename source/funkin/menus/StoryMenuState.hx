@@ -173,6 +173,8 @@ class StoryMenuState extends MusicBeatState {
 			characterSprites.members[i].changeCharacter(characters[weeks[curWeek].chars[i]]);
 
 		changeDifficulty(0, true);
+
+		MemoryUtil.clearMinor();
 	}
 
 	var __oldDiffName = null;
