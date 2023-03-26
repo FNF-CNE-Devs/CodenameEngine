@@ -38,6 +38,7 @@ class Main extends Sprite
 	public static var instance:Main;
 
 	public static var modToLoad:String = null;
+	public static var forceGPUOnlyBitmapsOff:Bool = false;
 
 	public static var scaleMode:FunkinRatioScaleMode;
 

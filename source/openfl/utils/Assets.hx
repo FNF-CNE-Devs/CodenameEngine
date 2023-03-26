@@ -1,5 +1,6 @@
 package openfl.utils;
 
+import funkin.options.Options;
 import funkin.system.OptimizedBitmapData;
 import openfl.utils._internal.Log;
 import openfl.display.BitmapData;
@@ -109,8 +110,13 @@ class Assets
 			#if flash
 			var bitmapData = image.src;
 			#else
-			var bitmapData = new OptimizedBitmapData(0, 0, true, 0);
-			bitmapData.__fromImage(image);
+			var bitmapData:BitmapData = null;
+			if (!Main.forceGPUOnlyBitmapsOff && Options.gpuOnlyBitmaps) {
+				bitmapData = new OptimizedBitmapData(0, 0, true, 0);
+				bitmapData.__fromImage(image);
+			} else {
+				bitmapData = BitmapData.fromImage(image);
+			}
 			#end
 
 			if (useCache && cache.enabled)
@@ -488,8 +494,13 @@ class Assets
 				#if flash
 				var bitmapData = image.src;
 				#else
-				var bitmapData = new OptimizedBitmapData(0, 0, true, 0);
-				bitmapData.__fromImage(image);
+				var bitmapData:BitmapData = null;
+				if (!Main.forceGPUOnlyBitmapsOff && Options.gpuOnlyBitmaps) {
+					bitmapData = new OptimizedBitmapData(0, 0, true, 0);
+					bitmapData.__fromImage(image);
+				} else {
+					bitmapData = BitmapData.fromImage(image);
+				}
 				#end
 
 				if (useCache && cache.enabled)

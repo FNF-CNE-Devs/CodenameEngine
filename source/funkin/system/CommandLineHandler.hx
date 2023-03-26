@@ -15,6 +15,7 @@ class CommandLineHandler {
 					#if MOD_SUPPORT
 					Sys.println("-mod [mod name]    | Load a specific mod");
 					Sys.println("-modfolder [path]  | Sets the mod folder path");
+					Sys.println("-nogpubitmap       | Forces GPU only bitmaps off");
 					#end
 					Sys.exit(0);
 				#if MOD_SUPPORT
@@ -27,6 +28,8 @@ class CommandLineHandler {
 					} else {
 						Main.modToLoad = arg.trim();
 					}
+				case "-nogpubitmap":
+					Main.forceGPUOnlyBitmapsOff = true;
 				case "-modfolder":
 					i++;
 					var arg = cmd[i];

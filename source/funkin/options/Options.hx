@@ -29,6 +29,7 @@ class Options
 	public static var splashesEnabled:Bool = true;
 	public static var hitWindow:Float = 250;
 	public static var framerate:Int = 120;
+	public static var gpuOnlyBitmaps:Bool = true;
 
 	public static var lastLoadedMod:String = null;
 
