@@ -100,7 +100,7 @@ class PlayState extends MusicBeatState
 	 */
 	public var stage:Stage;
 	/**
-	 * Current Stage.
+	 * Whenever the score will save when you beat the song.
 	 */
 	public var validScore:Bool = true;
 	/**
@@ -549,7 +549,7 @@ class PlayState extends MusicBeatState
 		#if REGION
 		for(content in Paths.getFolderContent('images/game/score/', true, true))
 			FlxG.bitmap.add(content);
-		
+
 		for(i in 1...4) {
 			FlxG.sound.load(Paths.sound('missnote' + Std.string(i)));
 		}
@@ -559,7 +559,7 @@ class PlayState extends MusicBeatState
 		#if REGION
 		strumLine = new FlxObject(0, 50, FlxG.width, 10);
 		strumLine.scrollFactor.set();
-		
+
 		generateSong(SONG);
 
 		for(noteType in SONG.noteTypes) {
@@ -834,7 +834,7 @@ class PlayState extends MusicBeatState
 		inst.play();
 
 		updateDiscordPresence();
-		
+
 		scripts.call("onStartSong");
 	}
 
@@ -847,7 +847,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.destroySound(vocals);
 		}
 		instance = null;
-		
+
 		Note.__customNoteTypeExists = [];
 	}
 
@@ -888,17 +888,17 @@ class PlayState extends MusicBeatState
 
 		generatedMusic = true;
 	}
-	
+
 	@:dox(hide) function sortByShit(Obj1:Note, Obj2:Note):Int {
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1.strumTime, Obj2.strumTime);
 	}
 
-	@:dox(hide) 
-	private inline function generateStrums():Void 
+	@:dox(hide)
+	private inline function generateStrums():Void
 		for(p in strumLines)
 			p.generateStrums();
 
-	@:dox(hide) 
+	@:dox(hide)
 	override function openSubState(SubState:FlxSubState)
 	{
 		var event = scripts.event("onSubstateOpen", EventManager.get(StateEvent).recycle(SubState));
@@ -923,7 +923,7 @@ class PlayState extends MusicBeatState
 		super.openSubState(SubState);
 	}
 
-	@:dox(hide) 
+	@:dox(hide)
 	override function closeSubState()
 	{
 		var event = scripts.event("onSubstateClose", EventManager.get(StateEvent).recycle(subState));
@@ -954,7 +954,7 @@ class PlayState extends MusicBeatState
 
 	var __songPlaying:Bool = false;
 	var __wasAutoPause:Bool = false;
-	@:dox(hide) 
+	@:dox(hide)
 	override public function onFocus():Void
 	{
 		scripts.call("onFocus");
@@ -971,7 +971,7 @@ class PlayState extends MusicBeatState
 		super.onFocus();
 	}
 
-	@:dox(hide) 
+	@:dox(hide)
 	override public function onFocusLost():Void
 	{
 		scripts.call("onFocusLost");
@@ -1126,7 +1126,7 @@ class PlayState extends MusicBeatState
 		// RESET = Quick Game Over Screen
 		if (startedCountdown && controls.RESET)
 			gameOver();
-		
+
 		if (health <= 0 && canDie)
 			gameOver(boyfriend);
 		else if (health >= maxHealth && canDadDie)
@@ -1295,19 +1295,19 @@ class PlayState extends MusicBeatState
 			__pressed.clear();
 			__justPressed.clear();
 			__justReleased.clear();
-	
+
 			__pressed.pushGroup(p.controls.NOTE_LEFT, p.controls.NOTE_DOWN, p.controls.NOTE_UP, p.controls.NOTE_RIGHT);
 			__justPressed.pushGroup(p.controls.NOTE_LEFT_P, p.controls.NOTE_DOWN_P, p.controls.NOTE_UP_P, p.controls.NOTE_RIGHT_P);
 			__justReleased.pushGroup(p.controls.NOTE_LEFT_R, p.controls.NOTE_DOWN_R, p.controls.NOTE_UP_R, p.controls.NOTE_RIGHT_R);
-	
+
 			var event = scripts.event("onKeyShit", EventManager.get(InputSystemEvent).recycle(__pressed, __justPressed, __justReleased, p, id));
 			if (event.cancelled) return;
-	
+
 			__pressed = CoolUtil.getDefault(event.pressed, []);
 			__justPressed = CoolUtil.getDefault(event.justPressed, []);
 			__justReleased = CoolUtil.getDefault(event.justReleased, []);
-	
-	
+
+
 			if (__pressed.contains(true)) {
 				for(c in p.characters)
 					if (c.lastAnimContext != DANCE)
@@ -1319,7 +1319,7 @@ class PlayState extends MusicBeatState
 					}
 				});
 			}
-	
+
 			var notePerStrum = [for(_ in 0...4) null];
 			if (__justPressed.contains(true)) {
 				__funcsToExec.push(function(note:Note) {
@@ -1330,19 +1330,19 @@ class PlayState extends MusicBeatState
 					}
 				});
 			}
-	
+
 			if (__funcsToExec.length > 0) {
 				p.notes.forEachAlive(function(note:Note) {
 					for(e in __funcsToExec) e(note);
 				});
 			}
-	
+
 			if (!p.ghostTapping) for(k=>pr in __justPressed) if (pr && notePerStrum[k] == null) {
 				// FUCK YOU
 				noteMiss(p, null, k, id);
 			}
 			for(e in notePerStrum) if (e != null) goodNoteHit(p, e);
-	
+
 			p.forEach(function(str:Strum) {
 				str.updatePlayerInput(__pressed[str.ID], __justPressed[str.ID], __justReleased[str.ID]);
 			});
@@ -1405,7 +1405,7 @@ class PlayState extends MusicBeatState
 
 	/**
 	 * Hits a note
-	 * @param note Note to hit. 
+	 * @param note Note to hit.
 	 */
 	public function goodNoteHit(strumLine:StrumLine, note:Note):Void
 	{
@@ -1561,7 +1561,7 @@ class PlayState extends MusicBeatState
 	public inline function deleteNote(note:Note)
 		if (note.strumLine != null)
 			note.strumLine.deleteNote(note);
-	
+
 	@:dox(hide)
 	override function stepHit(curStep:Int)
 	{
