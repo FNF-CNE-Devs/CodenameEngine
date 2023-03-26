@@ -53,10 +53,4 @@ class OptimizedBitmapData extends BitmapData {
 		return null;
 		#end
 	}
-
-	public override function dispose() {
-		if (__texture != null)
-			__texture.dispose();
-		super.dispose();
-	}
 }
