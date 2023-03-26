@@ -154,7 +154,7 @@ class Chart {
 
 		var filteredChart = filterChartForSaving(chart, saveSettings.saveMetaInChart);
 		var meta = filteredChart.meta;
-		
+
 		// idk how null reacts to it so better be sure
 
 		#if sys

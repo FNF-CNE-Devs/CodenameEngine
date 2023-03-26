@@ -38,6 +38,7 @@ class BaseGameParser {
 		}
 
 		result.meta.bpm = data.bpm;
+		result.meta.needsVoices = data.needsVoices.getDefault(true);
 
 		var camFocusedBF:Bool = false;
 		var beatsPerMesure:Float = data.beatsPerMesure.getDefault(4);
@@ -76,7 +77,6 @@ class BaseGameParser {
 					daNoteType = Chart.addNoteType(result, data.noteTypes[daNoteType-1]);
 				}
 
-				
 				result.strumLines[gottaHitNote ? 1 : 0].notes.push({
 					time: daStrumTime,
 					id: daNoteData % 4,
