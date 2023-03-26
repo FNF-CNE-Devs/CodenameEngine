@@ -146,12 +146,13 @@ class PauseSubState extends MusicBeatSubstate
 				FlxG.switchState(new OptionsMenu());
 			case "Exit to menu":
 				FlxG.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
-				CoolUtil.playMenuSong();		
+				CoolUtil.playMenuSong();
 		}
 	}
 	override function destroy()
 	{
-		FlxG.cameras.remove(camera, true);
+		if(FlxG.cameras.list.contains(camera))
+			FlxG.cameras.remove(camera, true);
 		pauseScript.call("onDestroy");
 		if (pauseMusic != null) pauseMusic.destroy();
 		pauseScript.destroy();
@@ -175,14 +176,10 @@ class PauseSubState extends MusicBeatSubstate
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			item.alpha = 0.6;
-			// item.setGraphicSize(Std.int(item.width * 0.8));
-
 			if (item.targetY == 0)
-			{
 				item.alpha = 1;
-				// item.setGraphicSize(Std.int(item.width));
-			}
+			else
+				item.alpha = 0.6;
 		}
 	}
 }
