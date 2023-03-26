@@ -13,20 +13,29 @@ class Logs {
 	public static function init() {
 
 		Log.trace = function(v : Dynamic, ?infos : Null<haxe.PosInfos>) {
-			__showInConsole(prepareColoredTrace([
+			var data = [
 				logText('${infos.fileName}:${infos.lineNumber}: ', CYAN),
 				logText(Std.string(v))
-			], TRACE));
+			];
+
+			if (infos.customParams != null) {
+				for (i in infos.customParams) {
+					data.push(
+						logText("," + Std.string(i))
+					);
+				}
+			}
+			__showInConsole(prepareColoredTrace(data, TRACE));
 		};
 
 		LogFrontEnd.onLogs = function(Data, Style, FireOnce) {
 			var prefix = "[FLIXEL]";
 			var color:ConsoleColor = LIGHTGRAY;
 			var level:Level = INFO;
-			if (Style == LogStyle.CONSOLE)  {prefix = "> ";					color = WHITE;	level = INFO;   }
-			if (Style == LogStyle.ERROR)    {prefix = "[FLIXEL]";		    color = RED;	level = ERROR;  }
-			if (Style == LogStyle.NORMAL)   {prefix = "[FLIXEL]";			color = WHITE;	level = INFO;   }
-			if (Style == LogStyle.NOTICE)   {prefix = "[FLIXEL]";	        color = GREEN;	level = WARNING;}
+			if (Style == LogStyle.CONSOLE)  {prefix = "> ";					color = WHITE;	level = INFO;   } else
+			if (Style == LogStyle.ERROR)    {prefix = "[FLIXEL]";		    color = RED;	level = ERROR;  } else
+			if (Style == LogStyle.NORMAL)   {prefix = "[FLIXEL]";			color = WHITE;	level = INFO;   } else
+			if (Style == LogStyle.NOTICE)   {prefix = "[FLIXEL]";	        color = GREEN;	level = WARNING;} else
 			if (Style == LogStyle.WARNING)  {prefix = "[FLIXEL]";	        color = YELLOW;	level = WARNING;}
 
 			var d:Dynamic = Data;

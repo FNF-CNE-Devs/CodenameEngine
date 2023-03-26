@@ -18,7 +18,7 @@ abstract XMLAnimType(Int) {
 	public static function fromString(str:String, def:XMLAnimType = NONE) {
 		return switch(str.trim().toLowerCase()) {
 			case "none":				NONE;
-			case "beat" | "onbeat":	 BEAT;
+			case "beat" | "onbeat":		BEAT;
 			case "loop":				LOOP;
 			default:					def;
 		}
@@ -61,12 +61,10 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
 
 	public function loadSprite(path:String, Unique:Bool = false, Key:String = null) {
 		var noExt = Path.withoutExtension(path);
-		if (Assets.exists('$noExt/Animation.json')
-			&& Assets.exists('$noExt/spritemap1.json')
-			&& Assets.exists('$noExt/spritemap1.png')) {
-				atlasPath = noExt;
-				animateAtlas = new FlxAnimate(x, y, noExt);
-			}
+		if (Assets.exists('$noExt/Animation.json')) {
+			atlasPath = noExt;
+			animateAtlas = new FlxAnimate(x, y, noExt);
+		}
 		else {
 			frames = CoolUtil.loadFrames(path, Unique, Key, true);
 		}
@@ -152,8 +150,8 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
 	}
 
 	public override function destroy() {
-		animateAtlas = FlxDestroyUtil.destroy(animateAtlas);	
-		super.destroy();	
+		animateAtlas = FlxDestroyUtil.destroy(animateAtlas);
+		super.destroy();
 	}
 	#end
 
@@ -214,10 +212,10 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
 			if (!animation.exists(AnimName)) return;
 			animation.play(AnimName, Force, Reversed, Frame);
 		}
-		
 
 		var daOffset = getAnimOffset(AnimName);
 		rotOffset.set(daOffset.x, daOffset.y);
+		daOffset.putWeak();
 
 		lastAnimContext = Context;
 	}

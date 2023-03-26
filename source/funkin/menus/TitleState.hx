@@ -156,6 +156,11 @@ class TitleState extends MusicBeatState
 			#end
 		}
 
+		if (pressedEnter && transitioning && skippedIntro) {
+			FlxG.camera.stopFX();// FlxG.camera.visible = false;
+			goToMainMenu();
+		}
+
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
 			pressEnter();
@@ -176,21 +181,22 @@ class TitleState extends MusicBeatState
 		transitioning = true;
 		// FlxG.sound.music.stop();
 
-		new FlxTimer().start(2, function(tmr:FlxTimer)
-		{
-			#if UPDATE_CHECKING
-			var report = hasCheckedUpdates ? null : funkin.updating.UpdateUtil.checkForUpdates();
-			hasCheckedUpdates = true;
+		new FlxTimer().start(2, (_) -> goToMainMenu());
+	}
 
-			if (report != null && report.newUpdate) {
-				FlxG.switchState(new funkin.updating.UpdateAvailableScreen(report));
-			} else {
-				FlxG.switchState(new MainMenuState());
-			}
-			#else
+	function goToMainMenu() {
+		#if UPDATE_CHECKING
+		var report = hasCheckedUpdates ? null : funkin.updating.UpdateUtil.checkForUpdates();
+		hasCheckedUpdates = true;
+
+		if (report != null && report.newUpdate) {
+			FlxG.switchState(new funkin.updating.UpdateAvailableScreen(report));
+		} else {
 			FlxG.switchState(new MainMenuState());
-			#end
-		});
+		}
+		#else
+		FlxG.switchState(new MainMenuState());
+		#end
 	}
 
 	public function createCoolText(textArray:Array<String>)

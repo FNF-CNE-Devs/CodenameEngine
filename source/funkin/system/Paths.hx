@@ -59,7 +59,7 @@ class Paths
 	{
 		return 'assets/$file';
 	}
-	
+
 	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)
 	{
 		return getPath(file, type, library);
@@ -96,9 +96,9 @@ class Paths
 	}
 
 	inline static public function ps1(key:String, ?library:String)
-		{
-			return getPath('data/$key.ps1', TEXT, library);
-		}
+	{
+		return getPath('data/$key.ps1', TEXT, library);
+	}
 
 	static public function sound(key:String, ?library:String)
 	{
@@ -153,7 +153,7 @@ class Paths
 		difficulty = difficulty.toLowerCase();
 		song = song.toLowerCase();
 
-		var difficultyEnd = (difficulty == "normal") ? "" : '-$difficulty';
+		//var difficultyEnd = (difficulty == "normal") ? "" : '-$difficulty';
 
 		// songs/your-song/charts/hard.json
 		var p = getPath('songs/$song/charts/$difficulty.json', TEXT, null);

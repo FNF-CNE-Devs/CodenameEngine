@@ -15,51 +15,49 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 
-
 	/**
 	 * Current step
 	 */
-	 public var curStep(get, never):Int;
-	 /**
-	  * Current beat
-	  */
-	 public var curBeat(get, never):Int;
-	 /**
-	  * Current beat
-	  */
-	 public var curMeasure(get, never):Int;
-	 /**
-	  * Current step, as a `Float` (ex: 4.94, instead of 4)
-	  */
-	 public var curStepFloat(get, never):Float;
-	 /**
-	  * Current beat, as a `Float` (ex: 1.24, instead of 1)
-	  */
-	 public var curBeatFloat(get, never):Float;
-	 /**
-	  * Current beat, as a `Float` (ex: 1.24, instead of 1)
-	  */
-	 public var curMeasureFloat(get, never):Float;
-	 /**
-	  * Current song position (in milliseconds).
-	  */
-	 public var songPos(get, never):Float;
- 
-	 inline function get_curStep():Int
-		 return Conductor.curStep;
-	 inline function get_curBeat():Int
-		 return Conductor.curBeat;
-	 inline function get_curMeasure():Int
-		 return Conductor.curMeasure;
-	 inline function get_curStepFloat():Float
-		 return Conductor.curStepFloat;
-	 inline function get_curBeatFloat():Float
-		 return Conductor.curBeatFloat;
-	 inline function get_curMeasureFloat():Float
-		 return Conductor.curMeasureFloat;
-	 inline function get_songPos():Float
-		 return Conductor.songPosition;
+	public var curStep(get, never):Int;
+	/**
+	 * Current beat
+	 */
+	public var curBeat(get, never):Int;
+	/**
+	 * Current beat
+	 */
+	public var curMeasure(get, never):Int;
+	/**
+	 * Current step, as a `Float` (ex: 4.94, instead of 4)
+	 */
+	public var curStepFloat(get, never):Float;
+	/**
+	 * Current beat, as a `Float` (ex: 1.24, instead of 1)
+	 */
+	public var curBeatFloat(get, never):Float;
+	/**
+	 * Current beat, as a `Float` (ex: 1.24, instead of 1)
+	 */
+	public var curMeasureFloat(get, never):Float;
+	/**
+	 * Current song position (in milliseconds).
+	 */
+	public var songPos(get, never):Float;
 
+	inline function get_curStep():Int
+		return Conductor.curStep;
+	inline function get_curBeat():Int
+		return Conductor.curBeat;
+	inline function get_curMeasure():Int
+		return Conductor.curMeasure;
+	inline function get_curStepFloat():Float
+		return Conductor.curStepFloat;
+	inline function get_curBeatFloat():Float
+		return Conductor.curBeatFloat;
+	inline function get_curMeasureFloat():Float
+		return Conductor.curMeasureFloat;
+	inline function get_songPos():Float
+		return Conductor.songPosition;
 
 	/**
 	 * Current injected script attached to the state. To add one, create a file at path "data/states/stateName" (ex: "data/states/PauseMenuSubstate.hx")
@@ -73,17 +71,17 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	/**
 	 * Game Controls. (All players / Solo)
 	 */
-	 public var controls(get, never):Controls;
+	public var controls(get, never):Controls;
 
-	 /**
-	  * Game Controls (Player 1 only)
-	  */
-	 public var controlsP1(get, never):Controls;
-	 
-	 /**
-	  * Game Controls (Player 2 only)
-	  */
-	 public var controlsP2(get, never):Controls;
+	/**
+	 * Game Controls (Player 1 only)
+	 */
+	public var controlsP1(get, never):Controls;
+
+	/**
+	 * Game Controls (Player 2 only)
+	 */
+	public var controlsP2(get, never):Controls;
 
 	inline function get_controls():Controls
 		return PlayerSettings.solo.controls;
@@ -247,7 +245,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	public var parent:FlxState;
 
 	public function onSubstateOpen() {
-		
+
 	}
 
 	public override function resetSubState() {
