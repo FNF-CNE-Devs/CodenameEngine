@@ -14,21 +14,6 @@ import openfl.system.System;
 
 using StringTools;
 
-#if cpp
-@:cppFileCode("
-#if defined(HX_WINDOWS)
-	#include <windows.h>
-#endif
-
-#if defined(HX_MAC)
-	#include <sys/sysctl.h>
-#endif
-
-#if defined(HX_LINUX)
-	#include <stdio.h>
-#endif
-")
-#end
 class MemoryUtil {
 	public static var disableCount:Int = 0;
 
@@ -78,50 +63,18 @@ class MemoryUtil {
 		#end
 	}
 
-	#if cpp
-	@:functionCode("
-	#if defined(HX_WINDOWS)
-		unsigned long long allocatedRAM = 0;
-		GetPhysicallyInstalledSystemMemory(&allocatedRAM);
-		return (allocatedRAM / 1024);
-	#endif
-
-	#if defined(HX_MAC)
-		int mib [] = { CTL_HW, HW_MEMSIZE };
-		int64_t value = 0;
-		size_t length = sizeof(value);
-
-		if(-1 == sysctl(mib, 2, &value, &length, NULL, 0))
-			return -1; // An error occurred
-
-		return value / 1024 / 1024;
-	#endif
-
-	#if defined(HX_LINUX)
-		FILE *meminfo = fopen('/proc/meminfo', 'r');
-
-		if(meminfo == NULL) return -1;
-
-		char line[256];
-		while(fgets(line, sizeof(line), meminfo))
-		{
-			int ram;
-			if(sscanf(line, 'MemTotal: %d kB', &ram) == 1)
-			{
-				fclose(meminfo);
-				return (ram / 1024);
-			}
-		}
-
-		fclose(meminfo);
-		return -1;
-	#endif
-	")
 	public static function getTotalMem():Float
 	{
+		#if windows
+		return funkin.native.Windows.getTotalRam();
+		#elseif mac
+		return funkin.native.Mac.getTotalRam();
+		#elseif linux
+		return funkin.native.Linux.getTotalRam();
+		#else
 		return 0;
+		#end
 	}
-	#end
 
 	public static inline function currentMemUsage() {
 		#if cpp
