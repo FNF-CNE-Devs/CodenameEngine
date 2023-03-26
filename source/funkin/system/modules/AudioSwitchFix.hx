@@ -1,4 +1,4 @@
-package funkin.system;
+package funkin.system.modules;
 
 import lime.media.AudioManager;
 import flixel.system.FlxSound;

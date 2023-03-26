@@ -1,5 +1,7 @@
 package funkin.system.framerate;
 
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
 import flixel.math.FlxPoint;
 import openfl.events.KeyboardEvent;
 import openfl.display.DisplayObject;
@@ -23,9 +25,17 @@ class Framerate extends Sprite {
 	public static var debugMode:Bool = false;
 	public static var offset:FlxPoint = new FlxPoint();
 
-	public var bgSprite:Sprite;
+	public var bgSprite:Bitmap;
 
 	public var categories:Array<FramerateCategory> = [];
+
+	@:isVar public static var __bitmap(get, null):BitmapData = null;
+
+	private static function get___bitmap():BitmapData {
+		if (__bitmap == null)
+			__bitmap = new BitmapData(1, 1, 0xFF000000);
+		return __bitmap;
+	}
 
 	public function new() {
 		super();
@@ -43,10 +53,10 @@ class Framerate extends Sprite {
 			}
 		});
 
-		bgSprite = new Sprite();
-		bgSprite.graphics.beginFill(0xFF000000);
-		bgSprite.graphics.drawRect(0, 0, 1, 1);
-		bgSprite.graphics.endFill();
+		if (__bitmap == null)
+			__bitmap = new BitmapData(1, 1, 0xFF000000);
+
+		bgSprite = new Bitmap(__bitmap);
 		bgSprite.alpha = 0;
 		addChild(bgSprite);
 

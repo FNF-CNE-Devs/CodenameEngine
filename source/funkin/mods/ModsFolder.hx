@@ -92,19 +92,11 @@ class ModsFolder {
 		Paths.assetsTree.clearCache();
 		FlxG.bitmap.reset();
 		Paths.assetsTree.removeLibrary(loadedMods[mod]);
-		Assets.unloadLibrary('mods/$mod'.toLowerCase());
 
 		loadedMods[mod] = null;
 	}
 
 	public static function prepareLibrary(libName:String, force:Bool = false) {
-		if (Assets.hasLibrary(libName)) {
-			if (force)
-				Assets.unloadLibrary(libName);
-			else
-				return null;
-		}
-		
 		var assets:AssetManifest = new AssetManifest();
 		assets.name = libName;
 		assets.version = 2;
@@ -119,7 +111,6 @@ class ModsFolder {
 		lib.prefix = 'assets/';
 		@:privateAccess
 		openLib.__proxy = cast(lib, lime.utils.AssetLibrary);
-		Assets.registerLibrary(libName, openLib);
 		return openLib;
 	}
 

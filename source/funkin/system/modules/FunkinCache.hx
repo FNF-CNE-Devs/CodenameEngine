@@ -1,4 +1,4 @@
-package funkin.system;
+package funkin.system.modules;
 
 import openfl.utils.AssetCache;
 import openfl.display.BitmapData;

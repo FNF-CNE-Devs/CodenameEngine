@@ -86,29 +86,33 @@ class Chart {
 			fromMods: Paths.assetsTree.existsSpecific(chartPath, "TEXT", MODS)
 		};
 
+		var valid:Bool = true;
 		if (!Assets.exists(chartPath)) {
 			Logs.trace('Chart for song ${songName} ($difficulty) at "$chartPath" was not found.', ERROR, RED);
-			return base;
+			valid = false;
 		}
 		var data:Dynamic = null;
 		try {
-			data = Json.parse(Assets.getText(chartPath));
+			if (valid)
+				data = Json.parse(Assets.getText(chartPath));
 		} catch(e) {
 			Logs.trace('Could not parse chart for song ${songName} ($difficulty): ${Std.string(e)}', ERROR, RED);
 		}
 
-		/**
-		 * CHART CONVERSION
-		 */
-		#if REGION
-		if (Reflect.hasField(data, "codenameChart") && Reflect.field(data, "codenameChart") == true) {
-			// codename chart
-			base = data;
-		} else {
-			// base game chart
-			BaseGameParser.parse(data, base);
+		if (data != null) {
+			/**
+			 * CHART CONVERSION
+			 */
+			#if REGION
+			if (Reflect.hasField(data, "codenameChart") && Reflect.field(data, "codenameChart") == true) {
+				// codename chart
+				base = data;
+			} else {
+				// base game chart
+				BaseGameParser.parse(data, base);
+			}
+			#end
 		}
-		#end
 
 		if (base.meta == null)
 			base.meta = loadChartMeta(songName, difficulty, base.fromMods);

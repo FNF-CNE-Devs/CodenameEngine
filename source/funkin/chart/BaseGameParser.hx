@@ -13,10 +13,11 @@ class BaseGameParser {
 		result.scrollSpeed = data.speed;
 		result.stage = data.stage;
 
+		var p2isGF:Bool = false;
 		result.strumLines.push({
 			characters: [data.player2],
 			type: 0,
-			position: data.player2.startsWith("gf") ? "girlfriend" : "dad",
+			position: (p2isGF = data.player2.startsWith("gf")) ? "girlfriend" : "dad",
 			notes: []
 		});
 		result.strumLines.push({
@@ -25,7 +26,7 @@ class BaseGameParser {
 			position: "boyfriend",
 			notes: []
 		});
-		if (data.gf != "none") {
+		if (!p2isGF && data.gf != "none") {
 			result.strumLines.push({
 				characters: [data.gf != null ? data.gf : "gf"],
 				type: 2,

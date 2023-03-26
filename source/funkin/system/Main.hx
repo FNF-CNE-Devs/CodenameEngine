@@ -23,6 +23,7 @@ import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import lime.app.Application;
+import funkin.system.modules.*;
 
 #if ALLOW_MULTITHREADING
 import sys.thread.Thread;
@@ -199,7 +200,6 @@ class Main extends Sprite
 
 		FlxG.fixedTimestep = false;
 
-		refreshAssets();
 
 		FlxG.scaleMode = scaleMode = new FunkinRatioScaleMode();
 
@@ -214,7 +214,6 @@ class Main extends Sprite
 		#if MOD_SUPPORT
 		ModsFolder.switchMod(modToLoad.getDefault(Options.lastLoadedMod));
 		#end
-
 		initTransition();
 	}
 

@@ -1,5 +1,6 @@
 package funkin.system.framerate;
 
+import openfl.display.Bitmap;
 import openfl.text.TextFormat;
 import openfl.display.Sprite;
 import openfl.text.TextField;
@@ -8,7 +9,7 @@ class FramerateCategory extends Sprite {
 	public var title:TextField;
 	public var text:TextField;
 
-	public var bgSprite:Sprite;
+	public var bgSprite:Bitmap;
 
 	private var _text:String = "";
 
@@ -19,10 +20,7 @@ class FramerateCategory extends Sprite {
 		this.title = new TextField();
 		this.text = new TextField();
 
-		bgSprite = new Sprite();
-		bgSprite.graphics.beginFill(0xFF000000);
-		bgSprite.graphics.drawRect(0, 0, 1, 1);
-		bgSprite.graphics.endFill();
+		bgSprite = new Bitmap(Framerate.__bitmap);
 		bgSprite.alpha = 0.5;
 		addChild(bgSprite);
 

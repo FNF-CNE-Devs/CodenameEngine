@@ -1,3 +1,3 @@
 package funkin.native;
 
-typedef HiddenProcess = sys.io.Process;
+typedef HiddenProcess = #if sys sys.io.Process #else Dynamic #end;

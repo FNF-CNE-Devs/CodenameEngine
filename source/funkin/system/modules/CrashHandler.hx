@@ -1,4 +1,4 @@
-package funkin.system;
+package funkin.system.modules;
 
 import lime.system.System;
 import funkin.windows.WindowsAPI;

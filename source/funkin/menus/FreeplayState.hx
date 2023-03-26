@@ -238,8 +238,10 @@ class FreeplayState extends MusicBeatState
 			FlxG.switchState(new MainMenuState());
 		}
 
+		#if sys
 		if (FlxG.keys.justPressed.EIGHT && Sys.args().contains("-livereload"))
 			convertChart();
+		#end
 
 		if (controls.ACCEPT && !dontPlaySongThisFrame)
 			select();
