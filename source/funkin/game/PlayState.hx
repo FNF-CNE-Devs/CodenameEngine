@@ -515,6 +515,7 @@ class PlayState extends MusicBeatState
 		// CHARACTER INITIALISATION
 		#if REGION
 		comboGroup = new FlxSpriteGroup(FlxG.width * 0.55, (FlxG.height * 0.5) - 60);
+		comboGroup.maxSize = 20;
 		#end
 
 		// SCRIPTS & STAGE INITIALISATION

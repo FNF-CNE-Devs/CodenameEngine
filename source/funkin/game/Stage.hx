@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.system.MusicBeatGroup;
 import flixel.FlxState;
 import haxe.xml.Access;
 import funkin.interfaces.IBeatReceiver;
@@ -156,15 +157,19 @@ class Stage extends FlxBasic implements IBeatReceiver {
 		PlayState.instance.scripts.add(stageScript);
 	}
 
+	public function getCharGroup(name:String) {
+		if (characterPoses[name] == null) return null;
+		return characterPoses[name].group;
+	}
+
 	public function addCharPos(name:String, node:Access, ?nonXMLInfo:StageCharPosInfo) {
-		var dummyBasic:FlxBasic = new FlxBasic();
-		dummyBasic.active = false;
-		state.add(dummyBasic);
+		var group:MusicBeatGroup = new MusicBeatGroup();
+		state.add(group);
 
 		characterPoses[name] = {
 			node: node,
 			nonXMLInfo: nonXMLInfo,
-			dummy: dummyBasic
+			group: group
 		};
 
 	}
@@ -189,7 +194,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 				char.setPosition(charPos.nonXMLInfo.x, charPos.nonXMLInfo.y);
 			if (charPos.node != null)
 				doCharNodeShit(char, charPos.node);
-			state.insert(state.members.indexOf(charPos.dummy), char);
+			charPos.group.add(char);
 		}
 	}
 	private static function doCharNodeShit(char:Character, node:Access) {
@@ -224,7 +229,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 
 typedef StageCharPos = {
 	var node:Access;
-	var dummy:FlxBasic;
+	var group:MusicBeatGroup;
 	var ?nonXMLInfo:StageCharPosInfo;
 }
 
