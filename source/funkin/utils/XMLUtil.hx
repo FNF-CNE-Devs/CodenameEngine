@@ -24,19 +24,32 @@ class XMLUtil {
 			return MISSING_PROPERTY;
 		}
 
+		var keys = property.att.name.split(".");
+		var o = object;
+		var isPath = false;
+		while(keys.length > 1) {
+			isPath = true;
+			o = Reflect.getProperty(o, keys.shift());
+			// TODO: support arrays
+		}
+
 		var value:Dynamic = switch(property.att.type.toLowerCase()) {
-			case "float" | "number":			Std.parseFloat(property.att.value);
-			case "int" | "integer" | "color":   Std.parseInt(property.att.value);
-			case "string" | "str" | "text":	 property.att.value;
-			case "bool" | "boolean":			property.att.value.toLowerCase() == "true";
-			default:							return TYPE_INCORRECT;
+			case "f" | "float" | "number":			Std.parseFloat(property.att.value);
+			case "i" | "int" | "integer" | "color":	Std.parseInt(property.att.value);
+			case "s" | "string" | "str" | "text":	property.att.value;
+			case "b" | "bool" | "boolean":			property.att.value.toLowerCase() == "true";
+			default:								return TYPE_INCORRECT;
 		}
 		if (value == null) return VALUE_NULL;
 
 		try {
-			Reflect.setProperty(object, property.att.name, value);
+			Reflect.setProperty(o, keys[0], value);
 		} catch(e) {
-			Logs.trace('Failed to apply XML property: $e on ${Type.getClass(object)}', WARNING);
+			var str = 'Failed to apply XML property: $e on ${Type.getClass(object)}';
+			if(isPath) {
+				str += ' (Path: ${property.att.name})';
+			}
+			Logs.trace(str, WARNING);
 			return REFLECT_ERROR;
 		}
 		return OK;
