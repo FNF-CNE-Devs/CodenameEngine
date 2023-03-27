@@ -36,9 +36,11 @@ class ModSwitchMenu extends MusicBeatSubstate {
 			}
 		}
 
+		mods.push(null);
+
 		alphabets = new FlxTypedGroup<Alphabet>();
 		for(mod in mods) {
-			var a = new Alphabet(0, 0, mod, true);
+			var a = new Alphabet(0, 0, mod == null ? "DISABLE MODS" : mod, true);
 			a.isMenuItem = true;
 			a.scrollFactor.set();
 			alphabets.add(a);
