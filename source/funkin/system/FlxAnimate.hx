@@ -9,58 +9,63 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
 
 class FlxAnimate extends flxanimate.FlxAnimate {
+	static var rMatrix = new FlxMatrix();
 
-	override function drawLimb(limb:FlxFrame, _matrix:FlxMatrix, ?colorTransform:ColorTransform)
+	override function drawLimb(limb:FlxFrame, _rMatrix:FlxMatrix, ?colorTransform:ColorTransform)
 	{
 		if (alpha == 0 || colorTransform != null && (colorTransform.alphaMultiplier == 0 || colorTransform.alphaOffset == -255) || limb == null || limb.type == EMPTY)
 			return;
 		for (camera in cameras)
 		{
-			var matrix = new FlxMatrix();
-			matrix.concat(_matrix);
-			if (!camera.visible || !camera.exists || !limbOnScreen(limb, _matrix, camera))
+			rMatrix.identity();
+			rMatrix.translate(-limb.offset.x, -limb.offset.y);
+			rMatrix.concat(_rMatrix);
+			if (!camera.visible || !camera.exists || !limbOnScreen(limb, _rMatrix, camera))
 				return;
 
 			getScreenPosition(_point, camera).subtractPoint(offset);
-			matrix.translate(-origin.x, -origin.y);
+			rMatrix.translate(-origin.x, -origin.y);
 			if (limb.name != "pivot") {
 				if (rotOffsetAngle != null && rotOffsetAngle != angle)
 				{
 					var angleOff = (-angle + rotOffsetAngle) * FlxAngle.TO_RAD;
-					matrix.rotate(-angleOff);
+					rMatrix.rotate(-angleOff);
 					if (useOffsetAsRotOffset)
-						matrix.translate(-offset.x, -offset.y);
+						rMatrix.translate(-offset.x, -offset.y);
 					else
-						matrix.translate(-rotOffset.x, -rotOffset.y);
-					matrix.rotate(angleOff);
+						rMatrix.translate(-rotOffset.x, -rotOffset.y);
+					rMatrix.rotate(angleOff);
 				}
 				else
 				{
 					if (useOffsetAsRotOffset)
-						matrix.translate(-offset.x, -offset.y);
+						rMatrix.translate(-offset.x, -offset.y);
 					else
-						matrix.translate(-rotOffset.x, -rotOffset.y);
+						rMatrix.translate(-rotOffset.x, -rotOffset.y);
 				}
-				matrix.scale(scale.x, scale.y);
+				rMatrix.scale(scale.x, scale.y);
 
 				if (bakedRotationAngle <= 0)
 				{
 					updateTrig();
 
 					if (angle != 0)
-						matrix.rotateWithTrig(_cosAngle, _sinAngle);
+						rMatrix.rotateWithTrig(_cosAngle, _sinAngle);
 				}
 			}
 			else
-				matrix.a = matrix.d = 0.7 / camera.zoom;
+				rMatrix.a = rMatrix.d = 0.7 / camera.zoom;
+			
+			//rMatrix.concat(_skewMatrix);
+
 			_point.addPoint(origin);
 			if (isPixelPerfectRender(camera))
 			{
 				_point.floor();
 			}
 
-			matrix.translate(_point.x, _point.y);
-			camera.drawPixels(limb, null, matrix, colorTransform, blend, antialiasing);
+			rMatrix.translate(_point.x, _point.y);
+			camera.drawPixels(limb, null, rMatrix, colorTransform, blend, antialiasing);
 			#if FLX_DEBUG
 			FlxBasic.visibleCount++;
 			#end
