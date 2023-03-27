@@ -35,6 +35,8 @@ class OptimizedBitmapData extends BitmapData {
 
 			readable = true;
 			this.image = null;
+
+			MemoryUtil.clearMinor();
 		}
 		#end
 	}

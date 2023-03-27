@@ -1,5 +1,6 @@
 package funkin.mods;
 
+import funkin.system.MainState;
 import funkin.menus.TitleState;
 import funkin.system.Main;
 import openfl.utils.AssetCache;
@@ -29,14 +30,18 @@ class ModsFolder {
 	 */
 	public static var currentModFolder:String = null;
 	/**
-	 * Map all loaded mods' folder libraries.
-	 */
-	public static var loadedMods:Map<String, lime.utils.AssetLibrary> = [];
-	/**
 	 * Path to the `mods` folder.
 	 */
 	public static var modsPath:String = "./mods/";
+	/**
+	 * Path to the `addons` folder.
+	 */
+	public static var addonsPath:String = "./addons/";
 
+	/**
+	 * Whenever its the first time mods has been reloaded.
+	 */
+	private static var __firstTime:Bool = true;
 	/**
 	 * Initialises `mods` folder by adding callbacks and such.
 	 */
@@ -45,55 +50,35 @@ class ModsFolder {
 	}
 
 	/**
-	 * Loads a mod with the specified name.
-	 * @param modName Name of the mod
-	 * @param force Whenever the mod should be reloaded if it has already been loaded
-	 */
-	public static function loadMod(mod:String, force:Bool = false) {
-		#if MOD_SUPPORT
-		if (mod == null) return null; // may be loading base game
-
-		if (FileSystem.exists('${modsPath}$mod.zip'))
-			return loadedMods[mod] = loadLibraryFromZip('mods/$mod'.toLowerCase(), '${modsPath}$mod.zip', force);
-		else
-			return loadedMods[mod] = loadLibraryFromFolder('mods/$mod'.toLowerCase(), '${modsPath}$mod', force);
-
-		#else
-		return null;
-		#end
-	}
-
-	/**
 	 * Switches mod - unloads all the other mods, then load this one.
 	 * @param libName 
 	 */
 	public static function switchMod(mod:String) {
-		unloadMod(ModsFolder.currentModFolder);
-		Options.lastLoadedMod = ModsFolder.currentModFolder = mod;
-		Options.save();
-		if (ModsFolder.currentModFolder == null) return;
-		
-		Paths.assetsTree.addLibrary(loadMod(ModsFolder.currentModFolder));
-
-		Main.refreshAssets();
-		onModSwitch.dispatch(ModsFolder.currentModFolder);
-		if (FlxG.sound.music != null && FlxG.sound.music.playing)
-			FlxG.sound.music.fadeOut(0.25, 0, function(t) {
-				FlxG.sound.music.stop();
-			});
-		DiscordUtil.reloadJsonData();
-		TitleState.initialized = false;
-		FlxG.switchState(new TitleState()); 
+		Options.lastLoadedMod = currentModFolder = mod;
+		reloadMods();
 	}
 
-	public static function unloadMod(mod:String) {
-		if (mod == null) return;
-		
-		Paths.assetsTree.clearCache();
-		FlxG.bitmap.reset();
-		Paths.assetsTree.removeLibrary(loadedMods[mod]);
+	public static function reloadMods() {
+		if (!__firstTime)
+			FlxG.switchState(new MainState());
+		__firstTime = false;
+	}
 
-		loadedMods[mod] = null;
+	/**
+	 * Loads a mod library from the specified path. Supports folders and zips.
+	 * @param modName Name of the mod
+	 * @param force Whenever the mod should be reloaded if it has already been loaded
+	 */
+	 public static function loadModLib(path:String, force:Bool = false) {
+		#if MOD_SUPPORT
+		if (FileSystem.exists('$path.zip'))
+			return loadLibraryFromZip('$path'.toLowerCase(), '$path.zip', force);
+		else
+			return loadLibraryFromFolder('$path'.toLowerCase(), '$path', force);
+
+		#else
+		return null;
+		#end
 	}
 
 	public static function prepareLibrary(libName:String, force:Bool = false) {

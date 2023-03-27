@@ -28,6 +28,7 @@ import haxe.xml.Access;
 using StringTools;
 
 @:allow(funkin.mods.ModsFolder)
+@:allow(funkin.system.MainState)
 class TitleState extends MusicBeatState
 {
 	static var initialized:Bool = false;

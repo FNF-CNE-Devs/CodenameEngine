@@ -5,9 +5,11 @@ import lime.utils.AssetLibrary;
 
 class AssetsLibraryList extends AssetLibrary {
 	public var libraries:Array<AssetLibrary> = [];
-	public var base:AssetLibrary;
 
-	public var sourceLibsAmount:Int = 0;
+	@:allow(funkin.system.Main)
+	@:allow(funkin.system.MainState)
+	private var __defaultLibraries:Array<AssetLibrary> = [];
+	public var base:AssetLibrary;
 
 	public function removeLibrary(lib:AssetLibrary) {
 		if (lib == null) return lib;
@@ -118,39 +120,12 @@ class AssetsLibraryList extends AssetLibrary {
 	private function shouldSkipLib(k:Int, source:AssetSource) {
 		return switch(source) {
 			case BOTH:	  false;
-			case SOURCE:	k < libraries.length - sourceLibsAmount;
-			case MODS:	  k >= libraries.length - sourceLibsAmount;
+			case SOURCE:	k < libraries.length - __defaultLibraries.length;
+			case MODS:	  k >= libraries.length - __defaultLibraries.length;
 		};
 	}
 	public override inline function getAsset(id:String, type:String):Dynamic
 		return getSpecificAsset(id, type, BOTH);
-
-	public function clearCache() {
-		var libs:Array<AssetLibrary> = [for(lib in libraries) lib];
-		libs.push(this);
-		for(l in libs) {
-			var lib:AssetLibrary = l;
-			if (lib is openfl.utils.AssetLibrary) {
-				var openflLib = cast(lib, openfl.utils.AssetLibrary);
-				@:privateAccess
-				if (openflLib.__proxy != null) lib = openflLib.__proxy;
-			}
-
-			@:privateAccess var cachedAudioBuffers = lib.cachedAudioBuffers;
-			@:privateAccess var cachedBytes = lib.cachedBytes;
-			@:privateAccess var cachedFonts = lib.cachedFonts;
-			@:privateAccess var cachedImages = lib.cachedImages;
-			@:privateAccess var cachedText = lib.cachedText;
-
-
-			for(buff in cachedAudioBuffers) buff.dispose();
-			cachedAudioBuffers.clear();
-
-			cachedBytes.clear();
-			cachedFonts.clear();
-			cachedText.clear();
-		}
-	}
 
 	public override function isLocal(id:String, type:String) {
 		return true;
@@ -161,7 +136,19 @@ class AssetsLibraryList extends AssetLibrary {
 		if (base == null)
 			base = Assets.getLibrary("default");
 		addLibrary(this.base = base);
-		sourceLibsAmount++;
+		__defaultLibraries.push(base);
+	}
+
+	public function reset() {
+		for(l in libraries)
+			if (!__defaultLibraries.contains(l))
+				l.unload();
+
+		libraries = [];
+
+		// adds default libraries in again
+		for(d in __defaultLibraries)
+			addLibrary(d);
 	}
 
 	public function addLibrary(lib:AssetLibrary) {

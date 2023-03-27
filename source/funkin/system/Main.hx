@@ -102,13 +102,9 @@ class Main extends Sprite
 		}
 
 
-		addChild(new FunkinGame(gameWidth, gameHeight, null, zoom, framerate, framerate, skipSplash, startFullscreen));
-		loadGameSettings();
-		// FlxG.switchState(new TitleState());
-		FlxG.switchState(new funkin.menus.BetaWarningState());
+		addChild(new FunkinGame(gameWidth, gameHeight, MainState, zoom, framerate, framerate, skipSplash, startFullscreen));
 
 		#if !mobile
-		// addChild(new FramerateField(10, 3, 0xFFFFFF));
 		addChild(new funkin.system.framerate.Framerate());
 		SystemInfo.init();
 		#end
@@ -144,7 +140,7 @@ class Main extends Sprite
 		return time = Lib.getTimer();
 	}
 
-	public function loadGameSettings() {
+	public static function loadGameSettings() {
 		MemoryUtil.init();
 		@:privateAccess
 		FlxG.game.getTimer = getTimer;
@@ -177,13 +173,11 @@ class Main extends Sprite
 			#elseif linux
 			trace("Used lime test linux. Switching into source assets.");
 			#end
-			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './${pathBack}assets/', true));
-			Paths.assetsTree.sourceLibsAmount++;
+			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', './${pathBack}assets/', true));
 			#end
 		} else {
 			#if USE_ADAPTED_ASSETS
-			Paths.assetsTree.addLibrary(ModsFolder.loadLibraryFromFolder('assets', './assets/', true));
-			Paths.assetsTree.sourceLibsAmount++;
+			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', './assets/', true));
 			#end
 		}
 		#end
@@ -201,7 +195,6 @@ class Main extends Sprite
 
 		FlxG.fixedTimestep = false;
 
-
 		FlxG.scaleMode = scaleMode = new FunkinRatioScaleMode();
 
 		Conductor.init();
@@ -215,6 +208,7 @@ class Main extends Sprite
 		#if MOD_SUPPORT
 		ModsFolder.switchMod(modToLoad.getDefault(Options.lastLoadedMod));
 		#end
+		
 		initTransition();
 	}
 
@@ -252,8 +246,6 @@ class Main extends Sprite
 			}
 			openfl.display3D.utils.UInt8Buff._pools.clear();
 		}
-
-		Paths.assetsTree.clearCache();
 
 		MemoryUtil.clearMajor();
 	}
