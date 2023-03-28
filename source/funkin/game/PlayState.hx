@@ -552,13 +552,8 @@ class PlayState extends MusicBeatState
 
 		// PRECACHING
 		#if REGION
-		for(content in Paths.getFolderContent('images/game/score/', true, true)) {
-			var graph = FlxG.bitmap.add(content);
-			if (graph != null) {
-				__cachedGraphics.push(graph);
-				graph.useCount++;
-			}
-		}
+		for(content in Paths.getFolderContent('images/game/score/', true, true))
+			graphicCache.cache(content);
 
 		for(i in 1...4) {
 			FlxG.sound.load(Paths.sound('missnote' + Std.string(i)));

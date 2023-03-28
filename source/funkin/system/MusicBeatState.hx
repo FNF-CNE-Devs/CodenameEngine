@@ -17,6 +17,10 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 	private var lastStep:Float = 0;
 
 	/**
+	 * Dummy sprite used to cache graphics to GPU.
+	 */
+	public var graphicCache:GraphicCacheSprite = new GraphicCacheSprite();
+	/**
 	 * Whenever the Conductor auto update should be enabled or not.
 	 */
 	 public var cancelConductorUpdate:Bool = false;
@@ -219,12 +223,14 @@ class MusicBeatState extends FlxUIState implements IBeatReceiver
 
 	public override function destroy() {
 		super.destroy();
+		graphicCache.destroy();
 		call("onDestroy");
 		if (stateScript != null)
 			stateScript.destroy();
 	}
 
 	public override function draw() {
+		graphicCache.draw();
 		super.draw();
 	}
 

@@ -175,8 +175,10 @@ class Note extends FlxSprite
 			animation.play("scroll");
 		}
 
-		if (PlayState.instance != null)
+		if (PlayState.instance != null) {
+			PlayState.instance.splashHandler.getSplashGroup(splash);
 			PlayState.instance.scripts.event("onPostNoteCreation", event);
+		}
 	}
 
 	public var lastScrollSpeed:Null<Float> = null;
