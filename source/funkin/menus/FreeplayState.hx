@@ -18,10 +18,6 @@ using StringTools;
 
 class FreeplayState extends MusicBeatState
 {
-	/**
-	 * Default background colors for songs without bg color
-	 */
-	public inline static var defaultColor:FlxColor = 0xFF9271FD;
 
 	/**
 	 * How much time a song stays selected until it autoplays.
@@ -112,8 +108,22 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
+		CoolUtil.playMenuSong();
 		songList = FreeplaySonglist.get();
 		songs = songList.songs;
+
+		for(k=>s in songs) {
+			if (s.name == Options.freeplayLastSong) {
+				curSelected = k;
+			}
+		}
+		if (songs[curSelected] != null) {
+			for(k=>diff in songs[curSelected].difficulties) {
+				if (diff == Options.freeplayLastDifficulty) {
+					curDifficulty = k;
+				}
+			}
+		}
 
 		DiscordUtil.changePresence("In the Menus", null);
 
@@ -265,6 +275,9 @@ class FreeplayState extends MusicBeatState
 		var event = event("onSelect", EventManager.get(FreeplaySongSelectEvent).recycle(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty], opponentMode, coopMode));
 
 		if (event.cancelled) return;
+
+		Options.freeplayLastSong = songs[curSelected].name;
+		Options.freeplayLastDifficulty = songs[curSelected].difficulties[curDifficulty];
 
 		CoolUtil.loadSong(event.song, event.difficulty, event.opponentMode, event.coopMode);
 		FlxG.switchState(new PlayState());

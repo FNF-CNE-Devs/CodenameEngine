@@ -13,6 +13,11 @@ import sys.FileSystem;
 using StringTools;
 
 class Chart {
+	/**
+	 * Default background colors for songs without bg color
+	 */
+	public inline static var defaultColor:FlxColor = 0xFF9271FD;
+
 	public static function loadChartMeta(songName:String, difficulty:String = "normal", fromMods:Bool = true) {
 		var metaPath = Paths.file('songs/${songName.toLowerCase()}/meta.json');
 		var metaDiffPath = Paths.file('songs/${songName.toLowerCase()}/meta-${difficulty.toLowerCase()}.json');
@@ -45,7 +50,7 @@ class Chart {
 		data.setFieldDefault("coopAllowed", false);
 		data.setFieldDefault("opponentModeAllowed", false);
 		data.setFieldDefault("displayName", data.name);
-		data.setFieldDefault("parsedColor", data.color.getColorFromDynamic());
+		data.setFieldDefault("parsedColor", data.color.getColorFromDynamic().getDefault(defaultColor));
 
 		if (data.difficulties.length <= 0) {
 			data.difficulties = [for(f in Paths.getFolderContent('songs/${songName.toLowerCase()}/charts/', false, !fromMods)) if (Path.extension(f = f.toUpperCase()) == "JSON") Path.withoutExtension(f)];

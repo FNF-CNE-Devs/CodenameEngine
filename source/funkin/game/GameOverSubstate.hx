@@ -80,7 +80,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		}
 
 		if (!isEnding && ((!lossSFX.playing) || (character.animation.curAnim != null && character.animation.curAnim.name == "firstDeath" && character.animation.curAnim.finished)) && (FlxG.sound.music == null || !FlxG.sound.music.playing)) {
-			CoolUtil.playMusic(Paths.music(gameOverSong), 100);
+			CoolUtil.playMusic(Paths.music(gameOverSong), false, 1, true, 100);
 			beatHit(0);
 		}
 	}

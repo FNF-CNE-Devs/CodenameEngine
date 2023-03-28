@@ -65,7 +65,12 @@ class XMLUtil {
 		spr.name = node.getAtt("name");
 		spr.antialiasing = true;
 
-		spr.loadAnimatedGraphic(Paths.image('$parentFolder${node.getAtt("sprite")}', null, true));
+		spr.loadSprite(Paths.image('$parentFolder${node.getAtt("sprite")}', null, true));
+
+		if (spr.frames != null && spr.frames.frames != null) {
+			spr.animation.add("idle", [for(i in 0...spr.frames.frames.length) i], 24, true);
+			spr.animation.play("idle");
+		}
 
 		spr.spriteAnimType = defaultAnimType;
 		if (node.has.type)

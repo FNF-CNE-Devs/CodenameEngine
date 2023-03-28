@@ -190,7 +190,8 @@ class CoolUtil
 	public static function playMenuSong(fadeIn:Bool = false) {
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
 		{
-			playMusic(Paths.music('freakyMenu'), 102, fadeIn ? 0 : 1);
+			playMusic(Paths.music('freakyMenu'), true, fadeIn ? 0 : 1, true, 102);
+			FlxG.sound.music.persist = true;
 			if (fadeIn)
 				FlxG.sound.music.fadeIn(4, 0, 0.7);
 		}
@@ -212,14 +213,18 @@ class CoolUtil
 	/**
 	 * Plays music, while resetting the Conductor, and taking info from INI in count.
 	 * @param path Path to the music
+	 * @param Persist Whenever the music should persist while switching states
 	 * @param DefaultBPM Default BPM of the music (102)
 	 * @param Volume Volume of the music (1)
 	 * @param Looped Whenever the music loops (true)
 	 * @param Group A group that this music belongs to (default)
 	 */
-	public static function playMusic(path:String, DefaultBPM:Int = 102, Volume:Int = 1, Looped:Bool = true, ?Group:FlxSoundGroup) {
+	public static function playMusic(path:String, Persist:Bool = false, Volume:Int = 1, Looped:Bool = true, DefaultBPM:Int = 102, ?Group:FlxSoundGroup) {
 		Conductor.reset();
 		FlxG.sound.playMusic(path, Volume, Looped, Group);
+		if (FlxG.sound.music != null) {
+			FlxG.sound.music.persist = Persist;
+		}
 
 		var infoPath = '${Path.withoutExtension(path)}.ini';
 		if (Assets.exists(infoPath)) {
@@ -614,6 +619,8 @@ class CoolUtil
 	 * @param music Music
 	 */
 	public static function setMusic(frontEnd:SoundFrontEnd, music:FlxSound) {
+		if (frontEnd.music != null)
+			@:privateAccess frontEnd.destroySound(frontEnd.music);
 		frontEnd.list.remove(music);
 		frontEnd.music = music;
 	}

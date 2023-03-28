@@ -40,6 +40,12 @@ class Options
 	public static var resizableEditors:Bool = true;
 	public static var maxUndos:Int = 120;
 
+	/**
+	 * QOL FEATURES
+	 */
+	public static var freeplayLastSong:String = null;
+	public static var freeplayLastDifficulty:String = "normal";
+
 	// CHARTER
 	public static var charterMetronomeEnabled:Bool = false;
 
