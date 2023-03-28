@@ -48,7 +48,6 @@ class DiscordUtil {
 				Logs.trace('Couldn\'t load Discord RPC configuration: ${e.toString()}', ERROR);
 			}
 		}
-		trace(data);
 		data.setFieldDefault("clientID", "1027994136193810442");
 		data.setFieldDefault("logoKey", "icon");
 		data.setFieldDefault("logoText", Application.current.meta.get('title'));

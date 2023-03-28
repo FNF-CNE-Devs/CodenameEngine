@@ -53,7 +53,6 @@ class Alphabet extends FlxSpriteGroup
 
 	// TODO: fix this shit refreshing
 	public function refreshAlphabetXML(path:String) {
-		trace("Needs refresh!!");
 		AlphaCharacter.__alphaPath = path;
 		try {
 			var xml = new Access(Xml.parse(Assets.getText(path)).firstElement());

@@ -28,10 +28,11 @@ class TreeMenu extends MusicBeatState {
 
 		FlxG.camera.scroll.set(-FlxG.width, 0);
 
-		pathLabel = new FunkinText(4, 4, FlxG.width - 8, "> Tree Menu", 32, false);
+		pathLabel = new FunkinText(4, 4, FlxG.width - 8, "> Tree Menu", 32, true);
+		pathLabel.borderSize = 1.25;
 		pathLabel.scrollFactor.set();
 
-		pathDesc = new FunkinText(4, pathLabel.y + pathLabel.height + 2, FlxG.width - 8, "Current Tree Menu Description", 16, false);
+		pathDesc = new FunkinText(4, pathLabel.y + pathLabel.height + 2, FlxG.width - 8, "Current Tree Menu Description", 16, true);
 		pathDesc.scrollFactor.set();
 
 		pathBG = new FlxSprite().makeGraphic(1, 1, 0xFF000000);

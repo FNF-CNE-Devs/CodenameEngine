@@ -1,5 +1,6 @@
 package funkin.utils;
 
+import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.FlxSound;
 import funkin.system.Conductor;
 import flixel.system.FlxSoundGroup;
@@ -36,23 +37,48 @@ class CoolUtil
 		return (v == null || isNaN(v)) ? defaultValue : v;
 	}
 
+	/**
+	 * Shortcut to parse JSON from an Asset path
+	 * @param assetPath Path to the JSON asset.
+	 */
 	public static function parseJson(assetPath:String) {
 		return Json.parse(Assets.getText(assetPath));
 	}
 
+	/**
+	 * Shortcut to parse a JSON string
+	 * @param str Path to the JSON string
+	 * @return Parsed JSON
+	 */
 	public inline static function parseJsonString(str:String)
 		return Json.parse(str);
 
+	/**
+	 * Whenever a value is NaN or not.
+	 * @param v Value
+	 */
 	public static inline function isNaN(v:Dynamic) {
 		if (v is Float || v is Int)
 			return Math.isNaN(cast(v, Float));
 		return false;
 	}
 
+	/**
+	 * Returns the last of an Array
+	 * @param array Array
+	 * @return T Last element
+	 */
 	public static inline function last<T>(array:Array<T>):T {
 		return array[array.length - 1];
 	}
 
+	/**
+	 * Sets a field's default value, and returns it. In case it already exists, returns the existing one.
+	 * @param v Dynamic to set the default value to
+	 * @param name Name of the value
+	 * @param defaultValue Default value
+	 * @return T New/old value.
+	 */
 	public static function setFieldDefault<T>(v:Dynamic, name:String, defaultValue:T):T {
 		if (Reflect.hasField(v, name)) {
 			var f:Null<Dynamic> = Reflect.field(v, name);
@@ -63,11 +89,21 @@ class CoolUtil
 		return defaultValue;
 	}
 
+	/**
+	 * Add several zeros at the beginning of a string, so that `2` becomes `02`.
+	 * @param str String to add zeros
+	 * @param num The length required
+	 */
 	public static inline function addZeros(str:String, num:Int) {
 		while(str.length < num) str = '0${str}';
 		return str;
 	}
 
+	/**
+	 * Returns a string representation of a size, following this format: `1.02 GB`, `134.00 MB`
+	 * @param size Size to convert ot string
+	 * @return String Result string representation
+	 */
 	public static function getSizeString(size:Float):String {
 		var labels = ["B", "KB", "MB", "GB", "TB"];
 		var rSize:Float = size;
@@ -79,6 +115,13 @@ class CoolUtil
 		return '${Std.int(rSize) + "." + addZeros(Std.string(Std.int((rSize % 1) * 100)), 2)}${labels[label]}';
 	}
 
+	/**
+	 * Alternative linear interpolation function for each frame use, without worrying about framerate changes.
+	 * @param v1 Begin value
+	 * @param v2 End value
+	 * @param ratio Ratio
+	 * @return Float Final value
+	 */
 	public static inline function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {
 		return FlxMath.lerp(v1, v2, getFPSRatio(ratio));
 	}
@@ -140,6 +183,10 @@ class CoolUtil
 		return null;
 	}
 
+	/**
+	 * Plays the main menu theme.
+	 * @param fadeIn 
+	 */
 	public static function playMenuSong(fadeIn:Bool = false) {
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
 		{
@@ -149,6 +196,11 @@ class CoolUtil
 		}
 	}
 
+	/**
+	 * Preloads a character.
+	 * @param name Character name
+	 * @param spriteName (Optional) sprite name.
+	 */
 	public static function preloadCharacter(name:String, ?spriteName:String) {
 		if (name == null) return;
 		if (spriteName == null)
@@ -157,6 +209,14 @@ class CoolUtil
 		Paths.getFrames('characters/$spriteName');
 	}
 
+	/**
+	 * Plays music, while resetting the Conductor, and taking info from INI in count.
+	 * @param path Path to the music
+	 * @param DefaultBPM Default BPM of the music (102)
+	 * @param Volume Volume of the music (1)
+	 * @param Looped Whenever the music loops (true)
+	 * @param Group A group that this music belongs to (default)
+	 */
 	public static function playMusic(path:String, DefaultBPM:Int = 102, Volume:Int = 1, Looped:Bool = true, ?Group:FlxSoundGroup) {
 		Conductor.reset();
 		FlxG.sound.playMusic(path, Volume, Looped, Group);
@@ -200,17 +260,38 @@ class CoolUtil
 		}), volume);
 	}
 
+	/**
+	 * Allows you to split a text file from a path, into a "cool text file", AKA a list. Allows for comments. For example,
+	 * `# comment`
+	 * `test1`
+	 * ` `
+	 * `test2`
+	 * will return `["test1", "test2"]`
+	 * @param path 
+	 * @return Array<String>
+	 */
 	public static function coolTextFile(path:String):Array<String>
 	{
 		var trim:String;
 		return [for(line in Assets.getText(path).split("\n")) if ((trim = line.trim()) != "" && !trim.startsWith("#")) trim];
 	}
 
+	/**
+	 * Returns an array of number from min to max. Equivalent of `[for (i in min...max) i]`.
+	 * @param max Max value
+	 * @param min Minimal value (0)
+	 * @return Array<Int> Final array
+	 */
 	public static inline function numberArray(max:Int, ?min:Int = 0):Array<Int>
 	{
 		return [for (i in min...max) i];
 	}
 
+	/**
+	 * Switches frames from 2 FlxAnimations.
+	 * @param anim1 First animation
+	 * @param anim2 Second animation
+	 */
 	public static function switchAnimFrames(anim1:FlxAnimation, anim2:FlxAnimation) {
 		if (anim1 == null || anim2 == null) return;
 		var old = anim1.frames;
@@ -218,6 +299,14 @@ class CoolUtil
 		anim2.frames = old;
 	}
 
+	/**
+	 * Allows you to set a graphic size (ex: 150x150), with proper hitbox without a stretched sprite.
+	 * @param sprite Sprite to apply the new graphic size to
+	 * @param width Width
+	 * @param height Height
+	 * @param fill Whenever the sprite should fill instead of shrinking (true)
+	 * @param maxScale Maximum scale (0 / none)
+	 */
 	public static function setUnstretchedGraphicSize(sprite:FlxSprite, width:Int, height:Int, fill:Bool = true, maxScale:Float = 0) {
 		sprite.setGraphicSize(width, height);
 		sprite.updateHitbox();
@@ -226,6 +315,11 @@ class CoolUtil
 		sprite.scale.set(nScale, nScale);
 	}
 
+	/**
+	 * Returns a simple string representation of a FlxKey. Used in Controls options.
+	 * @param key Key
+	 * @return Simple representation
+	 */
 	public static inline function keyToString(key:Null<FlxKey>):String {
 		return switch(key) {
 			case null | 0 | NONE:	"---";
@@ -263,6 +357,12 @@ class CoolUtil
 		}
 	}
 
+	/**
+	 * Centers an object in a camera's field, basically `screenCenter()` but `camera.width` and `camera.height` are used instead of `FlxG.width` and `FlxG.height`.
+	 * @param obj Sprite to center
+	 * @param cam Camera
+	 * @param axes Axes (XY)
+	 */
 	public static function cameraCenter(obj:FlxObject, cam:FlxCamera, axes:FlxAxes = XY) {
 		switch(axes) {
 			case XY:
@@ -276,6 +376,11 @@ class CoolUtil
 		}
 	}
 
+	/**
+	 * Load a week into PlayState.
+	 * @param weekData Week Data
+	 * @param difficulty Week Difficulty
+	 */
 	public static function loadWeek(weekData:WeekData, difficulty:String = "normal") {
 		PlayState.storyWeek = weekData;
 		PlayState.storyPlaylist = [for(e in weekData.songs) e.name];
@@ -284,6 +389,14 @@ class CoolUtil
 		PlayState.opponentMode = PlayState.coopMode = false;
 		__loadSong(PlayState.storyPlaylist[0], difficulty);
 	}
+
+	/**
+	 * Loads a song into PlayState
+	 * @param name Song name
+	 * @param difficulty Chart difficulty (if invalid, will load an empty chart)
+	 * @param opponentMode Whenever opponent mode is on
+	 * @param coopMode Whenever co-op mode is on.
+	 */
 	public static function loadSong(name:String, difficulty:String = "normal", opponentMode:Bool = false, coopMode:Bool = false) {
 		PlayState.campaignScore = 0;
 		PlayState.isStoryMode = false;
@@ -291,22 +404,49 @@ class CoolUtil
 		PlayState.coopMode = coopMode;
 		__loadSong(name, difficulty);
 	}
+
+	/**
+	 * (INTERNAL) Loads a song without resetting story mode/opponent mode/coop mode values.
+	 * @param name Song name
+	 * @param difficulty Song difficulty
+	 */
 	public static function __loadSong(name:String, difficulty:String) {
 		PlayState.difficulty = difficulty;
 
 		PlayState.SONG = Chart.parse(name, difficulty);
 		PlayState.fromMods = PlayState.SONG.fromMods;
 	}
+
+	/**
+	 * Equivalent of `setGraphicSize`, except that it can accept floats and automatically updates the hitbox.
+	 * @param sprite Sprite to set the size of
+	 * @param width Width
+	 * @param height Height
+	 */
 	public static function setSpriteSize(sprite:FlxSprite, width:Float, height:Float) {
 		sprite.scale.set(width / sprite.frameWidth, height / sprite.frameHeight);
 		sprite.updateHitbox();
 	}
 
+	/**
+	 * Gets an XML attribute from an `Access` abstract, without throwing an exception if invalid.
+	 * Example: `xml.getAtt("test").getDefault("Hello, World!");`
+	 * @param xml XML to get the attribute from
+	 * @param name Name of the attribute
+	 */
 	public static inline function getAtt(xml:Access, name:String) {
 		if (!xml.has.resolve(name)) return null;
 		return xml.att.resolve(name);
 	}
 
+	/**
+	 * Loads frames from a specific image path. Supports Sparrow Atlases, Packer Atlases, and multiple spritesheets.
+	 * @param path Path to the image
+	 * @param Unique Whenever the image should be unique in the cache
+	 * @param Key Key to the image in the cache
+	 * @param SkipAtlasCheck Whenever the atlas check should be skipped.
+	 * @return FlxFramesCollection Frames
+	 */
 	public static function loadFrames(path:String, Unique:Bool = false, Key:String = null, SkipAtlasCheck:Bool = false):FlxFramesCollection {
 		var noExt = Path.withoutExtension(path);
 
@@ -350,6 +490,11 @@ class CoolUtil
 		return graph.imageFrame;
 	}
 
+	/**
+	 * Loads an animated graphic, and automatically animates it.
+	 * @param spr Sprite to load the graphic for
+	 * @param path Path to the graphic
+	 */
 	public static function loadAnimatedGraphic(spr:FlxSprite, path:String) {
 		spr.frames = loadFrames(path);
 
@@ -361,6 +506,11 @@ class CoolUtil
 		return spr;
 	}
 
+	/**
+	 * Copies a color transform from color1 to color2
+	 * @param color1 Color transform to copy to
+	 * @param color2 Color transform to copy from
+	 */
 	public static inline function copyColorTransform(color1:ColorTransform, color2:ColorTransform) {
 		color1.alphaMultiplier 	= color2.alphaMultiplier;
 		color1.alphaOffset 		= color2.alphaOffset;
@@ -372,6 +522,12 @@ class CoolUtil
 		color1.redOffset 		= color2.redOffset;
 	}
 
+	/**
+	 * Resets an FlxSprite
+	 * @param spr Sprite to reset
+	 * @param x New X position
+	 * @param y New Y position
+	 */
 	public static function resetSprite(spr:FlxSprite, x:Float, y:Float) {
 		spr.reset(x, y);
 		spr.alpha = 1;
@@ -397,12 +553,22 @@ class CoolUtil
 		return array;
 	}
 
+	/**
+	 * Push an entire group into an array.
+	 * @param array Array to push the group into
+	 * @param ...args Group entries
+	 * @return Array<T>
+	 */
 	public static function pushGroup<T>(array:Array<T>, ...args:T):Array<T> {
 		for(a in args)
 			array.push(a);
 		return array;
 	}
 
+	/**
+	 * Opens an URL in the browser.
+	 * @param url 
+	 */
 	public static function openURL(url:String) {
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [url, "&"]);
@@ -411,23 +577,51 @@ class CoolUtil
 		#end
 	}
 
+	/**
+	 * Stops a sound, set its time to 0 then play it again.
+	 * @param sound Sound to replay.
+	 */
 	public static function replay(sound:FlxSound) {
 		sound.stop();
 		sound.time = 0;
 		sound.play();
 	}
 
+	/**
+	 * Equivalent of `Math.max`, except doesn't require a Int -> Float -> Int conversion.
+	 * @param p1 
+	 * @param p2 
+	 * @return return p1 < p2 ? p2 : p1
+	 */
 	public static inline function maxInt(p1:Int, p2:Int)
 		return p1 < p2 ? p2 : p1;
 
+	/**
+	 * Equivalent of `Math.floor`, except doesn't require a Int -> Float -> Int conversion.
+	 * @param e Value to get the floor of.
+	 */
 	public static inline function floorInt(e:Float) {
 		var r = Std.int(e);
 		if (e < 0 && r != e)
 			r--;
 		return r;
 	}
+
+	/**
+	 * Sets a SoundFrontEnd's music to a FlxSound.
+	 * Example: `FlxG.sound.setMusic(music);`
+	 * @param frontEnd SoundFrontEnd to set the music of
+	 * @param music Music
+	 */
+	public static function setMusic(frontEnd:SoundFrontEnd, music:FlxSound) {
+		frontEnd.list.remove(music);
+		frontEnd.music = music;
+	}
 }
 
+/**
+ * SFXs to play using `playMenuSFX`.
+ */
 enum abstract CoolSfx(Int) from Int {
 	var SCROLL = 0;
 	var CONFIRM = 1;

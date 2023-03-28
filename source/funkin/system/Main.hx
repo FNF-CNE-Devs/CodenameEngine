@@ -108,8 +108,6 @@ class Main extends Sprite
 		addChild(new funkin.system.framerate.Framerate());
 		SystemInfo.init();
 		#end
-
-		trace("Hello", "World");
 	}
 
 	@:dox(hide)

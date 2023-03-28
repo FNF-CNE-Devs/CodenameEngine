@@ -237,7 +237,7 @@ class KeybindsOptions extends MusicBeatSubstate {
 
 		curSelected = FlxMath.wrap(curSelected + change, 0, alphabets.length-1);
 		alphabets.forEach(function(e) {
-			e.alpha = 0.2;
+			e.alpha = 0.45;
 		});
 		if (alphabets.members[curSelected] != null) {
 			var alphabet = alphabets.members[curSelected];

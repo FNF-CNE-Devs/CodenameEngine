@@ -677,6 +677,14 @@ class PlayState extends MusicBeatState
 		startingSong = true;
 
 		super.create();
+		
+		for(s in introSprites)
+			if (s != null)
+				graphicCache.cache(Paths.image(s));
+
+		for(s in introSounds)
+			if (s != null)
+				FlxG.sound.load(Paths.sound(s));
 	}
 
 	@:dox(hide) public override function createPost() {
@@ -827,7 +835,7 @@ class PlayState extends MusicBeatState
 		inst.onComplete = endSong;
 
 		if (!paused) {
-			FlxG.sound.music = inst;
+			FlxG.sound.setMusic(inst);
 			FlxG.sound.music.play();
 		}
 		vocals.play();
@@ -882,14 +890,12 @@ class PlayState extends MusicBeatState
 		curSong = songData.meta.name.toLowerCase();
 
 		inst = FlxG.sound.load(Paths.inst(SONG.meta.name, difficulty));
-		vocals = FlxG.sound.list.recycle(FlxSound);
-		@:privateAccess {
-			vocals.reset();
-			vocals.exists = true;
-		}
 		if (SONG.meta.needsVoices != false) // null or true
-			vocals.loadEmbedded(Paths.voices(SONG.meta.name, difficulty));
-		FlxG.sound.list.add(vocals);
+			vocals = FlxG.sound.load(Paths.voices(SONG.meta.name, difficulty));
+		else
+			vocals = new FlxSound();
+		inst.group = FlxG.sound.defaultMusicGroup;
+		vocals.group = FlxG.sound.defaultMusicGroup;
 
 		inst.persist = vocals.persist = false;
 
@@ -965,16 +971,6 @@ class PlayState extends MusicBeatState
 	override public function onFocus():Void
 	{
 		scripts.call("onFocus");
-
-
-		if (__wasAutoPause) {
-			updateDiscordPresence();
-			if (__songPlaying) {
-				inst.play();
-				vocals.play();
-			}
-		}
-
 		super.onFocus();
 	}
 
@@ -983,13 +979,6 @@ class PlayState extends MusicBeatState
 	{
 		scripts.call("onFocusLost");
 		updateDiscordPresence();
-		if (__wasAutoPause = FlxG.autoPause) {
-			__songPlaying = inst.playing;
-			inst.pause();
-			vocals.pause();
-		}
-
-
 		super.onFocusLost();
 	}
 
