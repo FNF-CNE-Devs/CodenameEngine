@@ -1,5 +1,6 @@
 package funkin.game;
 
+import flixel.graphics.FlxGraphic;
 import funkin.chart.Chart;
 import funkin.chart.ChartData;
 import funkin.game.SplashHandler;
@@ -448,6 +449,9 @@ class PlayState extends MusicBeatState
 	public var detailsText:String = "";
 	public var detailsPausedText:String = "";
 
+	@:unreflective
+	private var __cachedGraphics:Array<FlxGraphic> = [];
+
 	/**
 	 * Updates the rating.
 	 */
@@ -548,8 +552,13 @@ class PlayState extends MusicBeatState
 
 		// PRECACHING
 		#if REGION
-		for(content in Paths.getFolderContent('images/game/score/', true, true))
-			FlxG.bitmap.add(content);
+		for(content in Paths.getFolderContent('images/game/score/', true, true)) {
+			var graph = FlxG.bitmap.add(content);
+			if (graph != null) {
+				__cachedGraphics.push(graph);
+				graph.useCount++;
+			}
+		}
 
 		for(i in 1...4) {
 			FlxG.sound.load(Paths.sound('missnote' + Std.string(i)));
@@ -841,6 +850,8 @@ class PlayState extends MusicBeatState
 
 	public override function destroy() {
 		scripts.call("destroy");
+		for(g in __cachedGraphics)
+			g.useCount--;
 		super.destroy();
 		FlxDestroyUtil.destroy(scripts);
 		@:privateAccess {
