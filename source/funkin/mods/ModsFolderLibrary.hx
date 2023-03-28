@@ -52,7 +52,6 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 		var path = getAssetPath();
 		editedTimes[id] = FileSystem.stat(path).mtime.getTime();
 		var e = Bytes.fromFile(path);
-		cachedBytes.set(id, e);
 		return e;
 	}
 

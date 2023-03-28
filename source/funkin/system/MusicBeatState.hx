@@ -1,5 +1,6 @@
 package funkin.system;
 
+import flixel.addons.transition.FlxTransitionableState;
 import funkin.system.framerate.Framerate;
 import funkin.scripting.DummyScript;
 import flixel.FlxState;
@@ -11,7 +12,7 @@ import funkin.system.Conductor;
 import flixel.addons.ui.FlxUIState;
 import funkin.options.PlayerSettings;
 
-class MusicBeatState extends FlxUIState implements IBeatReceiver
+class MusicBeatState extends FlxTransitionableState implements IBeatReceiver
 {
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;

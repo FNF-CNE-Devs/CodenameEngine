@@ -10,26 +10,10 @@ import haxe.macro.Expr;
  */
 class ScriptsMacro {
 	public static function addAdditionalClasses() {
-		Compiler.include("flixel");
-		Compiler.include("away3d");
-		Compiler.include("flx3d");
-		#if (sys && !web)
-		Compiler.include("sys");
-		#end
-
-		Compiler.include("DateTools");
-		Compiler.include("EReg");
-		Compiler.include("Lambda");
-		Compiler.include("StringBuf");
-		Compiler.include("haxe.crypto");
-		Compiler.include("haxe.display");
-		Compiler.include("haxe.exceptions");
-		#if !web
-		Compiler.include("haxe.extern");
-		#end
-
-		Compiler.include("scripting");
-
+		for(inc in ["flixel", "away3d", "flx3d", "sys", "DateTools", "EReg", "Lambda", "StringBuf", "haxe.crypto", "haxe.display", "haxe.exceptions", "haxe.extern", "scripting"]) {
+			Compiler.include(inc);
+		}
+		
 		// FOR ABSTRACTS
 		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');
 	}

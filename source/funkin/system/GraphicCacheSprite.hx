@@ -17,7 +17,7 @@ class GraphicCacheSprite extends FlxSprite {
 
 	public override function new() {
 		super();
-		alpha = 0.001;
+		alpha = 0.00001;
 	}
 
 	/**
@@ -44,7 +44,6 @@ class GraphicCacheSprite extends FlxSprite {
 
 	public override function draw() {
 		while (nonRenderedCachedGraphics.length > 0) {
-			trace("DRAWING GRAPHIC - ", nonRenderedCachedGraphics[0].key);
 			loadGraphic(nonRenderedCachedGraphics.shift());
 			drawComplex(FlxG.camera);
 		}

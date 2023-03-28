@@ -199,10 +199,10 @@ class Conductor
 			var oldStep = curStep;
 			var oldBeat = curBeat;
 			var oldMeasure = curMeasure;
-			if (curStep != (curStep = Std.int(curStepFloat))) {
+			if (curStep != (curStep = CoolUtil.floorInt(curStepFloat))) {
 				// updates step
-				__updateBeat = curBeat != (curBeat = Std.int(curBeatFloat));
-				__updateMeasure = __updateBeat && (curMeasure != (curMeasure = Std.int(curMeasureFloat)));
+				__updateBeat = curBeat != (curBeat = CoolUtil.floorInt(curBeatFloat));
+				__updateMeasure = __updateBeat && (curMeasure != (curMeasure = CoolUtil.floorInt(curMeasureFloat)));
 
 				if (curStep > oldStep) {
 					for(i in oldStep...curStep) {

@@ -419,6 +419,13 @@ class CoolUtil
 
 	public static inline function maxInt(p1:Int, p2:Int)
 		return p1 < p2 ? p2 : p1;
+
+	public static inline function floorInt(e:Float) {
+		var r = Std.int(e);
+		if (e < 0 && r != e)
+			r--;
+		return r;
+	}
 }
 
 enum abstract CoolSfx(Int) from Int {

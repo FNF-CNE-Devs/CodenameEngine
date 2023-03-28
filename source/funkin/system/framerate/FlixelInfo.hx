@@ -7,6 +7,8 @@ class FlixelInfo extends FramerateCategory {
 
 	public override function __enterFrame(t:Int) {
 		if (alpha <= 0.05) return;
+
+
 		@:privateAccess {
 			var c:Int = 0;
 			for(_ in FlxG.bitmap._cache.keys())
@@ -18,6 +20,7 @@ class FlixelInfo extends FramerateCategory {
 			_text += '\nBitmaps Count: ${c}';
 			_text += '\nSounds Count: ${FlxG.sound.list.length}';
 			_text += '\nFlxG.game Childs Count: ${FlxG.game.numChildren}';
+			// _text += '\nCached objects count: ${cachedObjects}';
 		}
 		
 		this.text.text = _text;
