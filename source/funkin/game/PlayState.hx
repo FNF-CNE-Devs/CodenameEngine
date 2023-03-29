@@ -1303,13 +1303,14 @@ class PlayState extends MusicBeatState
 			__justPressed = CoolUtil.getDefault(event.justPressed, []);
 			__justReleased = CoolUtil.getDefault(event.justReleased, []);
 
+
 			if (__pressed.contains(true)) {
 				for(c in p.characters)
 					if (c.lastAnimContext != DANCE)
 						c.__lockAnimThisFrame = true;
 
 				__funcsToExec.push(function(note:Note) {
-					if (__pressed[note.strumID] && (note.isSustainNote && (note.parentNote != null ? note.parentNote.wasGoodHit : true)) && note.canBeHit && !note.wasGoodHit) {
+					if (__pressed[note.strumID] && note.isSustainNote && note.canBeHit && !note.wasGoodHit) {
 						goodNoteHit(p, note);
 					}
 				});

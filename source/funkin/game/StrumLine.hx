@@ -79,14 +79,14 @@ class StrumLine extends FlxTypedGroup<Strum> {
 
 	public function generate(strumLine:ChartStrumLine) {
 		if (strumLine.notes != null) for(note in strumLine.notes) {
-			var parentNote:Note = notes.add(new Note(this, note, false));
+			notes.add(new Note(this, note, false));
 			
 			if (note.sLen > Conductor.stepCrochet * 0.75) {
 				var len:Float = note.sLen;
 				var curLen:Float = 0;
 				while(len > 10) {
 					curLen = Math.min(len, Conductor.stepCrochet);
-					notes.add(new Note(this, note, true, curLen, note.sLen - len, parentNote));
+					notes.add(new Note(this, note, true, curLen, note.sLen - len));
 					len -= curLen;
 				}
 			}
