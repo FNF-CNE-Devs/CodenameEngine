@@ -1,11 +1,13 @@
 package funkin.scripting;
 
 import hscript.Expr.Error;
+import hscript.Parser;
 import openfl.Assets;
 import hscript.*;
 
 class HScript extends Script {
 	public var interp:Interp;
+	public var parser:Parser;
 	public var expr:Expr;
 
 	public override function onCreate(path:String) {
@@ -14,7 +16,7 @@ class HScript extends Script {
 		interp = new Interp();
 
 		var code:String = Assets.getText(path);
-		var parser = new hscript.Parser();
+		parser = new Parser();
 		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
 		parser.preprocesorValues = Script.getDefaultPreprocessors();
 		interp.errorHandler = _errorHandler;
@@ -28,7 +30,8 @@ class HScript extends Script {
 		}));
 
 		try {
-			expr = parser.parseString(code, fileName);
+			if (code != null && code.trim() != "")
+				expr = parser.parseString(code, fileName);
 		} catch(e:Error) {
 			_errorHandler(e);
 		} catch(e) {
@@ -112,5 +115,71 @@ class HScript extends Script {
 
 	public override function setPublicMap(map:Map<String, Dynamic>) {
 		this.interp.publicVariables = map;
+	}
+
+	public override function onDestroy() {
+		@:privateAccess {
+			// INTERP
+			if (interp != null) {
+				interp.scriptObject = null;
+				interp.errorHandler = null;
+				interp.variables.clear();
+				interp.variables = null;
+				interp.publicVariables = null;
+				interp.staticVariables = null;
+				for(l in interp.locals)
+					if (l != null)
+						l.r = null;
+				interp.locals.clear();
+				interp.locals = null;
+				interp.binops.clear();
+				interp.binops = null;
+				interp.depth = 0;
+				interp.inTry = false;
+				while(interp.declared.length > 0)
+					interp.declared.shift();
+				interp.declared = null;
+				interp.returnValue = null;
+				interp.isBypassAccessor = false;
+				interp.importEnabled = false;
+				interp.allowStaticVariables = false;
+				interp.allowPublicVariables = false;
+				while(interp.importBlocklist.length > 0)
+					interp.importBlocklist.shift();
+				interp.importBlocklist = null;
+				while(interp.__instanceFields.length > 0)
+					interp.importBlocklist.shift();
+				interp.__instanceFields = null;
+				interp.curExpr = null;
+			}
+
+			if (parser != null) {
+				parser.line = 0;
+				parser.opChars = null;
+				parser.identChars = null;
+				parser.opPriority.clear();
+				parser.opPriority = null;
+				parser.opRightAssoc.clear();
+				parser.opRightAssoc = null;
+				parser.preprocesorValues.clear();
+				parser.preprocesorValues = null;
+				parser.input = null;
+				parser.readPos = 0;
+				parser.char = 0;
+				parser.ops = null;
+				parser.idents = null;
+				parser.uid = 0;
+				parser.origin = null;
+				parser.tokenMin = 0;
+				parser.tokenMax = 0;
+				parser.oldTokenMin = 0;
+				parser.oldTokenMax = 0;
+				parser.tokens = null;
+			}
+
+			expr = null;
+			parser = null;
+			interp = null;
+		}
 	}
 }

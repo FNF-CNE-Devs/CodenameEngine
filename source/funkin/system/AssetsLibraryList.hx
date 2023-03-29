@@ -139,10 +139,14 @@ class AssetsLibraryList extends AssetLibrary {
 		__defaultLibraries.push(base);
 	}
 
-	public function reset() {
+	public function unloadLibraries() {
 		for(l in libraries)
 			if (!__defaultLibraries.contains(l))
 				l.unload();
+	}
+	
+	public function reset() {
+		unloadLibraries();
 
 		libraries = [];
 

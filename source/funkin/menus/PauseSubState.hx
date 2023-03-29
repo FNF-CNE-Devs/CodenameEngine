@@ -49,10 +49,11 @@ class PauseSubState extends MusicBeatSubstate
 		menuItems = event.options;
 
 
-		pauseMusic = new FlxSound().loadEmbedded(Paths.music(event.music), true, true);
+		pauseMusic = FlxG.sound.load(Paths.music(event.music));
 		pauseMusic.volume = 0;
+		pauseMusic.persist = false;
+		pauseMusic.group = FlxG.sound.defaultMusicGroup;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
-		FlxG.sound.list.add(pauseMusic);
 
 		if (__cancelDefault = event.cancelled) return;
 
@@ -154,8 +155,12 @@ class PauseSubState extends MusicBeatSubstate
 		if(FlxG.cameras.list.contains(camera))
 			FlxG.cameras.remove(camera, true);
 		pauseScript.call("onDestroy");
-		if (pauseMusic != null) pauseMusic.destroy();
 		pauseScript.destroy();
+
+		if (pauseMusic != null)
+			@:privateAccess {
+				FlxG.sound.destroySound(pauseMusic);
+			}
 
 		super.destroy();
 	}
