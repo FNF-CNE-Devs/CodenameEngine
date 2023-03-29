@@ -856,7 +856,7 @@ class PlayState extends MusicBeatState
 		for(g in __cachedGraphics)
 			g.useCount--;
 		super.destroy();
-		FlxDestroyUtil.destroy(scripts);
+		scripts = FlxDestroyUtil.destroy(scripts);
 		@:privateAccess {
 			FlxG.sound.destroySound(inst);
 			FlxG.sound.destroySound(vocals);
