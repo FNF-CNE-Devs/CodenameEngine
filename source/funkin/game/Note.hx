@@ -53,6 +53,10 @@ class Note extends FlxSprite
 	 * The next sustain after this one
 	 */
 	public var nextSustain:Note;
+	/**
+	 * The parent note of the sustains, the top note
+	 */
+	public var parentNote:Note;
 
 	/**
 	 * Name of the splash.
@@ -93,13 +97,12 @@ class Note extends FlxSprite
 
 	public var animSuffix:String = "";
 
-
 	private static function customTypePathExists(path:String) {
 		if (__customNoteTypeExists.exists(path))
 			return __customNoteTypeExists[path];
 		return __customNoteTypeExists[path] = Assets.exists(path);
 	}
-	public function new(strumLine:StrumLine, noteData:ChartNote, sustain:Bool = false, sustainLength:Float = 0, sustainOffset:Float = 0)
+	public function new(strumLine:StrumLine, noteData:ChartNote, sustain:Bool = false, sustainLength:Float = 0, sustainOffset:Float = 0, ?parentNote:Null<Note> = null)
 	{
 		super();
 		
@@ -110,6 +113,7 @@ class Note extends FlxSprite
 		this.isSustainNote = sustain;
 		this.sustainLength = sustainLength;
 		this.strumLine = strumLine;
+		this.parentNote = parentNote;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
