@@ -64,7 +64,6 @@ class EventMacro {
 
 		fields.push(funcField);
 
-		var p = new Printer();
 		switch(func.expr.expr) {
 			case EBlock(exprs):
 				// add a "set this" expr for each variable

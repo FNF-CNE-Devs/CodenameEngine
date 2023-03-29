@@ -6,10 +6,13 @@ import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 
 @:build(funkin.macros.OptionsMacro.build())
+@:build(funkin.macros.FunkinSaveMacro.build("__save", "__flush", "__load"))
 class Options
 {
-	@:dox(hide) public static var __save:FlxSave;
-	@:dox(hide) private static var __eventAdded = false;
+	@:dox(hide) @:doNotSave
+	public static var __save:FlxSave;
+	@:dox(hide) @:doNotSave
+	private static var __eventAdded = false;
 
 	/**
 	 * SETTINGS
@@ -103,10 +106,7 @@ class Options
 	public static function load() {
 		if (__save == null) __save = new FlxSave();
 		__save.bind("options", "CodenameEngine");
-		for(field in Reflect.fields(__save.data)) {
-			var obj = Reflect.field(__save.data, field);
-			Reflect.setProperty(Options, field, obj);
-		}
+		__load();
 
 		if (!__eventAdded) {
 			Lib.application.onExit.add(function(i:Int) {
@@ -134,11 +134,6 @@ class Options
 
 	public static function save() {
 		volume = FlxG.sound.volume;
-		for(field in Type.getClassFields(Options)) {
-			var obj = Reflect.field(Options, field);
-			if (Reflect.isFunction(obj) || obj is FlxSave) continue;
-			Reflect.setField(__save.data, field, obj);
-		}
-		__save.flush();
+		__flush();
 	}
 }
