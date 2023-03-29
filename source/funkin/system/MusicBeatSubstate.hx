@@ -95,7 +95,6 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 		super();
 		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
 		this.scriptName = scriptName;
-		loadScript();
 	}
 
 	function loadScript() {
@@ -141,6 +140,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 
 	override function create()
 	{
+		loadScript();
 		super.create();
 		call("create");
 	}
