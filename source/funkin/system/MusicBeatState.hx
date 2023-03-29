@@ -105,7 +105,6 @@ class MusicBeatState extends FlxTransitionableState implements IBeatReceiver
 		super();
 		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
 		this.scriptName = scriptName;
-		loadScript();
 	}
 
 	function loadScript() {
@@ -142,6 +141,7 @@ class MusicBeatState extends FlxTransitionableState implements IBeatReceiver
 	}
 	override function create()
 	{
+		loadScript();
 		Framerate.offset.y = 0;
 		super.create();
 		call("create");
