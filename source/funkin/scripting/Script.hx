@@ -104,6 +104,23 @@ class Script extends FlxBasic implements IFlxDestroyable {
 			"macos" => #if macos true #else false #end,
 			"android" => #if android true #else false #end,
 			"web" => #if web true #else false #end,
+			"js" => #if js true #else false #end,
+			"html5" => #if html5 true #else false #end,
+			"flash" => #if flash true #else false #end,
+			"sys" => #if sys true #else false #end,
+			"mobile" => #if mobile true #else false #end,
+			"air" => #if air true #else false #end,
+			"ios" => #if ios true #else false #end,
+			"tvos" => #if tvos true #else false #end,
+			"cpp" => #if cpp true #else false #end,
+			"dom" => #if dom true #else false #end,
+			"cs" => #if cs true #else false #end,
+			"electron" => #if electron true #else false #end,
+			"emscripten" => #if emscripten true #else false #end,
+			"nodejs" => #if nodejs true #else false #end,
+			"rpi" => #if rpi true #else false #end,
+			"cppia" => #if cppia true #else false #end,
+			"commonjs" => #if commonjs true #else false #end,
 			"debug" => #if debug true #else false #end,
 			"release" => #if release true #else false #end,
 			"final" => #if final true #else false #end,
@@ -326,7 +343,7 @@ class ScriptClass {
 
 			return true;
 		}
-		
+
 		return false;
 	}
 }
@@ -346,5 +363,5 @@ class ScriptCustomClass implements IHScriptCustomConstructor {
 }
 
 interface IScriptClassInstance {
-	
+
 }

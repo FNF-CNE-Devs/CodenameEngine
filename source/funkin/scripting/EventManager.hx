@@ -29,7 +29,6 @@ class EventManager {
 	}
 
 	public static function init() {
-		
 		FlxG.signals.preStateCreate.add(onStateSwitch);
 	}
 
