@@ -21,12 +21,16 @@ import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
 import flash.geom.ColorTransform;
 import funkin.chart.Chart;
+import haxe.CallStack;
 
 using StringTools;
 
 @:allow(funkin.game.PlayState)
 class CoolUtil
 {
+	public static function getLastExceptionStack():String {
+		return CallStack.toString(CallStack.exceptionStack());
+	}
 	/*
 	 * Returns `v` if not null, `defaultValue` otherwise.
 	 * @param v The value

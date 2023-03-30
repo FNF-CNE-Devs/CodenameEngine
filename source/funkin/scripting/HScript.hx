@@ -1,5 +1,6 @@
 package funkin.scripting;
 
+import haxe.io.Path;
 import funkin.scripting.Script.ScriptClass;
 import hscript.Expr.ClassDecl;
 import hscript.Expr.ModuleDecl;
@@ -14,6 +15,7 @@ class HScript extends Script {
 	public var expr:Expr;
 	public var decls:Array<ModuleDecl> = null;
 	public var code:String;
+	public var folderlessPath:String;
 
 	public static function initParser() {
 		var parser = new Parser();
@@ -29,7 +31,10 @@ class HScript extends Script {
 
 		code = Assets.getText(path);
 		parser = initParser();
+		folderlessPath = Path.directory(path);
+
 		interp.errorHandler = _errorHandler;
+		interp.importFailedCallback = importFailedCallback;
 		interp.staticVariables = Script.staticVariables;
 		interp.allowStaticVariables = interp.allowPublicVariables = true;
 
@@ -47,6 +52,25 @@ class HScript extends Script {
 		} catch(e) {
 			_errorHandler(new Error(ECustom(e.toString()), 0, 0, fileName, 0));
 		}
+	}
+
+	private function importFailedCallback(cl:Array<String>):Bool {
+		var path = cl.join("/");
+
+		var scr = Script.create(Paths.script('classes/$path', null, false));
+		if (!(scr is DummyScript)) {
+			// script is valid
+			var cla = scr.getClass(cl.last());
+			if (cla != null) {
+				interp.variables.set(cl.last(), Script.createCustomClass(cla));
+			} else {
+				interp.variables.set(cl.last(), scr);
+			}
+
+			return true;
+		}
+		
+		return false;
 	}
 
 	private function _errorHandler(error:Error) {
@@ -131,16 +155,18 @@ class HScript extends Script {
 		if (decls == null) {
 			decls = parser.parseModule(code, fileName);
 		}
+		var imports:Array<Array<String>> = [];
 		for(d in decls) {
 			switch(d) {
 				case DPackage(path):
 					// ignore
 				case DImport(path, everything):
-					// ignore
+					imports.push(path);
 				case DClass(c):
-					if (c.name == name) {
-
-					}
+					trace(c.name);
+					trace(name);
+					if (c.name == name)
+						return new HScriptClass(c, interp, imports, folderlessPath);
 				case DTypedef(c):
 					// ignore
 			}
@@ -221,17 +247,23 @@ class HScriptClass extends ScriptClass {
 
 	var interp:Interp;
 
-	public function new(decl:ClassDecl, sInterp:Interp) {
+	public function new(decl:ClassDecl, sInterp:Interp, classesToImport:Array<Array<String>>, forderlessPath:String) {
 		super();
 		this.name = decl.name;
+		switch(decl.extend) {
+			case CTPath(p, params):
+				this.classPath = p.join(".");
+			default:
+				
+		}
 
 		
 		
 		interp = new Interp();
 		interp.errorHandler = sInterp.errorHandler;
 		interp.staticVariables = sInterp.staticVariables;
-		interp.allowStaticVariables = interp.allowPublicVariables = false;
-		// interp.execute({ e : EBlock(decl.fields), pmin : 0, pmax : 0, origin : fileName, line : 0 });
+		interp.allowStaticVariables = interp.allowPublicVariables = true;
+		interp.importFailedCallback = importFailedCallback;
 
 		var parser = HScript.initParser();
 
@@ -246,7 +278,22 @@ class HScriptClass extends ScriptClass {
 		}
 	}
 
+	public override function hasField(field:String) {
+		return interp.variables.exists(field);
+	}
 	public override function get(field:String) {
 		return interp.variables[field];
+	}
+
+	public override function set(field:String, v:Dynamic) {
+		interp.variables[field] = v;
+	}
+
+	public override function onCall(field:String, parameters:Array<Dynamic>, parent:Dynamic) {
+		interp.scriptObject = parent;
+		var v = interp.variables[field];
+		if (v != null && Reflect.isFunction(v))
+			return (parameters != null && parameters.length > 0) ? Reflect.callMethod(null, v, parameters) : v();
+		return null;
 	}
 }
