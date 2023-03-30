@@ -338,7 +338,7 @@ class ScriptCustomClass implements IHScriptCustomConstructor {
 		this.scrClass = scrClass;
 		this.scrType = scrType;
 	}
-	public function hnew(...args:Dynamic):Dynamic {
+	public function hnew(args:Array<Dynamic>):Dynamic {
 		var a = [for(arg in args) arg];
 		a.insert(0, scrClass);
 		return Type.createInstance(scrType, a);

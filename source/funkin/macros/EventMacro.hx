@@ -15,6 +15,10 @@ class EventMacro {
 		var curClass = curClassRest.get();
 		if (curClass == null || curClass.name == "CancellableEvent") return fields;
 
+		for(f in fields)
+			if (f.name == "recycle")
+				return fields;
+
 
 		// gets all fields
 		var values:Array<EventVar> = [];

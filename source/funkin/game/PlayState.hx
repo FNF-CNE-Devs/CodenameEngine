@@ -1151,7 +1151,7 @@ class PlayState extends MusicBeatState
 				if (event.params.length > 0 && event.params[0] is Int)
 					curCameraTarget = event.params[0];
 			case BPM_CHANGE:
-				// todo!!
+				// automatically handled by conductor
 			case ALT_ANIM_TOGGLE:
 				// todo!!!
 			default:

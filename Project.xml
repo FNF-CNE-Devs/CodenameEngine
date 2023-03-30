@@ -144,7 +144,6 @@
 	<haxedef name="SHOW_BUILD_ON_FPS" if="SHOW_BUILD_ON_FPS" />
 	<haxedef name="SOFTCODED_CLASSES" if="SOFTCODED_CLASSES" />
 	
-	<haxeflag name="--macro" value="funkin.macros.SoftcodedClassMacro.init()" />
 	<haxeflag name="--macro" value="funkin.macros.StdDeprecationsRemover.init()" />
 	<!-- _______________________________ Libraries ______________________________ -->
 
@@ -173,6 +172,7 @@
 	</section>
 	<haxeflag name="--macro" value="exclude('funkin.updating')" unless="UPDATE_CHECKING"/>
 	<haxeflag name="--macro" value="exclude('funkin.multitasking')" unless="ALLOW_MULTITASKING"/>
+	<haxeflag name="--macro" value="funkin.macros.SoftcodedClassMacro.init()" />
 
 	<haxedef name="HXCPP_CHECK_POINTER" if="release" />
 	<haxedef name="HXCPP_STACK_LINE" if="release" />

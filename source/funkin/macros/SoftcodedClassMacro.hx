@@ -4,7 +4,6 @@ using StringTools;
 class SoftcodedClassMacro {
 	#if macro
 	public static function init() {
-		trace("cock and balls");
 		Compiler.addGlobalMetadata('funkin', '@:build(funkin.macros.SoftcodedClassMacro.build())');
 		Compiler.addGlobalMetadata('flixel', '@:build(funkin.macros.SoftcodedClassMacro.build())');
 	}
@@ -27,8 +26,7 @@ class SoftcodedClassMacro {
 				kind: FVar(scriptClassType, macro null)
 			});
 			var c = cl.get();
-			trace(c.name);
-			if (c.name.endsWith('__Softcoded')) return fields;
+			if (c.name.endsWith('__Softcoded') || c.name.endsWith("_HSC") || c.name.endsWith("_Impl_")) return fields;
 			if (c.params.length > 0) return fields; // NOT SUPPORTED
 			if (c.isAbstract) return fields;
 
@@ -47,12 +45,15 @@ class SoftcodedClassMacro {
 
 			shadowClass.name = '${c.name}__Softcoded';
 			shadowClass.fields = funcs;
-			shadowClass.pack = c.pack; // todo
+			shadowClass.pack = c.pack;
 			shadowClass.kind = TDClass({
 				pack: c.pack,
 				name: c.name
 			}, [], false, false, false);
 
+			var addedFields:Array<String> = [];
+
+			#if !display
 			for(f in [for(f in fields) f]) {
 				var valid = true;
 				if (f.access != null) for(e in f.access) {
@@ -197,7 +198,9 @@ class SoftcodedClassMacro {
 
 				}
 			}
+			#end
 
+			
 			var imports = [for(i in Context.getLocalImports()) i];
 			imports.push({
 				path: [for(p in c.module.split(".")) {

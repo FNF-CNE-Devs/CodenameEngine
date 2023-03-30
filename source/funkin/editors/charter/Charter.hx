@@ -492,7 +492,6 @@ class Charter extends UIState {
 
 	var __crochet:Float;
 	public override function update(elapsed:Float) {
-		// TODO: do optimization like NoteGroup
 		updateNoteLogic(elapsed);
 
 		super.update(elapsed);
