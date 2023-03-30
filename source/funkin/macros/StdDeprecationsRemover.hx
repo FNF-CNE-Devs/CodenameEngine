@@ -9,7 +9,7 @@ import haxe.macro.Compiler;
  * Removes all deprecations errors related to `Std.is`
  * Written by Yoshman29 to keep you sane.
  * Feel free to use this macro on your mod.
- * 
+ *
  * Line to add in project.xml:
  * `<haxeflag name="--macro" value="funkin.macros.StdDeprecationsRemover.init()" />`
  */

@@ -53,6 +53,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 			// Engine related stuff
 			"engine"			=> {
 				commit: funkin.macros.GitCommitMacro.commitNumber,
+				hash: funkin.macros.GitCommitMacro.commitHash,
 				build: 2675, // 2675 being the last build num before it was removed
 				name: "Codename Engine"
 			},
@@ -90,46 +91,12 @@ class Script extends FlxBasic implements IFlxDestroyable {
 		];
 	}
 	public static function getDefaultPreprocessors():Map<String, Dynamic> {
-		return [
-			"CODENAME_ENGINE" => true,
-			"CODENAME_VER" => Application.current.meta.get('version'),
-			"CODENAME_BUILD" => 2675,
-			"CODENAME_COMMIT" => funkin.macros.GitCommitMacro.commitNumber,
-			"desktop" => #if desktop true #else false #end,
-			"windows" => #if windows true #else false #end,
-			"hl" => #if hl true #else false #end,
-			"neko" => #if neko true #else false #end,
-			"linux" => #if linux true #else false #end,
-			"mac" => #if mac true #else false #end,
-			"macos" => #if macos true #else false #end,
-			"android" => #if android true #else false #end,
-			"web" => #if web true #else false #end,
-			"js" => #if js true #else false #end,
-			"html5" => #if html5 true #else false #end,
-			"flash" => #if flash true #else false #end,
-			"sys" => #if sys true #else false #end,
-			"mobile" => #if mobile true #else false #end,
-			"air" => #if air true #else false #end,
-			"ios" => #if ios true #else false #end,
-			"tvos" => #if tvos true #else false #end,
-			"cpp" => #if cpp true #else false #end,
-			"dom" => #if dom true #else false #end,
-			"cs" => #if cs true #else false #end,
-			"electron" => #if electron true #else false #end,
-			"emscripten" => #if emscripten true #else false #end,
-			"nodejs" => #if nodejs true #else false #end,
-			"rpi" => #if rpi true #else false #end,
-			"cppia" => #if cppia true #else false #end,
-			"commonjs" => #if commonjs true #else false #end,
-			"debug" => #if debug true #else false #end,
-			"release" => #if release true #else false #end,
-			"final" => #if final true #else false #end,
-			"MOD_SUPPORT" => #if MOD_SUPPORT true #else false #end,
-			"GLOBAL_SCRIPT" => #if GLOBAL_SCRIPT true #else false #end,
-			"SOFTCODED_STATES" => #if SOFTCODED_STATES true #else false #end,
-			"USE_SOURCE_ASSETS" => #if USE_SOURCE_ASSETS true #else false #end,
-			"USE_ADAPTED_ASSETS" => #if USE_ADAPTED_ASSETS true #else false #end,
-		];
+		var defines = funkin.macros.DefinesMacro.defines;
+		defines.set("CODENAME_ENGINE", true);
+		defines.set("CODENAME_VER", Application.current.meta.get('version'));
+		defines.set("CODENAME_BUILD", 2675); // 2675 being the last build num before it was removed
+		defines.set("CODENAME_COMMIT", funkin.macros.GitCommitMacro.commitNumber);
+		return defines;
 	}
 	/**
 	 * All available script extensions
