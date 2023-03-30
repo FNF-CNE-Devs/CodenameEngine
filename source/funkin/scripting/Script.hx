@@ -266,8 +266,22 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
 	public function onDestroy() {};
 
+	public function getClass(name:String):ScriptClass {
+		return null;
+	}
+
 	public override function destroy() {
 		super.destroy();
 		onDestroy();
 	}
+}
+
+class ScriptClass {
+	public function new() {}
+
+	public function get(field:String):Dynamic {return null;}
+
+	public function set(field:String, v:Dynamic) {}
+
+	public function call(field:String, ?args:Array<Dynamic>) {return null;}
 }

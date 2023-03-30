@@ -17,23 +17,5 @@ class ScriptsMacro {
 		// FOR ABSTRACTS
 		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');
 	}
-
-	public static function build():Array<Field> {
-		var fields:Array<Field> = Context.getBuildFields();
-
-		for(f in fields) {
-			switch(f.kind) {
-				case FFun(func):
-					if (f.access == null) f.access = [];
-					if (f.access.contains(AInline))
-						f.access.remove(AInline);
-					f.access.push(ADynamic);
-				default:
-					// do nothing u piece of shit
-			}
-		}
-
-		return fields;
-	}
 }
 #end

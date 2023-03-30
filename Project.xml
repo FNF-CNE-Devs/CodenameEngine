@@ -128,6 +128,9 @@
 	<!-- Comment this out to disable support for custom ndlls. !-->
 	<haxedef name="NDLLS_SUPPORTED" />
 
+	<!-- Comment this out to disable support for custom extended classes (data/classes). !-->
+	<define name="SOFTCODED_CLASSES" />
+
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
 	<define name="VIDEO_CUTSCENES" unless="web || linux || hl || mac" />
 
@@ -139,6 +142,9 @@
 	<haxedef name="UPDATE_CHECKING" if="UPDATE_CHECKING" />
 	<haxedef name="DISCORD_RPC" if="DISCORD_RPC" />
 	<haxedef name="SHOW_BUILD_ON_FPS" if="SHOW_BUILD_ON_FPS" />
+	<haxedef name="SOFTCODED_CLASSES" if="SOFTCODED_CLASSES" />
+	
+	<haxeflag name="--macro" value="funkin.macros.SoftcodedClassMacro.init()" />
 	<haxeflag name="--macro" value="funkin.macros.StdDeprecationsRemover.init()" />
 	<!-- _______________________________ Libraries ______________________________ -->
 

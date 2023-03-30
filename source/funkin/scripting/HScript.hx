@@ -1,5 +1,8 @@
 package funkin.scripting;
 
+import funkin.scripting.Script.ScriptClass;
+import hscript.Expr.ClassDecl;
+import hscript.Expr.ModuleDecl;
 import hscript.Expr.Error;
 import hscript.Parser;
 import openfl.Assets;
@@ -9,16 +12,23 @@ class HScript extends Script {
 	public var interp:Interp;
 	public var parser:Parser;
 	public var expr:Expr;
+	public var decls:Array<ModuleDecl> = null;
+	public var code:String;
+
+	public static function initParser() {
+		var parser = new Parser();
+		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
+		parser.preprocesorValues = Script.getDefaultPreprocessors();
+		return parser;
+	}
 
 	public override function onCreate(path:String) {
 		super.onCreate(path);
 
 		interp = new Interp();
 
-		var code:String = Assets.getText(path);
-		parser = new Parser();
-		parser.allowJSON = parser.allowMetadata = parser.allowTypes = true;
-		parser.preprocesorValues = Script.getDefaultPreprocessors();
+		code = Assets.getText(path);
+		parser = initParser();
 		interp.errorHandler = _errorHandler;
 		interp.staticVariables = Script.staticVariables;
 		interp.allowStaticVariables = interp.allowPublicVariables = true;
@@ -117,6 +127,27 @@ class HScript extends Script {
 		this.interp.publicVariables = map;
 	}
 
+	public override function getClass(name:String) {
+		if (decls == null) {
+			decls = parser.parseModule(code, fileName);
+		}
+		for(d in decls) {
+			switch(d) {
+				case DPackage(path):
+					// ignore
+				case DImport(path, everything):
+					// ignore
+				case DClass(c):
+					if (c.name == name) {
+
+					}
+				case DTypedef(c):
+					// ignore
+			}
+		}
+		return null;
+	}
+
 	public override function onDestroy() {
 		@:privateAccess {
 			// INTERP
@@ -181,5 +212,41 @@ class HScript extends Script {
 			parser = null;
 			interp = null;
 		}
+	}
+}
+
+class HScriptClass extends ScriptClass {
+	var decl:ClassDecl;
+	var name:String;
+
+	var interp:Interp;
+
+	public function new(decl:ClassDecl, sInterp:Interp) {
+		super();
+		this.name = decl.name;
+
+		
+		
+		interp = new Interp();
+		interp.errorHandler = sInterp.errorHandler;
+		interp.staticVariables = sInterp.staticVariables;
+		interp.allowStaticVariables = interp.allowPublicVariables = false;
+		// interp.execute({ e : EBlock(decl.fields), pmin : 0, pmax : 0, origin : fileName, line : 0 });
+
+		var parser = HScript.initParser();
+
+		for(f in decl.fields) {
+			switch(f.kind) {
+				case KVar(v):
+					interp.variables[f.name] = interp.execute(v.expr);
+				case KFunction(fun):
+					@:privateAccess
+					interp.variables[f.name] = interp.execute(parser.mk(EFunction(fun.args, fun.expr, f.name, fun.ret, false, false)));
+			}
+		}
+	}
+
+	public override function get(field:String) {
+		return interp.variables[field];
 	}
 }
