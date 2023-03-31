@@ -51,6 +51,8 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 			spr.scale.set(source.scale.x, source.scale.y);
 			spr.scrollFactor.set(source.scrollFactor.x, source.scrollFactor.y);
 			spr.skew.set(source.skew.x, source.skew.y);
+			spr.transformMatrix = source.transformMatrix;
+			spr.matrixExposed = source.matrixExposed;
 		}
 		return spr;
 	}
@@ -149,6 +151,8 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 			animateAtlas.shader = shader;
 			animateAtlas.antialiasing = antialiasing;
 			animateAtlas.skew = skew;
+			animateAtlas.transformMatrix = transformMatrix;
+			animateAtlas.matrixExposed = matrixExposed;
 		}
 	}
 

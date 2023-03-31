@@ -45,7 +45,7 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 				}
 				rMatrix.scale(scale.x, scale.y);
 
-				if (bakedRotationAngle <= 0)
+				if (!matrixExposed && bakedRotationAngle <= 0)
 				{
 					updateTrig();
 
@@ -56,7 +56,14 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 			else
 				rMatrix.a = rMatrix.d = 0.7 / camera.zoom;
 
-			rMatrix.concat(@:privateAccess flxanimate.FlxAnimate._skewMatrix);
+			if (matrixExposed)
+			{
+				rMatrix.concat(transformMatrix);
+			}
+			else
+			{
+				rMatrix.concat(@:privateAccess flxanimate.FlxAnimate._skewMatrix);
+			}
 
 			_point.addPoint(origin);
 			if (isPixelPerfectRender(camera))
