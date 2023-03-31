@@ -88,6 +88,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 			#if sys "ZipUtil"   => funkin.utils.ZipUtil, #end
 			"MarkdownUtil"	  => funkin.utils.MarkdownUtil,
 			"EngineUtil"		=> funkin.utils.EngineUtil,
+			"MemoryUtil"		=> funkin.utils.MemoryUtil,
+			"BitmapUtil"		=> funkin.utils.BitmapUtil,
 		];
 	}
 	public static function getDefaultPreprocessors():Map<String, Dynamic> {
@@ -102,7 +104,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 * All available script extensions
 	 */
 	public static var scriptExtensions:Array<String> = [
-		"hx", "hscript", "hsc", "hxs", "lua" /** ACTUALLY NOT SUPPORTED, ONLY FOR THE MESSAGE **/
+		"hx", "hscript", "hsc", "hxs",
+		"lua" /** ACTUALLY NOT SUPPORTED, ONLY FOR THE MESSAGE **/
 	];
 
 	/**

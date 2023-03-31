@@ -25,7 +25,7 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			rMatrix.translate(-origin.x, -origin.y);
-			if (limb.name != "pivot") {
+			if (!showPivot && limb.name != "pivot") {
 				if (rotOffsetAngle != null && rotOffsetAngle != angle)
 				{
 					var angleOff = (-angle + rotOffsetAngle) * FlxAngle.TO_RAD;
@@ -55,8 +55,8 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 			}
 			else
 				rMatrix.a = rMatrix.d = 0.7 / camera.zoom;
-			
-			//rMatrix.concat(_skewMatrix);
+
+			rMatrix.concat(@:privateAccess flxanimate.FlxAnimate._skewMatrix);
 
 			_point.addPoint(origin);
 			if (isPixelPerfectRender(camera))
@@ -71,10 +71,11 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 			#end
 		}
 
-		#if FLX_DEBUG
-		if (FlxG.debugger.drawDebug)
-			drawDebug();
-		#end
+		// doesnt work, needs to be remade
+		// #if FLX_DEBUG
+		// if (FlxG.debugger.drawDebug)
+		// 	drawDebug();
+		// #end
 	}
 
 	override function limbOnScreen(limb:FlxFrame, m:FlxMatrix, ?Camera:FlxCamera)

@@ -1,5 +1,6 @@
 package funkin.system;
 
+import flixel.addons.effects.FlxSkewedSprite;
 import haxe.io.Path;
 import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
 import funkin.interfaces.IOffsetCompatible;
@@ -25,7 +26,7 @@ abstract XMLAnimType(Int) {
 	}
 }
 
-class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffsetCompatible {
+class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements IOffsetCompatible {
 	public var spriteAnimType:XMLAnimType = NONE;
 	public var beatAnims:Array<String> = [];
 	public var name:String;
@@ -49,6 +50,7 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
 			spr.antialiasing = source.antialiasing;
 			spr.scale.set(source.scale.x, source.scale.y);
 			spr.scrollFactor.set(source.scrollFactor.x, source.scrollFactor.y);
+			spr.skew.set(source.skew.x, source.skew.y);
 		}
 		return spr;
 	}
@@ -146,6 +148,7 @@ class FunkinSprite extends FlxSprite implements IBeatReceiver implements IOffset
 			animateAtlas.flipY = flipY;
 			animateAtlas.shader = shader;
 			animateAtlas.antialiasing = antialiasing;
+			animateAtlas.skew = skew;
 		}
 	}
 

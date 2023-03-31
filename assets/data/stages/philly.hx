@@ -45,7 +45,7 @@ function beatHit(curBeat:Int) {
 function update(elapsed:Float) {
     if (Conductor.songPosition > 0)
         light.alpha = 1 - (FlxEase.cubeIn((curBeatFloat / 4) % 1) * 0.85);
-    else 
+    else
         light.alpha = 0;
 
     if (trainMoving) {
