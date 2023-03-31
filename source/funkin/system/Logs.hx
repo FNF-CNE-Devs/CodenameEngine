@@ -3,8 +3,8 @@ package funkin.system;
 import flixel.system.debug.log.LogStyle;
 import flixel.system.frontEnds.LogFrontEnd;
 import haxe.Log;
-import funkin.windows.WindowsAPI;
-import funkin.windows.WindowsAPI.ConsoleColor;
+import funkin.utils.NativeAPI;
+import funkin.utils.NativeAPI.ConsoleColor;
 
 class Logs {
 	private static var __showing:Bool = false;
@@ -83,10 +83,10 @@ class Logs {
 		}
 		__showing = true;
 		for(t in text) {
-			WindowsAPI.setConsoleColors(t.color);
+			NativeAPI.setConsoleColors(t.color);
 			Sys.print(t.text);
 		}
-		WindowsAPI.setConsoleColors();
+		NativeAPI.setConsoleColors();
 		Sys.print("\r\n");
 		__showing = false;
 		#else

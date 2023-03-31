@@ -5,7 +5,7 @@ import openfl.utils.AssetLibrary;
 import openfl.utils.AssetCache;
 import openfl.text.TextFormat;
 import flixel.system.ui.FlxSoundTray;
-import funkin.windows.WindowsAPI;
+import funkin.utils.NativeAPI;
 import funkin.menus.BetaWarningState;
 import funkin.menus.TitleState;
 import funkin.game.Highscore;
@@ -59,7 +59,7 @@ class Main extends Sprite
 
 	public static function main():Void
 	{
-		#if windows WindowsAPI.setDarkMode(true); #end
+		#if windows NativeAPI.setDarkMode(true); #end
 		Lib.current.addChild(instance = new Main());
 	}
 

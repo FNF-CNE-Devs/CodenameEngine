@@ -24,7 +24,7 @@ import away3d.loaders.misc.AssetLoaderContext;
 import openfl.Assets;
 import away3d.entities.Mesh;
 import away3d.loaders.Loader3D;
-import funkin.windows.WindowsAPI.ConsoleColor;
+import funkin.native.NativeAPI.ConsoleColor;
 import flixel.FlxCamera;
 import away3d.containers.View3D;
 

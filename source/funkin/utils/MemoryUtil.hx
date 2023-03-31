@@ -1,6 +1,6 @@
 package funkin.utils;
 
-import funkin.native.HiddenProcess;
+import funkin.utils.native.HiddenProcess;
 #if cpp
 import cpp.vm.Gc;
 #elseif hl
@@ -66,11 +66,11 @@ class MemoryUtil {
 	public static function getTotalMem():Float
 	{
 		#if windows
-		return funkin.native.Windows.getTotalRam();
+		return funkin.utils.native.Windows.getTotalRam();
 		#elseif mac
-		return funkin.native.Mac.getTotalRam();
+		return funkin.utils.native.Mac.getTotalRam();
 		#elseif linux
-		return funkin.native.Linux.getTotalRam();
+		return funkin.utils.native.Linux.getTotalRam();
 		#else
 		return 0;
 		#end

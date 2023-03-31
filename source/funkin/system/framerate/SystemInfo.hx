@@ -1,6 +1,6 @@
 package funkin.system.framerate;
 
-import funkin.native.HiddenProcess;
+import funkin.utils.native.HiddenProcess;
 import funkin.utils.MemoryUtil;
 
 using StringTools;

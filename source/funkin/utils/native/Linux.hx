@@ -1,4 +1,4 @@
-package funkin.native;
+package funkin.utils.native;
 
 #if linux
 @:cppFileCode("#include <stdio.h>")

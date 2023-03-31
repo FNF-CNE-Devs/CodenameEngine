@@ -3,7 +3,7 @@ package funkin.system.modules;
 import lime.media.AudioManager;
 import flixel.system.FlxSound;
 import flixel.FlxState;
-import funkin.windows.WindowsAPI;
+import funkin.utils.NativeAPI;
 
 /**
  * if youre stealing this keep this comment at least please lol
@@ -56,7 +56,7 @@ class AudioSwitchFix {
 
 	public static function init() {
 		#if windows
-		WindowsAPI.registerAudio();
+		NativeAPI.registerAudio();
 		FlxG.signals.preStateCreate.add(onStateSwitch);
 		#end
 	}

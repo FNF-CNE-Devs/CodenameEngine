@@ -3,7 +3,7 @@ package funkin.editors;
 import funkin.options.type.*;
 import funkin.options.OptionsScreen;
 import funkin.options.TreeMenu;
-import funkin.windows.WindowsAPI;
+import funkin.utils.NativeAPI;
 
 class DebugOptions extends TreeMenu {
 	public override function create() {
@@ -33,8 +33,9 @@ class DebugOptionsScreen extends OptionsScreen {
 			"Show Console",
 			"Select this to show the debug console, which contains log information about the game.",
 			function() {
-				WindowsAPI.allocConsole();
+				NativeAPI.allocConsole();
 			}));
+		#end
 		add(new Checkbox(
 			"Enable Editor SFXs",
 			"If checked, will play sound effects when working on editors (ex: will play sfxs when checking checkboxes...)",
@@ -43,6 +44,5 @@ class DebugOptionsScreen extends OptionsScreen {
 			"Resizable Editors",
 			"If checked, editors will be resizable and extensible like other programs instead of zooming in upon maximization.",
 			"resizableEditors"));
-		#end
 	}
 }

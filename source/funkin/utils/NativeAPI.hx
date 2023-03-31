@@ -1,14 +1,14 @@
 
 
-package funkin.windows;
+package funkin.utils;
 
-import funkin.native.*;
+import funkin.utils.native.*;
 
 /**
  * Class for Windows-only functions, such as transparent windows, message boxes, and more.
  * Does not have any effect on other platforms.
  */
-class WindowsAPI {
+class NativeAPI {
 	@:dox(hide) public static function registerAudio() {
 		#if windows
 		Windows.registerAudio();

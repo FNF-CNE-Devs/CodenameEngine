@@ -1,6 +1,6 @@
-package funkin.native;
+package funkin.utils.native;
 
-import funkin.windows.WindowsAPI.MessageBoxIcon;
+import funkin.utils.NativeAPI.MessageBoxIcon;
 #if windows
 @:buildXml('
 <target id="haxe">
