@@ -200,6 +200,7 @@ class Conductor
 			var oldBeat = curBeat;
 			var oldMeasure = curMeasure;
 			if (curStep != (curStep = CoolUtil.floorInt(curStepFloat))) {
+				if (curStep < oldStep && oldStep - curStep < 2) return;
 				// updates step
 				__updateBeat = curBeat != (curBeat = CoolUtil.floorInt(curBeatFloat));
 				__updateMeasure = __updateBeat && (curMeasure != (curMeasure = CoolUtil.floorInt(curMeasureFloat)));

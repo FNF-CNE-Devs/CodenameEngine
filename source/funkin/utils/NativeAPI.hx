@@ -1,5 +1,3 @@
-
-
 package funkin.utils;
 
 import funkin.utils.native.*;

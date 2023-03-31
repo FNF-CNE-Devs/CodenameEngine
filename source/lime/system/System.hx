@@ -529,7 +529,7 @@ class System
 		// executes first!!
 		
 		#if sys
-		funkin.native.NativeAPI.registerAsDPICompatible();
+		funkin.utils.NativeAPI.registerAsDPICompatible();
 		funkin.system.CommandLineHandler.parseCommandLine(Sys.args());
 		#end
 		
