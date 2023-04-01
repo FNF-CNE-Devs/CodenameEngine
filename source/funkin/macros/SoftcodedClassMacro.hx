@@ -3,9 +3,15 @@ package funkin.macros;
 using StringTools;
 class SoftcodedClassMacro {
 	#if macro
+	private static var nonAllowedSuffixes:Array<String> = ["__Softcoded", "_HSC", "_HSX", "_Impl_"];
 	public static function init() {
-		Compiler.addGlobalMetadata('funkin', '@:build(funkin.macros.SoftcodedClassMacro.build())');
-		Compiler.addGlobalMetadata('flixel', '@:build(funkin.macros.SoftcodedClassMacro.build())');
+		Compiler.addGlobalMetadata('funkin.cutscenes', '@:build(funkin.macros.SoftcodedClassMacro.build())');
+		Compiler.addGlobalMetadata('funkin.game', '@:build(funkin.macros.SoftcodedClassMacro.build())');
+		Compiler.addGlobalMetadata('funkin.menus', '@:build(funkin.macros.SoftcodedClassMacro.build())');
+		Compiler.addGlobalMetadata('funkin.options', '@:build(funkin.macros.SoftcodedClassMacro.build())');
+		Compiler.addGlobalMetadata('funkin.scripting', '@:build(funkin.macros.SoftcodedClassMacro.build())');
+		Compiler.addGlobalMetadata('funkin.shaders', '@:build(funkin.macros.SoftcodedClassMacro.build())');
+		Compiler.addGlobalMetadata('flixel', '@:build(funkin.macros.SoftcodedClassMacro.build())', false);
 	}
 
 	public static function build():Array<Field> {
@@ -26,7 +32,18 @@ class SoftcodedClassMacro {
 				kind: FVar(scriptClassType, macro null)
 			});
 			var c = cl.get();
-			if (c.name.endsWith('__Softcoded') || c.name.endsWith("_HSC") || c.name.endsWith("_Impl_")) return fields;
+			c.isPrivate = false;
+			switch(c.kind) {
+				case KNormal:
+					// do nothing
+				default:
+					return fields;
+			}
+			if (c.isPrivate || c.isInterface || c.isFinal || c.isExtern || c.isAbstract) return fields;
+
+			for(s in nonAllowedSuffixes)
+				if (c.name.endsWith(s))
+					return fields;
 			if (c.params.length > 0) return fields; // NOT SUPPORTED
 			if (c.isAbstract) return fields;
 
@@ -43,11 +60,14 @@ class SoftcodedClassMacro {
 
 			};
 
+
+			// var fixedPack = [for(p in c.pack) if (p.startsWith("_")) p.substr(1) else p];
+
 			shadowClass.name = '${c.name}__Softcoded';
 			shadowClass.fields = funcs;
-			shadowClass.pack = c.pack;
+			shadowClass.pack = c.pack.copy();
 			shadowClass.kind = TDClass({
-				pack: c.pack,
+				pack: c.pack.copy(),
 				name: c.name
 			}, [], false, false, false);
 
@@ -70,6 +90,7 @@ class SoftcodedClassMacro {
 
 				switch(f.kind) {
 					case FFun(fun):
+						if (fun.params != null && fun.params.length > 0) continue;
 						var funcExpr = macro {
 							${{
 								pos: Context.currentPos(),
@@ -200,7 +221,6 @@ class SoftcodedClassMacro {
 			}
 			#end
 
-			
 			var imports = [for(i in Context.getLocalImports()) i];
 			imports.push({
 				path: [for(p in c.module.split(".")) {
@@ -216,6 +236,7 @@ class SoftcodedClassMacro {
 				}],
 				mode: INormal
 			});
+
 
 			Context.defineModule(c.module + "__Softcoded", [shadowClass], imports);
 		}

@@ -25,7 +25,7 @@ package funkin.utils.native;
 
 import cpp.NativeProcess;
 
-private class Stdin extends haxe.io.Output {
+class Stdin extends haxe.io.Output {
 	var p:Dynamic;
 	var buf:haxe.io.Bytes;
 
@@ -54,7 +54,7 @@ private class Stdin extends haxe.io.Output {
 	}
 }
 
-private class Stdout extends haxe.io.Input {
+class Stdout extends haxe.io.Input {
 	var p:Dynamic;
 	var out:Bool;
 	var buf:haxe.io.Bytes;
