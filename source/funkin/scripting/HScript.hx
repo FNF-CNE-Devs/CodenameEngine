@@ -1,7 +1,6 @@
 package funkin.scripting;
 
 import haxe.io.Path;
-import funkin.scripting.Script.ScriptClass;
 import hscript.Expr.ClassDecl;
 import hscript.Expr.ModuleDecl;
 import hscript.Expr.Error;
@@ -16,6 +15,7 @@ class HScript extends Script {
 	public var decls:Array<ModuleDecl> = null;
 	public var code:String;
 	public var folderlessPath:String;
+	var __importedPaths:Array<String>;
 
 	public static function initParser() {
 		var parser = new Parser();
@@ -32,6 +32,7 @@ class HScript extends Script {
 		code = Assets.getText(path);
 		parser = initParser();
 		folderlessPath = Path.directory(path);
+		__importedPaths = [path];
 
 		interp.errorHandler = _errorHandler;
 		interp.importFailedCallback = importFailedCallback;
@@ -55,21 +56,30 @@ class HScript extends Script {
 	}
 
 	private function importFailedCallback(cl:Array<String>):Bool {
-		var path = cl.join("/");
-
-		var scr = Script.create(Paths.script('classes/$path', null, false));
-		if (!(scr is DummyScript)) {
-			// script is valid
-			var cla = scr.getClass(cl.last());
-			if (cla != null) {
-				interp.variables.set(cl.last(), Script.createCustomClass(cla));
-			} else {
-				interp.variables.set(cl.last(), scr);
+		var assetsPath = 'assets/data/classes/${cl.join("/")}';
+		for(hxExt in ["hx", "hscript", "hsc", "hxs"]) {
+			var p = '$assetsPath.$hxExt';
+			if (__importedPaths.contains(p))
+				return true; // no need to reimport again
+			if (Assets.exists(p)) {
+				var code = Assets.getText(p);
+				var expr:Expr = null;
+				try {
+					if (code != null && code.trim() != "")
+						expr = parser.parseString(code);
+				} catch(e:Error) {
+					_errorHandler(e);
+				} catch(e) {
+					_errorHandler(new Error(ECustom(e.toString()), 0, 0, fileName, 0));
+				}
+				if (expr != null) {
+					@:privateAccess
+					interp.exprReturn(expr);
+					__importedPaths.push(p);
+				}
+				return true;
 			}
-
-			return true;
 		}
-		
 		return false;
 	}
 
@@ -90,6 +100,8 @@ class HScript extends Script {
 	}
 
 	public override function onLoad() {
+		@:privateAccess
+		interp.execute(parser.mk(EBlock([]), 0, 0));
 		if (expr != null) {
 			interp.execute(expr);
 			call("new", []);
@@ -98,7 +110,7 @@ class HScript extends Script {
 
 	public override function reload() {
 		// save variables
-		
+
 		interp.allowStaticVariables = interp.allowPublicVariables = false;
 		var savedVariables:Map<String, Dynamic> = [];
 		for(k=>e in interp.variables) {
@@ -149,29 +161,6 @@ class HScript extends Script {
 
 	public override function setPublicMap(map:Map<String, Dynamic>) {
 		this.interp.publicVariables = map;
-	}
-
-	public override function getClass(name:String) {
-		if (decls == null) {
-			decls = parser.parseModule(code, fileName);
-		}
-		var imports:Array<Array<String>> = [];
-		for(d in decls) {
-			switch(d) {
-				case DPackage(path):
-					// ignore
-				case DImport(path, everything):
-					imports.push(path);
-				case DClass(c):
-					trace(c.name);
-					trace(name);
-					if (c.name == name)
-						return new HScriptClass(c, interp, imports, folderlessPath);
-				case DTypedef(c):
-					// ignore
-			}
-		}
-		return null;
 	}
 
 	public override function onDestroy() {
@@ -238,62 +227,5 @@ class HScript extends Script {
 			parser = null;
 			interp = null;
 		}
-	}
-}
-
-class HScriptClass extends ScriptClass {
-	var decl:ClassDecl;
-	var name:String;
-
-	var interp:Interp;
-
-	public function new(decl:ClassDecl, sInterp:Interp, classesToImport:Array<Array<String>>, forderlessPath:String) {
-		super();
-		this.name = decl.name;
-		switch(decl.extend) {
-			case CTPath(p, params):
-				this.classPath = p.join(".");
-			default:
-				
-		}
-
-		
-		
-		interp = new Interp();
-		interp.errorHandler = sInterp.errorHandler;
-		interp.staticVariables = sInterp.staticVariables;
-		interp.allowStaticVariables = interp.allowPublicVariables = true;
-		interp.importFailedCallback = importFailedCallback;
-
-		var parser = HScript.initParser();
-
-		for(f in decl.fields) {
-			switch(f.kind) {
-				case KVar(v):
-					interp.variables[f.name] = interp.execute(v.expr);
-				case KFunction(fun):
-					@:privateAccess
-					interp.variables[f.name] = interp.execute(parser.mk(EFunction(fun.args, fun.expr, f.name, fun.ret, false, false)));
-			}
-		}
-	}
-
-	public override function hasField(field:String) {
-		return interp.variables.exists(field);
-	}
-	public override function get(field:String) {
-		return interp.variables[field];
-	}
-
-	public override function set(field:String, v:Dynamic) {
-		interp.variables[field] = v;
-	}
-
-	public override function onCall(field:String, parameters:Array<Dynamic>, parent:Dynamic) {
-		interp.scriptObject = parent;
-		var v = interp.variables[field];
-		if (v != null && Reflect.isFunction(v))
-			return (parameters != null && parameters.length > 0) ? Reflect.callMethod(null, v, parameters) : v();
-		return null;
 	}
 }

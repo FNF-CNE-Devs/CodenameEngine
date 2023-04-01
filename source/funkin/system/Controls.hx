@@ -24,7 +24,7 @@ enum abstract Action(String) to String from String {
 	var RIGHT_R = "right-release";
 	var DOWN_R = "down-release";
 
-	
+
 	var NOTE_UP = "note-up";
 	var NOTE_LEFT = "note-left";
 	var NOTE_RIGHT = "note-right";
@@ -575,7 +575,7 @@ class Controls extends FlxActionSet
 			removeKeyboard();
 
 		keyboardScheme = scheme;
-		
+
 		switch (scheme)
 		{
 			case Solo:
@@ -642,7 +642,7 @@ class Controls extends FlxActionSet
 	public function addGamepad(id:Int, ?buttonMap:Map<Control, Array<FlxGamepadInputID>>):Void
 	{
 		gamepadsAdded.push(id);
-		
+
 		#if (haxe >= "4.0.0")
 		for (control => buttons in buttonMap)
 			inline bindButtons(control, id, buttons);

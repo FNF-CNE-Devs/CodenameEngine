@@ -142,15 +142,6 @@ class Script extends FlxBasic implements IFlxDestroyable {
 		return new DummyScript(path);
 	}
 
-	public static function createCustomClass(s:ScriptClass) {
-		var t:Class<IScriptClassInstance> = cast Type.resolveClass('${s.classPath}__Softcoded');
-		if (t == null) {
-			Logs.trace('Class at ${s.classPath} was not found.', ERROR);
-			return null;
-		}
-		return new ScriptCustomClass(s, t);
-	}
-
 	/**
 	 * Creates a new instance of the script class.
 	 * @param path
@@ -263,75 +254,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
 	public function onDestroy() {};
 
-	public function getClass(name:String):ScriptClass {
-		return null;
-	}
-
 	public override function destroy() {
 		super.destroy();
 		onDestroy();
 	}
-}
-
-class ScriptClass {
-	public var classPath:String = null;
-	public var folderlessPath:String = null;
-
-	public function new() {}
-
-	public function get(field:String):Dynamic {return null;}
-
-	public function set(field:String, v:Dynamic) {}
-
-	public function hasField(field:String):Bool {return false;}
-
-	/**
-	 * Calls the function `func` defined in the class.
-	 * @param func Name of the function
-	 * @param parameters (Optional) Parameters of the function.
-	 * @return Result (if void, then null)
-	 */
-	 public function call(func:String, parameters:Array<Dynamic>, parent:Dynamic):Dynamic {
-		var result = onCall(func, parameters == null ? [] : parameters, parent);
-		return result;
-	}
-
-	public function onCall(func:String, parameters:Array<Dynamic>, parent:Dynamic):Dynamic {return null;}
-
-	private function importFailedCallback(cl:Array<String>):Bool {
-		var path = cl.join("/");
-
-		var scr = Script.create(Paths.script('$folderlessPath$path', null, true));
-		if (!(scr is DummyScript)) {
-			// script is valid
-			var cla = scr.getClass(cl.last());
-			if (cla != null) {
-				set(cl.last(), Script.createCustomClass(cla));
-			} else {
-				set(cl.last(), scr);
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-}
-
-class ScriptCustomClass implements IHScriptCustomConstructor {
-	var scrClass:ScriptClass;
-	var scrType:Class<IScriptClassInstance>;
-	public function new(scrClass:ScriptClass, scrType:Class<IScriptClassInstance>) {
-		this.scrClass = scrClass;
-		this.scrType = scrType;
-	}
-	public function hnew(args:Array<Dynamic>):Dynamic {
-		var a = [for(arg in args) arg];
-		a.insert(0, scrClass);
-		return Type.createInstance(scrType, a);
-	}
-}
-
-interface IScriptClassInstance {
-
 }

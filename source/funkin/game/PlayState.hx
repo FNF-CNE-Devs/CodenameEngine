@@ -677,7 +677,7 @@ class PlayState extends MusicBeatState
 		startingSong = true;
 
 		super.create();
-		
+
 		for(s in introSprites)
 			if (s != null)
 				graphicCache.cache(Paths.image(s));
