@@ -1,6 +1,6 @@
 package funkin.scripting.events;
 
-class RatingUpdateEvent extends CancellableEvent {
+final class RatingUpdateEvent extends CancellableEvent {
 	/**
 		New combo
 	**/

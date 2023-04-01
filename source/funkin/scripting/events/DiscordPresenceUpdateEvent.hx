@@ -4,7 +4,7 @@ package funkin.scripting.events;
 import discord_rpc.DiscordRpc.DiscordPresenceOptions;
 #end
 
-class DiscordPresenceUpdateEvent extends CancellableEvent {
+final class DiscordPresenceUpdateEvent extends CancellableEvent {
 	/**
 	 * Object containing all of the data for the presence. Can be altered.
 	 */

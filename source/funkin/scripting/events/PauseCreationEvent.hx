@@ -3,7 +3,7 @@ package funkin.scripting.events;
 /**
  * CANCEL this event to prevent default behaviour!
  */
-class PauseCreationEvent extends CancellableEvent {
+final class PauseCreationEvent extends CancellableEvent {
 	/**
 	 * Music that is going to be played
 	 */

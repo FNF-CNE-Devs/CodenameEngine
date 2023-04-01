@@ -1,6 +1,6 @@
 package funkin.scripting.events;
 
-class FreeplaySongSelectEvent extends CancellableEvent {
+final class FreeplaySongSelectEvent extends CancellableEvent {
 	/**
 	 * Song name that is about to be played
 	 */

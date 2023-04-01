@@ -2,7 +2,7 @@ package funkin.scripting.events;
 
 import funkin.game.Strum;
 
-class StrumCreationEvent extends CancellableEvent {
+final class StrumCreationEvent extends CancellableEvent {
 	@:dox(hide) public var __doAnimation = true;
 
 

@@ -3,7 +3,7 @@ package funkin.scripting.events;
 import funkin.game.Note;
 import funkin.game.Strum;
 
-class NoteUpdateEvent extends CancellableEvent {
+final class NoteUpdateEvent extends CancellableEvent {
 	@:dox(hide) public var __updateHitWindow = true;
 	@:dox(hide) public var __autoCPUHit = true;
 	@:dox(hide) public var __reposNote = true;

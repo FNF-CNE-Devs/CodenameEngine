@@ -2,7 +2,7 @@ package funkin.scripting.events;
 
 import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
 
-class DirectionAnimEvent extends CancellableEvent {
+final class DirectionAnimEvent extends CancellableEvent {
 	/**
 		Default animation that will be played
 	**/

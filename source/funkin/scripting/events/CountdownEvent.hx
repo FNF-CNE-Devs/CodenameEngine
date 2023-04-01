@@ -3,7 +3,7 @@ package funkin.scripting.events;
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
 
-class CountdownEvent extends CancellableEvent {
+final class CountdownEvent extends CancellableEvent {
 	/**
 	 * At which count the countdown is. Normally goes 0-1-2-3-4 unless `PlayState.instance.introLength` is changed.
 	 */

@@ -3,7 +3,7 @@ package funkin.scripting.events;
 import funkin.game.Note;
 import funkin.game.Character;
 
-class NoteHitEvent extends CancellableEvent {
+final class NoteHitEvent extends CancellableEvent {
 	@:dox(hide) public var animCancelled:Bool = false;
 	@:dox(hide) public var strumGlowCancelled:Bool = false;
 	@:dox(hide) public var deleteNote:Bool = true;

@@ -2,7 +2,7 @@ package funkin.scripting.events;
 
 import funkin.game.StrumLine;
 
-class InputSystemEvent extends CancellableEvent {
+final class InputSystemEvent extends CancellableEvent {
 	/**
 	 * Array containing whenever a specific control is pressed or not.
 	 * For example, `pressed[0]` will return whenever the left strum was pressed.

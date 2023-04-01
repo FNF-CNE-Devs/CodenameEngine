@@ -1,6 +1,6 @@
 package funkin.scripting.events;
 
-class NameEvent extends CancellableEvent {
+final class NameEvent extends CancellableEvent {
 	/**
 	 * Name
 	 */

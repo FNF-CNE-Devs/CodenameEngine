@@ -1,6 +1,6 @@
 package funkin.scripting.events;
 
-class PointEvent extends CancellableEvent {
+final class PointEvent extends CancellableEvent {
 	/**
 		X position
 	**/

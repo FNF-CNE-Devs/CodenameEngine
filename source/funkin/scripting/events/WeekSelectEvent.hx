@@ -2,7 +2,7 @@ package funkin.scripting.events;
 
 import funkin.menus.StoryMenuState.WeekData;
 
-class WeekSelectEvent extends CancellableEvent {
+final class WeekSelectEvent extends CancellableEvent {
 	/**
 	 * Week that is going to be selected
 	 */

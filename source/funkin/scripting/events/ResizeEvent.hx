@@ -1,6 +1,6 @@
 package funkin.scripting.events;
 
-class ResizeEvent extends CancellableEvent {
+final class ResizeEvent extends CancellableEvent {
 	/**
 	 * New width
 	 */
