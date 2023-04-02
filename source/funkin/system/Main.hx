@@ -110,7 +110,7 @@ class Main extends Sprite
 
 		#if !mobile
 		addChild(framerateSprite = new funkin.system.framerate.Framerate());
-		framerateSprite = stage.window.scale;
+		framerateSprite.scaleX = framerateSprite.scaleY = stage.window.scale;
 		SystemInfo.init();
 		#end
 	}
