@@ -51,6 +51,29 @@ class CoolUtil
 	}
 
 	/**
+	 * Deletes a folder recursively
+	 * @param delete Path to the folder.
+	 */
+	public static function deleteFolder(delete:String) {
+		#if sys
+		if (!sys.FileSystem.exists(delete)) return;
+		var files:Array<String> = sys.FileSystem.readDirectory(delete);
+		for(file in files) {
+			if (sys.FileSystem.isDirectory(delete + "/" + file)) {
+				deleteFolder(delete + "/" + file);
+				sys.FileSystem.deleteDirectory(delete + "/" + file);
+			} else {
+				try {
+					sys.FileSystem.deleteFile(delete + "/" + file);
+				} catch(e) {
+					Logs.trace("Could not delete " + delete + "/" + file, WARNING);
+				}
+			}
+		}
+		#end
+	}
+
+	/**
 	 * Shortcut to parse a JSON string
 	 * @param str Path to the JSON string
 	 * @return Parsed JSON

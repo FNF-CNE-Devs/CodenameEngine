@@ -18,6 +18,9 @@ class MainState extends FlxState {
 			Main.loadGameSettings();
 		initiated = true;
 		
+		#if sys
+		CoolUtil.deleteFolder('./.temp/'); // delete temp folder
+		#end
 		Options.save();
 
 		FlxG.bitmap.reset();
@@ -46,5 +49,9 @@ class MainState extends FlxState {
 			FlxG.switchState(new BetaWarningState());
 			betaWarningShown = true;
 		}
+
+		#if sys
+		sys.FileSystem.createDirectory('./.temp/');
+		#end
 	}
 }

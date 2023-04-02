@@ -721,7 +721,7 @@ class PlayState extends MusicBeatState
 			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}cutscene.mp4');
 			var dialogue = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}dialogue.xml');
 			persistentUpdate = true;
-			if (cutsceneScriptPath != null) {
+			if (cutsceneScriptPath != null && Assets.exists(cutsceneScriptPath)) {
 				openSubState(new ScriptedCutscene(cutsceneScriptPath, function() {
 					callback();
 				}));

@@ -65,6 +65,11 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 		return Image.fromBytes(unzip(assets[_parsedAsset]));
 	}
 
+	public override function getPath(id:String):String {
+		if (!__parseAsset(id)) return null;
+		return getAssetPath();
+	}
+
 
 
 	public inline function unzip(f:SysZipEntry)
@@ -88,7 +93,8 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 	}
 
 	private function getAssetPath() {
-		return _parsedAsset;
+		trace('[ZIP]$zipPath/$_parsedAsset');
+		return '[ZIP]$zipPath/$_parsedAsset';
 	}
 
 	public function getFiles(folder:String):Array<String> {
