@@ -14,6 +14,7 @@ import lime.text.Font;
 import lime.utils.AssetType;
 import lime.utils.Bytes;
 import lime.utils.Assets as LimeAssets;
+import openfl.text.Font as OpenFLFont;
 
 
 #if MOD_SUPPORT
@@ -21,108 +22,60 @@ import sys.FileStat;
 import sys.FileSystem;
 import sys.io.File;
 import haxe.zip.Reader;
-import haxe.zip.Entry;
-#end
+import funkin.utils.SysZip;
+import funkin.utils.SysZip.SysZipEntry;
 
 class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 	public var zipPath:String;
 	public var libName:String;
 	public var useImageCache:Bool = false;
 	public var prefix = 'assets/';
-	
-	#if MOD_SUPPORT
-	public var zip:Reader;
-	public var assets:Map<String, Entry> = [];
-	#end
+
+	public var zip:SysZip;
+	public var assets:Map<String, SysZipEntry> = [];
 
 	public function new(zipPath:String, libName:String) {
 		this.zipPath = zipPath;
 		this.libName = libName;
-		this.prefix = 'assets/$libName/';
 
-		#if MOD_SUPPORT
-		zip = new Reader(File.read(zipPath, true));
-		var entries = zip.read();
-		for(entry in entries) {
+		zip = SysZip.openFromFile(zipPath);
+		zip.read();
+		for(entry in zip.entries)
 			assets[entry.fileName.toLowerCase()] = entry;
-		}
-		#end
 
 		super();
 	}
 
-	#if MOD_SUPPORT
 	public var _parsedAsset:String;
-	
+
 	public override function getAudioBuffer(id:String):AudioBuffer {
-		if (__isCacheValid(LimeAssets.cache.audio, id))
-			return LimeAssets.cache.audio.get('$libName:$id');
-		else {
-			if (!exists(id, "SOUND")) {
-				Log.error('ZipFolderLibrary: Audio Buffer at $id does not exist.');
-				return null;
-			}
-			var e = AudioBuffer.fromBytes(unzip(assets[_parsedAsset]));
-			return e;
-		}
+		__parseAsset(id);
+		return AudioBuffer.fromBytes(unzip(assets[_parsedAsset]));
 	}
-
 	public override function getBytes(id:String):Bytes {
-		if (__isCacheValid(cachedBytes, id, true))
-			return cachedBytes.get(id);
-		else {
-			if (!exists(id, "BINARY")) {
-				Log.error('ZipFolderLibrary: Bytes at $id does not exist.');
-				return null;
-			}
-			var e = Bytes.fromBytes(unzip(assets[_parsedAsset]));
-			cachedBytes.set(id, e);
-			return e;
-		}
+		__parseAsset(id);
+		return Bytes.fromBytes(unzip(assets[_parsedAsset]));
 	}
-
-	
-	public static function unzip(f:Entry) {
-		if (!f.compressed)
-			return f.data;
-		var c = new haxe.zip.Uncompress(-15);
-		var s = haxe.io.Bytes.alloc(f.fileSize);
-		var r = c.execute(f.data, 0, s, 0);
-		c.close();
-		if (!r.done || r.read != f.data.length || r.write != f.fileSize)
-			throw "Invalid compressed data for " + f.fileName;
-		f.compressed = false;
-		f.dataSize = f.fileSize;
-		f.data = s;
-		return f.data;
-	}
-
 	public override function getFont(id:String):Font {
-		if (__isCacheValid(LimeAssets.cache.font, id))
-			return LimeAssets.cache.font.get('$libName:$id');
-		else {
-			if (!exists(id, "FONT")) {
-				Log.error('ZipFolderLibrary: Font at $id does not exist.');
-				return null;
-			}
-			var e = Font.fromBytes(unzip(assets[_parsedAsset]));
-			return e;
-		}
+		__parseAsset(id);
+		var font = Font.fromBytes(unzip(assets[_parsedAsset]));
+
+		var openflFont = new OpenFLFont();
+		@:privateAccess
+		openflFont.__fromLimeFont(font);
+		OpenFLFont.registerFont(openflFont);
+
+		return font;
+	}
+	public override function getImage(id:String):Image {
+		__parseAsset(id);
+		return Image.fromBytes(unzip(assets[_parsedAsset]));
 	}
 
-	public override function getImage(id:String):Image {
-		if (useImageCache && __isCacheValid(LimeAssets.cache.image, id))
-			return LimeAssets.cache.image.get('$libName:$id');
-		else {
-			if (!exists(id, "IMAGE")) {
-				Log.error('ZipFolderLibrary: Image at $id does not exist.');
-				return null;
-			}
-			var e = Image.fromBytes(unzip(assets[_parsedAsset]));
-			if (useImageCache) cachedImages.set(id, e);
-			return e;
-		}
-	}
+
+
+	public inline function unzip(f:SysZipEntry)
+		return f == null ? null : zip.unzipEntry(f);
 
 	public function __parseAsset(asset:String):Bool {
 		if (!asset.startsWith(prefix)) return false;
@@ -134,8 +87,8 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 		if (cache.exists(isLocal ? '$libName:$asset': asset)) return true;
 		return false;
 	}
-	
-	public override function exists(asset:String, type:String):Bool { 
+
+	public override function exists(asset:String, type:String):Bool {
 		if(!__parseAsset(asset)) return false;
 
 		return assets[_parsedAsset] != null;
@@ -147,10 +100,10 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 
 	public function getFiles(folder:String):Array<String> {
 		var content:Array<String> = [];
-		
+
 		if (!folder.endsWith("/")) folder = folder + "/";
 		if (!__parseAsset(folder)) return [];
-		
+
 		@:privateAccess
 		for(k=>e in assets) {
 			if (k.toLowerCase().startsWith(_parsedAsset)) {
@@ -164,10 +117,10 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 
 	public function getFolders(folder:String):Array<String> {
 		var content:Array<String> = [];
-		
+
 		if (!folder.endsWith("/")) folder = folder + "/";
 		if (!__parseAsset(folder)) return [];
-		
+
 		@:privateAccess
 		for(k=>e in assets) {
 			if (k.toLowerCase().startsWith(_parsedAsset)) {
@@ -178,5 +131,5 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 		}
 		return content;
 	}
-	#end
 }
+#end
