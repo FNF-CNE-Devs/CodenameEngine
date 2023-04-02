@@ -53,6 +53,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 			spr.skew.set(source.skew.x, source.skew.y);
 			spr.transformMatrix = source.transformMatrix;
 			spr.matrixExposed = source.matrixExposed;
+			spr.animOffsets = source.animOffsets;
 		}
 		return spr;
 	}
