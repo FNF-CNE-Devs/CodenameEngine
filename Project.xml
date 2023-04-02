@@ -91,6 +91,7 @@
 
 	<!-- Comment this out to disable multiple windows for editors !-->
 	<define name="ALLOW_MULTITASKING" />
+	<define name="openfl_dpi_aware" />
 
 	<!-- Comment this out to disable updates !-->
 	<!-- <define name="UPDATE_CHECKING" unless="web || hl || neko"/> -->
@@ -144,6 +145,7 @@
 	<haxedef name="DISCORD_RPC" if="DISCORD_RPC" />
 	<haxedef name="SHOW_BUILD_ON_FPS" if="SHOW_BUILD_ON_FPS" />
 	<haxedef name="SOFTCODED_CLASSES" if="SOFTCODED_CLASSES" />
+	<haxedef name="openfl_dpi_aware" if="openfl_dpi_aware" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
