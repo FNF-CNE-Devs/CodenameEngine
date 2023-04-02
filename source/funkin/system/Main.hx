@@ -104,7 +104,7 @@ class Main extends Sprite
 		}
 
 
-		stage.scaleX = game.scaleY = stage.window.scale; 
+		stage.scaleX = stage.scaleY = stage.window.scale; 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, zoom, framerate, framerate, skipSplash, startFullscreen));
 
 		#if !mobile
