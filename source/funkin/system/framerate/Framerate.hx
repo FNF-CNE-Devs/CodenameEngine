@@ -22,7 +22,12 @@ class Framerate extends Sprite {
 
 	public static var fontName:String = #if windows '${Sys.getEnv("windir")}\\Fonts\\consola.ttf' #else "_sans" #end;
 
-	public static var debugMode:Bool = false;
+	/**
+	 * 0: FPS INVISIBLE
+	 * 1: FPS VISIBLE
+	 * 2: FPS & DEBUG INFO VISIBLE
+	 */
+	public static var debugMode:Int = 1;
 	public static var offset:FlxPoint = new FlxPoint();
 
 	public var bgSprite:Bitmap;
@@ -49,7 +54,7 @@ class Framerate extends Sprite {
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, function(e:KeyboardEvent) {
 			switch(e.keyCode) {
 				case #if web Keyboard.NUMBER_3 #else Keyboard.F3 #end: // 3 on web or F3 on windows, linux and other things that runs code
-					debugMode = !debugMode;
+					debugMode = (debugMode + 1) % 3;
 			}
 		});
 
@@ -91,8 +96,11 @@ class Framerate extends Sprite {
 
 	var debugAlpha:Float = 0;
 	public override function __enterFrame(t:Int) {
+		alpha = CoolUtil.fpsLerp(alpha, debugMode > 0 ? 1 : 0, 0.5);
+		debugAlpha = CoolUtil.fpsLerp(debugAlpha, debugMode > 1 ? 1 : 0, 0.5);
+
+		if (alpha < 0.05) return;
 		super.__enterFrame(t);
-		debugAlpha = CoolUtil.fpsLerp(debugAlpha, debugMode ? 1 : 0, 1);
 		bgSprite.alpha = debugAlpha * 0.5;
 
 		x = 10 + offset.x;
