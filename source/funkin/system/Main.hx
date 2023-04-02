@@ -49,6 +49,8 @@ class Main extends Sprite
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
+	public static var game:FunkinGame;
+
 	public static var time:Int = 0;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
@@ -102,7 +104,8 @@ class Main extends Sprite
 		}
 
 
-		addChild(new FunkinGame(gameWidth, gameHeight, MainState, zoom, framerate, framerate, skipSplash, startFullscreen));
+		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, zoom, framerate, framerate, skipSplash, startFullscreen));
+		game.scaleX = game.scaleY = stage.window.scale;
 
 		#if !mobile
 		addChild(new funkin.system.framerate.Framerate());
