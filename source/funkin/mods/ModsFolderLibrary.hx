@@ -37,7 +37,7 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 	}
 
 	public override function getAudioBuffer(id:String):AudioBuffer {
-		if (!exists(id, "SOUND")) 
+		if (!exists(id, "SOUND"))
 			return null;
 		var path = getAssetPath();
 		editedTimes[id] = FileSystem.stat(path).mtime.getTime();
@@ -101,7 +101,7 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 		return [];
 	}
 
-	public override function exists(asset:String, type:String):Bool { 
+	public override function exists(asset:String, type:String):Bool {
 		if(!__parseAsset(asset)) return false;
 		return FileSystem.exists(getAssetPath());
 	}

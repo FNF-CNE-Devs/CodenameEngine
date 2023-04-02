@@ -125,8 +125,11 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 		for(k=>e in assets) {
 			if (k.toLowerCase().startsWith(_parsedAsset)) {
 				var fileName = k.substr(_parsedAsset.length);
-				if (fileName.contains("/"))
-					content.push(fileName.split("/")[0]);
+				if (fileName.contains("/")) {
+					var s = fileName.split("/")[0];
+					if (!content.contains(s))
+						content.push(s);
+				}
 			}
 		}
 		return content;
