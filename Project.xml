@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Friday Night Funkin' - Codename Engine" allow-high-dpi="true" file="CodenameEngine" packageName="com.yoshman29.codenameengine" package="com.yoshman29.codenameengine" main="funkin.system.Main" version="0.1.0" company="Yoshman29" />
+	<app title="Friday Night Funkin' - Codename Engine" file="CodenameEngine" packageName="com.yoshman29.codenameengine" package="com.yoshman29.codenameengine" main="funkin.system.Main" version="0.1.0" company="Yoshman29" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
@@ -28,6 +28,7 @@
 
 	<!--Desktop-specific-->
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
+	<window if="mac" allow-high-dpi="true" />
 
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
