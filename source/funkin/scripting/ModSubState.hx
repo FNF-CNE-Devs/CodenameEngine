@@ -1,7 +1,10 @@
 package funkin.scripting;
 
 class ModSubState extends MusicBeatSubstate {
-	public function new(scriptName:String) {
-		super(true, scriptName);
+	public static var lastName:String = null;
+	public function new(stateName:String) {
+		if (stateName != null)
+			lastName = stateName;
+		super(true, lastName);
 	}
 }
