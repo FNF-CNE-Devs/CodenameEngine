@@ -60,8 +60,7 @@ class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 			return null;
 		var path = getAssetPath();
 		editedTimes[id] = FileSystem.stat(path).mtime.getTime();
-		var e = Font.fromFile(path);
-		return e;
+		return ModsFolder.registerFont(Font.fromFile(path));
 	}
 
 	public override function getImage(id:String):Image {

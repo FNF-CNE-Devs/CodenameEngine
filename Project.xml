@@ -143,8 +143,7 @@
 	<haxedef name="DISCORD_RPC" if="DISCORD_RPC" />
 	<haxedef name="SHOW_BUILD_ON_FPS" if="SHOW_BUILD_ON_FPS" />
 	<haxedef name="SOFTCODED_CLASSES" if="SOFTCODED_CLASSES" />
-	
-	<haxeflag name="--macro" value="funkin.macros.StdDeprecationsRemover.init()" />
+
 	<!-- _______________________________ Libraries ______________________________ -->
 
 

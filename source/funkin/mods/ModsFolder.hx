@@ -10,6 +10,9 @@ import openfl.utils.AssetLibrary;
 import flixel.graphics.FlxGraphic;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
+import lime.text.Font;
+import openfl.text.Font as OpenFLFont;
+
 #if MOD_SUPPORT
 import sys.FileSystem;
 #end
@@ -89,6 +92,14 @@ class ModsFolder {
 		assets.assets = [];
 
 		return AssetLibrary.fromManifest(assets);
+	}
+
+	public static function registerFont(font:Font) {
+		var openflFont = new OpenFLFont();
+		@:privateAccess
+		openflFont.__fromLimeFont(font);
+		OpenFLFont.registerFont(openflFont);
+		return font;
 	}
 
 	public static function prepareModLibrary(libName:String, lib:ModsAssetLibrary, force:Bool = false) {

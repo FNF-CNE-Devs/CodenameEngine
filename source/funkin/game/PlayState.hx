@@ -1044,7 +1044,7 @@ class PlayState extends MusicBeatState
 		// accuracyTxt.addFormat(accFormat, accuracyTxt.text.length - rating.rating.length, accuracyTxt.text.length);
 
 
-		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
+		if (controls.PAUSE && startedCountdown && canPause)
 			pauseGame();
 
 		if (canAccessDebugMenus) {

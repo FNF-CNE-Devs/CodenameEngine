@@ -88,16 +88,17 @@ class Assets
 		@usage		var bitmap = new Bitmap (Assets.getBitmapData ("image.png"));
 		@param	id		The ID or asset path for the bitmap
 		@param	useCache		(Optional) Whether to allow use of the asset cache (Default: true)
+		@param	useCache		Whenever the image should be immediately pushed to GPU.
 		@return		A new BitmapData object
 	**/
-	public static function getBitmapData(id:String, useCache:Bool = true):BitmapData
+	public static function getBitmapData(id:String, useCache:Bool = true, pushToGPU:Bool = true):BitmapData
 	{
 		#if (lime && tools && !display)
 		if (useCache && cache.enabled && cache.hasBitmapData(id))
 		{
 			var bitmapData = cache.getBitmapData(id);
 
-			if (isValidBitmapData(bitmapData))
+			if (isValidBitmapData(bitmapData) && (pushToGPU || bitmapData.readable))
 			{
 				return bitmapData;
 			}
@@ -111,7 +112,7 @@ class Assets
 			var bitmapData = image.src;
 			#else
 			var bitmapData:BitmapData = null;
-			if (!Main.forceGPUOnlyBitmapsOff && Options.gpuOnlyBitmaps) {
+			if (pushToGPU && !Main.forceGPUOnlyBitmapsOff && Options.gpuOnlyBitmaps) {
 				bitmapData = new OptimizedBitmapData(0, 0, true, 0);
 				bitmapData.__fromImage(image);
 			} else {

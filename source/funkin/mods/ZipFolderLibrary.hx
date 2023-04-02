@@ -58,14 +58,7 @@ class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
 	}
 	public override function getFont(id:String):Font {
 		__parseAsset(id);
-		var font = Font.fromBytes(unzip(assets[_parsedAsset]));
-
-		var openflFont = new OpenFLFont();
-		@:privateAccess
-		openflFont.__fromLimeFont(font);
-		OpenFLFont.registerFont(openflFont);
-
-		return font;
+		return ModsFolder.registerFont(Font.fromBytes(unzip(assets[_parsedAsset])));
 	}
 	public override function getImage(id:String):Image {
 		__parseAsset(id);
