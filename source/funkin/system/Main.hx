@@ -41,6 +41,9 @@ class Main extends Sprite
 	public static var forceGPUOnlyBitmapsOff:Bool = false;
 
 	public static var scaleMode:FunkinRatioScaleMode;
+	#if !mobile
+	public static var framerateSprite:funkin.system.framerate.Framerate;
+	#end
 
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
@@ -103,12 +106,11 @@ class Main extends Sprite
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
 
-
-		stage.scaleX = stage.scaleY = stage.window.scale; 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, zoom, framerate, framerate, skipSplash, startFullscreen));
 
 		#if !mobile
-		addChild(new funkin.system.framerate.Framerate());
+		addChild(framerateSprite = new funkin.system.framerate.Framerate());
+		framerateSprite = stage.window.scale;
 		SystemInfo.init();
 		#end
 	}
