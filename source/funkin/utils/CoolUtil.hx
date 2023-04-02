@@ -1,5 +1,6 @@
 package funkin.utils;
 
+import flixel.tweens.FlxTween;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.system.FlxSound;
 import funkin.system.Conductor;
@@ -189,7 +190,7 @@ class CoolUtil
 
 	/**
 	 * Plays the main menu theme.
-	 * @param fadeIn 
+	 * @param fadeIn
 	 */
 	public static function playMenuSong(fadeIn:Bool = false) {
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
@@ -276,7 +277,7 @@ class CoolUtil
 	 * ` `
 	 * `test2`
 	 * will return `["test1", "test2"]`
-	 * @param path 
+	 * @param path
 	 * @return Array<String>
 	 */
 	public static function coolTextFile(path:String):Array<String>
@@ -542,8 +543,11 @@ class CoolUtil
 		spr.alpha = 1;
 		spr.visible = true;
 		spr.active = true;
+		spr.acceleration.set();
+		spr.drag.set();
 		spr.antialiasing = FlxSprite.defaultAntialiasing;
 		spr.rotOffset.set();
+		FlxTween.cancelTweensOf(spr);
 	}
 
 	/**
@@ -576,7 +580,7 @@ class CoolUtil
 
 	/**
 	 * Opens an URL in the browser.
-	 * @param url 
+	 * @param url
 	 */
 	public static function openURL(url:String) {
 		#if linux
@@ -598,8 +602,8 @@ class CoolUtil
 
 	/**
 	 * Equivalent of `Math.max`, except doesn't require a Int -> Float -> Int conversion.
-	 * @param p1 
-	 * @param p2 
+	 * @param p1
+	 * @param p2
 	 * @return return p1 < p2 ? p2 : p1
 	 */
 	public static inline function maxInt(p1:Int, p2:Int)
