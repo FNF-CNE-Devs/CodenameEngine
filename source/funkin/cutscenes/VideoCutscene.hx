@@ -1,5 +1,6 @@
 package funkin.cutscenes;
 
+import flixel.util.FlxColor;
 import haxe.io.Path;
 import flixel.addons.display.FlxBackdrop;
 #if sys
@@ -61,6 +62,7 @@ class VideoCutscene extends Cutscene {
 		bg.visible = false;
 
 		subtitle = new FunkinText(0, FlxG.height * 0.875, 0, "", 20);
+		subtitle.alignment = CENTER;
 		subtitle.visible = false;
 
 		if (localPath.startsWith("[ZIP]")) {
@@ -125,7 +127,8 @@ class VideoCutscene extends Cutscene {
 
 						subtitles.push({
 							subtitle: sNode.innerData,
-							time: time * 1000
+							time: time * 1000,
+							color: sNode.has.color ? CoolUtil.getColorFromDynamic(sNode.att.color).getDefault(0xFFFFFFFF) : 0xFFFFFFFF
 						});
 					}
 				}
@@ -160,6 +163,7 @@ class VideoCutscene extends Cutscene {
 	public function setSubtitle(sub:CutsceneSubtitle) {
 		if (bg.visible = subtitle.visible = (sub.subtitle.length > 0)) {
 			subtitle.text = sub.subtitle;
+			subtitle.color = sub.color;
 			subtitle.screenCenter(X);
 			bg.scale.set(subtitle.width + 8, subtitle.height + 8);
 			bg.updateHitbox();
@@ -176,4 +180,5 @@ class VideoCutscene extends Cutscene {
 typedef CutsceneSubtitle = {
 	var time:Float; // time in ms
 	var subtitle:String; // subtitle text
+	var color:FlxColor;
 }
