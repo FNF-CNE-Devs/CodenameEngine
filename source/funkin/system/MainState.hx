@@ -17,7 +17,7 @@ class MainState extends FlxState {
 		if (!initiated)
 			Main.loadGameSettings();
 		initiated = true;
-		
+
 		#if sys
 		CoolUtil.deleteFolder('./.temp/'); // delete temp folder
 		#end
@@ -27,7 +27,7 @@ class MainState extends FlxState {
 		FlxG.sound.destroy(true);
 
 		Paths.assetsTree.reset();
-		
+
 		#if MOD_SUPPORT
 		if (ModsFolder.currentModFolder != null)
 			Paths.assetsTree.addLibrary(ModsFolder.loadModLib('${ModsFolder.modsPath}${ModsFolder.currentModFolder}'));
