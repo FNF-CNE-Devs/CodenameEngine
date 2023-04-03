@@ -41,6 +41,8 @@ class VideoCutscene extends Cutscene {
 	public override function create() {
 		super.create();
 
+		// TODO: get vlc to stop autoloading those goddamn subtitles (use different file ext??)
+
 		cutsceneCamera = new FlxCamera();
 		cutsceneCamera.bgColor = 0;
 		FlxG.cameras.add(cutsceneCamera, false);
@@ -97,45 +99,64 @@ class VideoCutscene extends Cutscene {
 	}
 
 	public function parseSubtitles() {
-		var subtitlesPath = '${Path.withoutExtension(path)}.xml';
-		trace(subtitlesPath);
+		var subtitlesPath = '${Path.withoutExtension(path)}.srt';
 
 		if (Assets.exists(subtitlesPath)) {
-			// subtitles found
-			var subtitleData:Access = null;
-			try {
-				subtitleData = new Access(Xml.parse(Assets.getText(subtitlesPath)));
-			} catch(e) {
-				Logs.trace('Subtitles XML couldn\'t be parsed: ${e}', ERROR, RED);
-			}
+			var text = Assets.getText('$subtitlesPath').split("\n");
+			while(text.length > 0) {
+				var head = text.shift();
+				if (head == null || head.trim() == "")
+					continue; // no head (EOF or empty line), skipping
+				if (Std.parseInt(head) == null)
+					continue; // invalid index, skipping
 
-			if (subtitleData != null) {
-				// subtitles parsed correctly, cycling
-				for(node in subtitleData.nodes.subtitles) {
-					for(sNode in node.nodes.subtitle) {
-						if (!sNode.has.time) continue;
+				var id = head;
+				var time = text.shift();
+				if (time == null) continue; // no time (EOF), skipping
+				var arrowIndex = time.indexOf('-->');
+				if (arrowIndex < 0) continue; // no -->, skipping
+				var beginTime = splitTime(time.substr(0, arrowIndex).trim());
+				var endTime = splitTime(time.substr(arrowIndex + 3).trim());
+				if (beginTime < 0 || endTime < 0) continue; // invalid timestamps
 
-						var timeSplit:Array<Null<Float>> = [for(e in sNode.att.time.split(":")) Std.parseFloat(e)];
-						var multipliers:Array<Float> = [1, 60, 3600, 86400]; // no way a cutscene will last longer than days
-						var time:Float = 0;
-
-						for(k=>i in timeSplit) {
-							var mul = multipliers[timeSplit.length - 1 - k];
-							if (i != null)
-								time += i * mul;
-						}
-
-						subtitles.push({
-							subtitle: sNode.innerData,
-							time: time * 1000,
-							color: sNode.has.color ? CoolUtil.getColorFromDynamic(sNode.att.color).getDefault(0xFFFFFFFF) : 0xFFFFFFFF
-						});
-					}
+				var subtitleText:Array<String> = [];
+				var t:String = text.shift();
+				while(t != null && t.trim() != "") {
+					subtitleText.push(t);
+					t = text.shift();
 				}
+				if (subtitleText.length <= 0) continue; // empty subtitle, skipping
+				var lastSub = subtitles.last();
+				if (lastSub != null && lastSub.subtitle == "" && lastSub.time > beginTime)
+					subtitles.pop(); // remove last subtitle auto reset to prevent bugs
+				subtitles.push({
+					subtitle: subtitleText.join("."),
+					time: beginTime * 1000,
+					color: 0xFFFFFFFF // todo
+				});
+				subtitles.push({
+					subtitle: "",
+					time: endTime * 1000,
+					color: 0xFFFFFFFF
+				});
 			}
 		}
 
 		trace(subtitles);
+	}
+
+	public static function splitTime(str:String):Float {
+		if (str == null || str.trim() == "") return -1;
+		var multipliers:Array<Float> = [1, 60, 3600, 86400]; // no way a cutscene will last longer than days
+		var timeSplit:Array<Null<Float>> = [for(e in str.split(":")) Std.parseFloat(e.replace(",", "."))];
+		var time:Float = 0;
+
+		for(k=>i in timeSplit) {
+			var mul = multipliers[timeSplit.length - 1 - k];
+			if (i != null)
+				time += i * mul;
+		}
+		return time;
 	}
 
 	public override function update(elapsed:Float) {
