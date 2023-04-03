@@ -24,6 +24,7 @@ class Conductor
 	/**
 	 * FlxSignals
 	 */
+	public static var onMeasureHit:FlxTypedSignal<Int->Void> = new FlxTypedSignal();
 	public static var onBeatHit:FlxTypedSignal<Int->Void> = new FlxTypedSignal();
 	public static var onStepHit:FlxTypedSignal<Int->Void> = new FlxTypedSignal();
 	public static var onBPMChange:FlxTypedSignal<Float->Void> = new FlxTypedSignal();
@@ -37,7 +38,7 @@ class Conductor
 	 * Current Crochet (time per beat), in milliseconds.
 	 */
 	public static var crochet:Float = ((60 / bpm) * 1000); // beats in milliseconds
-	
+
 	/**
 	 * Current StepCrochet (time per step), in milliseconds.
 	 */
@@ -47,51 +48,51 @@ class Conductor
 	 * Number of beats per mesure (top number in time signature). Defaults to 4.
 	 */
 	public static var beatsPerMesure:Float = 4;
-	
+
 	/**
 	 * Number of steps per beat (bottom number in time signature). Defaults to 4.
 	 */
 	public static var stepsPerBeat:Float = 4;
 
-	
+
 	/**
 	 * Current position of the song, in milliseconds.
 	 */
 	public static var songPosition:Float;
 
-	
+
 	/**
 	 * Current step
 	 */
 	public static var curStep:Int = 0;
-	
-	 /**
-	  * Current beat
-	  */
+
+	/**
+	 * Current beat
+	 */
 	public static var curBeat:Int = 0;
-	
-	 /**
-	  * Current measure
-	  */
+
+	/**
+	 * Current measure
+	 */
 	public static var curMeasure:Int = 0;
- 
-	 
-	 /**
-	  * Current step, as a `Float` (ex: 4.94, instead of 4)
-	  */
+
+
+	/**
+	 * Current step, as a `Float` (ex: 4.94, instead of 4)
+	 */
 	public static var curStepFloat:Float = 0;
- 
-	 /**
-	  * Current beat, as a `Float` (ex: 1.24, instead of 1)
-	  */
+
+	/**
+	 * Current beat, as a `Float` (ex: 1.24, instead of 1)
+	 */
 	public static var curBeatFloat:Float = 0;
- 
-	 /**
-	  * Current measure, as a `Float` (ex: 1.24, instead of 1)
-	  */
+
+	/**
+	 * Current measure, as a `Float` (ex: 1.24, instead of 1)
+	 */
 	public static var curMeasureFloat:Float = 0;
 
-	
+
 	@:dox(hide) public static var lastSongPos:Float = 0;
 	@:dox(hide) public static var offset:Float = 0;
 
@@ -189,7 +190,7 @@ class Conductor
 				if (Conductor.songPosition >= change.songTime)
 					__lastChange = change;
 			}
-	
+
 			if (__lastChange.bpm > 0 && bpm != __lastChange.bpm) changeBPM(__lastChange.bpm);
 
 			curStepFloat = __lastChange.stepTime + ((Conductor.songPosition - __lastChange.songTime) / Conductor.stepCrochet);
@@ -213,6 +214,11 @@ class Conductor
 				if (__updateBeat && curBeat > oldBeat) {
 					for(i in oldBeat...curBeat) {
 						onBeatHit.dispatch(i+1);
+					}
+				}
+				if (__updateMeasure && curMeasure > oldMeasure) {
+					for(i in oldMeasure...curMeasure) {
+						onMeasureHit.dispatch(i+1);
 					}
 				}
 
@@ -254,7 +260,6 @@ class Conductor
 
 		Conductor.beatsPerMesure = beatsPerMesure;
 		Conductor.stepsPerBeat = stepsPerBeat;
-		
 
 		onBPMChange.dispatch(bpm);
 	}

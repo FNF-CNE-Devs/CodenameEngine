@@ -15,8 +15,8 @@ class CommandLineHandler {
 					#if MOD_SUPPORT
 					Sys.println("-mod [mod name]    | Load a specific mod");
 					Sys.println("-modfolder [path]  | Sets the mod folder path");
-					Sys.println("-nogpubitmap       | Forces GPU only bitmaps off");
 					#end
+					Sys.println("-nogpubitmap       | Forces GPU only bitmaps off");
 					Sys.exit(0);
 				#if MOD_SUPPORT
 				case "-m" | "-mod" | "-currentmod":

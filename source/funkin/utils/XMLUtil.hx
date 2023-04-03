@@ -93,6 +93,14 @@ class XMLUtil {
 				if (scroll != null) spr.scrollFactor.y = scroll;
 			}
 		}
+		if (node.has.skewx) {
+			var skew:Null<Float> = Std.parseFloat(node.att.skewx);
+			if (skew != null) spr.skew.x = skew;
+		}
+		if (node.has.skewy) {
+			var skew:Null<Float> = Std.parseFloat(node.att.skewy);
+			if (skew != null) spr.skew.y = skew;
+		}
 		if (node.has.antialiasing) spr.antialiasing = node.att.antialiasing == "true";
 		if (node.has.scale) {
 			var scale:Null<Float> = Std.parseFloat(node.att.scale);
