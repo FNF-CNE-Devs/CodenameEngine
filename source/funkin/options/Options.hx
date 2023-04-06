@@ -51,6 +51,8 @@ class Options
 
 	// CHARTER
 	public static var charterMetronomeEnabled:Bool = false;
+	public static var charterShowSections:Bool = true;
+	public static var charterShowBeats:Bool = true;
 
 	/**
 	 * PLAYER 1 CONTROLS

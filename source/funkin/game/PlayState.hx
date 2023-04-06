@@ -65,6 +65,10 @@ class PlayState extends MusicBeatState
 	 */
 	public static var fromMods:Bool = false;
 	/**
+	 * Whenever Charting Mode has been enabled for this song.
+	 */
+	public static var chartingMode:Bool = false;
+	/**
 	 * Whenever the song has been started with opponent mode on.
 	 */
 	public static var opponentMode:Bool = false;
@@ -1048,6 +1052,9 @@ class PlayState extends MusicBeatState
 			pauseGame();
 
 		if (canAccessDebugMenus) {
+			if (chartingMode && FlxG.keys.justPressed.SEVEN) {
+				FlxG.switchState(new funkin.editors.charter.Charter(SONG.meta.name, difficulty, false));
+			}
 			if (FlxG.keys.justPressed.F5) {
 				Logs.trace('Reloading scripts...', WARNING, YELLOW);
 				scripts.reload();

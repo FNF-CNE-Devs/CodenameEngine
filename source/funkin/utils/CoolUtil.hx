@@ -419,6 +419,7 @@ class CoolUtil
 		PlayState.storyPlaylist = [for(e in weekData.songs) e.name];
 		PlayState.isStoryMode = true;
 		PlayState.campaignScore = 0;
+		PlayState.chartingMode = false;
 		PlayState.opponentMode = PlayState.coopMode = false;
 		__loadSong(PlayState.storyPlaylist[0], difficulty);
 	}
@@ -434,6 +435,7 @@ class CoolUtil
 		PlayState.campaignScore = 0;
 		PlayState.isStoryMode = false;
 		PlayState.opponentMode = opponentMode;
+		PlayState.chartingMode = false;
 		PlayState.coopMode = coopMode;
 		__loadSong(name, difficulty);
 	}
