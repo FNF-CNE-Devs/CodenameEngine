@@ -272,6 +272,8 @@ class FreeplayState extends MusicBeatState
 			opponentMode = curCoopMode == 1;
 		}
 
+		if (songs[curSelected].difficulties.length <= 0) return;
+
 		var event = event("onSelect", EventManager.get(FreeplaySongSelectEvent).recycle(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty], opponentMode, coopMode));
 
 		if (event.cancelled) return;
@@ -299,20 +301,21 @@ class FreeplayState extends MusicBeatState
 		if (change == 0 && !force) return;
 
 		var curSong = songs[curSelected];
-		var event = event("onChangeDiff", EventManager.get(MenuChangeEvent).recycle(curDifficulty, FlxMath.wrap(curDifficulty + change, 0, curSong.difficulties.length-1), change));
+		var validDifficulties = curSong.difficulties.length > 0;
+		var event = event("onChangeDiff", EventManager.get(MenuChangeEvent).recycle(curDifficulty, validDifficulties ? FlxMath.wrap(curDifficulty + change, 0, curSong.difficulties.length-1) : 0, change));
 
 		if (event.cancelled) return;
 
 		curDifficulty = event.value;
 
 		#if !switch
-		intendedScore = Highscore.getScore(curSong.name, curSong.difficulties[curDifficulty]).score;
+		intendedScore = validDifficulties ? Highscore.getScore(curSong.name, curSong.difficulties[curDifficulty]).score : 0;
 		#end
 
 		if (curSong.difficulties.length > 1)
 			diffText.text = '< ${curSong.difficulties[curDifficulty]} >';
 		else
-			diffText.text = curSong.difficulties[curDifficulty];
+			diffText.text = validDifficulties ? curSong.difficulties[curDifficulty] : "-";
 	}
 
 	/**
