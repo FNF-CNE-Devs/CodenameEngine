@@ -26,22 +26,16 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			rMatrix.translate(-origin.x, -origin.y);
 			if (!showPivot && limb.name != "pivot") {
-				if (rotOffsetAngle != null && rotOffsetAngle != angle)
+				if (frameOffsetAngle != null && frameOffsetAngle != angle)
 				{
-					var angleOff = (-angle + rotOffsetAngle) * FlxAngle.TO_RAD;
+					var angleOff = (-angle + frameOffsetAngle) * FlxAngle.TO_RAD;
 					rMatrix.rotate(-angleOff);
-					if (useOffsetAsRotOffset)
-						rMatrix.translate(-offset.x, -offset.y);
-					else
-						rMatrix.translate(-rotOffset.x, -rotOffset.y);
+					rMatrix.translate(-frameOffset.x, -frameOffset.y);
 					rMatrix.rotate(angleOff);
 				}
 				else
 				{
-					if (useOffsetAsRotOffset)
-						rMatrix.translate(-offset.x, -offset.y);
-					else
-						rMatrix.translate(-rotOffset.x, -rotOffset.y);
+					rMatrix.translate(-frameOffset.x, -frameOffset.y);
 				}
 				rMatrix.scale(scale.x, scale.y);
 

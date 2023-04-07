@@ -62,51 +62,12 @@ class Main extends Sprite
 	public static var gameThreads:Array<Thread> = [];
 	#end
 
-	public static function main():Void
-	{
-		#if windows NativeAPI.setDarkMode(true); #end
-		Lib.current.addChild(instance = new Main());
-	}
-
 	public function new()
 	{
 		super();
+		#if windows NativeAPI.setDarkMode(true); #end
 
-		if (stage != null)
-		{
-			init();
-		}
-		else
-		{
-			addEventListener(Event.ADDED_TO_STAGE, init);
-		}
-	}
-
-	private function init(?E:Event):Void
-	{
-		if (hasEventListener(Event.ADDED_TO_STAGE))
-		{
-			removeEventListener(Event.ADDED_TO_STAGE, init);
-		}
-
-		setupGame();
-	}
-
-	private function setupGame():Void
-	{
-		var stageWidth:Int = Lib.current.stage.stageWidth;
-		var stageHeight:Int = Lib.current.stage.stageHeight;
-
-		if (zoom == -1)
-		{
-			var ratioX:Float = stageWidth / gameWidth;
-			var ratioY:Float = stageHeight / gameHeight;
-			zoom = Math.min(ratioX, ratioY);
-			gameWidth = Math.ceil(stageWidth / zoom);
-			gameHeight = Math.ceil(stageHeight / zoom);
-		}
-
-		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, zoom, framerate, framerate, skipSplash, startFullscreen));
+		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, framerate, framerate, skipSplash, startFullscreen));
 
 		#if !mobile
 		addChild(framerateSprite = new funkin.system.framerate.Framerate());

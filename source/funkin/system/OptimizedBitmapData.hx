@@ -36,9 +36,9 @@ class OptimizedBitmapData extends BitmapData {
 			readable = true;
 			this.image = null;
 
-			@:privateAccess
-			if (FlxG.bitmap.__doNotDelete)
-				MemoryUtil.clearMinor();
+			// @:privateAccess
+			// if (FlxG.bitmap.__doNotDelete)
+			// 	MemoryUtil.clearMinor();
 		}
 		#end
 	}

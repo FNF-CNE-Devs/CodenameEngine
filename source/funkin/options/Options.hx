@@ -123,7 +123,7 @@ class Options
 
 	public static function applySettings() {
 		applyKeybinds();
-		FlxG.game.stage.quality = (FlxG.forceNoAntialiasing = !antialiasing) ? LOW : BEST;
+		FlxG.game.stage.quality = (FlxG.enableAntialiasing = antialiasing) ? LOW : BEST;
 		FlxG.autoPause = autoPause;
 		FlxG.drawFramerate = FlxG.updateFramerate = framerate;
 	}

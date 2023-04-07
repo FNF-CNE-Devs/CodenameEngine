@@ -184,7 +184,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 			animateAtlas.scrollFactor = scrollFactor;
 			animateAtlas.scale = scale;
 			animateAtlas.offset = offset;
-			animateAtlas.rotOffset = rotOffset;
+			animateAtlas.frameOffset = frameOffset;
 			animateAtlas.x = x;
 			animateAtlas.y = y;
 			animateAtlas.angle = angle;
@@ -277,7 +277,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		}
 
 		var daOffset = getAnimOffset(AnimName);
-		rotOffset.set(daOffset.x, daOffset.y);
+		frameOffset.set(daOffset.x, daOffset.y);
 		daOffset.putWeak();
 
 		lastAnimContext = Context;

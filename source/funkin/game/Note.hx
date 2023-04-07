@@ -208,17 +208,17 @@ class Note extends FlxSprite
 
 			setPosition(__strum.x, __strum.y);
 
-			rotOffset.x -= pos.x / scale.x;
-			rotOffset.y -= pos.y / scale.y;
+			frameOffset.x -= pos.x / scale.x;
+			frameOffset.y -= pos.y / scale.y;
 
-			this.rotOffsetAngle = __noteAngle;
+			this.frameOffsetAngle = __noteAngle;
 
 			super.draw();
 
-			this.rotOffsetAngle = 0;
+			this.frameOffsetAngle = 0;
 
-			rotOffset.x += pos.x / scale.x;
-			rotOffset.y += pos.y / scale.y;
+			frameOffset.x += pos.x / scale.x;
+			frameOffset.y += pos.y / scale.y;
 
 			setPosition(pos.x, pos.y);
 			pos.put();

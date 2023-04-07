@@ -2,7 +2,7 @@ package funkin.utils;
 
 import funkin.scripting.events.DiscordPresenceUpdateEvent;
 import haxe.Json;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 #if DISCORD_RPC
 import discord_rpc.DiscordRpc;
 import sys.thread.Thread;

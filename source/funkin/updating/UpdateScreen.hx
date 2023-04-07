@@ -4,7 +4,7 @@ import funkin.shaders.CustomShader;
 import funkin.ui.FunkinText;
 import funkin.menus.TitleState;
 import flixel.math.FlxRect;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.ui.FlxBar;
 import funkin.updating.UpdateUtil.UpdateCheckCallback;
 

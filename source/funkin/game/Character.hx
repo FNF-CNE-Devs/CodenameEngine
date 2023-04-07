@@ -292,7 +292,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			__drawingShadowFrame = true;
 
 			var oldFrame = _frame;
-			var oldPos = FlxPoint.get(rotOffset.x, rotOffset.y);
+			var oldPos = FlxPoint.get(frameOffset.x, frameOffset.y);
 			
 			__oldColorTransform.copyColorTransform(colorTransform);
 			
@@ -307,11 +307,11 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 			_frame = shadowFrame.frame;
 			var o = getAnimOffset(shadowFrame.anim);
-			rotOffset.set(o.x, o.y);
+			frameOffset.set(o.x, o.y);
 			super.draw();
 
 			_frame = oldFrame;
-			rotOffset.set(oldPos.x, oldPos.y);
+			frameOffset.set(oldPos.x, oldPos.y);
 			
 			colorTransform.copyColorTransform(__oldColorTransform);
 

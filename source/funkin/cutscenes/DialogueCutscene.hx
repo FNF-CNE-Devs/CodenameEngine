@@ -1,6 +1,6 @@
 package funkin.cutscenes;
 
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import funkin.cutscenes.dialogue.*;
 import haxe.xml.Access;
 

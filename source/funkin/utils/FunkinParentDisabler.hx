@@ -1,6 +1,6 @@
 package funkin.utils;
 
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 
@@ -32,8 +32,8 @@ class FunkinParentDisabler extends FlxBasic {
 			FlxTimer.globalManager._timers = [];
 
 			// cameras
-			__cameras = [for(c in FlxG.cameras.list) if (c.followActive) c];
-			for(c in __cameras) c.followActive = false;
+			__cameras = [for(c in FlxG.cameras.list) if (c.followEnabled) c];
+			for(c in __cameras) c.followEnabled = false;
 
 			// sounds
 			__sounds = [for(s in FlxG.sound.list) if (s.playing) s];
@@ -54,7 +54,7 @@ class FunkinParentDisabler extends FlxBasic {
 				for(t in __tweens) FlxTween.globalManager._tweens.push(t);
 				for(t in __timers) FlxTimer.globalManager._timers.push(t);
 			}
-			for(c in __cameras) c.followActive = true;
+			for(c in __cameras) c.followEnabled = true;
 			for(s in __sounds) s.play();
 		}
 	}

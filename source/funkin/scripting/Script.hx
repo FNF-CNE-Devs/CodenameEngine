@@ -37,7 +37,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 			"state"			 => flixel.FlxG.state,
 			"FlxEase"		   => flixel.tweens.FlxEase,
 			"FlxTween"		  => flixel.tweens.FlxTween,
-			"FlxSound"		  => flixel.system.FlxSound,
+			"FlxSound"		  => flixel.sound.FlxSound,
 			"FlxAssets"		 => flixel.system.FlxAssets,
 			"FlxMath"		   => flixel.math.FlxMath,
 			"FlxGroup"		  => flixel.group.FlxGroup,

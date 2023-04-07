@@ -11,18 +11,33 @@
       "version": null
     },
     {
-      "name": "flixel-yc29",
+      "name": "flixel-addons",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "spinehaxe",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "flixel",
       "type": "git",
-      "dir": "flixel",
-      "ref": "master",
-      "url": "https://www.github.com/YoshiCrafter29/flixel"
+      "ref": "dev",
+      "url": "https://www.github.com/FNF-CNE-Devs/flixel"
+    },
+    {
+      "name": "flixel-addons",
+      "type": "git",
+      "ref": "dev",
+      "url": "https://www.github.com/FNF-CNE-Devs/flixel-addons"
     },
     {
       "name": "flxanimate",
       "type": "git",
       "dir": "flxanimate",
       "ref": "master",
-      "url": "https://github.com/YoshiCrafter29/flxanimate/"
+      "url": "https://github.com/FNF-CNE-Devs/flxanimate/"
     },
     {
       "name": "format",
@@ -33,8 +48,8 @@
       "name": "hscript-improved",
       "type": "git",
       "dir": "hscript-improved",
-      "ref": "master",
-      "url": "https://www.github.com/YoshiCrafter29/hscript-improved"
+      "ref": "custom-classes",
+      "url": "https://www.github.com/FNF-CNE-Devs/hscript-improved"
     },
     {
       "name": "hxCodec",

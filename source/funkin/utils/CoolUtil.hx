@@ -2,9 +2,9 @@ package funkin.utils;
 
 import flixel.tweens.FlxTween;
 import flixel.system.frontEnds.SoundFrontEnd;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import funkin.system.Conductor;
-import flixel.system.FlxSoundGroup;
+import flixel.sound.FlxSoundGroup;
 import animateatlas.AtlasFrameMaker;
 import haxe.Json;
 import funkin.menus.StoryMenuState.WeekData;
@@ -571,7 +571,7 @@ class CoolUtil
 		spr.acceleration.set();
 		spr.drag.set();
 		spr.antialiasing = FlxSprite.defaultAntialiasing;
-		spr.rotOffset.set();
+		spr.frameOffset.set();
 		FlxTween.cancelTweensOf(spr);
 	}
 

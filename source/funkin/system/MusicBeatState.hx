@@ -9,7 +9,6 @@ import funkin.scripting.events.*;
 import funkin.scripting.Script;
 import funkin.interfaces.IBeatReceiver;
 import funkin.system.Conductor;
-import flixel.addons.ui.FlxUIState;
 import funkin.options.PlayerSettings;
 
 class MusicBeatState extends FlxTransitionableState implements IBeatReceiver

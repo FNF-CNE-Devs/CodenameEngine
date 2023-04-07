@@ -1,7 +1,7 @@
 package funkin.editors.charter;
 
 import flixel.input.keyboard.FlxKey;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.util.FlxSort;
 import flixel.math.FlxPoint;
 import funkin.editors.charter.CharterBackdrop.CharterBackdropDummy;

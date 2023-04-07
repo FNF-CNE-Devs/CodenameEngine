@@ -139,7 +139,6 @@
 	<!-- Comment this out to disable commit number on FPS -->
 	<define name="SHOW_BUILD_ON_FPS" />
 
-
 	<haxedef name="VIDEO_CUTSCENES" if="VIDEO_CUTSCENES" />
 	<haxedef name="UPDATE_CHECKING" if="UPDATE_CHECKING" />
 	<haxedef name="DISCORD_RPC" if="DISCORD_RPC" />
@@ -149,13 +148,13 @@
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
-
 	<haxelib name="hxCodec" if="VIDEO_CUTSCENES" />
 	<haxelib name="away3d" />
 	<haxelib name="format" />
 	<haxelib name="flxanimate" />
 
-	<haxelib name="flixel-yc29" rename="flixel" />
+	<haxelib name="flixel" />
+	<haxelib name="flixel-addons" />
 	<haxedev set='webgl' />
 
 	<haxelib name="hscript-improved" />
@@ -165,13 +164,13 @@
 
 	<haxelib name="hxcpp-debug-server" if="desktop debug"/>
 
-	<!-- _________________________________ HScript classes _______________________________ -->
-
+	<!-- _________________________________ Additional stuff _______________________________ -->
 
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
 		<haxeflag name="--macro" value="funkin.macros.ScriptsMacro.addAdditionalClasses()" />
 	</section>
+
 	<haxeflag name="--macro" value="exclude('funkin.updating')" unless="UPDATE_CHECKING"/>
 	<haxeflag name="--macro" value="exclude('funkin.multitasking')" unless="ALLOW_MULTITASKING"/>
 

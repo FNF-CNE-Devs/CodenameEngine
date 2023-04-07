@@ -105,7 +105,7 @@ class HiddenProcess {
 	}
 
 	public function exitCode(block:Bool = true):Null<Int> {
-		return NativeProcess.process_exit(p);
+		return NativeProcess.process_exit(p #if (haxe >= "4.3.0"), block #end);
 	}
 
 	public function close():Void {
