@@ -1,15 +1,23 @@
 package funkin.utils;
 
+import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 
 /**
- * Just add this in any substate to disable tweens, timers & camera movement from parent state.
+ * FlxBasic allowing you to disable those elements from the parent state while this substate is opened
+ * - Tweens
+ * - Camera Movement
+ * - Timers
+ * - Sounds
+ *
+ * To use, add `add(new FunkinParentDisabler());` after `super.create();` in your `create` function.
  */
 class FunkinParentDisabler extends FlxBasic {
 	var __tweens:Array<FlxTween>;
 	var __cameras:Array<FlxCamera>;
 	var __timers:Array<FlxTimer>;
+	var __sounds:Array<FlxSound>;
 	var __replaceUponDestroy:Bool;
 	public function new(replaceUponDestroy:Bool = true) {
 		super();
@@ -26,6 +34,10 @@ class FunkinParentDisabler extends FlxBasic {
 			// cameras
 			__cameras = [for(c in FlxG.cameras.list) if (c.followActive) c];
 			for(c in __cameras) c.followActive = false;
+
+			// sounds
+			__sounds = [for(s in FlxG.sound.list) if (s.playing) s];
+			for(s in __sounds) s.pause();
 		}
 	}
 
@@ -43,6 +55,7 @@ class FunkinParentDisabler extends FlxBasic {
 				for(t in __timers) FlxTimer.globalManager._timers.push(t);
 			}
 			for(c in __cameras) c.followActive = true;
+			for(s in __sounds) s.play();
 		}
 	}
 }
