@@ -1,6 +1,5 @@
 package funkin.options;
 
-import flixel.util.FlxDestroyUtil;
 class OptionsTree extends FlxTypedGroup<OptionsScreen> {
 	public var lastMenu:OptionsScreen;
 	public override function new() {

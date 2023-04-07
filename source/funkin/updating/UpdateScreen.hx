@@ -1,7 +1,6 @@
 package funkin.updating;
 
 import funkin.shaders.CustomShader;
-import flixel.util.FlxDestroyUtil;
 import funkin.ui.FunkinText;
 import funkin.menus.TitleState;
 import flixel.math.FlxRect;

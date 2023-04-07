@@ -9,7 +9,6 @@ import funkin.menus.StoryMenuState.WeekData;
 import funkin.ui.FunkinText;
 import flixel.group.FlxSpriteGroup;
 import funkin.scripting.Script;
-import flixel.util.FlxDestroyUtil;
 import funkin.scripting.ScriptPack;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
@@ -1463,7 +1462,7 @@ class PlayState extends MusicBeatState
 			if (event.showRating || (event.showRating == null && event.player && !note.isSustainNote))
 			{
 				var rating:FlxSprite = comboGroup.recycle(FlxSprite);
-				rating.resetSprite(-40, -60);
+				rating.resetSprite(comboGroup.x + -40, comboGroup.y + -60);
 				comboGroup.remove(rating, true);
 
 				songScore += score;
@@ -1474,7 +1473,7 @@ class PlayState extends MusicBeatState
 				rating.velocity.x -= FlxG.random.int(0, 10);
 
 				var comboSpr:FlxSprite = comboGroup.recycle(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}combo${event.ratingSuffix}'));
-				comboSpr.resetSprite(0, 0);
+				comboSpr.resetSprite(comboGroup.x, comboGroup.y);
 				comboGroup.remove(comboSpr, true);
 				comboSpr.acceleration.y = 600;
 				comboSpr.velocity.y -= 150;
@@ -1497,7 +1496,7 @@ class PlayState extends MusicBeatState
 					for (i in 0...separatedScore.length)
 					{
 						var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}num${separatedScore.charAt(i)}${event.ratingSuffix}'));
-						numScore.resetSprite((43 * i) - 90, 80);
+						numScore.resetSprite(comboGroup.x + (43 * i) - 90, comboGroup.y + 80);
 						comboGroup.remove(numScore, true);
 						numScore.antialiasing = event.numAntialiasing;
 						numScore.scale.set(event.numScale, event.numScale);

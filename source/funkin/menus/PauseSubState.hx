@@ -13,6 +13,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import funkin.options.keybinds.KeybindsOptions;
 import funkin.menus.StoryMenuState;
+import funkin.system.FunkinParentDisabler;
 
 class PauseSubState extends MusicBeatSubstate
 {
@@ -38,6 +39,8 @@ class PauseSubState extends MusicBeatSubstate
 	override function create()
 	{
 		super.create();
+
+		add(new FunkinParentDisabler());
 
 		pauseScript = Script.create(Paths.script(script));
 		pauseScript.setParent(this);

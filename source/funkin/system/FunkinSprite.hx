@@ -9,7 +9,6 @@ import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
 import funkin.interfaces.IBeatReceiver;
-import flixel.util.FlxDestroyUtil;
 
 @:enum
 abstract XMLAnimType(Int)

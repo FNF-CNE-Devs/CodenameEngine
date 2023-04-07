@@ -1,6 +1,5 @@
 package funkin.editors.ui;
 
-import flixel.util.FlxDestroyUtil;
 import flixel.math.FlxRect;
 import openfl.ui.MouseCursor;
 

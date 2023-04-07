@@ -19,6 +19,7 @@ import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
+import flixel.util.FlxDestroyUtil;
 
 import funkin.ui.Alphabet;
 import flixel.group.FlxGroup.FlxTypedGroup;

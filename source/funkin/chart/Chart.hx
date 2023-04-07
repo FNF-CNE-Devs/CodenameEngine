@@ -70,8 +70,6 @@ class Chart {
 				}
 			}
 		}
-		if (data.difficulties.length <= 0)
-			data.difficulties.push("CHART MISSING");
 
 		return data;
 	}

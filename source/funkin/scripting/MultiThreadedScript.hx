@@ -5,7 +5,6 @@ import sys.thread.Thread;
 #end
 
 import hscript.IHScriptCustomBehaviour;
-import flixel.util.FlxDestroyUtil;
 
 class MultiThreadedScript implements IFlxDestroyable implements IHScriptCustomBehaviour {
 	var thread:#if ALLOW_MULTITHREADING Thread #else Dynamic #end;
