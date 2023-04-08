@@ -19,7 +19,7 @@ class FunkinParentDisabler extends FlxBasic {
 	var __timers:Array<FlxTimer>;
 	var __sounds:Array<FlxSound>;
 	var __replaceUponDestroy:Bool;
-	public function new(replaceUponDestroy:Bool = true) {
+	public function new(replaceUponDestroy:Bool = false) {
 		super();
 		__replaceUponDestroy = replaceUponDestroy;
 		@:privateAccess {

@@ -47,6 +47,8 @@ class Charter extends UIState {
 	public var conductorFollowerSpr:FlxSprite;
 	public var topLimit:FlxSprite;
 
+	public var strumlineInfoBG:FlxSprite;
+
 	public var hitsound:FlxSound;
 	public var metronome:FlxSound;
 
@@ -55,7 +57,7 @@ class Charter extends UIState {
 	/**
 	 * ACTUAL CHART DATA
 	 */
-	public var strumLines:Array<CharterStrumline> = [];
+	public var strumLines:FlxTypedGroup<CharterStrumline> = new FlxTypedGroup<CharterStrumline>();
 	public var notesGroup:CharterNoteGroup = new CharterNoteGroup();
 
 	/**
@@ -327,6 +329,14 @@ class Charter extends UIState {
 		topLimit.color = 0xFF888888;
 		topLimit.blend = MULTIPLY;
 
+		strumlineInfoBG = new UISprite();
+		strumlineInfoBG.loadGraphic(Paths.image('editors/charter/strumline-info-bg'));
+		strumlineInfoBG.y = 23;
+		strumlineInfoBG.scrollFactor.set();
+
+		strumlineInfoBG.cameras = [charterCamera];
+		strumLines.cameras = [charterCamera];
+
 
 		// adds grid and notes so that they're ALWAYS behind the UI
 		add(gridBackdrop);
@@ -336,6 +346,8 @@ class Charter extends UIState {
 		add(topLimit);
 		add(conductorFollowerSpr);
 		add(selectionBox);
+		add(strumlineInfoBG);
+		add(strumLines);
 		// add the ui group
 		add(uiGroup);
 		// add the top menu last OUT of the ui group so that it stays on top
@@ -362,10 +374,7 @@ class Charter extends UIState {
 				notesGroup.add(n);
 			}
 
-			strumLines.push({
-				strumLine: strL,
-				hitsounds: true
-			});
+			strumLines.add(new CharterStrumline(strL));
 		}
 	}
 
@@ -509,9 +518,9 @@ class Charter extends UIState {
 
 		super.update(elapsed);
 
-		if (gridBackdrop.strumlinesAmount != (gridBackdrop.strumlinesAmount = strumLines.length)) {
+		if (gridBackdrop.strumlinesAmount != (gridBackdrop.strumlinesAmount = strumLines.length))
 			updateDisplaySprites();
-		}
+
 		sectionSeparator.spacing.y = (10 * Conductor.beatsPerMesure * Conductor.stepsPerBeat) - 1;
 		beatSeparator.spacing.y = (20 * Conductor.stepsPerBeat) - 1;
 
@@ -560,6 +569,16 @@ class Charter extends UIState {
 		topLimit.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, Math.ceil(FlxG.height / charterCamera.zoom));
 		topLimit.updateHitbox();
 		topLimit.y = -topLimit.height;
+
+		strumlineInfoBG.scale.set(FlxG.width / charterCamera.zoom, 1);
+		strumlineInfoBG.updateHitbox();
+		strumlineInfoBG.screenCenter(X);
+
+		for(id=>str in strumLines.members) {
+			if (str == null) continue;
+			str.x = id * 40 * 4;
+			str.y = strumlineInfoBG.y;
+		}
 	}
 
 	var zoom:Float = 0;
@@ -731,7 +750,7 @@ class Charter extends UIState {
 
 	inline function _note_subtractsustain(t)
 		changeNoteSustain(-1);
-	
+
 	#end
 
 	function changeNoteSustain(change:Float) {
@@ -779,7 +798,7 @@ class Charter extends UIState {
 	}
 
 	public inline function hitsoundsEnabled(id:Int)
-		return strumLines[Std.int(id / 4)] != null && strumLines[Std.int(id / 4)].hitsounds;
+		return strumLines.members[Std.int(id / 4)] != null && strumLines.members[Std.int(id / 4)].hitsounds;
 }
 
 enum CharterChange {
@@ -791,11 +810,6 @@ enum CharterChange {
 
 enum CharterCopyboardObject {
 	CNote(step:Float, id:Int, susLength:Float, type:Int);
-}
-
-typedef CharterStrumline = {
-	var strumLine:ChartStrumLine;
-	var hitsounds:Bool;
 }
 
 typedef NoteSustainChange = {

@@ -25,10 +25,9 @@ class UITopMenu extends UISliceSprite {
 			anyMenuOpened = true;
 			break;
 		}
-		
+
 		super.update(elapsed);
 
-		
 		bWidth = FlxG.width;
 	}
 }
@@ -39,7 +38,7 @@ class UITopMenuButton extends UISliceSprite {
 	public var parent:UITopMenu;
 
 	public var curMenu:UIContextMenu = null;
-	
+
 	public function new(x:Float, y:Float, parent:UITopMenu, label:String, contextMenu:Array<UIContextMenuOption>) {
 		super(x, y, 0, 23, "editors/ui/menu-item");
 		this.contextMenu = contextMenu;
@@ -48,12 +47,12 @@ class UITopMenuButton extends UISliceSprite {
 
 		this.label = new UIText(4, 0, 0, label);
 		this.label.alignment = CENTER;
-		bWidth = this.label.frameWidth + 8;
+		bWidth = Std.int(this.label.fieldWidth = this.label.frameWidth + 8);
 		members.push(this.label);
 	}
 
 	public override function update(elapsed:Float) {
-		label.follow(this, 4, Std.int((bHeight - label.height) / 2));
+		label.follow(this, 0, Std.int((bHeight - label.height) / 2));
 		super.update(elapsed);
 
 		var opened = curMenu.contextMenuOpened();
@@ -67,10 +66,15 @@ class UITopMenuButton extends UISliceSprite {
 			if (curMenu.contextMenuOpened()) {
 				UIState.state.curContextMenu.preventOutOfBoxClickDeletion();
 			} else {
-				if (parent.anyMenuOpened || FlxG.mouse.justReleased) {
-					curMenu = UIState.state.openContextMenu(contextMenu, null, x, y + bHeight);
+				if ((parent != null && parent.anyMenuOpened) || FlxG.mouse.justReleased) {
+					openContextMenu();
 				}
 			}
 		}
+	}
+
+	public function openContextMenu() {
+		var screenPos = getScreenPosition(null, __lastDrawCameras[0] == null ? FlxG.camera : __lastDrawCameras[0]);
+		curMenu = UIState.state.openContextMenu(contextMenu, null, screenPos.x, screenPos.y + bHeight);
 	}
 }

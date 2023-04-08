@@ -11,7 +11,7 @@ class UISliceSprite extends UISprite {
 
 	public function new(x:Float, y:Float, w:Int, h:Int, path:String) {
 		super(x, y);
-		
+
 		frames = CoolUtil.loadFrames(Paths.image(path));
 		resize(w, h);
 	}
@@ -33,7 +33,7 @@ class UISliceSprite extends UISprite {
 	public override function draw() {
 		var x:Float = this.x;
 		var y:Float = this.y;
-		
+
 		var topleft:FlxFrame = frames.frames[framesOffset];
 		var top:FlxFrame = frames.frames[framesOffset + 1];
 		var topright:FlxFrame = frames.frames[framesOffset + 2];
@@ -50,7 +50,7 @@ class UISliceSprite extends UISprite {
 			setPosition(x, y);
 			__setSize(topleft.frame.width, topleft.frame.height);
 			super.drawSuper();
-	
+
 			// TOP
 			if (bWidth > topleft.frame.width + topright.frame.width) {
 				frame = top;
@@ -71,7 +71,7 @@ class UISliceSprite extends UISprite {
 				setPosition(x, y + top.frame.height);
 				__setSize(middleleft.frame.width, bHeight - topleft.frame.height - bottomleft.frame.height);
 				super.drawSuper();
-		
+
 				if (bWidth > middleleft.frame.width + middleright.frame.width) {
 					// MIDDLE
 					frame = middle;
@@ -92,7 +92,7 @@ class UISliceSprite extends UISprite {
 			setPosition(x, y + bHeight - bottom.frame.height);
 			__setSize(bottomleft.frame.width, bottomleft.frame.height);
 			super.drawSuper();
-	
+
 			if (bWidth > bottomleft.frame.width + bottomright.frame.width) {
 				// BOTTOM
 				frame = bottom;
