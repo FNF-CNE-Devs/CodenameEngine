@@ -390,13 +390,13 @@ class Charter extends UIState {
 	 * NOTE AND CHARTER GRID LOGIC HERE
 	 */
 	#if REGION
-	var selectionBoxEnabled:Bool = false;
+	var gridActionType:CharterGridActionType = NONE;
 	var dragStartPos:FlxPoint = new FlxPoint();
 
 	public function updateNoteLogic(elapsed:Float) {
 		notesGroup.forEach(function(n) {
 			n.selected = false;
-			if (n.hovered && !selectionBoxEnabled) {
+			if (n.hovered && gridActionType == NONE) {
 				if (FlxG.mouse.justReleased) {
 					if (FlxG.keys.pressed.CONTROL)
 						selection.push(n);
@@ -415,67 +415,119 @@ class Charter extends UIState {
 		for(n in selection)
 			n.selected = true;
 
-		if (gridBackdropDummy.hovered || (selectionBoxEnabled && gridBackdropDummy.hoveredByChild)) {
-			var mousePos = FlxG.mouse.getWorldPosition(charterCamera);
-			if (FlxG.mouse.justPressed) {
-				selectionBoxEnabled = false;
-				FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
-			}
-			if (FlxG.mouse.pressed) {
-				if (Math.abs(mousePos.x - dragStartPos.x) > 20 || Math.abs(mousePos.y - dragStartPos.y) > 20) {
-					selectionBoxEnabled = true;
-				}
-				if (selectionBoxEnabled) {
-					selectionBox.x = Math.min(mousePos.x, dragStartPos.x);
-					selectionBox.y = Math.min(mousePos.y, dragStartPos.y);
-					selectionBox.bWidth = Std.int(Math.abs(mousePos.x - dragStartPos.x));
-					selectionBox.bHeight = Std.int(Math.abs(mousePos.y - dragStartPos.y));
-				}
-			}
-			if (FlxG.mouse.justReleased) {
-				if (selectionBoxEnabled) {
-					var minX = Std.int(selectionBox.x / 40);
-					var minY = Std.int(selectionBox.y / 40);
-					var maxX = Std.int(Math.ceil((selectionBox.x + selectionBox.bWidth) / 40));
-					var maxY = Math.ceil((selectionBox.y + selectionBox.bHeight) / 40);
-
-					if (FlxG.keys.pressed.SHIFT) {
-						notesGroup.forEach(function(n) {
-							if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY && selection.contains(n))
-								selection.remove(n);
-						});
-					} else if (FlxG.keys.pressed.CONTROL) {
-						notesGroup.forEach(function(n) {
-							if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY && !selection.contains(n))
-								selection.push(n);
-						});
+		/**
+		 * NOTE DRAG HANDLING
+		 */
+		var mousePos = FlxG.mouse.getWorldPosition(charterCamera);
+		if (!gridBackdropDummy.hoveredByChild && !FlxG.mouse.pressed)
+			gridActionType = NONE;
+		selectionBox.visible = false;
+		switch(gridActionType) {
+			case BOX:
+				if (gridBackdropDummy.hoveredByChild) {
+					selectionBox.visible = true;
+					if (FlxG.mouse.pressed) {
+						selectionBox.x = Math.min(mousePos.x, dragStartPos.x);
+						selectionBox.y = Math.min(mousePos.y, dragStartPos.y);
+						selectionBox.bWidth = Std.int(Math.abs(mousePos.x - dragStartPos.x));
+						selectionBox.bHeight = Std.int(Math.abs(mousePos.y - dragStartPos.y));
 					} else {
-						selection = [];
-						notesGroup.forEach(function(n) {
-							if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY)
-								selection.push(n);
-						});
-					}
-
-					selectionBoxEnabled = false;
-				} else if (selection.length > 1) {
-					selection = [];
-				} else {
-					// place note
-					var id = Std.int(mousePos.x / 40);
-					if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0) {
-						var note = new CharterNote();
-						note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Std.int(mousePos.y / 40), id, 0, 0);
-						notesGroup.add(note);
-						selection = [note];
-						addToUndo(CPlaceNote(note));
+						var minX = Std.int(selectionBox.x / 40);
+						var minY = Std.int(selectionBox.y / 40);
+						var maxX = Std.int(Math.ceil((selectionBox.x + selectionBox.bWidth) / 40));
+						var maxY = Math.ceil((selectionBox.y + selectionBox.bHeight) / 40);
+	
+						if (FlxG.keys.pressed.SHIFT) {
+							notesGroup.forEach(function(n) {
+								if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY && selection.contains(n))
+									selection.remove(n);
+							});
+						} else if (FlxG.keys.pressed.CONTROL) {
+							notesGroup.forEach(function(n) {
+								if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY && !selection.contains(n))
+									selection.push(n);
+							});
+						} else {
+							selection = [];
+							notesGroup.forEach(function(n) {
+								if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY)
+									selection.push(n);
+							});
+						}
+						gridActionType = NONE;
 					}
 				}
-			}
-			if (FlxG.mouse.justReleasedRight)
-				openContextMenu(topMenu[1].childs);
+			case INVALID_DRAG:
+				// do nothing, locked
+				if (!FlxG.mouse.pressed)
+					gridActionType = NONE;
+			case DRAG:
+				// todo
+				if (FlxG.mouse.pressed) {
+					for(s in selection)
+						s.setPosition(s.id * 40 + (mousePos.x - dragStartPos.x), s.step * 40 + (mousePos.y - dragStartPos.y));
+				} else {
+					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(dragStartPos.y / 40) * 40);
+					var verticalChange:Float = (mousePos.y - dragStartPos.y) / 40;
+					if (!FlxG.keys.pressed.SHIFT)
+						verticalChange = CoolUtil.floorInt(verticalChange);
+					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
+					addToUndo(CNoteDrag([for(s in selection) {
+						var oldStep = s.step;
+						var oldID = s.id;
+
+						s.updatePos(s.step + verticalChange, s.id + horizontalChange, s.susLength, s.type);
+
+						{
+							note: s,
+							oldID: oldID,
+							oldStep: oldStep,
+							newID: s.id,
+							newStep: s.step
+						};
+					}]));
+					gridActionType = NONE;
+				}
+			case NONE:
+				if (FlxG.mouse.justPressed)
+					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
+				if (gridBackdropDummy.hovered) {
+					// SETUP
+
+					// AUTO DETECT
+					if (FlxG.mouse.pressed && (Math.abs(mousePos.x - dragStartPos.x) > 20 || Math.abs(mousePos.y - dragStartPos.y) > 20))
+						gridActionType = BOX;
+
+					if (FlxG.mouse.justReleased) {
+						if (selection.length > 1) {
+							selection = []; // clear selection
+						} else {
+							// place note
+							var id = Std.int(mousePos.x / 40);
+							if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0) {
+								var note = new CharterNote();
+								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Std.int(mousePos.y / 40), id, 0, 0);
+								notesGroup.add(note);
+								selection = [note];
+								addToUndo(CPlaceNote(note));
+							}
+						}
+					}
+				} else if (gridBackdropDummy.hoveredByChild) {
+					// TODO: NOTE DRAGGING
+					if (FlxG.mouse.pressed && (Math.abs(mousePos.x - dragStartPos.x) > 5 || Math.abs(mousePos.y - dragStartPos.y) > 5)) {
+						var noteHovered:Bool = false;
+						for(n in selection) if (n.hovered) {
+							noteHovered = true;
+							break;
+						}
+						gridActionType = noteHovered ? DRAG : INVALID_DRAG;
+					}
+				}
+
+				if (FlxG.mouse.justReleasedRight)
+					openContextMenu(topMenu[1].childs);
 		}
-		selectionBox.visible = selectionBoxEnabled;
 	}
 
 	public function deleteNote(note:CharterNote):CharterNote {
@@ -645,6 +697,10 @@ class Charter extends UIState {
 			case CSustainChange(changes):
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.before, n.note.type);
+			case CNoteDrag(notes):
+				for(n in notes)
+					n.note.updatePos(n.oldStep, n.oldID, n.note.susLength, n.note.type);
+			
 		}
 		if (v != null)
 			redoList.insert(0, v);
@@ -683,6 +739,9 @@ class Charter extends UIState {
 			case CSustainChange(changes):
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.after, n.note.type);
+			case CNoteDrag(notes):
+				for(n in notes)
+					n.note.updatePos(n.newStep, n.newID, n.note.susLength, n.note.type);
 		}
 		if (v != null)
 			undoList.insert(0, v);
@@ -806,6 +865,7 @@ enum CharterChange {
 	CSustainChange(notes:Array<NoteSustainChange>);
 	CCreateNotes(notes:Array<CharterNote>);
 	CDeleteNotes(notes:Array<CharterNote>);
+	CNoteDrag(notes:Array<NoteDragChange>);
 }
 
 enum CharterCopyboardObject {
@@ -816,4 +876,18 @@ typedef NoteSustainChange = {
 	var note:CharterNote;
 	var before:Float;
 	var after:Float;
+}
+typedef NoteDragChange = {
+	var note:CharterNote;
+	var oldID:Int;
+	var newID:Int;
+	var oldStep:Float;
+	var newStep:Float;
+}
+
+enum abstract CharterGridActionType(Int) {
+	var NONE = 0;
+	var BOX = 1;
+	var DRAG = 2;
+	var INVALID_DRAG = 3;
 }

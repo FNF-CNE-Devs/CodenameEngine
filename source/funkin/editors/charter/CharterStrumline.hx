@@ -46,7 +46,7 @@ class CharterStrumline extends UISprite {
 class CharterStrumlineButton extends UITopMenuButton {
 	var strLine:CharterStrumline;
 	public function new(parent:CharterStrumline) {
-		super(0, 95, null, "Strumline Options", []);
+		super(0, 95, null, "Options", []);
 		strLine = parent;
 		bWidth = 40 * 4;
 		this.label.fieldWidth = bWidth;
@@ -54,7 +54,7 @@ class CharterStrumlineButton extends UITopMenuButton {
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-		alpha = FlxMath.lerp(1/3, 1, alpha);
+		alpha = FlxMath.lerp(1/3, 1, alpha); // so that instead of 0% it is 33% visible
 	}
 
 	public override function openContextMenu() {
