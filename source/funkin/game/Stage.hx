@@ -92,21 +92,18 @@ class Stage extends FlxBasic implements IBeatReceiver {
 							y: 100,
 							flip: true
 						});
-						null;
 					case "girlfriend" | "gf":
 						addCharPos("girlfriend", node, {
 							x: 400,
 							y: 130,
 							flip: false
 						});
-						null;
 					case "dad" | "opponent":
 						addCharPos("dad", node, {
 							x: 100,
 							y: 100,
 							flip: false
 						});
-						null;
 					case "character":
 						if (!node.has.name) continue;
 						addCharPos(node.att.name, node);
@@ -162,7 +159,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 		return characterPoses[name].group;
 	}
 
-	public function addCharPos(name:String, node:Access, ?nonXMLInfo:StageCharPosInfo) {
+	public function addCharPos(name:String, node:Access, ?nonXMLInfo:StageCharPosInfo):MusicBeatGroup {
 		var group:MusicBeatGroup = new MusicBeatGroup();
 		state.add(group);
 
@@ -172,6 +169,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 			group: group
 		};
 
+		return group;
 	}
 
 	public function isCharFlipped(posName:String, def:Bool = false) {
