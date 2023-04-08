@@ -45,6 +45,7 @@ class Charter extends UIState {
 	public var sectionSeparator:FlxBackdrop;
 	public var gridBackdropDummy:CharterBackdropDummy;
 	public var conductorFollowerSpr:FlxSprite;
+	public var topLimit:FlxSprite;
 
 	public var hitsound:FlxSound;
 	public var metronome:FlxSound;
@@ -321,12 +322,18 @@ class Charter extends UIState {
 		topMenuSpr = new UITopMenu(topMenu);
 		topMenuSpr.cameras = uiGroup.cameras = [uiCamera];
 
+		topLimit = new FlxSprite();
+		topLimit.makeGraphic(1, 1, -1);
+		topLimit.color = 0xFF888888;
+		topLimit.blend = MULTIPLY;
+
 
 		// adds grid and notes so that they're ALWAYS behind the UI
 		add(gridBackdrop);
 		add(sectionSeparator);
 		add(beatSeparator);
 		add(notesGroup);
+		add(topLimit);
 		add(conductorFollowerSpr);
 		add(selectionBox);
 		// add the ui group
@@ -447,7 +454,7 @@ class Charter extends UIState {
 				} else {
 					// place note
 					var id = Std.int(mousePos.x / 40);
-					if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount) {
+					if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0) {
 						var note = new CharterNote();
 						note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Std.int(mousePos.y / 40), id, 0, 0);
 						notesGroup.add(note);
@@ -503,14 +510,7 @@ class Charter extends UIState {
 		super.update(elapsed);
 
 		if (gridBackdrop.strumlinesAmount != (gridBackdrop.strumlinesAmount = strumLines.length)) {
-			conductorFollowerSpr.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, 4);
-			conductorFollowerSpr.updateHitbox();
-
-			sectionSeparator.scale.set((gridBackdrop.strumlinesAmount * 4 * 40) + 20, 4);
-			sectionSeparator.updateHitbox();
-
-			beatSeparator.scale.set((gridBackdrop.strumlinesAmount * 4 * 40) + 10, 2);
-			beatSeparator.updateHitbox();
+			updateDisplaySprites();
 		}
 		sectionSeparator.spacing.y = (10 * Conductor.beatsPerMesure * Conductor.stepsPerBeat) - 1;
 		beatSeparator.spacing.y = (20 * Conductor.stepsPerBeat) - 1;
@@ -542,8 +542,24 @@ class Charter extends UIState {
 		}
 		charterCamera.scroll.set(conductorFollowerSpr.x + ((conductorFollowerSpr.scale.x - FlxG.width) / 2), conductorFollowerSpr.y - (FlxG.height * 0.5));
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125))) {
-			charterBG.scale.set(1 / charterCamera.zoom, 1 / charterCamera.zoom);
+			updateDisplaySprites();
 		}
+	}
+
+	function updateDisplaySprites() {
+		conductorFollowerSpr.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, 4);
+		conductorFollowerSpr.updateHitbox();
+
+		sectionSeparator.scale.set((gridBackdrop.strumlinesAmount * 4 * 40) + 20, 4);
+		sectionSeparator.updateHitbox();
+
+		beatSeparator.scale.set((gridBackdrop.strumlinesAmount * 4 * 40) + 10, 2);
+		beatSeparator.updateHitbox();
+
+		charterBG.scale.set(1 / charterCamera.zoom, 1 / charterCamera.zoom);
+		topLimit.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, Math.ceil(FlxG.height / charterCamera.zoom));
+		topLimit.updateHitbox();
+		topLimit.y = -topLimit.height;
 	}
 
 	var zoom:Float = 0;
