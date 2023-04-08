@@ -17,6 +17,7 @@ class CharterBackdrop extends FlxBackdrop {
 		pixels.fillRect(new Rectangle(0, 0, 1, 160), 0xFFDDDDDD);
 		pixels.fillRect(new Rectangle(159, 0, 1, 160), 0xFFDDDDDD);
 		pixels.unlock();
+		alpha = 0.9;
 		// loadFrame(frame);
 	}
 

@@ -11,16 +11,6 @@
       "version": null
     },
     {
-      "name": "flixel-addons",
-      "type": "haxelib",
-      "version": null
-    },
-    {
-      "name": "spinehaxe",
-      "type": "haxelib",
-      "version": null
-    },
-    {
       "name": "flixel",
       "type": "git",
       "ref": "dev",

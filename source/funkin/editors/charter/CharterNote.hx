@@ -8,7 +8,17 @@ import flixel.util.FlxColor;
 class CharterNote extends UISprite {
 	var angleTween:FlxTween;
 
+	private static var colors:Array<FlxColor> = [
+		0xFFC24B99,
+		0xFF00FFFF,
+		0xFF12FA05,
+		0xFFF9393F
+	];
+
+	public var sustainSpr:FlxSprite;
 	public var selected:Bool = false;
+
+	var __doAnim:Bool = false;
 
 	public function new() {
 		super();
@@ -18,11 +28,13 @@ class CharterNote extends UISprite {
 		animation.play("note");
 		this.setUnstretchedGraphicSize(40, 40, false);
 
-		angle = 45; // green-red inbetween
-
 		cursor = BUTTON;
 
 		moves = false;
+
+		sustainSpr = new FlxSprite(10, 40);
+		sustainSpr.makeGraphic(1, 1, -1);
+		members.push(sustainSpr);
 	}
 
 	public override function updateButton() {
@@ -44,19 +56,33 @@ class CharterNote extends UISprite {
 		this.id = id;
 		this.susLength = susLength;
 		this.type = type;
-		
+
 		x = id * 40;
 		y = step * 40;
 
+		sustainSpr.scale.set(10, (40 * susLength));
+		sustainSpr.updateHitbox();
+
 		if (angleTween != null) angleTween.cancel();
 
-		angleTween = FlxTween.tween(this, {angle: switch(animation.curAnim.curFrame = (id % 4)) {
+		var destAngle = switch(animation.curAnim.curFrame = (id % 4)) {
 			case 0: -90;
 			case 1: 180;
 			case 2: 0;
 			case 3: 90;
 			default: 0; // how is that even possible
-		}}, 2/3, {ease: function(t) {
+		};
+
+		sustainSpr.color = colors[animation.curAnim.curFrame];
+
+		if (!__doAnim) {
+			angle = destAngle;
+			return;
+		}
+
+		if (angle == destAngle) return;
+
+		angleTween = FlxTween.tween(this, {angle: destAngle}, 2/3, {ease: function(t) {
 			return ((Math.sin(t * Math.PI) * 0.35) * 3 * t * Math.sqrt(1 - t)) + t;
 		}});
 	}
@@ -71,6 +97,7 @@ class CharterNote extends UISprite {
 				case 3: 90;
 				default: 0; // how is that even possible
 			};
+			__doAnim = false;
 		}
 		super.kill();
 	}
@@ -79,14 +106,24 @@ class CharterNote extends UISprite {
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 
+		sustainSpr.follow(this, 15, 20);
+
 		if (__passed != (__passed = step < Conductor.curStepFloat)) {
 			alpha = __passed ? 0.6 : 1;
 			if (__passed && FlxG.sound.music.playing && Charter.instance.hitsoundsEnabled(id))
 				Charter.instance.hitsound.replay();
 		}
-		
+		sustainSpr.alpha = alpha;
+
 		colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;
 		colorTransform.redOffset = colorTransform.greenOffset = selected ? 96 : 0;
 		colorTransform.blueOffset = selected ? 168 : 0;
+
+		__doAnim = true;
+	}
+
+	public override function draw() {
+		drawMembers();
+		drawSuper();
 	}
 }

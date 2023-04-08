@@ -23,7 +23,7 @@ class MusicBeatState extends FlxTransitionableState implements IBeatReceiver
 	/**
 	 * Whenever the Conductor auto update should be enabled or not.
 	 */
-	 public var cancelConductorUpdate:Bool = false;
+	public var cancelConductorUpdate:Bool = false;
 
 	/**
 	 * Current step
@@ -148,6 +148,7 @@ class MusicBeatState extends FlxTransitionableState implements IBeatReceiver
 
 	public override function createPost() {
 		super.createPost();
+		persistentUpdate = true;
 		call("postCreate");
 	}
 	public function call(name:String, ?args:Array<Dynamic>, ?defaultVal:Dynamic):Dynamic {

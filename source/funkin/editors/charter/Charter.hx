@@ -32,6 +32,7 @@ class Charter extends UIState {
 	/**
 	 * CONFIG & UI (might make this customizable later)
 	 */
+	public var charterBG:FunkinSprite;
 	public var uiGroup:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
 	private var gridColor1:FlxColor = 0xFF272727; // white
 	private var gridColor2:FlxColor = 0xFF545454; // gray
@@ -164,6 +165,30 @@ class Charter extends UIState {
 				]
 			},
 			{
+				label: "Note",
+				childs: [
+					{
+						label: "Add sustain length",
+						keybind: [E],
+						onSelect: _note_addsustain
+					},
+					{
+						label: "Subtract sustain length",
+						keybind: [Q],
+						onSelect: _note_subtractsustain
+					},
+					null,
+					{
+						label: "(0) Default Note",
+						keybind: [ZERO]
+					},
+					{
+						label: "(1) Hurt Note",
+						keybind: [ONE]
+					}
+				]
+			},
+			{
 				label: "View",
 				childs: [
 					{
@@ -255,6 +280,12 @@ class Charter extends UIState {
 		uiCamera.bgColor = 0;
 		FlxG.cameras.add(uiCamera);
 
+		charterBG = new FunkinSprite(0, 0, Paths.image('menus/menuDesat'));
+		charterBG.color = 0xFF181818;
+		charterBG.cameras = [charterCamera];
+		charterBG.screenCenter();
+		charterBG.scrollFactor.set();
+		add(charterBG);
 
 		gridBackdrop = new CharterBackdrop();
 
@@ -319,7 +350,8 @@ class Charter extends UIState {
 		for(strID=>strL in PlayState.SONG.strumLines) {
 			for(note in strL.notes) {
 				var n = new CharterNote();
-				n.updatePos(Conductor.getStepForTime(note.time), (strID * 4) + note.id, note.sLen, note.type);
+				var t = Conductor.getStepForTime(note.time);
+				n.updatePos(t, (strID * 4) + note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type);
 				notesGroup.add(n);
 			}
 
@@ -410,7 +442,7 @@ class Charter extends UIState {
 					}
 
 					selectionBoxEnabled = false;
-				} else if (selection.length > 0) {
+				} else if (selection.length > 1) {
 					selection = [];
 				} else {
 					// place note
@@ -419,12 +451,13 @@ class Charter extends UIState {
 						var note = new CharterNote();
 						note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Std.int(mousePos.y / 40), id, 0, 0);
 						notesGroup.add(note);
+						selection = [note];
 						addToUndo(CPlaceNote(note));
 					}
 				}
 			}
 			if (FlxG.mouse.justReleasedRight)
-				openContextMenu(topMenu[2].childs);
+				openContextMenu(topMenu[1].childs);
 		}
 		selectionBox.visible = selectionBoxEnabled;
 	}
@@ -509,7 +542,7 @@ class Charter extends UIState {
 		}
 		charterCamera.scroll.set(conductorFollowerSpr.x + ((conductorFollowerSpr.scale.x - FlxG.width) / 2), conductorFollowerSpr.y - (FlxG.height * 0.5));
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125))) {
-
+			charterBG.scale.set(1 / charterCamera.zoom, 1 / charterCamera.zoom);
 		}
 	}
 
@@ -574,6 +607,9 @@ class Charter extends UIState {
 				notesGroup.remove(note, true);
 				note.kill();
 				selection.remove(note);
+			case CSustainChange(changes):
+				for(n in changes)
+					n.note.updatePos(n.note.step, n.note.id, n.before, n.note.type);
 		}
 		if (v != null)
 			redoList.insert(0, v);
@@ -609,6 +645,9 @@ class Charter extends UIState {
 			case CPlaceNote(note):
 				notesGroup.add(note);
 				note.revive();
+			case CSustainChange(changes):
+				for(n in changes)
+					n.note.updatePos(n.note.step, n.note.id, n.after, n.note.type);
 		}
 		if (v != null)
 			undoList.insert(0, v);
@@ -670,7 +709,31 @@ class Charter extends UIState {
 		t.icon = (Options.charterShowBeats = !Options.charterShowBeats) ? 1 : 0;
 		beatSeparator.visible = Options.charterShowBeats;
 	}
+
+	inline function _note_addsustain(t)
+		changeNoteSustain(1);
+
+	inline function _note_subtractsustain(t)
+		changeNoteSustain(-1);
+	
 	#end
+
+	function changeNoteSustain(change:Float) {
+		if (selection.length <= 0 || change == 0) return;
+
+		addToUndo(CSustainChange([
+			for(n in selection) {
+				var old:Float = n.susLength;
+				n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0));
+
+				{
+					before: old,
+					after: n.susLength,
+					note: n
+				};
+			}
+		]));
+	}
 
 	public function playtestChart(time:Float = 0, opponentMode = false) {
 		buildChart();
@@ -688,10 +751,11 @@ class Charter extends UIState {
 		for(n in notesGroup.members) {
 			var strLineID = Std.int(n.id / 4);
 			if (PlayState.SONG.strumLines[strLineID] != null) {
+				var time = Conductor.getTimeForStep(n.step);
 				PlayState.SONG.strumLines[strLineID].notes.push({
 					type: n.type,
-					time: Conductor.getTimeForStep(n.step),
-					sLen: n.susLength,
+					time: time,
+					sLen: Conductor.getTimeForStep(n.step + n.susLength) - time,
 					id: n.id % 4
 				});
 			}
@@ -704,6 +768,7 @@ class Charter extends UIState {
 
 enum CharterChange {
 	CPlaceNote(note:CharterNote);
+	CSustainChange(notes:Array<NoteSustainChange>);
 	CCreateNotes(notes:Array<CharterNote>);
 	CDeleteNotes(notes:Array<CharterNote>);
 }
@@ -715,4 +780,10 @@ enum CharterCopyboardObject {
 typedef CharterStrumline = {
 	var strumLine:ChartStrumLine;
 	var hitsounds:Bool;
+}
+
+typedef NoteSustainChange = {
+	var note:CharterNote;
+	var before:Float;
+	var after:Float;
 }

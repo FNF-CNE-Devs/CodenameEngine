@@ -13,7 +13,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 		__loopSprite = null;
 
 		max = FlxG.height / 70 / camera.zoom;
-		
+
 		var oldCur = __currentlyLooping;
 		__currentlyLooping = true;
 
@@ -23,7 +23,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 				i++;
 				continue;
 			}
-			if (Math.abs(__loopSprite.step - Conductor.curStepFloat) < max)
+			if (Math.abs(__loopSprite.step - Conductor.curStepFloat) - __loopSprite.susLength < max)
 				noteFunc(__loopSprite);
 			i++;
 		}
@@ -33,7 +33,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	public override function draw() {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
-		
+
 		forEach((n) -> n.draw());
 
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
@@ -42,7 +42,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	public override function update(elapsed:Float) {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
-		
+
 		forEach((n) -> n.update(elapsed));
 
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;

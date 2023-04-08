@@ -16,7 +16,7 @@ class UIButton extends UISliceSprite {
 		field.borderSize = 1;
 		field.alignment = CENTER;
 		field.fieldWidth = w;
-		
+
 		cursor = BUTTON;
 	}
 
