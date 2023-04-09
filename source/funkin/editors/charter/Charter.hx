@@ -433,26 +433,23 @@ class Charter extends UIState {
 						selectionBox.bHeight = Std.int(Math.abs(mousePos.y - dragStartPos.y));
 					} else {
 						var minX = Std.int(selectionBox.x / 40);
-						var minY = Std.int(selectionBox.y / 40);
+						var minY = (selectionBox.y / 40) - 1;
 						var maxX = Std.int(Math.ceil((selectionBox.x + selectionBox.bWidth) / 40));
-						var maxY = Math.ceil((selectionBox.y + selectionBox.bHeight) / 40);
-	
+						var maxY = ((selectionBox.y + selectionBox.bHeight) / 40);
+
 						if (FlxG.keys.pressed.SHIFT) {
-							notesGroup.forEach(function(n) {
+							for(n in notesGroup)
 								if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY && selection.contains(n))
 									selection.remove(n);
-							});
 						} else if (FlxG.keys.pressed.CONTROL) {
-							notesGroup.forEach(function(n) {
+							for(n in notesGroup)
 								if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY && !selection.contains(n))
 									selection.push(n);
-							});
 						} else {
 							selection = [];
-							notesGroup.forEach(function(n) {
+							for(n in notesGroup)
 								if (n.id >= minX && n.id < maxX && n.step >= minY && n.step < maxY)
 									selection.push(n);
-							});
 						}
 						gridActionType = NONE;
 					}
@@ -700,7 +697,7 @@ class Charter extends UIState {
 			case CNoteDrag(notes):
 				for(n in notes)
 					n.note.updatePos(n.oldStep, n.oldID, n.note.susLength, n.note.type);
-			
+
 		}
 		if (v != null)
 			redoList.insert(0, v);
