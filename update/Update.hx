@@ -14,11 +14,14 @@ class Update {
             // install libs
             switch(lib.type) {
                 case "haxelib":
-                    prettyPrint('Installing "${lib.name}"...');             
+                    prettyPrint('Installing "${lib.name}"...');
                     Sys.command('haxelib install ${lib.name} ${lib.version != null ? " " + lib.version : " "}');
                 case "git":
                     prettyPrint('Installing "${lib.name}" from git url "${lib.url}"');
-                    Sys.command('haxelib git ${lib.name} ${lib.url}');
+					if (lib.ref != null)
+                    	Sys.command('haxelib git ${lib.name} ${lib.url} ${lib.ref}');
+					else
+                    	Sys.command('haxelib git ${lib.name} ${lib.url}');
                 default:
                     prettyPrint('Cannot resolve library of type "${lib.type}"');
             }
