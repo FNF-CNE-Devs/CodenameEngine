@@ -137,6 +137,9 @@ class Main extends Sprite
 			#elseif linux
 			trace("Used lime test linux. Switching into source assets.");
 			#end
+			#if MOD_SUPPORT
+			ModsFolder.modsPath = './${pathBack}mods/';
+			#end
 			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', './${pathBack}assets/', true));
 			#end
 		} else {
