@@ -56,10 +56,10 @@ class MultiThreadedScript implements IFlxDestroyable implements IHScriptCustomBe
 		__variables = Type.getInstanceFields(Type.getClass(this));
 	}
 
-	public inline function hget(name:String):Dynamic
+	public function hget(name:String):Dynamic
 		return __variables.contains(name) ? Reflect.getProperty(this, name) : script.get(name);
 
-	public inline function hset(name:String, val:Dynamic):Dynamic {
+	public function hset(name:String, val:Dynamic):Dynamic {
 		if (__variables.contains(name))
 			Reflect.setProperty(this, name, val);
 		else

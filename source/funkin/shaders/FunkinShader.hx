@@ -358,12 +358,12 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 		}
 	}
 
-	public function hget(v:String):Dynamic {
-		if (__instanceFields.contains(v) || __instanceFields.contains('get_${v}')) {
-			return Reflect.getProperty(this, v);
+	public function hget(name:String):Dynamic {
+		if (__instanceFields.contains(name) || __instanceFields.contains('get_${name}')) {
+			return Reflect.getProperty(this, name);
 		}
-		if (!Reflect.hasField(data, v)) return null;
-		var field = Reflect.field(data, v);
+		if (!Reflect.hasField(data, name)) return null;
+		var field = Reflect.field(data, name);
 		var cl = Std.string(Type.getClass(field));
 
 		// cant do "field is ShaderInput" for some reason
@@ -378,17 +378,17 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 		return field;
 	}
 
-	public function hset(v:String, val:Dynamic):Dynamic {
-		if (__instanceFields.contains(v) || __instanceFields.contains('set_${v}')) {
-			Reflect.setProperty(this, v, val);
+	public function hset(name:String, val:Dynamic):Dynamic {
+		if (__instanceFields.contains(name) || __instanceFields.contains('set_${name}')) {
+			Reflect.setProperty(this, name, val);
 			return val;
 		}
 
-		if (!Reflect.hasField(data, v)) {
-			Reflect.setField(data, v, val);
+		if (!Reflect.hasField(data, name)) {
+			Reflect.setField(data, name, val);
 			return val;
 		} else {
-			var field = Reflect.field(data, v);
+			var field = Reflect.field(data, name);
 			var cl = Std.string(Type.getClass(field));
 
 			// cant do "field is ShaderInput" for some reason
@@ -398,23 +398,23 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 					// that means we wait for a single number, instead of an array
 					@:privateAccess
 					if (field.__isInt && !(val is Int)) {
-						throw new ShaderTypeException(v, Type.getClass(val), 'Int');
+						throw new ShaderTypeException(name, Type.getClass(val), 'Int');
 						return null;
 					} else
 					@:privateAccess
 					if (field.__isBool && !(val is Bool)) {
-						throw new ShaderTypeException(v, Type.getClass(val), 'Bool');
+						throw new ShaderTypeException(name, Type.getClass(val), 'Bool');
 						return null;
 					} else
 					@:privateAccess
 					if (field.__isFloat && !(val is Float)) {
-						throw new ShaderTypeException(v, Type.getClass(val), 'Float');
+						throw new ShaderTypeException(name, Type.getClass(val), 'Float');
 						return null;
 					}
 					return field.value = [val];
 				} else {
 					if (!(val is Array)) {
-						throw new ShaderTypeException(v, Type.getClass(val), Array);
+						throw new ShaderTypeException(name, Type.getClass(val), Array);
 						return null;
 					}
 					return field.value = val;
@@ -422,7 +422,7 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 			} else if (cl.startsWith("openfl.display.ShaderInput")) {
 				// shader input!!
 				if (!(val is BitmapData)) {
-					throw new ShaderTypeException(v, Type.getClass(val), BitmapData);
+					throw new ShaderTypeException(name, Type.getClass(val), BitmapData);
 					return null;
 				}
 				field.input = cast val;
