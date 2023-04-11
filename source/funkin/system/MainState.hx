@@ -1,6 +1,8 @@
 package funkin.system;
 
+#if MOD_SUPPORT
 import sys.FileSystem;
+#end
 import funkin.mods.ModsFolder;
 import funkin.menus.TitleState;
 import funkin.menus.BetaWarningState;

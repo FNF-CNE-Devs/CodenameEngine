@@ -110,6 +110,7 @@ class ModsFolder {
 		return openLib;
 	}
 
+	#if MOD_SUPPORT
 	public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false) {
 		return prepareModLibrary(libName, new ModsFolderLibrary(folder, libName), force);
 	}
@@ -117,4 +118,5 @@ class ModsFolder {
 	public static function loadLibraryFromZip(libName:String, zipPath:String, force:Bool = false) {
 		return prepareModLibrary(libName, new ZipFolderLibrary(zipPath, libName), force);
 	}
+	#end
 }

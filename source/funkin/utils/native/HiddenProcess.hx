@@ -117,5 +117,5 @@ class HiddenProcess {
 	}
 }
 #else
-typedef HiddenProcess = sys.io.Process;
+typedef HiddenProcess = Dynamic;
 #end
