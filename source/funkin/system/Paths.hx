@@ -253,14 +253,14 @@ class Paths
 			@:privateAccess
 			if (lib.__proxy != null) library = lib.__proxy;
 		}
-		
+
 		var content:Array<String> = [];
 		#if MOD_SUPPORT
 		if (library is funkin.mods.ModsAssetLibrary) {
 			// easy task, can immediately scan for files!
 			var lib = cast(library, funkin.mods.ModsAssetLibrary);
 			content = lib.getFiles(libThing.symbolName);
-			if (addPath) 
+			if (addPath)
 				for(i in 0...content.length)
 					content[i] = '$folderPath${content[i]}';
 		} else #end {

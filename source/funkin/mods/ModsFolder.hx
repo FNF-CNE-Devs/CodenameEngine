@@ -27,7 +27,7 @@ class ModsFolder {
 	 * INTERNAL - Only use when editing source mods!!
 	 */
 	@:dox(hide) public static var onModSwitch:FlxTypedSignal<String->Void> = new FlxTypedSignal<String->Void>();
-	
+
 	/**
 	 * Current mod folder. Will affect `Paths`.
 	 */
@@ -49,12 +49,12 @@ class ModsFolder {
 	 * Initialises `mods` folder by adding callbacks and such.
 	 */
 	public static function init() {
-		
+
 	}
 
 	/**
 	 * Switches mod - unloads all the other mods, then load this one.
-	 * @param libName 
+	 * @param libName
 	 */
 	public static function switchMod(mod:String) {
 		Options.lastLoadedMod = currentModFolder = mod;

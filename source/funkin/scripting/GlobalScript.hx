@@ -18,7 +18,7 @@ class GlobalScript {
 
 		Conductor.onBeatHit.add(beatHit);
 		Conductor.onStepHit.add(stepHit);
-		
+
 		FlxG.signals.focusGained.add(function() {
 			call("focusGained");
 		});

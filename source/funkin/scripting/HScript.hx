@@ -66,7 +66,7 @@ class HScript extends Script {
 				var expr:Expr = null;
 				try {
 					if (code != null && code.trim() != "")
-						expr = parser.parseString(code);
+						expr = parser.parseString(code, cl.join("/") + "." + hxExt);
 				} catch(e:Error) {
 					_errorHandler(e);
 				} catch(e) {

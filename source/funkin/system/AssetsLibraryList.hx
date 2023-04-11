@@ -144,7 +144,7 @@ class AssetsLibraryList extends AssetLibrary {
 			if (!__defaultLibraries.contains(l))
 				l.unload();
 	}
-	
+
 	public function reset() {
 		unloadLibraries();
 
