@@ -1,5 +1,5 @@
 #if !macro
-import funkin.system.Paths;
+import funkin.assets.Paths;
 import funkin.system.MusicBeatState;
 import funkin.system.MusicBeatSubstate;
 import funkin.system.MusicBeatGroup;
@@ -21,7 +21,7 @@ import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.util.FlxDestroyUtil;
 
-import funkin.ui.Alphabet;
+import funkin.menus.ui.Alphabet;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 

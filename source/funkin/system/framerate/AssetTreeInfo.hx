@@ -1,6 +1,6 @@
 package funkin.system.framerate;
 
-import funkin.mods.ModsAssetLibrary;
+import funkin.assets.ModsAssetLibrary;
 
 class AssetTreeInfo extends FramerateCategory {
 	public function new() {

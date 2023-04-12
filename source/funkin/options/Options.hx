@@ -5,8 +5,8 @@ import openfl.Lib;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 
-@:build(funkin.macros.OptionsMacro.build())
-@:build(funkin.macros.FunkinSaveMacro.build("__save", "__flush", "__load"))
+@:build(funkin.system.macros.OptionsMacro.build())
+@:build(funkin.system.macros.FunkinSaveMacro.build("__save", "__flush", "__load"))
 class Options
 {
 	@:dox(hide) @:doNotSave

@@ -67,7 +67,7 @@ class OptionsMenu extends TreeMenu {
 		})]);
 		
 		var xmlPath = Paths.xml("config/options");
-		for(source in [funkin.system.AssetsLibraryList.AssetSource.SOURCE, funkin.system.AssetsLibraryList.AssetSource.MODS]) {
+		for(source in [funkin.assets.AssetsLibraryList.AssetSource.SOURCE, funkin.assets.AssetsLibraryList.AssetSource.MODS]) {
 			if (Paths.assetsTree.existsSpecific(xmlPath, "TEXT", source)) {
 				var access:Access = null;
 				try {

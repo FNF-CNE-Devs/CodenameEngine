@@ -6,7 +6,7 @@ import funkin.chart.ChartData;
 import funkin.game.SplashHandler;
 import funkin.scripting.DummyScript;
 import funkin.menus.StoryMenuState.WeekData;
-import funkin.ui.FunkinText;
+import funkin.system.FunkinText;
 import flixel.group.FlxSpriteGroup;
 import funkin.scripting.Script;
 import funkin.scripting.ScriptPack;
@@ -23,7 +23,7 @@ import flixel.util.FlxTimer;
 import haxe.io.Path;
 import lime.utils.Assets;
 import funkin.system.Conductor;
-import funkin.cutscenes.*;
+import funkin.game.cutscenes.*;
 
 import funkin.menus.*;
 import funkin.scripting.events.*;

@@ -1,6 +1,6 @@
 package funkin.system;
 
-import funkin.interfaces.IBeatReceiver;
+import funkin.system.interfaces.IBeatReceiver;
 
 class MusicBeatGroup extends FlxTypedSpriteGroup<FlxSprite> implements IBeatReceiver {
 	public function beatHit(curBeat:Int) {

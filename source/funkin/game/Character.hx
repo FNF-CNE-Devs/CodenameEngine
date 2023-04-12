@@ -3,8 +3,8 @@ package funkin.game;
 import funkin.system.FunkinSprite;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
-import funkin.interfaces.IBeatReceiver;
-import funkin.interfaces.IOffsetCompatible;
+import funkin.system.interfaces.IBeatReceiver;
+import funkin.system.interfaces.IOffsetCompatible;
 import funkin.utils.XMLUtil;
 
 import flixel.animation.FlxBaseAnimation;

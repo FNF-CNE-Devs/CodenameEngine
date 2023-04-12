@@ -37,7 +37,7 @@ class CommandLineHandler {
 						Sys.println("[ERROR] You need to specify the mod folder path");
 						Sys.exit(0);
 					} else if (FileSystem.exists(arg)) {
-						funkin.mods.ModsFolder.modsPath = arg;
+						funkin.assets.ModsFolder.modsPath = arg;
 					} else {
 						Sys.println('[ERROR] Mod folder at "${arg}" does not exist.');
 						Sys.exit(0);

@@ -7,7 +7,7 @@ import flixel.FlxState;
 import flixel.FlxSubState;
 import funkin.scripting.events.*;
 import funkin.scripting.Script;
-import funkin.interfaces.IBeatReceiver;
+import funkin.system.interfaces.IBeatReceiver;
 import funkin.system.Conductor;
 import funkin.options.PlayerSettings;
 

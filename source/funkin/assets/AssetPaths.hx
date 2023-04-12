@@ -1,5 +1,43 @@
+// UNUSED
+
 package funkin.assets;
 
+/**
+ * {
+		"characterXML": "data/characters/{0}.xml",
+		"characterScript": "data/characters/{0}",
+		"config": "data/config/",
+		"dialogueBoxes": "data/dialogue/boxes/",
+		"dialogueCharacters": "data/dialogue/characters/",
+		"globalChartScripts": "data/charts/",
+		"splashData": "data/splashes/{0}.xml",
+		"stageXML": "data/stages/{0}.xml",
+		"stageScript": "data/stages/{0}",
+		"titleIntroText": "data/titlescreen/introText.txt",
+		"weekList": "data/weeks/weeks.txt",
+		"weekData": "data/weeks/weeks/{0}.xml",
+		"weekCharacterData": "data/weeks/characters/{0}.xml",
+		"noteTypeScript": "data/notes/{0}",
+		"stateScript": "data/states/{0}",
+		"globalScript": "data/global",
+
+		"txt": "data/{0}.txt",
+		"ini": "data/{0}.ini",
+		"fragShader": "shaders/{0}.frag",
+		"vertShader": "shaders/{0}.vert",
+		"xml": "data/{0}.xml",
+		"json": "data/{0}.json",
+		"ps1": "data/{0}.ps1",
+		"sound": "sounds/{0}.{1}",
+		"music": "music/{0}.{1}",
+		"image": "images/{0}",
+
+		"instDefault": "songs/{0}/song/Inst.{1}",
+		"instDifficulty": "songs/{0}/song/Inst-{1}.{2}",
+		"voicesDefault": "songs/{0}/song/Voices.{1}",
+		"voicesDifficulty": "songs/{0}/song/Voices-{1}.{2}"
+	}
+ */
 /**
 	Static class containing all of the paths for every different feature of the engine.
 **/

@@ -1,6 +1,6 @@
 package funkin.editors.ui;
 
-import funkin.ui.FunkinText;
+import funkin.system.FunkinText;
 
 class UICheckbox extends UISprite {
 	public var checked:Bool = false;

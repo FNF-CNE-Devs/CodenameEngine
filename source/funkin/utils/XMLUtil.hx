@@ -3,9 +3,9 @@ package funkin.utils;
 import funkin.system.FunkinSprite;
 import funkin.system.ErrorCode;
 import funkin.system.FunkinSprite.XMLAnimType;
-import funkin.interfaces.IBeatReceiver;
+import funkin.system.interfaces.IBeatReceiver;
 import haxe.xml.Access;
-import funkin.interfaces.IOffsetCompatible;
+import funkin.system.interfaces.IOffsetCompatible;
 
 using StringTools;
 /**

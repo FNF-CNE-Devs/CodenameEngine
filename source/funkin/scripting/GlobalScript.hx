@@ -3,7 +3,7 @@ package funkin.scripting;
 import funkin.scripting.events.CancellableEvent;
 import funkin.system.Conductor;
 import flixel.FlxState;
-import funkin.mods.ModsFolder;
+import funkin.assets.ModsFolder;
 #if GLOBAL_SCRIPT
 /**
  * Class for THE Global Script, aka script that runs in the background at all times.

@@ -1,6 +1,6 @@
 package funkin.menus.credits;
 
-import funkin.ui.FunkinText;
+import funkin.system.FunkinText;
 import flixel.util.FlxColor;
 import funkin.shaders.CustomShader;
 import funkin.options.type.TextOption;
@@ -8,8 +8,8 @@ import funkin.options.OptionsScreen;
 import flixel.graphics.FlxGraphic;
 import openfl.display.BitmapData;
 import flixel.addons.transition.FlxTransitionableState;
-import funkin.github.GitHub;
-import funkin.github.GitHubContributor;
+import funkin.system.github.GitHub;
+import funkin.system.github.GitHubContributor;
 import funkin.menus.MainMenuState;
 
 using funkin.utils.BitmapUtil;

@@ -4,11 +4,11 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.addons.effects.FlxSkewedSprite;
 import haxe.io.Path;
 import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
-import funkin.interfaces.IOffsetCompatible;
+import funkin.system.interfaces.IOffsetCompatible;
 import flixel.math.FlxMatrix;
 import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
-import funkin.interfaces.IBeatReceiver;
+import funkin.system.interfaces.IBeatReceiver;
 
 @:enum
 abstract XMLAnimType(Int)

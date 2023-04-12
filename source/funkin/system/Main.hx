@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.assets.AssetsLibraryList;
 import funkin.system.framerate.SystemInfo;
 import openfl.utils.AssetLibrary;
 import openfl.utils.AssetCache;
@@ -31,7 +32,7 @@ import sys.thread.Thread;
 #if sys
 import sys.io.File;
 #end
-import funkin.mods.ModsFolder;
+import funkin.assets.ModsFolder;
 
 class Main extends Sprite
 {
@@ -116,7 +117,7 @@ class Main extends Sprite
 		Paths.assetsTree = new AssetsLibraryList();
 
 		#if UPDATE_CHECKING
-		funkin.updating.UpdateUtil.init();
+		funkin.system.updating.UpdateUtil.init();
 		#end
 		CrashHandler.init();
 		Logs.init();

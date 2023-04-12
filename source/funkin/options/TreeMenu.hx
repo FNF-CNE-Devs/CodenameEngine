@@ -1,7 +1,7 @@
 package funkin.options;
 
 import flixel.FlxState;
-import funkin.ui.FunkinText;
+import funkin.system.FunkinText;
 import flixel.tweens.FlxTween;
 import funkin.menus.MainMenuState;
 import funkin.options.type.TextOption;

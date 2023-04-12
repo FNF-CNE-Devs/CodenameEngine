@@ -3,7 +3,7 @@ package funkin.game;
 import funkin.system.MusicBeatGroup;
 import flixel.FlxState;
 import haxe.xml.Access;
-import funkin.interfaces.IBeatReceiver;
+import funkin.system.interfaces.IBeatReceiver;
 import funkin.scripting.Script;
 import haxe.io.Path;
 

@@ -3,7 +3,7 @@ package funkin.system.framerate;
 import openfl.text.TextFormat;
 import openfl.display.Sprite;
 import openfl.text.TextField;
-import funkin.macros.GitCommitMacro;
+import funkin.system.macros.GitCommitMacro;
 
 class CodenameBuildField extends TextField {
 	public function new() {

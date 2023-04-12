@@ -1,6 +1,6 @@
 package funkin.menus;
 
-import funkin.github.GitHub;
+import funkin.system.github.GitHub;
 import funkin.system.MusicBeatGroup;
 import funkin.utils.XMLUtil;
 import flixel.util.typeLimit.OneOfThree;
@@ -27,7 +27,7 @@ import haxe.xml.Access;
 
 using StringTools;
 
-@:allow(funkin.mods.ModsFolder)
+@:allow(funkin.assets.ModsFolder)
 @:allow(funkin.system.MainState)
 class TitleState extends MusicBeatState
 {
@@ -187,11 +187,11 @@ class TitleState extends MusicBeatState
 
 	function goToMainMenu() {
 		#if UPDATE_CHECKING
-		var report = hasCheckedUpdates ? null : funkin.updating.UpdateUtil.checkForUpdates();
+		var report = hasCheckedUpdates ? null : funkin.system.updating.UpdateUtil.checkForUpdates();
 		hasCheckedUpdates = true;
 
 		if (report != null && report.newUpdate) {
-			FlxG.switchState(new funkin.updating.UpdateAvailableScreen(report));
+			FlxG.switchState(new funkin.system.updating.UpdateAvailableScreen(report));
 		} else {
 			FlxG.switchState(new MainMenuState());
 		}

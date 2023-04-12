@@ -4,7 +4,7 @@ import funkin.chart.Chart;
 import funkin.chart.ChartData;
 import openfl.Lib;
 import flixel.FlxState;
-import funkin.interfaces.IBeatReceiver;
+import funkin.system.interfaces.IBeatReceiver;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
 /**

@@ -8,7 +8,7 @@ import flixel.graphics.frames.FlxFramesCollection;
 import funkin.game.Highscore;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import funkin.ui.FunkinText;
+import funkin.system.FunkinText;
 import haxe.xml.Access;
 import flixel.text.FlxText;
 
@@ -300,7 +300,7 @@ class StoryMenuState extends MusicBeatState {
 		characters[charName] = charObj;
 	}
 
-	public function getWeeksFromSource(weeks:Array<String>, source:funkin.system.AssetsLibraryList.AssetSource) {
+	public function getWeeksFromSource(weeks:Array<String>, source:funkin.assets.AssetsLibraryList.AssetSource) {
 		var path:String = Paths.txt('freeplaySonglist');
 		var weeksFound:Array<String> = [];
 		if (Paths.assetsTree.existsSpecific(path, "TEXT", source)) {

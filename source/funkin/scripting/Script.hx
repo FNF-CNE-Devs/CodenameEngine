@@ -52,8 +52,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
 			// Engine related stuff
 			"engine"			=> {
-				commit: funkin.macros.GitCommitMacro.commitNumber,
-				hash: funkin.macros.GitCommitMacro.commitHash,
+				commit: funkin.system.macros.GitCommitMacro.commitNumber,
+				hash: funkin.system.macros.GitCommitMacro.commitHash,
 				build: 2675, // 2675 being the last build num before it was removed
 				name: "Codename Engine"
 			},
@@ -75,12 +75,12 @@ class Script extends FlxBasic implements IFlxDestroyable {
 			"StoryMenuState"	=> funkin.menus.StoryMenuState,
 			"TitleState"		=> funkin.menus.TitleState,
 			"Options"		   => funkin.options.Options,
-			"Paths"			 => funkin.system.Paths,
+			"Paths"			 => funkin.assets.Paths,
 			"Conductor"		 => funkin.system.Conductor,
 			"FunkinShader"	  => funkin.shaders.FunkinShader,
 			"CustomShader"	  => funkin.shaders.CustomShader,
-			"FunkinText"		=> funkin.ui.FunkinText,
-			"Alphabet"		  => funkin.ui.Alphabet,
+			"FunkinText"		=> funkin.menus.ui.FunkinText,
+			"Alphabet"		  => funkin.menus.ui.Alphabet,
 
 			"CoolUtil"		  => funkin.utils.CoolUtil,
 			"IniUtil"		   => funkin.utils.IniUtil,
@@ -93,11 +93,11 @@ class Script extends FlxBasic implements IFlxDestroyable {
 		];
 	}
 	public static function getDefaultPreprocessors():Map<String, Dynamic> {
-		var defines = funkin.macros.DefinesMacro.defines;
+		var defines = funkin.system.macros.DefinesMacro.defines;
 		defines.set("CODENAME_ENGINE", true);
 		defines.set("CODENAME_VER", Application.current.meta.get('version'));
 		defines.set("CODENAME_BUILD", 2675); // 2675 being the last build num before it was removed
-		defines.set("CODENAME_COMMIT", funkin.macros.GitCommitMacro.commitNumber);
+		defines.set("CODENAME_COMMIT", funkin.system.macros.GitCommitMacro.commitNumber);
 		return defines;
 	}
 	/**
