@@ -358,7 +358,7 @@ class Charter extends UIState {
 
 	public function loadSong() {
 		if (__reload)
-			CoolUtil.loadSong(__song, __diff, false, false);
+			PlayState.loadSong(__song, __diff, false, false);
 
 		Conductor.setupSong(PlayState.SONG);
 

@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.savedata.FunkinSave;
 import flixel.graphics.FlxGraphic;
 import funkin.chart.Chart;
 import funkin.chart.ChartData;
@@ -327,6 +328,19 @@ class PlayState extends MusicBeatState
 	public static var campaignScore:Int = 0;
 
 	/**
+	 * Misses for the current week.
+	 */
+	public static var campaignMisses:Int = 0;
+
+	/**
+	 * Accuracy for the current week
+	 */
+	public static var campaignAccuracy(get, null):Float;
+
+	public static var campaignAccuracyTotal:Float = 0;
+	public static var campaignAccuracyCount:Float = 0;
+
+	/**
 	 * Camera zoom at which the game lerps to.
 	 */
 	public var defaultCamZoom:Float = 1.05;
@@ -592,8 +606,7 @@ class PlayState extends MusicBeatState
 			}) : strumLine.position;
 			if (strumLine.characters != null) for(k=>charName in strumLine.characters) {
 				var char = new Character(0, 0, charName, stage.isCharFlipped(charPosName, strumLine.type == 1));
-				stage.applyCharStuff(char, charPosName);
-				char.x += k * 50;
+				stage.applyCharStuff(char, charPosName, k);
 				chars.push(char);
 			}
 
@@ -1211,11 +1224,13 @@ class PlayState extends MusicBeatState
 		if (validScore)
 		{
 			#if !switch
-			Highscore.saveScore(SONG.meta.name, {
+			FunkinSave.setSongHighscore(SONG.meta.name, difficulty, {
 				score: songScore,
 				misses: misses,
-				accuracy: accuracy
-			}, difficulty);
+				accuracy: accuracy,
+				hits: [],
+				date: Date.now().toString()
+			});
 			#end
 		}
 
@@ -1229,6 +1244,9 @@ class PlayState extends MusicBeatState
 		if (isStoryMode)
 		{
 			campaignScore += songScore;
+			campaignMisses += misses;
+			campaignAccuracyTotal += accuracy;
+			campaignAccuracyCount++;
 			storyPlaylist.shift();
 
 			if (storyPlaylist.length <= 0)
@@ -1238,9 +1256,13 @@ class PlayState extends MusicBeatState
 				if (validScore)
 				{
 					// TODO: more week info saving
-					Highscore.saveWeekScore(storyWeek.id, {
-						score: campaignScore
-					}, difficulty);
+					FunkinSave.setWeekHighscore(storyWeek.id, difficulty, {
+						score: campaignScore,
+						misses: campaignMisses,
+						accuracy: campaignAccuracy,
+						hits: [],
+						date: Date.now().toString()
+					});
 				}
 				FlxG.save.flush();
 			}
@@ -1253,7 +1275,7 @@ class PlayState extends MusicBeatState
 
 				FlxG.sound.music.stop();
 
-				CoolUtil.__loadSong(PlayState.storyPlaylist[0].toLowerCase(), difficulty);
+				PlayState.__loadSong(PlayState.storyPlaylist[0].toLowerCase(), difficulty);
 
 				FlxG.switchState(new PlayState());
 			}
@@ -1599,6 +1621,8 @@ class PlayState extends MusicBeatState
 		scripts.call("beatHit", [curBeat]);
 	}
 
+	// GETTERS & SETTERS
+	#if REGION
 	private inline function get_player():StrumLine
 		return playerStrums;
 	private inline function set_player(s:StrumLine):StrumLine
@@ -1649,6 +1673,55 @@ class PlayState extends MusicBeatState
 		if (strumLines[2] != null && strumLines[2].characters[0] != null)
 			strumLines[2].characters[0].danceInterval = v;
 		return v;
+	}
+
+	private inline static function get_campaignAccuracy()
+		return campaignAccuracyCount == 0 ? 0 : campaignAccuracyTotal / campaignAccuracyCount;
+	#end
+
+	/**
+	 * Load a week into PlayState.
+	 * @param weekData Week Data
+	 * @param difficulty Week Difficulty
+	 */
+	 public static function loadWeek(weekData:WeekData, difficulty:String = "normal") {
+		storyWeek = weekData;
+		storyPlaylist = [for(e in weekData.songs) e.name];
+		isStoryMode = true;
+		campaignScore = 0;
+		campaignMisses = 0;
+		campaignAccuracyTotal = 0;
+		campaignAccuracyCount = 0;
+		chartingMode = false;
+		opponentMode = coopMode = false;
+		__loadSong(storyPlaylist[0], difficulty);
+	}
+
+	/**
+	 * Loads a song into PlayState
+	 * @param name Song name
+	 * @param difficulty Chart difficulty (if invalid, will load an empty chart)
+	 * @param opponentMode Whenever opponent mode is on
+	 * @param coopMode Whenever co-op mode is on.
+	 */
+	public static function loadSong(name:String, difficulty:String = "normal", opponentMode:Bool = false, coopMode:Bool = false) {
+		isStoryMode = false;
+		PlayState.opponentMode = opponentMode;
+		chartingMode = false;
+		PlayState.coopMode = coopMode;
+		__loadSong(name, difficulty);
+	}
+
+	/**
+	 * (INTERNAL) Loads a song without resetting story mode/opponent mode/coop mode values.
+	 * @param name Song name
+	 * @param difficulty Song difficulty
+	 */
+	public static function __loadSong(name:String, difficulty:String) {
+		PlayState.difficulty = difficulty;
+
+		PlayState.SONG = Chart.parse(name, difficulty);
+		PlayState.fromMods = PlayState.SONG.fromMods;
 	}
 }
 

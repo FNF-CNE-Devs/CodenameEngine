@@ -38,7 +38,7 @@ class CoolUtil
 	 * @param defaultValue The default value
 	 * @return The return value
 	 */
-	public static inline function getDefault<T>(v:Null<T>, defaultValue:T):Null<T> {
+	public static inline function getDefault<T>(v:Null<T>, defaultValue:T):T {
 		return (v == null || isNaN(v)) ? defaultValue : v;
 	}
 
@@ -407,49 +407,6 @@ class CoolUtil
 			case NONE:
 
 		}
-	}
-
-	/**
-	 * Load a week into PlayState.
-	 * @param weekData Week Data
-	 * @param difficulty Week Difficulty
-	 */
-	public static function loadWeek(weekData:WeekData, difficulty:String = "normal") {
-		PlayState.storyWeek = weekData;
-		PlayState.storyPlaylist = [for(e in weekData.songs) e.name];
-		PlayState.isStoryMode = true;
-		PlayState.campaignScore = 0;
-		PlayState.chartingMode = false;
-		PlayState.opponentMode = PlayState.coopMode = false;
-		__loadSong(PlayState.storyPlaylist[0], difficulty);
-	}
-
-	/**
-	 * Loads a song into PlayState
-	 * @param name Song name
-	 * @param difficulty Chart difficulty (if invalid, will load an empty chart)
-	 * @param opponentMode Whenever opponent mode is on
-	 * @param coopMode Whenever co-op mode is on.
-	 */
-	public static function loadSong(name:String, difficulty:String = "normal", opponentMode:Bool = false, coopMode:Bool = false) {
-		PlayState.campaignScore = 0;
-		PlayState.isStoryMode = false;
-		PlayState.opponentMode = opponentMode;
-		PlayState.chartingMode = false;
-		PlayState.coopMode = coopMode;
-		__loadSong(name, difficulty);
-	}
-
-	/**
-	 * (INTERNAL) Loads a song without resetting story mode/opponent mode/coop mode values.
-	 * @param name Song name
-	 * @param difficulty Song difficulty
-	 */
-	public static function __loadSong(name:String, difficulty:String) {
-		PlayState.difficulty = difficulty;
-
-		PlayState.SONG = Chart.parse(name, difficulty);
-		PlayState.fromMods = PlayState.SONG.fromMods;
 	}
 
 	/**

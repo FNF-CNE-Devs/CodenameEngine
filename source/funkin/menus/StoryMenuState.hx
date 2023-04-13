@@ -1,11 +1,11 @@
 package funkin.menus;
 
+import funkin.savedata.FunkinSave;
 import haxe.io.Path;
 import funkin.scripting.events.*;
 import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
 import flixel.graphics.frames.FlxFramesCollection;
-import funkin.game.Highscore;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import funkin.system.FunkinText;
@@ -201,7 +201,7 @@ class StoryMenuState extends MusicBeatState {
 			}
 		}
 
-		intendedScore = Highscore.getWeekScore(weeks[curWeek].name, weeks[curWeek].difficulties[curDifficulty]).score;
+		intendedScore = FunkinSave.getWeekHighscore(weeks[curWeek].name, weeks[curWeek].difficulties[curDifficulty]).score;
 	}
 
 	public function loadXMLs() {
@@ -336,7 +336,7 @@ class StoryMenuState extends MusicBeatState {
 			if (char.animation.exists("confirm"))
 				char.animation.play("confirm");
 
-		CoolUtil.loadWeek(weeks[curWeek], weeks[curWeek].difficulties[curDifficulty]);
+		PlayState.loadWeek(weeks[curWeek], weeks[curWeek].difficulties[curDifficulty]);
 
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{

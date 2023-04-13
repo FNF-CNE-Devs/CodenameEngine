@@ -10,7 +10,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
 import funkin.game.HealthIcon;
-import funkin.game.Highscore;
+import funkin.savedata.FunkinSave;
 import haxe.Json;
 import funkin.scripting.events.*;
 
@@ -256,32 +256,39 @@ class FreeplayState extends MusicBeatState
 		if (controls.ACCEPT && !dontPlaySongThisFrame)
 			select();
 	}
+	
+	var __opponentMode:Bool = false;
+	var __coopMode:Bool = false;
+
+	function updateCoopModes() {
+		__opponentMode = false;
+		__coopMode = false;
+		if (songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed) {
+			__opponentMode = curCoopMode % 2 == 1;
+			__coopMode = curCoopMode >= 2;
+		} else if (songs[curSelected].coopAllowed) {
+			__coopMode = curCoopMode == 1;
+		} else if (songs[curSelected].opponentModeAllowed) {
+			__opponentMode = curCoopMode == 1;
+		}
+	}
 
 	/**
 	 * Selects the current song.
 	 */
 	public function select() {
-		var opponentMode:Bool = false;
-		var coopMode:Bool = false;
-		if (songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed) {
-			opponentMode = curCoopMode % 2 == 1;
-			coopMode = curCoopMode >= 2;
-		} else if (songs[curSelected].coopAllowed) {
-			coopMode = curCoopMode == 1;
-		} else if (songs[curSelected].opponentModeAllowed) {
-			opponentMode = curCoopMode == 1;
-		}
+		updateCoopModes();
 
 		if (songs[curSelected].difficulties.length <= 0) return;
 
-		var event = event("onSelect", EventManager.get(FreeplaySongSelectEvent).recycle(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty], opponentMode, coopMode));
+		var event = event("onSelect", EventManager.get(FreeplaySongSelectEvent).recycle(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty], __opponentMode, __coopMode));
 
 		if (event.cancelled) return;
 
 		Options.freeplayLastSong = songs[curSelected].name;
 		Options.freeplayLastDifficulty = songs[curSelected].difficulties[curDifficulty];
 
-		CoolUtil.loadSong(event.song, event.difficulty, event.opponentMode, event.coopMode);
+		PlayState.loadSong(event.song, event.difficulty, event.opponentMode, event.coopMode);
 		FlxG.switchState(new PlayState());
 	}
 
@@ -308,14 +315,25 @@ class FreeplayState extends MusicBeatState
 
 		curDifficulty = event.value;
 
-		#if !switch
-		intendedScore = validDifficulties ? Highscore.getScore(curSong.name, curSong.difficulties[curDifficulty]).score : 0;
-		#end
+		updateScore();
 
 		if (curSong.difficulties.length > 1)
 			diffText.text = '< ${curSong.difficulties[curDifficulty]} >';
 		else
 			diffText.text = validDifficulties ? curSong.difficulties[curDifficulty] : "-";
+	}
+
+	function updateScore() {
+		if (songs[curSelected].difficulties.length <= 0) {
+			intendedScore = 0;
+			return;
+		}
+		updateCoopModes();
+		var changes:Array<HighscoreChange> = [];
+		if (__coopMode) changes.push(CCoopMode);
+		if (__opponentMode) changes.push(COpponentMode);
+		var saveData = FunkinSave.getSongHighscore(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty], changes);
+		intendedScore = saveData.score;
 	}
 
 	/**
@@ -342,8 +360,9 @@ class FreeplayState extends MusicBeatState
 
 		if (event.cancelled) return;
 
-
 		curCoopMode = event.value;
+		
+		updateScore();
 
 		if (bothEnabled) {
 			coopText.text = coopLabels[curCoopMode];

@@ -9,7 +9,6 @@ import flixel.system.ui.FlxSoundTray;
 import funkin.utils.NativeAPI;
 import funkin.menus.BetaWarningState;
 import funkin.menus.TitleState;
-import funkin.game.Highscore;
 import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Assets;
@@ -157,9 +156,8 @@ class Main extends Sprite
 		Assets.registerLibrary('default', lib);
 
 		funkin.options.PlayerSettings.init();
-		funkin.saves.FunkinSave.init();
+		funkin.savedata.FunkinSave.init();
 		Options.load();
-		Highscore.load();
 
 		FlxG.fixedTimestep = false;
 
