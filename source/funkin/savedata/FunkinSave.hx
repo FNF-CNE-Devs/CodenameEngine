@@ -22,7 +22,7 @@ class FunkinSave {
 
 	public static function init() {
 		save = new FlxSave();
-		save.bind('save', #if sys 'YoshiCrafter29/CodenameEngine/save-default' #else 'save-default' #end);
+		save.bind('save-default', #if sys 'YoshiCrafter29/CodenameEngine' #else 'CodenameEngine' #end);
 		load();
 
 		if (!__eventAdded) {
