@@ -9,7 +9,7 @@ class CreditsMain extends OptionsScreen {
 		options = [
 			// TODO: Custom Credits
 			new TextOption("Codename Engine", "Select this to see all of the contributors of the engine!", function() {
-				FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
+				MusicBeatState.skipTransIn = MusicBeatState.skipTransOut = true;
 				FlxG.switchState(new CreditsCodename());
 			}),
 			new TextOption("Friday Night Funkin'", "Select this to open the itch.io page of the original game to donate!", function() {

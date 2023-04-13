@@ -98,8 +98,8 @@ class EditorPicker extends MusicBeatSubstate {
 			selected = true;
 			CoolUtil.playMenuSFX(CONFIRM);
 			
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
+			MusicBeatState.skipTransIn = true;
+			MusicBeatState.skipTransOut = true;
 
 			FlxG.sound.music.fadeOut(0.7, 0, function(n) {
 				FlxG.sound.music.stop();

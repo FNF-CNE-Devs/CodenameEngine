@@ -50,7 +50,7 @@ class BetaWarningState extends MusicBeatState {
 	}
 
 	private function goToTitle() {
-		FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
+		MusicBeatState.skipTransIn = MusicBeatState.skipTransOut = true;
 		FlxG.switchState(new TitleState());
 	}
 }

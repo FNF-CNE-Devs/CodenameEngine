@@ -46,7 +46,7 @@ class TitleState extends MusicBeatState
 	{
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
-		FlxTransitionableState.skipNextTransIn = true;
+		MusicBeatState.skipTransIn = true;
 
 		super.create();
 

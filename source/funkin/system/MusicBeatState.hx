@@ -93,8 +93,8 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 
 	public var scriptName:String = null;
 
-	public var skipTransOut:Bool = true;
-	public var skipTransIn:Bool = true;
+	public static var skipTransOut:Bool = false;
+	public static var skipTransIn:Bool = false;
 
 	inline function get_controls():Controls
 		return PlayerSettings.solo.controls;
@@ -153,7 +153,10 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		super.createPost();
 		persistentUpdate = true;
 		call("postCreate");
-		openSubState(new MusicBeatTransition(null));
+		if (!skipTransOut)
+			openSubState(new MusicBeatTransition(null));
+		skipTransIn = false;
+		skipTransOut = false;
 	}
 	public function call(name:String, ?args:Array<Dynamic>, ?defaultVal:Dynamic):Dynamic {
 		// calls the function on the assigned script
@@ -244,6 +247,8 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		if (e.cancelled)
 			return false;
 
+		if (skipTransOut)
+			return true;
 		if (subState is MusicBeatTransition && cast(subState, MusicBeatTransition).newState != null)
 			return true;
 		openSubState(new MusicBeatTransition(nextState));

@@ -128,7 +128,7 @@ class CreditsCodename extends OptionsScreen {
 	}
 
 	public override function exit() {
-		FlxTransitionableState.skipNextTransOut = true;
+		MusicBeatState.skipTransOut = true;
 		FlxG.switchState(new CreditsMain());
 	}
 }

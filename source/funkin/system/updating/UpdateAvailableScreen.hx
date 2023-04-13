@@ -31,7 +31,7 @@ class UpdateAvailableScreen extends MusicBeatState {
 
 	public override function create() {
 		super.create();
-		FlxTransitionableState.skipNextTransIn = true;
+		MusicBeatState.skipTransIn = true;
 		FlxG.mouse.visible = true;
 
 		FlxG.camera.flash(0xFF000000, 0.25);

@@ -197,7 +197,7 @@ class KeybindsOptions extends MusicBeatSubstate {
 			changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
 			
 			if (controls.BACK) {
-				FlxTransitionableState.skipNextTransIn = true;
+				MusicBeatState.skipTransIn = true;
 				if (isSubState)
 					close();
 				else

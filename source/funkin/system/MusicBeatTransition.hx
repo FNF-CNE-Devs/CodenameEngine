@@ -61,7 +61,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 			return;
 		}
 
-		if (!parent.persistentUpdate && controls.ACCEPT) {
+		if (!parent.persistentUpdate && FlxG.keys.pressed.SHIFT) {
 			// skip
 			if (newState != null) {
 				nextFrameSkip = true;

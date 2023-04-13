@@ -640,7 +640,7 @@ class PlayState extends MusicBeatState
 		if (smoothTransitionData != null && smoothTransitionData.stage == curStage) {
 			FlxG.camera.scroll.set(smoothTransitionData.camX, smoothTransitionData.camY);
 			FlxG.camera.zoom = smoothTransitionData.camZoom;
-			FlxTransitionableState.skipNextTransIn = true;
+			MusicBeatState.skipTransIn = true;
 			camFollow.setPosition(smoothTransitionData.camFollowX, smoothTransitionData.camFollowY);
 		} else {
 			FlxG.camera.focusOn(camFollow.getPosition());
@@ -742,19 +742,19 @@ class PlayState extends MusicBeatState
 					callback();
 				}));
 			} else if (Assets.exists(dialogue)) {
-				FlxTransitionableState.skipNextTransIn = true;
+				MusicBeatState.skipTransIn = true;
 				openSubState(new DialogueCutscene(dialogue, function() {
 					callback();
 				}));
 			} else if (Assets.exists(videoCutsceneAlt)) {
-				FlxTransitionableState.skipNextTransIn = true;
+				MusicBeatState.skipTransIn = true;
 				persistentUpdate = false;
 				openSubState(new VideoCutscene(videoCutsceneAlt, function() {
 					callback();
 				}));
 				persistentDraw = false;
 			} else if (Assets.exists(videoCutscene)) {
-				FlxTransitionableState.skipNextTransIn = true;
+				MusicBeatState.skipTransIn = true;
 				persistentUpdate = false;
 				openSubState(new VideoCutscene(videoCutscene, function() {
 					callback();
@@ -933,7 +933,7 @@ class PlayState extends MusicBeatState
 		var event = scripts.event("onSubstateOpen", EventManager.get(StateEvent).recycle(SubState));
 
 		if (!postCreated)
-			FlxTransitionableState.skipNextTransIn = true;
+			MusicBeatState.skipTransIn = true;
 
 		if (event.cancelled) return;
 
@@ -1296,8 +1296,8 @@ class PlayState extends MusicBeatState
 			camFollowY: camFollow.y,
 			camZoom: FlxG.camera.zoom
 		};
-		FlxTransitionableState.skipNextTransIn = true;
-		FlxTransitionableState.skipNextTransOut = true;
+		MusicBeatState.skipTransIn = true;
+		MusicBeatState.skipTransOut = true;
 	}
 
 	var __funcsToExec:Array<Note->Void> = [];
