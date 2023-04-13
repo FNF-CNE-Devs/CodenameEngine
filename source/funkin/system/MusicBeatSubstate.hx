@@ -250,10 +250,12 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	}
 
 	public override function resetSubState() {
-		super.resetSubState();
 		if (subState != null && subState is MusicBeatSubstate) {
 			cast(subState, MusicBeatSubstate).parent = this;
+			super.resetSubState();
 			cast(subState, MusicBeatSubstate).onSubstateOpen();
+			return;
 		}
+		super.resetSubState();
 	}
 }

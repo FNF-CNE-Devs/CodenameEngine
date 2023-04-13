@@ -11,7 +11,7 @@ import funkin.system.interfaces.IBeatReceiver;
 import funkin.system.Conductor;
 import funkin.options.PlayerSettings;
 
-class MusicBeatState extends FlxTransitionableState implements IBeatReceiver
+class MusicBeatState extends FlxState implements IBeatReceiver
 {
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
@@ -93,6 +93,9 @@ class MusicBeatState extends FlxTransitionableState implements IBeatReceiver
 
 	public var scriptName:String = null;
 
+	public var skipTransOut:Bool = true;
+	public var skipTransIn:Bool = true;
+
 	inline function get_controls():Controls
 		return PlayerSettings.solo.controls;
 	inline function get_controlsP1():Controls
@@ -150,6 +153,7 @@ class MusicBeatState extends FlxTransitionableState implements IBeatReceiver
 		super.createPost();
 		persistentUpdate = true;
 		call("postCreate");
+		openSubState(new MusicBeatTransition(null));
 	}
 	public function call(name:String, ?args:Array<Dynamic>, ?defaultVal:Dynamic):Dynamic {
 		// calls the function on the assigned script
@@ -239,7 +243,12 @@ class MusicBeatState extends FlxTransitionableState implements IBeatReceiver
 		var e = event("onStateSwitch", EventManager.get(StateEvent).recycle(nextState));
 		if (e.cancelled)
 			return false;
-		return super.switchTo(nextState);
+
+		if (subState is MusicBeatTransition && cast(subState, MusicBeatTransition).newState != null)
+			return true;
+		openSubState(new MusicBeatTransition(nextState));
+		persistentUpdate = false;
+		return false;
 	}
 
 	public override function onFocus() {
