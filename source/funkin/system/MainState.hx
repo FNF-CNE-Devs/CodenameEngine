@@ -13,7 +13,7 @@ import flixel.FlxState;
  */
 class MainState extends FlxState {
 	public static var initiated:Bool = false;
-	public static var betaWarningShown:Bool = true;
+	public static var betaWarningShown:Bool = false;
 	public override function create() {
 		super.create();
 		if (!initiated)
