@@ -12,7 +12,7 @@ class UISliceSprite extends UISprite {
 	public function new(x:Float, y:Float, w:Int, h:Int, path:String) {
 		super(x, y);
 
-		frames = CoolUtil.loadFrames(Paths.image(path));
+		frames = Paths.getFrames(path);
 		resize(w, h);
 	}
 

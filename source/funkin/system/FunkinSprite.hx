@@ -95,7 +95,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		}
 		else
 		{
-			frames = CoolUtil.loadFrames(path, Unique, Key, true);
+			frames = Paths.getFrames(path, true);
 		}
 	}
 

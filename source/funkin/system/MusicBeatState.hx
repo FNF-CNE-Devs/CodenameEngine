@@ -153,7 +153,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		super.createPost();
 		persistentUpdate = true;
 		call("postCreate");
-		if (!skipTransOut)
+		if (!skipTransIn)
 			openSubState(new MusicBeatTransition(null));
 		skipTransIn = false;
 		skipTransOut = false;

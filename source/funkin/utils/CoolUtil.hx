@@ -5,12 +5,8 @@ import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.sound.FlxSound;
 import funkin.system.Conductor;
 import flixel.sound.FlxSoundGroup;
-import animateatlas.AtlasFrameMaker;
 import haxe.Json;
 import funkin.menus.StoryMenuState.WeekData;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.system.FlxAssets.FlxGraphicAsset;
-import flixel.graphics.FlxGraphic;
 import haxe.io.Path;
 import haxe.xml.Access;
 import flixel.input.keyboard.FlxKey;
@@ -432,63 +428,12 @@ class CoolUtil
 	}
 
 	/**
-	 * Loads frames from a specific image path. Supports Sparrow Atlases, Packer Atlases, and multiple spritesheets.
-	 * @param path Path to the image
-	 * @param Unique Whenever the image should be unique in the cache
-	 * @param Key Key to the image in the cache
-	 * @param SkipAtlasCheck Whenever the atlas check should be skipped.
-	 * @return FlxFramesCollection Frames
-	 */
-	public static function loadFrames(path:String, Unique:Bool = false, Key:String = null, SkipAtlasCheck:Bool = false):FlxFramesCollection {
-		var noExt = Path.withoutExtension(path);
-
-		if (Assets.exists('$noExt/1.png')) {
-			// MULTIPLE SPRITESHEETS!!
-
-			var graphic = FlxG.bitmap.add("flixel/images/logo/default.png", false, '$noExt/mult');
-			var frames = FlxAtlasFrames.findFrame(graphic);
-			if (frames != null)
-				return frames;
-
-			trace("no frames yet for multiple atlases!!");
-			var spritesheets = [];
-			var cur = 1;
-			var finalFrames = new FlxFramesCollection(graphic, ATLAS);
-			while(Assets.exists('$noExt/$cur.png')) {
-				spritesheets.push(loadFrames('$noExt/$cur.png'));
-				cur++;
-			}
-			for(frames in spritesheets)
-				if (frames != null && frames.frames != null)
-					for(f in frames.frames)
-						if (f != null) {
-							finalFrames.frames.push(f);
-							f.parent = frames.parent;
-						}
-			return finalFrames;
-		} else if (!SkipAtlasCheck && Assets.exists('$noExt/Animation.json')
-		&& Assets.exists('$noExt/spritemap.json')
-		&& Assets.exists('$noExt/spritemap.png')) {
-			return AtlasFrameMaker.construct(noExt);
-		} else if (Assets.exists('$noExt.xml')) {
-			return Paths.getSparrowAtlasAlt(noExt);
-		} else if (Assets.exists('$noExt.txt')) {
-			return Paths.getPackerAtlasAlt(noExt);
-		}
-
-		var graph:FlxGraphic = FlxG.bitmap.add(path, Unique, Key);
-		if (graph == null)
-			return null;
-		return graph.imageFrame;
-	}
-
-	/**
 	 * Loads an animated graphic, and automatically animates it.
 	 * @param spr Sprite to load the graphic for
 	 * @param path Path to the graphic
 	 */
 	public static function loadAnimatedGraphic(spr:FlxSprite, path:String) {
-		spr.frames = loadFrames(path);
+		spr.frames = Paths.getFrames(path, true);
 
 		if (spr.frames != null && spr.frames.frames != null) {
 			spr.animation.add("idle", [for(i in 0...spr.frames.frames.length) i], 24, true);
