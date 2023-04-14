@@ -8,7 +8,7 @@ Known issues in the beta:
 - Week 6 still have no dialogue
 - Week 7 have no running tankman
 
-Build instructions are below. Press TAB on the main menu to switch mods (make sure a mod folder exists or it crashes).
+Build instructions are below. Press TAB on the main menu to switch mods.
 
 Also, `lime test windows` uses the source assets folder instead of the export one for easier development.
 
