@@ -13,7 +13,9 @@ class FunkinSave {
 	public static var highscores:Map<HighscoreEntry, SongScore> = [];
 
 
-	// STUFF
+	/**
+	 * ONLY OPEN IF YOU WANT TO EDIT FUNCTIONS RELATED TO SAVING, LOADING OR HIGHSCORES.
+	 */
 	#if REGION
 	@:dox(hide) @:doNotSave
 	private static var __eventAdded = false;

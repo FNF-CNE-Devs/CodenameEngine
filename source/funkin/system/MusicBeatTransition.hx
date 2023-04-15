@@ -6,6 +6,8 @@ import funkin.utils.FunkinParentDisabler;
 
 class MusicBeatTransition extends MusicBeatSubstate {
 	var nextFrameSkip:Bool = false;
+
+	public var transitionTween:FlxTween = null;
 	public var transitionCamera:FlxCamera;
 	public var newState:FlxState;
 
@@ -45,7 +47,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 		add(transitionSprite);
 
 		transitionCamera.scroll.y = transitionCamera.height;
-		FlxTween.tween(transitionCamera.scroll, {y: -transitionCamera.height}, 2/3, {
+		transitionTween = FlxTween.tween(transitionCamera.scroll, {y: -transitionCamera.height}, 2/3, {
 			ease: FlxEase.sineOut,
 			onComplete: function(_) {
 				finish();
@@ -79,6 +81,9 @@ class MusicBeatTransition extends MusicBeatSubstate {
 	}
 
 	public override function destroy() {
+		if (transitionTween != null)
+			transitionTween.cancel();
+		transitionTween = FlxDestroyUtil.destroy(transitionTween);
 		if (newState == null && FlxG.cameras.list.contains(transitionCamera))
 			FlxG.cameras.remove(transitionCamera);
 		else
