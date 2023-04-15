@@ -14,6 +14,8 @@ import flixel.addons.display.FlxBackdrop;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UIState;
 import openfl.net.FileReference;
+import funkin.assets.ModsFolder;
+import sys.FileSystem;
 
 class Charter extends UIState {
 	var __song:String;
@@ -93,6 +95,10 @@ class Charter extends UIState {
 				childs: [
 					{
 						label: "New"
+					},
+					{
+						label: "Save",
+						onSelect: _file_save
 					},
 					null,
 					{
@@ -637,6 +643,33 @@ class Charter extends UIState {
 	#if REGION
 	function _file_exit(_) {
 		FlxG.switchState(new CharterSelection());
+	}
+	function _file_save(_) {
+		buildChart();
+		var path:String = (chart.fromMods ? '${ModsFolder.modsPath}${ModsFolder.currentModFolder}' : './assets') + '/songs/$__song';
+		if (!FileSystem.exists(path))
+			FileSystem.createDirectory(path);
+
+		if (FileSystem.exists('$path/charts/${__diff.toLowerCase()}.json'))
+		{
+			openSubState(new UIWarningSubstate("WARNING", 'There already exists a chart for $__song-${__diff.toLowerCase()}. Do you want to overwrite it?', [
+				{
+					label: "Nuh Uh",
+					onClick: function(t) {}
+				},
+				{
+					label: "Yeah",
+					onClick: function(t) {
+						Chart.save(path, chart, __diff.toLowerCase(), {saveMetaInChart: true});
+						trace('saved to $path/charts/$__diff.json');
+					}
+				}
+			]));
+		}
+		else {
+			Chart.save(path, chart, __diff.toLowerCase(), {saveMetaInChart: true});
+			trace('saved to $path/charts/$__diff.json');
+		}
 	}
 	function _edit_copy(_) {
 		var minStep:Float = selection[0].step;
