@@ -5,6 +5,7 @@ on:
 jobs:
   build:
     name: Mac OS Build
+    permissions: write-all
     runs-on: macos-latest
     steps:
       - name: Pulling the new commit

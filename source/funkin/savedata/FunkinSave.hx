@@ -1,5 +1,6 @@
 package funkin.savedata;
 
+import lime.app.Application;
 import openfl.Lib;
 import flixel.util.FlxSave;
 
@@ -23,6 +24,8 @@ class FunkinSave {
 	public static var save:FlxSave;
 
 	public static function init() {
+		trace(Application.current.meta.get('save-path'));
+		trace(Application.current.meta.get('save-name'));
 		save = new FlxSave();
 		save.bind('save-default', #if sys 'YoshiCrafter29/CodenameEngine' #else 'CodenameEngine' #end);
 		load();
@@ -89,7 +92,6 @@ class FunkinSave {
 		return false;
 	}
 	#end
-
 }
 
 enum HighscoreEntry {
