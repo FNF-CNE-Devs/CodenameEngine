@@ -661,14 +661,12 @@ class Charter extends UIState {
 					label: "Yeah",
 					onClick: function(t) {
 						Chart.save(path, chart, __diff.toLowerCase(), {saveMetaInChart: true});
-						trace('saved to $path/charts/$__diff.json');
 					}
 				}
 			]));
 		}
 		else {
 			Chart.save(path, chart, __diff.toLowerCase(), {saveMetaInChart: true});
-			trace('saved to $path/charts/$__diff.json');
 		}
 	}
 	function _edit_copy(_) {
