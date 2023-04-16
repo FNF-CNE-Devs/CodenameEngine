@@ -20,7 +20,8 @@ class ScriptsMacro {
 			"flixel.addons.plugin", "flixel.addons.text", "flixel.addons.tile", "flixel.addons.transition",
 			"flixel.addons.util",
 			// OTHER LIBRARIES & STUFF
-			"away3d", "flx3d", #if sys "sys", #end
+			"away3d", "flx3d", #if sys "sys", #end "openfl.net",
+			"funkin.system.net",
 			// BASE HAXE
 			"DateTools", "EReg", "Lambda", "StringBuf", "haxe.crypto", "haxe.display", "haxe.exceptions", "haxe.extern", "scripting"
 		])

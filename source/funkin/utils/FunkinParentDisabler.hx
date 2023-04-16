@@ -44,6 +44,13 @@ class FunkinParentDisabler extends FlxBasic {
 	public override function update(elapsed:Float) {}
 	public override function draw() {}
 
+	public function reset() {
+		__tweens = [];
+		__cameras = [];
+		__timers = [];
+		__sounds = [];
+	}
+
 	public override function destroy() {
 		super.destroy();
 		@:privateAccess {

@@ -36,11 +36,12 @@ class PauseSubState extends MusicBeatSubstate
 		super();
 	}
 
+	var parentDisabler:FunkinParentDisabler;
 	override function create()
 	{
 		super.create();
 
-		add(new FunkinParentDisabler());
+		add(parentDisabler = new FunkinParentDisabler());
 
 		pauseScript = Script.create(Paths.script(script));
 		pauseScript.setParent(this);
@@ -140,6 +141,7 @@ class PauseSubState extends MusicBeatSubstate
 			case "Resume":
 				close();
 			case "Restart Song":
+				parentDisabler.reset();
 				PlayState.instance.registerSmoothTransition();
 				FlxG.resetState();
 			case "Change Controls":
@@ -154,6 +156,7 @@ class PauseSubState extends MusicBeatSubstate
 	}
 	override function destroy()
 	{
+
 		if(FlxG.cameras.list.contains(camera))
 			FlxG.cameras.remove(camera, true);
 		pauseScript.call("onDestroy");
