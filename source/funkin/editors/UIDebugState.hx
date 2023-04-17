@@ -99,6 +99,7 @@ class UIDebugState extends UIState {
 				}
 			]));
 		}, 130, 48));
+		add(new UITextBox(10, 220, ""));
 	}
 
 	public override function update(elapsed:Float) {

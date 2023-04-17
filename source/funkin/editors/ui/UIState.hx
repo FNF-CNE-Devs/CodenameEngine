@@ -1,5 +1,8 @@
 package funkin.editors.ui;
 
+import lime.ui.KeyModifier;
+import lime.ui.KeyCode;
+import openfl.events.KeyboardEvent;
 import funkin.system.framerate.Framerate;
 import funkin.editors.ui.UIContextMenu.UIContextMenuCallback;
 import openfl.ui.Mouse;
@@ -15,6 +18,7 @@ class UIState extends MusicBeatState {
 
 	public var buttonHandler:Void->Void = null;
 	public var hoveredSprite:UISprite = null;
+	public var currentFocus:IUIFocusable = null;
 
 	private var __rect:FlxRect;
 	private var __mousePos:FlxPoint;
@@ -27,6 +31,25 @@ class UIState extends MusicBeatState {
 		__mousePos = FlxPoint.get();
 		super.create();
 		Framerate.offset.y = 30;
+
+		FlxG.stage.window.onKeyDown.add(onKeyDown);
+		FlxG.stage.window.onKeyUp.add(onKeyUp);
+		FlxG.stage.window.onTextInput.add(onTextInput);
+	}
+
+	private function onKeyDown(e:KeyCode, modifier:KeyModifier) {
+		if (currentFocus != null)
+			currentFocus.onKeyDown(e, modifier);
+	}
+
+	private function onKeyUp(e:KeyCode, modifier:KeyModifier) {
+		if (currentFocus != null)
+			currentFocus.onKeyUp(e, modifier);
+	}
+
+	private function onTextInput(str:String) {
+		if (currentFocus != null)
+			currentFocus.onTextInput(str);
 	}
 
 	public function updateButtonHandler(spr:UISprite, buttonHandler:Void->Void) {
@@ -69,6 +92,9 @@ class UIState extends MusicBeatState {
 			buttonHandler = null;
 		}
 
+		if (FlxG.mouse.justReleased)
+			currentFocus = (hoveredSprite is IUIFocusable) ? (cast hoveredSprite) : null;
+
 		if (hoveredSprite != null) {
 			Mouse.cursor = hoveredSprite.cursor;
 			hoveredSprite = null;
@@ -80,6 +106,9 @@ class UIState extends MusicBeatState {
 	public override function destroy() {
 		super.destroy();
 		__mousePos.put();
+		FlxG.stage.window.onKeyDown.remove(onKeyDown);
+		FlxG.stage.window.onKeyUp.remove(onKeyUp);
+		FlxG.stage.window.onTextInput.remove(onTextInput);
 	}
 
 	public function openContextMenu(options:Array<UIContextMenuOption>, ?callback:UIContextMenuCallback, ?x:Float, ?y:Float) {

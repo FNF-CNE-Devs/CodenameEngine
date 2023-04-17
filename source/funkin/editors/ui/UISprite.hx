@@ -21,6 +21,22 @@ class UISprite extends FlxSprite {
 
 	public var cursor:MouseCursor = ARROW;
 
+	public var focused(get, set):Bool;
+
+	private inline function get_focused():Bool
+		return UIState.state.currentFocus == cast this;
+
+	private inline function set_focused(b:Bool):Bool {
+		if (get_focused()) {
+			if (!b)
+				UIState.state.currentFocus = null;
+		} else {
+			if (b)
+				UIState.state.currentFocus = cast this;
+		}
+		return b;
+	}
+
 	public override function update(elapsed:Float) {
 		hovered = false;
 		pressed = false;
