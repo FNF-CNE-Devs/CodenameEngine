@@ -26,8 +26,8 @@
 	<SubTexture name="pressed-topright" x="88" y="0" width="8" height="8"/>
 	<SubTexture name="pressed-middleleft" x="64" y="8" width="8" height="16"/>
 	<SubTexture name="pressed-middle" x="72" y="8" width="16" height="16"/>
-	<SubTexture name="pressed-middleright" x="80" y="8" width="8" height="16"/>
+	<SubTexture name="pressed-middleright" x="88" y="8" width="8" height="16"/>
 	<SubTexture name="pressed-bottomleft" x="64" y="24" width="8" height="8"/>
 	<SubTexture name="pressed-bottom" x="72" y="24" width="16" height="8"/>
-	<SubTexture name="pressed-bottomright" x="80" y="24" width="8" height="8"/>
+	<SubTexture name="pressed-bottomright" x="88" y="24" width="8" height="8"/>
 </TextureAtlas>
