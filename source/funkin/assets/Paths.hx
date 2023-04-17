@@ -172,8 +172,8 @@ class Paths
 	 * @param library (Additional) library to load the frames from.
 	 */
 	public static function getFrames(key:String, assetsPath:Bool = false, ?library:String) {
-		if (tempFramesCache.exists(key)) {
-			if (tempFramesCache[key].parent.bitmap.readable)
+		if (tempFramesCache[key] != null) {
+			if (tempFramesCache[key].parent != null && tempFramesCache[key].parent.bitmap != null && tempFramesCache[key].parent.bitmap.readable)
 				return tempFramesCache[key];
 			else
 				tempFramesCache[key] = null;

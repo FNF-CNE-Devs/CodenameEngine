@@ -68,6 +68,8 @@
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
+	<haxeflag name="--macro" value="funkin.system.macros.NewHaxeWarning.warn()" />
+
 	<!--Enable the Flixel core recording system-->
 	<!--<haxedef name="FLX_RECORD" />-->
 
@@ -156,14 +158,15 @@
 	<haxedef name="openfl_dpi_aware" if="openfl_dpi_aware" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
+	
+	<haxelib name="flixel" />
+	<haxelib name="flixel-addons" />
 
 	<haxelib name="hxCodec" if="VIDEO_CUTSCENES" />
 	<haxelib name="away3d" />
 	<haxelib name="format" />
 	<haxelib name="flxanimate" />
 
-	<haxelib name="flixel" />
-	<haxelib name="flixel-addons" />
 	<haxedev set='webgl' />
 
 	<haxelib name="hscript-improved" />
