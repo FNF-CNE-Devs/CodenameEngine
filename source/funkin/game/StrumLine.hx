@@ -197,6 +197,8 @@ class StrumLine extends FlxTypedGroup<Strum> {
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
 
+			babyArrow.frameOffset.x -= (Note.swagWidth - babyArrow.width) / 2;
+
 			if (event.__doAnimation)
 			{
 				babyArrow.y -= 10;

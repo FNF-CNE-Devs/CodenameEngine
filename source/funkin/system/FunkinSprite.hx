@@ -1,5 +1,6 @@
 package funkin.system;
 
+import funkin.utils.XMLUtil.IXMLEvents;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.addons.effects.FlxSkewedSprite;
 import haxe.io.Path;
@@ -29,7 +30,7 @@ abstract XMLAnimType(Int)
 	}
 }
 
-class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements IOffsetCompatible
+class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements IOffsetCompatible implements IXMLEvents
 {
 	public var spriteAnimType:XMLAnimType = NONE;
 	public var beatAnims:Array<String> = [];
@@ -97,6 +98,11 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		{
 			frames = Paths.getFrames(path, true);
 		}
+	}
+
+	public function onPropertySet(property:String, value:Dynamic) {
+		if (property.startsWith("velocity") || property.startsWith("acceleration"))
+			moves = true;
 	}
 
 	public function beatHit(curBeat:Int)

@@ -42,6 +42,10 @@ class XMLUtil {
 		}
 		if (value == null) return VALUE_NULL;
 
+		if (object is IXMLEvents) {
+			cast(object, IXMLEvents).onPropertySet(property.att.name, value);
+		}
+
 		try {
 			Reflect.setProperty(o, keys[0], value);
 		} catch(e) {
@@ -210,4 +214,8 @@ typedef AnimData = {
 	var y:Float;
 	var indices:Array<Int>;
 	var animType:XMLAnimType;
+}
+
+interface IXMLEvents {
+	public function onPropertySet(property:String, value:Dynamic):Void;
 }

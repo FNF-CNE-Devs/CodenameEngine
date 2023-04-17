@@ -52,7 +52,7 @@ class Strum extends FlxSprite {
 		daNote.angle = daNote.isSustainNote ? daNote.__noteAngle : angle;
 
 		if (daNote.strumRelativePos) {
-			daNote.setPosition(daNote.isSustainNote ? ((Note.swagWidth - daNote.width) / 2) : 0, (daNote.strumTime - Conductor.songPosition) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
+			daNote.setPosition((Note.swagWidth - daNote.width) / 2, (daNote.strumTime - Conductor.songPosition) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
 			if (daNote.isSustainNote) daNote.y += N_WIDTHDIV2;
 		} else {
 			var offset = FlxPoint.get(0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));

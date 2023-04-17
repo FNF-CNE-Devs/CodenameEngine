@@ -669,7 +669,6 @@ class Charter extends UIState {
 		for(assetPath in [Paths.chart(__song, __diff.toLowerCase()), instPath]) {
 			var path = Assets.getPath(assetPath);
 			var filteredPath = path.substr(0, path.lastIndexOf(assetPath == instPath ? '/song/' : '/charts/'));
-			trace(filteredPath);
 			saveTo(filteredPath);
 			return;
 		}

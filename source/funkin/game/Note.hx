@@ -153,11 +153,11 @@ class Note extends FlxSprite
 					}
 
 					scale.set(event.noteScale, event.noteScale);
-					updateHitbox();
 					antialiasing = true;
 			}
 		}
 
+		updateHitbox();
 
 		if (isSustainNote && prevNote != null)
 		{
