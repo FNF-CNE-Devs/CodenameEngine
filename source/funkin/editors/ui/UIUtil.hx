@@ -19,6 +19,9 @@ class UIUtil {
 	 * @param topMenuOptions
 	 */
 	public static function processShortcuts(topMenuOptions:Array<UIContextMenuOption>) {
+		var maxKeyLength = 0;
+		var curTopMenuOption = null;
+
 		for(o in topMenuOptions) {
 			if (o == null) continue;
 
@@ -56,15 +59,21 @@ class UIUtil {
 					if (!needsShift && FlxG.keys.pressed.SHIFT) continue;
 					if (!pressed || !justPressed) continue;
 
-					if (o.onSelect != null)
-						o.onSelect(o);
-
-					return true;
+					if (maxKeyLength < o.keybinds.length) {
+						maxKeyLength = o.keybinds.length;
+						curTopMenuOption = o;
+					}
 				}
 			}
 
 			if (o.childs != null && processShortcuts(o.childs))
 				return true;
+		}
+
+		if (curTopMenuOption != null) {
+			if (curTopMenuOption.onSelect != null)
+				curTopMenuOption.onSelect(curTopMenuOption);
+			return true;
 		}
 		return false;
 	}

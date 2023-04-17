@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import haxe.Json;
 import flixel.input.keyboard.FlxKey;
 import flixel.sound.FlxSound;
 import flixel.util.FlxSort;
@@ -93,6 +94,17 @@ class Charter extends UIState {
 				childs: [
 					{
 						label: "New"
+					},
+					null,
+					{
+						label: "Save",
+						keybind: [CONTROL, S],
+						onSelect: _file_save,
+					},
+					{
+						label: "Save As...",
+						keybind: [CONTROL, SHIFT, S],
+						onSelect: _file_saveas,
 					},
 					null,
 					{
@@ -356,13 +368,14 @@ class Charter extends UIState {
 		loadSong();
 	}
 
+	var instPath:String;
 	public function loadSong() {
 		if (__reload)
 			PlayState.loadSong(__song, __diff, false, false);
 
 		Conductor.setupSong(PlayState.SONG);
 
-		FlxG.sound.setMusic(FlxG.sound.load(Paths.inst(__song, __diff)));
+		FlxG.sound.setMusic(FlxG.sound.load(instPath = Paths.inst(__song, __diff)));
 		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
 		vocals.group = FlxG.sound.defaultMusicGroup;
 
@@ -469,20 +482,31 @@ class Charter extends UIState {
 					if (!FlxG.keys.pressed.SHIFT)
 						verticalChange = CoolUtil.floorInt(verticalChange);
 					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
-					addToUndo(CNoteDrag([for(s in selection) {
+					var drags = [];
+					var deletes = [];
+					for(s in selection) {
 						var oldStep = s.step;
 						var oldID = s.id;
 
-						s.updatePos(s.step + verticalChange, s.id + horizontalChange, s.susLength, s.type);
+						var newID = s.id + horizontalChange;
+						var newStep = s.step + verticalChange;
+						if (newStep < 0 || newID < 0 || newID >= strumLines.length * 4) {
+							s.updatePos(s.step, s.id, s.susLength, s.type);
+							deletes.push(s);
+						} else {
+							s.updatePos(newStep, newID, s.susLength, s.type);
 
-						{
-							note: s,
-							oldID: oldID,
-							oldStep: oldStep,
-							newID: s.id,
-							newStep: s.step
-						};
-					}]));
+							drags.push({
+								note: s,
+								oldID: oldID,
+								oldStep: oldStep,
+								newID: s.id,
+								newStep: s.step
+							});
+						}
+					}
+					deleteNotes(deletes, false);
+					addToUndo(CNoteDrag(drags, deletes));
 					gridActionType = NONE;
 				}
 			case NONE:
@@ -527,23 +551,25 @@ class Charter extends UIState {
 		}
 	}
 
-	public function deleteNote(note:CharterNote):CharterNote {
+	public function deleteNote(note:CharterNote, addToUndo:Bool = true):CharterNote {
 		if (note == null) return note;
 
 		notesGroup.remove(note, true);
 		note.kill();
-		addToUndo(CDeleteNotes([note]));
+		if (addToUndo)
+			this.addToUndo(CDeleteNotes([note]));
 		return null;
 	}
 
-	public function deleteNotes(notes:Array<CharterNote>) {
+	public function deleteNotes(notes:Array<CharterNote>, addToUndo:Bool = true) {
 		if (notes.length <= 0) return [];
 
 		for(note in notes) {
 			notesGroup.remove(note, true);
 			note.kill();
 		}
-		addToUndo(CDeleteNotes(notes));
+		if (addToUndo)
+			this.addToUndo(CDeleteNotes(notes));
 		return [];
 	}
 
@@ -638,6 +664,32 @@ class Charter extends UIState {
 	function _file_exit(_) {
 		FlxG.switchState(new CharterSelection());
 	}
+	function _file_save(_) {
+		#if sys
+		for(assetPath in [Paths.chart(__song, __diff.toLowerCase()), instPath]) {
+			var path = Assets.getPath(assetPath);
+			var filteredPath = path.substr(0, path.lastIndexOf(assetPath == instPath ? '/song/' : '/charts/'));
+			trace(filteredPath);
+			saveTo(filteredPath);
+			return;
+		}
+		#end
+		_file_saveas(_);
+	}
+
+	function _file_saveas(_) {
+		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, true)), {
+			defaultSaveFile: '${__diff.toLowerCase()}.json'
+		}));
+	}
+
+	#if sys
+	function saveTo(path:String) {
+		buildChart();
+		Chart.save(path, PlayState.SONG, __diff.toLowerCase());
+	}
+	#end
+
 	function _edit_copy(_) {
 		var minStep:Float = selection[0].step;
 		for(s in selection)
@@ -694,9 +746,14 @@ class Charter extends UIState {
 			case CSustainChange(changes):
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.before, n.note.type);
-			case CNoteDrag(notes):
+			case CNoteDrag(notes, deletes):
 				for(n in notes)
 					n.note.updatePos(n.oldStep, n.oldID, n.note.susLength, n.note.type);
+				for(d in deletes) {
+					notesGroup.add(d);
+					d.revive();
+				}
+				selection = [for(n in notes) n.note];
 
 		}
 		if (v != null)
@@ -736,9 +793,11 @@ class Charter extends UIState {
 			case CSustainChange(changes):
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.after, n.note.type);
-			case CNoteDrag(notes):
+			case CNoteDrag(notes, deletes):
 				for(n in notes)
 					n.note.updatePos(n.newStep, n.newID, n.note.susLength, n.note.type);
+				deleteNotes(deletes, false);
+				selection = [for(n in notes) n.note];
 		}
 		if (v != null)
 			undoList.insert(0, v);
@@ -862,7 +921,7 @@ enum CharterChange {
 	CSustainChange(notes:Array<NoteSustainChange>);
 	CCreateNotes(notes:Array<CharterNote>);
 	CDeleteNotes(notes:Array<CharterNote>);
-	CNoteDrag(notes:Array<NoteDragChange>);
+	CNoteDrag(notes:Array<NoteDragChange>, deletes:Array<CharterNote>);
 }
 
 enum CharterCopyboardObject {

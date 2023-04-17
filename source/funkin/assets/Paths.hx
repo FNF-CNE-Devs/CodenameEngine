@@ -87,12 +87,14 @@ class Paths
 		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/song/Inst.$SOUND_EXT', null);
 	}
 
-	inline static public function image(key:String, ?library:String, checkForAtlas:Bool = false)
+	static public function image(key:String, ?library:String, checkForAtlas:Bool = false)
 	{
-		var atlasPath = checkForAtlas ? getPath('images/$key/spritemap.png', library) : null;
-		var multiplePath = checkForAtlas ? getPath('images/$key/1.png', library) : null;
-		if (atlasPath != null && OpenFlAssets.exists(atlasPath)) return atlasPath.substr(0, atlasPath.length - 14);
-		if (multiplePath != null && OpenFlAssets.exists(multiplePath)) return multiplePath.substr(0, multiplePath.length - 6);
+		if (checkForAtlas) {
+			var atlasPath = getPath('images/$key/spritemap.png', library);
+			var multiplePath = getPath('images/$key/1.png', library);
+			if (atlasPath != null && OpenFlAssets.exists(atlasPath)) return atlasPath.substr(0, atlasPath.length - 14);
+			if (multiplePath != null && OpenFlAssets.exists(multiplePath)) return multiplePath.substr(0, multiplePath.length - 6);
+		}
 		return getPath('images/$key.png', library);
 	}
 
@@ -115,17 +117,7 @@ class Paths
 		difficulty = difficulty.toLowerCase();
 		song = song.toLowerCase();
 
-		//var difficultyEnd = (difficulty == "normal") ? "" : '-$difficulty';
-
-		// songs/your-song/charts/hard.json
-		var p = getPath('songs/$song/charts/$difficulty.json', null);
-		if (OpenFlAssets.exists(p)) return p;
-
-		// data/charts/your-song/hard.json
-		var p = json('charts/$song/$difficulty');
-		if (OpenFlAssets.exists(p)) return p;
-
-		return p; // returns the normal one so that it shows the correct path in the error message.
+		return getPath('songs/$song/charts/$difficulty.json', null);
 	}
 
 	inline static public function font(key:String)
@@ -155,7 +147,7 @@ class Paths
 
 	inline static public function getSparrowAtlas(key:String, ?library:String)
 		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
-	
+
 	inline static public function getSparrowAtlasAlt(key:String)
 		return FlxAtlasFrames.fromSparrow('$key.png', '$key.xml');
 
@@ -181,7 +173,7 @@ class Paths
 		}
 		return tempFramesCache[key] = loadFrames(assetsPath ? key : Paths.image(key, library, true));
 	}
-	
+
 
 	/**
 	 * Loads frames from a specific image path. Supports Sparrow Atlases, Packer Atlases, and multiple spritesheets.

@@ -158,8 +158,6 @@ class Chart {
 		var filteredChart = filterChartForSaving(chart, saveSettings.saveMetaInChart);
 		var meta = filteredChart.meta;
 
-		// idk how null reacts to it so better be sure
-
 		#if sys
 		if (!FileSystem.exists('${songFolderPath}\\charts\\'))
 			FileSystem.createDirectory('${songFolderPath}\\charts\\');
@@ -169,6 +167,7 @@ class Chart {
 
 		File.saveContent(chartPath, Json.stringify(filteredChart, null, saveSettings.prettyPrint == true ? "\t" : null));
 
+		// idk how null reacts to it so better be sure
 		if (saveSettings.overrideExistingMeta == true || !FileSystem.exists(metaPath))
 			File.saveContent(metaPath, Json.stringify(meta, null, saveSettings.prettyPrint == true ? "\t" : null));
 		#end
