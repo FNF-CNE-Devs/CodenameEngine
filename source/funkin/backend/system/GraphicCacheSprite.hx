@@ -29,15 +29,17 @@ class GraphicCacheSprite extends FlxSprite {
 		if (graphic != null) {
 			// make their useCount one time higher to prevent them from auto being cleared from cache
 			graphic.useCount++;
+			graphic.destroyOnNoUse = false;
 			cachedGraphics.push(graphic);
 			nonRenderedCachedGraphics.push(graphic);
 		}
 	}
 
 	public override function destroy() {
-		for(g in cachedGraphics)
-			// make their usecount 1 time lower so that it can be cleared again
+		for(g in cachedGraphics) {
+			g.destroyOnNoUse = true;
 			g.useCount--;
+		}
 		graphic = null;
 		super.destroy();
 	}
