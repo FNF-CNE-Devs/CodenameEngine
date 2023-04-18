@@ -3,7 +3,7 @@
 ## `v1.0.0` - Initial release
 
 - [x] Remove Herobrine
-- [*] Chart Editor
+- [x] Chart Editor
 - [ ] New Switch Mod menu
 - [ ] Add note offset
 - [ ] Dialogue
