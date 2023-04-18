@@ -4,6 +4,7 @@
 
 - [x] Remove Herobrine
 - [*] Chart Editor
+- [ ] New Switch Mod menu
 - [ ] Add note offset
 - [ ] Dialogue
 - [ ] Finish Base Game port
