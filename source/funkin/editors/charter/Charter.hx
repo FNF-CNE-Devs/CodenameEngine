@@ -40,6 +40,8 @@ class Charter extends UIState {
 
 	public var topMenu:Array<UIContextMenuOption>;
 
+	public var scrollBar:UIScrollBar;
+
 	public var topMenuSpr:UITopMenu;
 	public var gridBackdrop:CharterBackdrop;
 	public var beatSeparator:FlxBackdrop;
@@ -332,9 +334,11 @@ class Charter extends UIState {
 
 		conductorFollowerSpr.cameras = selectionBox.cameras = notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
 
-
 		topMenuSpr = new UITopMenu(topMenu);
 		topMenuSpr.cameras = uiGroup.cameras = [uiCamera];
+
+		scrollBar = new UIScrollBar(FlxG.width - 20, topMenuSpr.bHeight, 1000, 0, 100);
+		uiGroup.add(scrollBar);
 
 		topLimit = new FlxSprite();
 		topLimit.makeGraphic(1, 1, -1);
@@ -389,6 +393,13 @@ class Charter extends UIState {
 
 			strumLines.add(new CharterStrumline(strL));
 		}
+
+		refreshBPMSensitive();
+	}
+
+	public function refreshBPMSensitive() {
+		// refreshes everything dependant on BPM, and BPM changes
+		scrollBar.length = Conductor.getStepForTime(FlxG.sound.music.getDefault(vocals).length);
 	}
 
 	public override function beatHit(curBeat:Int) {
@@ -592,6 +603,9 @@ class Charter extends UIState {
 		updateNoteLogic(elapsed);
 
 		super.update(elapsed);
+
+		scrollBar.size = (FlxG.height / 40 / charterCamera.zoom);
+		scrollBar.start = Conductor.curStepFloat - (scrollBar.size / 2);
 
 		if (gridBackdrop.strumlinesAmount != (gridBackdrop.strumlinesAmount = strumLines.length))
 			updateDisplaySprites();
