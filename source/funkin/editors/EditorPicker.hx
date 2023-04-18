@@ -95,22 +95,27 @@ class EditorPicker extends MusicBeatSubstate {
 		}
 
 		if (controls.ACCEPT || FlxG.mouse.justReleased) {
-			selected = true;
-			CoolUtil.playMenuSFX(CONFIRM);
-			
-			MusicBeatState.skipTransIn = true;
-			MusicBeatState.skipTransOut = true;
+			if (options[curSelected].state != null) {
+				selected = true;
+				CoolUtil.playMenuSFX(CONFIRM);
+				
+				MusicBeatState.skipTransIn = true;
+				MusicBeatState.skipTransOut = true;
 
-			FlxG.sound.music.fadeOut(0.7, 0, function(n) {
-				FlxG.sound.music.stop();
-			});
-
-			sprites[curSelected].flicker(function() {
-				if (FlxG.sound.music != null)
-				camera.fade(0xFF000000, 0.25, false, function() {
-					FlxG.switchState(Type.createInstance(options[curSelected].state, []));
+				FlxG.sound.music.fadeOut(0.7, 0, function(n) {
+					FlxG.sound.music.stop();
 				});
-			});
+
+				sprites[curSelected].flicker(function() {
+					if (FlxG.sound.music != null)
+					camera.fade(0xFF000000, 0.25, false, function() {
+						FlxG.switchState(Type.createInstance(options[curSelected].state, []));
+					});
+				});
+			} else {
+				CoolUtil.openURL("https://www.youtube.com/watch?v=9Youam7GYdQ");
+			}
+
 		}
 		if (controls.BACK)
 			close();
