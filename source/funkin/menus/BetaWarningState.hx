@@ -3,7 +3,7 @@ package funkin.menus;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.FlxColor;
 import flixel.text.FlxText;
-import funkin.system.FunkinText;
+import funkin.backend.FunkinText;
 
 class BetaWarningState extends MusicBeatState {
 	var titleAlphabet:Alphabet;

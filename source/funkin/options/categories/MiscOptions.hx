@@ -13,9 +13,9 @@ class MiscOptions extends OptionsScreen {
 			"Check for Updates",
 			"Select this option to check for new engine updates.",
 			function() {
-				var report = funkin.system.updating.UpdateUtil.checkForUpdates();
+				var report = funkin.backend.system.updating.UpdateUtil.checkForUpdates();
 				if (report.newUpdate) {
-					FlxG.switchState(new funkin.system.updating.UpdateAvailableScreen(report));
+					FlxG.switchState(new funkin.backend.system.updating.UpdateAvailableScreen(report));
 				} else {
 					CoolUtil.playMenuSFX(CANCEL);
 					updateDescText("No update found.");

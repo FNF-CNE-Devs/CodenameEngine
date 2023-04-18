@@ -1,7 +1,7 @@
 package funkin.menus;
 
-import funkin.chart.Chart;
-import funkin.chart.ChartData;
+import funkin.backend.chart.Chart;
+import funkin.backend.chart.ChartData;
 import haxe.io.Path;
 import flash.text.TextField;
 import flixel.FlxState;
@@ -12,7 +12,7 @@ import lime.utils.Assets;
 import funkin.game.HealthIcon;
 import funkin.savedata.FunkinSave;
 import haxe.Json;
-import funkin.scripting.events.*;
+import funkin.backend.scripting.events.*;
 
 using StringTools;
 
@@ -423,7 +423,7 @@ class FreeplaySonglist {
 
 	public function new() {}
 
-	public function getSongsFromSource(source:funkin.assets.AssetsLibraryList.AssetSource, useTxt:Bool = true) {
+	public function getSongsFromSource(source:funkin.backend.assets.AssetsLibraryList.AssetSource, useTxt:Bool = true) {
 		var path:String = Paths.txt('freeplaySonglist');
 		var songsFound:Array<String> = [];
 		if (useTxt && Paths.assetsTree.existsSpecific(path, "TEXT", source)) {

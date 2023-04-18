@@ -2,10 +2,10 @@ package funkin.game;
 
 import flixel.util.FlxSignal.FlxTypedSignal;
 
-import funkin.scripting.events.*;
-import funkin.system.Conductor;
-import funkin.chart.ChartData;
-import funkin.system.Controls;
+import funkin.backend.scripting.events.*;
+import funkin.backend.system.Conductor;
+import funkin.backend.chart.ChartData;
+import funkin.backend.system.Controls;
 import flixel.tweens.FlxTween;
 
 class StrumLine extends FlxTypedGroup<Strum> {

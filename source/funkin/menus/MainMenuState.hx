@@ -1,7 +1,7 @@
 package funkin.menus;
 
 import haxe.Json;
-import funkin.system.FunkinText;
+import funkin.backend.FunkinText;
 // import funkin.menus.credits.CreditsMain;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
@@ -11,7 +11,7 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
-import funkin.scripting.events.*;
+import funkin.backend.scripting.events.*;
 
 import funkin.options.OptionsMenu;
 
@@ -76,7 +76,7 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nBeta: Commit ${funkin.system.macros.GitCommitMacro.commitNumber} (${funkin.system.macros.GitCommitMacro.commitHash})\n[TAB] Open Mods menu\n');
+		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nBeta: Commit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[TAB] Open Mods menu\n');
 		versionShit.scrollFactor.set();
 		versionShit.y -= versionShit.height;
 		add(versionShit);
@@ -104,7 +104,7 @@ class MainMenuState extends MusicBeatState
 					FlxG.switchState(new funkin.desktop.DesktopMain());
 				if (FlxG.keys.justPressed.EIGHT) {
 					#if sys
-					sys.io.File.saveContent("chart.json", Json.stringify(funkin.chart.Chart.parse("dadbattle", "hard")));
+					sys.io.File.saveContent("chart.json", Json.stringify(funkin.backend.chart.Chart.parse("dadbattle", "hard")));
 					#end
 				}
 				*/

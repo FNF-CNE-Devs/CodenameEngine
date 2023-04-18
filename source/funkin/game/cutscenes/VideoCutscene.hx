@@ -6,7 +6,7 @@ import flixel.addons.display.FlxBackdrop;
 #if sys
 import sys.io.File;
 #end
-import funkin.system.FunkinText;
+import funkin.backend.FunkinText;
 import haxe.xml.Access;
 
 

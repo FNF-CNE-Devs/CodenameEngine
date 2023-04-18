@@ -10,7 +10,7 @@ import away3d.library.Asset3DLibraryBundle;
 import away3d.events.LoaderEvent;
 import away3d.loaders.AssetLoader;
 import away3d.loaders.misc.AssetLoaderToken;
-import funkin.system.Logs;
+import funkin.backend.system.Logs;
 import flixel.FlxG;
 import flx3d.Flx3DUtil;
 import away3d.library.assets.Asset3DType;
@@ -24,7 +24,7 @@ import away3d.loaders.misc.AssetLoaderContext;
 import openfl.Assets;
 import away3d.entities.Mesh;
 import away3d.loaders.Loader3D;
-import funkin.utils.NativeAPI.ConsoleColor;
+import funkin.backend.utils.NativeAPI.ConsoleColor;
 import flixel.FlxCamera;
 import away3d.containers.View3D;
 

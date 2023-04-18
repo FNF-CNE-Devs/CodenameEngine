@@ -1,6 +1,6 @@
 package funkin.editors.charter;
 
-import funkin.system.Conductor;
+import funkin.backend.system.Conductor;
 
 class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	var __loopSprite:CharterNote;

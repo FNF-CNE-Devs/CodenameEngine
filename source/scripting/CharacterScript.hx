@@ -1,6 +1,6 @@
 package scripting;
 
-import funkin.scripting.events.*;
+import funkin.backend.scripting.events.*;
 
 /**
  * Contains all callbacks you can add in a Character script.

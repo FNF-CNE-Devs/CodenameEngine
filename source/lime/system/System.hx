@@ -529,8 +529,8 @@ class System
 		// executes first!!
 		
 		#if sys
-		funkin.utils.NativeAPI.registerAsDPICompatible();
-		funkin.system.CommandLineHandler.parseCommandLine(Sys.args());
+		funkin.backend.utils.NativeAPI.registerAsDPICompatible();
+		funkin.backend.system.CommandLineHandler.parseCommandLine(Sys.args());
 		#end
 		
 		if (__applicationEntryPoint == null)

@@ -1,8 +1,8 @@
 package funkin.editors.charter;
 
-import funkin.system.Conductor;
+import funkin.backend.system.Conductor;
 import flixel.tweens.FlxTween;
-import funkin.shaders.CustomShader;
+import funkin.backend.shaders.CustomShader;
 import flixel.util.FlxColor;
 
 class CharterNote extends UISprite {

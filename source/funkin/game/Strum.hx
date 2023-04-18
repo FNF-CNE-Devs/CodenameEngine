@@ -1,7 +1,7 @@
 package funkin.game;
 
 import flixel.math.FlxPoint;
-import funkin.system.Conductor;
+import funkin.backend.system.Conductor;
 
 class Strum extends FlxSprite {
 	public var cpu = false;

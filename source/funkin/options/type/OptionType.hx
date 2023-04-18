@@ -1,6 +1,6 @@
 package funkin.options.type;
 
-import funkin.system.Controls;
+import funkin.backend.system.Controls;
 import flixel.group.FlxSpriteGroup;
 import funkin.options.OptionsScreen;
 

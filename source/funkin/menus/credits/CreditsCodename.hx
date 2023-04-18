@@ -1,18 +1,18 @@
 package funkin.menus.credits;
 
-import funkin.system.FunkinText;
+import funkin.backend.FunkinText;
 import flixel.util.FlxColor;
-import funkin.shaders.CustomShader;
+import funkin.backend.shaders.CustomShader;
 import funkin.options.type.TextOption;
 import funkin.options.OptionsScreen;
 import flixel.graphics.FlxGraphic;
 import openfl.display.BitmapData;
 import flixel.addons.transition.FlxTransitionableState;
-import funkin.system.github.GitHub;
-import funkin.system.github.GitHubContributor;
+import funkin.backend.system.github.GitHub;
+import funkin.backend.system.github.GitHubContributor;
 import funkin.menus.MainMenuState;
 
-using funkin.utils.BitmapUtil;
+using funkin.backend.utils.BitmapUtil;
 
 class CreditsCodename extends OptionsScreen {
 	public var contributorsSprites:Array<FlxSprite> = [];

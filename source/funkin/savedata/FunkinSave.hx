@@ -9,7 +9,7 @@ import flixel.util.FlxSave;
  * Just add your save variables the way you would do in the Options.hx file.
  * The macro will automatically generate the `flush` and `load` functions.
  */
-@:build(funkin.system.macros.FunkinSaveMacro.build("save", "flush", "load"))
+@:build(funkin.backend.system.macros.FunkinSaveMacro.build("save", "flush", "load"))
 class FunkinSave {
 	public static var highscores:Map<HighscoreEntry, SongScore> = [];
 

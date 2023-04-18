@@ -3,7 +3,7 @@
 	<!-- _________________________ Application Settings _________________________ -->
 
 	<app
-		title="Friday Night Funkin' - Codename Engine" main="funkin.system.Main"
+		title="Friday Night Funkin' - Codename Engine" main="funkin.backend.system.Main"
 		file="CodenameEngine" packageName="com.yoshman29.codenameengine"
 		package="com.yoshman29.codenameengine"
 		version="0.1.0" company="Yoshman29" />
@@ -68,7 +68,7 @@
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
-	<haxeflag name="--macro" value="funkin.system.macros.NewHaxeWarning.warn()" />
+	<haxeflag name="--macro" value="funkin.backend.system.macros.NewHaxeWarning.warn()" />
 
 	<!--Enable the Flixel core recording system-->
 	<!--<haxedef name="FLX_RECORD" />-->
@@ -180,10 +180,10 @@
 
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
-		<haxeflag name="--macro" value="funkin.system.macros.ScriptsMacro.addAdditionalClasses()" />
+		<haxeflag name="--macro" value="funkin.backend.system.macros.ScriptsMacro.addAdditionalClasses()" />
 	</section>
 
-	<haxeflag name="--macro" value="exclude('funkin.system.updating')" unless="UPDATE_CHECKING"/>
+	<haxeflag name="--macro" value="exclude('funkin.backend.system.updating')" unless="UPDATE_CHECKING"/>
 
 	<haxedef name="HXCPP_CHECK_POINTER" if="release" />
 	<haxedef name="HXCPP_STACK_LINE" if="release" />

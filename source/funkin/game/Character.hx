@@ -1,11 +1,11 @@
 package funkin.game;
 
-import funkin.system.FunkinSprite;
+import funkin.backend.FunkinSprite;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
-import funkin.system.interfaces.IBeatReceiver;
-import funkin.system.interfaces.IOffsetCompatible;
-import funkin.utils.XMLUtil;
+import funkin.backend.system.interfaces.IBeatReceiver;
+import funkin.backend.system.interfaces.IOffsetCompatible;
+import funkin.backend.utils.XMLUtil;
 
 import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -14,14 +14,14 @@ import flixel.math.FlxRect;
 import haxe.xml.Access;
 import haxe.Exception;
 import haxe.io.Path;
-import funkin.system.Conductor;
+import funkin.backend.system.Conductor;
 
 import flash.geom.ColorTransform;
 
-import funkin.scripting.DummyScript;
-import funkin.scripting.Script;
-import funkin.scripting.events.*;
-import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
+import funkin.backend.scripting.DummyScript;
+import funkin.backend.scripting.Script;
+import funkin.backend.scripting.events.*;
+import funkin.backend.scripting.events.PlayAnimEvent.PlayAnimContext;
 using StringTools;
 
 @:allow(funkin.desktop.editors.CharacterEditor)

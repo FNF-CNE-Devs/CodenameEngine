@@ -2,13 +2,13 @@ package funkin.menus;
 
 import funkin.savedata.FunkinSave;
 import haxe.io.Path;
-import funkin.scripting.events.*;
+import funkin.backend.scripting.events.*;
 import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
 import flixel.graphics.frames.FlxFramesCollection;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import funkin.system.FunkinText;
+import funkin.backend.FunkinText;
 import haxe.xml.Access;
 import flixel.text.FlxText;
 
@@ -300,7 +300,7 @@ class StoryMenuState extends MusicBeatState {
 		characters[charName] = charObj;
 	}
 
-	public function getWeeksFromSource(weeks:Array<String>, source:funkin.assets.AssetsLibraryList.AssetSource) {
+	public function getWeeksFromSource(weeks:Array<String>, source:funkin.backend.assets.AssetsLibraryList.AssetSource) {
 		var path:String = Paths.txt('freeplaySonglist');
 		var weeksFound:Array<String> = [];
 		if (Paths.assetsTree.existsSpecific(path, "TEXT", source)) {

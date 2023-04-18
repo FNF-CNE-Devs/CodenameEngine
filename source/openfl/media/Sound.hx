@@ -636,8 +636,8 @@ class Sound extends EventDispatcher
 			return null;
 		}
 
-		if (changeID < funkin.system.Main.changeID) {
-			changeID = funkin.system.Main.changeID;
+		if (changeID < funkin.backend.system.Main.changeID) {
+			changeID = funkin.backend.system.Main.changeID;
 			regen();
 		}
 

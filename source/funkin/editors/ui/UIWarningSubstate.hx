@@ -2,7 +2,7 @@ package funkin.editors.ui;
 
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
-import funkin.shaders.CustomShader;
+import funkin.backend.shaders.CustomShader;
 
 class UIWarningSubstate extends MusicBeatSubstate {
 	var camShaders:Array<FlxCamera> = [];

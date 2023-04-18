@@ -2,15 +2,15 @@ package funkin.game;
 
 import funkin.savedata.FunkinSave;
 import flixel.graphics.FlxGraphic;
-import funkin.chart.Chart;
-import funkin.chart.ChartData;
+import funkin.backend.chart.Chart;
+import funkin.backend.chart.ChartData;
 import funkin.game.SplashHandler;
-import funkin.scripting.DummyScript;
+import funkin.backend.scripting.DummyScript;
 import funkin.menus.StoryMenuState.WeekData;
-import funkin.system.FunkinText;
+import funkin.backend.FunkinText;
 import flixel.group.FlxSpriteGroup;
-import funkin.scripting.Script;
-import funkin.scripting.ScriptPack;
+import funkin.backend.scripting.Script;
+import funkin.backend.scripting.ScriptPack;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.math.FlxPoint;
@@ -23,11 +23,11 @@ import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import haxe.io.Path;
 import lime.utils.Assets;
-import funkin.system.Conductor;
+import funkin.backend.system.Conductor;
 import funkin.game.cutscenes.*;
 
 import funkin.menus.*;
-import funkin.scripting.events.*;
+import funkin.backend.scripting.events.*;
 
 using StringTools;
 

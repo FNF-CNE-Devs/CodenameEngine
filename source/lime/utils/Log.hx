@@ -1,7 +1,7 @@
 package lime.utils;
 
 import haxe.PosInfos;
-import funkin.system.Logs as FunkinLogs;
+import funkin.backend.system.Logs as FunkinLogs;
 
 #if !lime_debug
 @:fileXml('tags="haxe,release"')

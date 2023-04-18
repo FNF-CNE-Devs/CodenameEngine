@@ -1,12 +1,12 @@
 package funkin.options;
 
-import funkin.system.Controls;
+import funkin.backend.system.Controls;
 import openfl.Lib;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 
-@:build(funkin.system.macros.OptionsMacro.build())
-@:build(funkin.system.macros.FunkinSaveMacro.build("__save", "__flush", "__load"))
+@:build(funkin.backend.system.macros.OptionsMacro.build())
+@:build(funkin.backend.system.macros.FunkinSaveMacro.build("__save", "__flush", "__load"))
 class Options
 {
 	@:dox(hide) @:doNotSave

@@ -1,6 +1,6 @@
 package funkin.options;
 
-import funkin.system.Controls;
+import funkin.backend.system.Controls;
 import flixel.util.FlxSignal;
 
 // import ui.DeviceManager;

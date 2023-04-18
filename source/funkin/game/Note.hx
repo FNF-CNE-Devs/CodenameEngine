@@ -1,13 +1,13 @@
 package funkin.game;
 
-import funkin.chart.Chart;
-import funkin.chart.ChartData;
+import funkin.backend.chart.Chart;
+import funkin.backend.chart.ChartData;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxColor;
 import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
-import funkin.system.Conductor;
-import funkin.scripting.events.*;
+import funkin.backend.system.Conductor;
+import funkin.backend.scripting.events.*;
 
 using StringTools;
 

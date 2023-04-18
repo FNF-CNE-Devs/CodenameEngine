@@ -1,9 +1,9 @@
 package funkin.menus;
 
 import funkin.options.OptionsMenu;
-import funkin.scripting.events.PauseCreationEvent;
-import funkin.scripting.events.NameEvent;
-import funkin.scripting.Script;
+import funkin.backend.scripting.events.PauseCreationEvent;
+import funkin.backend.scripting.events.NameEvent;
+import funkin.backend.scripting.Script;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.input.keyboard.FlxKey;
@@ -13,7 +13,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import funkin.options.keybinds.KeybindsOptions;
 import funkin.menus.StoryMenuState;
-import funkin.utils.FunkinParentDisabler;
+import funkin.backend.utils.FunkinParentDisabler;
 
 class PauseSubState extends MusicBeatSubstate
 {

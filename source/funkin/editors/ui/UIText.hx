@@ -1,7 +1,7 @@
 package funkin.editors.ui;
 
 import flixel.util.FlxColor;
-import funkin.system.FunkinText;
+import funkin.backend.FunkinText;
 
 class UIText extends FunkinText {
 	// PUTTING THIS HERE IN CASE IMMA MAKE FUTURE CHANGES

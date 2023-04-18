@@ -3,7 +3,7 @@ package funkin.editors.ui;
 import lime.ui.KeyModifier;
 import lime.ui.KeyCode;
 import openfl.events.KeyboardEvent;
-import funkin.system.framerate.Framerate;
+import funkin.backend.system.framerate.Framerate;
 import funkin.editors.ui.UIContextMenu.UIContextMenuCallback;
 import openfl.ui.Mouse;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;

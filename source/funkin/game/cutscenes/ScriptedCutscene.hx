@@ -1,8 +1,8 @@
 package funkin.game.cutscenes;
 
-import funkin.scripting.DummyScript;
+import funkin.backend.scripting.DummyScript;
 import flixel.addons.transition.FlxTransitionableState;
-import funkin.scripting.Script;
+import funkin.backend.scripting.Script;
 
 /**
  * Substate made for scripted cutscenes.

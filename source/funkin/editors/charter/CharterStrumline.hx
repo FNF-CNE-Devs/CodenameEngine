@@ -3,7 +3,7 @@ package funkin.editors.charter;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.game.HealthIcon;
-import funkin.chart.ChartData.ChartStrumLine;
+import funkin.backend.chart.ChartData.ChartStrumLine;
 
 class CharterStrumline extends UISprite {
 	public var strumLine:ChartStrumLine;

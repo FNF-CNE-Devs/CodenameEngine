@@ -1,8 +1,8 @@
 package funkin.menus;
 
-import funkin.system.github.GitHub;
-import funkin.system.MusicBeatGroup;
-import funkin.utils.XMLUtil;
+import funkin.backend.system.github.GitHub;
+import funkin.backend.MusicBeatGroup;
+import funkin.backend.utils.XMLUtil;
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
 import flixel.FlxState;
@@ -21,14 +21,14 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import funkin.system.Conductor;
+import funkin.backend.system.Conductor;
 import openfl.Assets;
 import haxe.xml.Access;
 
 using StringTools;
 
-@:allow(funkin.assets.ModsFolder)
-@:allow(funkin.system.MainState)
+@:allow(funkin.backend.assets.ModsFolder)
+@:allow(funkin.backend.system.MainState)
 class TitleState extends MusicBeatState
 {
 	static var initialized:Bool = false;
@@ -187,11 +187,11 @@ class TitleState extends MusicBeatState
 
 	function goToMainMenu() {
 		#if UPDATE_CHECKING
-		var report = hasCheckedUpdates ? null : funkin.system.updating.UpdateUtil.checkForUpdates();
+		var report = hasCheckedUpdates ? null : funkin.backend.system.updating.UpdateUtil.checkForUpdates();
 		hasCheckedUpdates = true;
 
 		if (report != null && report.newUpdate) {
-			FlxG.switchState(new funkin.system.updating.UpdateAvailableScreen(report));
+			FlxG.switchState(new funkin.backend.system.updating.UpdateAvailableScreen(report));
 		} else {
 			FlxG.switchState(new MainMenuState());
 		}

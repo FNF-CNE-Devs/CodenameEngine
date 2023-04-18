@@ -2,7 +2,7 @@ package funkin.menus;
 
 #if MOD_SUPPORT
 import haxe.io.Path;
-import funkin.assets.ModsFolder;
+import funkin.backend.assets.ModsFolder;
 import sys.FileSystem;
 import flixel.tweens.FlxTween;
 

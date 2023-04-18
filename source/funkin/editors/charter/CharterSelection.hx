@@ -1,6 +1,6 @@
 package funkin.editors.charter;
 
-import funkin.system.framerate.Framerate;
+import funkin.backend.system.framerate.Framerate;
 import flixel.util.FlxColor;
 import funkin.menus.FreeplayState.FreeplaySonglist;
 import funkin.editors.EditorTreeMenu;

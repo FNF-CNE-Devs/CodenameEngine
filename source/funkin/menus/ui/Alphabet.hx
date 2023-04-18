@@ -2,8 +2,8 @@ package funkin.menus.ui;
 
 import openfl.utils.AssetLibrary;
 import haxe.xml.Access;
-import funkin.assets.LimeLibrarySymbol;
-import funkin.assets.ModsAssetLibrary;
+import funkin.backend.assets.LimeLibrarySymbol;
+import funkin.backend.assets.ModsAssetLibrary;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxTimer;

@@ -1,11 +1,11 @@
 package funkin.game;
 
 import flixel.math.FlxPoint;
-import funkin.system.MusicBeatGroup;
+import funkin.backend.MusicBeatGroup;
 import flixel.FlxState;
 import haxe.xml.Access;
-import funkin.system.interfaces.IBeatReceiver;
-import funkin.scripting.Script;
+import funkin.backend.system.interfaces.IBeatReceiver;
+import funkin.backend.scripting.Script;
 import haxe.io.Path;
 
 using StringTools;

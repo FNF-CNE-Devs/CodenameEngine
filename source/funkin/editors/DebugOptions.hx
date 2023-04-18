@@ -3,7 +3,7 @@ package funkin.editors;
 import funkin.options.type.*;
 import funkin.options.OptionsScreen;
 import funkin.options.TreeMenu;
-import funkin.utils.NativeAPI;
+import funkin.backend.utils.NativeAPI;
 
 class DebugOptions extends TreeMenu {
 	public override function create() {
