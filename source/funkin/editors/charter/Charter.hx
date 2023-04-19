@@ -178,6 +178,12 @@ class Charter extends UIState {
 					},
 					null,
 					{
+						label: 'Enable scripts during playtesting',
+						onSelect: _chart_enablescripts,
+						icon: Options.charterEnablePlaytestScripts ? 1 : 0
+					},
+					null,
+					{
 						label: "Edit metadata information"
 					}
 				]
@@ -843,6 +849,9 @@ class Charter extends UIState {
 		playtestChart(0, true);
 	inline function _chart_playtest_opponent_here(_)
 		playtestChart(Conductor.songPosition, true, true);
+	function _chart_enablescripts(t) {
+		t.icon = (Options.charterEnablePlaytestScripts = !Options.charterEnablePlaytestScripts) ? 1 : 0;
+	}
 
 	function _playback_metronome(t) {
 		t.icon = (Options.charterMetronomeEnabled = !Options.charterMetronomeEnabled) ? 1 : 0;

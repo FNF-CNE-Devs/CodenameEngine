@@ -550,19 +550,21 @@ class PlayState extends MusicBeatState
 		var camPos:FlxPoint = new FlxPoint(0, 0);
 
 
-		switch(SONG.meta.name) {
-			// case "":
-				// ADD YOUR HARDCODED SCRIPTS HERE!
-			default:
-				for(content in [
-					Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH),
-					Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)]) {
-					for(file in content) {
-						var ext = Path.extension(file).toLowerCase();
-						if (Script.scriptExtensions.contains(ext))
-							scripts.add(Script.create(file));
+		if (!chartingMode || Options.charterEnablePlaytestScripts) {
+			switch(SONG.meta.name) {
+				// case "":
+					// ADD YOUR HARDCODED SCRIPTS HERE!
+				default:
+					for(content in [
+						Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH),
+						Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)]) {
+						for(file in content) {
+							var ext = Path.extension(file).toLowerCase();
+							if (Script.scriptExtensions.contains(ext))
+								scripts.add(Script.create(file));
+						}
 					}
-				}
+			}
 		}
 
 		add(comboGroup);
