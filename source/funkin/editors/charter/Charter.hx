@@ -676,6 +676,7 @@ class Charter extends UIState {
 		strumlineInfoBG.scale.set(FlxG.width / charterCamera.zoom, 1);
 		strumlineInfoBG.updateHitbox();
 		strumlineInfoBG.screenCenter(X);
+		strumlineInfoBG.y = -(((FlxG.height - (2 * topMenuSpr.bHeight)) / charterCamera.zoom) - FlxG.height) / 2;
 
 		for(id=>str in strumLines.members) {
 			if (str == null) continue;
