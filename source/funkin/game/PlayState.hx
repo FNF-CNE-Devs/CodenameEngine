@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.editors.charter.Charter;
 import funkin.savedata.FunkinSave;
 import flixel.graphics.FlxGraphic;
 import funkin.backend.chart.Chart;
@@ -629,7 +630,7 @@ class PlayState extends MusicBeatState
 		// CAMERA & HUD INITIALISATION
 		#if REGION
 		for(str in strumLines)
-			str.generate(str.data);
+			str.generate(str.data, (chartingMode && Charter.startHere) ? Charter.startTime : null);
 
 		camFollow = new FlxObject(0, 0, 2, 2);
 		camFollow.setPosition(camPos.x, camPos.y);
@@ -858,7 +859,7 @@ class PlayState extends MusicBeatState
 
 		vocals.pause();
 		inst.pause();
-		inst.time = vocals.time = 0;
+		inst.time = vocals.time = (chartingMode && Charter.startHere) ? Charter.startTime : 0;
 		vocals.play();
 		inst.play();
 

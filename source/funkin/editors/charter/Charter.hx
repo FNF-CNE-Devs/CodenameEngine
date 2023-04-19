@@ -341,7 +341,8 @@ class Charter extends UIState {
 		scrollBar = new UIScrollBar(FlxG.width - 20, topMenuSpr.bHeight, 1000, 0, 100);
 		scrollBar.cameras = [uiCamera];
 		scrollBar.onChange = function(v) {
-			Conductor.songPosition = Conductor.getTimeForStep(v);
+			if (!FlxG.sound.music.playing)
+				Conductor.songPosition = Conductor.getTimeForStep(v);
 		};
 		uiGroup.add(scrollBar);
 
@@ -658,6 +659,9 @@ class Charter extends UIState {
 		}
 	}
 
+	public static var startTime:Float = 0;
+	public static var startHere:Bool = false;
+
 	function updateDisplaySprites() {
 		conductorFollowerSpr.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, 4);
 		conductorFollowerSpr.updateHitbox();
@@ -793,9 +797,9 @@ class Charter extends UIState {
 			FlxG.sound.music.pause();
 			vocals.pause();
 		} else {
-			vocals.time = FlxG.sound.music.time = Conductor.songPosition;
 			FlxG.sound.music.play();
 			vocals.play();
+			vocals.time = FlxG.sound.music.time = Conductor.songPosition;
 		}
 	}
 
@@ -834,11 +838,11 @@ class Charter extends UIState {
 	inline function _chart_playtest(_)
 		playtestChart(0, false);
 	inline function _chart_playtest_here(_)
-		playtestChart(Conductor.songPosition, false);
+		playtestChart(Conductor.songPosition, false, true);
 	inline function _chart_playtest_opponent(_)
 		playtestChart(0, true);
 	inline function _chart_playtest_opponent_here(_)
-		playtestChart(Conductor.songPosition, true);
+		playtestChart(Conductor.songPosition, true, true);
 
 	function _playback_metronome(t) {
 		t.icon = (Options.charterMetronomeEnabled = !Options.charterMetronomeEnabled) ? 1 : 0;
@@ -913,8 +917,10 @@ class Charter extends UIState {
 		]));
 	}
 
-	public function playtestChart(time:Float = 0, opponentMode = false) {
+	public function playtestChart(time:Float = 0, opponentMode = false, here = false) {
 		buildChart();
+		startHere = here;
+		startTime = Conductor.songPosition;
 		PlayState.opponentMode = opponentMode;
 		PlayState.chartingMode = true;
 		FlxG.switchState(new PlayState());

@@ -64,7 +64,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 
 	private inline function set_ghostTapping(b:Bool):Bool
 		return this.ghostTapping = b;
-	
+
 	private var strumOffset:Float = 0.25;
 
 	public function new(characters:Array<Character>, strumOffset:Float = 0.25, cpu:Bool = false, opponentSide:Bool = true, ?controls:Controls) {
@@ -77,10 +77,13 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		this.notes = new NoteGroup();
 	}
 
-	public function generate(strumLine:ChartStrumLine) {
+	public function generate(strumLine:ChartStrumLine, ?startTime:Float) {
 		if (strumLine.notes != null) for(note in strumLine.notes) {
+			if (startTime != null && startTime > note.time)
+				continue;
+
 			notes.add(new Note(this, note, false));
-			
+
 			if (note.sLen > Conductor.stepCrochet * 0.75) {
 				var len:Float = note.sLen;
 				var curLen:Float = 0;
@@ -108,10 +111,10 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	public function updateNotes() {
 		notes.forEach(updateNote);
 	}
-	
+
 	var __updateNote_strum:Strum;
 	public function updateNote(daNote:Note) {
-		
+
 		for(e in members) {
 			if (e.ID == daNote.noteData % 4) {
 				__updateNote_strum = e;

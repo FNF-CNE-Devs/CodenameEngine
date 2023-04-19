@@ -11,7 +11,7 @@
 	- [x] Fix the strumlines bar when zooming out
 	- [ ] Step based zooming
 	- [ ] Algorithm to make note placements faster & sorted out
-	- [ ] Play here working
+	- [x] Play here working
 	- [ ] Events (including Camera Movement)
 	- [ ] Custom Notes
 	- [ ] Metadata Editing
