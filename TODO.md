@@ -14,6 +14,8 @@
 	- [ ] Events (including Camera Movement)
 	- [ ] Custom Notes
 	- [ ] Metadata Editing
+- [ ] Multiple state scripts & Multiple global scripts
+- [ ] Make update.bat use libs.xml instead of hmm.json
 - [ ] New Switch Mod menu
 - [ ] Add note offset
 - [ ] Dialogue
@@ -26,3 +28,4 @@
 
 - [ ] Custom classes
 - [ ] Full 3D support via stages files
+- [ ] Multithread sprites loading (for faster load times) ?

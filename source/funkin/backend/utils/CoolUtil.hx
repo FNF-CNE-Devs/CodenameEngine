@@ -124,6 +124,16 @@ class CoolUtil
 	}
 
 	/**
+	 * Add several zeros at the end of a string, so that `2` becomes `20`, useful for ms.
+	 * @param str String to add zeros
+	 * @param num The length required
+	 */
+	public static inline function addEndZeros(str:String, num:Int) {
+		while(str.length < num) str = '${str}0';
+		return str;
+	}
+
+	/**
 	 * Returns a string representation of a size, following this format: `1.02 GB`, `134.00 MB`
 	 * @param size Size to convert ot string
 	 * @return String Result string representation
@@ -516,6 +526,12 @@ class CoolUtil
 		FlxG.openURL(url);
 		#end
 	}
+
+	/**
+	 * Converts a timestamp to a readable format such as `01:22` (`mm:ss`)
+	 */
+	public static inline function timeToStr(time:Float)
+		return '${Std.string(Std.int(time / 60000)).addZeros(2)}:${Std.string(Std.int(time / 1000) % 60).addZeros(2)}.${Std.string(Std.int(time % 1000)).addZeros(3)}';
 
 	/**
 	 * Stops a sound, set its time to 0 then play it again.

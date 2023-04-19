@@ -1,11 +1,14 @@
 package funkin.editors.ui;
 
+import flixel.math.FlxPoint;
+
 class UIScrollBar extends UISprite {
 	public var length:Float;
 	public var start:Float;
 	public var size:Float;
 
 	public var thumb:UISliceSprite;
+	public var thumbIcon:FlxSprite;
 
 	public var value:Float;
 
@@ -21,23 +24,33 @@ class UIScrollBar extends UISprite {
 
 		thumb = new UISliceSprite(0, 0, w, h, 'editors/ui/scrollbar');
 		members.push(thumb);
+
+		thumbIcon = new FlxSprite(0, 0, Paths.image('editors/ui/scrollbar-icon'));
+		members.push(thumbIcon);
 	}
 
+
 	public override function update(elapsed:Float) {
+		var lastHovered = hovered;
+		var lastHoveredThumb = thumb.hovered;
 		super.update(elapsed);
 		thumb.follow(this, 0, FlxMath.remapToRange(start, -(size/2), length + size, 0, height));
 		thumb.bHeight = Std.int(FlxMath.remapToRange(size, -(size/2), length + size, 0, height));
 
-		if (hovered) {
-			if (FlxG.mouse.justReleased) {
-				var mousePos = FlxG.mouse.getScreenPosition(camera);
-				var yPos = FlxMath.remapToRange(mousePos.y, y, y+height, -(size/2), length + size);
-				if (yPos >= 0 && yPos < length) {
-					onChange(value = yPos);
-				}
+		thumbIcon.follow(thumb, 0, Std.int((thumb.bHeight - thumbIcon.height) / 2));
+		thumbIcon.alpha = thumb.bHeight > 30 ? 1 : 0;
+
+		if ((lastHovered || lastHoveredThumb) && FlxG.mouse.pressed) {
+			thumb.framesOffset = 18;
+			var mousePos = FlxG.mouse.getScreenPosition(__lastDrawCameras[0], FlxPoint.get());
+			var yPos = FlxMath.bound(FlxMath.remapToRange(mousePos.y, y, y+height, -(size/2), length + size), 0, length);
+			if (yPos >= 0 && yPos < length) {
+				value = yPos;
+				if (onChange != null)
+					onChange(value);
 			}
-		} else if (thumb.hovered) {
-			// todo: scrolling
-		}
+			mousePos.put();
+		} else
+			thumb.framesOffset = lastHoveredThumb ? 9 : 0;
 	}
 }

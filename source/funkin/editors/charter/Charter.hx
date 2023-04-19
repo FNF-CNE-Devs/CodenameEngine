@@ -41,6 +41,7 @@ class Charter extends UIState {
 	public var topMenu:Array<UIContextMenuOption>;
 
 	public var scrollBar:UIScrollBar;
+	public var songPosInfo:UIText;
 
 	public var topMenuSpr:UITopMenu;
 	public var gridBackdrop:CharterBackdrop;
@@ -338,7 +339,15 @@ class Charter extends UIState {
 		topMenuSpr.cameras = uiGroup.cameras = [uiCamera];
 
 		scrollBar = new UIScrollBar(FlxG.width - 20, topMenuSpr.bHeight, 1000, 0, 100);
+		scrollBar.cameras = [uiCamera];
+		scrollBar.onChange = function(v) {
+			Conductor.songPosition = Conductor.getTimeForStep(v);
+		};
 		uiGroup.add(scrollBar);
+
+		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0");
+		songPosInfo.alignment = RIGHT;
+		uiGroup.add(songPosInfo);
 
 		topLimit = new FlxSprite();
 		topLimit.makeGraphic(1, 1, -1);
@@ -364,10 +373,10 @@ class Charter extends UIState {
 		add(selectionBox);
 		add(strumlineInfoBG);
 		add(strumLines);
-		// add the ui group
-		add(uiGroup);
 		// add the top menu last OUT of the ui group so that it stays on top
 		add(topMenuSpr);
+		// add the ui group
+		add(uiGroup);
 
 		loadSong();
 	}
@@ -632,6 +641,11 @@ class Charter extends UIState {
 		}
 
 		Conductor.songPosition = FlxMath.bound(Conductor.songPosition, 0, FlxG.sound.music.length);
+
+		songPosInfo.text = '${CoolUtil.timeToStr(Conductor.songPosition)} / ${CoolUtil.timeToStr(FlxG.sound.music.length)}'
+		+ '\nStep: ${curStep}'
+		+ '\nBeat: ${curBeat}'
+		+ '\nMeasure: ${curMeasure}';
 
 		if (FlxG.sound.music.playing) {
 			conductorFollowerSpr.y = curStepFloat * 40;

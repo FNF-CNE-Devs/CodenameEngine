@@ -71,7 +71,7 @@ class UIState extends MusicBeatState {
 			__rect.x -= camera.scroll.x * spr.scrollFactor.x;
 			__rect.y -= camera.scroll.y * spr.scrollFactor.y;
 
-			if (((pos.x > __rect.x) && (pos.x < __rect.x + rect.width)) && ((pos.y > __rect.y) && (pos.y < __rect.y + __rect.height))) {
+			if (((pos.x > __rect.x) && (pos.x < __rect.x + __rect.width)) && ((pos.y > __rect.y) && (pos.y < __rect.y + __rect.height))) {
 				spr.hoveredByChild = true;
 				this.hoveredSprite = spr;
 				this.buttonHandler = buttonHandler;
