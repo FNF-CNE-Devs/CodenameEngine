@@ -399,6 +399,7 @@ class Charter extends UIState {
 		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
 		vocals.group = FlxG.sound.defaultMusicGroup;
 
+		trace("generating notes...");
 		for(strID=>strL in PlayState.SONG.strumLines) {
 			for(note in strL.notes) {
 				var n = new CharterNote();
@@ -409,6 +410,12 @@ class Charter extends UIState {
 
 			strumLines.add(new CharterStrumline(strL));
 		}
+		trace("sorting notes...");
+		notesGroup.sort(function(i, n1, n2) {
+			if (n1.step == n2.step)
+				return FlxSort.byValues(FlxSort.ASCENDING, n1.id, n2.id);
+			return FlxSort.byValues(FlxSort.ASCENDING, n1.step, n2.step);
+		});
 
 		refreshBPMSensitive();
 	}
@@ -522,6 +529,8 @@ class Charter extends UIState {
 							deletes.push(s);
 						} else {
 							s.updatePos(newStep, newID, s.susLength, s.type);
+							notesGroup.remove(s);
+							notesGroup.add(s);
 
 							drags.push({
 								note: s,
@@ -785,8 +794,11 @@ class Charter extends UIState {
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.before, n.note.type);
 			case CNoteDrag(notes, deletes):
-				for(n in notes)
+				for(n in notes) {
 					n.note.updatePos(n.oldStep, n.oldID, n.note.susLength, n.note.type);
+					notesGroup.remove(n.note);
+					notesGroup.add(n.note);
+				}
 				for(d in deletes) {
 					notesGroup.add(d);
 					d.revive();
@@ -832,8 +844,11 @@ class Charter extends UIState {
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.after, n.note.type);
 			case CNoteDrag(notes, deletes):
-				for(n in notes)
+				for(n in notes) {
 					n.note.updatePos(n.newStep, n.newID, n.note.susLength, n.note.type);
+					notesGroup.remove(n.note);
+					notesGroup.add(n.note);
+				}
 				deleteNotes(deletes, false);
 				selection = [for(n in notes) n.note];
 		}

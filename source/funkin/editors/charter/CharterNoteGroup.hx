@@ -9,7 +9,6 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	var __currentlyLooping:Bool = false;
 
 	public override function forEach(noteFunc:CharterNote->Void, recursive:Bool = false) {
-		i = 0;
 		__loopSprite = null;
 
 		max = FlxG.height / 70 / camera.zoom;
@@ -21,18 +20,33 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 		if (FlxG.state is Charter && !FlxG.sound.music.playing)
 			curStep = cast(FlxG.state, Charter).conductorFollowerSpr.y / 40;
 
-		while(i < length) {
+		var begin = SortedArrayUtil.binarySearch(members, curStep - max, getVarForEach);
+		var end = SortedArrayUtil.binarySearch(members, curStep + max, getVarForEach);
+
+		for(i in begin...end) {
 			__loopSprite = members[i];
-			if (__loopSprite == null || !__loopSprite.exists) {
-				i++;
-				continue;
-			}
-			if (Math.abs(__loopSprite.step - curStep) - __loopSprite.susLength < max)
+			if (!cast(FlxG.state, Charter).selection.contains(__loopSprite))
 				noteFunc(__loopSprite);
-			i++;
 		}
+		for(c in cast(FlxG.state, Charter).selection)
+			noteFunc(c);
+
 		__currentlyLooping = oldCur;
 	}
+
+	public override function add(v:CharterNote):CharterNote {
+		SortedArrayUtil.addSorted(members, v, getVar);
+		return v;
+	}
+
+	public override function remove(v:CharterNote, force:Bool = true):CharterNote
+		return super.remove(v, true);
+
+	private static function getVar(n:CharterNote)
+		return n.step;
+
+	private static function getVarForEach(n:CharterNote)
+		return n.step + n.susLength;
 
 	public override function draw() {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
