@@ -87,7 +87,6 @@ abstract ChartEventType(Int) from Int to Int {
 	 *  - Target Strumline ID (Int)
 	 */
 	var CAM_MOVEMENT = 1;
-
 	/**
 	 * BPM CHANGE EVENT
 	 * Params:

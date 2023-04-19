@@ -20,7 +20,7 @@ class BetaWarningState extends MusicBeatState {
 
 		disclaimer = new FunkinText(16, titleAlphabet.y + titleAlphabet.height + 10, FlxG.width - 32, "", 32);
 		disclaimer.alignment = CENTER;
-		disclaimer.applyMarkup("This engine is still in a beta state. That means *majority of the features* are either *buggy* or *non finished*. If you find any bug, please report them to the Codename Engine GitHub.\n\nPress ENTER to continue",
+		disclaimer.applyMarkup("This engine is still in a alpha state. That means *majority of the features* are either *buggy* or *non finished*. If you find any bug, please report them to the Codename Engine GitHub.\n\nPress ENTER to continue",
 			[
 				new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFF4444), "*")
 			]

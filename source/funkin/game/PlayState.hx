@@ -537,7 +537,7 @@ class PlayState extends MusicBeatState
 		// CHARACTER INITIALISATION
 		#if REGION
 		comboGroup = new FlxSpriteGroup(FlxG.width * 0.55, (FlxG.height * 0.5) - 60);
-		//comboGroup.maxSize = 20;
+		comboGroup.maxSize = 25;
 		#end
 
 		// SCRIPTS & STAGE INITIALISATION
@@ -1486,16 +1486,8 @@ class PlayState extends MusicBeatState
 
 			if (event.showRating || (event.showRating == null && event.player && !note.isSustainNote))
 			{
-				var rating:FlxSprite = comboGroup.recycle(FlxSprite);
-				rating.resetSprite(comboGroup.x + -40, comboGroup.y + -60);
-				comboGroup.remove(rating, true);
-
 				songScore += score;
 
-				rating.loadAnimatedGraphic(Paths.image('${event.ratingPrefix}$daRating${event.ratingSuffix}'));
-				rating.acceleration.y = 550;
-				rating.velocity.y -= FlxG.random.int(140, 175);
-				rating.velocity.x -= FlxG.random.int(0, 10);
 
 				var comboSpr:FlxSprite = comboGroup.recycle(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}combo${event.ratingSuffix}'));
 				comboSpr.resetSprite(comboGroup.x, comboGroup.y);
@@ -1504,14 +1496,10 @@ class PlayState extends MusicBeatState
 				comboSpr.velocity.y -= 150;
 				comboSpr.velocity.x += FlxG.random.int(1, 10);
 
-
-				rating.scale.set(event.ratingScale, event.ratingScale);
-				rating.antialiasing = event.ratingAntialiasing;
 				comboSpr.scale.set(event.ratingScale, event.ratingScale);
 				comboSpr.antialiasing = event.ratingAntialiasing;
 
 				comboSpr.updateHitbox();
-				rating.updateHitbox();
 
 				var separatedScore:String = Std.string(combo).addZeros(3);
 
@@ -1542,7 +1530,16 @@ class PlayState extends MusicBeatState
 						});
 					}
 				}
-				comboGroup.add(rating);
+
+				var rating:FlxSprite = comboGroup.recycle(FlxSprite);
+				rating.resetSprite(comboGroup.x + -40, comboGroup.y + -60);
+				rating.loadAnimatedGraphic(Paths.image('${event.ratingPrefix}$daRating${event.ratingSuffix}'));
+				rating.acceleration.y = 550;
+				rating.velocity.y -= FlxG.random.int(140, 175);
+				rating.velocity.x -= FlxG.random.int(0, 10);
+				rating.scale.set(event.ratingScale, event.ratingScale);
+				rating.antialiasing = event.ratingAntialiasing;
+				rating.updateHitbox();
 
 				FlxTween.tween(rating, {alpha: 0}, 0.2, {
 					startDelay: Conductor.crochet * 0.001

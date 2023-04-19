@@ -19,6 +19,7 @@
 - [ ] Multiple state scripts & Multiple global scripts
 - [ ] Make update.bat use libs.xml instead of hmm.json
 - [ ] New Switch Mod menu
+- [ ] Port shader camera stuff over to new flixel fork
 - [ ] Add note offset
 - [ ] Dialogue
 - [ ] Finish Base Game port

@@ -481,6 +481,7 @@ class CoolUtil
 		spr.visible = true;
 		spr.active = true;
 		spr.acceleration.set();
+		spr.velocity.set();
 		spr.drag.set();
 		spr.antialiasing = FlxSprite.defaultAntialiasing;
 		spr.frameOffset.set();

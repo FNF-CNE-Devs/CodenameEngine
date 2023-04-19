@@ -45,6 +45,7 @@ class Charter extends UIState {
 
 	public var topMenuSpr:UITopMenu;
 	public var gridBackdrop:CharterBackdrop;
+	public var eventsBackdrop:FlxBackdrop;
 	public var beatSeparator:FlxBackdrop;
 	public var sectionSeparator:FlxBackdrop;
 	public var gridBackdropDummy:CharterBackdropDummy;
@@ -313,6 +314,12 @@ class Charter extends UIState {
 
 		gridBackdrop = new CharterBackdrop();
 
+		eventsBackdrop = new FlxBackdrop(Paths.image('editors/charter/events-grid'), Y, 0, 0);
+		eventsBackdrop.x = -eventsBackdrop.width;
+		eventsBackdrop.alpha = 0.9;
+		eventsBackdrop.cameras = [charterCamera];
+		add(eventsBackdrop);
+
 		add(gridBackdropDummy = new CharterBackdropDummy(gridBackdrop));
 		sectionSeparator = new FlxBackdrop(null, Y, 0, 0);
 		sectionSeparator.x = -20;
@@ -560,10 +567,10 @@ class Charter extends UIState {
 							selection = []; // clear selection
 						} else {
 							// place note
-							var id = Std.int(mousePos.x / 40);
+							var id = Math.floor(mousePos.x / 40);
 							if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0) {
 								var note = new CharterNote();
-								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Std.int(mousePos.y / 40), id, 0, 0);
+								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id, 0, 0);
 								notesGroup.add(note);
 								selection = [note];
 								addToUndo(CPlaceNote(note));
