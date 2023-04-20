@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.backend.system.RotatingSpriteGroup;
 import funkin.editors.charter.Charter;
 import funkin.savedata.FunkinSave;
 import flixel.graphics.FlxGraphic;
@@ -424,7 +425,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Group containing all of the combo sprites.
 	 */
-	public var comboGroup:FlxSpriteGroup;
+	public var comboGroup:RotatingSpriteGroup;
 	/**
 	 * Array containing all of the note types names.
 	 */
@@ -536,7 +537,7 @@ class PlayState extends MusicBeatState
 
 		// CHARACTER INITIALISATION
 		#if REGION
-		comboGroup = new FlxSpriteGroup(FlxG.width * 0.55, (FlxG.height * 0.5) - 60);
+		comboGroup = new RotatingSpriteGroup(FlxG.width * 0.55, (FlxG.height * 0.5) - 60);
 		comboGroup.maxSize = 25;
 		#end
 
@@ -1239,11 +1240,20 @@ class PlayState extends MusicBeatState
 				accuracy: accuracy,
 				hits: [],
 				date: Date.now().toString()
-			});
+			}, getSongChanges());
 			#end
 		}
 
 		startCutscene("end-", endCutscene, nextSong);
+	}
+
+	private static inline function getSongChanges():Array<HighscoreChange> {
+		var a = [];
+		if (opponentMode)
+			a.push(COpponentMode);
+		if (coopMode)
+			a.push(CCoopMode);
+		return a;
 	}
 
 	/**
@@ -1495,28 +1505,34 @@ class PlayState extends MusicBeatState
 				songScore += score;
 
 
-				var comboSpr:FlxSprite = comboGroup.recycle(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}combo${event.ratingSuffix}'));
-				comboSpr.resetSprite(comboGroup.x, comboGroup.y);
-				comboGroup.remove(comboSpr, true);
-				comboSpr.acceleration.y = 600;
-				comboSpr.velocity.y -= 150;
-				comboSpr.velocity.x += FlxG.random.int(1, 10);
-
-				comboSpr.scale.set(event.ratingScale, event.ratingScale);
-				comboSpr.antialiasing = event.ratingAntialiasing;
-
-				comboSpr.updateHitbox();
-
 				var separatedScore:String = Std.string(combo).addZeros(3);
 
 
 				if (combo == 0 || combo >= 10) {
-					comboGroup.add(comboSpr);
+					if (combo >= 10) {
+						var comboSpr:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}combo${event.ratingSuffix}'));
+						comboSpr.resetSprite(comboGroup.x, comboGroup.y);
+						comboSpr.acceleration.y = 600;
+						comboSpr.velocity.y -= 150;
+						comboSpr.velocity.x += FlxG.random.int(1, 10);
+
+						comboSpr.scale.set(event.ratingScale, event.ratingScale);
+						comboSpr.antialiasing = event.ratingAntialiasing;
+
+						comboSpr.updateHitbox();
+
+						FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
+							onComplete: function(tween:FlxTween)
+							{
+								comboSpr.visible = comboSpr.active = false;
+							},
+							startDelay: Conductor.crochet * 0.001
+						});
+					}
 					for (i in 0...separatedScore.length)
 					{
-						var numScore:FlxSprite = comboGroup.recycle(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}num${separatedScore.charAt(i)}${event.ratingSuffix}'));
+						var numScore:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}num${separatedScore.charAt(i)}${event.ratingSuffix}'));
 						numScore.resetSprite(comboGroup.x + (43 * i) - 90, comboGroup.y + 80);
-						comboGroup.remove(numScore, true);
 						numScore.antialiasing = event.numAntialiasing;
 						numScore.scale.set(event.numScale, event.numScale);
 						numScore.updateHitbox();
@@ -1524,8 +1540,6 @@ class PlayState extends MusicBeatState
 						numScore.acceleration.y = FlxG.random.int(200, 300);
 						numScore.velocity.y -= FlxG.random.int(140, 160);
 						numScore.velocity.x = FlxG.random.float(-5, 5);
-
-						comboGroup.add(numScore);
 
 						FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 							onComplete: function(tween:FlxTween)
@@ -1537,7 +1551,7 @@ class PlayState extends MusicBeatState
 					}
 				}
 
-				var rating:FlxSprite = comboGroup.recycle(FlxSprite);
+				var rating:FlxSprite = comboGroup.recycleLoop(FlxSprite);
 				rating.resetSprite(comboGroup.x + -40, comboGroup.y + -60);
 				rating.loadAnimatedGraphic(Paths.image('${event.ratingPrefix}$daRating${event.ratingSuffix}'));
 				rating.acceleration.y = 550;
@@ -1548,16 +1562,10 @@ class PlayState extends MusicBeatState
 				rating.updateHitbox();
 
 				FlxTween.tween(rating, {alpha: 0}, 0.2, {
-					startDelay: Conductor.crochet * 0.001
-				});
-
-				FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
-					onComplete: function(tween:FlxTween)
-					{
+					startDelay: Conductor.crochet * 0.001,
+					onComplete: function(tween:FlxTween) {
 						rating.visible = rating.active = false;
-						comboSpr.visible = comboSpr.active = false;
-					},
-					startDelay: Conductor.crochet * 0.001
+					}
 				});
 
 				ratingNum += 1;
