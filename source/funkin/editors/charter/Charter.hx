@@ -64,6 +64,7 @@ class Charter extends UIState {
 	 */
 	public var strumLines:FlxTypedGroup<CharterStrumline> = new FlxTypedGroup<CharterStrumline>();
 	public var notesGroup:CharterNoteGroup = new CharterNoteGroup();
+	public var eventsGroup:CharterEventGroup = new CharterEventGroup();
 
 	/**
 	 * CAMERAS
@@ -381,6 +382,7 @@ class Charter extends UIState {
 		add(gridBackdrop);
 		add(sectionSeparator);
 		add(beatSeparator);
+		add(eventsGroup);
 		add(notesGroup);
 		add(topLimit);
 		add(conductorFollowerSpr);
@@ -423,6 +425,23 @@ class Charter extends UIState {
 				return FlxSort.byValues(FlxSort.ASCENDING, n1.id, n2.id);
 			return FlxSort.byValues(FlxSort.ASCENDING, n1.step, n2.step);
 		});
+
+		trace("generating events...");
+		var __last:CharterEvent = null;
+		var __lastTime:Float = Math.NaN;
+		for(e in PlayState.SONG.events) {
+			if (e == null) continue;
+			if (__last != null && __lastTime == e.time) {
+				__last.events.push(e);
+			} else {
+				__last = new CharterEvent(Conductor.getStepForTime(e.time), [e]);
+				__lastTime = e.time;
+				eventsGroup.add(__last);
+			}
+		}
+
+		for(e in eventsGroup.members)
+			e.refreshEventIcons();
 
 		refreshBPMSensitive();
 	}
@@ -959,9 +978,15 @@ class Charter extends UIState {
 
 	public function buildChart() {
 		PlayState.SONG.strumLines = [];
+		PlayState.SONG.events = [];
 		for(s in strumLines) {
 			s.strumLine.notes = [];
 			PlayState.SONG.strumLines.push(s.strumLine);
+		}
+		for(e in eventsGroup.members) {
+			for(event in e.events) {
+				PlayState.SONG.events.push(event);
+			}
 		}
 		for(n in notesGroup.members) {
 			var strLineID = Std.int(n.id / 4);

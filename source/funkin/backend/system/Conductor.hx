@@ -120,7 +120,13 @@ class Conductor
 	 */
 	public static function mapBPMChanges(song:ChartData)
 	{
-		bpmChangeMap = [];
+		bpmChangeMap = [
+			{
+				stepTime: 0,
+				songTime: 0,
+				bpm: song.meta.bpm
+			}
+		];
 
 		if (song.events == null) return;
 

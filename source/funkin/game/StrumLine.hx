@@ -55,6 +55,10 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	 * Group of all of the notes in this strumline. Using `forEach` on this group will only loop through the first notes for performance reasons.
 	 */
 	public var notes:NoteGroup;
+	/**
+	 * Whenever alt animation is enabled on this strumline.
+	 */
+	public var altAnim:Bool = false;
 
 	private function get_ghostTapping() {
 		if (this.ghostTapping != null) return this.ghostTapping;

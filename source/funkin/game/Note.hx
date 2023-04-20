@@ -91,7 +91,7 @@ class Note extends FlxSprite
 
 	private static var __customNoteTypeExists:Map<String, Bool> = [];
 
-	public var animSuffix:String = "";
+	public var animSuffix:String = null;
 
 
 	private static function customTypePathExists(path:String) {

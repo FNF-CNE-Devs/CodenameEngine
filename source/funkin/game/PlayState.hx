@@ -1167,14 +1167,20 @@ class PlayState extends MusicBeatState
 
 		switch(event.type) {
 			case CUSTOM:
-				var d = [for(d in event.params) d];
-				scripts.call(d.shift(), d);
+				if (event.params[0] is String && event.params[1] is Array) {
+					scripts.call(event.params[0], event.params[1]);
+				}
 			case CAM_MOVEMENT:
-				if (event.params.length > 0 && event.params[0] is Int)
+				if (event.params[0] is Int)
 					curCameraTarget = event.params[0];
 			case BPM_CHANGE:
 				// automatically handled by conductor
 			case ALT_ANIM_TOGGLE:
+				if (event.params[0] is Int && event.params[1] is Bool) {
+					var strLine = strumLines[event.params[0]];
+					if (strLine != null)
+						strLine.altAnim = cast event.params[1];
+				}
 				// todo!!!
 			default:
 		}
@@ -1469,9 +1475,9 @@ class PlayState extends MusicBeatState
 
 		var event:NoteHitEvent;
 		if (strumLine != null && !strumLine.cpu)
-			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, strumLine.characters, true, note.noteType, note.animSuffix, "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, Options.splashesEnabled && !note.isSustainNote && daRating == "sick"));
+			event = scripts.event("onPlayerHit", EventManager.get(NoteHitEvent).recycle(false, !note.isSustainNote, !note.isSustainNote, note, strumLine.characters, true, note.noteType, note.animSuffix.getDefault(strumLine.altAnim ? "-alt" : ""), "game/score/", "", note.strumID, score, note.isSustainNote ? null : accuracy, note.noteData > 0 ? 0.023 : 0.004, daRating, Options.splashesEnabled && !note.isSustainNote && daRating == "sick"));
 		else
-			event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, strumLine.characters, false, note.noteType, note.animSuffix, "game/score/", "", note.strumID, 0, null, 0, daRating, false));
+			event = scripts.event("onDadHit", EventManager.get(NoteHitEvent).recycle(false, false, false, note, strumLine.characters, false, note.noteType, note.animSuffix.getDefault(strumLine.altAnim ? "-alt" : ""), "game/score/", "", note.strumID, 0, null, 0, daRating, false));
 		strumLine.onHit.dispatch(event);
 		scripts.event("onNoteHit", event);
 
@@ -1524,7 +1530,7 @@ class PlayState extends MusicBeatState
 						FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 							onComplete: function(tween:FlxTween)
 							{
-								numScore.exists = false;
+								numScore.visible = numScore.active = false;
 							},
 							startDelay: Conductor.crochet * 0.002
 						});
@@ -1548,8 +1554,8 @@ class PlayState extends MusicBeatState
 				FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
 					onComplete: function(tween:FlxTween)
 					{
-						rating.exists = false;
-						comboSpr.exists = false;
+						rating.visible = rating.active = false;
+						comboSpr.visible = comboSpr.active = false;
 					},
 					startDelay: Conductor.crochet * 0.001
 				});

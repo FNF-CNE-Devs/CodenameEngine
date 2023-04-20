@@ -26,11 +26,16 @@ class CharterEvent extends UISliceSprite {
 	public var icons:Array<FlxSprite> = [];
 
 	public function new(step:Float, ?events:Array<ChartEvent>) {
-		super(-100, step * 40, 100, 34, 'editors/charter/event-spr');
+		super(-100, (step * 40) - 17, 100, 34, 'editors/charter/event-spr');
 		this.step = step;
 		this.events = events.getDefault([]);
+	}
 
-		refreshEventIcons();
+	public override function update(elapsed:Float) {
+		super.update(elapsed);
+		for(k=>i in icons) {
+			i.follow(this, (k * 22) + 23 - (i.width / 2), (bHeight - i.height) / 2);
+		}
 	}
 
 	public function refreshEventIcons() {
@@ -42,7 +47,7 @@ class CharterEvent extends UISliceSprite {
 
 		var f = function(type) {
 			var spr = new FlxSprite().loadGraphic(Paths.image('editors/charter/event-icons'), true, 16, 16);
-			spr.frame = spr.frames.frames[type];
+			spr.frame = spr.frames.frames[type+1];
 			icons.push(spr);
 			members.push(spr);
 		};
@@ -56,15 +61,15 @@ class CharterEvent extends UISliceSprite {
 					var state = cast(FlxG.state, Charter);
 					if (event.params[0] != null && event.params[0] >= 0 && event.params[0] < state.strumLines.length) {
 						// camera movement, use health icon
-						var healthIcon = new HealthIcon('${event.params[0]}');
-						healthIcon.setGraphicSize(24, 24);
-						healthIcon.updateHitbox();
+						var healthIcon = new HealthIcon('${state.strumLines.members[event.params[0]].strumLine.characters[0]}');
+						healthIcon.setUnstretchedGraphicSize(32, 32, false);
 						icons.push(healthIcon);
 						members.push(healthIcon);
 					} else
 						f(event.type);
 			}
 		}
+		x = -(bWidth = 32 + (icons.length * 22));
 	}
 }
 
