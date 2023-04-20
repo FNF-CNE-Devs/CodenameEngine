@@ -8,7 +8,7 @@ class Strum extends FlxSprite {
 	public var lastHit:Float = -5000;
 
 	public var scrollSpeed:Null<Float> = null; // custom scroll speed per strum
-	public var noteAngle:Null<Float> = null; // custom scroll speed per strum
+	public var noteAngle:Null<Float> = null;
 	
 	public var lastDrawCameras(default, null):Array<FlxCamera> = [];
 
