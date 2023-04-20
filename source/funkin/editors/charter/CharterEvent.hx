@@ -29,12 +29,14 @@ class CharterEvent extends UISliceSprite {
 		super(-100, (step * 40) - 17, 100, 34, 'editors/charter/event-spr');
 		this.step = step;
 		this.events = events.getDefault([]);
+		
+		cursor = BUTTON;
 	}
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 		for(k=>i in icons) {
-			i.follow(this, (k * 22) + 23 - (i.width / 2), (bHeight - i.height) / 2);
+			i.follow(this, (k * 22) + 30 - (i.width / 2), (bHeight - i.height) / 2);
 		}
 	}
 
@@ -69,7 +71,7 @@ class CharterEvent extends UISliceSprite {
 						f(event.type);
 			}
 		}
-		x = -(bWidth = 32 + (icons.length * 22));
+		x = -(bWidth = 37 + (icons.length * 22));
 	}
 }
 

@@ -46,6 +46,7 @@ class Charter extends UIState {
 	public var topMenuSpr:UITopMenu;
 	public var gridBackdrop:CharterBackdrop;
 	public var eventsBackdrop:FlxBackdrop;
+	public var addEventSpr:CharterEventAdd;
 	public var beatSeparator:FlxBackdrop;
 	public var sectionSeparator:FlxBackdrop;
 	public var gridBackdropDummy:CharterBackdropDummy;
@@ -376,12 +377,17 @@ class Charter extends UIState {
 
 		strumlineInfoBG.cameras = [charterCamera];
 		strumLines.cameras = [charterCamera];
+		
+		addEventSpr = new CharterEventAdd();
+		addEventSpr.alpha = 0;
+		addEventSpr.cameras = [charterCamera];
 
 
 		// adds grid and notes so that they're ALWAYS behind the UI
 		add(gridBackdrop);
 		add(sectionSeparator);
 		add(beatSeparator);
+		add(addEventSpr);
 		add(eventsGroup);
 		add(notesGroup);
 		add(topLimit);
@@ -611,6 +617,33 @@ class Charter extends UIState {
 				if (FlxG.mouse.justReleasedRight)
 					openContextMenu(topMenu[1].childs);
 		}
+
+		
+		if (gridActionType == NONE && mousePos.x < 0) {
+			addEventSpr.incorporeal = false;
+			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0.75, 0.25);
+			var event = getHoveredEvent(mousePos.y);
+			if (event != null) {
+				addEventSpr.updateEdit(event);
+			} else {
+				addEventSpr.updatePos(mousePos.y);
+			}
+		} else {
+			addEventSpr.incorporeal = true;
+			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
+		}
+	}
+
+	public function getHoveredEvent(y:Float) {
+		var eventHovered:CharterEvent = null;
+		eventsGroup.forEach(function(e) {
+			if (eventHovered != null)
+				return;
+
+			if (e.hovered || (y >= e.y && y < (e.y + e.bHeight)))
+				eventHovered = e;
+		});
+		return eventHovered;
 	}
 
 	public function deleteNote(note:CharterNote, addToUndo:Bool = true):CharterNote {

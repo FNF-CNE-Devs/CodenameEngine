@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="button.png">
+	<!-- Created without animate lol i wrote this-->
+	<SubTexture name="add-topleft" x="0" y="0" width="11" height="4"/>
+	<SubTexture name="add-top" x="11" y="0" width="19" height="4"/>
+	<SubTexture name="add-topright" x="30" y="0" width="18" height="4"/>
+	<SubTexture name="add-middleleft" x="0" y="4" width="11" height="26"/>
+	<SubTexture name="add-middle" x="11" y="4" width="19" height="26"/>
+	<SubTexture name="add-middleright" x="30" y="4" width="18" height="26"/>
+	<SubTexture name="add-bottomleft" x="0" y="30" width="11" height="4"/>
+	<SubTexture name="add-bottom" x="11" y="30" width="19" height="4"/>
+	<SubTexture name="add-bottomright" x="30" y="30" width="18" height="4"/>
+	
+	<SubTexture name="edit-topleft" x="0" y="34" width="11" height="4"/>
+	<SubTexture name="edit-top" x="11" y="34" width="19" height="4"/>
+	<SubTexture name="edit-topright" x="30" y="34" width="18" height="4"/>
+	<SubTexture name="edit-middleleft" x="0" y="38" width="11" height="26"/>
+	<SubTexture name="edit-middle" x="11" y="38" width="19" height="26"/>
+	<SubTexture name="edit-middleright" x="30" y="38" width="18" height="26"/>
+	<SubTexture name="edit-bottomleft" x="0" y="64" width="11" height="4"/>
+	<SubTexture name="edit-bottom" x="11" y="64" width="19" height="4"/>
+	<SubTexture name="edit-bottomright" x="30" y="64" width="18" height="4"/>
+</TextureAtlas>
