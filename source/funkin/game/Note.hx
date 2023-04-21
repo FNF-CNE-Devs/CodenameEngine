@@ -58,7 +58,7 @@ class Note extends FlxSprite
 	 * Name of the splash.
 	 */
 	public var splash:String = "default";
-	
+
 	public var strumID(get, never):Int;
 	private function get_strumID() {
 		var id = noteData % 4;
@@ -102,7 +102,7 @@ class Note extends FlxSprite
 	public function new(strumLine:StrumLine, noteData:ChartNote, sustain:Bool = false, sustainLength:Float = 0, sustainOffset:Float = 0)
 	{
 		super();
-		
+
 		moves = false;
 
 		this.prevNote = strumLine.notes.members.last();
@@ -114,8 +114,8 @@ class Note extends FlxSprite
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
-		this.strumTime = noteData.time.getDefault(0) + sustainOffset;
 
+		this.strumTime = noteData.time.getDefault(0) + sustainOffset;
 		this.noteData = noteData.id.getDefault(0);
 
 		var customType = Paths.image('game/notes/${this.noteType}');
@@ -199,7 +199,7 @@ class Note extends FlxSprite
 	override function draw() {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (__strumCameras != null) FlxCamera._defaultCameras = __strumCameras;
-		
+
 		var negativeScroll = isSustainNote && nextSustain != null && lastScrollSpeed < 0;
 		if (negativeScroll)	offset.y *= -1;
 
@@ -233,10 +233,6 @@ class Note extends FlxSprite
 	// The * 0.5 is so that it's easier to hit them too late, instead of too early
 	public var earlyPressWindow:Float = 0.5;
 	public var latePressWindow:Float = 1;
-	override function update(elapsed:Float)
-	{
-		super.update(elapsed);
-	}
 
 	public function updateSustain(strum:Strum) {
 		var scrollSpeed = strum.getScrollSpeed(this);

@@ -16,6 +16,7 @@
 	- [ ] Metadata Editing
 	- [ ] Cap zoom in & out
 	- [ ] Step based zooming
+- [ ] Use latest hxCodec
 - [ ] Multiple state scripts & Multiple global scripts
 - [ ] Make update.bat use libs.xml instead of hmm.json
 - [ ] New Switch Mod menu

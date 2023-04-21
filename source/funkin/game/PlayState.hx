@@ -1054,17 +1054,16 @@ class PlayState extends MusicBeatState
 		scoreTxt.text = 'Score:$songScore';
 		missesTxt.text = '${comboBreaks ? "Combo Breaks" : "Misses"}:$misses';
 
-		var rating:ComboRating = curRating == null ? new ComboRating(0, "[N/A]", 0xFF888888) : curRating;
+		if (curRating == null)
+			curRating = new ComboRating(0, "[N/A]", 0xFF888888);
 
 		@:privateAccess {
-			accFormat.format.color = rating.color;
-			accuracyTxt.text = 'Accuracy:${accuracy < 0 ? "-%" : '${FlxMath.roundDecimal(accuracy * 100, 2)}%'} - ${rating.rating}';
+			accFormat.format.color = curRating.color;
+			accuracyTxt.text = 'Accuracy:${accuracy < 0 ? "-%" : '${FlxMath.roundDecimal(accuracy * 100, 2)}%'} - ${curRating.rating}';
 
-			accuracyTxt._formatRanges[0].range.start = accuracyTxt.text.length - rating.rating.length;
+			accuracyTxt._formatRanges[0].range.start = accuracyTxt.text.length - curRating.rating.length;
 			accuracyTxt._formatRanges[0].range.end = accuracyTxt.text.length;
 		}
-		// accuracyTxt.addFormat(accFormat, accuracyTxt.text.length - rating.rating.length, accuracyTxt.text.length);
-
 
 		if (controls.PAUSE && startedCountdown && canPause)
 			pauseGame();
@@ -1327,13 +1326,12 @@ class PlayState extends MusicBeatState
 	var __justReleased:Array<Bool> = [];
 	private function keyShit():Void
 	{
-
 		for(id=>p in strumLines) {
 			p.updateNotes();
 
 			if (p.cpu) continue;
 
-			__funcsToExec.clear();
+			__funcsToExec = [null, null];
 			__pressed.clear();
 			__justPressed.clear();
 			__justReleased.clear();
@@ -1355,27 +1353,27 @@ class PlayState extends MusicBeatState
 					if (c.lastAnimContext != DANCE)
 						c.__lockAnimThisFrame = true;
 
-				__funcsToExec.push(function(note:Note) {
+				__funcsToExec[0] = function(note:Note) {
 					if (__pressed[note.strumID] && note.isSustainNote && note.canBeHit && !note.wasGoodHit) {
 						goodNoteHit(p, note);
 					}
-				});
+				};
 			}
 
 			var notePerStrum = [for(_ in 0...4) null];
 			if (__justPressed.contains(true)) {
-				__funcsToExec.push(function(note:Note) {
+				__funcsToExec[1] = function(note:Note) {
 					if (__justPressed[note.strumID] && !note.isSustainNote && !note.wasGoodHit && note.canBeHit) {
 						if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;
 						else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 2)  p.deleteNote(note);
 						else if (note.strumTime < notePerStrum[note.strumID].strumTime)					notePerStrum[note.strumID] = note;
 					}
-				});
+				};
 			}
 
 			if (__funcsToExec.length > 0) {
 				p.notes.forEachAlive(function(note:Note) {
-					for(e in __funcsToExec) e(note);
+					for(e in __funcsToExec) if (e != null) e(note);
 				});
 			}
 

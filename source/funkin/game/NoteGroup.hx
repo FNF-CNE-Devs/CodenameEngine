@@ -8,12 +8,12 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	var i:Int = 0;
 	var __currentlyLooping:Bool = false;
 
-	public function addNotes(notes:Array<Note>) {
+	public inline function addNotes(notes:Array<Note>) {
 		for(e in notes) add(e);
 		sortNotes();
 	}
 
-	public function sortNotes() {
+	public inline function sortNotes() {
 		sort(function(i, n1, n2) {
 			if (n1.strumTime == n2.strumTime)
 				return n1.isSustainNote ? -1 : 1;

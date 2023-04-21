@@ -135,10 +135,11 @@ class HScript extends Script {
 
 	private override function onCall(funcName:String, parameters:Array<Dynamic>):Dynamic {
 		if (interp == null) return null;
+		if (!interp.variables.exists(funcName)) return null;
 
 		var func = interp.variables.get(funcName);
 		if (func != null && Reflect.isFunction(func))
-			return (parameters != null && parameters.length > 0) ? Reflect.callMethod(null, func, parameters) : func();
+			return Reflect.callMethod(null, func, parameters);
 
 		return null;
 	}

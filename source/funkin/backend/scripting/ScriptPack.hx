@@ -62,7 +62,7 @@ class ScriptPack extends Script {
 	 * @param event Event (will be the first parameter of the function)
 	 * @return (modified by scripts)
 	 */
-	public function event<T:CancellableEvent>(func:String, event:T):T {
+	public inline function event<T:CancellableEvent>(func:String, event:T):T {
 		for(e in scripts) {
 			e.call(func, [event]);
 			@:privateAccess

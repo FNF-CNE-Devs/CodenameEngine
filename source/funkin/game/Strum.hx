@@ -85,7 +85,7 @@ class Strum extends FlxSprite {
 		}
 	}
 
-	public function updateSustain(daNote:Note) {
+	public inline function updateSustain(daNote:Note) {
 		if (!daNote.isSustainNote) return;
 		daNote.updateSustain(this);
 	}
@@ -108,7 +108,7 @@ class Strum extends FlxSprite {
 		centerOrigin();
 	}
 
-	public function press(time:Float) {
+	public inline function press(time:Float) {
 		lastHit = time;
 		playAnim("confirm");
 	}

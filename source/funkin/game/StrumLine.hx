@@ -118,13 +118,9 @@ class StrumLine extends FlxTypedGroup<Strum> {
 
 	var __updateNote_strum:Strum;
 	public function updateNote(daNote:Note) {
+		__updateNote_strum = members[daNote.noteData];
+		if (__updateNote_strum == null) return;
 
-		for(e in members) {
-			if (e.ID == daNote.noteData % 4) {
-				__updateNote_strum = e;
-				break; //ing bad
-			}
-		}
 		PlayState.instance.scripts.event("onNoteUpdate", PlayState.instance.__updateNote_event.recycle(daNote, FlxG.elapsed, __updateNote_strum));
 		onNoteUpdate.dispatch(PlayState.instance.__updateNote_event);
 		if (PlayState.instance.__updateNote_event.cancelled) return;
