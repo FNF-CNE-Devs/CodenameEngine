@@ -40,10 +40,9 @@ class UIWarningSubstate extends MusicBeatSubstate {
 		spr.y = (FlxG.height - spr.bHeight) / 2;
 		add(spr);
 
-		
 		add(titleSpr = new UIText(spr.x + 25, spr.y, spr.bWidth - 50, title, 15, -1));
 		titleSpr.y = spr.y + ((30 - titleSpr.height) / 2);
-		
+
 		add(messageSpr = new UIText(spr.x + 10, spr.y + 40, spr.bWidth - 20, message, 15, -1));
 
 		var xPos = (FlxG.width - (30 + (170 * buttons.length))) / 2;

@@ -9,13 +9,13 @@
 	- [x] Selection box & dragging
 	- [x] Scroll bar at the right + Song info
 	- [x] Fix the strumlines bar when zooming out
-	- [ ] Step based zooming
-	- [ ] Algorithm to make note placements faster & sorted out
+	- [x] Algorithm to make note placements faster & sorted out
 	- [x] Play here working
 	- [ ] Events (including Camera Movement)
 	- [ ] Custom Notes
 	- [ ] Metadata Editing
-	- [ ] Waveforms (maybe in v1.1.0, dont wanna slow shit down)
+	- [ ] Cap zoom in & out
+	- [ ] Step based zooming
 - [ ] Multiple state scripts & Multiple global scripts
 - [ ] Make update.bat use libs.xml instead of hmm.json
 - [ ] New Switch Mod menu
@@ -27,7 +27,7 @@
 - [ ] Fix bugs
 
 ## `v1.1.0`
-
+- [ ] Charter Waveforms (maybe in v1.1.0, dont wanna slow shit down)
 - [ ] Custom classes
 - [ ] Full 3D support via stages files
 - [ ] Multithread sprites loading (for faster load times) ?

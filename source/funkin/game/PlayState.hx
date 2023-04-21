@@ -713,6 +713,8 @@ class PlayState extends MusicBeatState
 
 		updateDiscordPresence();
 
+		__updateNote_event = EventManager.get(NoteUpdateEvent);
+
 		scripts.call("postCreate");
 	}
 
@@ -1325,9 +1327,6 @@ class PlayState extends MusicBeatState
 	var __justReleased:Array<Bool> = [];
 	private function keyShit():Void
 	{
-		if (generatedMusic) {
-			__updateNote_event = EventManager.get(NoteUpdateEvent);
-		}
 
 		for(id=>p in strumLines) {
 			p.updateNotes();

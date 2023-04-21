@@ -618,7 +618,6 @@ class Charter extends UIState {
 					openContextMenu(topMenu[1].childs);
 		}
 
-		
 		if (gridActionType == NONE && mousePos.x < 0) {
 			addEventSpr.incorporeal = false;
 			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0.75, 0.25);
