@@ -1605,7 +1605,7 @@ class PlayState extends MusicBeatState
 	{
 		super.beatHit(curBeat);
 
-		if (camZoomingInterval < 1) camZoomingInterval = 1;
+		if (camZoomingInterval != null && camZoomingInterval < 1) camZoomingInterval = 1;
 		if (Options.camZoomOnBeat && camZooming && FlxG.camera.zoom < maxCamZoom && camZoomingInterval != null && curBeat % camZoomingInterval == 0)
 		{
 			FlxG.camera.zoom += 0.015 * camZoomingStrength;
