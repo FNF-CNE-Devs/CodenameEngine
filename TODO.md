@@ -17,7 +17,9 @@
 	- [ ] Cap zoom in & out
 	- [ ] Step based zooming
 - [ ] Use latest hxCodec
+- [ ] Re-export gf-christmas, gf-car and gf-tankmen with padding
 - [ ] Multiple state scripts & Multiple global scripts
+- [ ] Re-add shader camera stuff
 - [ ] Make update.bat use libs.xml instead of hmm.json
 - [ ] New Switch Mod menu
 - [ ] Port shader camera stuff over to new flixel fork

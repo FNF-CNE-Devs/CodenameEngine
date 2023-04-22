@@ -1043,10 +1043,10 @@ class PlayState extends MusicBeatState
 	@:dox(hide)
 	override public function update(elapsed:Float)
 	{
-		super.update(elapsed);
 		scripts.call("update", [elapsed]);
 
 		if (inCutscene) {
+			super.update(elapsed);
 			scripts.call("postUpdate", [elapsed]);
 			return;
 		}
@@ -1159,6 +1159,8 @@ class PlayState extends MusicBeatState
 		if (generatedMusic && FlxG.keys.justPressed.ONE)
 			endSong();
 		#end
+		
+		super.update(elapsed);
 
 		scripts.call("postUpdate", [elapsed]);
 	}

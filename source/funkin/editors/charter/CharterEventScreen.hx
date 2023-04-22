@@ -8,6 +8,8 @@ class CharterEventScreen extends UISubstateWindow {
 
 	public var iconsPanel:FlxGroup;
 
+	public var eventName:UIText;
+
 	public var paramsPanel:FlxGroup;
 	public var paramsFields:Array<FlxBasic> = [];
 
@@ -42,13 +44,55 @@ class CharterEventScreen extends UISubstateWindow {
 
 		paramsPanel = new FlxGroup();
 		add(paramsPanel);
+
+		eventName = new UIText(windowSpr.x + 40, windowSpr.y + 41, 0, "", 24);
+		add(eventName);
+
+		changeTab(0);
 	}
 
 	public var curEvent:Int = -1;
 
 	public function changeTab(id:Int) {
-		// TODO
 		saveCurTab();
+
+		// destroy old elements
+		paramsFields = [];
+		for(e in paramsPanel) {
+			e.destroy();
+			paramsPanel.remove(e);
+		}
+
+		if (id >= 0 && id < chartEvent.events.length) {
+			curEvent = id;
+			var curEvent = chartEvent.events[curEvent];
+			var data = CharterEvent.getEventInfo(curEvent.type);
+			eventName.text = data.name;
+			// add new elements
+			var y:Float = eventName.y + eventName.height + 10;
+			for(k=>param in data.params) {
+				switch(param.type) {
+					case TString:
+						var label:UIText = new UIText(eventName.x, y, 0, param.name);
+						y += label.height + 4;
+						paramsPanel.add(label);
+
+						var textBox:UITextBox = new UITextBox(eventName.x, y, cast curEvent.params[k]);
+						y += textBox.height + 10;
+						paramsPanel.add(textBox);
+						paramsFields.push(textBox);
+					case TBool:
+						var checkbox = new UICheckbox(eventName.x, y, param.name, cast curEvent.params[k]);
+						paramsPanel.add(checkbox);
+						paramsFields.push(checkbox);
+					default:
+						// none
+						paramsFields.push(null);
+				}
+			}
+		} else
+			curEvent = -1;
+
 	}
 
 	public function saveCurTab() {
@@ -57,6 +101,8 @@ class CharterEventScreen extends UISubstateWindow {
 		chartEvent.events[curEvent].params = [for(p in paramsFields) {
 			if (p is UITextBox)
 				cast(p, UITextBox).label.text;
+			else if (p is UICheckbox)
+				cast(p, UICheckbox).checked;
 			else
 				null;
 		}
@@ -66,7 +112,6 @@ class CharterEventScreen extends UISubstateWindow {
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (controls.BACK)
-			close();
+
 	}
 }
