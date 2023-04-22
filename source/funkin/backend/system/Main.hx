@@ -211,8 +211,6 @@ class Main extends Sprite
 			openfl.display3D.utils.UInt8Buff._pools.clear();
 		}
 
-		MemoryUtil.clearMinor();
 		MemoryUtil.clearMajor();
-		MemoryUtil.clearMinor();
 	}
 }
