@@ -1,10 +1,10 @@
 <!DOCTYPE codename-engine-character>
 <character isPlayer="false" flipX="false" icon="mom">
-    <anim name="idle"      anim="Mom Idle"      fps="24" loop="false" />
-    <anim name="singUP"    anim="Mom Up Pose"   fps="24" loop="false" x="14" y="71"/>
-    <anim name="singDOWN"  anim="MOM DOWN POSE" fps="24" loop="false" x="20" y="-160"/>
-    <anim name="singLEFT"  anim="Mom Left Pose" fps="24" loop="false" x="250" y="-23"/>
-    <!-- ANIMATION IS CALLED MOM LEFT POSE BUT ITS FOR THE RIGHT -->
+	<anim name="idle"      anim="Mom Idle"      fps="24" loop="false" />
+	<anim name="singUP"    anim="Mom Up Pose"   fps="24" loop="false" x="14" y="71"/>
+	<anim name="singDOWN"  anim="MOM DOWN POSE" fps="24" loop="false" x="20" y="-160"/>
+	<anim name="singLEFT"  anim="Mom Left Pose" fps="24" loop="false" x="250" y="-23"/>
+	<!-- ANIMATION IS CALLED MOM LEFT POSE BUT ITS FOR THE RIGHT -->
 	<!-- CUZ DAVE IS DUMB! -->
-    <anim name="singRIGHT" anim="Mom Pose Left" fps="24" loop="false" x="10" y="-60"/>
+	<anim name="singRIGHT" anim="Mom Pose Left" fps="24" loop="false" x="10" y="-60"/>
 </character>

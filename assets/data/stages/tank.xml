@@ -1,40 +1,40 @@
 <!DOCTYPE codename-engine-stage>
 <stage zoom="0.9" name="tank" folder="stages/tank/">
-    <!-- BG STUFF -->
-    <sprite name="tankBg" x="-500" y="0" sprite="tankBg" scroll="0" zoomfactor="0"/>
-    
-    <sprite name="tankSky" x="-400" y="-600" sprite="tankSky" scroll="0" zoomfactor="0"/>
-    <high-memory>
-        <sprite name="tankClouds" x="-350" y="0" sprite="tankClouds" scroll="0.1" zoomfactor="0">
-            <property name="velocity.x" type="float" value="10" />
-        </sprite>
-    </high-memory>
-    <sprite name="tankMountains" x="-300" y="-20" sprite="tankMountains" scroll="0.2" scale="1.2" updateHitbox="true" zoomfactor="0.10"/>
-    <high-memory>
-        <sprite name="tankBuildings" x="-300" y="-20" sprite="tankBuildings" scroll="0.3" scale="1.1" updateHitbox="true" zoomfactor="0.25"/>
-        <sprite name="tankRuins" x="-200" y="0" sprite="tankRuins" scroll="0.35" scale="1.1" updateHitbox="true" zoomfactor="0.35"/>
-    </high-memory>
-    <high-memory>
-        <sprite name="smokeLeft" x="-200" y="-100" sprite="smokeLeft" scroll="0.4" zoomfactor="0.6"/>
-        <sprite name="smokeRight" x="1100" y="-100" sprite="smokeRight" scroll="0.4" zoomfactor="0.6"/>
-        <sprite name="tankWatchtower" x="100" y="50" sprite="tankWatchtower" scroll="0.5" onBeat="true" zoomfactor="0.7"/>
-    </high-memory>
-    <sprite name="tankRolling" x="300" y="300" sprite="tankRolling" scroll="0.5" zoomfactor="0.8" type="loop"/>
-    <sprite name="tankGround" x="-420" y="-150" sprite="tankGround" scale="1.15" updateHitbox="true" zoomfactor="1.0"/>
+	<!-- BG STUFF -->
+	<sprite name="tankBg" x="-500" y="0" sprite="tankBg" scroll="0" zoomfactor="0"/>
+	
+	<sprite name="tankSky" x="-400" y="-600" sprite="tankSky" scroll="0" zoomfactor="0"/>
+	<high-memory>
+		<sprite name="tankClouds" x="-350" y="0" sprite="tankClouds" scroll="0.1" zoomfactor="0">
+			<property name="velocity.x" type="float" value="10" />
+		</sprite>
+	</high-memory>
+	<sprite name="tankMountains" x="-300" y="-20" sprite="tankMountains" scroll="0.2" scale="1.2" updateHitbox="true" zoomfactor="0.10"/>
+	<high-memory>
+		<sprite name="tankBuildings" x="-300" y="-20" sprite="tankBuildings" scroll="0.3" scale="1.1" updateHitbox="true" zoomfactor="0.25"/>
+		<sprite name="tankRuins" x="-200" y="0" sprite="tankRuins" scroll="0.35" scale="1.1" updateHitbox="true" zoomfactor="0.35"/>
+	</high-memory>
+	<high-memory>
+		<sprite name="smokeLeft" x="-200" y="-100" sprite="smokeLeft" scroll="0.4" zoomfactor="0.6"/>
+		<sprite name="smokeRight" x="1100" y="-100" sprite="smokeRight" scroll="0.4" zoomfactor="0.6"/>
+		<sprite name="tankWatchtower" x="100" y="50" sprite="tankWatchtower" scroll="0.5" onBeat="true" zoomfactor="0.7"/>
+	</high-memory>
+	<sprite name="tankRolling" x="300" y="300" sprite="tankRolling" scroll="0.5" zoomfactor="0.8" type="loop"/>
+	<sprite name="tankGround" x="-420" y="-150" sprite="tankGround" scale="1.15" updateHitbox="true" zoomfactor="1.0"/>
 
-    <!-- CHARACTERS -->
-    <girlfriend x="305" y="105"/>
-    <dad x="20" y="160"/>
-    <boyfriend x="810"/>
+	<!-- CHARACTERS -->
+	<girlfriend x="305" y="105"/>
+	<dad x="20" y="160"/>
+	<boyfriend x="810"/>
 
-    <!-- FOREGROUND TANKMANS -->
-    
-    <high-memory>
-        <sprite name="tank0" x="-500" y="650" sprite="tank0" scrollx="1.7" scrolly="1.5" onBeat="true" zoomfactor="1.25"/>
-        <sprite name="tank1" x="-300" y="750" sprite="tank1" scrollx="2" scrolly="0.2" onBeat="true" zoomfactor="1.25"/>
-        <sprite name="tank2" x="450" y="940" sprite="tank2" scroll="1.5" onBeat="true" zoomfactor="1.25"/>
-        <sprite name="tank4" x="1300" y="900" sprite="tank4" scroll="1.5" onBeat="true" zoomfactor="1.25"/>
-        <sprite name="tank5" x="1620" y="700" sprite="tank5" scroll="1.5" onBeat="true" zoomfactor="1.25"/>
-        <sprite name="tank3" x="1300" y="1200" sprite="tank3" scrollx="3.5" scrolly="2.5" onBeat="true" zoomfactor="1.25"/>
-    </high-memory>
+	<!-- FOREGROUND TANKMANS -->
+	
+	<high-memory>
+		<sprite name="tank0" x="-500" y="650" sprite="tank0" scrollx="1.7" scrolly="1.5" onBeat="true" zoomfactor="1.25"/>
+		<sprite name="tank1" x="-300" y="750" sprite="tank1" scrollx="2" scrolly="0.2" onBeat="true" zoomfactor="1.25"/>
+		<sprite name="tank2" x="450" y="940" sprite="tank2" scroll="1.5" onBeat="true" zoomfactor="1.25"/>
+		<sprite name="tank4" x="1300" y="900" sprite="tank4" scroll="1.5" onBeat="true" zoomfactor="1.25"/>
+		<sprite name="tank5" x="1620" y="700" sprite="tank5" scroll="1.5" onBeat="true" zoomfactor="1.25"/>
+		<sprite name="tank3" x="1300" y="1200" sprite="tank3" scrollx="3.5" scrolly="2.5" onBeat="true" zoomfactor="1.25"/>
+	</high-memory>
 </stage>

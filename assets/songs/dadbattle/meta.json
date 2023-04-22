@@ -1,8 +1,8 @@
 {
-    "displayName": "Dadbattle",
-    "bpm": 180.0,
-    "icon": "dad",
-    "color": "#9271FD",
-    "coopAllowed": true,
-    "opponentModeAllowed": true
+	"displayName": "Dadbattle",
+	"bpm": 180.0,
+	"icon": "dad",
+	"color": "#9271FD",
+	"coopAllowed": true,
+	"opponentModeAllowed": true
 }

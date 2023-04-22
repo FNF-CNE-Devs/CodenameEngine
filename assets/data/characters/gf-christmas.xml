@@ -1,14 +1,14 @@
 <!DOCTYPE codename-engine-character>
 <character isPlayer="false" flipX="false" isGF="true"  x="115" y="325">
-    <anim name="cheer"      anim="GF Cheer"                     fps="24" loop="false" />
-    <anim name="singUP"     anim="GF Up Note"                   fps="24" loop="false" x="0"  y="4" />
-    <anim name="singLEFT"   anim="GF left note"                 fps="24" loop="false" x="0"  y="-19" />
-    <anim name="singRIGHT"  anim="GF Right Note"                fps="24" loop="false" x="0"  y="-20" />
-    <anim name="singDOWN"   anim="GF Down Note"                 fps="24" loop="false" x="0"  y="-20" />
-    <anim name="danceLeft"  anim="GF Dancing Beat"              fps="24" loop="false" x="0"  y="-9" indices="30,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
-    <anim name="danceRight" anim="GF Dancing Beat"              fps="24" loop="false" x="0"  y="-9" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
-    <anim name="hairBlow"   anim="GF Dancing Beat Hair blowing" fps="24" loop="false" x="45" y="-8" indices="0,1,2,3" />
-    <anim name="hairFall"   anim="GF Dancing Beat Hair Landing" fps="24" loop="false" x="0"  y="-9" indices="0,1,2,3,4,5,6,7,8,9,10,11" />
-    <anim name="scared"     anim="GF FEAR"                      fps="24" loop="true"  x="-2" y="-17" />
-    <anim name="sad"        anim="gf sad"                       fps="24" loop="true"  x="-2"  y="-21" indices="0,1,2,3,4,5,6,7,8,9,10,11,12" />
+	<anim name="cheer"      anim="GF Cheer"                     fps="24" loop="false" />
+	<anim name="singUP"     anim="GF Up Note"                   fps="24" loop="false" x="0"  y="4" />
+	<anim name="singLEFT"   anim="GF left note"                 fps="24" loop="false" x="0"  y="-19" />
+	<anim name="singRIGHT"  anim="GF Right Note"                fps="24" loop="false" x="0"  y="-20" />
+	<anim name="singDOWN"   anim="GF Down Note"                 fps="24" loop="false" x="0"  y="-20" />
+	<anim name="danceLeft"  anim="GF Dancing Beat"              fps="24" loop="false" x="0"  y="-9" indices="30,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
+	<anim name="danceRight" anim="GF Dancing Beat"              fps="24" loop="false" x="0"  y="-9" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
+	<anim name="hairBlow"   anim="GF Dancing Beat Hair blowing" fps="24" loop="false" x="45" y="-8" indices="0,1,2,3" />
+	<anim name="hairFall"   anim="GF Dancing Beat Hair Landing" fps="24" loop="false" x="0"  y="-9" indices="0,1,2,3,4,5,6,7,8,9,10,11" />
+	<anim name="scared"     anim="GF FEAR"                      fps="24" loop="true"  x="-2" y="-17" />
+	<anim name="sad"        anim="gf sad"                       fps="24" loop="true"  x="-2"  y="-21" indices="0,1,2,3,4,5,6,7,8,9,10,11,12" />
 </character>

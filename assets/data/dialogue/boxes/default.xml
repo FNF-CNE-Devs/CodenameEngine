@@ -1,24 +1,24 @@
 <!DOCTYPE codename-engine-dialogue-box>
 <dialoguebox scale="0.9" y="75">
-    <!--
-        Node containing all text settings
-     -->
-    <text font="vcr.ttf" x="107" y="206" width="1053" color="#000000" size="40"/>
+	<!--
+		Node containing all text settings
+	 -->
+	<text font="vcr.ttf" x="107" y="206" width="1053" color="#000000" size="40"/>
 
-    <!--
-        All positions for characters
-    -->
-    <charpos name="left" x="-500" y="184" />
-    <charpos name="middle" x="0" y="184" />
-    <charpos name="right" x="500" y="184" flipBubble="true" />
+	<!--
+		All positions for characters
+	-->
+	<charpos name="left" x="-500" y="184" />
+	<charpos name="middle" x="0" y="184" />
+	<charpos name="right" x="500" y="184" flipBubble="true" />
 
-    <!--
-        All animations for the dialogue box
-        For example, if you wanna add an "angry" animation, add an animation named "angry" (box idle), and "angry-open" (not needed, for box apparition)
-     -->
-    <anim name="normal" anim="speech bubble normal" fps="24" loop="true" x="-30"/>
-    <anim name="normal-open" anim="Speech Bubble Normal Open" fps="24" />
+	<!--
+		All animations for the dialogue box
+		For example, if you wanna add an "angry" animation, add an animation named "angry" (box idle), and "angry-open" (not needed, for box apparition)
+	 -->
+	<anim name="normal" anim="speech bubble normal" fps="24" loop="true" x="-30"/>
+	<anim name="normal-open" anim="Speech Bubble Normal Open" fps="24" />
 
-    <anim name="angry" anim="AHH speech bubble" fps="24" loop="true" y="60"/>
-    <anim name="angry-open" anim="speech bubble loud open" fps="24"  y="60"/>
+	<anim name="angry" anim="AHH speech bubble" fps="24" loop="true" y="60"/>
+	<anim name="angry-open" anim="speech bubble loud open" fps="24"  y="60"/>
 </dialoguebox>

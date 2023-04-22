@@ -1,10 +1,10 @@
 <!DOCTYPE codename-engine-character>
 <character isPlayer="false" flipX="false" x="150" y="360" antialiasing="false" scale="6" camx="100">
-    <anim name="idle" anim="Senpai Idle" fps="12" loop="false" x="0" y="0" />
+	<anim name="idle" anim="Senpai Idle" fps="12" loop="false" x="0" y="0" />
 
-    <!-- Offsets are actually multiplied by scale -->
-    <anim name="singLEFT"   anim="SENPAI LEFT NOTE"     fps="12" loop="false"   x="7" y="0" />
-    <anim name="singDOWN"   anim="SENPAI DOWN NOTE"     fps="12" loop="false"   x="2" y="0" />
-    <anim name="singUP"     anim="SENPAI UP NOTE"       fps="12" loop="false"   x="1" y="6" />
-    <anim name="singRIGHT"  anim="SENPAI RIGHT NOTE"    fps="12" loop="false"   x="0" y="0" />
+	<!-- Offsets are actually multiplied by scale -->
+	<anim name="singLEFT"   anim="SENPAI LEFT NOTE"     fps="12" loop="false"   x="7" y="0" />
+	<anim name="singDOWN"   anim="SENPAI DOWN NOTE"     fps="12" loop="false"   x="2" y="0" />
+	<anim name="singUP"     anim="SENPAI UP NOTE"       fps="12" loop="false"   x="1" y="6" />
+	<anim name="singRIGHT"  anim="SENPAI RIGHT NOTE"    fps="12" loop="false"   x="0" y="0" />
 </character>

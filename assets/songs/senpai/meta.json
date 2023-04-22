@@ -1,8 +1,8 @@
 {
-    "displayName": "Senpai",
-    "bpm": 144.0,
-    "icon": "senpai",
-    "color": "#FF78BF",
-    "coopAllowed": true,
-    "opponentModeAllowed": true
+	"displayName": "Senpai",
+	"bpm": 144.0,
+	"icon": "senpai",
+	"color": "#FF78BF",
+	"coopAllowed": true,
+	"opponentModeAllowed": true
 }
