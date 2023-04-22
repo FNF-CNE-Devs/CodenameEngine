@@ -29,12 +29,6 @@ class NativeAPI {
 		#end
 	}
 
-	public static function setDarkMode(handle:Dynamic, enable:Bool) {
-		#if windows
-		Windows.setDarkMode(handle, enable);
-		#end
-	}
-
 	/**
 	 * Shows a message box
 	 */
