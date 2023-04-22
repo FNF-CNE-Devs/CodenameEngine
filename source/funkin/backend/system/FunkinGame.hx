@@ -7,7 +7,7 @@ class FunkinGame extends FlxGame {
 	public override function switchState() {
 		super.switchState();
 		// draw once to put all images in gpu then put the last update time to now to prevent lag spikes or whatever
-		draw(); 
+		draw();
 		_total = ticks = getTicks();
 		skipNextTickUpdate = true;
 	}
@@ -16,17 +16,5 @@ class FunkinGame extends FlxGame {
 		if (skipNextTickUpdate != (skipNextTickUpdate = false))
 			_total = ticks = getTicks();
 		super.onEnterFrame(t);
-	}
-
-	public override function draw() {
-		MemoryUtil.askDisable();
-		super.draw();
-		MemoryUtil.askEnable();
-	}
-
-	public override function update() {
-		MemoryUtil.askDisable();
-		super.update();
-		MemoryUtil.askEnable();
 	}
 }
