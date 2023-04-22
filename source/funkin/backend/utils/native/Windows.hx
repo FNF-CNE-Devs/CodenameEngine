@@ -129,12 +129,16 @@ class Windows {
 
 	@:functionCode('
 		int darkMode = enable ? 1 : 0;
-		HWND window = GetActiveWindow();
-		if (S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
+
+		HWND window = FindWindowA(NULL, title.c_str());
+		// Look for child windows if top level aint found
+		if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
+
+		if (window != NULL && S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
 			DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
 		}
 	')
-	public static function setDarkMode(enable:Bool) {}
+	public static function setDarkMode(title:String, enable:Bool) {}
 
 	@:functionCode('
 	// https://stackoverflow.com/questions/15543571/allocconsole-not-displaying-cout
