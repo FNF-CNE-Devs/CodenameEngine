@@ -102,7 +102,6 @@ class TileAnimationLibrary {
 	}
 
 	// # region Pooling
-	// todo migrate this to lime pool
 
 	@:access(animateatlas)
 	private function getSymbol(name:String):TileContainerSymbol {

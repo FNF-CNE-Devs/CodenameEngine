@@ -1,19 +1,15 @@
 package funkin.menus;
 
+import funkin.savedata.FunkinSave;
 import haxe.io.Path;
-import funkin.scripting.events.*;
+import funkin.backend.scripting.events.*;
 import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
 import flixel.graphics.frames.FlxFramesCollection;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import funkin.game.Highscore;
 import flixel.tweens.FlxTween;
-import flixel.FlxG;
-import flixel.math.FlxMath;
 import flixel.util.FlxColor;
-import funkin.ui.FunkinText;
+import funkin.backend.FunkinText;
 import haxe.xml.Access;
-import flixel.FlxSprite;
 import flixel.text.FlxText;
 
 class StoryMenuState extends MusicBeatState {
@@ -177,6 +173,8 @@ class StoryMenuState extends MusicBeatState {
 			characterSprites.members[i].changeCharacter(characters[weeks[curWeek].chars[i]]);
 
 		changeDifficulty(0, true);
+
+		MemoryUtil.clearMinor();
 	}
 
 	var __oldDiffName = null;
@@ -203,7 +201,7 @@ class StoryMenuState extends MusicBeatState {
 			}
 		}
 
-		intendedScore = Highscore.getWeekScore(weeks[curWeek].name, weeks[curWeek].difficulties[curDifficulty]).score;
+		intendedScore = FunkinSave.getWeekHighscore(weeks[curWeek].name, weeks[curWeek].difficulties[curDifficulty]).score;
 	}
 
 	public function loadXMLs() {
@@ -302,7 +300,7 @@ class StoryMenuState extends MusicBeatState {
 		characters[charName] = charObj;
 	}
 
-	public function getWeeksFromSource(weeks:Array<String>, source:funkin.system.AssetsLibraryList.AssetSource) {
+	public function getWeeksFromSource(weeks:Array<String>, source:funkin.backend.assets.AssetsLibraryList.AssetSource) {
 		var path:String = Paths.txt('freeplaySonglist');
 		var weeksFound:Array<String> = [];
 		if (Paths.assetsTree.existsSpecific(path, "TEXT", source)) {
@@ -338,7 +336,7 @@ class StoryMenuState extends MusicBeatState {
 			if (char.animation.exists("confirm"))
 				char.animation.play("confirm");
 
-		CoolUtil.loadWeek(weeks[curWeek], weeks[curWeek].difficulties[curDifficulty]);
+		PlayState.loadWeek(weeks[curWeek], weeks[curWeek].difficulties[curDifficulty]);
 
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{

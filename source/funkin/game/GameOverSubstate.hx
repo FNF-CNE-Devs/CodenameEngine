@@ -1,16 +1,14 @@
 package funkin.game;
 
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.system.FlxSound;
-import flixel.FlxG;
-import flixel.FlxObject;
+import flixel.sound.FlxSound;
 import flixel.FlxSubState;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import funkin.menus.StoryMenuState;
 import funkin.menus.FreeplayState;
-import funkin.system.Conductor;
+import funkin.backend.system.Conductor;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
@@ -82,7 +80,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		}
 
 		if (!isEnding && ((!lossSFX.playing) || (character.animation.curAnim != null && character.animation.curAnim.name == "firstDeath" && character.animation.curAnim.finished)) && (FlxG.sound.music == null || !FlxG.sound.music.playing)) {
-			CoolUtil.playMusic(Paths.music(gameOverSong), 100);
+			CoolUtil.playMusic(Paths.music(gameOverSong), false, 1, true, 100);
 			beatHit(0);
 		}
 	}
@@ -102,7 +100,10 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			isEnding = true;
 			character.playAnim('deathConfirm', true);
-			FlxG.sound.music.stop();
+			if (FlxG.sound.music != null)
+				FlxG.sound.music.stop();
+			FlxG.sound.music = null;
+
 			var sound = FlxG.sound.play(Paths.sound(retrySFX));
 
 			var secsLength:Float = sound.length / 1000;
@@ -118,7 +119,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			{
 				FlxG.camera.fade(FlxColor.BLACK, fadeOutTime, false, function()
 				{
-					FlxTransitionableState.skipNextTransOut = true;
+					MusicBeatState.skipTransOut = true;
 					FlxG.switchState(new PlayState());
 				});
 			});

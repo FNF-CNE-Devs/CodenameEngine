@@ -1,24 +1,19 @@
 package funkin.menus;
 
 import funkin.options.OptionsMenu;
-import flixel.FlxCamera;
-import funkin.scripting.events.PauseCreationEvent;
-import funkin.scripting.events.NameEvent;
-import funkin.scripting.Script;
-import flixel.FlxG;
-import flixel.FlxSprite;
+import funkin.backend.scripting.events.PauseCreationEvent;
+import funkin.backend.scripting.events.NameEvent;
+import funkin.backend.scripting.Script;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import funkin.ui.Alphabet;
 import funkin.options.keybinds.KeybindsOptions;
 import funkin.menus.StoryMenuState;
+import funkin.backend.utils.FunkinParentDisabler;
 
 class PauseSubState extends MusicBeatSubstate
 {
@@ -37,13 +32,20 @@ class PauseSubState extends MusicBeatSubstate
 
 	private var __cancelDefault:Bool = false;
 
-	public function new(x:Float, y:Float)
-	{
+	public function new(x:Float = 0, y:Float = 0) {
 		super();
+	}
+
+	var parentDisabler:FunkinParentDisabler;
+	override function create()
+	{
+		super.create();
+
+		add(parentDisabler = new FunkinParentDisabler());
 
 		pauseScript = Script.create(Paths.script(script));
 		pauseScript.setParent(this);
-        pauseScript.load();
+		pauseScript.load();
 
 		var event = EventManager.get(PauseCreationEvent).recycle('breakfast', menuItems);
 		pauseScript.call('create', [event]);
@@ -51,10 +53,10 @@ class PauseSubState extends MusicBeatSubstate
 		menuItems = event.options;
 
 
-		pauseMusic = new FlxSound().loadEmbedded(Paths.music(event.music), true, true);
-		pauseMusic.volume = 0;
+		pauseMusic = FlxG.sound.load(Paths.music(event.music), 0, true);
+		pauseMusic.persist = false;
+		pauseMusic.group = FlxG.sound.defaultMusicGroup;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
-		FlxG.sound.list.add(pauseMusic);
 
 		if (__cancelDefault = event.cancelled) return;
 
@@ -139,23 +141,31 @@ class PauseSubState extends MusicBeatSubstate
 			case "Resume":
 				close();
 			case "Restart Song":
+				parentDisabler.reset();
+				PlayState.instance.registerSmoothTransition();
 				FlxG.resetState();
 			case "Change Controls":
 				persistentDraw = false;
 				openSubState(new KeybindsOptions());
 			case "Options":
-				FlxG.switchState(new OptionsMenu(true));
+				FlxG.switchState(new OptionsMenu());
 			case "Exit to menu":
+				CoolUtil.playMenuSong();
 				FlxG.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
-				CoolUtil.playMenuSong();		
 		}
 	}
 	override function destroy()
 	{
-		FlxG.cameras.remove(camera, true);
+
+		if(FlxG.cameras.list.contains(camera))
+			FlxG.cameras.remove(camera, true);
 		pauseScript.call("onDestroy");
-		if (pauseMusic != null) pauseMusic.destroy();
 		pauseScript.destroy();
+
+		if (pauseMusic != null)
+			@:privateAccess {
+				FlxG.sound.destroySound(pauseMusic);
+			}
 
 		super.destroy();
 	}
@@ -176,14 +186,10 @@ class PauseSubState extends MusicBeatSubstate
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			item.alpha = 0.6;
-			// item.setGraphicSize(Std.int(item.width * 0.8));
-
 			if (item.targetY == 0)
-			{
 				item.alpha = 1;
-				// item.setGraphicSize(Std.int(item.width));
-			}
+			else
+				item.alpha = 0.6;
 		}
 	}
 }

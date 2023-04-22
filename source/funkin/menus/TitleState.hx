@@ -1,12 +1,10 @@
 package funkin.menus;
 
-import funkin.github.GitHub;
-import funkin.system.MusicBeatGroup;
-import funkin.utils.XMLUtil;
+import funkin.backend.system.github.GitHub;
+import funkin.backend.MusicBeatGroup;
+import funkin.backend.utils.XMLUtil;
 import flixel.util.typeLimit.OneOfThree;
 import flixel.util.typeLimit.OneOfTwo;
-import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
@@ -17,21 +15,20 @@ import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.system.ui.FlxSoundTray;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import funkin.system.Conductor;
+import funkin.backend.system.Conductor;
 import openfl.Assets;
-import funkin.ui.Alphabet;
 import haxe.xml.Access;
 
 using StringTools;
 
-@:allow(funkin.mods.ModsFolder)
+@:allow(funkin.backend.assets.ModsFolder)
+@:allow(funkin.backend.system.MainState)
 class TitleState extends MusicBeatState
 {
 	static var initialized:Bool = false;
@@ -49,7 +46,7 @@ class TitleState extends MusicBeatState
 	{
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
-		FlxTransitionableState.skipNextTransIn = true;
+		MusicBeatState.skipTransIn = true;
 
 		super.create();
 
@@ -160,6 +157,11 @@ class TitleState extends MusicBeatState
 			#end
 		}
 
+		if (pressedEnter && transitioning && skippedIntro) {
+			FlxG.camera.stopFX();// FlxG.camera.visible = false;
+			goToMainMenu();
+		}
+
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
 			pressEnter();
@@ -180,21 +182,22 @@ class TitleState extends MusicBeatState
 		transitioning = true;
 		// FlxG.sound.music.stop();
 
-		new FlxTimer().start(2, function(tmr:FlxTimer)
-		{
-			#if UPDATE_CHECKING
-			var report = hasCheckedUpdates ? null : funkin.updating.UpdateUtil.checkForUpdates();
-			hasCheckedUpdates = true;
+		new FlxTimer().start(2, (_) -> goToMainMenu());
+	}
 
-			if (report != null && report.newUpdate) {
-				FlxG.switchState(new funkin.updating.UpdateAvailableScreen(report));
-			} else {
-				FlxG.switchState(new MainMenuState());
-			}
-			#else
+	function goToMainMenu() {
+		#if UPDATE_CHECKING
+		var report = hasCheckedUpdates ? null : funkin.backend.system.updating.UpdateUtil.checkForUpdates();
+		hasCheckedUpdates = true;
+
+		if (report != null && report.newUpdate) {
+			FlxG.switchState(new funkin.backend.system.updating.UpdateAvailableScreen(report));
+		} else {
 			FlxG.switchState(new MainMenuState());
-			#end
-		});
+		}
+		#else
+		FlxG.switchState(new MainMenuState());
+		#end
 	}
 
 	public function createCoolText(textArray:Array<String>)
@@ -327,7 +330,7 @@ class TitleState extends MusicBeatState
 				}
 			}
 		} catch(e) {
-            Logs.trace('Failed to load titlescreen XML: $e', ERROR);
+			Logs.trace('Failed to load titlescreen XML: $e', ERROR);
 		}
 	}
 	#end

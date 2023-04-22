@@ -65,11 +65,11 @@ import lime.media.AudioSource;
 	Center Topic: [Security](http://www.adobe.com/go/devnet_security_en).
 
 	@event complete   Dispatched when data has loaded successfully.
-	@event id3        Dispatched by a Sound object when ID3 data is available
+	@event id3		Dispatched by a Sound object when ID3 data is available
 					  for an MP3 sound.
-	@event ioError    Dispatched when an input/output error occurs that causes
+	@event ioError	Dispatched when an input/output error occurs that causes
 					  a load operation to fail.
-	@event open       Dispatched when a load operation starts.
+	@event open	   Dispatched when a load operation starts.
 	@event progress   Dispatched when data is received as a load operation
 					  progresses.
 	@event sampleData Dispatched when the runtime requests new audio data.
@@ -418,8 +418,8 @@ class Sound extends EventDispatcher
 					   data to hold in the Sound object's buffer) and can specify
 					   whether the application should check for a cross-domain
 					   policy file prior to loading the sound.
-		@throws IOError       A network error caused the load to fail.
-		@throws IOError       The `digest` property of the
+		@throws IOError	   A network error caused the load to fail.
+		@throws IOError	   The `digest` property of the
 							  `stream` object is not `null`.
 							  You should only set the `digest` property
 							  of a URLRequest object when calling the
@@ -616,9 +616,9 @@ class Sound extends EventDispatcher
 		monitor volume.(To control the volume, panning, and balance, access the
 		SoundTransform object assigned to the sound channel.)
 
-		@param startTime    The initial position in milliseconds at which playback
+		@param startTime	The initial position in milliseconds at which playback
 							should start.
-		@param loops        Defines the number of times a sound loops back to the
+		@param loops		Defines the number of times a sound loops back to the
 							`startTime` value before the sound channel
 							stops playback.
 		@param sndTransform The initial SoundTransform object assigned to the
@@ -636,8 +636,8 @@ class Sound extends EventDispatcher
 			return null;
 		}
 
-		if (changeID < funkin.system.Main.changeID) {
-			changeID = funkin.system.Main.changeID;
+		if (changeID < funkin.backend.system.Main.changeID) {
+			changeID = funkin.backend.system.Main.changeID;
 			regen();
 		}
 

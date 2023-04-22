@@ -28,6 +28,7 @@
         <letter char="X"        anim="X bold" />
         <letter char="Y"        anim="Y bold" />
         <letter char="Z"        anim="Z bold" />
+        <letter char=">"        anim="> Bold" />
     </bold>
     <normal spritesheet="menus/alphabet">
         <!-- Symbols !-->

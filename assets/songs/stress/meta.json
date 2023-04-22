@@ -3,7 +3,6 @@
     "bpm": 178.0,
     "icon": "tankman",
     "color": "#F6B604",
-    "difficulties": ["EASY", "NORMAL", "HARD"],
     "coopAllowed": true,
     "opponentModeAllowed": true
 }

@@ -424,8 +424,6 @@ class System
 	#if sys
 	private static function __parseArguments(attributes:WindowAttributes):Void
 	{
-		// TODO: Handle default arguments, like --window-fps=60
-
 		var arguments = Sys.args();
 		var stripQuotes = ~/^['"](.*)['"]$/;
 		var equals, argValue, parameters = null;
@@ -528,12 +526,13 @@ class System
 
 	@:noCompletion private static function __registerEntryPoint(projectName:String, entryPoint:Function):Void
 	{
-        // executes first!!
-        
-        #if sys
-        funkin.system.CommandLineHandler.parseCommandLine(Sys.args());
-        #end
-        
+		// executes first!!
+		
+		#if sys
+		funkin.backend.utils.NativeAPI.registerAsDPICompatible();
+		funkin.backend.system.CommandLineHandler.parseCommandLine(Sys.args());
+		#end
+		
 		if (__applicationEntryPoint == null)
 		{
 			__applicationEntryPoint = new Map();

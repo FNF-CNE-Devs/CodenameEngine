@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="button.png">
+	<!-- Created without animate lol i wrote this-->
+	<SubTexture name="normal-topleft" x="0" y="0" width="8" height="8"/>
+	<SubTexture name="normal-top" x="8" y="0" width="16" height="8"/>
+	<SubTexture name="normal-topright" x="24" y="0" width="8" height="8"/>
+	<SubTexture name="normal-middleleft" x="0" y="8" width="8" height="16"/>
+	<SubTexture name="normal-middle" x="8" y="8" width="16" height="16"/>
+	<SubTexture name="normal-middleright" x="24" y="8" width="8" height="16"/>
+	<SubTexture name="normal-bottomleft" x="0" y="24" width="8" height="8"/>
+	<SubTexture name="normal-bottom" x="8" y="24" width="16" height="8"/>
+	<SubTexture name="normal-bottomright" x="24" y="24" width="8" height="8"/>
+
+	<SubTexture name="hover-topleft" x="32" y="0" width="8" height="8"/>
+	<SubTexture name="hover-top" x="40" y="0" width="16" height="8"/>
+	<SubTexture name="hover-topright" x="56" y="0" width="8" height="8"/>
+	<SubTexture name="hover-middleleft" x="32" y="8" width="8" height="16"/>
+	<SubTexture name="hover-middle" x="40" y="8" width="16" height="16"/>
+	<SubTexture name="hover-middleright" x="56" y="8" width="8" height="16"/>
+	<SubTexture name="hover-bottomleft" x="32" y="24" width="8" height="8"/>
+	<SubTexture name="hover-bottom" x="40" y="24" width="16" height="8"/>
+	<SubTexture name="hover-bottomright" x="56" y="24" width="8" height="8"/>
+
+	<SubTexture name="pressed-topleft" x="64" y="0" width="8" height="8"/>
+	<SubTexture name="pressed-top" x="72" y="0" width="16" height="8"/>
+	<SubTexture name="pressed-topright" x="88" y="0" width="8" height="8"/>
+	<SubTexture name="pressed-middleleft" x="64" y="8" width="8" height="16"/>
+	<SubTexture name="pressed-middle" x="72" y="8" width="16" height="16"/>
+	<SubTexture name="pressed-middleright" x="88" y="8" width="8" height="16"/>
+	<SubTexture name="pressed-bottomleft" x="64" y="24" width="8" height="8"/>
+	<SubTexture name="pressed-bottom" x="72" y="24" width="16" height="8"/>
+	<SubTexture name="pressed-bottomright" x="88" y="24" width="8" height="8"/>
+</TextureAtlas>

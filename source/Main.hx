@@ -1,1 +1,1 @@
-typedef Main = funkin.system.Main;
+typedef Main = funkin.backend.system.Main;

@@ -106,7 +106,7 @@ function onStartCountdown() {
 
     var pixelSwagWidth = Note.swagWidth + (daPixelZoom - (Note.swagWidth % daPixelZoom));
 
-    for(p in players) {
+    for(p in strumLines) {
         var i = 0;
         for(str in p.members) {
             str.x = (FlxG.width * strumOffset) + (pixelSwagWidth * (i - 2));
@@ -151,7 +151,7 @@ function postUpdate(elapsed) {
             e.downscroll = camHUD.downscroll;
     }
     if (enableCameraHacks) {
-        for(p in players)
+        for(p in strumLines)
             p.notes.forEach(function(n) {
                 n.y -= n.y % daPixelZoom;
                 n.x -= n.x % daPixelZoom;

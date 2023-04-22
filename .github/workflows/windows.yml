@@ -5,6 +5,7 @@ on:
 jobs:
   build:
     name: Windows Build
+    permissions: write-all
     runs-on: windows-latest
     steps:
       - name: Pulling the new commit

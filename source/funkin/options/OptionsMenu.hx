@@ -1,113 +1,123 @@
 package funkin.options;
 
-import flixel.util.typeLimit.OneOfTwo;
-import flixel.FlxState;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import funkin.ui.Alphabet;
-import flixel.math.FlxMath;
-import flixel.FlxSprite;
-import flixel.FlxG;
-import flixel.effects.FlxFlicker;
+import funkin.options.type.Checkbox;
+import haxe.xml.Access;
+import flixel.tweens.FlxTween;
 import funkin.menus.MainMenuState;
-
+import flixel.util.typeLimit.OneOfTwo;
+import funkin.options.type.*;
 import funkin.options.categories.*;
+import funkin.options.TreeMenu;
 
-typedef OptionCategory = {
-    var name:String;
-    var desc:String;
-    var state:OneOfTwo<Class<FlxState>, FlxState>;
-}
-class OptionsMenu extends MusicBeatState {
-    public static var fromPlayState:Bool = false;
-    public var options:Array<OptionCategory> = [
-        {
-            name: 'Controls',
-            desc: 'Change Controls for Player 1 and Player 2!',
-            state: funkin.options.keybinds.KeybindsOptions
-        },
-        {
-            name: 'Gameplay',
-            desc: 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...',
-            state: GameplayOptions
-        },
-        {
-            name: 'Appearance',
-            desc: 'Change Appearance options such as Flashing menus...',
-            state: AppearanceOptions
-        },
-        {
-            name: 'Miscellaneous',
-            desc: 'Use this menu to reset save data or engine settings.',
-            state: MiscOptions
-        },
-        {
-            name: 'Debug Options',
-            desc: 'Use this menu to change debug options.',
-            state: DebugOptions
-        }
-    ];
+class OptionsMenu extends TreeMenu {
+	public static var mainOptions:Array<OptionCategory> = [
+		{
+			name: 'Controls',
+			desc: 'Change Controls for Player 1 and Player 2!',
+			state: null,
+			substate: funkin.options.keybinds.KeybindsOptions
+		},
+		{
+			name: 'Gameplay >',
+			desc: 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...',
+			state: GameplayOptions
+		},
+		{
+			name: 'Appearance >',
+			desc: 'Change Appearance options such as Flashing menus...',
+			state: AppearanceOptions
+		},
+		{
+			name: 'Miscellaneous >',
+			desc: 'Use this menu to reset save data or engine settings.',
+			state: MiscOptions
+		}
+	];
 
-    public var curSelected:Int = -1;
-    public var canSelect:Bool = true;
-    public var alphabets:FlxTypedGroup<Alphabet>;
+	public override function create() {
+		super.create();
 
-    public function new(?fromPlayState:Bool) {
-        super();
-        if (fromPlayState != null) OptionsMenu.fromPlayState = fromPlayState;
-    }
-    public override function create() {
+		CoolUtil.playMenuSong();
+
 		var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBGBlue'));
-        bg.scrollFactor.set();
+		// bg.scrollFactor.set();
 		bg.scale.set(1.15, 1.15);
 		bg.updateHitbox();
 		bg.screenCenter();
+		bg.scrollFactor.set();
 		bg.antialiasing = true;
 		add(bg);
 
-        super.create();
-        alphabets = new FlxTypedGroup<Alphabet>();
-        for(k=>e in options) {
-            var alphabet = new Alphabet(0, (k+1) * (100), e.name, true, false);
-            alphabet.screenCenter(X);
-            alphabets.add(alphabet);
-        }
-        add(alphabets);
-        changeSelection(1);
+		main = new OptionsScreen("Options", "Select a category to continue.", [for(o in mainOptions) new TextOption(o.name, o.desc, function() {
+			if (o.substate != null) {
+				persistentUpdate = false;
+				persistentDraw = true;
+				if (o.substate is MusicBeatSubstate) {
+					openSubState(o.substate);
+				} else {
+					openSubState(Type.createInstance(o.substate, []));
+				}
+			} else {
+				if (o.state is OptionsScreen) {
+					optionsTree.add(o.state);
+				} else {
+					optionsTree.add(Type.createInstance(o.state, []));
+				}
+			}
+		})]);
+		
+		var xmlPath = Paths.xml("config/options");
+		for(source in [funkin.backend.assets.AssetsLibraryList.AssetSource.SOURCE, funkin.backend.assets.AssetsLibraryList.AssetSource.MODS]) {
+			if (Paths.assetsTree.existsSpecific(xmlPath, "TEXT", source)) {
+				var access:Access = null;
+				try {
+					access = new Access(Xml.parse(Paths.assetsTree.getSpecificAsset(xmlPath, "TEXT", source)));
+				} catch(e) {
+					Logs.trace('Error while parsing options.xml: ${Std.string(e)}', ERROR);
+				}
+				
+				if (access != null)
+					for(o in parseOptionsFromXML(access))
+						main.add(o);
+			}
+		}
+		
+	}
 
-        CoolUtil.playMenuSong();
-    }
+	public override function exit() {
+		Options.save();
+		Options.applySettings();
+		super.exit();
+	}
 
-    public override function update(elapsed:Float) {
-        super.update(elapsed);
-        if (!canSelect) return;
-        changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
-        if (controls.ACCEPT && alphabets.members[curSelected] != null) {
-            CoolUtil.playMenuSFX(CONFIRM);
-            canSelect = false;
-            FlxFlicker.flicker(alphabets.members[curSelected], 1, Options.flashingMenu ? 0.06 : 0.15, false, false, function(flick:FlxFlicker)
-            {
-                FlxTransitionableState.skipNextTransOut = true;
-                if (options[curSelected].state is FlxState)
-                    FlxG.switchState(options[curSelected].state);
-                else
-                    FlxG.switchState(Type.createInstance(options[curSelected].state, []));
-            });
-        } else if (controls.BACK) {
-            if (fromPlayState)
-                FlxG.switchState(new PlayState());
-            else
-                FlxG.switchState(new MainMenuState());
-        }
-    }
+	/**
+	 * XML STUFF
+	 */
+	public function parseOptionsFromXML(xml:Access):Array<OptionType> {
+		var options:Array<OptionType> = [];
 
-    public function changeSelection(change:Int) {
-        if (change == 0) return;
-        CoolUtil.playMenuSFX(SCROLL, 0.7);
-        curSelected = FlxMath.wrap(curSelected + change, 0, options.length-1);
-        alphabets.forEach(function(e) {
-            e.alpha = 0.6;
-        });
-        if (alphabets.members[curSelected] != null) alphabets.members[curSelected].alpha = 1;
-    }
+		for(node in xml.elements) {
+			if (!node.has.name) {
+				Logs.trace("An option node requires a name attribute.", WARNING);
+				continue;
+			}
+			var name = node.getAtt("name");
+			var desc = node.getAtt("desc").getDefault("No Description");
+
+			switch(node.name) {
+				case "checkbox":
+					if (!node.has.id) {
+						Logs.trace("A checkbox option requires an \"id\" for option saving.", WARNING);
+						continue;
+					}
+					options.push(new Checkbox(name, desc, node.att.id, FlxG.save.data));
+				case "menu":
+					options.push(new TextOption(name + " >", desc, function() {
+						optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node)));
+					}));
+			}
+		}
+
+		return options;
+	}
 }

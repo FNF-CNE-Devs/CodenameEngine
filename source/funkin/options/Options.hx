@@ -1,17 +1,19 @@
 package funkin.options;
 
-import flixel.FlxG;
-import funkin.system.Controls;
+import funkin.backend.system.Controls;
 import openfl.Lib;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
 
-@:build(funkin.macros.OptionsMacro.build())
+@:build(funkin.backend.system.macros.OptionsMacro.build())
+@:build(funkin.backend.system.macros.FunkinSaveMacro.build("__save", "__flush", "__load"))
 class Options
 {
-	@:dox(hide) public static var __save:FlxSave;
-	@:dox(hide) private static var __eventAdded = false;
-	
+	@:dox(hide) @:doNotSave
+	public static var __save:FlxSave;
+	@:dox(hide) @:doNotSave
+	private static var __eventAdded = false;
+
 	/**
 	 * SETTINGS
 	 */
@@ -30,8 +32,27 @@ class Options
 	public static var splashesEnabled:Bool = true;
 	public static var hitWindow:Float = 250;
 	public static var framerate:Int = 120;
+	public static var gpuOnlyBitmaps:Bool = #if mac false #else true #end; // causes issues on mac
 
 	public static var lastLoadedMod:String = null;
+
+	/**
+	 * EDITORS SETTINGS
+	 */
+	public static var editorSFX:Bool = true;
+	public static var resizableEditors:Bool = true;
+	public static var maxUndos:Int = 120;
+
+	/**
+	 * QOL FEATURES
+	 */
+	public static var freeplayLastSong:String = null;
+	public static var freeplayLastDifficulty:String = "normal";
+
+	// CHARTER
+	public static var charterMetronomeEnabled:Bool = false;
+	public static var charterShowSections:Bool = true;
+	public static var charterShowBeats:Bool = true;
 
 	/**
 	 * PLAYER 1 CONTROLS
@@ -87,10 +108,7 @@ class Options
 	public static function load() {
 		if (__save == null) __save = new FlxSave();
 		__save.bind("options", "CodenameEngine");
-		for(field in Reflect.fields(__save.data)) {
-			var obj = Reflect.field(__save.data, field);
-			Reflect.setProperty(Options, field, obj);
-		}
+		__load();
 
 		if (!__eventAdded) {
 			Lib.application.onExit.add(function(i:Int) {
@@ -105,7 +123,7 @@ class Options
 
 	public static function applySettings() {
 		applyKeybinds();
-		FlxG.game.stage.quality = (FlxG.forceNoAntialiasing = !antialiasing) ? LOW : BEST;
+		FlxG.game.stage.quality = (FlxG.enableAntialiasing = antialiasing) ? LOW : BEST;
 		FlxG.autoPause = autoPause;
 		FlxG.drawFramerate = FlxG.updateFramerate = framerate;
 	}
@@ -118,11 +136,6 @@ class Options
 
 	public static function save() {
 		volume = FlxG.sound.volume;
-		for(field in Type.getClassFields(Options)) {
-			var obj = Reflect.field(Options, field);
-			if (Reflect.isFunction(obj) || obj is FlxSave) continue;
-			Reflect.setField(__save.data, field, obj);
-		}
-		__save.flush();
+		__flush();
 	}
 }

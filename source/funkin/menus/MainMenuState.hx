@@ -1,24 +1,17 @@
 package funkin.menus;
 
 import haxe.Json;
-import funkin.ui.FunkinText;
-import funkin.options.Options;
-import flixel.FlxG;
-import funkin.menus.credits.CreditsMain;
-import flixel.FlxObject;
-import flixel.FlxSprite;
+import funkin.backend.FunkinText;
+// import funkin.menus.credits.CreditsMain;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import lime.app.Application;
-import funkin.scripting.events.*;
+import funkin.backend.scripting.events.*;
 
 import funkin.options.OptionsMenu;
 
@@ -30,11 +23,7 @@ class MainMenuState extends MusicBeatState
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 
-	#if !switch
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
-	#else
-	var optionShit:Array<String> = ['story mode', 'freeplay'];
-	#end
+	var optionShit:Array<String> = CoolUtil.coolTextFile(Paths.txt("config/menuItems"));
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
@@ -87,7 +76,7 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nBeta: Build ${funkin.macros.BuildCounterMacro.getBuildNumber()}\n');
+		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nBeta: Commit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[TAB] Open Mods menu\n');
 		versionShit.scrollFactor.set();
 		versionShit.y -= versionShit.height;
 		add(versionShit);
@@ -105,14 +94,20 @@ class MainMenuState extends MusicBeatState
 		if (!selectedSomethin)
 		{
 			if (canAccessDebugMenus) {
-				
+				if (FlxG.keys.justPressed.SEVEN) {
+					persistentUpdate = false;
+					persistentDraw = true;
+					openSubState(new funkin.editors.EditorPicker());
+				}
+				/*
 				if (FlxG.keys.justPressed.SEVEN)
 					FlxG.switchState(new funkin.desktop.DesktopMain());
 				if (FlxG.keys.justPressed.EIGHT) {
 					#if sys
-					sys.io.File.saveContent("chart.json", Json.stringify(funkin.chart.Chart.parse("dadbattle", "hard")));
+					sys.io.File.saveContent("chart.json", Json.stringify(funkin.backend.chart.Chart.parse("dadbattle", "hard")));
 					#end
 				}
+				*/
 			}
 
 			if (controls.UP_P)
@@ -179,11 +174,13 @@ class MainMenuState extends MusicBeatState
 					trace("Freeplay Menu Selected");
 
 				case 'donate':
+					/*
 					FlxG.switchState(new CreditsMain());
 					trace("Credits Menu Selected");
+					*/
 
 				case 'options':
-					FlxG.switchState(new OptionsMenu(false));
+					FlxG.switchState(new OptionsMenu());
 			}
 		});
 	}

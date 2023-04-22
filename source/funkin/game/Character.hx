@@ -1,15 +1,12 @@
 package funkin.game;
 
-import funkin.system.FunkinSprite;
+import funkin.backend.FunkinSprite;
 import flixel.graphics.frames.FlxFrame;
 import flixel.math.FlxPoint;
-import funkin.interfaces.IBeatReceiver;
-import funkin.interfaces.IOffsetCompatible;
-import funkin.utils.XMLUtil;
+import funkin.backend.system.interfaces.IBeatReceiver;
+import funkin.backend.system.interfaces.IOffsetCompatible;
+import funkin.backend.utils.XMLUtil;
 
-import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.FlxCamera;
 import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxRect;
@@ -17,14 +14,14 @@ import flixel.math.FlxRect;
 import haxe.xml.Access;
 import haxe.Exception;
 import haxe.io.Path;
-import funkin.system.Conductor;
+import funkin.backend.system.Conductor;
 
 import flash.geom.ColorTransform;
 
-import funkin.scripting.DummyScript;
-import funkin.scripting.Script;
-import funkin.scripting.events.*;
-import funkin.scripting.events.PlayAnimEvent.PlayAnimContext;
+import funkin.backend.scripting.DummyScript;
+import funkin.backend.scripting.Script;
+import funkin.backend.scripting.events.*;
+import funkin.backend.scripting.events.PlayAnimEvent.PlayAnimContext;
 using StringTools;
 
 @:allow(funkin.desktop.editors.CharacterEditor)
@@ -295,7 +292,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			__drawingShadowFrame = true;
 
 			var oldFrame = _frame;
-			var oldPos = FlxPoint.get(rotOffset.x, rotOffset.y);
+			var oldPos = FlxPoint.get(frameOffset.x, frameOffset.y);
 			
 			__oldColorTransform.copyColorTransform(colorTransform);
 			
@@ -310,11 +307,11 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 			_frame = shadowFrame.frame;
 			var o = getAnimOffset(shadowFrame.anim);
-			rotOffset.set(o.x, o.y);
+			frameOffset.set(o.x, o.y);
 			super.draw();
 
 			_frame = oldFrame;
-			rotOffset.set(oldPos.x, oldPos.y);
+			frameOffset.set(oldPos.x, oldPos.y);
 			
 			colorTransform.copyColorTransform(__oldColorTransform);
 

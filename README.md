@@ -1,15 +1,22 @@
 # Friday Night Funkin' - Codename Engine (WIP)
 
 ## PLEASE NOTE - THIS IS STILL IN A BETA STATE
+### Mods created with beta versions of Codename may not be compatible with the release version
 Known issues in the beta:
 - Some options are missing
 - Week 5 has no monster animation
 - Week 6 still have no dialogue
 - Week 7 have no running tankman
 
-Build instructions are below. Press TAB on the main menu to switch mods (make sure a mod folder exists or it crashes).
+Build instructions are below. Press TAB on the main menu to switch mods.
 
 Also, `lime test windows` uses the source assets folder instead of the export one for easier development.
+
+## Codename Engine
+
+Codename Engine is a new Friday Night Funkin' Engine aimed for easier modding, along with extensiblity and ease of use.
+
+### It includes many new features, as seen [here](FEATURES.md)
 
 ## How to download
 

@@ -307,7 +307,7 @@ class SpriteSymbol extends Sprite {
 		sMatrix.setTo(data.m00, data.m01, data.m10, data.m11, data.m30, data.m31);
 		if (sMatrix.a != transform.matrix.a || sMatrix.b != transform.matrix.b || sMatrix.c != transform.matrix.c || sMatrix.d != transform.matrix.d
 			|| sMatrix.tx != transform.matrix.tx || sMatrix.ty != transform.matrix.ty)
-			transform.matrix = sMatrix.clone(); // todo stop the cloning :(
+			transform.matrix = sMatrix.clone();
 	}
 
 	private function setColor(data:ColorData):Void {

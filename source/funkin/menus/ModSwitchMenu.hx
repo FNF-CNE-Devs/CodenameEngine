@@ -1,84 +1,80 @@
 package funkin.menus;
 
 #if MOD_SUPPORT
-import flixel.math.FlxMath;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import funkin.ui.Alphabet;
 import haxe.io.Path;
-import funkin.mods.ModsFolder;
+import funkin.backend.assets.ModsFolder;
 import sys.FileSystem;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.FlxSprite;
-import flixel.FlxG;
 
 class ModSwitchMenu extends MusicBeatSubstate {
-    var mods:Array<String> = [];
-    var alphabets:FlxTypedGroup<Alphabet>;
-    var curSelected:Int = 0;
+	var mods:Array<String> = [];
+	var alphabets:FlxTypedGroup<Alphabet>;
+	var curSelected:Int = 0;
 
-    public override function create() {
-        super.create();
+	public override function create() {
+		super.create();
 
-        var bg = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFF000000);
-        bg.scale.set(FlxG.width, FlxG.height);
-        bg.updateHitbox();
-        bg.scrollFactor.set();
-        add(bg);
+		var bg = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFF000000);
+		bg.scale.set(FlxG.width, FlxG.height);
+		bg.updateHitbox();
+		bg.scrollFactor.set();
+		add(bg);
 
-        bg.alpha = 0;
-        FlxTween.tween(bg, {alpha: 0.5}, 0.25, {ease: FlxEase.cubeOut});
+		bg.alpha = 0;
+		FlxTween.tween(bg, {alpha: 0.5}, 0.25, {ease: FlxEase.cubeOut});
 
-        for(modFolder in FileSystem.readDirectory(ModsFolder.modsPath)) {
-            if (FileSystem.isDirectory('${ModsFolder.modsPath}${modFolder}')) {
-                mods.push(modFolder);
-            } else {
-                var ext = Path.extension(modFolder).toLowerCase();
-                switch(ext) {
-                    case 'zip':
-                        // is a zip mod!!
-                        mods.push(Path.withoutExtension(modFolder));
-                }
-            }
-        }
+		for(modFolder in FileSystem.readDirectory(ModsFolder.modsPath)) {
+			if (FileSystem.isDirectory('${ModsFolder.modsPath}${modFolder}')) {
+				mods.push(modFolder);
+			} else {
+				var ext = Path.extension(modFolder).toLowerCase();
+				switch(ext) {
+					case 'zip':
+						// is a zip mod!!
+						mods.push(Path.withoutExtension(modFolder));
+				}
+			}
+		}
 
-        alphabets = new FlxTypedGroup<Alphabet>();
-        for(mod in mods) {
-            var a = new Alphabet(0, 0, mod, true);
-            a.isMenuItem = true;
-            a.scrollFactor.set();
-            alphabets.add(a);
-        }
-        add(alphabets);
-        changeSelection(0, true);
-    }
+		mods.push(null);
 
-    public override function update(elapsed:Float) {
-        super.update(elapsed);
+		alphabets = new FlxTypedGroup<Alphabet>();
+		for(mod in mods) {
+			var a = new Alphabet(0, 0, mod == null ? "DISABLE MODS" : mod, true);
+			a.isMenuItem = true;
+			a.scrollFactor.set();
+			alphabets.add(a);
+		}
+		add(alphabets);
+		changeSelection(0, true);
+	}
 
-        changeSelection((controls.DOWN_P ? 1 : 0) + (controls.UP_P ? -1 : 0));
+	public override function update(elapsed:Float) {
+		super.update(elapsed);
 
-        if (controls.ACCEPT) {
-            ModsFolder.switchMod(mods[curSelected]);
-            close();
-        }
+		changeSelection((controls.DOWN_P ? 1 : 0) + (controls.UP_P ? -1 : 0));
 
-        if (controls.BACK)
-            close();
-    }
+		if (controls.ACCEPT) {
+			ModsFolder.switchMod(mods[curSelected]);
+			close();
+		}
 
-    public function changeSelection(change:Int, force:Bool = false) {
-        if (change == 0 && !force) return;
+		if (controls.BACK)
+			close();
+	}
 
-        curSelected = FlxMath.wrap(curSelected + change, 0, alphabets.length-1);
+	public function changeSelection(change:Int, force:Bool = false) {
+		if (change == 0 && !force) return;
 
-        CoolUtil.playMenuSFX(SCROLL, 0.7);
+		curSelected = FlxMath.wrap(curSelected + change, 0, alphabets.length-1);
 
-        for(k=>alphabet in alphabets.members) {
-            alphabet.alpha = 0.6;
-            alphabet.targetY = k - curSelected;
-        }
-        alphabets.members[curSelected].alpha = 1;
-    }
+		CoolUtil.playMenuSFX(SCROLL, 0.7);
+
+		for(k=>alphabet in alphabets.members) {
+			alphabet.alpha = 0.6;
+			alphabet.targetY = k - curSelected;
+		}
+		alphabets.members[curSelected].alpha = 1;
+	}
 }
 #end
