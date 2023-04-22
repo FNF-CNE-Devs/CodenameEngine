@@ -1606,16 +1606,17 @@ class PlayState extends MusicBeatState
 		super.beatHit(curBeat);
 
 		if (camZoomingInterval < 1) camZoomingInterval = 1;
-		if (Options.camZoomOnBeat && camZooming && FlxG.camera.zoom < maxCamZoom && camZoomingInterval != null && curBeat % camZoomingInterval == 0)
+		if (Options.camZoomOnBeat && camZooming && FlxG.camera.zoom < maxCamZoom && curBeat % camZoomingInterval == 0)
 		{
 			FlxG.camera.zoom += 0.015 * camZoomingStrength;
 			camHUD.zoom += 0.03 * camZoomingStrength;
 		}
-		
-		for (i in [iconP1, iconP2] {
-			i.scale.set(1.2, 1.2);
-			i.updateHitbox();
-		}
+
+		iconP1.scale.set(1.2, 1.2);
+		iconP2.scale.set(1.2, 1.2);
+
+		iconP1.updateHitbox();
+		iconP2.updateHitbox();
 
 		scripts.call("beatHit", [curBeat]);
 	}
