@@ -1,8 +1,8 @@
 {
-    "displayName": "Roses",
-    "bpm": 120.0,
-    "icon": "senpai",
-    "color": "#FF78BF",
-    "coopAllowed": true,
-    "opponentModeAllowed": true
+	"displayName": "Roses",
+	"bpm": 120.0,
+	"icon": "senpai",
+	"color": "#FF78BF",
+	"coopAllowed": true,
+	"opponentModeAllowed": true
 }

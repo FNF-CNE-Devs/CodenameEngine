@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-stage>
 <stage zoom="1" name="school-evil" folder="stages/school/" >
-    <sprite name="bg" x="400" y="200" sprite="animatedEvilSchool"
-        antialiasing="false" scale="6" scrollx="0.8" scrolly="0.9" type="loop"/>
+	<sprite name="bg" x="400" y="200" sprite="animatedEvilSchool"
+		antialiasing="false" scale="6" scrollx="0.8" scrolly="0.9" type="loop"/>
 </stage>

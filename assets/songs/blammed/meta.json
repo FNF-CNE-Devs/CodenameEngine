@@ -1,8 +1,8 @@
 {
-    "displayName": "Blammed",
-    "bpm": 165.0,
-    "icon": "pico",
-    "color": "#941653",
-    "coopAllowed": true,
-    "opponentModeAllowed": true
+	"displayName": "Blammed",
+	"bpm": 165.0,
+	"icon": "pico",
+	"color": "#941653",
+	"coopAllowed": true,
+	"opponentModeAllowed": true
 }

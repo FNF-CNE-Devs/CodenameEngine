@@ -1,8 +1,8 @@
 {
-    "displayName": "Eggnog",
-    "bpm": 150.0,
-    "icon": "parents-christmas",
-    "color": "#A0D1FF",
-    "coopAllowed": true,
-    "opponentModeAllowed": true
+	"displayName": "Eggnog",
+	"bpm": 150.0,
+	"icon": "parents-christmas",
+	"color": "#A0D1FF",
+	"coopAllowed": true,
+	"opponentModeAllowed": true
 }

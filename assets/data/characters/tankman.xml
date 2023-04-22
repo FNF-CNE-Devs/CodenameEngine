@@ -2,14 +2,14 @@
 
 <!-- tankman actually have player offsets !-->
 <character isPlayer="true" flipX="true" x="0" y="180" camx="0">
-    <anim name="idle"      anim="Tankman Idle Dance instance 100" fps="24" loop="false" x="0" y="0" />
-    <anim name="singRIGHT" anim="Tankman Right Note instance 1000" fps="24" loop="false" x="-1" y="-7" />
-    <anim name="singDOWN"  anim="Tankman DOWN note instance 1000" fps="24" loop="false" x="98" y="-90" />
-    <anim name="singUP"    anim="Tankman UP note instance 1000" fps="24" loop="false" x="24" y="56" />
-    <anim name="singLEFT"  anim="Tankman Note Left instance 1000" fps="24" loop="false" x="100" y="-14" />
+	<anim name="idle"      anim="Tankman Idle Dance instance 100" fps="24" loop="false" x="0" y="0" />
+	<anim name="singRIGHT" anim="Tankman Right Note instance 1000" fps="24" loop="false" x="-1" y="-7" />
+	<anim name="singDOWN"  anim="Tankman DOWN note instance 1000" fps="24" loop="false" x="98" y="-90" />
+	<anim name="singUP"    anim="Tankman UP note instance 1000" fps="24" loop="false" x="24" y="56" />
+	<anim name="singLEFT"  anim="Tankman Note Left instance 1000" fps="24" loop="false" x="100" y="-14" />
 
-    <!-- Heh! Pretty Good! -->
-    <anim name="singDOWN-alt" anim="PRETTY GOOD tankman instance 100" fps="24" loop="false" x="98" y="-90" />
-    <!-- Ugh! -->
-    <anim name="singUP-alt" anim="TANKMAN UGH instance 100" fps="30" loop="false" x="24" y="56" />
+	<!-- Heh! Pretty Good! -->
+	<anim name="singDOWN-alt" anim="PRETTY GOOD tankman instance 100" fps="24" loop="false" x="98" y="-90" />
+	<!-- Ugh! -->
+	<anim name="singUP-alt" anim="TANKMAN UGH instance 100" fps="30" loop="false" x="24" y="56" />
 </character>

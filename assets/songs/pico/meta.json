@@ -1,8 +1,8 @@
 {
-    "displayName": "Pico",
-    "bpm": 150.0,
-    "icon": "pico",
-    "color": "#941653",
-    "coopAllowed": true,
-    "opponentModeAllowed": true
+	"displayName": "Pico",
+	"bpm": 150.0,
+	"icon": "pico",
+	"color": "#941653",
+	"coopAllowed": true,
+	"opponentModeAllowed": true
 }

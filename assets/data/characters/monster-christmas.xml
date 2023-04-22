@@ -1,8 +1,8 @@
 <!DOCTYPE codename-engine-character>
 <character isPlayer="false" flipX="false" x="0" y="130" icon="monster">
-    <anim name="idle"      anim="monster idle"       fps="24" loop="false" x="0"   y="0"/>
-    <anim name="singUP"    anim="monster up note"    fps="24" loop="false" x="-20" y="50"/>
-    <anim name="singRIGHT" anim="Monster left note"  fps="24" loop="false" x="-30" y="0"/>
-    <anim name="singLEFT"  anim="Monster Right note" fps="24" loop="false" x="-51" y="0"/>
-    <anim name="singDOWN"  anim="monster down"       fps="24" loop="false" x="-40" y="-94"/>
+	<anim name="idle"      anim="monster idle"       fps="24" loop="false" x="0"   y="0"/>
+	<anim name="singUP"    anim="monster up note"    fps="24" loop="false" x="-20" y="50"/>
+	<anim name="singRIGHT" anim="Monster left note"  fps="24" loop="false" x="-30" y="0"/>
+	<anim name="singLEFT"  anim="Monster Right note" fps="24" loop="false" x="-51" y="0"/>
+	<anim name="singDOWN"  anim="monster down"       fps="24" loop="false" x="-40" y="-94"/>
 </character>

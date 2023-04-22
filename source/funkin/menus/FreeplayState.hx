@@ -46,17 +46,17 @@ class FreeplayState extends MusicBeatState
 	 * Text containing the score info (PERSONAL BEST: 0)
 	 */
 	public var scoreText:FlxText;
-	
+
 	/**
 	 * Text containing the current difficulty (< HARD >)
 	 */
 	public var diffText:FlxText;
-	
+
 	/**
 	 * Text containing the current coop/opponent mode ([TAB] Co-Op mode)
 	 */
 	public var coopText:FlxText;
-	
+
 	/**
 	 * Currently lerped score. Is updated to go towards `intendedScore`.
 	 */
@@ -256,7 +256,7 @@ class FreeplayState extends MusicBeatState
 		if (controls.ACCEPT && !dontPlaySongThisFrame)
 			select();
 	}
-	
+
 	var __opponentMode:Bool = false;
 	var __coopMode:Bool = false;
 
@@ -351,7 +351,7 @@ class FreeplayState extends MusicBeatState
 	 * @param change How much to change
 	 * @param force Force the change, even if `change` is equal to 0.
 	 */
-	 public function changeCoopMode(change:Int = 0, force:Bool = false) {
+	public function changeCoopMode(change:Int = 0, force:Bool = false) {
 		if (change == 0 && !force) return;
 		if (!songs[curSelected].coopAllowed && !songs[curSelected].opponentModeAllowed) return;
 
@@ -361,7 +361,7 @@ class FreeplayState extends MusicBeatState
 		if (event.cancelled) return;
 
 		curCoopMode = event.value;
-		
+
 		updateScore();
 
 		if (bothEnabled) {
@@ -431,7 +431,7 @@ class FreeplaySonglist {
 		} else {
 			songsFound = Paths.getFolderDirectories('songs', false, source);
 		}
-		
+
 		if (songsFound.length > 0) {
 			for(s in songsFound)
 				songs.push(Chart.loadChartMeta(s, "normal", source == MODS));

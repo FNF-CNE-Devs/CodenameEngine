@@ -1,46 +1,46 @@
 <!DOCTYPE codename-engine-stage>
 <stage zoom="0.9" name="limo" folder="stages/limo/">
-    <!-- BG LIMOS !-->
-    <sprite name="skyBG" x="-120" y="-50" sprite="limoSunset" scroll="0.1" zoomfactor="0"/>
-    <sprite name="bgLimo" x="-200" y="480" sprite="bgLimo" scroll="0.4" zoomfactor="0.55" />
+	<!-- BG LIMOS !-->
+	<sprite name="skyBG" x="-120" y="-50" sprite="limoSunset" scroll="0.1" zoomfactor="0"/>
+	<sprite name="bgLimo" x="-200" y="480" sprite="bgLimo" scroll="0.4" zoomfactor="0.55" />
 
-    <!-- ONLY FOR INSTANCES WITH LOW MEMORY MODE DISABLED -->
-    <high-memory>
-        <!-- DANCERS !-->
-        <sprite name="dancer1" x="130" y="80" sprite="limoDancer" scroll="0.4" zoomfactor="0.55">
-            <anim name="danceLeft" anim="bg dancer sketch PINK" loop="false" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
-            <anim name="danceRight" anim="bg dancer sketch PINK" loop="false" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
-        </sprite>
-        <sprite name="dancer2" x="500" y="80" sprite="limoDancer" scroll="0.4" zoomfactor="0.55">
-            <anim name="danceLeft" anim="bg dancer sketch PINK" loop="false" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
-            <anim name="danceRight" anim="bg dancer sketch PINK" loop="false" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
-        </sprite>
-        <sprite name="dancer3" x="870" y="80" sprite="limoDancer" scroll="0.4" zoomfactor="0.55">
-            <anim name="danceLeft" anim="bg dancer sketch PINK" loop="false" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
-            <anim name="danceRight" anim="bg dancer sketch PINK" loop="false" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
-        </sprite>
-        <sprite name="dancer4" x="1240" y="80" sprite="limoDancer" scroll="0.4" zoomfactor="0.55">
-            <anim name="danceLeft" anim="bg dancer sketch PINK" loop="false" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
-            <anim name="danceRight" anim="bg dancer sketch PINK" loop="false" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
-        </sprite>
-        <sprite name="dancer5" x="1610" y="80" sprite="limoDancer" scroll="0.4" zoomfactor="0.55">
-            <anim name="danceLeft" anim="bg dancer sketch PINK" loop="false" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
-            <anim name="danceRight" anim="bg dancer sketch PINK" loop="false" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
-        </sprite>
+	<!-- ONLY FOR INSTANCES WITH LOW MEMORY MODE DISABLED -->
+	<high-memory>
+		<!-- DANCERS !-->
+		<sprite name="dancer1" x="130" y="80" sprite="limoDancer" scroll="0.4" zoomfactor="0.55">
+			<anim name="danceLeft" anim="bg dancer sketch PINK" loop="false" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
+			<anim name="danceRight" anim="bg dancer sketch PINK" loop="false" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
+		</sprite>
+		<sprite name="dancer2" x="500" y="80" sprite="limoDancer" scroll="0.4" zoomfactor="0.55">
+			<anim name="danceLeft" anim="bg dancer sketch PINK" loop="false" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
+			<anim name="danceRight" anim="bg dancer sketch PINK" loop="false" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
+		</sprite>
+		<sprite name="dancer3" x="870" y="80" sprite="limoDancer" scroll="0.4" zoomfactor="0.55">
+			<anim name="danceLeft" anim="bg dancer sketch PINK" loop="false" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
+			<anim name="danceRight" anim="bg dancer sketch PINK" loop="false" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
+		</sprite>
+		<sprite name="dancer4" x="1240" y="80" sprite="limoDancer" scroll="0.4" zoomfactor="0.55">
+			<anim name="danceLeft" anim="bg dancer sketch PINK" loop="false" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
+			<anim name="danceRight" anim="bg dancer sketch PINK" loop="false" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
+		</sprite>
+		<sprite name="dancer5" x="1610" y="80" sprite="limoDancer" scroll="0.4" zoomfactor="0.55">
+			<anim name="danceLeft" anim="bg dancer sketch PINK" loop="false" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14" />
+			<anim name="danceRight" anim="bg dancer sketch PINK" loop="false" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" />
+		</sprite>
 
-        <!-- SUPER FAST CAR !-->
-        <sprite name="fastCar" x="-300" y="160" sprite="fastCarLol" zoomfactor="0.75" />
-    </high-memory>
+		<!-- SUPER FAST CAR !-->
+		<sprite name="fastCar" x="-300" y="160" sprite="fastCarLol" zoomfactor="0.75" />
+	</high-memory>
 
 
-    <!-- MORE LIMO STUFF !-->
-    <girlfriend />
-    <sprite name="limo" x="-120" y="550" sprite="limoDrive" />
-    <boyfriend x="1030" y="-120" camxoffset="-300"/>
-    
-    <high-memory>
-        <sprite name="overlayShit" x="-500" y="480" sprite="limoOverlay" scroll="0">
-            <property name="alpha" type="float" value="0.5" />
-        </sprite>
-    </high-memory>
+	<!-- MORE LIMO STUFF !-->
+	<girlfriend />
+	<sprite name="limo" x="-120" y="550" sprite="limoDrive" />
+	<boyfriend x="1030" y="-120" camxoffset="-300"/>
+	
+	<high-memory>
+		<sprite name="overlayShit" x="-500" y="480" sprite="limoOverlay" scroll="0">
+			<property name="alpha" type="float" value="0.5" />
+		</sprite>
+	</high-memory>
 </stage>

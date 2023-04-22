@@ -1,16 +1,16 @@
 function create() {
-    importScript("data/scripts/pixel");
-    pixelNotesForBF = false;
-    enablePixelUI = true;
-    enableCameraHacks = false;
-    playCutscenes = true;
+	importScript("data/scripts/pixel");
+	pixelNotesForBF = false;
+	enablePixelUI = true;
+	enableCameraHacks = false;
+	playCutscenes = true;
 }
 
 function postCreate() {
-    for(i in 0...6) {
-        var name = "tank" + Std.string(i);
-        stage.getSprite(name).visible = false;
-    }
+	for(i in 0...6) {
+		var name = "tank" + Std.string(i);
+		stage.getSprite(name).visible = false;
+	}
 }
 
 function postUpdate(elapsed) {

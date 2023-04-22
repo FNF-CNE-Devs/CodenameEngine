@@ -1160,7 +1160,7 @@ class PlayState extends MusicBeatState
 		if (generatedMusic && FlxG.keys.justPressed.ONE)
 			endSong();
 		#end
-		
+
 		super.update(elapsed);
 
 		scripts.call("postUpdate", [elapsed]);
@@ -1393,8 +1393,8 @@ class PlayState extends MusicBeatState
 		note.wasGoodHit = true;
 
 		/**
-			* CALCULATES RATING
-			*/
+		 * CALCULATES RATING
+		 */
 		var noteDiff = Math.abs(Conductor.songPosition - note.strumTime);
 		var daRating:String = "sick";
 		var score:Int = 300;
@@ -1440,9 +1440,7 @@ class PlayState extends MusicBeatState
 			{
 				songScore += score;
 
-
 				var separatedScore:String = Std.string(combo).addZeros(3);
-
 
 				if (combo == 0 || combo >= 10) {
 					if (combo >= 10) {
@@ -1634,7 +1632,7 @@ class PlayState extends MusicBeatState
 	 * @param weekData Week Data
 	 * @param difficulty Week Difficulty
 	 */
-	 public static function loadWeek(weekData:WeekData, difficulty:String = "normal") {
+	public static function loadWeek(weekData:WeekData, difficulty:String = "normal") {
 		storyWeek = weekData;
 		storyPlaylist = [for(e in weekData.songs) e.name];
 		isStoryMode = true;

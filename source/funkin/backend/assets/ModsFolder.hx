@@ -72,7 +72,7 @@ class ModsFolder {
 	 * @param modName Name of the mod
 	 * @param force Whenever the mod should be reloaded if it has already been loaded
 	 */
-	 public static function loadModLib(path:String, force:Bool = false) {
+	public static function loadModLib(path:String, force:Bool = false) {
 		#if MOD_SUPPORT
 		if (FileSystem.exists('$path.zip'))
 			return loadLibraryFromZip('$path'.toLowerCase(), '$path.zip', force);

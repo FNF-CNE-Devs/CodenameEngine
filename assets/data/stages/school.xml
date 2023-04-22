@@ -1,28 +1,28 @@
 <!DOCTYPE codename-engine-stage>
 <stage zoom="1" folder="stages/school/" >
-    <sprite name="bgSky" x="-12" y="0" sprite="weebSky"
-        antialiasing="false" scale="6" scroll="0.1" updateHitbox="true"/>
+	<sprite name="bgSky" x="-12" y="0" sprite="weebSky"
+		antialiasing="false" scale="6" scroll="0.1" updateHitbox="true"/>
 
-    <sprite name="bgSchool" x="-216" y="0" sprite="weebSchool"
-        antialiasing="false" scale="6" scrollx="0.6" scrolly="0.9" updateHitbox="true"/>
+	<sprite name="bgSchool" x="-216" y="0" sprite="weebSchool"
+		antialiasing="false" scale="6" scrollx="0.6" scrolly="0.9" updateHitbox="true"/>
 
-    <sprite name="bgStreet" x="-204" y="0" sprite="weebStreet"
-        antialiasing="false" scale="6" scroll="0.95" updateHitbox="true"/>
+	<sprite name="bgStreet" x="-204" y="0" sprite="weebStreet"
+		antialiasing="false" scale="6" scroll="0.95" updateHitbox="true"/>
 
 
-    <sprite name="fgTrees" x="-30" y="130" sprite="weebTreesBack"
-        antialiasing="false" scale="4.8" scroll="0.9" updateHitbox="true" type="loop"/>
+	<sprite name="fgTrees" x="-30" y="130" sprite="weebTreesBack"
+		antialiasing="false" scale="4.8" scroll="0.9" updateHitbox="true" type="loop"/>
 
-    <sprite name="bgTrees" x="-1180" y="-1600" sprite="weebTrees"
-        antialiasing="false" scale="8.4" scroll="0.85" updateHitbox="true" type="loop"/>
+	<sprite name="bgTrees" x="-1180" y="-1600" sprite="weebTrees"
+		antialiasing="false" scale="8.4" scroll="0.85" updateHitbox="true" type="loop"/>
 
-    <high-memory>
-        <sprite name="treeLeaves" x="-200" y="-40" sprite="petals"
-            antialiasing="false" scale="6" scroll="0.85" updateHitbox="true" type="loop"/>
-    </high-memory>
+	<high-memory>
+		<sprite name="treeLeaves" x="-200" y="-40" sprite="petals"
+			antialiasing="false" scale="6" scroll="0.85" updateHitbox="true" type="loop"/>
+	</high-memory>
 
-    <sprite name="bgGirls" x="-100" y="190" sprite="bgFreaks" scroll="0.9" scale="6" antialiasing="false" updateHitbox="true">
-        <anim name="danceLeft" anim="BG girls group" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13" fps="24" loop="false"/>
-        <anim name="danceRight" anim="BG girls group" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" fps="24" loop="false"/>
-    </sprite>
+	<sprite name="bgGirls" x="-100" y="190" sprite="bgFreaks" scroll="0.9" scale="6" antialiasing="false" updateHitbox="true">
+		<anim name="danceLeft" anim="BG girls group" indices="0,1,2,3,4,5,6,7,8,9,10,11,12,13" fps="24" loop="false"/>
+		<anim name="danceRight" anim="BG girls group" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" fps="24" loop="false"/>
+	</sprite>
 </stage>

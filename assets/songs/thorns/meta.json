@@ -1,8 +1,8 @@
 {
-    "displayName": "Thorns",
-    "bpm": 190.0,
-    "icon": "spirit",
-    "color": "#FF78BF",
-    "coopAllowed": true,
-    "opponentModeAllowed": true
+	"displayName": "Thorns",
+	"bpm": 190.0,
+	"icon": "spirit",
+	"color": "#FF78BF",
+	"coopAllowed": true,
+	"opponentModeAllowed": true
 }

@@ -1,4 +1,4 @@
 function onNoteCreation(event) {
-    if (event.mustHit)
-        event.animSuffix = "";
+	if (event.mustHit)
+		event.animSuffix = "";
 }
