@@ -119,7 +119,7 @@ class Note extends FlxSprite
 		this.noteData = noteData.id.getDefault(0);
 
 		var customType = Paths.image('game/notes/${this.noteType}');
-		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, noteTypeID, PlayState.instance.strumLines.indexOf(strumLine), mustPress,
+		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, noteTypeID, PlayState.instance.strumLines.members.indexOf(strumLine), mustPress,
 			(this.noteType != null && customTypePathExists(customType)) ? 'game/notes/${this.noteType}' : 'game/notes/default', 0.7, animSuffix);
 
 		if (PlayState.instance != null)
@@ -251,7 +251,11 @@ class Note extends FlxSprite
 
 		if (!wasGoodHit) return;
 		var t = FlxMath.bound((Conductor.songPosition - strumTime) / (height / (0.45 * FlxMath.roundDecimal(scrollSpeed, 2))), 0, 1);
-		var swagRect = new FlxRect(0, t * frameHeight, frameWidth, frameHeight);
+		var swagRect = this.clipRect == null ? new FlxRect() : this.clipRect;
+		swagRect.x = 0;
+		swagRect.y = t * frameHeight;
+		swagRect.width = frameWidth;
+		swagRect.height = frameHeight;
 
 		setClipRect(swagRect);
 	}

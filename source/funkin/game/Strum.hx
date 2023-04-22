@@ -51,8 +51,12 @@ class Strum extends FlxSprite {
 		daNote.__noteAngle = getNotesAngle(daNote);
 		daNote.angle = daNote.isSustainNote ? daNote.__noteAngle : angle;
 
+		updateNotePos(daNote);
+	}
+
+	private inline function updateNotePos(daNote:Note) {
 		if (daNote.strumRelativePos) {
-			daNote.setPosition((Note.swagWidth - daNote.width) / 2, (daNote.strumTime - Conductor.songPosition) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
+			daNote.setPosition((this.width - daNote.width) / 2, (daNote.strumTime - Conductor.songPosition) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
 			if (daNote.isSustainNote) daNote.y += N_WIDTHDIV2;
 		} else {
 			var offset = FlxPoint.get(0, (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(getScrollSpeed(daNote), 2)));
@@ -104,8 +108,6 @@ class Strum extends FlxSprite {
 			case null:
 				playAnim("static");
 		}
-		centerOffsets();
-		centerOrigin();
 	}
 
 	public inline function press(time:Float) {
@@ -114,7 +116,6 @@ class Strum extends FlxSprite {
 	}
 
 	public function playAnim(anim:String, force:Bool = true) {
-		var oldAnim = animation.curAnim;
 		animation.play(anim, force);
 		centerOffsets();
 		centerOrigin();

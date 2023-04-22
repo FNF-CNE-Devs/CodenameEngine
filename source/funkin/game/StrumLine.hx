@@ -28,6 +28,12 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	 */
 	public var onNoteUpdate:FlxTypedSignal<NoteUpdateEvent->Void> = new FlxTypedSignal<NoteUpdateEvent->Void>();
 	/**
+	 * Signal that triggers whenever a note is being updated. Similar to onNoteUpdate, except strumline specific.
+	 * To add a listener, do
+	 * `strumLine.onNoteUpdate.add(function(e:NoteUpdateEvent) {});`
+	 */
+	public var onNoteDelete:FlxTypedSignal<SimpleNoteEvent->Void> = new FlxTypedSignal<SimpleNoteEvent->Void>();
+	/**
 	 * Array containing all of the characters "attached" to those strums.
 	 */
 	public var characters:Array<Character>;
@@ -112,7 +118,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		notes.draw();
 	}
 
-	public function updateNotes() {
+	public inline function updateNotes() {
 		notes.forEach(updateNote);
 	}
 
@@ -121,7 +127,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		__updateNote_strum = members[daNote.noteData];
 		if (__updateNote_strum == null) return;
 
-		PlayState.instance.scripts.event("onNoteUpdate", PlayState.instance.__updateNote_event.recycle(daNote, FlxG.elapsed, __updateNote_strum));
+		PlayState.instance.__updateNote_event.recycle(daNote, FlxG.elapsed, __updateNote_strum);
 		onNoteUpdate.dispatch(PlayState.instance.__updateNote_event);
 		if (PlayState.instance.__updateNote_event.cancelled) return;
 
@@ -133,7 +139,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 				daNote.tooLate = true;
 		}
 
-		if (PlayState.instance.__updateNote_event.__autoCPUHit && cpu && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) PlayState.instance.goodNoteHit(this, daNote);
+		if (cpu && PlayState.instance.__updateNote_event.__autoCPUHit && !daNote.wasGoodHit && daNote.strumTime < Conductor.songPosition) PlayState.instance.goodNoteHit(this, daNote);
 
 		if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.sustainLength) < Conductor.songPosition) {
 			deleteNote(daNote);
@@ -149,9 +155,78 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		if (PlayState.instance.__updateNote_event.strum == null) return;
 
 		if (PlayState.instance.__updateNote_event.__reposNote) PlayState.instance.__updateNote_event.strum.updateNotePosition(daNote);
-		PlayState.instance.__updateNote_event.strum.updateSustain(daNote);
+		if (daNote.isSustainNote)
+			daNote.updateSustain(PlayState.instance.__updateNote_event.strum);
+	}
 
-		PlayState.instance.scripts.event("onNotePostUpdate", PlayState.instance.__updateNote_event);
+	var __funcsToExec:Array<Note->Void> = [];
+	var __pressed:Array<Bool> = [];
+	var __justPressed:Array<Bool> = [];
+	var __justReleased:Array<Bool> = [];
+	var __notePerStrum:Array<Note> = [];
+
+	function __inputProcessPressed(note:Note) {
+		if (__pressed[note.strumID] && note.isSustainNote && note.canBeHit && !note.wasGoodHit) {
+			PlayState.instance.goodNoteHit(this, note);
+		}
+	}
+	function __inputProcessJustPressed(note:Note) {
+		if (__justPressed[note.strumID] && !note.isSustainNote && !note.wasGoodHit && note.canBeHit) {
+			if (__notePerStrum[note.strumID] == null) 											__notePerStrum[note.strumID] = note;
+			else if (Math.abs(__notePerStrum[note.strumID].strumTime - note.strumTime) <= 2)  	deleteNote(note);
+			else if (note.strumTime < __notePerStrum[note.strumID].strumTime)					__notePerStrum[note.strumID] = note;
+		}
+	}
+	public function updateInput(id:Int = 0) {
+		updateNotes();
+
+		if (cpu) return;
+
+		__funcsToExec.clear();
+		__pressed.clear();
+		__justPressed.clear();
+		__justReleased.clear();
+
+		__pressed.pushGroup(controls.NOTE_LEFT, controls.NOTE_DOWN, controls.NOTE_UP, controls.NOTE_RIGHT);
+		__justPressed.pushGroup(controls.NOTE_LEFT_P, controls.NOTE_DOWN_P, controls.NOTE_UP_P, controls.NOTE_RIGHT_P);
+		__justReleased.pushGroup(controls.NOTE_LEFT_R, controls.NOTE_DOWN_R, controls.NOTE_UP_R, controls.NOTE_RIGHT_R);
+
+		var event = PlayState.instance.scripts.event("onKeyShit", EventManager.get(InputSystemEvent).recycle(__pressed, __justPressed, __justReleased, this, id));
+		if (event.cancelled) return;
+
+		__pressed = CoolUtil.getDefault(event.pressed, []);
+		__justPressed = CoolUtil.getDefault(event.justPressed, []);
+		__justReleased = CoolUtil.getDefault(event.justReleased, []);
+
+		__notePerStrum = [for(_ in 0...4) null];
+
+
+		if (__pressed.contains(true)) {
+			for(c in characters)
+				if (c.lastAnimContext != DANCE)
+					c.__lockAnimThisFrame = true;
+
+			__funcsToExec.push(__inputProcessPressed);
+		}
+		if (__justPressed.contains(true))
+			__funcsToExec.push(__inputProcessJustPressed);
+
+		if (__funcsToExec.length > 0) {
+			notes.forEachAlive(function(note:Note) {
+				for(e in __funcsToExec) if (e != null) e(note);
+			});
+		}
+
+		if (!ghostTapping) for(k=>pr in __justPressed) if (pr && __notePerStrum[k] == null) {
+			// FUCK YOU
+			PlayState.instance.noteMiss(this, null, k, ID);
+		}
+		for(e in __notePerStrum) if (e != null) PlayState.instance.goodNoteHit(this, e);
+
+		forEach(function(str:Strum) {
+			str.updatePlayerInput(__pressed[str.ID], __justPressed[str.ID], __justReleased[str.ID]);
+		});
+		PlayState.instance.scripts.call("onPostKeyShit");
 	}
 
 	public inline function addHealth(health:Float)
@@ -163,7 +238,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 			var babyArrow:Strum = new Strum((FlxG.width * strumOffset) + (Note.swagWidth * (i - 2)), PlayState.instance.strumLine.y);
 			babyArrow.ID = i;
 
-			var event = PlayState.instance.scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, PlayState.instance.strumLines.indexOf(this), i));
+			var event = PlayState.instance.scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, PlayState.instance.strumLines.members.indexOf(this), i));
 
 			if (!event.cancelled) {
 				babyArrow.frames = Paths.getFrames(event.sprite);
@@ -219,7 +294,8 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	 */
 	public function deleteNote(note:Note) {
 		if (note == null) return;
-		var event:SimpleNoteEvent = PlayState.instance.scripts.event("onNoteDelete", EventManager.get(SimpleNoteEvent).recycle(note));
+		var event:SimpleNoteEvent = EventManager.get(SimpleNoteEvent).recycle(note);
+		onNoteDelete.dispatch(event);
 		if (!event.cancelled) {
 			note.kill();
 			notes.remove(note, true);

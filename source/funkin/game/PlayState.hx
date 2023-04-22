@@ -87,7 +87,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Array of all the players in the stage.
 	 */
-	public var strumLines:Array<StrumLine> = [];
+	public var strumLines:FlxTypedGroup<StrumLine> = new FlxTypedGroup<StrumLine>();
 
 	/**
 	 * Game Over Song. (assets/music/gameOver.ogg)
@@ -618,10 +618,11 @@ class PlayState extends MusicBeatState
 			var strLine = new StrumLine(chars, strOffset, strumLine.type == 2 || (!coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode))), strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls);
 			strLine.cameras = [camHUD];
 			strLine.data = strumLine;
-			strumLines.push(strLine);
-			if (strumLine.visible != false)
-				add(strLine);
+			strLine.visible = (strumLine.visible != false);
+			strumLines.add(strLine);
 		}
+
+		add(strumLines);
 
 		splashHandler = new SplashHandler();
 		add(splashHandler);
@@ -1114,11 +1115,11 @@ class PlayState extends MusicBeatState
 		while(events.length > 0 && events[0].time <= Conductor.songPosition)
 			executeEvent(events.shift());
 
-		if (generatedMusic && strumLines[curCameraTarget] != null)
+		if (generatedMusic && strumLines.members[curCameraTarget] != null)
 		{
 			var pos = FlxPoint.get();
 			var r = 0;
-			for(c in strumLines[curCameraTarget].characters) {
+			for(c in strumLines.members[curCameraTarget].characters) {
 				if (c == null) continue;
 				var cpos = c.getCameraPosition();
 				pos.x += cpos.x;
@@ -1130,7 +1131,7 @@ class PlayState extends MusicBeatState
 				pos.x /= r;
 				pos.y /= r;
 
-				var event = scripts.event("onCameraMove", EventManager.get(CamMoveEvent).recycle(pos, strumLines[curCameraTarget], r));
+				var event = scripts.event("onCameraMove", EventManager.get(CamMoveEvent).recycle(pos, strumLines.members[curCameraTarget], r));
 				if (!event.cancelled)
 					camFollow.setPosition(pos.x, pos.y);
 			}
@@ -1181,7 +1182,7 @@ class PlayState extends MusicBeatState
 				// automatically handled by conductor
 			case ALT_ANIM_TOGGLE:
 				if (event.params[0] is Int && event.params[1] is Bool) {
-					var strLine = strumLines[event.params[0]];
+					var strLine = strumLines.members[event.params[0]];
 					if (strLine != null)
 						strLine.altAnim = cast event.params[1];
 				}
@@ -1322,74 +1323,10 @@ class PlayState extends MusicBeatState
 		MusicBeatState.skipTransOut = true;
 	}
 
-	var __funcsToExec:Array<Note->Void> = [];
-	var __pressed:Array<Bool> = [];
-	var __justPressed:Array<Bool> = [];
-	var __justReleased:Array<Bool> = [];
-	private function keyShit():Void
+	private inline function keyShit():Void
 	{
-		for(id=>p in strumLines) {
-			p.updateNotes();
-
-			if (p.cpu) continue;
-
-			__funcsToExec = [null, null];
-			__pressed.clear();
-			__justPressed.clear();
-			__justReleased.clear();
-
-			__pressed.pushGroup(p.controls.NOTE_LEFT, p.controls.NOTE_DOWN, p.controls.NOTE_UP, p.controls.NOTE_RIGHT);
-			__justPressed.pushGroup(p.controls.NOTE_LEFT_P, p.controls.NOTE_DOWN_P, p.controls.NOTE_UP_P, p.controls.NOTE_RIGHT_P);
-			__justReleased.pushGroup(p.controls.NOTE_LEFT_R, p.controls.NOTE_DOWN_R, p.controls.NOTE_UP_R, p.controls.NOTE_RIGHT_R);
-
-			var event = scripts.event("onKeyShit", EventManager.get(InputSystemEvent).recycle(__pressed, __justPressed, __justReleased, p, id));
-			if (event.cancelled) return;
-
-			__pressed = CoolUtil.getDefault(event.pressed, []);
-			__justPressed = CoolUtil.getDefault(event.justPressed, []);
-			__justReleased = CoolUtil.getDefault(event.justReleased, []);
-
-
-			if (__pressed.contains(true)) {
-				for(c in p.characters)
-					if (c.lastAnimContext != DANCE)
-						c.__lockAnimThisFrame = true;
-
-				__funcsToExec[0] = function(note:Note) {
-					if (__pressed[note.strumID] && note.isSustainNote && note.canBeHit && !note.wasGoodHit) {
-						goodNoteHit(p, note);
-					}
-				};
-			}
-
-			var notePerStrum = [for(_ in 0...4) null];
-			if (__justPressed.contains(true)) {
-				__funcsToExec[1] = function(note:Note) {
-					if (__justPressed[note.strumID] && !note.isSustainNote && !note.wasGoodHit && note.canBeHit) {
-						if (notePerStrum[note.strumID] == null) 										notePerStrum[note.strumID] = note;
-						else if (Math.abs(notePerStrum[note.strumID].strumTime - note.strumTime) <= 2)  p.deleteNote(note);
-						else if (note.strumTime < notePerStrum[note.strumID].strumTime)					notePerStrum[note.strumID] = note;
-					}
-				};
-			}
-
-			if (__funcsToExec.length > 0) {
-				p.notes.forEachAlive(function(note:Note) {
-					for(e in __funcsToExec) if (e != null) e(note);
-				});
-			}
-
-			if (!p.ghostTapping) for(k=>pr in __justPressed) if (pr && notePerStrum[k] == null) {
-				// FUCK YOU
-				noteMiss(p, null, k, id);
-			}
-			for(e in notePerStrum) if (e != null) goodNoteHit(p, e);
-
-			p.forEach(function(str:Strum) {
-				str.updatePlayerInput(__pressed[str.ID], __justPressed[str.ID], __justReleased[str.ID]);
-			});
-			scripts.call("onPostKeyShit");
-		}
+		for(id=>p in strumLines.members)
+			p.updateInput(id);
 	}
 
 	/**
@@ -1400,11 +1337,11 @@ class PlayState extends MusicBeatState
 	 */
 	public function noteMiss(strumLine:StrumLine, note:Note, ?direction:Int, ?player:Int):Void
 	{
-		var playerID:Null<Int> = note == null ? player : strumLines.indexOf(strumLine);
+		var playerID:Null<Int> = note == null ? player : strumLines.members.indexOf(strumLine);
 		var directionID:Null<Int> = note == null ? direction : note.strumID;
 		if (playerID == null || directionID == null) return;
 
-		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, strumLines[playerID].characters, true, note != null ? note.noteType : null, "", "", "", directionID, -10, 0, -0.04, "shit"));
+		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, strumLines.members[playerID].characters, true, note != null ? note.noteType : null, "", "", "", directionID, -10, 0, -0.04, "shit"));
 		strumLine.onMiss.dispatch(event);
 		if (event.cancelled) return;
 
@@ -1647,44 +1584,44 @@ class PlayState extends MusicBeatState
 		return cpuStrums = s;
 
 	private function get_boyfriend():Character {
-		if (strumLines != null && strumLines[1] != null)
-			return strumLines[1].characters[0];
+		if (strumLines != null && strumLines.members[1] != null)
+			return strumLines.members[1].characters[0];
 		return null;
 	}
 	private function set_boyfriend(bf:Character):Character {
-		if (strumLines != null && strumLines[1] != null)
-			strumLines[1].characters = [bf];
+		if (strumLines != null && strumLines.members[1] != null)
+			strumLines.members[1].characters = [bf];
 		return bf;
 	}
 	private function get_dad():Character {
-		if (strumLines != null && strumLines[0] != null)
-			return strumLines[0].characters[0];
+		if (strumLines != null && strumLines.members[0] != null)
+			return strumLines.members[0].characters[0];
 		return null;
 	}
 	private function set_dad(dad:Character):Character {
-		if (strumLines != null && strumLines[0] != null)
-			strumLines[0].characters = [dad];
+		if (strumLines != null && strumLines.members[0] != null)
+			strumLines.members[0].characters = [dad];
 		return dad;
 	}
 	private function get_gf():Character {
-		if (strumLines != null && strumLines[2] != null)
-			return strumLines[2].characters[0];
+		if (strumLines != null && strumLines.members[2] != null)
+			return strumLines.members[2].characters[0];
 		return null;
 	}
 	private function set_gf(gf:Character):Character {
-		if (strumLines != null && strumLines[2] != null)
-			strumLines[2].characters = [gf];
+		if (strumLines != null && strumLines.members[2] != null)
+			strumLines.members[2].characters = [gf];
 		return gf;
 	}
 	private inline function get_cpuStrums():StrumLine
-		return strumLines[0];
+		return strumLines.members[0];
 	private inline function get_playerStrums():StrumLine
-		return strumLines[1];
+		return strumLines.members[1];
 	private inline function get_gfSpeed():Int
-		return (strumLines[2] != null && strumLines[2].characters[0] != null) ? strumLines[2].characters[0].danceInterval : 1;
+		return (strumLines.members[2] != null && strumLines.members[2].characters[0] != null) ? strumLines.members[2].characters[0].danceInterval : 1;
 	private inline function set_gfSpeed(v:Int):Int {
-		if (strumLines[2] != null && strumLines[2].characters[0] != null)
-			strumLines[2].characters[0].danceInterval = v;
+		if (strumLines.members[2] != null && strumLines.members[2].characters[0] != null)
+			strumLines.members[2].characters[0].danceInterval = v;
 		return v;
 	}
 
