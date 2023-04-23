@@ -1,13 +1,11 @@
-import funkin.system.FunkinSprite;
-
-var tankman:FunkinSprite;
+var tankman:FlxSprite;
 var tankTalk1, tankTalk2, bfBeep, distorto:FlxSound;
 
 function create() {
     FlxTween.tween(FlxG.camera, {zoom: 1}, 0.7, {ease: FlxEase.quadInOut});
     game.camHUD.visible = false;
 
-    tankman = new FunkinSprite(game.dad.x + game.dad.globalOffset.x + 520, game.dad.y + game.dad.globalOffset.y + 225);
+    tankman = new FlxSprite(game.dad.x + game.dad.globalOffset.x + 520, game.dad.y + game.dad.globalOffset.y + 225);
     tankman.antialiasing = true;
     tankman.loadSprite(Paths.image('game/cutscenes/tank/ugh-tankman'));
     tankman.animateAtlas.anim.addBySymbol('1', 'TANK TALK 1 P1', 0, false);

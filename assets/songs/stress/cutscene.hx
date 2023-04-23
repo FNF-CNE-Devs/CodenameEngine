@@ -1,8 +1,7 @@
 import lime.app.Application;
-import funkin.system.FunkinSprite;
 import funkin.options.Options;
 
-var tankman, pico:FunkinSprite;
+var tankman, pico:FlxSprite;
 var gf:Character;
 var stressCutscene:FlxSound;
 var step:Int = 0;
@@ -30,14 +29,14 @@ function create() {
         close();
     };
 
-    tankman = new FunkinSprite(game.dad.x + game.dad.globalOffset.x + 520, game.dad.y + game.dad.globalOffset.y + 225);
+    tankman = new FlxSprite(game.dad.x + game.dad.globalOffset.x + 520, game.dad.y + game.dad.globalOffset.y + 225);
     tankman.antialiasing = true;
     tankman.loadSprite(Paths.image('game/cutscenes/tank/stress-tankman'));
     tankman.animateAtlas.anim.addBySymbol('p1', 'TANK TALK 3 P1 UNCUT', 0, false);
     tankman.animateAtlas.anim.addBySymbol('p2', 'TANK TALK 3 P2 UNCUT', 0, false);
     tankman.playAnim('p1');
 
-    pico = new FunkinSprite(game.gf.x + game.gf.globalOffset.x + 150, game.gf.y + game.gf.globalOffset.y + 395);
+    pico = new FlxSprite(game.gf.x + game.gf.globalOffset.x + 150, game.gf.y + game.gf.globalOffset.y + 395);
     pico.antialiasing = true;
     pico.loadSprite(Paths.image('game/cutscenes/tank/stress-pico'));
     pico.animateAtlas.anim.addBySymbol('die', 'GF Time to Die sequence', 24, false);
@@ -98,7 +97,7 @@ function update(elapsed) {
     }
 }
 
-function lipSync(char:FunkinSprite, begin:Float, end:Float) {
+function lipSync(char:FlxSprite, begin:Float, end:Float) {
     char.animateAtlas.anim.curFrame = Std.int(FlxMath.remapToRange(stressCutscene.time, begin, end, 0, char.animateAtlas.anim.length-1));
 }
 
