@@ -26,6 +26,11 @@ class CharterEventScreen extends UISubstateWindow {
 
 		FlxG.sound.music.pause(); // prevent the song from continuing
 
+		var bg:FlxSprite = new FlxSprite(windowSpr.x + 1, windowSpr.y + 31, Paths.image('editors/ui/scrollbar-bg'));
+		bg.setGraphicSize(30, windowSpr.bHeight - 32);
+		bg.updateHitbox();
+		add(bg);
+
 		iconsPanel = new FlxGroup();
 		add(iconsPanel);
 
@@ -58,12 +63,15 @@ class CharterEventScreen extends UISubstateWindow {
 			// add new elements
 			var y:Float = eventName.y + eventName.height + 10;
 			for(k=>param in data.params) {
+				function addLabel() {	
+					var label:UIText = new UIText(eventName.x, y, 0, param.name);
+					y += label.height + 4;
+					paramsPanel.add(label);
+				};
+
 				switch(param.type) {
 					case TString:
-						var label:UIText = new UIText(eventName.x, y, 0, param.name);
-						y += label.height + 4;
-						paramsPanel.add(label);
-
+						addLabel();
 						var textBox:UITextBox = new UITextBox(eventName.x, y, cast curEvent.params[k]);
 						y += textBox.height + 10;
 						paramsPanel.add(textBox);
@@ -74,24 +82,19 @@ class CharterEventScreen extends UISubstateWindow {
 						paramsPanel.add(checkbox);
 						paramsFields.push(checkbox);
 					case TInt(min, max, step):
-						var label:UIText = new UIText(eventName.x, y, 0, param.name);
-						y += label.height + 4;
-						paramsPanel.add(label);
-
+						addLabel();
 						var numericStepper = new UINumericStepper(eventName.x, y, cast curEvent.params[k], step.getDefault(1), 0, min, max);
 						y += numericStepper.height + 10;
 						paramsPanel.add(numericStepper);
 						paramsFields.push(numericStepper);
 					case TFloat(min, max, step, precision):
-						var label:UIText = new UIText(eventName.x, y, 0, param.name);
-						y += label.height + 4;
-						paramsPanel.add(label);
-
+						addLabel();
 						var numericStepper = new UINumericStepper(eventName.x, y, cast curEvent.params[k], step.getDefault(1), precision, min, max);
 						y += numericStepper.height + 10;
 						paramsPanel.add(numericStepper);
 						paramsFields.push(numericStepper);
 					case TStrumLine:
+						addLabel();
 						var dropdown = new UIDropDown(eventName.x, y, 320, 32, [for(k=>s in cast(FlxG.state, Charter).strumLines.members) 'Strumline #${k+1} (${s.strumLine.characters[0]})'], cast curEvent.params[k]);
 						y += dropdown.height + 10;
 						paramsPanel.add(dropdown);
