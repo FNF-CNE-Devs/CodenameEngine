@@ -42,7 +42,6 @@ class CharterEventScreen extends UISubstateWindow {
 
 	public function changeTab(id:Int) {
 		saveCurTab();
-		
 
 		// destroy old elements
 		paramsFields = [];
@@ -149,12 +148,5 @@ class CharterEventScreen extends UISubstateWindow {
 					null;
 			}
 		];
-	}
-
-	public override function update(elapsed:Float) {
-		super.update(elapsed);
-
-		if (FlxG.keys.justPressed.ESCAPE || controls.BACK)
-			close();
 	}
 }
