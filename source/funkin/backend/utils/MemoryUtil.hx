@@ -137,7 +137,6 @@ class MemoryUtil {
 			}
 		}
 		#end
-
 		return "Unknown";
 	}
 

@@ -154,6 +154,7 @@ class CharterEventScreen extends UISubstateWindow {
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 
-
+		if (FlxG.keys.justPressed.ESCAPE || controls.BACK)
+			close();
 	}
 }
