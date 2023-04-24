@@ -119,7 +119,7 @@ class UIState extends MusicBeatState {
 		state.persistentDraw = true;
 		state.persistentUpdate = true;
 
-		openSubState(curContextMenu = new UIContextMenu(options, callback, x.getDefault(__mousePos.x), y.getDefault(__mousePos.y)));
+		state.openSubState(curContextMenu = new UIContextMenu(options, callback, x.getDefault(__mousePos.x), y.getDefault(__mousePos.y)));
 		return curContextMenu;
 	}
 }

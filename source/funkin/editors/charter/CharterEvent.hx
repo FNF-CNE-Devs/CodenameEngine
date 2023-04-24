@@ -138,7 +138,7 @@ typedef EventParamInfo = {
 
 enum EventParamType {
 	TBool;
-	TInt(?min:Int, ?max:Int);
+	TInt(?min:Int, ?max:Int, ?step:Float);
 	TFloat(?min:Int, ?max:Int, ?step:Float, ?precision:Int);
 	TString;
 	TArrayOfString;

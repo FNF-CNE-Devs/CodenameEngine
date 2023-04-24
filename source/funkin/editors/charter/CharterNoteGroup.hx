@@ -20,8 +20,8 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 		if (FlxG.state is Charter && !FlxG.sound.music.playing)
 			curStep = cast(FlxG.state, Charter).conductorFollowerSpr.y / 40;
 
-		var begin = SortedArrayUtil.binarySearch(members, curStep - max, getVarForEach);
-		var end = SortedArrayUtil.binarySearch(members, curStep + max, getVarForEach);
+		var begin = SortedArrayUtil.binarySearch(members, curStep - max, getVarForEachAdd);
+		var end = SortedArrayUtil.binarySearch(members, curStep + max, getVarForEachRemove);
 
 		for(i in begin...end) {
 			__loopSprite = members[i];
@@ -45,8 +45,10 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	private static function getVar(n:CharterNote)
 		return n.step;
 
-	private static function getVarForEach(n:CharterNote)
+	private static function getVarForEachAdd(n:CharterNote)
 		return n.step + n.susLength;
+	private static function getVarForEachRemove(n:CharterNote)
+		return n.step - n.susLength;
 
 	public override function draw() {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;

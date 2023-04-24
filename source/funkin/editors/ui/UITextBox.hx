@@ -13,6 +13,10 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 	public var multiline:Bool = false;
 	public var caretSpr:FlxSprite;
 
+	public var onChange:String->Void;
+
+	var __wasFocused:Bool = false;
+
 	public function new(x:Float, y:Float, text:String = "", width:Int = 320, height:Int = 32, multiline:Bool = false) {
 		super(x, y, width, height, 'editors/ui/inputbox');
 
@@ -25,30 +29,38 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 		caretSpr.updateHitbox();
 		members.push(caretSpr);
 		this.multiline = multiline;
+		position = text.length;
 	}
 
 	var cacheRect:Rectangle = new Rectangle();
 
 	public override function update(elapsed:Float) {
-		super.update(elapsed);
-		var off = multiline ? 4 : ((bHeight - label.height) / 2);
-		label.follow(this, 4, off);
-
-		if (hovered && FlxG.mouse.justReleased) {
+		if (hovered && FlxG.mouse.justReleased && __lastDrawCameras.length > 0) {
 			// get caret pos
-			var pos = FlxG.mouse.getScreenPosition(camera, FlxPoint.get());
+			var pos = FlxG.mouse.getScreenPosition(__lastDrawCameras[0], FlxPoint.get());
 			pos.x -= label.x;
 			pos.y -= label.y;
 
-			var index = label.textField.getCharIndexAtPoint(pos.x, pos.y);
-			if (index > -1)
-				position = index;
+			if (pos.x < 0)
+				position = 0;
+			else {
+				var index = label.textField.getCharIndexAtPoint(pos.x, pos.y);
+				if (index > -1)
+					position = index;
+				else
+					position = label.text.length;
+			}
 
 			pos.put();
 		}
+
+		super.update(elapsed);
+		var off = multiline ? 4 : ((bHeight - label.height) / 2);
+		label.follow(this, 4, off);
 		framesOffset = (focused ? 18 : (hovered ? 9 : 0));
 		@:privateAccess {
 			if (focused) {
+				__wasFocused = true;
 				caretSpr.alpha = (FlxG.game.ticks % 666) >= 333 ? 1 : 0;
 
 				var curPos = switch(position) {
@@ -66,6 +78,11 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 				caretSpr.follow(this, 4 + curPos.x, off + curPos.y);
 				curPos.put();
 			} else {
+				if (__wasFocused) {
+					__wasFocused = false;
+					if (onChange != null)
+						onChange(label.text);
+				}
 				caretSpr.alpha = 0;
 			}
 		}
@@ -73,6 +90,8 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 
 	public function onKeyDown(e:KeyCode, modifier:KeyModifier) {
 		switch(e) {
+			case RETURN:
+				focused = false;
 			case LEFT:
 				changeSelection(-1);
 			case RIGHT:
@@ -87,7 +106,7 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 			case END:
 				position = label.text.length;
 			case V:
-				if (modifier == KeyModifier.LEFT_CTRL || modifier == KeyModifier.RIGHT_CTRL ) {
+				if (modifier == KeyModifier.LEFT_CTRL || modifier == KeyModifier.RIGHT_CTRL) {
 					// paste
 					var data:String = Clipboard.generalClipboard.getData(TEXT_FORMAT);
 					if (data != null)

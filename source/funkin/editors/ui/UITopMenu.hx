@@ -62,13 +62,11 @@ class UITopMenuButton extends UISliceSprite {
 
 	public override function onHovered() {
 		super.onHovered();
-		if (hovered) {
-			if (curMenu.contextMenuOpened()) {
-				UIState.state.curContextMenu.preventOutOfBoxClickDeletion();
-			} else {
-				if ((parent != null && parent.anyMenuOpened) || FlxG.mouse.justReleased) {
-					openContextMenu();
-				}
+		if (curMenu.contextMenuOpened()) {
+			UIState.state.curContextMenu.preventOutOfBoxClickDeletion();
+		} else {
+			if ((parent != null && parent.anyMenuOpened) || FlxG.mouse.justReleased) {
+				openContextMenu();
 			}
 		}
 	}
