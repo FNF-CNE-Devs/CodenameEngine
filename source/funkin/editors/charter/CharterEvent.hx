@@ -1,11 +1,12 @@
 package funkin.editors.charter;
 
+import funkin.backend.system.Conductor;
 import funkin.backend.chart.ChartData.ChartEventType;
 import funkin.game.HealthIcon;
 import funkin.backend.chart.ChartData.ChartEvent;
 
 class CharterEvent extends UISliceSprite {
-	public static function getEventInfo(id:ChartEventType) {
+	public static function getEventInfo(id:ChartEventType):EventDefineInfo {
 		return switch(id) {
 			case CUSTOM:
 				// hscript
@@ -14,11 +15,13 @@ class CharterEvent extends UISliceSprite {
 					params: [
 						{
 							name: "Function name",
-							type: TString
+							type: TString,
+							defValue: "myFunc"
 						},
 						{
 							name: "Function parameters (string)",
-							type: TArrayOfString
+							type: TArrayOfString,
+							defValue: []
 						}
 					]
 				}
@@ -28,7 +31,8 @@ class CharterEvent extends UISliceSprite {
 					params: [
 						{
 							name: "Camera Target",
-							type: TStrumLine
+							type: TStrumLine,
+							defValue: 0
 						}
 					]
 				}
@@ -38,7 +42,8 @@ class CharterEvent extends UISliceSprite {
 					params: [
 						{
 							name: "Target BPM",
-							type: TFloat(1)
+							type: TFloat(1),
+							defValue: Conductor.bpm
 						}
 					]
 				}
@@ -48,11 +53,13 @@ class CharterEvent extends UISliceSprite {
 					params: [
 						{
 							name: "Strumline",
-							type: TStrumLine
+							type: TStrumLine,
+							defValue: 0
 						},
 						{
 							name: "Enable",
-							type: TBool
+							type: TBool,
+							defValue: true
 						}
 					]
 				}
@@ -108,6 +115,12 @@ class CharterEvent extends UISliceSprite {
 		}
 	}
 
+	public override function onHovered() {
+		super.onHovered();
+		if (FlxG.mouse.justReleased)
+			FlxG.state.openSubState(new CharterEventScreen(this));
+	}
+
 	public function refreshEventIcons() {
 		while(icons.length > 0) {
 			var i = icons.shift();
@@ -125,15 +138,19 @@ class CharterEvent extends UISliceSprite {
 	}
 }
 
-typedef EventInfo = {
+typedef EventDefineInfo = {
 	var name:String;
 	var params:Array<EventParamInfo>;
+}
+typedef EventInfo = {
+	> EventDefineInfo,
 	var paramValues:Array<Dynamic>;
 }
 
 typedef EventParamInfo = {
 	var name:String;
 	var type:EventParamType;
+	var defValue:Dynamic;
 }
 
 enum EventParamType {

@@ -40,8 +40,6 @@ class UISubstateWindow extends MusicBeatSubstate {
 		FlxG.cameras.add(subCam, false);
 
 		windowSpr = new UISliceSprite(0, 0, winWidth, winHeight, "editors/ui/warning-popup");
-		windowSpr.x = (FlxG.width - windowSpr.bWidth) / 2;
-		windowSpr.y = (FlxG.height - windowSpr.bHeight) / 2;
 		add(windowSpr);
 
 		add(titleSpr = new UIText(windowSpr.x + 25, windowSpr.y, windowSpr.bWidth - 50, winTitle, 15, -1));
@@ -58,5 +56,10 @@ class UISubstateWindow extends MusicBeatSubstate {
 
 		FlxTween.cancelTweensOf(subCam);
 		FlxG.cameras.remove(subCam);
+	}
+
+	public override function update(elapsed:Float) {
+		super.update(elapsed);
+		subCam.scroll.set(Std.int(-(FlxG.width - windowSpr.bWidth) / 2), Std.int(-(FlxG.height - windowSpr.bHeight) / 2));
 	}
 }
