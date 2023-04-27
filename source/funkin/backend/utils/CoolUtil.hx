@@ -16,7 +16,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxAxes;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.frames.FlxFramesCollection;
-import flash.geom.ColorTransform;
+import openfl.geom.ColorTransform;
 import funkin.backend.chart.Chart;
 import haxe.CallStack;
 

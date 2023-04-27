@@ -192,9 +192,17 @@ class Note extends FlxSprite
 	public var strumRelativePos:Bool = true;
 
 	override function drawComplex(camera:FlxCamera) {
-		flipY = (isSustainNote && flipSustain) && ((camera is HudCamera ? cast(camera, HudCamera).downscroll : false) != (__strum != null && __strum.getScrollSpeed(this) < 0));
-		super.drawComplex(camera);
+		var downscrollCam = (camera is HudCamera ? cast(camera, HudCamera).downscroll : false);
+		flipY = (isSustainNote && flipSustain) && (downscrollCam != (__strum != null && __strum.getScrollSpeed(this) < 0));
+		if (downscrollCam) {
+			frameOffset.y += __notePosFrameOffset.y * 2;
+			super.drawComplex(camera);
+			frameOffset.y -= __notePosFrameOffset.y * 2;
+		} else 
+			super.drawComplex(camera);
 	}
+
+	var __notePosFrameOffset:FlxPoint = FlxPoint.get();
 
 	override function draw() {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
@@ -208,8 +216,10 @@ class Note extends FlxSprite
 
 			setPosition(__strum.x, __strum.y);
 
-			frameOffset.x -= pos.x / scale.x;
-			frameOffset.y -= pos.y / scale.y;
+			__notePosFrameOffset.set(pos.x / scale.x, pos.y / scale.y);
+
+			frameOffset.x -= __notePosFrameOffset.x;
+			frameOffset.y -= __notePosFrameOffset.y;
 
 			this.frameOffsetAngle = __noteAngle;
 
@@ -217,12 +227,13 @@ class Note extends FlxSprite
 
 			this.frameOffsetAngle = 0;
 
-			frameOffset.x += pos.x / scale.x;
-			frameOffset.y += pos.y / scale.y;
+			frameOffset.x += __notePosFrameOffset.x;
+			frameOffset.y += __notePosFrameOffset.y;
 
 			setPosition(pos.x, pos.y);
 			pos.put();
 		} else {
+			__notePosFrameOffset.set(0, 0);
 			super.draw();
 		}
 
@@ -273,5 +284,10 @@ class Note extends FlxSprite
 			frame = frames.frames[animation.frameIndex];
 
 		return rect;
+	}
+
+	public override function destroy() {
+		super.destroy();
+		__notePosFrameOffset.put();
 	}
 }

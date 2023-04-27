@@ -3,14 +3,14 @@ package funkin.game;
 
 import lime.app.Application;
 import flixel.graphics.tile.FlxGraphicsShader;
-import flash.display.Bitmap;
-import flash.display.BitmapData;
-import flash.display.DisplayObject;
-import flash.display.Graphics;
-import flash.display.Sprite;
-import flash.geom.ColorTransform;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.DisplayObject;
+import openfl.display.Graphics;
+import openfl.display.Sprite;
+import openfl.geom.ColorTransform;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
@@ -31,17 +31,28 @@ class HudCamera extends FlxCamera {
 	public var downscroll:Bool = false;
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-		flipY = downscroll;
+		// flipY = downscroll;
 	}
 
 
-	public override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
-		?shader:FlxShader):Void
-	{
+	// public override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,
+	// 	?shader:FlxShader):Void
+	// {
+	// 	if (downscroll) {
+	// 		matrix.scale(1, -1);
+	// 		matrix.translate(0, height);
+	// 	}
+	// 	super.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+	// }
+
+
+	public override function alterScreenPosition(spr:FlxObject, pos:FlxPoint) {
 		if (downscroll) {
-			matrix.scale(1, -1);
-			matrix.translate(0, height);
+			var oldPoint = FlxPoint.get(pos.x, pos.y);
+			pos.set(pos.x, height - pos.y - spr.height);
+	
+			oldPoint.put();
 		}
-		super.drawPixels(frame, pixels, matrix, transform, blend, smoothing, shader);
+		return pos;
 	}
 }

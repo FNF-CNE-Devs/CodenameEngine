@@ -3,7 +3,7 @@ package funkin.menus;
 import funkin.backend.chart.Chart;
 import funkin.backend.chart.ChartData;
 import haxe.io.Path;
-import flash.text.TextField;
+import openfl.text.TextField;
 import flixel.FlxState;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.text.FlxText;

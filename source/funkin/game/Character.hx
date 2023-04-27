@@ -16,7 +16,7 @@ import haxe.Exception;
 import haxe.io.Path;
 import funkin.backend.system.Conductor;
 
-import flash.geom.ColorTransform;
+import openfl.geom.ColorTransform;
 
 import funkin.backend.scripting.DummyScript;
 import funkin.backend.scripting.Script;

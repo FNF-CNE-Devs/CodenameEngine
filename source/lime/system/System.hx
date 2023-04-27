@@ -10,12 +10,12 @@ import lime.utils.ArrayBuffer;
 import lime.utils.UInt8Array;
 import lime.utils.UInt16Array;
 #if flash
-import flash.net.URLRequest;
-import flash.system.Capabilities;
-import flash.Lib;
+import openfl.net.URLRequest;
+import openfl.system.Capabilities;
+import openfl.Lib;
 #end
 #if air
-import flash.desktop.NativeApplication;
+import openfl.desktop.NativeApplication;
 #end
 #if ((js && html5) || electron)
 import js.html.Element;
