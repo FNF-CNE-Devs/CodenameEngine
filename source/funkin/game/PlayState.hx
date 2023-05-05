@@ -903,7 +903,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 		events.sort(function(p1, p2) {
-			return FlxSort.byValues(FlxSort.ASCENDING, p1.time, p2.time);
+			return FlxSort.byValues(FlxSort.DESCENDING, p1.time, p2.time);
 		});
 
 		camZoomingInterval = cast songData.meta.beatsPerMesure.getDefault(4);
@@ -1112,8 +1112,8 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		while(events.length > 0 && events[0].time <= Conductor.songPosition)
-			executeEvent(events.shift());
+		while(events.length > 0 && events.last().time <= Conductor.songPosition)
+			executeEvent(events.pop());
 
 		if (generatedMusic && strumLines.members[curCameraTarget] != null)
 		{

@@ -16,44 +16,39 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	public inline function sortNotes() {
 		sort(function(i, n1, n2) {
 			if (n1.strumTime == n2.strumTime)
-				return n1.isSustainNote ? -1 : 1;
-			return FlxSort.byValues(FlxSort.ASCENDING, n1.strumTime, n2.strumTime);
+				return n1.isSustainNote ? 1 : -1;
+			return FlxSort.byValues(FlxSort.DESCENDING, n1.strumTime, n2.strumTime);
 		});
 	}
 	public override function update(elapsed:Float) {
-		i = 0;
+		i = length-1;
 		__loopSprite = null;
-		while(i < length) {
-			__loopSprite = members[i];
+		while(i >= 0) {
+			__loopSprite = members[i--];
 			if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.active) {
-				i++;
 				continue;
 			}
 			if (__loopSprite.strumTime - Conductor.songPosition > 1500)
 				break;
 			__loopSprite.update(elapsed);
-			i++;
 		}
 	}
 
 	public override function draw() {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
-		
-		i = 0;
-		__loopSprite = null;
 
 		var oldCur = __currentlyLooping;
 		__currentlyLooping = true;
-		while(i < length) {
-			__loopSprite = members[i];
-			if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.visible) {
-				i++;
+
+		i = length-1;
+		__loopSprite = null;
+		while(i >= 0) {
+			__loopSprite = members[i--];
+			if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.visible)
 				continue;
-			}
 			if (__loopSprite.strumTime - Conductor.songPosition > 1500) break;
 			__loopSprite.draw();
-			i++;
 		}
 		__currentlyLooping = oldCur;
 
@@ -61,21 +56,18 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	}
 
 	public override function forEach(noteFunc:Note->Void, recursive:Bool = false) {
-		i = 0;
+		i = length-1;
 		__loopSprite = null;
 		
 		var oldCur = __currentlyLooping;
 		__currentlyLooping = true;
 
-		while(i < length) {
-			__loopSprite = members[i];
-			if (__loopSprite == null || !__loopSprite.exists) {
-				i++;
+		while(i >= 0) {
+			__loopSprite = members[i--];
+			if (__loopSprite == null || !__loopSprite.exists)
 				continue;
-			}
 			if (__loopSprite.strumTime - Conductor.songPosition > 1500) break;
 			noteFunc(__loopSprite);
-			i++;
 		}
 		__currentlyLooping = oldCur;
 	}
@@ -90,14 +82,14 @@ class NoteGroup extends FlxTypedGroup<Note> {
 		if (members == null)
 			return null;
 
-		var index:Int = members.indexOf(Object);
+		var index:Int = members.indexOfFromLast(Object);
 
 		if (index < 0)
 			return null;
 
 		// doesnt prevent looping from breaking
 		if (Splice && __currentlyLooping && i >= index)
-			i--;
+			i++;
 
 		if (Splice)
 		{
