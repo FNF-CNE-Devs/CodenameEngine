@@ -503,10 +503,12 @@ class CoolUtil
 	 */
 	public static inline function indexOfFromLast<T>(array:Array<T>, element:T):Int {
 		var i = array.length - 1;
-		while(i >= 0)
+		while(i >= 0) {
 			if (array[i] == element)
-				return i;
-		return -1;
+				break;
+			i--;
+		}
+		return i;
 	}
 
 	/**
