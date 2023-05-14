@@ -31,7 +31,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
 			// Flixel related stuff
 			"FlxG"			  => flixel.FlxG,
-			"FlxSprite"		 => funkin.backend.FunkinSprite,
+			"FlxSprite"		 => funkin.backend.FlxSprite,
 			"FlxBasic"		  => flixel.FlxBasic,
 			"FlxCamera"		 => flixel.FlxCamera,
 			"state"			 => flixel.FlxG.state,
