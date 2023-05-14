@@ -1,1 +1,1 @@
-@haxe -cp update -D analyzer-optimize -main Update --interp
+@haxe -cp commandline -D analyzer-optimize --run Main setup

@@ -57,11 +57,14 @@
 	<define name="PRELOAD_ALL" unless="web" />
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
 
+
 	<library name="assets"    preload="true"  if="PRELOAD_ALL"/>
 	<library name="assets"    preload="false" if="NO_PRELOAD_ALL" />
 
-	<assets path="assets/"    rename="assets"	exclude="*.ogg" if="web"/>
-	<assets path="assets/"    rename="assets"	exclude="*.mp3" unless="web"/>
+	<section unless="TEST_BUILD">
+		<assets path="assets/"    rename="assets"	exclude="*.ogg" if="web"/>
+		<assets path="assets/"    rename="assets"	exclude="*.mp3" unless="web"/>
+	</section>
 
 	<assets path='mods' rename='mods' embed='false'/>
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
@@ -131,9 +134,6 @@
 
 	<!-- Comment this out to disable softcoded states and state scripting !-->
 	<haxedef name="SOFTCODED_STATES" />
-
-	<!-- Comment this out to disable usage of source assets when using lime test windows !-->
-	<haxedef name="USE_SOURCE_ASSETS" />
 
 	<!-- Comment this out to use the default OpenFL assets system for the assets/ folder. !-->
 	<haxedef name="USE_ADAPTED_ASSETS" />

@@ -83,7 +83,7 @@ class Main extends Sprite
 		#else
 			""
 		#end;
-	public static var startedFromSource:Bool = false;
+	public static var startedFromSource:Bool = #if TEST_BUILD true #else false #end;
 
 
 	private static var __threadCycle:Int = 0;
@@ -123,26 +123,14 @@ class Main extends Sprite
 		funkin.backend.scripting.GlobalScript.init();
 		#end
 
-		#if sys
-		if (startedFromSource = Sys.args().contains("-livereload")) {
-			#if USE_SOURCE_ASSETS
-			#if windows
-			trace("Used lime test windows. Switching into source assets.");
-			#elseif mac
-			trace("Used lime test mac. Switching into source assets.");
-			#elseif linux
-			trace("Used lime test linux. Switching into source assets.");
-			#end
+		#if (sys && TEST_BUILD)
+			trace("Used cne test / cne build. Switching into source assets.");
 			#if MOD_SUPPORT
-			ModsFolder.modsPath = './${pathBack}mods/';
+				ModsFolder.modsPath = './${pathBack}mods/';
 			#end
 			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', './${pathBack}assets/', true));
-			#end
-		} else {
-			#if USE_ADAPTED_ASSETS
+		#elseif USE_ADAPTED_ASSETS
 			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', './assets/', true));
-			#end
-		}
 		#end
 
 

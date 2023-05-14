@@ -1,10 +1,12 @@
+package commands;
+
 import haxe.Json;
 import sys.io.File;
 import sys.io.Process;
 import sys.FileSystem;
 
 class Update {
-    public static function main() {
+    public static function main(args:Array<String>) {
         // to prevent messing with currently installed libs
         if (!FileSystem.exists('.haxelib'))
             FileSystem.createDirectory('.haxelib');
