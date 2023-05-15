@@ -31,15 +31,14 @@ class SystemInfo extends FramerateCategory {
 			if (process.exitCode() == 0) cpuName = process.stdout.readAll().toString().trim().split(":")[1].trim();
 			#elseif linux
 			var process = new HiddenProcess("cat", ["/proc/cpuinfo"]);
-			if (process.exitCode() == 0) {
-				for (line in  process.stdout.readAll().toString().split("\n")) {
-					if (line.indexOf("model name") == 0) {
-						cpuName = line.substring(line.indexOf(":") + 2);
-						break;
-					}
-				}
-			};
+			if (process.exitCode() != 0) throw 'Could not fetch CPU information';
 
+			for (line in  process.stdout.readAll().toString().split("\n")) {
+				if (line.indexOf("model name") == 0) {
+					cpuName = line.substring(line.indexOf(":") + 2);
+					break;
+				}
+			}
 			#end
 		} catch (e) {
 			Logs.trace('Unable to grab CPU Name: $e', ERROR, RED);
