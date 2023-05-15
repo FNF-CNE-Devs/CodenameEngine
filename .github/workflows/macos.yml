@@ -27,10 +27,10 @@ jobs:
             cache-build-mac
       - name: Installing/Updating libraries
         run: |
-          haxe -cp ./update -D analyzer-optimize -main Update --interp
+          haxe -cp commandline -D analyzer-optimize --run Main setup
       - name: Building the game
         run: |
-          haxelib run lime build mac
+          haxe -cp commandline -D analyzer-optimize --run Main release
       - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v2
         with:
