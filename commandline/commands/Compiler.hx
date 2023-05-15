@@ -5,13 +5,13 @@ class Compiler {
         __build(args, ["test", getBuildTarget(), "-D", "TEST_BUILD"]);
     }
     public static function build(args:Array<String>) {
-        __build(args, ["build", "windows", "-D", "TEST_BUILD"]);
+        __build(args, ["build", getBuildTarget(), "-D", "TEST_BUILD"]);
     }
     public static function release(args:Array<String>) {
-        __build(args, ["build", "windows"]);
+        __build(args, ["build", getBuildTarget()]);
     }
     public static function testRelease(args:Array<String>) {
-        __build(args, ["test", "windows"]);
+        __build(args, ["test", getBuildTarget()]);
     }
 
     private static function __build(args:Array<String>, arg:Array<String>) {
