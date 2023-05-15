@@ -16,5 +16,5 @@ labels: compiling help
 [ ] Mac
 
 ### Explain your issue
-##### Please check first if your issue haven't already been reported yet.
+##### Please check first if your issue haven't already been reported yet, and make sure you ran the `update.bat` file before building.
 [weed]: <> (MAKE SURE TO ADD A SCREENSHOT OF THE CRASH HANDLER, IF AVAILABLE, AND STEPS TO REPRODUCE THE BUG!)
