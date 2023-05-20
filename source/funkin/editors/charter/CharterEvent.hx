@@ -14,14 +14,14 @@ class CharterEvent extends UISliceSprite {
 					name: "HScript Call",
 					params: [
 						{
-							name: "Function name",
+							name: "Function Name",
 							type: TString,
 							defValue: "myFunc"
 						},
 						{
-							name: "Function parameters (string)",
-							type: TArrayOfString,
-							defValue: []
+							name: "Function Parameters (String split with commas)",
+							type: TString,
+							defValue: ""
 						}
 					]
 				}

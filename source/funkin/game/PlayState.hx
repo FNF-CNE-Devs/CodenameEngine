@@ -1172,8 +1172,8 @@ class PlayState extends MusicBeatState
 
 		switch(event.type) {
 			case CUSTOM:
-				if (event.params[0] is String && event.params[1] is Array) {
-					scripts.call(event.params[0], event.params[1]);
+				if (event.params[0] is String && event.params[1] is String) {
+					scripts.call(event.params[0], event.params[1].split(','));
 				}
 			case CAM_MOVEMENT:
 				if (event.params[0] is Int)
