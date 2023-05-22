@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.editors.charter.EventsData;
 import funkin.backend.system.RotatingSpriteGroup;
 import funkin.editors.charter.Charter;
 import funkin.savedata.FunkinSave;
@@ -550,21 +551,22 @@ class PlayState extends MusicBeatState
 		// dadMidpoint.put();
 		var camPos:FlxPoint = new FlxPoint(0, 0);
 
-
 		if (!chartingMode || Options.charterEnablePlaytestScripts) {
 			switch(SONG.meta.name) {
 				// case "":
 					// ADD YOUR HARDCODED SCRIPTS HERE!
 				default:
-					for(content in [
-						Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH),
-						Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)]) {
-						for(file in content) {
-							var ext = Path.extension(file).toLowerCase();
-							if (Script.scriptExtensions.contains(ext))
-								scripts.add(Script.create(file));
-						}
+					function addScript(file:String) {
+						var ext = Path.extension(file).toLowerCase();
+						if (Script.scriptExtensions.contains(ext))
+							scripts.add(Script.create(file));
 					}
+
+					for(content in [Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH), Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)])
+						for(file in content) addScript(file);
+
+					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH)) 
+						if (EventsData.eventsList.contains(Path.withoutExtension(Path.withoutDirectory(file)))) addScript(file);
 			}
 		}
 
@@ -897,7 +899,7 @@ class PlayState extends MusicBeatState
 		// get first camera focus
 		for(e in events) {
 			if (e.time > 10) break;
-			if (e.type == CAM_MOVEMENT) {
+			if (e.name == "Camera Movement") {
 				executeEvent(e);
 				break;
 			}
@@ -1170,24 +1172,24 @@ class PlayState extends MusicBeatState
 		if (event == null) return;
 		if (event.params == null) return;
 
-		switch(event.type) {
-			case CUSTOM:
+		if (scripts.event("onEvent", EventManager.get(EventGameEvent).recycle(event)).cancelled) return;
+
+		switch(event.name) {
+			case "HScript Call":
 				if (event.params[0] is String && event.params[1] is String) {
 					scripts.call(event.params[0], event.params[1].split(','));
 				}
-			case CAM_MOVEMENT:
+			case "Camera Movement":
 				if (event.params[0] is Int)
 					curCameraTarget = event.params[0];
-			case BPM_CHANGE:
-				// automatically handled by conductor
-			case ALT_ANIM_TOGGLE:
+			case "BPM Change": // automatically handled by conductor
+			case "Alt Animation Toggle":
 				if (event.params[0] is Int && event.params[1] is Bool) {
 					var strLine = strumLines.members[event.params[0]];
 					if (strLine != null)
 						strLine.altAnim = cast event.params[1];
 				}
-				// todo!!!
-			default:
+			case "Unknown":
 		}
 	}
 

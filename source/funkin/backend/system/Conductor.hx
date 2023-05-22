@@ -134,7 +134,7 @@ class Conductor
 		var songTime:Float = 0;
 		var stepTime:Float = 0;
 
-		for(e in song.events) if (e.type == BPM_CHANGE && e.params != null && e.params[0] is Float) {
+		for(e in song.events) if (e.name == "BPM Change" && e.params != null && e.params[0] is Float) {
 			if (e.params[0] == curBPM) continue;
 			var steps = (e.time - songTime) / ((60 / curBPM) * 1000 / 4);
 			stepTime += steps;
