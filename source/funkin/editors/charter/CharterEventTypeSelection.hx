@@ -1,11 +1,11 @@
 package funkin.editors.charter;
 
-import funkin.editors.charter.EventsData;
+import funkin.backend.chart.ChartData.ChartEventType;
 
 class CharterEventTypeSelection extends UISubstateWindow {
-	var callback:String->Void;
+	var callback:ChartEventType->Void;
 
-	public function new(callback:String->Void) {
+	public function new(callback:ChartEventType->Void) {
 		super();
 		this.callback = callback;
 	}
@@ -16,10 +16,11 @@ class CharterEventTypeSelection extends UISubstateWindow {
 		var w:Int = winWidth - 20;
 		var lastIndex:Int = 0;
 
-		for(k=>eventName in EventsData.eventsList) {
-			add(new UIButton(10, 41 + (32 * k), eventName, function() {
+		for(k=>eventType in ChartEventType.getChartEventTypes()) {
+			var type = CharterEvent.getEventInfo(eventType);
+			add(new UIButton(10, 41 + (32 * k), type.name, function() {
 				close();
-				callback(eventName);
+				callback(eventType);
 			}, w));
 
 			lastIndex = k;

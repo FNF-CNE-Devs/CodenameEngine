@@ -2,7 +2,6 @@ package funkin.editors.charter;
 
 import funkin.backend.system.Conductor;
 import flixel.group.FlxGroup;
-import funkin.editors.charter.EventsData;
 
 class CharterEventScreen extends UISubstateWindow {
 	public var cam:FlxCamera;
@@ -41,11 +40,11 @@ class CharterEventScreen extends UISubstateWindow {
 		add(iconsPanel);
 
 		addButton = new UIButton(windowSpr.x + 1, windowSpr.y + 31, "", function() {
-			openSubState(new CharterEventTypeSelection(function(eventName) {
+			openSubState(new CharterEventTypeSelection(function(eventType) {
 				chartEvent.events.push({
 					time: Conductor.getTimeForStep(chartEvent.step),
 					params: [],
-					name: eventName
+					type: eventType
 				});
 				changeTab(chartEvent.events.length-1);
 			}));
@@ -106,10 +105,11 @@ class CharterEventScreen extends UISubstateWindow {
 		if (id >= 0 && id < chartEvent.events.length) {
 			curEvent = id;
 			var curEvent = chartEvent.events[curEvent];
-			eventName.text = curEvent.name;
+			var data = CharterEvent.getEventInfo(curEvent.type);
+			eventName.text = data.name;
 			// add new elements
 			var y:Float = eventName.y + eventName.height + 10;
-			for(k=>param in EventsData.getEventParams(curEvent.name)) {
+			for(k=>param in data.params) {
 				function addLabel() {
 					var label:UIText = new UIText(eventName.x, y, 0, param.name);
 					y += label.height + 4;
@@ -121,30 +121,30 @@ class CharterEventScreen extends UISubstateWindow {
 					case TString:
 						addLabel();
 						var textBox:UITextBox = new UITextBox(eventName.x, y, cast value);
-						y += textBox.height + 30;
+						y += textBox.height + 10;
 						paramsPanel.add(textBox);
 						paramsFields.push(textBox);
 					case TBool:
 						var checkbox = new UICheckbox(eventName.x, y, param.name, cast value);
-						y += checkbox.height + 8;
+						y += checkbox.height + 10;
 						paramsPanel.add(checkbox);
 						paramsFields.push(checkbox);
 					case TInt(min, max, step):
 						addLabel();
 						var numericStepper = new UINumericStepper(eventName.x, y, cast value, step.getDefault(1), 0, min, max);
-						y += numericStepper.height + 30;
+						y += numericStepper.height + 10;
 						paramsPanel.add(numericStepper);
 						paramsFields.push(numericStepper);
 					case TFloat(min, max, step, precision):
 						addLabel();
 						var numericStepper = new UINumericStepper(eventName.x, y, cast value, step.getDefault(1), precision, min, max);
-						y += numericStepper.height + 30;
+						y += numericStepper.height + 10;
 						paramsPanel.add(numericStepper);
 						paramsFields.push(numericStepper);
 					case TStrumLine:
 						addLabel();
 						var dropdown = new UIDropDown(eventName.x, y, 320, 32, [for(k=>s in cast(FlxG.state, Charter).strumLines.members) 'Strumline #${k+1} (${s.strumLine.characters[0]})'], cast value);
-						y += dropdown.height + 30;
+						y += dropdown.height + 10;
 						paramsPanel.add(dropdown);
 						paramsFields.push(dropdown);
 					default:

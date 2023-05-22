@@ -1,10 +1,76 @@
 package funkin.editors.charter;
 
 import funkin.backend.system.Conductor;
+import funkin.backend.chart.ChartData.ChartEventType;
 import funkin.game.HealthIcon;
 import funkin.backend.chart.ChartData.ChartEvent;
 
 class CharterEvent extends UISliceSprite {
+	public static function getEventInfo(id:ChartEventType):EventDefineInfo {
+		return switch(id) {
+			case CUSTOM:
+				// hscript
+				{
+					name: "HScript Call",
+					params: [
+						{
+							name: "Function Name",
+							type: TString,
+							defValue: "myFunc"
+						},
+						{
+							name: "Function Parameters (String split with commas)",
+							type: TString,
+							defValue: ""
+						}
+					]
+				}
+			case CAM_MOVEMENT:
+				{
+					name: "Camera Movement",
+					params: [
+						{
+							name: "Camera Target",
+							type: TStrumLine,
+							defValue: 0
+						}
+					]
+				}
+			case BPM_CHANGE:
+				{
+					name: "BPM Change",
+					params: [
+						{
+							name: "Target BPM",
+							type: TFloat(1),
+							defValue: Conductor.bpm
+						}
+					]
+				}
+			case ALT_ANIM_TOGGLE:
+				{
+					name: "Alt Animation Toggle",
+					params: [
+						{
+							name: "Strumline",
+							type: TStrumLine,
+							defValue: 0
+						},
+						{
+							name: "Enable",
+							type: TBool,
+							defValue: true
+						}
+					]
+				}
+			default:
+				{
+					name: "Unknown",
+					params: []
+				}
+		};
+	}
+
 	public var events:Array<ChartEvent>;
 
 	public var step:Float;
@@ -26,19 +92,17 @@ class CharterEvent extends UISliceSprite {
 		}
 	}
 
-	private static function generateDefaultIcon(name:String) {
-		var path:String = Paths.image('editors/charter/event-icons/$name');
-		if (!Assets.exists(path)) path = Paths.image('editors/charter/event-icons/Unknown');
-
-		var spr = new FlxSprite().loadGraphic(path);
-		return spr;
+	private static function generateDefaultIcon(type:Int) {
+			var spr = new FlxSprite().loadGraphic(Paths.image('editors/charter/event-icons'), true, 16, 16);
+			spr.frame = spr.frames.frames[type+1];
+			return spr;
 	}
 
 	public static function generateEventIcon(event:ChartEvent) {
-		return switch(event.name) {
+		return switch(event.type) {
 			default:
-				generateDefaultIcon(event.name);
-			case "Camera Movement":
+				generateDefaultIcon(event.type);
+			case CAM_MOVEMENT:
 				// custom icon for camera movement
 				var state = cast(FlxG.state, Charter);
 				if (event.params[0] != null && event.params[0] >= 0 && event.params[0] < state.strumLines.length) {
@@ -47,7 +111,7 @@ class CharterEvent extends UISliceSprite {
 					healthIcon.setUnstretchedGraphicSize(32, 32, false);
 					healthIcon;
 				} else
-					generateDefaultIcon(event.name);
+					generateDefaultIcon(event.type);
 		}
 	}
 
@@ -72,4 +136,28 @@ class CharterEvent extends UISliceSprite {
 
 		x = -(bWidth = 37 + (icons.length * 22));
 	}
+}
+
+typedef EventDefineInfo = {
+	var name:String;
+	var params:Array<EventParamInfo>;
+}
+typedef EventInfo = {
+	> EventDefineInfo,
+	var paramValues:Array<Dynamic>;
+}
+
+typedef EventParamInfo = {
+	var name:String;
+	var type:EventParamType;
+	var defValue:Dynamic;
+}
+
+enum EventParamType {
+	TBool;
+	TInt(?min:Int, ?max:Int, ?step:Float);
+	TFloat(?min:Int, ?max:Int, ?step:Float, ?precision:Int);
+	TString;
+	TArrayOfString;
+	TStrumLine;
 }
