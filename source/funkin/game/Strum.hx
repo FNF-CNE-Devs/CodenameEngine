@@ -12,6 +12,38 @@ class Strum extends FlxSprite {
 	
 	public var lastDrawCameras(default, null):Array<FlxCamera> = [];
 
+	public var getPressed:StrumLine->Bool = null;
+	public var getJustPressed:StrumLine->Bool = null;
+	public var getJustReleased:StrumLine->Bool = null;
+
+	public inline function __getPressed(strumLine:StrumLine):Bool {
+		return getPressed != null ? getPressed(strumLine) : switch(ID) {
+			case 0: strumLine.controls.NOTE_LEFT;
+			case 1: strumLine.controls.NOTE_DOWN;
+			case 2: strumLine.controls.NOTE_UP;
+			case 3: strumLine.controls.NOTE_RIGHT;
+			default: false;
+		}
+	}
+	public inline function __getJustPressed(strumLine:StrumLine) {
+		return getJustPressed != null ? getJustPressed(strumLine) : switch(ID) {
+			case 0: strumLine.controls.NOTE_LEFT_P;
+			case 1: strumLine.controls.NOTE_DOWN_P;
+			case 2: strumLine.controls.NOTE_UP_P;
+			case 3: strumLine.controls.NOTE_RIGHT_P;
+			default: false;
+		}
+	}
+	public inline function __getJustReleased(strumLine:StrumLine) {
+		return getJustReleased != null ? getJustReleased(strumLine) : switch(ID) {
+			case 0: strumLine.controls.NOTE_LEFT_R;
+			case 1: strumLine.controls.NOTE_DOWN_R;
+			case 2: strumLine.controls.NOTE_UP_R;
+			case 3: strumLine.controls.NOTE_RIGHT_R;
+			default: false;
+		}
+	}
+
 	public inline function getScrollSpeed(?note:Note):Float {
 		if (note != null && note.scrollSpeed != null) return note.scrollSpeed;
 		if (scrollSpeed != null) return scrollSpeed;
