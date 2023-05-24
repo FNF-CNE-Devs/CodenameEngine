@@ -22,6 +22,11 @@ final class StrumCreationEvent extends CancellableEvent {
 	public var strumID:Int;
 
 	/**
+	 * Animation prefix (`left` = `arrowLEFT`, `left press`, `left confirm`).
+	 */
+	public var animPrefix:String;
+
+	/**
 	 * Sprite path, in case you only want to change the sprite.
 	 */
 	public var sprite:String = "game/notes/default";

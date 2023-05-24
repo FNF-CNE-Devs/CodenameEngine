@@ -108,6 +108,22 @@ class Chart {
 			 */
 			#if REGION
 			if (Reflect.hasField(data, "codenameChart") && Reflect.field(data, "codenameChart") == true) {
+				// backward compat on events since its caused problems
+				var eventTypesToString:Map<Int, String> = [
+					-1 => "HScript Call",
+					0 => "Unknown",
+					1 => "Camera Movement",
+					2 => "BPM Change",
+					3 => "Alt Animation Toggle",
+				];
+
+				for (event in cast(data.events, Array<Dynamic>)) {
+					if (Reflect.hasField(event, "type")) {
+						event.name = eventTypesToString[event.type];
+						event.type = null;
+					}
+				}
+
 				// codename chart
 				base = data;
 			} else {

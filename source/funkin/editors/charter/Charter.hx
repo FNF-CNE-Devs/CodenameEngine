@@ -405,8 +405,11 @@ class Charter extends UIState {
 
 	var instPath:String;
 	public function loadSong() {
-		if (__reload)
+		if (__reload) {
+			EventsData.reloadEvents();
 			PlayState.loadSong(__song, __diff, false, false);
+		}
+			
 
 		Conductor.setupSong(PlayState.SONG);
 

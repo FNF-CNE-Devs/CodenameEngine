@@ -55,7 +55,7 @@ class BaseGameParser {
 			if (camFocusedBF != (camFocusedBF = section.mustHitSection)) {
 				result.events.push({
 					time: curTime,
-					type: CAM_MOVEMENT,
+					name: "Camera Movement",
 					params: [camFocusedBF ? 1 : 0]
 				});
 			}
@@ -90,7 +90,7 @@ class BaseGameParser {
 
 				result.events.push({
 					time: curTime,
-					type: BPM_CHANGE,
+					name: "BPM Change",
 					params: [section.bpm]
 				});
 			}
