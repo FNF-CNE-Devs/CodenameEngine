@@ -9,7 +9,7 @@ class Strum extends FlxSprite {
 
 	public var scrollSpeed:Null<Float> = null; // custom scroll speed per strum
 	public var noteAngle:Null<Float> = null;
-	
+
 	public var lastDrawCameras(default, null):Array<FlxCamera> = [];
 
 	public var getPressed:StrumLine->Bool = null;
@@ -50,7 +50,7 @@ class Strum extends FlxSprite {
 		if (PlayState.instance != null) return PlayState.instance.scrollSpeed;
 		return 1;
 	}
-	
+
 	public inline function getNotesAngle(?note:Note):Float {
 		if (note != null && note.noteAngle != null) return note.noteAngle;
 		if (noteAngle != null) return noteAngle;
@@ -76,7 +76,7 @@ class Strum extends FlxSprite {
 
 	public function updateNotePosition(daNote:Note) {
 		if (!daNote.exists) return;
-	
+
 		daNote.__strumCameras = lastDrawCameras;
 		daNote.__strum = this;
 		daNote.scrollFactor.set(scrollFactor.x, scrollFactor.y);
@@ -95,7 +95,7 @@ class Strum extends FlxSprite {
 			var realOffset = FlxPoint.get(0, 0);
 
 			if (daNote.isSustainNote) offset.y -= N_WIDTHDIV2;
-			
+
 			if (Std.int(daNote.__noteAngle % 360) != 0) {
 				var noteAngleCos = FlxMath.fastCos(daNote.__noteAngle / PIX180);
 				var noteAngleSin = FlxMath.fastSin(daNote.__noteAngle / PIX180);
@@ -113,9 +113,9 @@ class Strum extends FlxSprite {
 				realOffset.y = offset.y;
 			}
 			realOffset.y *= -1;
-	
+
 			daNote.setPosition(x + realOffset.x, y + realOffset.y);
-			
+
 			offset.put();
 			realOffset.put();
 		}

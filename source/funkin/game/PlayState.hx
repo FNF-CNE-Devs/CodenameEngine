@@ -635,6 +635,12 @@ class PlayState extends MusicBeatState
 
 		// CAMERA & HUD INITIALISATION
 		#if REGION
+
+		if (!scripts.event("onPreGenerateStrums", new CancellableEvent()).cancelled) {
+			generateStrums();
+			scripts.call("onPostGenerateStrums");
+		}
+
 		for(str in strumLines)
 			str.generate(str.data, (chartingMode && Charter.startHere) ? Charter.startTime : null);
 
@@ -661,7 +667,7 @@ class PlayState extends MusicBeatState
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
 
-		
+
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, maxHealth);
@@ -784,11 +790,6 @@ class PlayState extends MusicBeatState
 			inCutscene = false;
 
 			if (scripts.event("onStartCountdown", new CancellableEvent()).cancelled) return;
-		}
-
-		if (!scripts.event("onPreGenerateStrums", new CancellableEvent()).cancelled) {
-			generateStrums();
-			scripts.call("onPostGenerateStrums");
 		}
 
 		startedCountdown = true;
