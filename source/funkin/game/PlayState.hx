@@ -565,7 +565,7 @@ class PlayState extends MusicBeatState
 					for(content in [Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH), Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)])
 						for(file in content) addScript(file);
 
-					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH)) 
+					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH))
 						if (EventsData.eventsList.contains(Path.withoutExtension(Path.withoutDirectory(file)))) addScript(file);
 			}
 		}
@@ -601,7 +601,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		for(strumLine in SONG.strumLines) {
+		for(i=>strumLine in SONG.strumLines) {
 			if (strumLine == null) continue;
 
 			var chars = [];
@@ -621,6 +621,7 @@ class PlayState extends MusicBeatState
 			strLine.cameras = [camHUD];
 			strLine.data = strumLine;
 			strLine.visible = (strumLine.visible != false);
+			strLine.ID = i;
 			strumLines.add(strLine);
 		}
 
@@ -635,9 +636,9 @@ class PlayState extends MusicBeatState
 
 		// CAMERA & HUD INITIALISATION
 		#if REGION
-
-		if (!scripts.event("onPreGenerateStrums", new CancellableEvent()).cancelled) {
-			generateStrums();
+		var event = EventManager.get(AmountEvent).recycle(4);
+		if (!scripts.event("onPreGenerateStrums", event).cancelled) {
+			generateStrums(event.amount);
 			scripts.call("onPostGenerateStrums");
 		}
 
@@ -798,7 +799,6 @@ class PlayState extends MusicBeatState
 
 		var swagCounter:Int = 0;
 
-
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
 			countdown(swagCounter++);
@@ -935,9 +935,9 @@ class PlayState extends MusicBeatState
 	}
 
 	@:dox(hide)
-	private inline function generateStrums():Void
+	private inline function generateStrums(amount:Int = 4):Void
 		for(p in strumLines)
-			p.generateStrums();
+			p.generateStrums(amount);
 
 	@:dox(hide)
 	override function openSubState(SubState:FlxSubState)
@@ -1105,7 +1105,7 @@ class PlayState extends MusicBeatState
 		{
 			if (startedCountdown)
 			{
-				Conductor.songPosition += FlxG.elapsed * 1000;
+				Conductor.songPosition += elapsed * 1000;
 				if (Conductor.songPosition >= 0)
 					startSong();
 			}
@@ -1336,6 +1336,7 @@ class PlayState extends MusicBeatState
 
 	/**
 	 * Misses a note
+	 * @param strumLine The strumline the miss happened on.
 	 * @param note Note to miss.
 	 * @param direction Specify a custom direction in case note is null.
 	 * @param player Specify a custom player in case note is null.
@@ -1344,14 +1345,13 @@ class PlayState extends MusicBeatState
 	{
 		var playerID:Null<Int> = note == null ? player : strumLines.members.indexOf(strumLine);
 		var directionID:Null<Int> = note == null ? direction : note.strumID;
-		if (playerID == null || directionID == null) return;
+		if (playerID == null || directionID == null || playerID == -1) return;
 
-		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, strumLines.members[playerID].characters, true, note != null ? note.noteType : null, "", "", "", directionID, -10, 0, -0.04, "shit"));
+		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, strumLines.members[playerID].characters, true, note != null ? note.noteType : null, "", "", "", directionID, -10, 0, note != null ? -0.0475 : -0.04, "shit"));
 		strumLine.onMiss.dispatch(event);
 		if (event.cancelled) return;
 
-
-		if (event.note != null && strumLine != null) strumLine.addHealth(event.healthGain);
+		if (strumLine != null) strumLine.addHealth(event.healthGain);
 		if (gf != null && combo > 5 && gf.hasAnimation('sad'))
 			gf.playAnim('sad', event.forceAnim, MISS);
 		combo = 0;

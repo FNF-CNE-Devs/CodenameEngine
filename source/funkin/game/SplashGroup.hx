@@ -66,7 +66,7 @@ class SplashGroup extends FlxTypedGroup<FunkinSprite> {
 			splashSprite.animation.finishCallback = function(name) {
 				splashSprite.active = splashSprite.visible = false;
 			};
-			
+
 			if (xml.has.scale) splashSprite.scale.scale(Std.parseFloat(xml.att.scale).getDefault(1));
 			if (xml.has.alpha) splashSprite.alpha = Std.parseFloat(xml.att.alpha).getDefault(1);
 			if (xml.has.antialiasing) splashSprite.antialiasing = xml.att.antialiasing == "true";
