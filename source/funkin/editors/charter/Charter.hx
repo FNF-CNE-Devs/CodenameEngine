@@ -187,7 +187,8 @@ class Charter extends UIState {
 					},
 					null,
 					{
-						label: "Edit metadata information"
+						label: "Edit metadata information",
+						onSelect: chart_edit_metadata
 					}
 				]
 			},
@@ -928,6 +929,8 @@ class Charter extends UIState {
 	function _chart_enablescripts(t) {
 		t.icon = (Options.charterEnablePlaytestScripts = !Options.charterEnablePlaytestScripts) ? 1 : 0;
 	}
+	function chart_edit_metadata(_)
+		FlxG.state.openSubState(new MetaDataScreen(PlayState.SONG.meta));
 
 	function _playback_metronome(t) {
 		t.icon = (Options.charterMetronomeEnabled = !Options.charterMetronomeEnabled) ? 1 : 0;

@@ -46,13 +46,14 @@ class MainState extends FlxState {
 		EventsData.reloadEvents();
 		TitleState.initialized = false;
 
-
+		/*
 		if (betaWarningShown)
 			FlxG.switchState(new TitleState());
 		else {
 			FlxG.switchState(new BetaWarningState());
 			betaWarningShown = true;
-		}
+		}*/
+		FlxG.switchState(new funkin.editors.charter.Charter("gamebreaker", "normal"));
 
 		#if sys
 		sys.FileSystem.createDirectory('./.temp/');
