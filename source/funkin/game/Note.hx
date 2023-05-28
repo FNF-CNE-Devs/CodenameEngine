@@ -198,7 +198,7 @@ class Note extends FlxSprite
 			frameOffset.y += __notePosFrameOffset.y * 2;
 			super.drawComplex(camera);
 			frameOffset.y -= __notePosFrameOffset.y * 2;
-		} else 
+		} else
 			super.drawComplex(camera);
 	}
 

@@ -72,22 +72,24 @@ class Stage extends FlxBasic implements IBeatReceiver {
 						stageSprites.set(spr.name, spr);
 						state.add(spr);
 						spr;
-					case "box":
+					case "box" | "solid":
 						if ( !node.has.name || !node.has.width || !node.has.height) continue;
 
 						var spr = new FlxSprite(
 							(node.has.x) ? Std.parseFloat(node.att.x) : 0,
 							(node.has.y) ? Std.parseFloat(node.att.y) : 0
-						).makeGraphic(
+						);
+
+						(node.name == "solid" ? spr.makeSolid : spr.makeGraphic)(
 							Std.parseInt(node.att.width),
 							Std.parseInt(node.att.height),
-							(node.has.color) ? CoolUtil.getColorFromDynamic(node.att.color) : 0xFFFFFFFF
+							(node.has.color) ? CoolUtil.getColorFromDynamic(node.att.color) : -1
 						);
 
 						stageSprites.set(node.getAtt("name"), spr);
 						state.add(spr);
 						spr;
-					case "boyfriend" | "bf":
+					case "boyfriend" | "bf" | "player":
 						addCharPos("boyfriend", node, {
 							x: 770,
 							y: 100,

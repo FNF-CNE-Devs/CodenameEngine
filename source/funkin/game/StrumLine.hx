@@ -65,6 +65,10 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	 * Whenever alt animation is enabled on this strumline.
 	 */
 	public var altAnim:Bool = false;
+	/**
+	 * TODO: Write documention about this being a variable that can help when making multi key
+	 */
+	public var strumAnimPrefix = ["left", "down", "up", "right"];
 
 	private function get_ghostTapping() {
 		if (this.ghostTapping != null) return this.ghostTapping;
@@ -200,7 +204,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		__justPressed = CoolUtil.getDefault(event.justPressed, []);
 		__justReleased = CoolUtil.getDefault(event.justReleased, []);
 
-		__notePerStrum = [for(_ in 0...4) null];
+		__notePerStrum = [for(_ in 0...members.length) null];
 
 
 		if (__pressed.contains(true)) {
@@ -235,7 +239,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		PlayState.instance.health += health * (opponentSide ? -1 : 1);
 
 	public inline function generateStrums(amount:Int = 4) {
-		for (i in 0...4)
+		for (i in 0...amount)
 			add(createStrum(i));
 	}
 
@@ -246,13 +250,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	 */
 	public function createStrum(i:Int, ?animPrefix:String) {
 		if (animPrefix == null)
-			animPrefix = switch(i % 4) {
-				case 0: "left";
-				case 1: "down";
-				case 2: "up";
-				case 3: "right";
-				case _: "up";
-			}
+			animPrefix = strumAnimPrefix[i % strumAnimPrefix.length];
 		var babyArrow:Strum = new Strum((FlxG.width * strumOffset) + (Note.swagWidth * (i - 2)), PlayState.instance.strumLine.y);
 		babyArrow.ID = i;
 
@@ -284,7 +282,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 			FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 		}
 		babyArrow.playAnim('static');
-		
+
 		insert(i, babyArrow);
 		return babyArrow;
 	}

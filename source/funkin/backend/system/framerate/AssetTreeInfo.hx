@@ -28,7 +28,7 @@ class AssetTreeInfo extends FramerateCategory {
 		}
 		if (text != "")
 			text = text.substr(0, text.length-1);
-		
+
 		this.text.text = text;
 		super.__enterFrame(t);
 	}
