@@ -13,7 +13,7 @@ class UIColorwheel extends UISliceSprite {
 
 	var colorSlider:FlxSprite;
 	var colorSliderSelector:UIColorWheelSelector;
-	
+
 	var colorHexTextBox:UITextBox;
 	var rgbNumSteppers:Array<UINumericStepper> = []; // r,g,b
 
@@ -46,7 +46,7 @@ class UIColorwheel extends UISliceSprite {
 		colorSlider.pixels.lock();
 		for (pixely in 0...Std.int(colorSlider.height)) {
 			var color:Int = FlxColor.fromHSB(pixely / (colorSlider.height-1) * 360, 1, 1);
-			for (pixelx in 0...Std.int(colorSlider.width)) 
+			for (pixelx in 0...Std.int(colorSlider.width))
 				if (colorSlider.pixels.getPixel32(pixelx, pixely) != FlxColor.TRANSPARENT) colorSlider.pixels.setPixel32(pixelx, pixely, color);
 		}
 		colorSlider.pixels.unlock();
@@ -90,11 +90,11 @@ class UIColorwheel extends UISliceSprite {
 		updateWheel();
 	}
 
-	inline function updateColorPickerSelector() 
+	inline function updateColorPickerSelector()
         colorPickerSelector.selector.setPosition(colorPicker.x + (colorPicker.width *saturation) - 8, colorPicker.y + (colorPicker.height + (colorPicker.height * -brightness))- 8);
 
 	inline function updateColorPickerMouse(mousePos:FlxPoint) {
-		saturation = mousePos.x/colorPicker.width; brightness = 1 + -(mousePos.y/colorPicker.height); 
+		saturation = mousePos.x/colorPicker.width; brightness = 1 + -(mousePos.y/colorPicker.height);
 	}
 
 	inline function updateColorSliderPickerSelector()

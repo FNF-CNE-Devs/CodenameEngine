@@ -63,6 +63,8 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
+		CrashHandler.init();
+
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
 		#if !mobile
@@ -114,7 +116,6 @@ class Main extends Sprite
 		#if UPDATE_CHECKING
 		funkin.backend.system.updating.UpdateUtil.init();
 		#end
-		CrashHandler.init();
 		Logs.init();
 		Paths.init();
 		ModsFolder.init();
@@ -158,7 +159,7 @@ class Main extends Sprite
 		#if MOD_SUPPORT
 		ModsFolder.switchMod(modToLoad.getDefault(Options.lastLoadedMod));
 		#end
-		
+
 		initTransition();
 	}
 

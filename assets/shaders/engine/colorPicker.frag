@@ -1,9 +1,9 @@
 #pragma header
 
-vec3 hsvToRgb(vec3 hsv){ //hsv.x = hue, hsv.y = saturation, hsv.z = value
-	vec3 col = vec3(hsv.x, hsv.x + 2.0/3.0, hsv.x + 4.0/3.0); //inputs for r, g, and b
-	col = clamp(abs(mod(col*2.0, 2.0)-1.0)*3.0 - 1.0, 0.0, 1.0)*hsv.z*hsv.y + hsv.z - hsv.z*hsv.y; //hue function (graph it on desmos)
-	return col;
+vec3 hsvToRgb(vec3 c) { //hsv.x = hue, hsv.y = saturation, hsv.z = value
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
 uniform float hue;

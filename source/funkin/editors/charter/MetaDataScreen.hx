@@ -8,6 +8,7 @@ using StringTools;
 class MetaDataScreen extends UISubstateWindow {
 	public var metadata:ChartMetaData;
 	public var saveButton:UIButton;
+	public var closeButton:UIButton;
 
 	public var songNameTextBox:UITextBox;
 	public var bpmStepper:UINumericStepper;
@@ -92,7 +93,7 @@ class MetaDataScreen extends UISubstateWindow {
 		add(difficulitesTextBox);
 		addLabelOn(difficulitesTextBox, "Difficulties");
 
-		for (checkbox in [opponentModeCheckbox, coopAllowedCheckbox]) 
+		for (checkbox in [opponentModeCheckbox, coopAllowedCheckbox])
 			{checkbox.y += 6; checkbox.x += 4;}
 
 		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20, colorWheel.y + 32 + 197 + 26, "Save & Close", function() {
@@ -101,6 +102,13 @@ class MetaDataScreen extends UISubstateWindow {
 		}, 125);
 		saveButton.x -= saveButton.bWidth;
 		saveButton.y -= saveButton.bHeight;
+
+		closeButton = new UIButton(saveButton.x - 20, saveButton.y, "Close", function() {
+			close();
+		}, 125);
+		closeButton.x -= closeButton.bWidth;
+		//closeButton.y -= closeButton.bHeight;
+		add(closeButton);
 		add(saveButton);
 	}
 
