@@ -29,6 +29,8 @@ using StringTools;
 @:allow(funkin.game.PlayState)
 class Character extends FunkinSprite implements IBeatReceiver implements IOffsetCompatible
 {
+	public var extra:Map<String, Dynamic> = [];
+
 	private var __stunnedTime:Float = 0;
 	private var __lockAnimThisFrame:Bool = false;
 	public var stunned(default, set):Bool = false;
@@ -170,7 +172,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 
 		isDanceLeftDanceRight = (hasAnimation("danceLeft") && hasAnimation("danceRight"));
-		
+
 		// alternative to xor operator
 		// for people who dont believe it, heres the truth table
 		// [   a   ][   b   ][ a!= b ]
@@ -183,7 +185,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			// character is flipped
 			CoolUtil.switchAnimFrames(animation.getByName('singRIGHT'), animation.getByName('singLEFT'));
 			CoolUtil.switchAnimFrames(animation.getByName('singRIGHTmiss'), animation.getByName('singLEFTmiss'));
-			
+
 			switchOffset('singLEFT', 'singRIGHT');
 			switchOffset('singLEFTmiss', 'singRIGHTmiss');
 		}
@@ -209,7 +211,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	}
 
 	private var danced:Bool = false;
-	
+
 	/**
 	 * FOR GF DANCING SHIT
 	 */
@@ -268,7 +270,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			tryDance();
 		}
 	}
-	
+
 	public override function stepHit(curStep:Int) {
 		script.call("stepHit", [curStep]);
 		// nothing
@@ -284,7 +286,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		}
 		return super.getScreenBounds(newRect, camera);
 	}
-	
+
 	var __drawingShadowFrame = false;
 	var __oldColorTransform = new ColorTransform();
 	public override function draw() {
@@ -293,9 +295,9 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 			var oldFrame = _frame;
 			var oldPos = FlxPoint.get(frameOffset.x, frameOffset.y);
-			
+
 			__oldColorTransform.copyColorTransform(colorTransform);
-			
+
 			colorTransform.alphaMultiplier = 1;
 			colorTransform.alphaOffset = 0;
 			colorTransform.blueMultiplier = 0;
@@ -312,7 +314,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 			_frame = oldFrame;
 			frameOffset.set(oldPos.x, oldPos.y);
-			
+
 			colorTransform.copyColorTransform(__oldColorTransform);
 
 			oldPos.put();
@@ -341,17 +343,17 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		if (event.cancelled) return;
 
 		super.playAnim(event.animName, event.force, event.context, event.reverse, event.startingFrame);
-		
+
 		offset.set(globalOffset.x * (isPlayer != playerOffsets ? 1 : -1), -globalOffset.y);
 		if (event.context == SING || event.context == MISS)
 			lastHit = Conductor.songPosition;
 	}
 
-	
+
 
 	public override function destroy() {
 		super.destroy();
-		
+
 		cameraOffset.put();
 		globalOffset.put();
 	}

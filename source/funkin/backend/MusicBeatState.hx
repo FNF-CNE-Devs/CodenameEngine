@@ -241,7 +241,10 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 
 	public override function draw() {
 		graphicCache.draw();
-		super.draw();
+		var e = event("draw", EventManager.get(DrawEvent).recycle());
+		if (!e.cancelled)
+			super.draw();
+		event("postDraw", e);
 	}
 
 	public override function switchTo(nextState:FlxState) {

@@ -639,7 +639,7 @@ class PlayState extends MusicBeatState
 		var event = EventManager.get(AmountEvent).recycle(4);
 		if (!scripts.event("onPreGenerateStrums", event).cancelled) {
 			generateStrums(event.amount);
-			scripts.call("onPostGenerateStrums");
+			scripts.event("onPostGenerateStrums", event);
 		}
 
 		for(str in strumLines)
@@ -1169,6 +1169,13 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 
 		scripts.call("postUpdate", [elapsed]);
+	}
+
+	override function draw() {
+		var e = scripts.event("draw", EventManager.get(DrawEvent).recycle());
+		if (!e.cancelled)
+			super.draw();
+		scripts.event("postDraw", e);
 	}
 
 	public function executeEvent(event:ChartEvent) {

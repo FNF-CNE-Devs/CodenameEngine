@@ -14,6 +14,8 @@ using StringTools;
 @:allow(funkin.game.PlayState)
 class Note extends FlxSprite
 {
+	public var extra:Map<String, Dynamic> = [];
+
 	public var strumTime:Float = 0;
 
 	public var mustPress(get, never):Bool;

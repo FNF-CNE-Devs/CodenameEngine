@@ -70,6 +70,8 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	 */
 	public var strumAnimPrefix = ["left", "down", "up", "right"];
 
+	public var extra:Map<String, Dynamic> = [];
+
 	private function get_ghostTapping() {
 		if (this.ghostTapping != null) return this.ghostTapping;
 		if (PlayState.instance != null) return PlayState.instance.ghostTapping;
@@ -284,6 +286,9 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		babyArrow.playAnim('static');
 
 		insert(i, babyArrow);
+
+		PlayState.instance.scripts.event("onPostStrumCreation", event);
+
 		return babyArrow;
 	}
 
