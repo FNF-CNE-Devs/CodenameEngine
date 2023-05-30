@@ -704,7 +704,8 @@ class Charter extends UIState {
 		if (true) {
 			__crochet = ((60 / Conductor.bpm) * 1000);
 
-			UIUtil.processShortcuts(topMenu);
+			if(FlxG.keys.justPressed.ANY)
+				UIUtil.processShortcuts(topMenu);
 
 			if (FlxG.keys.pressed.CONTROL) {
 				if (FlxG.mouse.wheel != 0) {
