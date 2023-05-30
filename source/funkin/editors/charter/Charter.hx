@@ -766,8 +766,14 @@ class Charter extends UIState {
 		}
 	}
 
-	var zoom:Float = 0;
-	var __camZoom:Float = 1;
+	var zoom(default, set):Float = 0;
+	var __camZoom(default, set):Float = 1;
+	function set_zoom(val:Float) {
+		return zoom = FlxMath.bound(val, -3.5, 1.75); // makes zooming not lag behind when continuing scrolling
+	}
+	function set___camZoom(val:Float) {
+		return __camZoom = FlxMath.bound(val, 0.1, 3);
+	}
 
 	// TOP MENU OPTIONS
 	#if REGION
