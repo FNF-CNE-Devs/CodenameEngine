@@ -15,12 +15,12 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 */
 	public static var staticVariables:Map<String, Dynamic> = [];
 
-
 	public static function getDefaultVariables(?script:Script):Map<String, Dynamic> {
 		return [
 			// Haxe related stuff
 			"Std"			   => Std,
 			"Math"			  => Math,
+			"Reflect"			  => Reflect,
 			"StringTools"	   => StringTools,
 			"Json"			  => haxe.Json,
 
@@ -125,6 +125,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 */
 	public var path:String = null;
 
+	private var didLoad:Bool = false;
+
 	/**
 	 * Creates a script from the specified asset path. The language is automatically determined.
 	 * @param path Path in assets
@@ -164,10 +166,14 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 * Loads the script
 	 */
 	public function load() {
+		if(didLoad) return;
+
 		var oldScript = curScript;
 		curScript = this;
 		onLoad();
 		curScript = oldScript;
+
+		didLoad = true;
 	}
 
 	/**
