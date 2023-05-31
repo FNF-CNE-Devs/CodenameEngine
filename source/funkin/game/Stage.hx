@@ -244,8 +244,8 @@ class StageCharPos extends FlxObject {
 	public var charSpacingY:Float = 0;
 	public var camxoffset:Float = 0;
 	public var camyoffset:Float = 0;
-	public var skewX:Float = 0;
-	public var skewY:Float = 0;
+	public var skewX:Float = 1;
+	public var skewY:Float = 1;
 	public var flipX:Bool = false;
 	public var scale:FlxPoint = FlxPoint.get(1, 1);
 
@@ -263,8 +263,9 @@ class StageCharPos extends FlxObject {
 	public function prepareCharacter(char:Character, id:Float = 0) {
 		char.setPosition(x + (id * charSpacingX), y + (id * charSpacingY));
 		char.scrollFactor.set(scrollFactor.x, scrollFactor.y);
-		char.scale.x *= scale.x;
-		char.scale.y *= scale.y;
+		char.scale.x *= scale.x; char.scale.y *= scale.y;
+		char.cameraOffset += FlxPoint.weak(camxoffset, camyoffset);
+		char.skew.x *= skewX; char.skew.y *= skewY;
 	}
 }
 typedef StageCharPosInfo = {
