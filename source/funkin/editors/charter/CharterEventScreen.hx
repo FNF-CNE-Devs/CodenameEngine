@@ -5,6 +5,8 @@ import flixel.group.FlxGroup;
 import funkin.editors.charter.EventsData;
 import flixel.util.FlxColor;
 
+using StringTools;
+
 class CharterEventScreen extends UISubstateWindow {
 	public var cam:FlxCamera;
 	public var chartEvent:CharterEvent;
@@ -156,7 +158,7 @@ class CharterEventScreen extends UISubstateWindow {
 						paramsFields.push(colorWheel);
 					case TDropDown(options):
 						addLabel();
-						var dropdown = new UIDropDown(eventName.x, y, 320, 32, options, cast value);
+						var dropdown = new UIDropDown(eventName.x, y, 320, 32, options, Std.int(Math.abs(options.indexOf(cast value))));
 						y += dropdown.height + 30;
 						paramsPanel.add(dropdown);
 						paramsFields.push(dropdown);
@@ -201,7 +203,7 @@ class CharterEventScreen extends UISubstateWindow {
 		chartEvent.events[curEvent].params = [
 			for(p in paramsFields) {
 				if (p is UIDropDown)
-					cast(p, UIDropDown).index;
+					cast(p, UIDropDown).label.text.contains("Strumline") ? cast(p, UIDropDown).index : cast(p, UIDropDown).label.text;
 				else if (p is UINumericStepper) {
 					var stepper = cast(p, UINumericStepper);
 					// int
