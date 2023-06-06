@@ -178,8 +178,6 @@
 	<haxelib name="markdown" />
 
 	<haxelib name="hxcpp-debug-server" if="desktop debug"/>
-	<haxedef name="no-deprecation-warnings"/>
-
 	<!-- _________________________________ Additional stuff _______________________________ -->
 
 	<section if="COMPILE_ALL_CLASSES">
@@ -193,4 +191,5 @@
 	<haxedef name="HXCPP_STACK_LINE" if="release" />
 	<haxedef name="HXCPP_DEBUG_LINK" if="release" />
 	<haxedef name="hscriptPos" /> <!-- for logging -->
+	<haxedef name="no-deprecation-warnings" unless="debug" />
 </project>
