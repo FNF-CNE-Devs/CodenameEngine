@@ -3,6 +3,7 @@ package funkin.editors.charter;
 import funkin.backend.system.Conductor;
 import flixel.group.FlxGroup;
 import funkin.editors.charter.EventsData;
+import flixel.util.FlxColor;
 
 class CharterEventScreen extends UISubstateWindow {
 	public var cam:FlxCamera;
@@ -147,6 +148,18 @@ class CharterEventScreen extends UISubstateWindow {
 						y += dropdown.height + 30;
 						paramsPanel.add(dropdown);
 						paramsFields.push(dropdown);
+					case TColorWheel:
+						addLabel();
+						var colorWheel = new UIColorwheel(eventName.x, y, FlxColor.fromString(value));
+						y += colorWheel.height + 122;
+						paramsPanel.add(colorWheel);
+						paramsFields.push(colorWheel);
+					case TDropDown(options):
+						addLabel();
+						var dropdown = new UIDropDown(eventName.x, y, 320, 32, options, cast value);
+						y += dropdown.height + 30;
+						paramsPanel.add(dropdown);
+						paramsFields.push(dropdown);
 					default:
 						// none
 						paramsFields.push(null);
@@ -201,6 +214,8 @@ class CharterEventScreen extends UISubstateWindow {
 					cast(p, UITextBox).label.text;
 				else if (p is UICheckbox)
 					cast(p, UICheckbox).checked;
+				else if (p is UIColorwheel)
+					cast(p, UIColorwheel).curColor;
 				else
 					null;
 			}

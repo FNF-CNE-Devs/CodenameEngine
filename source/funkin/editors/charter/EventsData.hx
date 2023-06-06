@@ -3,7 +3,6 @@ package funkin.editors.charter;
 import hscript.Parser;
 import hscript.Interp;
 import haxe.Json;
-import sys.io.File;
 import openfl.Assets;
 import haxe.io.Path;
 import funkin.backend.assets.Paths;
@@ -36,6 +35,8 @@ class EventsData {
 		hscriptInterp.variables.set("Float", function (?min:Int, ?max:Int, ?step:Float, ?precision:Int):EventParamType {return TFloat(min, max, step, precision);});
 		hscriptInterp.variables.set("String", TString);
 		hscriptInterp.variables.set("StrumLine", TStrumLine);
+		hscriptInterp.variables.set("ColorWheel", TColorWheel);
+		hscriptInterp.variables.set("DropDown", Reflect.makeVarArgs((args) -> {return args.length > 0 ? TDropDown([for (arg in args) Std.string(arg)]) : TDropDown(["null"]);}));
 
 		var hscriptParser:Parser = new Parser();
 		hscriptParser.allowJSON = hscriptParser.allowMetadata = false;
@@ -58,7 +59,7 @@ class EventsData {
 				for (paramData in cast(data.params, Array<Dynamic>)) {
 					try {
 						finalParams.push({name: paramData.name, type: hscriptInterp.expr(hscriptParser.parseString(paramData.type)), defValue: paramData.defaultValue});
-					} catch (e) {trace('Error parsing event param ${paramData.name} - ${eventName}: $e');}
+					} catch (e) {trace('Error parsing event param ${paramData.name} - ${eventName}: $e'); finalParams.push(null);}
 				}
 				eventsParams.set(eventName, finalParams);
 			} catch (e) {trace('Error parsing file $file: $e');}
@@ -85,4 +86,6 @@ enum EventParamType {
 	TFloat(?min:Int, ?max:Int, ?step:Float, ?precision:Int);
 	TString;
 	TStrumLine;
+	TColorWheel;
+	TDropDown(?options:Array<String>);
 }
