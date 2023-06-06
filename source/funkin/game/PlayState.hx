@@ -565,8 +565,15 @@ class PlayState extends MusicBeatState
 					for(content in [Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH), Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)])
 						for(file in content) addScript(file);
 
-					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH))
-						if (EventsData.eventsList.contains(Path.withoutExtension(Path.withoutDirectory(file)))) addScript(file);
+					var songEvents:Array<String> = [];
+					for (event in SONG.events) 
+						if (!songEvents.contains(event.name)) songEvents.push(event.name);
+
+					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH)) {
+						var fileName:String = Path.withoutExtension(Path.withoutDirectory(file));
+						if (EventsData.eventsList.contains(fileName) && songEvents.contains(fileName)) addScript(file);
+					}
+						
 			}
 		}
 
