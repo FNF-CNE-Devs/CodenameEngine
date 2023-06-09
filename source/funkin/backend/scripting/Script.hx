@@ -4,7 +4,9 @@ import lime.app.Application;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.io.Path;
 import hscript.IHScriptCustomConstructor;
+import flixel.util.FlxStringUtil;
 
+@:allow(funkin.backend.scripting.ScriptPack)
 /**
  * Class used for scripting.
  */
@@ -159,6 +161,10 @@ class Script extends FlxBasic implements IFlxDestroyable {
 		for(k=>e in getDefaultVariables(this)) {
 			set(k, e);
 		}
+		set("disableScript", () -> {
+			active = false;
+		});
+		set("__script__", this);
 	}
 
 
@@ -248,6 +254,17 @@ class Script extends FlxBasic implements IFlxDestroyable {
 			Logs.logText(fileName, RED),
 			Logs.logText(text)
 		], ERROR);
+	}
+
+	override public function toString():String {
+		return FlxStringUtil.getDebugString(didLoad ? [
+			LabelValuePair.weak("path", path),
+			LabelValuePair.weak("active", active),
+		] : [
+			LabelValuePair.weak("path", path),
+			LabelValuePair.weak("active", active),
+			LabelValuePair.weak("loaded", didLoad),
+		]);
 	}
 
 	/**

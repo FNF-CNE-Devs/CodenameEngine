@@ -349,6 +349,11 @@ class PlayState extends MusicBeatState
 	public var defaultCamZoom:Float = 1.05;
 
 	/**
+	 * Camera zoom at which the hud lerps to.
+	 */
+	public var defaultHudZoom:Float = 1.0;
+
+	/**
 	 * Zoom for the pixel assets.
 	 */
 	public static var daPixelZoom:Float = 6;
@@ -658,6 +663,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04);
 		FlxG.camera.zoom = defaultCamZoom;
+		// camHUD.zoom = defaultHudZoom;
 		if (smoothTransitionData != null && smoothTransitionData.stage == curStage) {
 			FlxG.camera.scroll.set(smoothTransitionData.camX, smoothTransitionData.camY);
 			FlxG.camera.zoom = smoothTransitionData.camZoom;
@@ -1153,7 +1159,7 @@ class PlayState extends MusicBeatState
 		if (camZooming)
 		{
 			FlxG.camera.zoom = lerp(FlxG.camera.zoom, defaultCamZoom, 0.05);
-			camHUD.zoom = lerp(camHUD.zoom, 1, 0.05);
+			camHUD.zoom = lerp(camHUD.zoom, defaultHudZoom, 0.05);
 		}
 
 		// RESET = Quick Game Over Screen

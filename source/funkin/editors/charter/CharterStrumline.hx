@@ -9,8 +9,8 @@ class CharterStrumline extends UISprite {
 	public var strumLine:ChartStrumLine;
 	public var hitsounds:Bool = true;
 
-	var healthIcon:HealthIcon;
-	var button:CharterStrumlineButton;
+	public var healthIcon:HealthIcon;
+	public var button:CharterStrumlineButton;
 
 	public var curMenu:UIContextMenu = null;
 
@@ -24,6 +24,9 @@ class CharterStrumline extends UISprite {
 		healthIcon = new HealthIcon(strumLine.characters != null ? strumLine.characters[0] : null);
 		healthIcon.scale.set(80 / 150, 80 / 150);
 		healthIcon.updateHitbox();
+		if(strumLine.visible == null)
+			strumLine.visible = true;
+		healthIcon.alpha = strumLine.visible ? 1 : 0.4;
 
 		members.push(healthIcon);
 
@@ -79,6 +82,15 @@ class CharterStrumlineButton extends UITopMenuButton {
 					strLine.strumLine.type = ADDITIONAL;
 				},
 				icon: strLine.strumLine.type == ADDITIONAL ? 1 : 0
+			},
+			null,
+			{
+				label: "Visible",
+				onSelect: function(_) {
+					strLine.strumLine.visible = !strLine.strumLine.visible;
+					strLine.healthIcon.alpha = strLine.strumLine.visible ? 1 : 0.4;
+				},
+				icon: strLine.strumLine.visible ? 1 : 0
 			},
 			null,
 			{
