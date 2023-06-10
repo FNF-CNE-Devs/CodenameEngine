@@ -117,9 +117,14 @@ class UIState extends MusicBeatState {
 		FlxG.stage.window.onTextInput.remove(onTextInput);
 	}
 
+	public function closeCurrentContextMenu() {
+		if(curContextMenu != null)
+			curContextMenu.close();
+	}
+
 	public function openContextMenu(options:Array<UIContextMenuOption>, ?callback:UIContextMenuCallback, ?x:Float, ?y:Float) {
 		var state = FlxG.state;
-		while(state.subState != null)
+		while(state.subState != null && !(state._requestSubStateReset && state._requestedSubState == null))
 			state = state.subState;
 
 		state.persistentDraw = true;

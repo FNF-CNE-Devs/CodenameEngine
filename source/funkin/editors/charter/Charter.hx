@@ -491,6 +491,7 @@ class Charter extends UIState {
 				if (FlxG.mouse.justReleasedRight) {
 					if (!selection.contains(n))
 						selection = [n];
+					closeCurrentContextMenu();
 					openContextMenu(topMenu[1].childs);
 				}
 			}
@@ -618,8 +619,10 @@ class Charter extends UIState {
 					}
 				}
 
-				if (FlxG.mouse.justReleasedRight)
+				if (FlxG.mouse.justReleasedRight) {
+					closeCurrentContextMenu();
 					openContextMenu(topMenu[1].childs);
+				}
 		}
 
 		if (gridActionType == NONE && mousePos.x < 0) {
@@ -807,6 +810,8 @@ class Charter extends UIState {
 	#end
 
 	function _edit_copy(_) {
+		if(selection.length == 0) return;
+
 		var minStep:Float = selection[0].step;
 		for(s in selection)
 			if (s.step < minStep)

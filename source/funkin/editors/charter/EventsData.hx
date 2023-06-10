@@ -49,12 +49,12 @@ class EventsData {
 			eventsParams.set(eventName, []);
 
 			var fileTxt:String = Assets.getText(file);
-			if (fileTxt.trim() == "") {continue;}
+			if (fileTxt.trim() == "") continue;
 
 			try {
 				var data:Dynamic = Json.parse(fileTxt);
 				if (data == null || data.params == null) continue;
-				
+
 				var finalParams:Array<EventParamInfo> = [];
 				for (paramData in cast(data.params, Array<Dynamic>)) {
 					try {

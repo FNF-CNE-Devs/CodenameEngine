@@ -29,6 +29,7 @@
 - [ ] Character Editor
 - [ ] Add credits
 - [ ] Verbose mode (`--verbose`)
+- [ ] Tooltips
 - [ ] Fix bugs
 
 ## `v1.1.0`

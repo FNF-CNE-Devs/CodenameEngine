@@ -17,10 +17,22 @@ class CharterEventTypeSelection extends UISubstateWindow {
 		var lastIndex:Int = 0;
 
 		for(k=>eventName in EventsData.eventsList) {
-			add(new UIButton(10, 41 + (32 * k), eventName, function() {
+			var button = new UIButton(10, 41 + (32 * k), eventName, function() {
 				close();
 				callback(eventName);
-			}, w));
+			}, w);
+			add(button);
+
+			var icon = CharterEvent.generateEventIcon({
+				name: eventName,
+				time: 0,
+				params: []
+			});
+			icon.setGraphicSize(20, 20); // Std.int(button.bHeight - 12)
+			icon.updateHitbox();
+			icon.x = button.x + 8;
+			icon.y = button.y + Math.abs(button.bHeight - icon.height) / 2;
+			add(icon);
 
 			lastIndex = k;
 		}

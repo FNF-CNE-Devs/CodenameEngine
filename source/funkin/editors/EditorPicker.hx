@@ -86,7 +86,7 @@ class EditorPicker extends MusicBeatSubstate {
 			return;
 		}
 		changeSelection(-FlxG.mouse.wheel + (controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
-		
+
 		FlxG.mouse.getScreenPosition(camera, curMousePos);
 		if (curMousePos.x != oldMousePos.x || curMousePos.y != oldMousePos.y) {
 			oldMousePos.set(curMousePos.x, curMousePos.y);
@@ -98,7 +98,7 @@ class EditorPicker extends MusicBeatSubstate {
 			if (options[curSelected].state != null) {
 				selected = true;
 				CoolUtil.playMenuSFX(CONFIRM);
-				
+
 				MusicBeatState.skipTransIn = true;
 				MusicBeatState.skipTransOut = true;
 
@@ -187,7 +187,7 @@ class EditorPickerOption extends FlxTypedSpriteGroup<FlxSprite> {
 
 		selectionBG.alpha = (iconSpr.alpha = FlxEase.cubeOut(selectionLerp)) * 0.5;
 		selectionBG.x = FlxMath.lerp(-FlxG.width, 0, selectionLerp);
-		
+
 		label.x = FlxMath.lerp(10, 25 + iconSpr.width + 25, selectionLerp);
 		iconSpr.x = label.x - 25 - iconSpr.width;
 		iconSpr.angle = Math.sin(iconRotationCycle * 0.5) * 5;
