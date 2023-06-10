@@ -47,6 +47,7 @@ class CharterEvent extends UISliceSprite {
 					var icon = Character.getIconFromCharName(state.strumLines.members[event.params[0]].strumLine.characters[0]);
 					var healthIcon = new HealthIcon(icon);
 					healthIcon.setUnstretchedGraphicSize(32, 32, false);
+					healthIcon.scrollFactor.set(1, 1);
 					healthIcon.active = false;
 					healthIcon;
 				} else
