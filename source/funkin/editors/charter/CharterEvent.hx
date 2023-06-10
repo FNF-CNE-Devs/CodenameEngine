@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.game.Character;
 import funkin.backend.system.Conductor;
 import funkin.game.HealthIcon;
 import funkin.backend.chart.ChartData.ChartEvent;
@@ -43,8 +44,10 @@ class CharterEvent extends UISliceSprite {
 				var state = cast(FlxG.state, Charter);
 				if (event.params != null && event.params[0] != null && event.params[0] >= 0 && event.params[0] < state.strumLines.length) {
 					// camera movement, use health icon
-					var healthIcon = new HealthIcon('${state.strumLines.members[event.params[0]].strumLine.characters[0]}');
+					var icon = Character.getIconFromCharName(state.strumLines.members[event.params[0]].strumLine.characters[0]);
+					var healthIcon = new HealthIcon(icon);
 					healthIcon.setUnstretchedGraphicSize(32, 32, false);
+					healthIcon.active = false;
 					healthIcon;
 				} else
 					generateDefaultIcon(event.name);

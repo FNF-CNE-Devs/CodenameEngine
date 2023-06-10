@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.game.Character;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.game.HealthIcon;
@@ -21,7 +22,9 @@ class CharterStrumline extends UISprite {
 		scrollFactor.set(1, 0);
 		alpha = 0;
 
-		healthIcon = new HealthIcon(strumLine.characters != null ? strumLine.characters[0] : null);
+		var icon = Character.getIconFromCharName(strumLine.characters != null ? strumLine.characters[0] : null);
+
+		healthIcon = new HealthIcon(icon);
 		healthIcon.scale.set(80 / 150, 80 / 150);
 		healthIcon.updateHitbox();
 		if(strumLine.visible == null)

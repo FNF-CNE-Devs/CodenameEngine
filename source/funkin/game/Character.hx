@@ -361,6 +361,40 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public inline function getIcon() {
 		return (icon != null) ? icon : curCharacter;
 	}
+
+	public static function getIconFromCharName(?curCharacter:String) {
+		if(curCharacter == null) return "face";
+		var icon = curCharacter;
+		while(true) {
+			switch (curCharacter)
+			{
+				// case 'your-char': // To hardcode characters icons
+				default:
+					// load xml
+					var xmlPath = Paths.xml('characters/$curCharacter');
+					if (!Assets.exists(xmlPath)) {
+						curCharacter = "bf";
+						continue;
+					}
+
+					var xml = null;
+					var plainXML = Assets.getText(xmlPath);
+					try {
+						var charXML = Xml.parse(plainXML).firstElement();
+						if (charXML == null) throw new Exception("Missing \"character\" node in XML.");
+						xml = new Access(charXML);
+					} catch(e) {
+						Logs.trace('Error while loading character ${curCharacter}: ${e}', ERROR);
+						curCharacter = "bf";
+						continue;
+					}
+
+					if (xml.has.icon) icon = xml.att.icon;
+				}
+			break;
+		}
+		return icon;
+	}
 }
 
 typedef CharacterShadowFrame = {
