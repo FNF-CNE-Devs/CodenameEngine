@@ -93,7 +93,7 @@ class AddAnimScreen extends UISubstateWindow
 			y: 0
 		};
 
-		/*if (indices != "" && indices != null)
+		if (indices != "" && indices != null)
 		{
 			var indicesSplit = indices.split(",");
 
@@ -103,24 +103,7 @@ class AddAnimScreen extends UISubstateWindow
 				if (i != null)
 					animData.indices.push(i);
 			}
-
-			char.animOffsets.set(name, new FlxPoint(0, 0));
-			char.animation.addByIndices(name, anim, animData.indices, "", fps, looped);
-			char.characterData.animations.push(animData);
-
-			ghostChar.animOffsets.set(name, new FlxPoint(0, 0));
-			ghostChar.animation.addByIndices(name, anim, animData.indices, "", fps, looped);
-			ghostChar.characterData.animations.push(animData);
 		}
-		else
-		{
-			char.animOffsets.set(name, new FlxPoint(0, 0));
-			char.animation.addByPrefix(name, anim, fps, looped);
-			char.characterData.animations.push(animData);
-			
-			ghostChar.animOffsets.set(name, new FlxPoint(0, 0));
-			ghostChar.animation.addByPrefix(name, anim, fps, looped);
-		}*/
 		XMLUtil.addAnimToSprite(char, animData);
 		XMLUtil.addAnimToSprite(ghostChar, animData);
 		char.characterData.animations.push(animData);

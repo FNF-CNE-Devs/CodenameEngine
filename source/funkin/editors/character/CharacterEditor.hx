@@ -488,7 +488,6 @@ class CharacterEditor extends UIState
 
 	public function reloadGhost()
 	{
-		ghostChar.frames = char.frames;
 		for (i in 0...char.characterData.animations.length - 1)
 		{
 			XMLUtil.addAnimToSprite(ghostChar, char.characterData.animations[i]);
