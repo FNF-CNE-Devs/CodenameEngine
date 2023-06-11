@@ -651,10 +651,14 @@ class CharacterEditor extends UIState
 
 	function _file_exit(_)
 	{
+		FlxG.switchState(new CharacterSelection());
+	}
+
+	override function destroy() {
 		Framerate.fpsCounter.alpha = 1;
 		Framerate.memoryCounter.alpha = 1;
 		Framerate.codenameBuildField.alpha = 1;
-		FlxG.switchState(new CharacterSelection());
+		super.destroy();
 	}
 
 	function edit_properties_window(_)
