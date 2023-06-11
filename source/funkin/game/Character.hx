@@ -186,9 +186,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 					for (anim in xml.nodes.anim)
 					{
-						var animType:XMLAnimType = NONE;
-						if (sprite is FunkinSprite)
-							animType = cast(sprite, FunkinSprite).spriteAnimType;
 						XMLUtil.addXMLAnimation(this, anim);
 					}
 
