@@ -116,14 +116,6 @@ class UpdateAnimScreen extends UISubstateWindow
 				if (i != null)
 					animData.indices.push(i);
 			}
-
-			char.animation.addByIndices(name, anim, animData.indices, "", fps, looped);
-			ghostChar.animation.addByIndices(name, anim, animData.indices, "", fps, looped);
-		}
-		else
-		{
-			char.animation.addByPrefix(name, anim, fps, looped);
-			ghostChar.animation.addByPrefix(name, anim, fps, looped);
 		}
 		
 		XMLUtil.addAnimToSprite(char, animData);
