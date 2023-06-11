@@ -106,7 +106,7 @@ class UpdateAnimScreen extends UISubstateWindow
 			y: selectedAnim.y
 		};
 
-		/*if (indices != "" && indices != null)
+		if (indices != "" && indices != null)
 		{
 			var indicesSplit = indices.split(",");
 
@@ -124,7 +124,7 @@ class UpdateAnimScreen extends UISubstateWindow
 		{
 			char.animation.addByPrefix(name, anim, fps, looped);
 			ghostChar.animation.addByPrefix(name, anim, fps, looped);
-		}*/
+		}
 		
 		XMLUtil.addAnimToSprite(char, animData);
 		char.characterData.animations[selectedAnimIndex] = animData;
