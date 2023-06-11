@@ -44,7 +44,7 @@ class UIDropDown extends UISliceSprite {
 		}
 
 		super.update(elapsed);
-		
+
 		label.follow(this, 4, Std.int((bHeight - label.height) / 2));
 		dropButton.follow(this, bWidth - bHeight, 0);
 	}
@@ -60,5 +60,4 @@ class UIDropDown extends UISliceSprite {
 			setOption(i);
 		}, screenPos.x, screenPos.y + bHeight);
 	}
-	
 }

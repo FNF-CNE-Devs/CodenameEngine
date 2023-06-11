@@ -45,7 +45,7 @@ class CharterSelection extends EditorTreeMenu {
 		if (optionsTree.members.length > 1) { // selected a song
 			// small flashbang
 			var color:FlxColor = freeplayList.songs[main.curSelected].parsedColor.getDefault(0xFFFFFFFF);
-			
+
 			bg.colorTransform.redOffset = 0.25 * color.red;
 			bg.colorTransform.greenOffset = 0.25 * color.green;
 			bg.colorTransform.blueOffset = 0.25 * color.blue;

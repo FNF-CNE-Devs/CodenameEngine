@@ -1,8 +1,9 @@
 function create() {
 	importScript("data/scripts/pixel");
-	if (PlayState.SONG.song == "Roses") {
+	if (PlayState.SONG.meta.name.toLowerCase() == "roses") {
 		flabbergastGirls();
 	}
+	bgGirls.animation.play("danceLeft", true); // horrible fix, please fix later
 }
 
 public function flabbergastGirls() {

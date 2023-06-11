@@ -3,6 +3,9 @@ package funkin.editors.charter;
 import funkin.backend.system.Conductor;
 import flixel.group.FlxGroup;
 import funkin.editors.charter.EventsData;
+import flixel.util.FlxColor;
+
+using StringTools;
 
 class CharterEventScreen extends UISubstateWindow {
 	public var cam:FlxCamera;
@@ -84,7 +87,7 @@ class CharterEventScreen extends UISubstateWindow {
 		deleteButton.x -= deleteButton.bWidth;
 		add(deleteButton);
 
-		eventName = new UIText(windowSpr.x + 40, windowSpr.y + 41, 0, "", 24);
+		eventName = new UIText(windowSpr.x + addButton.bWidth + 15, windowSpr.y + 41, 0, "", 24);
 		add(eventName);
 
 		changeTab(0);
@@ -117,40 +120,49 @@ class CharterEventScreen extends UISubstateWindow {
 				};
 
 				var value:Dynamic = CoolUtil.getDefault(curEvent.params[k], param.defValue);
-				switch(param.type) {
+				var lastAdded = switch(param.type) {
 					case TString:
 						addLabel();
 						var textBox:UITextBox = new UITextBox(eventName.x, y, cast value);
-						y += textBox.height + 30;
-						paramsPanel.add(textBox);
-						paramsFields.push(textBox);
+						paramsPanel.add(textBox); paramsFields.push(textBox);
+						textBox;
 					case TBool:
 						var checkbox = new UICheckbox(eventName.x, y, param.name, cast value);
-						y += checkbox.height + 8;
-						paramsPanel.add(checkbox);
-						paramsFields.push(checkbox);
+						paramsPanel.add(checkbox); paramsFields.push(checkbox);
+						checkbox;
 					case TInt(min, max, step):
 						addLabel();
 						var numericStepper = new UINumericStepper(eventName.x, y, cast value, step.getDefault(1), 0, min, max);
-						y += numericStepper.height + 30;
-						paramsPanel.add(numericStepper);
-						paramsFields.push(numericStepper);
+						paramsPanel.add(numericStepper); paramsFields.push(numericStepper);
+						numericStepper;
 					case TFloat(min, max, step, precision):
 						addLabel();
 						var numericStepper = new UINumericStepper(eventName.x, y, cast value, step.getDefault(1), precision, min, max);
-						y += numericStepper.height + 30;
-						paramsPanel.add(numericStepper);
-						paramsFields.push(numericStepper);
+						paramsPanel.add(numericStepper); paramsFields.push(numericStepper);
+						numericStepper;
 					case TStrumLine:
 						addLabel();
 						var dropdown = new UIDropDown(eventName.x, y, 320, 32, [for(k=>s in cast(FlxG.state, Charter).strumLines.members) 'Strumline #${k+1} (${s.strumLine.characters[0]})'], cast value);
-						y += dropdown.height + 30;
-						paramsPanel.add(dropdown);
-						paramsFields.push(dropdown);
+						paramsPanel.add(dropdown); paramsFields.push(dropdown);
+						dropdown;
+					case TColorWheel:
+						addLabel();
+						var colorWheel = new UIColorwheel(eventName.x, y, value is String ? FlxColor.fromString(value) : Std.int(value));
+						paramsPanel.add(colorWheel); paramsFields.push(colorWheel);
+						colorWheel;
+					case TDropDown(options):
+						addLabel();
+						var dropdown = new UIDropDown(eventName.x, y, 320, 32, options, Std.int(Math.abs(options.indexOf(cast value))));
+						paramsPanel.add(dropdown); paramsFields.push(dropdown);
+						dropdown;
 					default:
-						// none
 						paramsFields.push(null);
+						null;
 				}
+				if (lastAdded is UISliceSprite)
+					y += cast(lastAdded, UISliceSprite).bHeight + 4;
+				else if (lastAdded is FlxSprite)
+					y += cast(lastAdded, FlxSprite).height + 6;
 			}
 		} else {
 			eventName.text = "No event";
@@ -187,12 +199,15 @@ class CharterEventScreen extends UISubstateWindow {
 
 		chartEvent.events[curEvent].params = [
 			for(p in paramsFields) {
-				if (p is UIDropDown)
-					cast(p, UIDropDown).index;
+				if (p is UIDropDown) {
+					var dataParams = EventsData.getEventParams(chartEvent.events[curEvent].name);
+					if (dataParams[paramsFields.indexOf(p)].type == TStrumLine) cast(p, UIDropDown).index;
+					else cast(p, UIDropDown).label.text;
+				}
 				else if (p is UINumericStepper) {
 					var stepper = cast(p, UINumericStepper);
-					// int
-					if (stepper.precision == 0)
+					@:privateAccess stepper.__onChange(stepper.label.text);
+					if (stepper.precision == 0) // int
 						Std.int(stepper.value);
 					else
 						stepper.value;
@@ -201,6 +216,8 @@ class CharterEventScreen extends UISubstateWindow {
 					cast(p, UITextBox).label.text;
 				else if (p is UICheckbox)
 					cast(p, UICheckbox).checked;
+				else if (p is UIColorwheel)
+					cast(p, UIColorwheel).curColor;
 				else
 					null;
 			}

@@ -7,4 +7,9 @@
 	<anim name="singDOWN"   anim="BF DOWN NOTE"     fps="24" loop="false"   x="0" y="0" />
 	<anim name="singUP"     anim="BF UP NOTE"       fps="24" loop="false"   x="0" y="0" />
 	<anim name="singRIGHT"  anim="BF RIGHT NOTE"    fps="24" loop="false"   x="0" y="0" />
+
+	<anim name="singUPmiss"    anim="BF UP MISS"    fps="24" loop="false" x="0" y="0"/>
+	<anim name="singLEFTmiss"  anim="BF LEFT MISS"  fps="24" loop="false" x="0"  y="0"/>
+	<anim name="singRIGHTmiss" anim="BF RIGHT MISS" fps="24" loop="false" x="0" y="0"/>
+	<anim name="singDOWNmiss"  anim="BF DOWN MISS"  fps="24" loop="false" x="0" y="0"/>
 </character>

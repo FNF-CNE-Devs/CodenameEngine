@@ -82,6 +82,9 @@ class CharterNote extends UISprite {
 
 		if (angle == destAngle) return;
 
+		if(angleTween != null)
+			angleTween.cancel();
+
 		angleTween = FlxTween.tween(this, {angle: destAngle}, 2/3, {ease: function(t) {
 			return ((Math.sin(t * Math.PI) * 0.35) * 3 * t * Math.sqrt(1 - t)) + t;
 		}});
@@ -90,6 +93,7 @@ class CharterNote extends UISprite {
 	public override function kill() {
 		if (angleTween != null) {
 			angleTween.cancel();
+			angleTween = null;
 			angle = switch(animation.curAnim.curFrame = (id % 4)) {
 				case 0: -90;
 				case 1: 180;

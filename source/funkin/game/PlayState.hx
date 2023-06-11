@@ -349,6 +349,11 @@ class PlayState extends MusicBeatState
 	public var defaultCamZoom:Float = 1.05;
 
 	/**
+	 * Camera zoom at which the hud lerps to.
+	 */
+	public var defaultHudZoom:Float = 1.0;
+
+	/**
 	 * Zoom for the pixel assets.
 	 */
 	public static var daPixelZoom:Float = 6;
@@ -565,8 +570,15 @@ class PlayState extends MusicBeatState
 					for(content in [Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH), Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)])
 						for(file in content) addScript(file);
 
-					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH))
-						if (EventsData.eventsList.contains(Path.withoutExtension(Path.withoutDirectory(file)))) addScript(file);
+					var songEvents:Array<String> = [];
+					for (event in SONG.events) 
+						if (!songEvents.contains(event.name)) songEvents.push(event.name);
+
+					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH)) {
+						var fileName:String = Path.withoutExtension(Path.withoutDirectory(file));
+						if (EventsData.eventsList.contains(fileName) && songEvents.contains(fileName)) addScript(file);
+					}
+						
 			}
 		}
 
@@ -639,7 +651,7 @@ class PlayState extends MusicBeatState
 		var event = EventManager.get(AmountEvent).recycle(4);
 		if (!scripts.event("onPreGenerateStrums", event).cancelled) {
 			generateStrums(event.amount);
-			scripts.call("onPostGenerateStrums");
+			scripts.event("onPostGenerateStrums", event);
 		}
 
 		for(str in strumLines)
@@ -651,6 +663,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04);
 		FlxG.camera.zoom = defaultCamZoom;
+		// camHUD.zoom = defaultHudZoom;
 		if (smoothTransitionData != null && smoothTransitionData.stage == curStage) {
 			FlxG.camera.scroll.set(smoothTransitionData.camX, smoothTransitionData.camY);
 			FlxG.camera.zoom = smoothTransitionData.camZoom;
@@ -1146,7 +1159,7 @@ class PlayState extends MusicBeatState
 		if (camZooming)
 		{
 			FlxG.camera.zoom = lerp(FlxG.camera.zoom, defaultCamZoom, 0.05);
-			camHUD.zoom = lerp(camHUD.zoom, 1, 0.05);
+			camHUD.zoom = lerp(camHUD.zoom, defaultHudZoom, 0.05);
 		}
 
 		// RESET = Quick Game Over Screen
@@ -1169,6 +1182,13 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 
 		scripts.call("postUpdate", [elapsed]);
+	}
+
+	override function draw() {
+		var e = scripts.event("draw", EventManager.get(DrawEvent).recycle());
+		if (!e.cancelled)
+			super.draw();
+		scripts.event("postDraw", e);
 	}
 
 	public function executeEvent(event:ChartEvent) {

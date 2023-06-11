@@ -8,5 +8,7 @@ class UIText extends FunkinText {
 	public function new(x, y, w, text, size:Int = 15, color:FlxColor = 0xFFFFFFFF) {
 		super(x, y, w, text, size, false);
 		this.color = color;
+
+		this.active = false;
 	}
 }

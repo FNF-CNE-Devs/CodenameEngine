@@ -58,7 +58,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	public override function forEach(noteFunc:Note->Void, recursive:Bool = false) {
 		i = length-1;
 		__loopSprite = null;
-		
+
 		var oldCur = __currentlyLooping;
 		__currentlyLooping = true;
 
@@ -76,7 +76,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
 			if (note.alive) noteFunc(note);
 		}, recursive);
 	}
-	
+
 	public override function remove(Object:Note, Splice:Bool = false):Note
 	{
 		if (members == null)

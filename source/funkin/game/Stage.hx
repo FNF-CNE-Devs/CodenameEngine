@@ -1,5 +1,7 @@
 package funkin.game;
 
+import funkin.backend.scripting.events.StageXMLEvent;
+import funkin.backend.scripting.events.StageNodeEvent;
 import flixel.math.FlxPoint;
 import funkin.backend.MusicBeatGroup;
 import flixel.FlxState;
@@ -35,8 +37,14 @@ class Stage extends FlxBasic implements IBeatReceiver {
 		} catch(e) {
 			Logs.trace('Couldn\'t load stage "$stage": ${e.message}', ERROR);
 		}
-		if (stageXML != null) {
 
+		if (PlayState.instance != null) {
+			stageScript = Script.create(Paths.script('data/stages/$stage'));
+			PlayState.instance.scripts.add(stageScript);
+			stageScript.load();
+		}
+
+		if (stageXML != null) {
 			var spritesParentFolder = "";
 			if (PlayState.instance != null) {
 				if (stageXML.has.zoom) {
@@ -57,6 +65,11 @@ class Stage extends FlxBasic implements IBeatReceiver {
 						elems.push(e);
 				else
 					elems.push(node);
+			}
+
+			if (PlayState.instance != null) {
+				var event = PlayState.instance.scripts.event("onStageXMLParsed", EventManager.get(StageXMLEvent).recycle(this, stageXML, elems));
+				elems = event.elems;
 			}
 
 			for(node in elems) {
@@ -123,6 +136,11 @@ class Stage extends FlxBasic implements IBeatReceiver {
 						PlayState.instance.comboGroup;
 					default: null;
 				}
+
+				if(PlayState.instance != null) {
+					sprite = PlayState.instance.scripts.event("onStageNodeParsed", EventManager.get(StageNodeEvent).recycle(this, node, sprite, node.name)).sprite;
+				}
+
 				if (sprite != null) {
 					for(e in node.nodes.property)
 						XMLUtil.applyXMLProperty(sprite, e);
@@ -155,11 +173,9 @@ class Stage extends FlxBasic implements IBeatReceiver {
 			});
 
 		if (PlayState.instance == null) return;
-		stageScript = Script.create(Paths.script('data/stages/$stage'));
 		for(k=>e in stageSprites) {
 			stageScript.set(k, e);
 		}
-		PlayState.instance.scripts.add(stageScript);
 	}
 
 	public function addCharPos(name:String, node:Access, ?nonXMLInfo:StageCharPosInfo):StageCharPos {
@@ -247,8 +263,9 @@ class StageCharPos extends FlxObject {
 	public function prepareCharacter(char:Character, id:Float = 0) {
 		char.setPosition(x + (id * charSpacingX), y + (id * charSpacingY));
 		char.scrollFactor.set(scrollFactor.x, scrollFactor.y);
-		char.scale.x *= scale.x;
-		char.scale.y *= scale.y;
+		char.scale.x *= scale.x; char.scale.y *= scale.y;
+		char.cameraOffset += FlxPoint.weak(camxoffset, camyoffset);
+		char.skew.x += skewX; char.skew.y += skewY;
 	}
 }
 typedef StageCharPosInfo = {

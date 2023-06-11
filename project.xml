@@ -178,6 +178,7 @@
 	<haxelib name="markdown" />
 
 	<haxelib name="hxcpp-debug-server" if="desktop debug"/>
+	<haxedef name="no-deprecation-warnings"/>
 
 	<!-- _________________________________ Additional stuff _______________________________ -->
 

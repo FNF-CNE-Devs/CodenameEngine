@@ -50,7 +50,7 @@ class HudCamera extends FlxCamera {
 		if (downscroll) {
 			var oldPoint = FlxPoint.get(pos.x, pos.y);
 			pos.set(pos.x, height - pos.y - spr.height);
-	
+
 			oldPoint.put();
 		}
 		return pos;

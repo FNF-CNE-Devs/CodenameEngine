@@ -49,6 +49,8 @@ typedef CharacterData =
 @:allow(funkin.game.PlayState)
 class Character extends FunkinSprite implements IBeatReceiver implements IOffsetCompatible
 {
+	public var extra:Map<String, Dynamic> = [];
+
 	private var __stunnedTime:Float = 0;
 	private var __lockAnimThisFrame:Bool = false;
 
@@ -340,7 +342,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 	public override function stepHit(curStep:Int)
 	{
-
 		script.call("stepHit", [curStep]);
 		// nothing
 	}
@@ -429,7 +430,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 	public override function destroy()
 	{
-		
 		super.destroy();
 
 		cameraOffset.put();
@@ -439,6 +439,40 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public inline function getIcon()
 	{
 		return (icon != null) ? icon : curCharacter;
+	}
+
+	public static function getIconFromCharName(?curCharacter:String) {
+		if(curCharacter == null) return "face";
+		var icon = curCharacter;
+		while(true) {
+			switch (curCharacter)
+			{
+				// case 'your-char': // To hardcode characters icons
+				default:
+					// load xml
+					var xmlPath = Paths.xml('characters/$curCharacter');
+					if (!Assets.exists(xmlPath)) {
+						curCharacter = "bf";
+						continue;
+					}
+
+					var xml = null;
+					var plainXML = Assets.getText(xmlPath);
+					try {
+						var charXML = Xml.parse(plainXML).firstElement();
+						if (charXML == null) throw new Exception("Missing \"character\" node in XML.");
+						xml = new Access(charXML);
+					} catch(e) {
+						Logs.trace('Error while loading character ${curCharacter}: ${e}', ERROR);
+						curCharacter = "bf";
+						continue;
+					}
+
+					if (xml.has.icon) icon = xml.att.icon;
+				}
+			break;
+		}
+		return icon;
 	}
 }
 

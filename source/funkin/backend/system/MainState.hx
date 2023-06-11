@@ -46,7 +46,6 @@ class MainState extends FlxState {
 		EventsData.reloadEvents();
 		TitleState.initialized = false;
 
-
 		if (betaWarningShown)
 			FlxG.switchState(new TitleState());
 		else {

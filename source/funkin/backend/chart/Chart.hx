@@ -119,8 +119,9 @@ class Chart {
 
 				for (event in cast(data.events, Array<Dynamic>)) {
 					if (Reflect.hasField(event, "type")) {
-						event.name = eventTypesToString[event.type];
-						event.type = null;
+						if(event.type != null)
+							event.name = eventTypesToString[event.type];
+						Reflect.deleteField(event, "type");
 					}
 				}
 

@@ -4,6 +4,8 @@ import flixel.math.FlxPoint;
 import funkin.backend.system.Conductor;
 
 class Strum extends FlxSprite {
+	public var extra:Map<String, Dynamic> = [];
+
 	public var cpu = false;
 	public var lastHit:Float = -5000;
 

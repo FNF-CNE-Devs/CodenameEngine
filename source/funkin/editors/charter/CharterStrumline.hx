@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.game.Character;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.game.HealthIcon;
@@ -9,8 +10,8 @@ class CharterStrumline extends UISprite {
 	public var strumLine:ChartStrumLine;
 	public var hitsounds:Bool = true;
 
-	var healthIcon:HealthIcon;
-	var button:CharterStrumlineButton;
+	public var healthIcon:HealthIcon;
+	public var button:CharterStrumlineButton;
 
 	public var curMenu:UIContextMenu = null;
 
@@ -21,9 +22,14 @@ class CharterStrumline extends UISprite {
 		scrollFactor.set(1, 0);
 		alpha = 0;
 
-		healthIcon = new HealthIcon(strumLine.characters != null ? strumLine.characters[0] : null);
+		var icon = Character.getIconFromCharName(strumLine.characters != null ? strumLine.characters[0] : null);
+
+		healthIcon = new HealthIcon(icon);
 		healthIcon.scale.set(80 / 150, 80 / 150);
 		healthIcon.updateHitbox();
+		if(strumLine.visible == null)
+			strumLine.visible = true;
+		healthIcon.alpha = strumLine.visible ? 1 : 0.4;
 
 		members.push(healthIcon);
 
@@ -79,6 +85,15 @@ class CharterStrumlineButton extends UITopMenuButton {
 					strLine.strumLine.type = ADDITIONAL;
 				},
 				icon: strLine.strumLine.type == ADDITIONAL ? 1 : 0
+			},
+			null,
+			{
+				label: "Visible",
+				onSelect: function(_) {
+					strLine.strumLine.visible = !strLine.strumLine.visible;
+					strLine.healthIcon.alpha = strLine.strumLine.visible ? 1 : 0.4;
+				},
+				icon: strLine.strumLine.visible ? 1 : 0
 			},
 			null,
 			{
