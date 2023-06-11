@@ -87,7 +87,7 @@ class CharterEventScreen extends UISubstateWindow {
 		deleteButton.x -= deleteButton.bWidth;
 		add(deleteButton);
 
-		eventName = new UIText(windowSpr.x + addButton.bWidth + 10, windowSpr.y + 41, 0, "", 24);
+		eventName = new UIText(windowSpr.x + addButton.bWidth + 15, windowSpr.y + 41, 0, "", 24);
 		add(eventName);
 
 		changeTab(0);
