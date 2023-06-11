@@ -152,7 +152,7 @@ class CharterEventScreen extends UISubstateWindow {
 						paramsFields.push(dropdown);
 					case TColorWheel:
 						addLabel();
-						var colorWheel = new UIColorwheel(eventName.x, y, FlxColor.fromString(value));
+						var colorWheel = new UIColorwheel(eventName.x, y, value is String ? FlxColor.fromString(value) : Std.int(value));
 						y += colorWheel.height + 122;
 						paramsPanel.add(colorWheel);
 						paramsFields.push(colorWheel);
@@ -202,12 +202,15 @@ class CharterEventScreen extends UISubstateWindow {
 
 		chartEvent.events[curEvent].params = [
 			for(p in paramsFields) {
-				if (p is UIDropDown)
-					cast(p, UIDropDown).label.text.contains("Strumline") ? cast(p, UIDropDown).index : cast(p, UIDropDown).label.text;
+				if (p is UIDropDown) {
+					var dataParams = EventsData.getEventParams(chartEvent.events[curEvent].name);
+					if (dataParams[paramsFields.indexOf(p)].type == TStrumLine) cast(p, UIDropDown).index;
+					else cast(p, UIDropDown).label.text;
+				}
 				else if (p is UINumericStepper) {
 					var stepper = cast(p, UINumericStepper);
-					// int
-					if (stepper.precision == 0)
+					@:privateAccess stepper.__onChange(stepper.label.text);
+					if (stepper.precision == 0) // int
 						Std.int(stepper.value);
 					else
 						stepper.value;
@@ -222,5 +225,6 @@ class CharterEventScreen extends UISubstateWindow {
 					null;
 			}
 		];
+		trace(chartEvent.events[curEvent].params);
 	}
 }
