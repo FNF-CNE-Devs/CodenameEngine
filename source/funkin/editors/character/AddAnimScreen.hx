@@ -104,6 +104,7 @@ class AddAnimScreen extends UISubstateWindow
 					animData.indices.push(i);
 			}
 		}
+		
 		XMLUtil.addAnimToSprite(char, animData);
 		XMLUtil.addAnimToSprite(ghostChar, animData);
 		char.characterData.animations.push(animData);
