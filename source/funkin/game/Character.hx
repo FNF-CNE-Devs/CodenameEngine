@@ -227,16 +227,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		// 		antialiasing = false;
 		// 		flipX = true;
 
-		isDanceLeftDanceRight = (hasAnimation("danceLeft") && hasAnimation("danceRight"));
-
-		// alternative to xor operator
-		// for people who dont believe it, heres the truth table
-		// [   a   ][   b   ][ a!= b ]
-		// [ true  ][ true  ][ false ]
-		// [ true  ][ false ][ true  ]
-		// [ false ][ true  ][ true  ]
-		// [ true  ][ true  ][ false ]
-
 		fixChar(true);
 		dance();
 		script.call("postCreate");
