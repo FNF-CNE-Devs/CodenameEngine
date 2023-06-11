@@ -224,6 +224,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		// 		flipX = true;
 
 		fixChar(true);
+
 		dance();
 		script.call("postCreate");
 	}
@@ -339,6 +340,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 	public override function stepHit(curStep:Int)
 	{
+
 		script.call("stepHit", [curStep]);
 		// nothing
 	}
@@ -427,6 +429,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 	public override function destroy()
 	{
+		
 		super.destroy();
 
 		cameraOffset.put();
