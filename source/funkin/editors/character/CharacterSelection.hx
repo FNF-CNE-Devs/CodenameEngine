@@ -40,7 +40,7 @@ class CharacterSelection extends EditorTreeMenu
 		if (optionsTree.members.length > 1) { // selected a song
 			// small flashbang
 			var color:FlxColor = characterList.characters[main.curSelected].iconColor.getDefault(0xFFFFFFFF);
-			
+
 			bg.colorTransform.redOffset = 0.25 * color.red;
 			bg.colorTransform.greenOffset = 0.25 * color.green;
 			bg.colorTransform.blueOffset = 0.25 * color.blue;
@@ -70,16 +70,16 @@ class CharactersList
 			for (s in charactersFound)
 				if (s.endsWith(".xml"))
 					characters.push(CharacterConfig.loadCharacterData(s.replace(".xml", "")));
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	public static function get()
 	{
 		var characterList = new CharactersList();
 
-		if (characterList.getCharactersFromSource(MODS))
+		if (!characterList.getCharactersFromSource(MODS))
 			characterList.getCharactersFromSource(SOURCE);
 
 		return characterList;

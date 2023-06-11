@@ -59,9 +59,8 @@ class CharacterEditor extends UIState
 		editorCamera = FlxG.camera;
 		uiCamera = new FlxCamera();
 		uiCamera.bgColor = 0;
-		FlxG.cameras.add(uiCamera);
+		FlxG.cameras.add(uiCamera, false);
 		FlxG.camera.follow(camFollow);
-		FlxCamera.defaultCameras = [editorCamera];
 
 		// Add Stage and Centered Cross
 		add(stage);
@@ -136,9 +135,10 @@ class CharacterEditor extends UIState
 
 	function resortAnims(animations:Array<AnimData>)
 	{
+		// TODO: add support for danceLeft danceRight
 		if (getAnimIndex("idle") != 0)
 		{
-			var oldanims = animations;
+			var oldanims = animations.copy();
 			animations.clear();
 			animations.push(searchAnim("idle", oldanims));
 			for (anim in oldanims)
@@ -348,8 +348,11 @@ class CharacterEditor extends UIState
 		}
 		ofs_cross.clear();
 
-		var horizontal_cross = new FlxSprite(0, 0).makeGraphic(2000, 5);
-		var vertical_cross = new FlxSprite(0, 0).makeGraphic(5, 2000);
+
+		var x = -800;
+
+		var horizontal_cross = new FlxSprite(x, -70).makeSolid(2000, 5);
+		var vertical_cross = new FlxSprite(x, 0).makeSolid(5, 2000);
 		horizontal_cross.y += (vertical_cross.height / 2);
 		vertical_cross.x += (horizontal_cross.width / 2);
 		ofs_cross.add(horizontal_cross);
@@ -503,7 +506,7 @@ class CharacterEditor extends UIState
 		}*/
 		ghostChar.color = 0xFF666688;
 		ghostChar.antialiasing = char.antialiasing;
-		ghostChar.playAnim(char.animation.curAnim.name, true);
+		ghostChar.playAnim(char.characterData.animations[curAnim].name, true);
 	}
 
 	function controlCharacter()
@@ -514,15 +517,18 @@ class CharacterEditor extends UIState
 			FlxG.keys.justPressed.UP,
 			FlxG.keys.justPressed.DOWN
 		];
+		var holdShift = FlxG.keys.pressed.SHIFT;
+		var holdAlt = FlxG.keys.pressed.ALT;
 
 		for (i in 0...controlArray.length)
 		{
 			if (controlArray[i])
 			{
-				var holdShift = FlxG.keys.pressed.SHIFT;
-				var multiplier = 1;
+				var multiplier:Float = 1;
 				if (holdShift)
 					multiplier = 10;
+				if (holdAlt)
+					multiplier = 0.1;
 
 				var negaMult:Int = 1;
 				if (i % 2 == 1)
@@ -558,11 +564,9 @@ class CharacterEditor extends UIState
 					new FlxPoint(char.characterData.animations[curAnim].x, char.characterData.animations[curAnim].y)); */
 
 				char.playAnim(char.characterData.animations[curAnim].name, false);
-				if (ghostChar.animation.curAnim != null
-					&& char.animation.curAnim != null
-					&& char.animation.curAnim.name == ghostChar.animation.curAnim.name)
+				if (char.getAnimName() != null && char.getAnimName() == ghostChar.getAnimName())
 				{
-					ghostChar.playAnim(char.animation.curAnim.name, false);
+					ghostChar.playAnim(char.getAnimName(), false);
 				}
 			}
 		}
@@ -611,19 +615,13 @@ class CharacterEditor extends UIState
 		var forward = (FlxG.keys.justPressed.L);
 		var backwards = (FlxG.keys.justPressed.K);
 
-		var changelimit = char.characterData.animations.length;
-
 		if (forward || backwards)
 		{
-			if (forward)
-				curAnim += 1;
-			else if (backwards)
-				curAnim -= 1;
+			var changeLimit = char.characterData.animations.length;
+			curAnim = FlxMath.wrap(curAnim + (forward ? 1 : -1), 0, changeLimit-1);
 
-			if (curAnim >= changelimit)
-				curAnim = 0;
-			else if (curAnim < 0)
-				curAnim = changelimit - 1;
+			trace(curAnim);
+			trace(char.characterData.animations[curAnim]);
 
 			char.playAnim(char.characterData.animations[curAnim].name, false);
 			playingAnim.text = 'Animation:\n${char.characterData.animations[curAnim].name}';
@@ -694,7 +692,6 @@ class CharacterEditor extends UIState
 	function set_camZoom(value:Float):Float
 	{
 		editorCamera.zoom = value;
-		camZoom = value;
-		return value;
+		return camZoom = value;
 	}
 }

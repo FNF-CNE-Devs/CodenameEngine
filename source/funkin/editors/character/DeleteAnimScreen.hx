@@ -44,7 +44,7 @@ class DeleteAnimScreen extends UISubstateWindow
 				close();
 			});
 			animButtons.add(newbutton);
-			y_adder += 60;
+			y_adder += 45;
 		}
 
 		closeButton = new UIButton(windowSpr.x - 120, windowSpr.y + 20, "Close", function() {

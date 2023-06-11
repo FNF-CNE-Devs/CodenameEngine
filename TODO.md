@@ -16,6 +16,11 @@
 	- [x] Metadata Editing
 	- [ ] Custom Notes
 	- [ ] Step based zooming
+- [ ] Character Editor
+	- [ ] Change ghost anim
+	- [ ] Make gf characters be positioned correctly
+	- [ ] Make it so dragging the character moves the offset
+	- [ ] Disable volume controls when selecting stuff
 - [ ] Use latest hxCodec
 - [ ] Re-export gf-christmas, gf-car and gf-tankmen with padding
 - [ ] Multiple state scripts & Multiple global scripts
@@ -26,7 +31,6 @@
 - [ ] Add note offset
 - [ ] Dialogue
 - [ ] Finish Base Game port
-- [ ] Character Editor
 - [ ] Add credits
 - [ ] Verbose mode (`--verbose`)
 - [ ] Tooltips

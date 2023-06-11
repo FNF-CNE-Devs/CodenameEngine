@@ -36,15 +36,15 @@ class SelectAnimUpdate extends UISubstateWindow
 		add(animButtons);
 
 		var y_ofs = 60;
-		
+
 		for (anim in char.characterData.animations)
 		{
 			var newbutton = new UIButton(animButtons.x - 550, animButtons.y + y_ofs, anim.name, function()
 			{
-				open_update_window(anim);
+				openUpdateWindow(anim);
 			});
 			animButtons.add(newbutton);
-			y_ofs += 60;
+			y_ofs += 45;
 		}
 
 		cancelButton = new UIButton(windowSpr.x - 10, windowSpr.y + 20, "Cancel", function()
@@ -55,7 +55,7 @@ class SelectAnimUpdate extends UISubstateWindow
 		add(cancelButton);
 	}
 
-	public function open_update_window(anim:AnimData)
+	public function openUpdateWindow(anim:AnimData)
 	{
 		openSubState(new UpdateAnimScreen(this.char, this.ghostChar, anim, this.editor));
 	}

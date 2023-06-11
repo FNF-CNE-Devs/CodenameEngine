@@ -117,7 +117,7 @@ class UpdateAnimScreen extends UISubstateWindow
 					animData.indices.push(i);
 			}
 		}
-		
+
 		XMLUtil.addAnimToSprite(char, animData);
 		char.characterData.animations[selectedAnimIndex] = animData;
 		char.playAnim(name, true);
