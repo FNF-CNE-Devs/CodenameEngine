@@ -120,6 +120,10 @@ class Paths
 		return getPath('songs/$song/charts/$difficulty.json', null);
 	}
 
+	static public function character(character:String):String {
+		return getPath('data/characters/$character.xml', null);
+	}
+
 	inline static public function font(key:String)
 	{
 		return getPath('fonts/$key');
