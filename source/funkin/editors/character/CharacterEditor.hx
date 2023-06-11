@@ -638,16 +638,16 @@ class CharacterEditor extends UIState
 
 	// Animation Windows
 	function add_anim_window(_)
-		FlxG.state.openSubState(new AddAnimScreen(char, ghostChar, this));
+		openSubState(new AddAnimScreen(char, ghostChar, this));
 
 	function update_anim_window(_)
-		FlxG.state.openSubState(new SelectAnimUpdate(char, ghostChar, this));
+		openSubState(new SelectAnimUpdate(char, ghostChar, this));
 
 	function remove_anim_window(_)
-		FlxG.state.openSubState(new DeleteAnimScreen(char, ghostChar, this));
+		openSubState(new DeleteAnimScreen(char, ghostChar, this));
 
 	function help_controls_window(_)
-		FlxG.state.openSubState(new HelpControls());
+		openSubState(new HelpControls());
 
 	function _file_exit(_)
 	{

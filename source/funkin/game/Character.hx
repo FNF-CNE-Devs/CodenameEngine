@@ -81,7 +81,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public var xml:Access;
 
 	public var characterData:CharacterData;
-	public var charXML:Xml;
 
 	public var shadowFrame:CharacterShadowFrame;
 
@@ -139,7 +138,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 					var plainXML = Assets.getText(xmlPath);
 					try
 					{
-						charXML = Xml.parse(plainXML).firstElement();
+						var charXML = Xml.parse(plainXML).firstElement();
 						if (charXML == null)
 							throw new Exception("Missing \"character\" node in XML.");
 						xml = new Access(charXML);
