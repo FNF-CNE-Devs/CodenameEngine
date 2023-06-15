@@ -176,12 +176,11 @@ class Chart {
 		var meta = filteredChart.meta;
 
 		#if sys
-		var sep:String = #if windows "\\" #else "/" #end; /** \\ doesn't work correctly on linux!! remember!! windows and linux are different doofy!! **/
-		if (!FileSystem.exists('${songFolderPath}${sep}charts${sep}'))
-			FileSystem.createDirectory('${songFolderPath}${sep}charts${sep}');
+		if (!FileSystem.exists('${songFolderPath}/charts/'))
+			FileSystem.createDirectory('${songFolderPath}/charts/');
 
-		var chartPath = '${songFolderPath}${sep}charts${sep}${difficulty.trim()}.json';
-		var metaPath = '${songFolderPath}${sep}meta.json';
+		var chartPath = '${songFolderPath}/charts/${difficulty.trim()}.json';
+		var metaPath = '${songFolderPath}/meta.json';
 
 		File.saveContent(chartPath, Json.stringify(filteredChart, null, saveSettings.prettyPrint == true ? "\t" : null));
 
