@@ -116,9 +116,13 @@
 	<!-- Comment this out to disable GitHub API integration !-->
 	<define name="GITHUB_API" unless="web || hl"/>
 
-	<!-- Comment this off to prevent unused classes from being compiled.
+	<!-- Comment this out to prevent unused classes from being compiled.
 		 Reduces compilation time at the cost of limited HScript flexibility. !-->
 	<define name="COMPILE_ALL_CLASSES" />
+
+	<!-- Comment this out to prevent extending classes in hscript.
+		 Reduces compilation time at the cost of limited HScript flexibility. !-->
+	<define name="CUSTOM_CLASSES" />
 
 	<!-- Comment this out to disable multithreading !-->
 	<haxedef name="ALLOW_MULTITHREADING" unless="web || flash" />
@@ -161,7 +165,7 @@
 	<haxedef name="openfl_dpi_aware" if="openfl_dpi_aware" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
-	
+
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 
