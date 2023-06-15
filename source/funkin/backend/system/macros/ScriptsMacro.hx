@@ -21,13 +21,11 @@ class ScriptsMacro {
 			"flixel.addons.util",
 			// OTHER LIBRARIES & STUFF
 			"away3d", "flx3d", #if sys "sys", #end "openfl.net",
-			"funkin.backend.system.net", "format",
+			"funkin.backend.system.net",
 			// BASE HAXE
 			"DateTools", "EReg", "Lambda", "StringBuf", "haxe.crypto", "haxe.display", "haxe.exceptions", "haxe.extern", "scripting"
 		])
 			Compiler.include(inc);
-
-		Compiler.exclude("format.neko");
 
 		// FOR ABSTRACTS
 		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');
