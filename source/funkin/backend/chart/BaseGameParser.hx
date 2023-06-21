@@ -28,7 +28,7 @@ class BaseGameParser {
 		});
 		if (!p2isGF && data.gf != "none") {
 			result.strumLines.push({
-				characters: [data.gf != null ? data.gf : "gf"],
+				characters: [data.gf != null ? data.gf : (data.gfVersion != null ? data.gfVersion : "gf")],
 				type: 2,
 				position: "girlfriend",
 				notes: [],
@@ -112,6 +112,7 @@ typedef SwagSong =
 	var player1:String;
 	var player2:String;
 	var gf:String;
+	var gfVersion:String;
 	var validScore:Bool;
 
 	// ADDITIONAL STUFF THAT MAY NOT BE PRESENT IN CHART
