@@ -112,6 +112,7 @@ typedef SwagSong =
 	var player1:String;
 	var player2:String;
 	var gf:String;
+	var gfVersion:String;
 	var validScore:Bool;
 
 	// ADDITIONAL STUFF THAT MAY NOT BE PRESENT IN CHART
