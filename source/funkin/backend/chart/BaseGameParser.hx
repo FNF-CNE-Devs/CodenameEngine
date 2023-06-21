@@ -28,7 +28,7 @@ class BaseGameParser {
 		});
 		if (!p2isGF && data.gf != "none") {
 			result.strumLines.push({
-				characters: [data.gf != null ? data.gf : "gf"],
+				characters: [data.gf != null ? data.gf : (data.gfVersion != null ? data.gfVersion : "gf")],
 				type: 2,
 				position: "girlfriend",
 				notes: [],
