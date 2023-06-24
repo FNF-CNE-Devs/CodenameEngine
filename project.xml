@@ -148,6 +148,9 @@
 	<!-- Comment this out to disable support for custom extended classes (data/classes). !-->
 	<define name="SOFTCODED_CLASSES" />
 
+	<!-- Comment this out to disable support for Away3D Flixel Intergration (reduces compile times)-->
+	<!-- <define name="THREE_D_SUPPORT" /> -->
+
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
 	<define name="VIDEO_CUTSCENES" unless="web || linux || hl || mac" />
 
@@ -170,7 +173,9 @@
 	<haxelib name="flixel-addons" />
 
 	<haxelib name="hxCodec" if="VIDEO_CUTSCENES" />
-	<haxelib name="away3d" />
+	<section if="THREE_D_SUPPORT">
+		<haxelib name="away3d" />
+	</section>
 	<haxelib name="format" />
 	<haxelib name="flxanimate" />
 
