@@ -561,12 +561,6 @@ class PlayState extends MusicBeatState
 				// case "":
 					// ADD YOUR HARDCODED SCRIPTS HERE!
 				default:
-					function addScript(file:String) {
-						var ext = Path.extension(file).toLowerCase();
-						if (Script.scriptExtensions.contains(ext))
-							scripts.add(Script.create(file));
-					}
-
 					for(content in [Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH), Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)])
 						for(file in content) addScript(file);
 
@@ -1592,6 +1586,12 @@ class PlayState extends MusicBeatState
 		iconP2.updateHitbox();
 
 		scripts.call("beatHit", [curBeat]);
+	}
+
+	public function addScript(file:String) {
+		var ext = Path.extension(file).toLowerCase();
+		if (Script.scriptExtensions.contains(ext))
+			scripts.add(Script.create(file));
 	}
 
 	// GETTERS & SETTERS
