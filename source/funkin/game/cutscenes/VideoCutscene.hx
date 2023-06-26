@@ -173,9 +173,7 @@ class VideoCutscene extends Cutscene {
 			loadingBackdrop.x -= elapsed * FlxG.width * 0.5;
 		}
 		if (skippable && video.isPlaying && controls.ACCEPT) {
-			video.stop();
-			video.dispose();
-			close();
+			video.onEndReached.dispatch();
 		}
 		#else
 		close();
