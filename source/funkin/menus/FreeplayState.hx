@@ -22,7 +22,11 @@ class FreeplayState extends MusicBeatState
 	/**
 	 * How much time a song stays selected until it autoplays.
 	 */
-	public inline static var timeUntilAutoplay:Float = 1;
+	public var timeUntilAutoplay:Float = 1;
+	/**
+	 * Whenever the song autoplays when hovered over.
+	 */
+	public var disableAutoPlay:Bool = false;
 
 	/**
 	 * Array containing all of the songs metadatas
@@ -202,7 +206,7 @@ class FreeplayState extends MusicBeatState
 
 		if (FlxG.sound.music != null && FlxG.sound.music.volume < 0.7)
 		{
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
+			FlxG.sound.music.volume += 0.5 * elapsed;
 		}
 
 		lerpScore = Math.floor(lerp(lerpScore, intendedScore, 0.4));
@@ -233,7 +237,7 @@ class FreeplayState extends MusicBeatState
 		var dontPlaySongThisFrame = false;
 		#if PRELOAD_ALL
 		autoplayElapsed += elapsed;
-		if (!songInstPlaying && (autoplayElapsed > timeUntilAutoplay || FlxG.keys.justPressed.SPACE)) {
+		if (!disableAutoPlay && !songInstPlaying && (autoplayElapsed > timeUntilAutoplay || FlxG.keys.justPressed.SPACE)) {
 			if (curPlayingInst != (curPlayingInst = Paths.inst(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty])))
 				FlxG.sound.playMusic(curPlayingInst, 0);
 			songInstPlaying = true;
@@ -398,22 +402,25 @@ class FreeplayState extends MusicBeatState
 	}
 
 	function updateOptionsAlpha() {
+		var event = event("onUpdateOptionsAlpha", EventManager.get(FreeplayAlphaUpdateEvent).recycle(0.6, 0.45, 1, 1, 0.25));
+		if (event.cancelled) return;
+
 		var bullShit:Int = 0;
 
 		for (i in 0...iconArray.length)
-			iconArray[i].alpha = lerp(iconArray[i].alpha, #if PRELOAD_ALL songInstPlaying ? 0.45 : #end 0.6, 0.25);
+			iconArray[i].alpha = lerp(iconArray[i].alpha, #if PRELOAD_ALL songInstPlaying ? event.idlePlayingAlpha : #end event.idleAlpha, event.lerp);
 
-		iconArray[curSelected].alpha = 1;
+		iconArray[curSelected].alpha = #if PRELOAD_ALL songInstPlaying ? event.selectedPlayingAlpha : #end event.selectedAlpha;
 
 		for (item in grpSongs.members)
 		{
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			item.alpha = lerp(item.alpha, #if PRELOAD_ALL songInstPlaying ? 0.45 : #end 0.6, 0.25);
+			item.alpha = lerp(item.alpha, #if PRELOAD_ALL songInstPlaying ? event.idlePlayingAlpha : #end event.idleAlpha, event.lerp);
 
 			if (item.targetY == 0)
-				item.alpha = 1;
+				item.alpha =  #if PRELOAD_ALL songInstPlaying ? event.selectedPlayingAlpha : #end event.selectedAlpha;
 		}
 	}
 }
