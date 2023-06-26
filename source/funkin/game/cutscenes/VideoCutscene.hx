@@ -53,8 +53,8 @@ class VideoCutscene extends Cutscene {
 		parseSubtitles();
 
 		video = new FlxVideo();
-		video.onEndReached.add(close);
 		video.onEndReached.add(video.dispose);
+		video.onEndReached.add(close);
 
 		bg = new FlxSprite(0, FlxG.height * 0.85).makeGraphic(1, 1, 0xFF000000);
 		bg.alpha = 0.5;
@@ -173,9 +173,7 @@ class VideoCutscene extends Cutscene {
 			loadingBackdrop.x -= elapsed * FlxG.width * 0.5;
 		}
 		if (skippable && video.isPlaying && controls.ACCEPT) {
-			video.stop();
-			video.dispose();
-			close();
+			video.onEndReached.dispatch();
 		}
 		#else
 		close();
