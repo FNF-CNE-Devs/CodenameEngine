@@ -26,9 +26,10 @@ class BaseGameParser {
 			position: "boyfriend",
 			notes: []
 		});
-		if (!p2isGF && data.gf != "none") {
+		var gfName = data.gf != null ? data.gf : (data.gfVersion != null ? data.gfVersion : "gf");
+		if (!p2isGF && gfName != "none") {
 			result.strumLines.push({
-				characters: [data.gf != null ? data.gf : (data.gfVersion != null ? data.gfVersion : "gf")],
+				characters: [gfName],
 				type: 2,
 				position: "girlfriend",
 				notes: [],
