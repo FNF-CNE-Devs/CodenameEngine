@@ -1,5 +1,6 @@
 package commands;
 
+import haxe.xml.Access;
 import haxe.Json;
 import sys.io.File;
 import sys.io.Process;
@@ -7,16 +8,34 @@ import sys.FileSystem;
 
 class Update {
     public static function main(args:Array<String>) {
-        // to prevent messing with currently installed libs
+		prettyPrint("Preparing installation...");
+
+		// to prevent messing with currently installed libs
         if (!FileSystem.exists('.haxelib'))
             FileSystem.createDirectory('.haxelib');
+		
+        var libs:Array<Library> = [];
+        var libsXML:Access = new Access(Xml.parse(File.getContent('./libs.xml')).firstElement());
 
-        var json:Array<Library> = Json.parse(File.getContent('./hmm.json')).dependencies;
-        prettyPrint("Preparing installation...");
-        for(lib in json) {
+		for (libNode in libsXML.elements) {
+			var lib:Library = {
+				name: libNode.att.name,
+				type: libNode.name
+			};
+			switch (lib.type) {
+				case "lib":
+					if (libNode.has.version) lib.version = libNode.att.version;
+				case "git":
+					if (libNode.has.url) lib.url = libNode.att.url;
+					if (libNode.has.ref) lib.ref = libNode.att.ref;
+			}
+			libs.push(lib);
+		}
+
+        for(lib in libs) {
             // install libs
             switch(lib.type) {
-                case "haxelib":
+                case "lib":
                     prettyPrint('Installing "${lib.name}"...');
                     Sys.command('haxelib install ${lib.name} ${lib.version != null ? " " + lib.version : " "}');
                 case "git":
@@ -71,8 +90,7 @@ class Update {
 typedef Library = {
     var name:String;
     var type:String;
-    var version:String;
-    var dir:String;
-    var ref:String;
-    var url:String;
+    var ?version:String;
+    var ?ref:String;
+    var ?url:String;
 }
