@@ -1,5 +1,10 @@
 {
   "dependencies": [
+	{
+		"name": "hxCodec",
+		"type": "git",
+		"url": "https://github.com/polybiusproxy/hxCodec"
+	},
     {
       "name": "away3d",
       "type": "haxelib",
@@ -40,11 +45,6 @@
       "dir": "hscript-improved",
       "ref": "custom-classes",
       "url": "https://www.github.com/FNF-CNE-Devs/hscript-improved"
-    },
-    {
-      "name": "hxCodec",
-      "type": "haxelib",
-      "version": "2.5.1"
     },
     {
       "name": "hxcpp-debug-server",
