@@ -114,6 +114,17 @@ class Charter extends UIState {
 					},
 					null,
 					{
+						label: "Save Mata",
+						keybind: [CONTROL, ALT, S],
+						onSelect: _file_meta_save,
+					},
+					{
+						label: "Save Meta As...",
+						keybind: [CONTROL, ALT ,SHIFT, S],
+						onSelect: _file_meta_saveas,
+					},
+					null,
+					{
 						label: "Exit",
 						onSelect: _file_exit
 					}
@@ -784,6 +795,7 @@ class Charter extends UIState {
 	function _file_exit(_) {
 		FlxG.switchState(new CharterSelection());
 	}
+
 	function _file_save(_) {
 		#if sys
 		for(assetPath in [Paths.chart(__song, __diff.toLowerCase()), instPath]) {
@@ -797,15 +809,35 @@ class Charter extends UIState {
 	}
 
 	function _file_saveas(_) {
-		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, true)), {
+		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false)), {
 			defaultSaveFile: '${__diff.toLowerCase()}.json'
+		}));
+	}
+
+	function _file_meta_save(_) {
+		#if sys
+		var metaPath = Paths.file('songs/${__song.toLowerCase()}/meta.json');
+		var metaDiffPath = Paths.file('songs/${__song.toLowerCase()}/meta-${__diff.toLowerCase()}.json');
+
+		sys.io.File.saveContent(
+			Assets.getPath(Assets.exists(metaDiffPath) ? metaDiffPath : metaPath), 
+			Json.stringify(PlayState.SONG.meta == null ? {} : PlayState.SONG.meta, null, "\t")
+		);
+		return;
+		#end
+		_file_meta_saveas(_);
+	}
+
+	function _file_meta_saveas(_) {
+		openSubState(new SaveSubstate(Json.stringify(PlayState.SONG.meta == null ? {} : PlayState.SONG.meta, null, "\t"), { // always pretty print meta
+			defaultSaveFile: 'meta.json'
 		}));
 	}
 
 	#if sys
 	function saveTo(path:String) {
 		buildChart();
-		Chart.save(path, PlayState.SONG, __diff.toLowerCase());
+		Chart.save(path, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false});
 	}
 	#end
 
