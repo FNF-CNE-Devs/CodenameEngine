@@ -3,11 +3,15 @@ package funkin.backend.utils;
 import openfl.display.Sprite;
 
 class ShaderResizeFix {
+	public static var doResizeFix:Bool = true;
+
 	public static function init() {
 		FlxG.signals.gameResized.add((w:Int, h:Int) -> {fixSpritesShadersSizes();});
 	}
 
 	public inline static function fixSpritesShadersSizes() {
+		if (!doResizeFix) return;
+		
 		fixSpriteShaderSize(Main.instance);
 		if (FlxG.game != null) fixSpriteShaderSize(FlxG.game);
 
