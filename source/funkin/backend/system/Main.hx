@@ -116,6 +116,7 @@ class Main extends Sprite
 		#if UPDATE_CHECKING
 		funkin.backend.system.updating.UpdateUtil.init();
 		#end
+		ShaderResizeFix.init();
 		Logs.init();
 		Paths.init();
 		ModsFolder.init();
