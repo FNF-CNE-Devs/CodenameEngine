@@ -695,9 +695,10 @@ class Charter extends UIState {
 
 	// STRUMLINE DELETION/CREATION
 	public function createStrumline(strumLineID:Int, strL:ChartStrumLine, addToUndo:Bool = true) {
+		selection = []; // dont fuck with selected notes
+
 		var cStr = new CharterStrumline(strL);
 		strumLines.insert(strumLineID, cStr);
-		selection = [];
 
 		// Push forward notes that are infront of the strumLine
 		for (note in notesGroup.members) {
@@ -712,12 +713,16 @@ class Charter extends UIState {
 			notesGroup.add(n);
 		}
 		sortNotes();
+
+		if (addToUndo)
+			this.addToUndo(CCreateStrumLine(strumLineID, strL));
 	}
 
 	public function deleteStrumline(strumLineID:Int, addToUndo:Bool = true) {
+		selection = []; // dont fuck with selected notes
+
 		var strL = strumLines.members[strumLineID].strumLine;
 		strumLines.members.remove(strumLines.members[strumLineID]);
-		selection = [];
 
 		var deletedstrumNotes:Array<CharterNote> = [];
 		// Delete this strums notes
