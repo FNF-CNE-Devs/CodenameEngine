@@ -997,9 +997,9 @@ class Charter extends UIState {
 				}
 				selection = [for(n in notes) n.note];
 			case CDeleteStrumLine(strumLineID, strumLine):
-				createStrumline(strumLineID, strumLine);
+				createStrumline(strumLineID, strumLine, false);
 			case CCreateStrumLine(strumLineID, strumLine):
-				deleteStrumline(strumLineID);
+				deleteStrumline(strumLineID, false);
 		}
 		if (v != null)
 			redoList.insert(0, v);
