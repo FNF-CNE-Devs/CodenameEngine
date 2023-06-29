@@ -8,6 +8,7 @@ import funkin.backend.chart.ChartData.ChartStrumLine;
 
 class CharterStrumline extends UISprite {
 	public var strumLine:ChartStrumLine;
+
 	public var hitsounds:Bool = true;
 
 	public var healthIcon:HealthIcon;
@@ -34,7 +35,6 @@ class CharterStrumline extends UISprite {
 		members.push(healthIcon);
 
 		button = new CharterStrumlineButton(this);
-
 		members.push(button);
 	}
 
@@ -102,6 +102,13 @@ class CharterStrumlineButton extends UITopMenuButton {
 					strLine.hitsounds = !strLine.hitsounds;
 				},
 				icon: strLine.hitsounds ? 1 : 0
+			},
+			null,
+			{
+				label: "Delete",
+				onSelect: function (_) {
+					Charter.instance.deleteStrumline(Charter.instance.getStrumlineID(strLine.strumLine));
+				}
 			}
 		];
 		super.openContextMenu();
