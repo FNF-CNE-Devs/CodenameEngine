@@ -1456,18 +1456,16 @@ class PlayState extends MusicBeatState
 		scripts.event("onNoteHit", event);
 
 		if (!event.cancelled) {
+			if (event.score) songScore += score;
 			if (event.accuracy != null) {
 				accuracyPressedNotes++;
 				totalAccuracyAmount += event.accuracy;
-
 				updateRating();
 			}
 			if (event.countAsCombo) combo++;
 
 			if (event.showRating || (event.showRating == null && event.player && !note.isSustainNote))
 			{
-				songScore += score;
-
 				var separatedScore:String = Std.string(combo).addZeros(3);
 
 				if (combo == 0 || combo >= 10) {
