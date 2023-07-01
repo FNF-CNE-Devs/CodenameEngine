@@ -44,5 +44,9 @@ class DebugOptionsScreen extends OptionsScreen {
 			"Resizable Editors",
 			"If checked, editors will be resizable and extensible like other programs instead of zooming in upon maximization.",
 			"resizableEditors"));
+		add(new Checkbox(
+			"Intensive Blur",
+			"If checked, will use more intensive blur that may be laggier but look better.",
+			"intensiveBlur"));
 	}
 }

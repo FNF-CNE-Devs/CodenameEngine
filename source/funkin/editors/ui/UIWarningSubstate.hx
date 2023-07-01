@@ -6,7 +6,7 @@ import funkin.backend.shaders.CustomShader;
 
 class UIWarningSubstate extends MusicBeatSubstate {
 	var camShaders:Array<FlxCamera> = [];
-	var blurShader:CustomShader = new CustomShader("engine/editorBlur");
+	var blurShader:CustomShader = Options.intensiveBlur ? new CustomShader("engine/editorBlur") : new CustomShader("engine/editorBlurFast");
 
 	var title:String;
 	var message:String;
