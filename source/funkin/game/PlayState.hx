@@ -1456,7 +1456,7 @@ class PlayState extends MusicBeatState
 		scripts.event("onNoteHit", event);
 
 		if (!event.cancelled) {
-			if (event.score) songScore += score;
+			if (event.countScore) songScore += score;
 			if (event.accuracy != null) {
 				accuracyPressedNotes++;
 				totalAccuracyAmount += event.accuracy;
