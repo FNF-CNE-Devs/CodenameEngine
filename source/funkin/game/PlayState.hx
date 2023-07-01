@@ -1468,7 +1468,7 @@ class PlayState extends MusicBeatState
 				if (event.showRating || (event.showRating == null && event.player))
 				{
 					displayCombo(event);
-					displayJudgement(daRating, event);
+					displayRating(daRating, event);
 					ratingNum += 1;
 				}
 			}
@@ -1498,10 +1498,13 @@ class PlayState extends MusicBeatState
 		if (event.deleteNote && !note.isSustainNote) strumLine.deleteNote(note);
 	}
 
-	public function displayJudgement(myRating:String, evt:NoteHitEvent):Void {
+	public function displayRating(myRating:String, ?evt:NoteHitEvent = null):Void {
+		var pre:String = evt != null ? evt.ratingPrefix : "";
+		var suf:String = evt != null ? evt.ratingSuffix : "";
+
 		var rating:FlxSprite = comboGroup.recycleLoop(FlxSprite);
 		rating.resetSprite(comboGroup.x + -40, comboGroup.y + -60);
-		rating.loadAnimatedGraphic(Paths.image('${evt.ratingPrefix}${myRating}${evt.ratingSuffix}'));
+		rating.loadAnimatedGraphic(Paths.image('${pre}${myRating}${suf}'));
 		rating.acceleration.y = 550;
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
@@ -1517,12 +1520,15 @@ class PlayState extends MusicBeatState
 		});
 	}
 
-	public function displayCombo(evt:NoteHitEvent):Void {
+	public function displayCombo(?evt:NoteHitEvent = null):Void {
+		var pre:String = evt != null ? evt.ratingPrefix : "";
+		var suf:String = evt != null ? evt.ratingSuffix : "";
+		
 		var separatedScore:String = Std.string(combo).addZeros(3);
 
 		if (combo == 0 || combo >= 10) {
 			if (combo >= 10) {
-				var comboSpr:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${evt.ratingPrefix}combo${evt.ratingSuffix}'));
+				var comboSpr:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${pre}combo${suf}'));
 				comboSpr.resetSprite(comboGroup.x, comboGroup.y);
 				comboSpr.acceleration.y = 600;
 				comboSpr.velocity.y -= 150;
@@ -1543,7 +1549,7 @@ class PlayState extends MusicBeatState
 
 			for (i in 0...separatedScore.length)
 			{
-				var numScore:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${evt.ratingPrefix}num${separatedScore.charAt(i)}${evt.ratingSuffix}'));
+				var numScore:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${pre}num${separatedScore.charAt(i)}${suf}'));
 				numScore.resetSprite(comboGroup.x + (43 * i) - 90, comboGroup.y + 80);
 				numScore.antialiasing = event.numAntialiasing;
 				numScore.scale.set(event.numScale, event.numScale);
