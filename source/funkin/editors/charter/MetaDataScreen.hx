@@ -35,7 +35,9 @@ class MetaDataScreen extends UISubstateWindow {
 		winWidth = 748 - 32 + 40;
 
 		super.create();
+
 		FlxG.sound.music.pause();
+		Charter.instance.vocals.pause();
 
 		function addLabelOn(ui:UISprite, text:String)
 			add(new UIText(ui.x, ui.y - 24, 0, text));
@@ -132,6 +134,9 @@ class MetaDataScreen extends UISubstateWindow {
 	}
 
 	public function saveMeta() {
+		for (stepper in [bpmStepper, stepsPerBeatStepper, beatsPerMesureStepper])
+			@:privateAccess stepper.__onChange(stepper.label.text);
+
 		PlayState.SONG.meta = {
 			name: songNameTextBox.label.text,
 			bpm: bpmStepper.value,

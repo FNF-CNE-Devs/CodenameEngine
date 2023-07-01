@@ -34,6 +34,7 @@ class CharterEventScreen extends UISubstateWindow {
 		super.create();
 
 		FlxG.sound.music.pause(); // prevent the song from continuing
+		Charter.instance.vocals.pause();
 
 		var bg:FlxSprite = new FlxSprite(windowSpr.x + 1, windowSpr.y + 31, Paths.image('editors/ui/scrollbar-bg'));
 		bg.setGraphicSize(30, windowSpr.bHeight - 32);

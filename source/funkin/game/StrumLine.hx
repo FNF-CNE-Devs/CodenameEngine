@@ -1,5 +1,6 @@
 package funkin.game;
 
+import flixel.math.FlxPoint;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
 import funkin.backend.scripting.events.*;
@@ -81,12 +82,14 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	private inline function set_ghostTapping(b:Bool):Bool
 		return this.ghostTapping = b;
 
-	private var strumOffset:Float = 0.25;
+	private var startingPos:FlxPoint = FlxPoint.get(0,0);
+	private var strumScale:Float = 1;
 
-	public function new(characters:Array<Character>, strumOffset:Float = 0.25, cpu:Bool = false, opponentSide:Bool = true, ?controls:Controls) {
+	public function new(characters:Array<Character>, startingPos:FlxPoint, strumScale:Float, cpu:Bool = false, opponentSide:Bool = true, ?controls:Controls) {
 		super();
 		this.characters = characters;
-		this.strumOffset = strumOffset;
+		this.startingPos = startingPos;
+		this.strumScale = strumScale;
 		this.cpu = cpu;
 		this.opponentSide = opponentSide;
 		this.controls = controls;
@@ -253,7 +256,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	public function createStrum(i:Int, ?animPrefix:String) {
 		if (animPrefix == null)
 			animPrefix = strumAnimPrefix[i % strumAnimPrefix.length];
-		var babyArrow:Strum = new Strum((FlxG.width * strumOffset) + (Note.swagWidth * (i - 2)), PlayState.instance.strumLine.y);
+		var babyArrow:Strum = new Strum(startingPos.x + ((Note.swagWidth * strumScale) * i), startingPos.y);
 		babyArrow.ID = i;
 
 		var event = PlayState.instance.scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, PlayState.instance.strumLines.members.indexOf(this), i, animPrefix));
@@ -266,7 +269,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 			babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
 
 			babyArrow.antialiasing = true;
-			babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
+			babyArrow.setGraphicSize(Std.int((babyArrow.width * 0.7) * strumScale));
 
 			babyArrow.animation.addByPrefix('static', 'arrow${event.animPrefix.toUpperCase()}');
 			babyArrow.animation.addByPrefix('pressed', '${event.animPrefix} press', 24, false);

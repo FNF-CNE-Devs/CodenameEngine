@@ -54,6 +54,7 @@ class Charter extends UIState {
 	public var topLimit:FlxSprite;
 
 	public var strumlineInfoBG:FlxSprite;
+	public var strumlineAddButton:CharterStrumlineAddButton;
 
 	public var hitsound:FlxSound;
 	public var metronome:FlxSound;
@@ -201,22 +202,6 @@ class Charter extends UIState {
 						label: "Edit metadata information",
 						onSelect: chart_edit_metadata
 					}
-				]
-			},
-			{
-				label: "Strumline",
-				childs: [
-					{
-						label: "Create Strumline",
-						onSelect: function (_) {
-							createStrumline(strumLines.members.length, {
-								characters: [],
-								type: ADDITIONAL,
-								notes: [],
-								position: "girlfriend"
-							});
-						}
-					},
 				]
 			},
 			{
@@ -403,6 +388,9 @@ class Charter extends UIState {
 		strumlineInfoBG.y = 23;
 		strumlineInfoBG.scrollFactor.set();
 
+		strumlineAddButton = new CharterStrumlineAddButton();
+
+		strumlineAddButton.cameras = [charterCamera];
 		strumlineInfoBG.cameras = [charterCamera];
 		strumLines.cameras = [charterCamera];
 		
@@ -422,6 +410,7 @@ class Charter extends UIState {
 		add(conductorFollowerSpr);
 		add(selectionBox);
 		add(strumlineInfoBG);
+		add(strumlineAddButton);
 		add(strumLines);
 		// add the top menu last OUT of the ui group so that it stays on top
 		add(topMenuSpr);
@@ -447,13 +436,6 @@ class Charter extends UIState {
 		trace("generating notes...");
 		for(strL in PlayState.SONG.strumLines)
 			createStrumline(strumLines.members.length, strL, false);
-
-		trace("sorting notes...");
-		notesGroup.sort(function(i, n1, n2) {
-			if (n1.step == n2.step)
-				return FlxSort.byValues(FlxSort.ASCENDING, n1.id, n2.id);
-			return FlxSort.byValues(FlxSort.ASCENDING, n1.step, n2.step);
-		});
 
 		trace("generating events...");
 		var __last:CharterEvent = null;
@@ -695,8 +677,6 @@ class Charter extends UIState {
 
 	// STRUMLINE DELETION/CREATION
 	public function createStrumline(strumLineID:Int, strL:ChartStrumLine, addToUndo:Bool = true) {
-		selection = []; // dont fuck with selected notes
-
 		var cStr = new CharterStrumline(strL);
 		strumLines.insert(strumLineID, cStr);
 
@@ -719,9 +699,10 @@ class Charter extends UIState {
 	}
 
 	public function deleteStrumline(strumLineID:Int, addToUndo:Bool = true) {
-		selection = []; // dont fuck with selected notes
+		removeStrumlineFromSelection(strumLineID);
 
 		var strL = strumLines.members[strumLineID].strumLine;
+		strumLines.members[strumLineID].destroy();
 		strumLines.members.remove(strumLines.members[strumLineID]);
 
 		var deletedstrumNotes:Array<CharterNote> = [];
@@ -769,6 +750,32 @@ class Charter extends UIState {
 		return -1;
 	}
 
+	public function createStrumWithUI() {
+		FlxG.state.openSubState(new CharterStrumlineScreen(strumLines.members.length, null, (_) -> {
+			createStrumline(strumLines.members.length, _);
+		}));
+	}
+
+	public inline function deleteStrumlineFromData(strL:ChartStrumLine)
+		deleteStrumline(getStrumlineID(strL));
+
+	public inline function editStrumline(strL:ChartStrumLine) {
+		var strID = getStrumlineID(strL);
+		FlxG.state.openSubState(new CharterStrumlineScreen(strID, strL, (_) -> {
+			strumLines.members[strID].strumLine = _;
+		}));
+	}
+
+	public inline function removeStrumlineFromSelection(strumLineID:Int) {
+		var i = 0; 
+		while(i < selection.length) {
+   			var note = selection[i];
+   			if (Std.int(note.id / 4) == strumLineID)
+				selection.remove(note);
+			else i++;
+		}
+	}
+
 	// UNDO/REDO LOGIC
 	#if REGION
 	public inline function addToUndo(c:CharterChange) {
@@ -779,8 +786,13 @@ class Charter extends UIState {
 	}
 	#end
 
-	public inline function sortNotes()
-		notesGroup.sort((i, c1, c2) -> FlxSort.byValues(i, c1.step, c2.step), FlxSort.ASCENDING);
+	public inline function sortNotes() {
+		notesGroup.sort(function(i, n1, n2) {
+			if (n1.step == n2.step)
+				return FlxSort.byValues(FlxSort.ASCENDING, n1.id, n2.id);
+			return FlxSort.byValues(FlxSort.ASCENDING, n1.step, n2.step);
+		});
+	}
 	#end
 
 	var __crochet:Float;
@@ -865,6 +877,9 @@ class Charter extends UIState {
 			str.x = id * 40 * 4;
 			str.y = strumlineInfoBG.y;
 		}
+
+		strumlineAddButton.x = strumLines.members.length * (40 * 4);
+		strumlineAddButton.y = strumlineInfoBG.y;
 	}
 
 	var zoom(default, set):Float = 0;

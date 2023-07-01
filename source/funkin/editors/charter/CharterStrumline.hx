@@ -66,28 +66,6 @@ class CharterStrumlineButton extends UITopMenuButton {
 	public override function openContextMenu() {
 		contextMenu = [
 			{
-				label: "Player",
-				onSelect: function(_) {
-					strLine.strumLine.type = PLAYER;
-				},
-				icon: strLine.strumLine.type == PLAYER ? 1 : 0
-			},
-			{
-				label: "Opponent",
-				onSelect: function(_) {
-					strLine.strumLine.type = OPPONENT;
-				},
-				icon: strLine.strumLine.type == OPPONENT ? 1 : 0
-			},
-			{
-				label: "Additional",
-				onSelect: function(_) {
-					strLine.strumLine.type = ADDITIONAL;
-				},
-				icon: strLine.strumLine.type == ADDITIONAL ? 1 : 0
-			},
-			null,
-			{
 				label: "Visible",
 				onSelect: function(_) {
 					strLine.strumLine.visible = !strLine.strumLine.visible;
@@ -105,9 +83,15 @@ class CharterStrumlineButton extends UITopMenuButton {
 			},
 			null,
 			{
-				label: "Delete",
+				label: "Edit",
 				onSelect: function (_) {
-					Charter.instance.deleteStrumline(Charter.instance.getStrumlineID(strLine.strumLine));
+					Charter.instance.editStrumline(strLine.strumLine);
+				}
+			},
+			{
+				label: "Delete",  
+				onSelect: function (_) {
+					Charter.instance.deleteStrumlineFromData(strLine.strumLine);
 				}
 			}
 		];
