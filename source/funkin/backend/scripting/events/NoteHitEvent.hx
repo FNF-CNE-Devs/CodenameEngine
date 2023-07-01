@@ -16,9 +16,13 @@ final class NoteHitEvent extends CancellableEvent {
 	 */
 	public var misses:Bool = true;
 	/**
-	 * Whenever a miss should be added.
+	 * Whether this hit increases combo.
 	 */
 	public var countAsCombo:Bool = true;
+	/**
+	 * Whether this hit increases the score
+	 */
+	public var countScore:Bool = true;
 	/**
 	 * Whenever ratings should be shown or not.
 	 */
