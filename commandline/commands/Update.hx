@@ -38,10 +38,10 @@ class Update {
 	    var globalism = lib.global == "true" ? "--global" : "";
             switch(lib.type) {
                 case "lib":
-                    prettyPrint('Installing "${lib.name}"...');
+                    prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}"...');
                     Sys.command('haxelib $globalism install ${lib.name} ${lib.version != null ? " " + lib.version : " "}');
                 case "git":
-                    prettyPrint('Installing "${lib.name}" from git url "${lib.url}"');
+                    prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}" from git url "${lib.url}"');
 		if (lib.ref != null)
                     Sys.command('haxelib $globalism git ${lib.name} ${lib.url} ${lib.ref}');
 		else
