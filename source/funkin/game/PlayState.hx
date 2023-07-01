@@ -1520,7 +1520,7 @@ class PlayState extends MusicBeatState
 
 		if (combo == 0 || combo >= 10) {
 			if (combo >= 10) {
-				var comboSpr:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${event.ratingPrefix}combo${event.ratingSuffix}'));
+				var comboSpr:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${evt.ratingPrefix}combo${evt.ratingSuffix}'));
 				comboSpr.resetSprite(comboGroup.x, comboGroup.y);
 				comboSpr.acceleration.y = 600;
 				comboSpr.velocity.y -= 150;
