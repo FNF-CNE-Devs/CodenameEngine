@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.editors.charter.EventsData;
 import funkin.backend.system.RotatingSpriteGroup;
 import funkin.editors.charter.Charter;
 import funkin.savedata.FunkinSave;
@@ -348,6 +349,11 @@ class PlayState extends MusicBeatState
 	public var defaultCamZoom:Float = 1.05;
 
 	/**
+	 * Camera zoom at which the hud lerps to.
+	 */
+	public var defaultHudZoom:Float = 1.0;
+
+	/**
 	 * Zoom for the pixel assets.
 	 */
 	public static var daPixelZoom:Float = 6;
@@ -550,21 +556,23 @@ class PlayState extends MusicBeatState
 		// dadMidpoint.put();
 		var camPos:FlxPoint = new FlxPoint(0, 0);
 
-
 		if (!chartingMode || Options.charterEnablePlaytestScripts) {
 			switch(SONG.meta.name) {
 				// case "":
 					// ADD YOUR HARDCODED SCRIPTS HERE!
 				default:
-					for(content in [
-						Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH),
-						Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)]) {
-						for(file in content) {
-							var ext = Path.extension(file).toLowerCase();
-							if (Script.scriptExtensions.contains(ext))
-								scripts.add(Script.create(file));
-						}
+					for(content in [Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH), Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)])
+						for(file in content) addScript(file);
+
+					var songEvents:Array<String> = [];
+					for (event in SONG.events) 
+						if (!songEvents.contains(event.name)) songEvents.push(event.name);
+
+					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH)) {
+						var fileName:String = Path.withoutExtension(Path.withoutDirectory(file));
+						if (EventsData.eventsList.contains(fileName) && songEvents.contains(fileName)) addScript(file);
 					}
+						
 			}
 		}
 
@@ -599,7 +607,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		for(strumLine in SONG.strumLines) {
+		for(i=>strumLine in SONG.strumLines) {
 			if (strumLine == null) continue;
 
 			var chars = [];
@@ -614,11 +622,21 @@ class PlayState extends MusicBeatState
 				chars.push(char);
 			}
 
-			var strOffset:Float = strumLine.strumLinePos == null ? (strumLine.type == 1 ? 0.75 : 0.25) : strumLine.strumLinePos;
-			var strLine = new StrumLine(chars, strOffset, strumLine.type == 2 || (!coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode))), strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls);
+			var startingPos:FlxPoint = strumLine.strumPos == null ? switch (strumLine.type) {
+				case 1: FlxPoint.get((FlxG.width * 0.75) - ((Note.swagWidth * (strumLine.strumScale == null ? 1 : strumLine.strumScale)) * 2), this.strumLine.y);
+				default: FlxPoint.get((FlxG.width * 0.25) - ((Note.swagWidth * (strumLine.strumScale == null ? 1 : strumLine.strumScale)) * 2), this.strumLine.y);
+			} : FlxPoint.get(strumLine.strumPos[0], strumLine.strumPos[1]);
+
+			var strLine = new StrumLine(chars,
+				startingPos, 
+				strumLine.strumScale == null ? 1 : strumLine.strumScale,
+				strumLine.type == 2 || (!coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode))), 
+				strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls
+			);
 			strLine.cameras = [camHUD];
 			strLine.data = strumLine;
 			strLine.visible = (strumLine.visible != false);
+			strLine.ID = i;
 			strumLines.add(strLine);
 		}
 
@@ -633,6 +651,12 @@ class PlayState extends MusicBeatState
 
 		// CAMERA & HUD INITIALISATION
 		#if REGION
+		var event = EventManager.get(AmountEvent).recycle(4);
+		if (!scripts.event("onPreGenerateStrums", event).cancelled) {
+			generateStrums(event.amount);
+			scripts.event("onPostGenerateStrums", event);
+		}
+
 		for(str in strumLines)
 			str.generate(str.data, (chartingMode && Charter.startHere) ? Charter.startTime : null);
 
@@ -642,6 +666,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, LOCKON, 0.04);
 		FlxG.camera.zoom = defaultCamZoom;
+		// camHUD.zoom = defaultHudZoom;
 		if (smoothTransitionData != null && smoothTransitionData.stage == curStage) {
 			FlxG.camera.scroll.set(smoothTransitionData.camX, smoothTransitionData.camY);
 			FlxG.camera.zoom = smoothTransitionData.camZoom;
@@ -658,6 +683,8 @@ class PlayState extends MusicBeatState
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
+
+
 
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, maxHealth);
@@ -782,17 +809,11 @@ class PlayState extends MusicBeatState
 			if (scripts.event("onStartCountdown", new CancellableEvent()).cancelled) return;
 		}
 
-		if (!scripts.event("onPreGenerateStrums", new CancellableEvent()).cancelled) {
-			generateStrums();
-			scripts.call("onPostGenerateStrums");
-		}
-
 		startedCountdown = true;
 		Conductor.songPosition = 0;
 		Conductor.songPosition -= Conductor.crochet * introLength;
 
 		var swagCounter:Int = 0;
-
 
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
@@ -897,7 +918,7 @@ class PlayState extends MusicBeatState
 		// get first camera focus
 		for(e in events) {
 			if (e.time > 10) break;
-			if (e.type == CAM_MOVEMENT) {
+			if (e.name == "Camera Movement") {
 				executeEvent(e);
 				break;
 			}
@@ -930,9 +951,9 @@ class PlayState extends MusicBeatState
 	}
 
 	@:dox(hide)
-	private inline function generateStrums():Void
+	private inline function generateStrums(amount:Int = 4):Void
 		for(p in strumLines)
-			p.generateStrums();
+			p.generateStrums(amount);
 
 	@:dox(hide)
 	override function openSubState(SubState:FlxSubState)
@@ -1100,7 +1121,7 @@ class PlayState extends MusicBeatState
 		{
 			if (startedCountdown)
 			{
-				Conductor.songPosition += FlxG.elapsed * 1000;
+				Conductor.songPosition += elapsed * 1000;
 				if (Conductor.songPosition >= 0)
 					startSong();
 			}
@@ -1141,7 +1162,7 @@ class PlayState extends MusicBeatState
 		if (camZooming)
 		{
 			FlxG.camera.zoom = lerp(FlxG.camera.zoom, defaultCamZoom, 0.05);
-			camHUD.zoom = lerp(camHUD.zoom, 1, 0.05);
+			camHUD.zoom = lerp(camHUD.zoom, defaultHudZoom, 0.05);
 		}
 
 		// RESET = Quick Game Over Screen
@@ -1166,28 +1187,35 @@ class PlayState extends MusicBeatState
 		scripts.call("postUpdate", [elapsed]);
 	}
 
+	override function draw() {
+		var e = scripts.event("draw", EventManager.get(DrawEvent).recycle());
+		if (!e.cancelled)
+			super.draw();
+		scripts.event("postDraw", e);
+	}
+
 	public function executeEvent(event:ChartEvent) {
 		if (event == null) return;
 		if (event.params == null) return;
 
-		switch(event.type) {
-			case CUSTOM:
-				if (event.params[0] is String && event.params[1] is Array) {
-					scripts.call(event.params[0], event.params[1]);
+		if (scripts.event("onEvent", EventManager.get(EventGameEvent).recycle(event)).cancelled) return;
+
+		switch(event.name) {
+			case "HScript Call":
+				if (event.params[0] is String && event.params[1] is String) {
+					scripts.call(event.params[0], event.params[1].split(','));
 				}
-			case CAM_MOVEMENT:
+			case "Camera Movement":
 				if (event.params[0] is Int)
 					curCameraTarget = event.params[0];
-			case BPM_CHANGE:
-				// automatically handled by conductor
-			case ALT_ANIM_TOGGLE:
+			case "BPM Change": // automatically handled by conductor
+			case "Alt Animation Toggle":
 				if (event.params[0] is Int && event.params[1] is Bool) {
 					var strLine = strumLines.members[event.params[0]];
 					if (strLine != null)
 						strLine.altAnim = cast event.params[1];
 				}
-				// todo!!!
-			default:
+			case "Unknown":
 		}
 	}
 
@@ -1331,6 +1359,7 @@ class PlayState extends MusicBeatState
 
 	/**
 	 * Misses a note
+	 * @param strumLine The strumline the miss happened on.
 	 * @param note Note to miss.
 	 * @param direction Specify a custom direction in case note is null.
 	 * @param player Specify a custom player in case note is null.
@@ -1339,14 +1368,13 @@ class PlayState extends MusicBeatState
 	{
 		var playerID:Null<Int> = note == null ? player : strumLines.members.indexOf(strumLine);
 		var directionID:Null<Int> = note == null ? direction : note.strumID;
-		if (playerID == null || directionID == null) return;
+		if (playerID == null || directionID == null || playerID == -1) return;
 
-		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, strumLines.members[playerID].characters, true, note != null ? note.noteType : null, "", "", "", directionID, -10, 0, -0.04, "shit"));
+		var event:NoteHitEvent = scripts.event("onPlayerMiss", EventManager.get(NoteHitEvent).recycle(true, false, false, note, strumLines.members[playerID].characters, true, note != null ? note.noteType : null, "", "", "", directionID, -10, 0, note != null ? -0.0475 : -0.04, "shit"));
 		strumLine.onMiss.dispatch(event);
 		if (event.cancelled) return;
 
-
-		if (event.note != null && strumLine != null) strumLine.addHealth(event.healthGain);
+		if (strumLine != null) strumLine.addHealth(event.healthGain);
 		if (gf != null && combo > 5 && gf.hasAnimation('sad'))
 			gf.playAnim('sad', event.forceAnim, MISS);
 		combo = 0;
@@ -1567,6 +1595,12 @@ class PlayState extends MusicBeatState
 		iconP2.updateHitbox();
 
 		scripts.call("beatHit", [curBeat]);
+	}
+
+	public function addScript(file:String) {
+		var ext = Path.extension(file).toLowerCase();
+		if (Script.scriptExtensions.contains(ext))
+			scripts.add(Script.create(file));
 	}
 
 	// GETTERS & SETTERS

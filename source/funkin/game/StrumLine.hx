@@ -1,5 +1,6 @@
 package funkin.game;
 
+import flixel.math.FlxPoint;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
 import funkin.backend.scripting.events.*;
@@ -65,6 +66,12 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	 * Whenever alt animation is enabled on this strumline.
 	 */
 	public var altAnim:Bool = false;
+	/**
+	 * TODO: Write documention about this being a variable that can help when making multi key
+	 */
+	public var strumAnimPrefix = ["left", "down", "up", "right"];
+
+	public var extra:Map<String, Dynamic> = [];
 
 	private function get_ghostTapping() {
 		if (this.ghostTapping != null) return this.ghostTapping;
@@ -75,12 +82,14 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	private inline function set_ghostTapping(b:Bool):Bool
 		return this.ghostTapping = b;
 
-	private var strumOffset:Float = 0.25;
+	private var startingPos:FlxPoint = FlxPoint.get(0,0);
+	private var strumScale:Float = 1;
 
-	public function new(characters:Array<Character>, strumOffset:Float = 0.25, cpu:Bool = false, opponentSide:Bool = true, ?controls:Controls) {
+	public function new(characters:Array<Character>, startingPos:FlxPoint, strumScale:Float, cpu:Bool = false, opponentSide:Bool = true, ?controls:Controls) {
 		super();
 		this.characters = characters;
-		this.strumOffset = strumOffset;
+		this.startingPos = startingPos;
+		this.strumScale = strumScale;
 		this.cpu = cpu;
 		this.opponentSide = opponentSide;
 		this.controls = controls;
@@ -187,18 +196,20 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		__justPressed.clear();
 		__justReleased.clear();
 
-		__pressed.pushGroup(controls.NOTE_LEFT, controls.NOTE_DOWN, controls.NOTE_UP, controls.NOTE_RIGHT);
-		__justPressed.pushGroup(controls.NOTE_LEFT_P, controls.NOTE_DOWN_P, controls.NOTE_UP_P, controls.NOTE_RIGHT_P);
-		__justReleased.pushGroup(controls.NOTE_LEFT_R, controls.NOTE_DOWN_R, controls.NOTE_UP_R, controls.NOTE_RIGHT_R);
+		for(s in members) {
+			__pressed.push(s.__getPressed(this));
+			__justPressed.push(s.__getJustPressed(this));
+			__justReleased.push(s.__getJustReleased(this));
+		}
 
-		var event = PlayState.instance.scripts.event("onKeyShit", EventManager.get(InputSystemEvent).recycle(__pressed, __justPressed, __justReleased, this, id));
+		var event = PlayState.instance.scripts.event("onInputUpdate", EventManager.get(InputSystemEvent).recycle(__pressed, __justPressed, __justReleased, this, id));
 		if (event.cancelled) return;
 
 		__pressed = CoolUtil.getDefault(event.pressed, []);
 		__justPressed = CoolUtil.getDefault(event.justPressed, []);
 		__justReleased = CoolUtil.getDefault(event.justReleased, []);
 
-		__notePerStrum = [for(_ in 0...4) null];
+		__notePerStrum = [for(_ in 0...members.length) null];
 
 
 		if (__pressed.contains(true)) {
@@ -224,68 +235,64 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		for(e in __notePerStrum) if (e != null) PlayState.instance.goodNoteHit(this, e);
 
 		forEach(function(str:Strum) {
-			str.updatePlayerInput(__pressed[str.ID], __justPressed[str.ID], __justReleased[str.ID]);
+			str.updatePlayerInput(str.__getPressed(this), str.__getJustPressed(this), str.__getJustReleased(this));
 		});
-		PlayState.instance.scripts.call("onPostKeyShit");
+		PlayState.instance.scripts.call("onPostInputUpdate");
 	}
 
 	public inline function addHealth(health:Float)
 		PlayState.instance.health += health * (opponentSide ? -1 : 1);
 
-	public function generateStrums(amount:Int = 4) {
-		for (i in 0...4)
-		{
-			var babyArrow:Strum = new Strum((FlxG.width * strumOffset) + (Note.swagWidth * (i - 2)), PlayState.instance.strumLine.y);
-			babyArrow.ID = i;
+	public inline function generateStrums(amount:Int = 4) {
+		for (i in 0...amount)
+			add(createStrum(i));
+	}
 
-			var event = PlayState.instance.scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, PlayState.instance.strumLines.members.indexOf(this), i));
+	/**
+	 * Creates a strum and returns the created strum (needs to be added manually).
+	 * @param i Index of the strum
+	 * @param animPrefix (Optional) Animation prefix (`left` = `arrowLEFT`, `left press`, `left confirm`).
+	 */
+	public function createStrum(i:Int, ?animPrefix:String) {
+		if (animPrefix == null)
+			animPrefix = strumAnimPrefix[i % strumAnimPrefix.length];
+		var babyArrow:Strum = new Strum(startingPos.x + ((Note.swagWidth * strumScale) * i), startingPos.y);
+		babyArrow.ID = i;
 
-			if (!event.cancelled) {
-				babyArrow.frames = Paths.getFrames(event.sprite);
-				babyArrow.animation.addByPrefix('green', 'arrowUP');
-				babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
-				babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
-				babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
+		var event = PlayState.instance.scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, PlayState.instance.strumLines.members.indexOf(this), i, animPrefix));
 
-				babyArrow.antialiasing = true;
-				babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
+		if (!event.cancelled) {
+			babyArrow.frames = Paths.getFrames(event.sprite);
+			babyArrow.animation.addByPrefix('green', 'arrowUP');
+			babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
+			babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
+			babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
 
-				switch (babyArrow.ID % 4)
-				{
-					case 0:
-						babyArrow.animation.addByPrefix('static', 'arrowLEFT');
-						babyArrow.animation.addByPrefix('pressed', 'left press', 24, false);
-						babyArrow.animation.addByPrefix('confirm', 'left confirm', 24, false);
-					case 1:
-						babyArrow.animation.addByPrefix('static', 'arrowDOWN');
-						babyArrow.animation.addByPrefix('pressed', 'down press', 24, false);
-						babyArrow.animation.addByPrefix('confirm', 'down confirm', 24, false);
-					case 2:
-						babyArrow.animation.addByPrefix('static', 'arrowUP');
-						babyArrow.animation.addByPrefix('pressed', 'up press', 24, false);
-						babyArrow.animation.addByPrefix('confirm', 'up confirm', 24, false);
-					case 3:
-						babyArrow.animation.addByPrefix('static', 'arrowRIGHT');
-						babyArrow.animation.addByPrefix('pressed', 'right press', 24, false);
-						babyArrow.animation.addByPrefix('confirm', 'right confirm', 24, false);
-				}
-			}
+			babyArrow.antialiasing = true;
+			babyArrow.setGraphicSize(Std.int((babyArrow.width * 0.7) * strumScale));
 
-			babyArrow.cpu = cpu;
-			babyArrow.updateHitbox();
-			babyArrow.scrollFactor.set();
-
-			if (event.__doAnimation)
-			{
-				babyArrow.y -= 10;
-				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
-			}
-
-			add(babyArrow);
-
-			babyArrow.playAnim('static');
+			babyArrow.animation.addByPrefix('static', 'arrow${event.animPrefix.toUpperCase()}');
+			babyArrow.animation.addByPrefix('pressed', '${event.animPrefix} press', 24, false);
+			babyArrow.animation.addByPrefix('confirm', '${event.animPrefix} confirm', 24, false);
 		}
+
+		babyArrow.cpu = cpu;
+		babyArrow.updateHitbox();
+		babyArrow.scrollFactor.set();
+
+		if (event.__doAnimation)
+		{
+			babyArrow.y -= 10;
+			babyArrow.alpha = 0;
+			FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+		}
+		babyArrow.playAnim('static');
+
+		insert(i, babyArrow);
+
+		PlayState.instance.scripts.event("onPostStrumCreation", event);
+
+		return babyArrow;
 	}
 
 	/**

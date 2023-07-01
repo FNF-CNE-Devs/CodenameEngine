@@ -54,7 +54,7 @@ class UISprite extends FlxSprite {
 
 			FlxCamera._defaultCameras = __oldDefCams;
 		}
-		
+
 	}
 
 	public override function draw() {
@@ -74,11 +74,11 @@ class UISprite extends FlxSprite {
 
 			for(m in members)
 				m.draw();
-			
+
 			FlxCamera._defaultCameras = __oldDefCams;
 		}
 	}
-	
+
 	public override function destroy() {
 		super.destroy();
 		members = FlxDestroyUtil.destroyArray(members);

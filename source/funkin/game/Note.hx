@@ -14,6 +14,8 @@ using StringTools;
 @:allow(funkin.game.PlayState)
 class Note extends FlxSprite
 {
+	public var extra:Map<String, Dynamic> = [];
+
 	public var strumTime:Float = 0;
 
 	public var mustPress(get, never):Bool;
@@ -61,7 +63,7 @@ class Note extends FlxSprite
 
 	public var strumID(get, never):Int;
 	private function get_strumID() {
-		var id = noteData % 4;
+		var id = noteData % strumLine.members.length;
 		if (id < 0) id = 0;
 		return id;
 	}
@@ -198,7 +200,7 @@ class Note extends FlxSprite
 			frameOffset.y += __notePosFrameOffset.y * 2;
 			super.drawComplex(camera);
 			frameOffset.y -= __notePosFrameOffset.y * 2;
-		} else 
+		} else
 			super.drawComplex(camera);
 	}
 

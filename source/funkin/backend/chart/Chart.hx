@@ -108,6 +108,23 @@ class Chart {
 			 */
 			#if REGION
 			if (Reflect.hasField(data, "codenameChart") && Reflect.field(data, "codenameChart") == true) {
+				// backward compat on events since its caused problems
+				var eventTypesToString:Map<Int, String> = [
+					-1 => "HScript Call",
+					0 => "Unknown",
+					1 => "Camera Movement",
+					2 => "BPM Change",
+					3 => "Alt Animation Toggle",
+				];
+
+				for (event in cast(data.events, Array<Dynamic>)) {
+					if (Reflect.hasField(event, "type")) {
+						if(event.type != null)
+							event.name = eventTypesToString[event.type];
+						Reflect.deleteField(event, "type");
+					}
+				}
+
 				// codename chart
 				base = data;
 			} else {
@@ -159,11 +176,11 @@ class Chart {
 		var meta = filteredChart.meta;
 
 		#if sys
-		if (!FileSystem.exists('${songFolderPath}\\charts\\'))
-			FileSystem.createDirectory('${songFolderPath}\\charts\\');
+		if (!FileSystem.exists('${songFolderPath}/charts/'))
+			FileSystem.createDirectory('${songFolderPath}/charts/');
 
-		var chartPath = '${songFolderPath}\\charts\\${difficulty.trim()}.json';
-		var metaPath = '${songFolderPath}\\meta.json';
+		var chartPath = '${songFolderPath}/charts/${difficulty.trim()}.json';
+		var metaPath = '${songFolderPath}/meta.json';
 
 		File.saveContent(chartPath, Json.stringify(filteredChart, null, saveSettings.prettyPrint == true ? "\t" : null));
 

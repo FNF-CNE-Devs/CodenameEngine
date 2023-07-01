@@ -54,6 +54,7 @@ class Charter extends UIState {
 	public var topLimit:FlxSprite;
 
 	public var strumlineInfoBG:FlxSprite;
+	public var strumlineAddButton:CharterStrumlineAddButton;
 
 	public var hitsound:FlxSound;
 	public var metronome:FlxSound;
@@ -111,6 +112,17 @@ class Charter extends UIState {
 						label: "Save As...",
 						keybind: [CONTROL, SHIFT, S],
 						onSelect: _file_saveas,
+					},
+					null,
+					{
+						label: "Save Mata",
+						keybind: [CONTROL, ALT, S],
+						onSelect: _file_meta_save,
+					},
+					{
+						label: "Save Meta As...",
+						keybind: [CONTROL, ALT ,SHIFT, S],
+						onSelect: _file_meta_saveas,
 					},
 					null,
 					{
@@ -187,7 +199,8 @@ class Charter extends UIState {
 					},
 					null,
 					{
-						label: "Edit metadata information"
+						label: "Edit metadata information",
+						onSelect: chart_edit_metadata
 					}
 				]
 			},
@@ -375,6 +388,9 @@ class Charter extends UIState {
 		strumlineInfoBG.y = 23;
 		strumlineInfoBG.scrollFactor.set();
 
+		strumlineAddButton = new CharterStrumlineAddButton();
+
+		strumlineAddButton.cameras = [charterCamera];
 		strumlineInfoBG.cameras = [charterCamera];
 		strumLines.cameras = [charterCamera];
 		
@@ -394,6 +410,7 @@ class Charter extends UIState {
 		add(conductorFollowerSpr);
 		add(selectionBox);
 		add(strumlineInfoBG);
+		add(strumlineAddButton);
 		add(strumLines);
 		// add the top menu last OUT of the ui group so that it stays on top
 		add(topMenuSpr);
@@ -405,8 +422,10 @@ class Charter extends UIState {
 
 	var instPath:String;
 	public function loadSong() {
-		if (__reload)
+		if (__reload) {
+			EventsData.reloadEvents();
 			PlayState.loadSong(__song, __diff, false, false);
+		}
 
 		Conductor.setupSong(PlayState.SONG);
 
@@ -415,22 +434,8 @@ class Charter extends UIState {
 		vocals.group = FlxG.sound.defaultMusicGroup;
 
 		trace("generating notes...");
-		for(strID=>strL in PlayState.SONG.strumLines) {
-			for(note in strL.notes) {
-				var n = new CharterNote();
-				var t = Conductor.getStepForTime(note.time);
-				n.updatePos(t, (strID * 4) + note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type);
-				notesGroup.add(n);
-			}
-
-			strumLines.add(new CharterStrumline(strL));
-		}
-		trace("sorting notes...");
-		notesGroup.sort(function(i, n1, n2) {
-			if (n1.step == n2.step)
-				return FlxSort.byValues(FlxSort.ASCENDING, n1.id, n2.id);
-			return FlxSort.byValues(FlxSort.ASCENDING, n1.step, n2.step);
-		});
+		for(strL in PlayState.SONG.strumLines)
+			createStrumline(strumLines.members.length, strL, false);
 
 		trace("generating events...");
 		var __last:CharterEvent = null;
@@ -487,6 +492,7 @@ class Charter extends UIState {
 				if (FlxG.mouse.justReleasedRight) {
 					if (!selection.contains(n))
 						selection = [n];
+					closeCurrentContextMenu();
 					openContextMenu(topMenu[1].childs);
 				}
 			}
@@ -614,8 +620,10 @@ class Charter extends UIState {
 					}
 				}
 
-				if (FlxG.mouse.justReleasedRight)
+				if (FlxG.mouse.justReleasedRight) {
+					closeCurrentContextMenu();
 					openContextMenu(topMenu[1].childs);
+				}
 		}
 
 		if (gridActionType == NONE && mousePos.x < 0) {
@@ -667,6 +675,108 @@ class Charter extends UIState {
 		return [];
 	}
 
+	// STRUMLINE DELETION/CREATION
+	public function createStrumline(strumLineID:Int, strL:ChartStrumLine, addToUndo:Bool = true) {
+		var cStr = new CharterStrumline(strL);
+		strumLines.insert(strumLineID, cStr);
+
+		// Push forward notes that are infront of the strumLine
+		for (note in notesGroup.members) {
+			if (Std.int(note.id / 4) >= strumLineID)
+				note.updatePos(note.step, note.id + 4, note.susLength, note.type);
+		}
+
+		for(note in strL.notes) {
+			var n = new CharterNote();
+			var t = Conductor.getStepForTime(note.time);
+			n.updatePos(t, ((strumLines.members.indexOf(cStr)) * 4) + note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type);
+			notesGroup.add(n);
+		}
+		sortNotes();
+
+		if (addToUndo)
+			this.addToUndo(CCreateStrumLine(strumLineID, strL));
+	}
+
+	public function deleteStrumline(strumLineID:Int, addToUndo:Bool = true) {
+		removeStrumlineFromSelection(strumLineID);
+
+		var strL = strumLines.members[strumLineID].strumLine;
+		strumLines.members[strumLineID].destroy();
+		strumLines.members.remove(strumLines.members[strumLineID]);
+
+		var deletedstrumNotes:Array<CharterNote> = [];
+		// Delete this strums notes
+		var i = 0; // thanks yosh!!!!! (deleteNote removes a index)
+		while(i < notesGroup.members.length) {
+   			var note = notesGroup.members[i];
+   			if (Std.int(note.id / 4) == strumLineID) { // thanks neo lol!!!!!
+				deletedstrumNotes.push(note); 
+				deleteNote(note, false);
+			} else 
+				i++;
+		}
+
+		// Push back strumline notes that are infront
+		for (note in notesGroup.members) {
+			if (Std.int(note.id / 4) > strumLineID)
+				note.updatePos(note.step, note.id - 4, note.susLength, note.type);
+		}
+		sortNotes();
+
+		// Undo shit
+		if (addToUndo) {
+			var newStrL = Reflect.copy(strL);
+			newStrL.notes.clear();
+			
+			for (note in deletedstrumNotes) {
+				var time = Conductor.getTimeForStep(note.step);
+				newStrL.notes.push({
+					type: note.type,
+					time: time,
+					sLen: Conductor.getTimeForStep(note.step + note.susLength) - time,
+					id: note.id % 4
+				});
+			}
+			this.addToUndo(CDeleteStrumLine(strumLineID, newStrL));
+		}
+	}
+
+	public function getStrumlineID(strL:ChartStrumLine):Int {
+		for (index=>strumLine in strumLines.members) {
+			if (strumLine.strumLine == strL)
+				return index;
+		}
+		return -1;
+	}
+
+	public function createStrumWithUI() {
+		FlxG.state.openSubState(new CharterStrumlineScreen(strumLines.members.length, null, (_) -> {
+			createStrumline(strumLines.members.length, _);
+		}));
+	}
+
+	public inline function deleteStrumlineFromData(strL:ChartStrumLine)
+		deleteStrumline(getStrumlineID(strL));
+
+	public inline function editStrumline(strL:ChartStrumLine) {
+		var strID = getStrumlineID(strL);
+		FlxG.state.openSubState(new CharterStrumlineScreen(strID, strL, (_) -> {
+			strumLines.members[strID].strumLine = _;
+			strumLines.members[strID].updateInfo();
+		}));
+	}
+
+	public inline function removeStrumlineFromSelection(strumLineID:Int) {
+		var i = 0; 
+		while(i < selection.length) {
+   			var note = selection[i];
+   			if (Std.int(note.id / 4) == strumLineID)
+				selection.remove(note);
+			else i++;
+		}
+	}
+
 	// UNDO/REDO LOGIC
 	#if REGION
 	public inline function addToUndo(c:CharterChange) {
@@ -677,8 +787,13 @@ class Charter extends UIState {
 	}
 	#end
 
-	public inline function sortNotes()
-		notesGroup.sort((i, c1, c2) -> FlxSort.byValues(i, c1.step, c2.step), FlxSort.ASCENDING);
+	public inline function sortNotes() {
+		notesGroup.sort(function(i, n1, n2) {
+			if (n1.step == n2.step)
+				return FlxSort.byValues(FlxSort.ASCENDING, n1.id, n2.id);
+			return FlxSort.byValues(FlxSort.ASCENDING, n1.step, n2.step);
+		});
+	}
 	#end
 
 	var __crochet:Float;
@@ -690,7 +805,7 @@ class Charter extends UIState {
 		scrollBar.size = (FlxG.height / 40 / charterCamera.zoom);
 		scrollBar.start = Conductor.curStepFloat - (scrollBar.size / 2);
 
-		if (gridBackdrop.strumlinesAmount != (gridBackdrop.strumlinesAmount = strumLines.length))
+		if (gridBackdrop.strumlinesAmount != strumLines.members.length)
 			updateDisplaySprites();
 
 		sectionSeparator.spacing.y = (10 * Conductor.beatsPerMesure * Conductor.stepsPerBeat) - 1;
@@ -700,7 +815,8 @@ class Charter extends UIState {
 		if (true) {
 			__crochet = ((60 / Conductor.bpm) * 1000);
 
-			UIUtil.processShortcuts(topMenu);
+			if(FlxG.keys.justPressed.ANY)
+				UIUtil.processShortcuts(topMenu);
 
 			if (FlxG.keys.pressed.CONTROL) {
 				if (FlxG.mouse.wheel != 0) {
@@ -736,6 +852,8 @@ class Charter extends UIState {
 	public static var startHere:Bool = false;
 
 	function updateDisplaySprites() {
+		gridBackdrop.strumlinesAmount = strumLines.members.length;
+
 		conductorFollowerSpr.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, 4);
 		conductorFollowerSpr.updateHitbox();
 
@@ -760,16 +878,26 @@ class Charter extends UIState {
 			str.x = id * 40 * 4;
 			str.y = strumlineInfoBG.y;
 		}
+
+		strumlineAddButton.x = strumLines.members.length * (40 * 4);
+		strumlineAddButton.y = strumlineInfoBG.y;
 	}
 
-	var zoom:Float = 0;
-	var __camZoom:Float = 1;
+	var zoom(default, set):Float = 0;
+	var __camZoom(default, set):Float = 1;
+	function set_zoom(val:Float) {
+		return zoom = FlxMath.bound(val, -3.5, 1.75); // makes zooming not lag behind when continuing scrolling
+	}
+	function set___camZoom(val:Float) {
+		return __camZoom = FlxMath.bound(val, 0.1, 3);
+	}
 
 	// TOP MENU OPTIONS
 	#if REGION
 	function _file_exit(_) {
 		FlxG.switchState(new CharterSelection());
 	}
+
 	function _file_save(_) {
 		#if sys
 		for(assetPath in [Paths.chart(__song, __diff.toLowerCase()), instPath]) {
@@ -783,19 +911,41 @@ class Charter extends UIState {
 	}
 
 	function _file_saveas(_) {
-		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, true)), {
+		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false)), {
 			defaultSaveFile: '${__diff.toLowerCase()}.json'
+		}));
+	}
+
+	function _file_meta_save(_) {
+		#if sys
+		var metaPath = Paths.file('songs/${__song.toLowerCase()}/meta.json');
+		var metaDiffPath = Paths.file('songs/${__song.toLowerCase()}/meta-${__diff.toLowerCase()}.json');
+
+		sys.io.File.saveContent(
+			Assets.getPath(Assets.exists(metaDiffPath) ? metaDiffPath : metaPath), 
+			Json.stringify(PlayState.SONG.meta == null ? {} : PlayState.SONG.meta, null, "\t")
+		);
+		return;
+		#end
+		_file_meta_saveas(_);
+	}
+
+	function _file_meta_saveas(_) {
+		openSubState(new SaveSubstate(Json.stringify(PlayState.SONG.meta == null ? {} : PlayState.SONG.meta, null, "\t"), { // always pretty print meta
+			defaultSaveFile: 'meta.json'
 		}));
 	}
 
 	#if sys
 	function saveTo(path:String) {
 		buildChart();
-		Chart.save(path, PlayState.SONG, __diff.toLowerCase());
+		Chart.save(path, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false});
 	}
 	#end
 
 	function _edit_copy(_) {
+		if(selection.length == 0) return;
+
 		var minStep:Float = selection[0].step;
 		for(s in selection)
 			if (s.step < minStep)
@@ -862,7 +1012,10 @@ class Charter extends UIState {
 					d.revive();
 				}
 				selection = [for(n in notes) n.note];
-
+			case CDeleteStrumLine(strumLineID, strumLine):
+				createStrumline(strumLineID, strumLine, false);
+			case CCreateStrumLine(strumLineID, strumLine):
+				deleteStrumline(strumLineID, false);
 		}
 		if (v != null)
 			redoList.insert(0, v);
@@ -909,6 +1062,10 @@ class Charter extends UIState {
 				}
 				deleteNotes(deletes, false);
 				selection = [for(n in notes) n.note];
+			case CDeleteStrumLine(strumLineID, strumLine):
+				deleteStrumline(strumLineID, false);
+			case CCreateStrumLine(strumLineID, strumLine):
+				createStrumline(strumLineID, strumLine, false);
 		}
 		if (v != null)
 			undoList.insert(0, v);
@@ -925,6 +1082,8 @@ class Charter extends UIState {
 	function _chart_enablescripts(t) {
 		t.icon = (Options.charterEnablePlaytestScripts = !Options.charterEnablePlaytestScripts) ? 1 : 0;
 	}
+	function chart_edit_metadata(_)
+		FlxG.state.openSubState(new MetaDataScreen(PlayState.SONG.meta));
 
 	function _playback_metronome(t) {
 		t.icon = (Options.charterMetronomeEnabled = !Options.charterMetronomeEnabled) ? 1 : 0;
@@ -1044,6 +1203,8 @@ enum CharterChange {
 	CCreateNotes(notes:Array<CharterNote>);
 	CDeleteNotes(notes:Array<CharterNote>);
 	CNoteDrag(notes:Array<NoteDragChange>, deletes:Array<CharterNote>);
+	CCreateStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
+	CDeleteStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
 }
 
 enum CharterCopyboardObject {

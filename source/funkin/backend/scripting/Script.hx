@@ -4,7 +4,9 @@ import lime.app.Application;
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 import haxe.io.Path;
 import hscript.IHScriptCustomConstructor;
+import flixel.util.FlxStringUtil;
 
+@:allow(funkin.backend.scripting.ScriptPack)
 /**
  * Class used for scripting.
  */
@@ -15,12 +17,12 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 */
 	public static var staticVariables:Map<String, Dynamic> = [];
 
-
 	public static function getDefaultVariables(?script:Script):Map<String, Dynamic> {
 		return [
 			// Haxe related stuff
 			"Std"			   => Std,
 			"Math"			  => Math,
+			"Reflect"			  => Reflect,
 			"StringTools"	   => StringTools,
 			"Json"			  => haxe.Json,
 
@@ -125,6 +127,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 */
 	public var path:String = null;
 
+	private var didLoad:Bool = false;
+
 	/**
 	 * Creates a script from the specified asset path. The language is automatically determined.
 	 * @param path Path in assets
@@ -157,6 +161,10 @@ class Script extends FlxBasic implements IFlxDestroyable {
 		for(k=>e in getDefaultVariables(this)) {
 			set(k, e);
 		}
+		set("disableScript", () -> {
+			active = false;
+		});
+		set("__script__", this);
 	}
 
 
@@ -164,10 +172,14 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 * Loads the script
 	 */
 	public function load() {
+		if(didLoad) return;
+
 		var oldScript = curScript;
 		curScript = this;
 		onLoad();
 		curScript = oldScript;
+
+		didLoad = true;
 	}
 
 	/**
@@ -242,6 +254,17 @@ class Script extends FlxBasic implements IFlxDestroyable {
 			Logs.logText(fileName, RED),
 			Logs.logText(text)
 		], ERROR);
+	}
+
+	override public function toString():String {
+		return FlxStringUtil.getDebugString(didLoad ? [
+			LabelValuePair.weak("path", path),
+			LabelValuePair.weak("active", active),
+		] : [
+			LabelValuePair.weak("path", path),
+			LabelValuePair.weak("active", active),
+			LabelValuePair.weak("loaded", didLoad),
+		]);
 	}
 
 	/**

@@ -116,9 +116,13 @@
 	<!-- Comment this out to disable GitHub API integration !-->
 	<define name="GITHUB_API" unless="web || hl"/>
 
-	<!-- Comment this off to prevent unused classes from being compiled.
+	<!-- Comment this out to prevent unused classes from being compiled.
 		 Reduces compilation time at the cost of limited HScript flexibility. !-->
 	<define name="COMPILE_ALL_CLASSES" />
+
+	<!-- Comment this out to prevent extending classes in hscript.
+		 Reduces compilation time at the cost of limited HScript flexibility. !-->
+	<define name="CUSTOM_CLASSES" />
 
 	<!-- Comment this out to disable multithreading !-->
 	<haxedef name="ALLOW_MULTITHREADING" unless="web || flash" />
@@ -144,6 +148,9 @@
 	<!-- Comment this out to disable support for custom extended classes (data/classes). !-->
 	<define name="SOFTCODED_CLASSES" />
 
+	<!-- Comment this out to disable support for Away3D Flixel Intergration (reduces compile times)-->
+	<define name="THREE_D_SUPPORT" />
+
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
 	<define name="VIDEO_CUTSCENES" unless="web || linux || hl || mac" />
 
@@ -161,12 +168,14 @@
 	<haxedef name="openfl_dpi_aware" if="openfl_dpi_aware" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
-	
+
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 
 	<haxelib name="hxCodec" if="VIDEO_CUTSCENES" />
-	<haxelib name="away3d" />
+	<section if="THREE_D_SUPPORT">
+		<haxelib name="away3d" />
+	</section>
 	<haxelib name="format" />
 	<haxelib name="flxanimate" />
 
@@ -178,6 +187,7 @@
 	<haxelib name="markdown" />
 
 	<haxelib name="hxcpp-debug-server" if="desktop debug"/>
+	<haxedef name="no-deprecation-warnings"/>
 
 	<!-- _________________________________ Additional stuff _______________________________ -->
 

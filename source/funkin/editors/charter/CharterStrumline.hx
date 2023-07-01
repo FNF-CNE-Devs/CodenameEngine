@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.game.Character;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.game.HealthIcon;
@@ -7,10 +8,11 @@ import funkin.backend.chart.ChartData.ChartStrumLine;
 
 class CharterStrumline extends UISprite {
 	public var strumLine:ChartStrumLine;
+
 	public var hitsounds:Bool = true;
 
-	var healthIcon:HealthIcon;
-	var button:CharterStrumlineButton;
+	public var healthIcon:HealthIcon;
+	public var button:CharterStrumlineButton;
 
 	public var curMenu:UIContextMenu = null;
 
@@ -21,25 +23,39 @@ class CharterStrumline extends UISprite {
 		scrollFactor.set(1, 0);
 		alpha = 0;
 
-		healthIcon = new HealthIcon(strumLine.characters != null ? strumLine.characters[0] : null);
+		var icon = Character.getIconFromCharName(strumLine.characters != null ? strumLine.characters[0] : null);
+
+		healthIcon = new HealthIcon(icon);
 		healthIcon.scale.set(80 / 150, 80 / 150);
 		healthIcon.updateHitbox();
+		if(strumLine.visible == null)
+			strumLine.visible = true;
+		healthIcon.alpha = strumLine.visible ? 1 : 0.4;
 
 		members.push(healthIcon);
 
 		button = new CharterStrumlineButton(this);
-
 		members.push(button);
 	}
 
 	public override function update(elapsed:Float) {
-		healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, 0);
+		if (healthIcon != null)
+			healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, 0);
 		button.follow(this, 0, 95);
 		super.update(elapsed);
 	}
 
 	public function updateInfo() {
-		// todo
+		members.remove(healthIcon);
+		healthIcon.destroy();
+
+		var icon = Character.getIconFromCharName(strumLine.characters != null ? strumLine.characters[0] : null);
+
+		healthIcon = new HealthIcon(icon);
+		healthIcon.scale.set(80 / 150, 80 / 150);
+		healthIcon.updateHitbox();
+		healthIcon.alpha = strumLine.visible ? 1 : 0.4;
+		members.push(healthIcon);
 	}
 }
 
@@ -60,25 +76,12 @@ class CharterStrumlineButton extends UITopMenuButton {
 	public override function openContextMenu() {
 		contextMenu = [
 			{
-				label: "Player",
+				label: "Visible",
 				onSelect: function(_) {
-					strLine.strumLine.type = PLAYER;
+					strLine.strumLine.visible = !strLine.strumLine.visible;
+					strLine.healthIcon.alpha = strLine.strumLine.visible ? 1 : 0.4;
 				},
-				icon: strLine.strumLine.type == PLAYER ? 1 : 0
-			},
-			{
-				label: "Opponent",
-				onSelect: function(_) {
-					strLine.strumLine.type = OPPONENT;
-				},
-				icon: strLine.strumLine.type == OPPONENT ? 1 : 0
-			},
-			{
-				label: "Additional",
-				onSelect: function(_) {
-					strLine.strumLine.type = ADDITIONAL;
-				},
-				icon: strLine.strumLine.type == ADDITIONAL ? 1 : 0
+				icon: strLine.strumLine.visible ? 1 : 0
 			},
 			null,
 			{
@@ -87,6 +90,19 @@ class CharterStrumlineButton extends UITopMenuButton {
 					strLine.hitsounds = !strLine.hitsounds;
 				},
 				icon: strLine.hitsounds ? 1 : 0
+			},
+			null,
+			{
+				label: "Edit",
+				onSelect: function (_) {
+					Charter.instance.editStrumline(strLine.strumLine);
+				}
+			},
+			{
+				label: "Delete",  
+				onSelect: function (_) {
+					Charter.instance.deleteStrumlineFromData(strLine.strumLine);
+				}
 			}
 		];
 		super.openContextMenu();

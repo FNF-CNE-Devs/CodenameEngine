@@ -1,5 +1,6 @@
 package flx3d;
 
+#if THREE_D_SUPPORT
 import away3d.entities.SegmentSet;
 import away3d.cameras.Camera3D;
 import away3d.entities.TextureProjector;
@@ -25,10 +26,12 @@ import openfl.Assets;
 import away3d.entities.Mesh;
 import away3d.loaders.Loader3D;
 import funkin.backend.utils.NativeAPI.ConsoleColor;
-import flixel.FlxCamera;
 import away3d.containers.View3D;
+#end
+import flixel.FlxCamera;
 
 class Flx3DCamera extends FlxCamera {
+	#if THREE_D_SUPPORT
 	private static var __3DIDS:Int = 0;
 
 	public var view:View3D;
@@ -169,6 +172,7 @@ class Flx3DCamera extends FlxCamera {
 		super.destroy();
 	}
 
-	public inline function addChild(c)
+	public function addChild(c)
 		view.scene.addChild(c);
+	#end
 }

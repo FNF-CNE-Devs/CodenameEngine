@@ -2,7 +2,7 @@ package funkin.backend.scripting.events;
 
 import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
-@:allow(ScriptPack)
+@:allow(funkin.backend.scripting.ScriptPack)
 @:autoBuild(funkin.backend.system.macros.EventMacro.build())
 @:noCustomClass
 class CancellableEvent implements IFlxDestroyable {

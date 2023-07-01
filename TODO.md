@@ -11,27 +11,39 @@
 	- [x] Fix the strumlines bar when zooming out
 	- [x] Algorithm to make note placements faster & sorted out
 	- [x] Play here working
-	- [ ] Events (including Camera Movement)
+	- [x] Cap zoom in & out
+	- [x] Events (including Camera Movement)
+	- [x] Metadata Editing
 	- [ ] Custom Notes
-	- [ ] Metadata Editing
-	- [ ] Cap zoom in & out
 	- [ ] Step based zooming
+- [ ] Character Editor
+	- [ ] Change ghost anim
+	- [ ] Make gf characters be positioned correctly
+	- [ ] Make it so dragging the character moves the offset
+	- [ ] Disable volume controls when selecting stuff
 - [ ] Use latest hxCodec
 - [ ] Re-export gf-christmas, gf-car and gf-tankmen with padding
 - [ ] Multiple state scripts & Multiple global scripts
-- [ ] Re-add shader camera stuff
+- [x] Re-add shader camera stuff
 - [ ] Make update.bat use libs.xml instead of hmm.json
 - [ ] New Switch Mod menu
-- [ ] Port shader camera stuff over to new flixel fork
+- [x] Port shader camera stuff over to new flixel fork
 - [ ] Add note offset
 - [ ] Dialogue
 - [ ] Finish Base Game port
-- [ ] Character Editor
+- [ ] Add credits
+- [ ] Verbose mode (`--verbose`)
+- [ ] Tooltips
 - [ ] Fix bugs
 
 ## `v1.1.0`
 - [ ] Charter Waveforms (maybe in v1.1.0, dont wanna slow shit down)
 - [ ] Custom classes
+	- [ ] Proper super overrides (FlxText_HSX doesn't allow overrides for update because of this)
+	- [ ] Custom Class extending Custom Classes
+	- [ ] Statics on Custom Classes
+	- [ ] Fix Bugs
 - [ ] Full 3D support via stages files
 - [ ] Multithread sprites loading (for faster load times) ?
 - [ ] Stage Editor
+- [ ] Optimize flxanimate isOnScreen

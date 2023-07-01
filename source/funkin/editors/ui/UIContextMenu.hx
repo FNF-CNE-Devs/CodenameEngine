@@ -62,7 +62,6 @@ class UIContextMenu extends MusicBeatSubstate {
 			if (o.bWidth > maxW)
 				maxW = o.bWidth;
 
-		
 		for(o in contextMenuOptions)
 			o.bWidth = maxW;
 		for(o in separators) {
@@ -91,7 +90,7 @@ class UIContextMenu extends MusicBeatSubstate {
 	}
 
 	public override function update(elapsed:Float) {
-		if (__oobDeletion && FlxG.mouse.pressed && !bg.hoveredByChild)
+		if (__oobDeletion && FlxG.mouse.justPressed && !bg.hoveredByChild)
 			close();
 
 		__oobDeletion = true;

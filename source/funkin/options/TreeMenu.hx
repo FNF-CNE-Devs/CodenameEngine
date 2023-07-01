@@ -10,7 +10,6 @@ import funkin.options.type.OptionType;
 import funkin.options.categories.*;
 
 class TreeMenu extends MusicBeatState {
-	
 	public var main:OptionsScreen;
 	public var optionsTree:OptionsTree;
 	public var pathLabel:FunkinText;
@@ -40,7 +39,7 @@ class TreeMenu extends MusicBeatState {
 		pathBG.updateHitbox();
 		pathBG.alpha = 0.25;
 		pathBG.scrollFactor.set();
-		
+
 		optionsTree = new OptionsTree();
 		optionsTree.onMenuChange = onMenuChange;
 		optionsTree.onMenuClose = onMenuClose;

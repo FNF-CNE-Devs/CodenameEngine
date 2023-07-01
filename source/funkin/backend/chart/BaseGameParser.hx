@@ -26,14 +26,14 @@ class BaseGameParser {
 			position: "boyfriend",
 			notes: []
 		});
-		if (!p2isGF && data.gf != "none") {
+		var gfName = data.gf != null ? data.gf : (data.gfVersion != null ? data.gfVersion : "gf");
+		if (!p2isGF && gfName != "none") {
 			result.strumLines.push({
-				characters: [data.gf != null ? data.gf : "gf"],
+				characters: [gfName],
 				type: 2,
 				position: "girlfriend",
 				notes: [],
 				visible: false,
-				strumLinePos: 0.5
 			});
 		}
 
@@ -55,7 +55,7 @@ class BaseGameParser {
 			if (camFocusedBF != (camFocusedBF = section.mustHitSection)) {
 				result.events.push({
 					time: curTime,
-					type: CAM_MOVEMENT,
+					name: "Camera Movement",
 					params: [camFocusedBF ? 1 : 0]
 				});
 			}
@@ -90,7 +90,7 @@ class BaseGameParser {
 
 				result.events.push({
 					time: curTime,
-					type: BPM_CHANGE,
+					name: "BPM Change",
 					params: [section.bpm]
 				});
 			}
@@ -112,6 +112,7 @@ typedef SwagSong =
 	var player1:String;
 	var player2:String;
 	var gf:String;
+	var gfVersion:String;
 	var validScore:Bool;
 
 	// ADDITIONAL STUFF THAT MAY NOT BE PRESENT IN CHART

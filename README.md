@@ -38,7 +38,7 @@ Latest builds for the engine can be found in the [Actions](https://github.com/Yo
     <summary>Windows</summary>
 
 ##### Tested on Windows 10 21H2
-1. Install the [latest version of Haxe](https://haxe.org/download/).
+1. Install [version 4.2.5 of Haxe](https://haxe.org/download/version/4.2.5/).
 2. Download [Visual Studio Build Tools](https://aka.ms/vs/17/release/vs_BuildTools.exe)
 3. Wait for the Visual Studio Installer to install
 4. On the Visual Studio installer screen, go to the "Individual components" tab and only select those options:
@@ -63,7 +63,7 @@ Latest builds for the engine can be found in the [Actions](https://github.com/Yo
     <summary>Linux</summary>
 
 ##### Requires testing
-1. Install the [latest version of Haxe](https://haxe.org/download/).
+1. Install [version 4.2.5 of Haxe](https://haxe.org/download/version/4.2.5/).
 2. Install `g++`, if not present already.
 3. Download and install [`git-scm`](https://git-scm.com/download/linux).
 4. Open a terminal in the Codename Engine source folder, and run `update.sh`.
@@ -74,7 +74,7 @@ Latest builds for the engine can be found in the [Actions](https://github.com/Yo
     <summary>MacOS</summary>
 
 ##### Requires testing
-1. Install the [latest version of Haxe](https://haxe.org/download/).
+1. Install [version 4.2.5 of Haxe](https://haxe.org/download/version/4.2.5/).
 2. Install `Xcode` to allow C++ app building.
 3. Download and install [`git-scm`](https://git-scm.com/download/mac).
 4. Open a terminal in the Codename Engine source folder, and run `update.sh`.

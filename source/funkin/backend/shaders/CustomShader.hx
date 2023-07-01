@@ -14,6 +14,8 @@ import hscript.IHScriptCustomBehaviour;
  * To access the shader's uniform variables, use `shader.variable`
  */
 class CustomShader extends FunkinShader {
+	public var path:String = "";
+
 	/**
 	 * Creates a new custom shader
 	 * @param name Name of the frag and vert files.
@@ -24,6 +26,8 @@ class CustomShader extends FunkinShader {
 		var vertShaderPath = Paths.vertShader(name);
 		var fragCode = Assets.exists(fragShaderPath) ? Assets.getText(fragShaderPath) : null;
 		var vertCode = Assets.exists(vertShaderPath) ? Assets.getText(vertShaderPath) : null;
+
+		path = fragShaderPath+vertShaderPath;
 
 		if (fragCode == null && vertCode == null)
 			Logs.trace('Shader "$name" couldn\'t be found.', ERROR);

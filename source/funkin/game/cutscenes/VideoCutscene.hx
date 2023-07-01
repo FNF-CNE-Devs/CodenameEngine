@@ -8,7 +8,9 @@ import sys.io.File;
 #end
 import funkin.backend.FunkinText;
 import haxe.xml.Access;
-
+#if VIDEO_CUTSCENES
+import hxcodec.flixel.FlxVideo;
+#end
 
 /**
  * Substate made for video cutscenes. To use it in a scripted cutscene, call `startVideo`.
@@ -19,8 +21,8 @@ class VideoCutscene extends Cutscene {
 	var localPath:String;
 
 	#if VIDEO_CUTSCENES
-	var video:MP4Handler;
-	var videoSprite:FlxSprite;
+	var video:FlxVideo;
+	public var skippable:Bool = true;
 	#end
 	var cutsceneCamera:FlxCamera;
 
@@ -50,14 +52,9 @@ class VideoCutscene extends Cutscene {
 		#if VIDEO_CUTSCENES
 		parseSubtitles();
 
-		video = new MP4Handler();
-		video.finishCallback = close;
-		video.canvasWidth = cutsceneCamera.width;
-		video.canvasHeight = cutsceneCamera.height;
-
-		videoSprite = new FlxSprite();
-		videoSprite.cameras = [cutsceneCamera];
-		videoSprite.antialiasing = true;
+		video = new FlxVideo();
+		video.onEndReached.add(video.dispose);
+		video.onEndReached.add(close);
 
 		bg = new FlxSprite(0, FlxG.height * 0.85).makeGraphic(1, 1, 0xFF000000);
 		bg.alpha = 0.5;
@@ -88,9 +85,8 @@ class VideoCutscene extends Cutscene {
 				videoReady = true;
 			});
 		} else {
-			video.playMP4(localPath, false, videoSprite);
+			video.play(localPath);
 		}
-		add(videoSprite);
 		add(bg);
 		add(subtitle);
 		#end
@@ -164,17 +160,20 @@ class VideoCutscene extends Cutscene {
 		#if VIDEO_CUTSCENES
 		if (videoReady) {
 			videoReady = false;
-			video.playMP4(localPath, false, videoSprite);
+			video.play(localPath);
 			if (loadingBackdrop != null)
 				loadingBackdrop.visible = false;
 		}
 		@:privateAccess
-		var time = video.bitmap.getTime();
+		var time = video.time;
 		while (subtitles.length > 0 && subtitles[0].time < time)
 			setSubtitle(subtitles.shift());
 
 		if (loadingBackdrop != null) {
 			loadingBackdrop.x -= elapsed * FlxG.width * 0.5;
+		}
+		if (skippable && video.isPlaying && controls.ACCEPT) {
+			video.onEndReached.dispatch();
 		}
 		#else
 		close();

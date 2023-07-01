@@ -1,5 +1,6 @@
 package funkin.backend.scripting;
 
+import flixel.util.FlxStringUtil;
 import funkin.backend.scripting.events.CancellableEvent;
 
 @:access(CancellableEvent)
@@ -52,7 +53,8 @@ class ScriptPack extends Script {
 
 	public override function call(func:String, ?parameters:Array<Dynamic>):Dynamic {
 		for(e in scripts)
-			e.call(func, parameters);
+			if(e.active)
+				e.call(func, parameters);
 		return null;
 	}
 
@@ -64,8 +66,9 @@ class ScriptPack extends Script {
 	 */
 	public inline function event<T:CancellableEvent>(func:String, event:T):T {
 		for(e in scripts) {
+			if(!e.active) continue;
+
 			e.call(func, [event]);
-			@:privateAccess
 			if (event.cancelled && !event.__continueCalls) break;
 		}
 		return event;
@@ -95,7 +98,7 @@ class ScriptPack extends Script {
 	public override function onDestroy() {
 		for(e in scripts) e.destroy();
 	}
-	
+
 	public override function onCreate(path:String) {}
 
 	public function add(script:Script) {
@@ -116,5 +119,12 @@ class ScriptPack extends Script {
 		if (parent != null) script.setParent(parent);
 		script.setPublicMap(publicVariables);
 		for(k=>e in additionalDefaultVariables) script.set(k, e);
+	}
+
+	override public function toString():String {
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("parent", FlxStringUtil.getClassName(parent, true)),
+			LabelValuePair.weak("total", scripts.length),
+		]);
 	}
 }

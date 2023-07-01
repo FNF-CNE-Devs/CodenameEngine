@@ -128,7 +128,7 @@ class MemoryUtil {
 		reg.match(process.stdout.readAll().toString());
 		if (process.exitCode() == 0) return reg.matched(1);
 		#elseif linux
-		var process = HiddenProcess("sudo", ["dmidecode", "--type", "17"]);
+		var process = new HiddenProcess("sudo", ["dmidecode", "--type", "17"]);
 		if (process.exitCode() != 0) return "Unknown";
 		var lines = process.stdout.readAll().toString().split("\n");
 		for (line in lines) {

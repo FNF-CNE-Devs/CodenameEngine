@@ -51,27 +51,50 @@ class UITopMenuButton extends UISliceSprite {
 		members.push(this.label);
 	}
 
+	var justClosed:Int = 0;
+
 	public override function update(elapsed:Float) {
 		label.follow(this, 0, Std.int((bHeight - label.height) / 2));
 		super.update(elapsed);
 
-		var opened = curMenu.contextMenuOpened();
+		if(FlxG.mouse.released) {
+			if(justClosed > 0)
+				justClosed -= 1;
+		}
+
+		var opened = curMenu != null ? curMenu.contextMenuOpened() : false;
+
+		if(opened && FlxG.mouse.justPressed) {
+			__rect.x = x;
+			__rect.y = y;
+			__rect.width = bWidth;
+			__rect.height = bHeight;
+			if(UIState.state.isOverlapping(this, __rect)) {
+				curMenu.close();
+				justClosed = 2;
+				opened = false;
+			}
+		}
+
 		alpha = (hovered || opened) ? 1 : 0;
 		framesOffset = opened ? 9 : 0;
 	}
 
 	public override function onHovered() {
 		super.onHovered();
-		if (curMenu.contextMenuOpened()) {
+		if (curMenu != null && curMenu.contextMenuOpened()) {
 			UIState.state.curContextMenu.preventOutOfBoxClickDeletion();
 		} else {
-			if ((parent != null && parent.anyMenuOpened) || FlxG.mouse.justReleased) {
+			if (/*(parent != null && !parent.anyMenuOpened) || */FlxG.mouse.justReleased && justClosed == 0) {
 				openContextMenu();
 			}
 		}
 	}
 
 	public function openContextMenu() {
+		//if(UIState.state.curContextMenu != null) {
+		//	UIState.state.curContextMenu.close();
+		//}
 		var screenPos = getScreenPosition(null, __lastDrawCameras[0] == null ? FlxG.camera : __lastDrawCameras[0]);
 		curMenu = UIState.state.openContextMenu(contextMenu, null, screenPos.x, screenPos.y + bHeight);
 	}

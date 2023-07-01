@@ -6,6 +6,7 @@ import sys.FileSystem;
 import funkin.backend.assets.ModsFolder;
 import funkin.menus.TitleState;
 import funkin.menus.BetaWarningState;
+import funkin.editors.charter.EventsData;
 import flixel.FlxState;
 
 /**
@@ -42,8 +43,8 @@ class MainState extends FlxState {
 		Main.refreshAssets();
 		ModsFolder.onModSwitch.dispatch(ModsFolder.currentModFolder);
 		DiscordUtil.reloadJsonData();
+		EventsData.reloadEvents();
 		TitleState.initialized = false;
-
 
 		if (betaWarningShown)
 			FlxG.switchState(new TitleState());

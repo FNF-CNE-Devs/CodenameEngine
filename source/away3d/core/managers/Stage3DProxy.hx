@@ -1,5 +1,6 @@
 package away3d.core.managers;
 
+#if THREE_D_SUPPORT
 import away3d.debug.Debug;
 import away3d.events.Stage3DEvent;
 
@@ -712,3 +713,4 @@ class Stage3DProxy extends EventDispatcher
 		_ibUploadCount++;
 	}
 }
+#end

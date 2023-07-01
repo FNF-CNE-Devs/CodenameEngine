@@ -1,5 +1,5 @@
 import funkin.game.HudCamera;
-import funkin.scripting.events.NoteHitEvent;
+import funkin.backend.scripting.events.NoteHitEvent;
 
 public var pixelNotesForBF = true;
 public var pixelNotesForDad = true;
@@ -82,16 +82,16 @@ function postCreate() {
 		PauseSubState.script = 'data/scripts/week6-pause';
 	}
 	if (enableCameraHacks) {
-		FlxG.camera.antialiasing = false;
-		FlxG.camera.pixelPerfectRender = true;
-
-
-		iconP1.antialiasing = false;
-		iconP2.antialiasing = false;
+		camGame.pixelPerfectRender = true;
+		camGame.antialiasing = false;
 
 		makeCameraPixely(camGame);
 		defaultCamZoom /= daPixelZoom;
 	}
+
+	iconP1.antialiasing = false;
+	iconP2.antialiasing = false;
+
 	if (enablePixelGameOver) {
 		gameOverSong = "pixel/gameOver";
 		lossSFX = "pixel/gameOverSFX";
@@ -100,7 +100,7 @@ function postCreate() {
 }
 
 function onStartCountdown() {
-	var newNoteCamera = new HudCamera();
+	/*var newNoteCamera = new HudCamera();
 	newNoteCamera.bgColor = 0; // transparent
 	FlxG.cameras.add(newNoteCamera, false);
 
@@ -114,7 +114,7 @@ function onStartCountdown() {
 			i++;
 		}
 	}
-	makeCameraPixely(newNoteCamera);
+	makeCameraPixely(newNoteCamera);*/
 }
 
 /**
@@ -122,6 +122,8 @@ function onStartCountdown() {
  */
 public function makeCameraPixely(cam) {
 	cam.pixelPerfectRender = true;
+	if(!enableCameraHacks) return;
+
 	cam.zoom /= Math.min(FlxG.scaleMode.scale.x, FlxG.scaleMode.scale.y) * daPixelZoom;
 
 	var shad = new CustomShader('pixelZoomShader');
