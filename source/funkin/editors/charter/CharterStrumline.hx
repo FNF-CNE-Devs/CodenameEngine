@@ -39,13 +39,23 @@ class CharterStrumline extends UISprite {
 	}
 
 	public override function update(elapsed:Float) {
-		healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, 0);
+		if (healthIcon != null)
+			healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, 0);
 		button.follow(this, 0, 95);
 		super.update(elapsed);
 	}
 
 	public function updateInfo() {
-		// todo
+		members.remove(healthIcon);
+		healthIcon.destroy();
+
+		var icon = Character.getIconFromCharName(strumLine.characters != null ? strumLine.characters[0] : null);
+
+		healthIcon = new HealthIcon(icon);
+		healthIcon.scale.set(80 / 150, 80 / 150);
+		healthIcon.updateHitbox();
+		healthIcon.alpha = strumLine.visible ? 1 : 0.4;
+		members.push(healthIcon);
 	}
 }
 

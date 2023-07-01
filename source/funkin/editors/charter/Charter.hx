@@ -763,6 +763,7 @@ class Charter extends UIState {
 		var strID = getStrumlineID(strL);
 		FlxG.state.openSubState(new CharterStrumlineScreen(strID, strL, (_) -> {
 			strumLines.members[strID].strumLine = _;
+			strumLines.members[strID].updateInfo();
 		}));
 	}
 

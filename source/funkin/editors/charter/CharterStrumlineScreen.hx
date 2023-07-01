@@ -127,6 +127,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 				(charactersTextBox.y + 16) - (iconSprite.height/2)
 			);
 			add(iconSprite);
+			characterIcons.push(iconSprite);
 		}
 	}
 
