@@ -115,7 +115,7 @@ class Charter extends UIState {
 					},
 					null,
 					{
-						label: "Save Mata",
+						label: "Save Meta",
 						keybind: [CONTROL, ALT, S],
 						onSelect: _file_meta_save,
 					},
