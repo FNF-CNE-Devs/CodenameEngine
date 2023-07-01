@@ -1456,19 +1456,21 @@ class PlayState extends MusicBeatState
 		scripts.event("onNoteHit", event);
 
 		if (!event.cancelled) {
-			if (event.countScore) songScore += event.score;
-			if (event.accuracy != null) {
-				accuracyPressedNotes++;
-				totalAccuracyAmount += event.accuracy;
-				updateRating();
-			}
-			if (event.countAsCombo) combo++;
-
-			if (event.showRating || (event.showRating == null && event.player && !note.isSustainNote))
-			{
-				displayCombo(event);
-				displayJudgement(daRating, event);
-				ratingNum += 1;
+			if (!note.isSustainNote) {
+				if (event.countScore) songScore += event.score;
+				if (event.accuracy != null) {
+					accuracyPressedNotes++;
+					totalAccuracyAmount += event.accuracy;
+					updateRating();
+				}
+				if (event.countAsCombo) combo++;
+	
+				if (event.showRating || (event.showRating == null && event.player))
+				{
+					displayCombo(event);
+					displayJudgement(daRating, event);
+					ratingNum += 1;
+				}
 			}
 
 			if (strumLine != null) strumLine.addHealth(event.healthGain);
@@ -1510,7 +1512,7 @@ class PlayState extends MusicBeatState
 		FlxTween.tween(rating, {alpha: 0}, 0.2, {
 			startDelay: Conductor.crochet * 0.001,
 			onComplete: function(tween:FlxTween) {
-				rating.visible = rating.active = false;
+				rating.kill();
 			}
 		});
 	}
@@ -1533,7 +1535,7 @@ class PlayState extends MusicBeatState
 				FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
 					onComplete: function(tween:FlxTween)
 					{
-						comboSpr.visible = comboSpr.active = false;
+						comboSpr.kill();
 					},
 					startDelay: Conductor.crochet * 0.001
 				});
@@ -1554,7 +1556,7 @@ class PlayState extends MusicBeatState
 				FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 					onComplete: function(tween:FlxTween)
 					{
-						numScore.visible = numScore.active = false;
+						numScore.kill();
 					},
 					startDelay: Conductor.crochet * 0.002
 				});
