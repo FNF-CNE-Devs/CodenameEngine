@@ -9,6 +9,7 @@
     <git name="discord-rpc" url="https://github.com/Aidan63/linc_discord-rpc"/>
 	<git name="flxanimate" url="https://github.com/FNF-CNE-Devs/flxanimate/" />
 	<git name="hxCodec" url="https://github.com/polybiusproxy/hxCodec" global="true"/>
+	<!-- this is to fix a weird haxe bug -->
 	<git name="hxCodec" url="https://github.com/polybiusproxy/hxCodec" global="false"/>
 
 	<!-- Documentation and other features -->
