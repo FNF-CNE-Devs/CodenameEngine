@@ -20,7 +20,7 @@ class Update {
 		for (libNode in libsXML.elements) {
 			var lib:Library = {
 				name: libNode.att.name,
-				type: libNode.name,
+				type: libNode.name
 			};
 			if (libNode.has.global) lib.global = libNode.att.global;
 			switch (lib.type) {
