@@ -191,7 +191,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 						XMLUtil.addXMLAnimation(this, anim);
 					}
 
-					characterData = CharacterConfig.loadCharacterData(character);
+					characterData = CharacterConfig.loadCharacterData(curCharacter);
 
 					// Loads the script and calls it's "create" function
 					script = Script.create(Paths.script(Path.withoutExtension(xmlPath), null, true));
