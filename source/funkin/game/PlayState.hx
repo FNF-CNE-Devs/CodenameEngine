@@ -1508,8 +1508,10 @@ class PlayState extends MusicBeatState
 		rating.acceleration.y = 550;
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
-		rating.scale.set(event.ratingScale, event.ratingScale);
-		rating.antialiasing = event.ratingAntialiasing;
+		if (evt != null) {
+			rating.scale.set(evt.ratingScale,evt.ratingScale);
+			rating.antialiasing = evt.ratingAntialiasing;
+		}
 		rating.updateHitbox();
 
 		FlxTween.tween(rating, {alpha: 0}, 0.2, {
@@ -1534,8 +1536,10 @@ class PlayState extends MusicBeatState
 				comboSpr.velocity.y -= 150;
 				comboSpr.velocity.x += FlxG.random.int(1, 10);
 
-				comboSpr.scale.set(event.ratingScale, event.ratingScale);
-				comboSpr.antialiasing = event.ratingAntialiasing;
+				if (evt != null) {
+					comboSpr.scale.set(evt.ratingScale, evt.ratingScale);
+					comboSpr.antialiasing = evt.ratingAntialiasing;
+				}
 				comboSpr.updateHitbox();
 
 				FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
@@ -1551,8 +1555,10 @@ class PlayState extends MusicBeatState
 			{
 				var numScore:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${pre}num${separatedScore.charAt(i)}${suf}'));
 				numScore.resetSprite(comboGroup.x + (43 * i) - 90, comboGroup.y + 80);
-				numScore.antialiasing = event.numAntialiasing;
-				numScore.scale.set(event.numScale, event.numScale);
+				if (evt != null) {
+					numScore.antialiasing = evt.numAntialiasing;
+					numScore.scale.set(evt.numScale, evt.numScale);
+				}
 				numScore.updateHitbox();
 
 				numScore.acceleration.y = FlxG.random.int(200, 300);
