@@ -100,13 +100,12 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		}, 125);
 		add(saveButton);
 
-		if (!creatingStrumLine) {
-			closeButton = new UIButton(saveButton.x - 20, saveButton.y, "Close", function() {
-				close();
-			}, 125);
-			add(closeButton);
-			closeButton.x -= closeButton.bWidth;
-		}
+		closeButton = new UIButton(saveButton.x - 20, saveButton.y, creatingStrumLine ? "Cancel" : "Close", function() {
+			if (creatingStrumLine) onSave(null);
+			close();
+		}, 125);
+		add(closeButton);
+		closeButton.x -= closeButton.bWidth;
 	}
 
 	function updateCharacterIcons(characters:Array<String>) {

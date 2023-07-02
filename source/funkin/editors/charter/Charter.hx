@@ -54,7 +54,7 @@ class Charter extends UIState {
 	public var topLimit:FlxSprite;
 
 	public var strumlineInfoBG:FlxSprite;
-	public var strumlineAddButton:CharterStrumlineAddButton;
+	public var strumlineAddButton:CharterStrumlineExtraButton;
 
 	public var hitsound:FlxSound;
 	public var metronome:FlxSound;
@@ -388,7 +388,8 @@ class Charter extends UIState {
 		strumlineInfoBG.y = 23;
 		strumlineInfoBG.scrollFactor.set();
 
-		strumlineAddButton = new CharterStrumlineAddButton();
+		strumlineAddButton = new CharterStrumlineExtraButton("editors/charter/add-strumline", "Add New");
+		strumlineAddButton.onClick = createStrumWithUI;
 
 		strumlineAddButton.cameras = [charterCamera];
 		strumlineInfoBG.cameras = [charterCamera];
@@ -752,7 +753,7 @@ class Charter extends UIState {
 
 	public function createStrumWithUI() {
 		FlxG.state.openSubState(new CharterStrumlineScreen(strumLines.members.length, null, (_) -> {
-			createStrumline(strumLines.members.length, _);
+			if (_ != null) createStrumline(strumLines.members.length, _);
 		}));
 	}
 
