@@ -622,13 +622,14 @@ class PlayState extends MusicBeatState
 				chars.push(char);
 			}
 
-			var startingPos:FlxPoint = strumLine.strumPos == null ? switch (strumLine.type) {
-				case 1: FlxPoint.get((FlxG.width * 0.75) - ((Note.swagWidth * (strumLine.strumScale == null ? 1 : strumLine.strumScale)) * 2), this.strumLine.y);
-				default: FlxPoint.get((FlxG.width * 0.25) - ((Note.swagWidth * (strumLine.strumScale == null ? 1 : strumLine.strumScale)) * 2), this.strumLine.y);
-			} : FlxPoint.get(strumLine.strumPos[0], strumLine.strumPos[1]);
+			var strOffset:Float = strumLine.strumLinePos == null ? (strumLine.type == 1 ? 0.75 : 0.25) : strumLine.strumLinePos;
+
+			var startingPos:FlxPoint = strumLine.strumPos == null ?
+				FlxPoint.get((FlxG.width * strOffset) - ((Note.swagWidth * (strumLine.strumScale == null ? 1 : strumLine.strumScale)) * 2), this.strumLine.y) :
+				FlxPoint.get(strumLine.strumPos[0], strumLine.strumPos[1]);
 
 			var strLine = new StrumLine(chars,
-				startingPos, 
+				startingPos,
 				strumLine.strumScale == null ? 1 : strumLine.strumScale,
 				strumLine.type == 2 || (!coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode))), 
 				strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls

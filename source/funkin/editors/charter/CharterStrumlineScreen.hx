@@ -32,7 +32,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 	}
 
 	public override function create() {
-		var creatingStrumLine:Bool = strumLine == null; 
+		var creatingStrumLine:Bool = strumLine == null;
 
 		if (creatingStrumLine)
 			strumLine = {
@@ -63,7 +63,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		};
 		add(charactersTextBox);
 		addLabelOn(charactersTextBox, "Characters");
-		
+
 		updateCharacterIcons(strumLine.characters);
 
 		typeDropdown = new UIDropDown(charactersTextBox.x, charactersTextBox.y + 32 + 58, 200, 32, ["OPPONENT", "PLAYER", "ADDITIONAL"], strumLine.type);
@@ -71,7 +71,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		addLabelOn(typeDropdown, "Type");
 
 		var stagePositionI = strumLine.position == null ? strumLine.type : ["DAD", "BOYFRIEND", "GIRLFRIEND"].indexOf(strumLine.position.toUpperCase());
-		
+
 		stagePositionDropdown = new UIDropDown(typeDropdown.x + 200 - 32 + 26, typeDropdown.y, 200, 32, ["DAD", "BOYFRIEND", "GIRLFRIEND"], stagePositionI);
 		add(stagePositionDropdown);
 		addLabelOn(stagePositionDropdown, "Stage Position");
@@ -80,10 +80,11 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		add(hudScaleStepper);
 		addLabelOn(hudScaleStepper, "Scale");
 
-		var startingPos:FlxPoint = strumLine.strumPos == null ? switch (strumLine.type) {
-			case 1: FlxPoint.get((FlxG.width * 0.75) - ((Note.swagWidth * (strumLine.strumScale == null ? 1 : strumLine.strumScale)) * 2), 50);
-			default: FlxPoint.get((FlxG.width * 0.25) - ((Note.swagWidth * (strumLine.strumScale == null ? 1 : strumLine.strumScale)) * 2), 50);
-		} : FlxPoint.get(strumLine.strumPos[0], strumLine.strumPos[1]);
+		var strOffset:Float = strumLine.strumLinePos == null ? (strumLine.type == 1 ? 0.75 : 0.25) : strumLine.strumLinePos;
+
+		var startingPos:FlxPoint = strumLine.strumPos == null ?
+			FlxPoint.get((FlxG.width * strOffset) - ((Note.swagWidth * (strumLine.strumScale == null ? 1 : strumLine.strumScale)) * 2), 50) :
+			FlxPoint.get(strumLine.strumPos[0], strumLine.strumPos[1]);
 
 		hudXStepper = new UINumericStepper(hudScaleStepper.x + 80 - 32 + 26, hudScaleStepper.y, startingPos.x, 0.001, 2, null, null, 84);
 		add(hudXStepper);
