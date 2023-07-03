@@ -39,6 +39,8 @@ typedef ChartStrumLine = {
 	var ?visible:Null<Bool>;
 	var ?strumPos:Array<Float>;
 	var ?strumScale:Float;
+
+	var ?strumLinePos:Float; // Backwards compatability
 }
 
 typedef ChartNote = {

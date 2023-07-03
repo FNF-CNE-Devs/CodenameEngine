@@ -22,6 +22,7 @@ class Update {
 				name: libNode.att.name,
 				type: libNode.name
 			};
+			if (libNode.has.global) lib.global = libNode.att.global;
 			switch (lib.type) {
 				case "lib":
 					if (libNode.has.version) lib.version = libNode.att.version;
@@ -34,16 +35,17 @@ class Update {
 
         for(lib in libs) {
             // install libs
+	    var globalism = lib.global == "true" ? "--global" : "";
             switch(lib.type) {
                 case "lib":
-                    prettyPrint('Installing "${lib.name}"...');
-                    Sys.command('haxelib install ${lib.name} ${lib.version != null ? " " + lib.version : " "}');
+                    prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}"...');
+                    Sys.command('haxelib $globalism install ${lib.name} ${lib.version != null ? " " + lib.version : " "}');
                 case "git":
-                    prettyPrint('Installing "${lib.name}" from git url "${lib.url}"');
-					if (lib.ref != null)
-                    	Sys.command('haxelib git ${lib.name} ${lib.url} ${lib.ref}');
-					else
-                    	Sys.command('haxelib git ${lib.name} ${lib.url}');
+                    prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}" from git url "${lib.url}"');
+		if (lib.ref != null)
+                    Sys.command('haxelib $globalism git ${lib.name} ${lib.url} ${lib.ref}');
+		else
+                    Sys.command('haxelib $globalism git ${lib.name} ${lib.url}');
                 default:
                     prettyPrint('Cannot resolve library of type "${lib.type}"');
             }
@@ -90,6 +92,7 @@ class Update {
 typedef Library = {
     var name:String;
     var type:String;
+    var ?global:String;
     var ?version:String;
     var ?ref:String;
     var ?url:String;

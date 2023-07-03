@@ -182,7 +182,7 @@
 	<haxedev set='webgl' />
 
 	<haxelib name="hscript-improved" />
-	<haxelib name="linc_discord-rpc" if="DISCORD_RPC"/>
+	<haxelib name="discord-rpc" if="DISCORD_RPC"/>
 
 	<haxelib name="markdown" />
 
