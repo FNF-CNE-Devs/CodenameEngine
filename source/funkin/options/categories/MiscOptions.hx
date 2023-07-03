@@ -6,8 +6,8 @@ class MiscOptions extends OptionsScreen {
 		super("Miscellaneous", "Use this menu to reset save data or engine settings.");
 		#if UPDATE_CHECKING
 		add(new Checkbox(
-			"Enable Beta Updates",
-			"If checked, will also include beta (prereleases) updates in the update checking.",
+			"Enable Version Updates",
+			"If checked, will also include nightly builds in the update checking.",
 			"betaUpdates"));,
 		add(new TextOption(
 			"Check for Updates",
