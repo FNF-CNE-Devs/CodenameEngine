@@ -4,5 +4,6 @@ latest/windows/obj/
 latest/windows/haxe/
 .vscode/*
 !.vscode/settings.json
+!.vscode/tasks.json
 .haxelib/
 mods/Baldi's Basics in Funkin'/

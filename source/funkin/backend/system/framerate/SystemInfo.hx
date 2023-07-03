@@ -18,10 +18,43 @@ class SystemInfo extends FramerateCategory {
 	static var __formattedSysText:String = "";
 
 	public static inline function init() {
+		#if linux
+		var process = new HiddenProcess("cat", ["/etc/os-release"]);
+		if (process.exitCode() != 0) Logs.trace('Unable to grab OS Label', ERROR, RED);
+		else {
+			var osName = "";
+			var osVersion = "";
+			for (line in process.stdout.readAll().toString().split("\n")) {
+				if (line.startsWith("PRETTY_NAME=")) {
+					var index = line.indexOf('"');
+					if (index != -1)
+						osName = line.substring(index + 1, line.lastIndexOf('"'));
+					else {
+						var arr = line.split("=");
+						arr.shift();
+						osName = arr.join("=");
+					}
+				}
+				if (line.startsWith("VERSION=")) {
+					var index = line.indexOf('"');
+					if (index != -1)
+						osVersion = line.substring(index + 1, line.lastIndexOf('"'));
+					else {
+						var arr = line.split("=");
+						arr.shift();
+						osVersion = arr.join("=");
+					}
+				}
+			}
+			if (osName != "")
+				osInfo = '${osName} ${osVersion}'.trim();
+		}
+		#else
 		if (lime.system.System.platformLabel != null && lime.system.System.platformLabel != "" && lime.system.System.platformVersion != null && lime.system.System.platformVersion != "")
 			osInfo = '${lime.system.System.platformLabel.replace(lime.system.System.platformVersion, "").trim()} ${lime.system.System.platformVersion}';
 		else
 			Logs.trace('Unable to grab OS Label', ERROR, RED);
+		#end
 
 		try {
 			#if windows
@@ -38,7 +71,7 @@ class SystemInfo extends FramerateCategory {
 			var process = new HiddenProcess("cat", ["/proc/cpuinfo"]);
 			if (process.exitCode() != 0) throw 'Could not fetch CPU information';
 
-			for (line in  process.stdout.readAll().toString().split("\n")) {
+			for (line in process.stdout.readAll().toString().split("\n")) {
 				if (line.indexOf("model name") == 0) {
 					cpuName = line.substring(line.indexOf(":") + 2);
 					break;
