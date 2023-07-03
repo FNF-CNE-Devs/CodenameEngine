@@ -6,7 +6,7 @@ class MiscOptions extends OptionsScreen {
 		super("Miscellaneous", "Use this menu to reset save data or engine settings.");
 		#if UPDATE_CHECKING
 		add(new Checkbox(
-			"Enable Version Updates",
+			"Enable Nightly Updates",
 			"If checked, will also include nightly builds in the update checking.",
 			"betaUpdates"));,
 		add(new TextOption(
