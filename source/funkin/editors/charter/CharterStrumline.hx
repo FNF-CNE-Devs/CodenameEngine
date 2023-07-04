@@ -39,13 +39,23 @@ class CharterStrumline extends UISprite {
 	}
 
 	public override function update(elapsed:Float) {
-		healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, 0);
+		if (healthIcon != null)
+			healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, 0);
 		button.follow(this, 0, 95);
 		super.update(elapsed);
 	}
 
 	public function updateInfo() {
-		// todo
+		members.remove(healthIcon);
+		healthIcon.destroy();
+
+		var icon = Character.getIconFromCharName(strumLine.characters != null ? strumLine.characters[0] : null);
+
+		healthIcon = new HealthIcon(icon);
+		healthIcon.scale.set(80 / 150, 80 / 150);
+		healthIcon.updateHitbox();
+		healthIcon.alpha = strumLine.visible ? 1 : 0.4;
+		members.push(healthIcon);
 	}
 }
 
@@ -66,28 +76,6 @@ class CharterStrumlineButton extends UITopMenuButton {
 	public override function openContextMenu() {
 		contextMenu = [
 			{
-				label: "Player",
-				onSelect: function(_) {
-					strLine.strumLine.type = PLAYER;
-				},
-				icon: strLine.strumLine.type == PLAYER ? 1 : 0
-			},
-			{
-				label: "Opponent",
-				onSelect: function(_) {
-					strLine.strumLine.type = OPPONENT;
-				},
-				icon: strLine.strumLine.type == OPPONENT ? 1 : 0
-			},
-			{
-				label: "Additional",
-				onSelect: function(_) {
-					strLine.strumLine.type = ADDITIONAL;
-				},
-				icon: strLine.strumLine.type == ADDITIONAL ? 1 : 0
-			},
-			null,
-			{
 				label: "Visible",
 				onSelect: function(_) {
 					strLine.strumLine.visible = !strLine.strumLine.visible;
@@ -105,9 +93,15 @@ class CharterStrumlineButton extends UITopMenuButton {
 			},
 			null,
 			{
-				label: "Delete",
+				label: "Edit",
 				onSelect: function (_) {
-					Charter.instance.deleteStrumline(Charter.instance.getStrumlineID(strLine.strumLine));
+					Charter.instance.editStrumline(strLine.strumLine);
+				}
+			},
+			{
+				label: "Delete",  
+				onSelect: function (_) {
+					Charter.instance.deleteStrumlineFromData(strLine.strumLine);
 				}
 			}
 		];

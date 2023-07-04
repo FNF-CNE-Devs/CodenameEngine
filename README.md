@@ -1,8 +1,8 @@
 # Friday Night Funkin' - Codename Engine (WIP)
 
-## PLEASE NOTE - THIS IS STILL IN A BETA STATE
-### Mods created with beta versions of Codename may not be compatible with the release version
-Known issues in the beta:
+## PLEASE NOTE - THIS IS STILL IN A ALPHA STATE
+### Mods created with alpha versions of Codename may not be compatible with the release version
+Known issues in the alpha:
 - Some options are missing
 - Week 5 has no monster animation
 - Week 6 still have no dialogue

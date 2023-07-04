@@ -36,8 +36,11 @@ typedef ChartStrumLine = {
 	var type:ChartStrumLineType;
 	var notes:Array<ChartNote>;
 	var position:String;
-	var ?strumLinePos:Float; // 0.25 = default opponent pos, 0.75 = default boyfriend pos
 	var ?visible:Null<Bool>;
+	var ?strumPos:Array<Float>;
+	var ?strumScale:Float;
+
+	var ?strumLinePos:Float; // Backwards compatability
 }
 
 typedef ChartNote = {

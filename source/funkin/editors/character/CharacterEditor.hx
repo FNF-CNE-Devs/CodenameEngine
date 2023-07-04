@@ -38,7 +38,12 @@ class CharacterEditor extends UIState
 	public var curAnim:Int = 0;
 
 	public var playingAnim:UIText;
+	public var currentChar:UIText;
 	public var movingCamText:UIText;
+
+	//Healthbar
+	public var healthBarBG:FlxSprite;
+	public var icon:FlxSprite;
 
 	public var camZoom(default, set):Float = 1;
 
@@ -85,16 +90,49 @@ class CharacterEditor extends UIState
 		// UI
 		loadUI();
 
-		playingAnim = new UIText((FlxG.width / 2), 30, -1, 'Animation:\n${char.characterData.animations[curAnim].name}', 24);
+		playingAnim = new UIText(846.62, 64.23, 0, 'Animation: ${char.characterData.animations[curAnim].name}', 24);
+		playingAnim.alignment = LEFT;
 		playingAnim.cameras = [uiCamera];
+
+		currentChar = new UIText(846.62, 30.23, 0, 'Character: ${char.curCharacter}', 24);
+		currentChar.alignment = LEFT;
+		currentChar.cameras = [uiCamera];
 
 		movingCamText = new UIText((FlxG.width / 4) - 310, (FlxG.height / 2), -1,
 			"Press the left mouse button anywhere on this stage to set the character's camera position.", 24);
 		movingCamText.cameras = [uiCamera];
 		movingCamText.visible = false;
 
+		//Health Bar
+		healthBarBG = new FlxSprite(747, 102).loadGraphic(Paths.image('game/healthBar'));
+		healthBarBG.setGraphicSize(399,13);
+		healthBarBG.scrollFactor.set();
+		healthBarBG.cameras = [uiCamera];
+
+
+		var charData:CharacterData;
+		charData = char.characterData;
+
+		var path = Paths.image('icons/${charData.icon}');
+		if (!Assets.exists(path)) path = Paths.image('icons/face');
+
+		//Show both Losing Normal Icons
+		icon = new FlxSprite(754, 86).loadGraphic(path);
+		icon.scale.set(0.5,0.5);
+		icon.scrollFactor.set();
+		icon.cameras = [uiCamera];
+
+
+
+
+
+		healthBarBG.color = charData.iconColor;
+
 		// Top Menu
+		add(currentChar);
 		add(playingAnim);
+		add(icon);
+		add(healthBarBG);
 		add(movingCamText);
 		add(topMenuSpr);
 		add(uiGroup);
@@ -108,10 +146,21 @@ class CharacterEditor extends UIState
 		changeAnim();
 		moveCharPos();
 		detectCamClick();
+		mouseControl();
 
 		ghostChar.setPosition(char.x, char.y);
 		super.update(elapsed);
 	}
+
+	public function reloadIcon()
+		{
+			var charData:CharacterData;
+			charData = char.characterData;
+			
+			var path = Paths.image('icons/${charData.icon}');
+			if (!Assets.exists(path)) path = Paths.image('icons/face');
+			icon.loadGraphic(path);
+		}
 
 	public function searchAnim(name:String, ?array:Array<AnimData>):AnimData
 	{
@@ -186,6 +235,13 @@ class CharacterEditor extends UIState
 
 		animAtlas = (char.animateAtlas != null ? char.animateAtlas : null);
 
+		currentChar.text = 'Character: ${char.curCharacter}';
+		healthBarBG.color = charData.iconColor;
+		reloadIcon();
+		
+
+		trace(charData.iconColor);
+
 		updateCharPos(charData.offsetX, charData.offsetY);
 		updatePointerPos();
 		mixDataToChar(char, charData);
@@ -255,7 +311,8 @@ class CharacterEditor extends UIState
 				label: "File",
 				childs: [
 					{
-						label: "New"
+						label: "New",
+						onSelect: new_character
 					},
 					null,
 					{
@@ -509,6 +566,18 @@ class CharacterEditor extends UIState
 		ghostChar.playAnim(char.characterData.animations[curAnim].name, true);
 	}
 
+	public function mouseControl()
+		{
+			if (FlxG.mouse.justReleasedRight) {
+				closeCurrentContextMenu();
+				openContextMenu(topMenu[1].childs);
+			}
+
+			if (FlxG.mouse.wheel != 0) {
+				camZoom += (FlxG.mouse.wheel / 10);
+			}
+		}
+
 	function controlCharacter()
 	{
 		var controlArray:Array<Bool> = [
@@ -607,6 +676,10 @@ class CharacterEditor extends UIState
 			if (camZoom < 0.1)
 				camZoom = 0.1;
 		}
+
+
+
+		
 	}
 
 	function changeAnim()
@@ -624,7 +697,7 @@ class CharacterEditor extends UIState
 			trace(char.characterData.animations[curAnim]);
 
 			char.playAnim(char.characterData.animations[curAnim].name, false);
-			playingAnim.text = 'Animation:\n${char.characterData.animations[curAnim].name}';
+			playingAnim.text = 'Animation: ${char.characterData.animations[curAnim].name}';
 		}
 
 		if (space)
@@ -658,6 +731,10 @@ class CharacterEditor extends UIState
 		Framerate.codenameBuildField.alpha = 1;
 		super.destroy();
 	}
+
+	function new_character(_)
+		FlxG.state.openSubState(new NewCharacter(char, ghostChar, this));
+
 
 	function edit_properties_window(_)
 		FlxG.state.openSubState(new CharacterProperties(char, ghostChar, this));

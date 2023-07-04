@@ -34,7 +34,6 @@ class BaseGameParser {
 				position: "girlfriend",
 				notes: [],
 				visible: false,
-				strumLinePos: 0.5
 			});
 		}
 
