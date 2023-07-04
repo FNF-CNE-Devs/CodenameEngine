@@ -23,7 +23,7 @@ class Alphabet extends FlxSpriteGroup
 	public var targetY:Float = 0;
 	public var isMenuItem:Bool = false;
 
-	public var text(default, set):String = "";
+	public var text:String = "";
 
 	var _finalText:String = "";
 	var _curText:String = "";
@@ -49,24 +49,6 @@ class Alphabet extends FlxSpriteGroup
 			}
 		}
 		return super.set_color(c);
-	}
-
-	private function set_text(v:String):String {
-		text = v;
-
-                while (members.length > 0) {
-			var character = members[0];
-                        remove(character, true);
-                        character.destroy();
-		}
-
-		if (text != "") {
-			if (typed)
-				startTypedText();
-			else
-				addText();
-                }
-		return v;
 	}
 
 	// TODO: fix this shit refreshing
@@ -102,6 +84,7 @@ class Alphabet extends FlxSpriteGroup
 	{
 		super(x, y);
 
+		_finalText = this.text = text;
 		isBold = bold;
 
 		var alphabetPath = Paths.xml("alphabet");
@@ -128,7 +111,17 @@ class Alphabet extends FlxSpriteGroup
 		}
 		#end
 
-		_finalText = this.text = text;
+		if (text != "")
+		{
+			if (typed)
+			{
+				startTypedText();
+			}
+			else
+			{
+				addText();
+			}
+		}
 	}
 
 	public function addText()
