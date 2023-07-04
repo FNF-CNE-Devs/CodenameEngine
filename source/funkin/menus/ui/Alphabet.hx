@@ -53,6 +53,13 @@ class Alphabet extends FlxSpriteGroup
 
 	private function set_text(v:String):String {
 		text = v;
+
+                while (members.length > 0) {
+			var character = members[0];
+                        remove(character, true);
+                        character.destroy();
+		}
+
 		if (text != "") {
 			if (typed)
 				startTypedText();
