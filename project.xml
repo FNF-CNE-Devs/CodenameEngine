@@ -152,7 +152,7 @@
 	<define name="THREE_D_SUPPORT" />
 
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
-	<define name="VIDEO_CUTSCENES" unless="web || linux || hl || mac" />
+	<define name="VIDEO_CUTSCENES" unless="web || linux || hl" />
 
 	<!-- Comment this out to disable commit number on FPS -->
 	<define name="SHOW_BUILD_ON_FPS" />
@@ -172,7 +172,7 @@
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 
-	<haxelib name="hxCodec" if="VIDEO_CUTSCENES" />
+	<haxelib name="hxCodec-cne" if="VIDEO_CUTSCENES" />
 	<section if="THREE_D_SUPPORT">
 		<haxelib name="away3d" />
 	</section>
