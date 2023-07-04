@@ -59,6 +59,7 @@ class Alphabet extends FlxSpriteGroup
 			else
 				addText();
                 }
+		return v;
 	}
 
 	// TODO: fix this shit refreshing
