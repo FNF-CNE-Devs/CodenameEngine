@@ -30,7 +30,7 @@ class FramerateCounter extends Sprite {
 		if (alpha <= 0.05) return;
 		super.__enterFrame(t);
 
-		lastFPS = FlxG.elapsed == 0 ? 0 : (1 / FlxG.elapsed);
+		lastFPS = CoolUtil.fpsLerp(lastFPS, FlxG.elapsed == 0 ? 0 : (1 / FlxG.elapsed), 0.25);
 		fpsNum.text = Std.string(Math.floor(lastFPS));
 		fpsLabel.x = fpsNum.x + fpsNum.width;
 		fpsLabel.y = (fpsNum.y + fpsNum.height) - fpsLabel.height;
