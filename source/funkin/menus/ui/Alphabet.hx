@@ -24,7 +24,6 @@ class Alphabet extends FlxSpriteGroup
 	public var isMenuItem:Bool = false;
 
 	public var text(default, set):String = "";
-	public var typed:Bool = false;
 
 	var _finalText:String = "";
 	var _curText:String = "";
@@ -129,7 +128,6 @@ class Alphabet extends FlxSpriteGroup
 		}
 		#end
 
-		this.typed = typed;
 		_finalText = this.text = text;
 	}
 
