@@ -31,7 +31,7 @@ class ChartDataScreen extends UISubstateWindow {
 
 		super.create();
 
-		scrollSpeedStepper = new UINumericStepper(windowSpr.x + 20, windowSpr.y + 60, data.scrollSpeed, 0.1, 2, 0, 100, 82);
+		scrollSpeedStepper = new UINumericStepper(windowSpr.x + 20, windowSpr.y + 60, data.scrollSpeed, 0.1, 2, 0, 10, 82);
 		add(scrollSpeedStepper);
 		addLabelOn(scrollSpeedStepper, "Scroll Speed");
 

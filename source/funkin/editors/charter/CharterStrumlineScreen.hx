@@ -89,7 +89,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		}
 		add(usesChartscrollSpeed);
 
-		scrollSpeedStepper = new UINumericStepper(typeDropdown.x, typeDropdown.y + 32 + 58, usesChartscrollSpeed.checked ? PlayState.SONG.scrollSpeed : strumLine.scrollSpeed, 0.1, 2, 0, 100, 82);
+		scrollSpeedStepper = new UINumericStepper(typeDropdown.x, typeDropdown.y + 32 + 58, usesChartscrollSpeed.checked ? PlayState.SONG.scrollSpeed : strumLine.scrollSpeed, 0.1, 2, 0, 10, 82);
 		if(usesChartscrollSpeed.checked)
 		{
 			scrollSpeedStepper.alpha = 0.4;
