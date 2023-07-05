@@ -201,6 +201,11 @@ class Charter extends UIState {
 					{
 						label: "Edit metadata information",
 						onSelect: chart_edit_metadata
+					},
+					null,
+					{
+						label: "Edit chart data",
+						onSelect: chart_edit_data
 					}
 				]
 			},
@@ -1085,6 +1090,8 @@ class Charter extends UIState {
 	}
 	function chart_edit_metadata(_)
 		FlxG.state.openSubState(new MetaDataScreen(PlayState.SONG.meta));
+	function chart_edit_data(_)
+		FlxG.state.openSubState(new ChartDataScreen(PlayState.SONG));
 
 	function _playback_metronome(t) {
 		t.icon = (Options.charterMetronomeEnabled = !Options.charterMetronomeEnabled) ? 1 : 0;
