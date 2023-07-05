@@ -258,7 +258,10 @@ class StrumLine extends FlxTypedGroup<Strum> {
 			animPrefix = strumAnimPrefix[i % strumAnimPrefix.length];
 		var babyArrow:Strum = new Strum(startingPos.x + ((Note.swagWidth * strumScale) * i), startingPos.y);
 		babyArrow.ID = i;
-
+		
+		if(data.scrollSpeed != null)
+			babyArrow.scrollSpeed = data.scrollSpeed;
+		
 		var event = PlayState.instance.scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, PlayState.instance.strumLines.members.indexOf(this), i, animPrefix));
 
 		if (!event.cancelled) {

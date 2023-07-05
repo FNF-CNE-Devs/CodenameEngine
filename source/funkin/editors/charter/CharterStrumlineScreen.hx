@@ -16,6 +16,8 @@ class CharterStrumlineScreen extends UISubstateWindow {
 	public var hudScaleStepper:UINumericStepper;
 	public var hudXStepper:UINumericStepper;
 	public var hudYStepper:UINumericStepper;
+	public var scrollSpeedStepper:UINumericStepper;
+	public var usesChartscrollSpeed:UICheckbox;
 
 	public var characterIcons:Array<HealthIcon> = [];
 
@@ -44,7 +46,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			};
 
 		winTitle = creatingStrumLine ? 'Creating Strumline #$strumLineID' : 'Strumline #$strumLineID properties';
-		winWidth = 690; winHeight = 334;
+		winWidth = 690; winHeight = 390;
 
 		FlxG.sound.music.pause();
 		Charter.instance.vocals.pause();
@@ -69,6 +71,37 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		typeDropdown = new UIDropDown(charactersTextBox.x, charactersTextBox.y + 32 + 58, 200, 32, ["OPPONENT", "PLAYER", "ADDITIONAL"], strumLine.type);
 		add(typeDropdown);
 		addLabelOn(typeDropdown, "Type");
+
+		usesChartscrollSpeed = new UICheckbox(typeDropdown.x + 200 - 32 + 26, typeDropdown.y + 32 + 58, "Uses charts scroll speed?", strumLine.scrollSpeed == null);
+		usesChartscrollSpeed.onChecked = function(b) {
+			if(b)
+			{
+				scrollSpeedStepper.alpha = 0.4;
+				scrollSpeedStepper.label.alpha = 0.4;
+				scrollSpeedStepper.value = PlayState.SONG.scrollSpeed;
+				scrollSpeedStepper.active = false;
+			} else {
+				scrollSpeedStepper.alpha = 1;
+				scrollSpeedStepper.label.alpha = 1;
+				scrollSpeedStepper.active = true;
+			}
+				
+		}
+		add(usesChartscrollSpeed);
+
+		scrollSpeedStepper = new UINumericStepper(typeDropdown.x, typeDropdown.y + 32 + 58, usesChartscrollSpeed.checked ? PlayState.SONG.scrollSpeed : strumLine.scrollSpeed, 0.1, 2, 0, 10, 82);
+		if(usesChartscrollSpeed.checked)
+		{
+			scrollSpeedStepper.alpha = 0.4;
+			scrollSpeedStepper.label.alpha = 0.4;
+			scrollSpeedStepper.active = false;
+		} else {
+			scrollSpeedStepper.alpha = 1;
+			scrollSpeedStepper.label.alpha = 1;
+			scrollSpeedStepper.active = true;
+		}
+		add(scrollSpeedStepper);
+		addLabelOn(scrollSpeedStepper, "Scroll Speed");
 
 		var stagePositionI = strumLine.position == null ? strumLine.type : ["DAD", "BOYFRIEND", "GIRLFRIEND"].indexOf(strumLine.position.toUpperCase());
 
@@ -144,6 +177,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			strumPos: [hudXStepper.value, hudYStepper.value],
 			strumScale: hudScaleStepper.value
 		};
+		if(!usesChartscrollSpeed.checked) strumLine.scrollSpeed = scrollSpeedStepper.value;
 		if (onSave != null) onSave(strumLine);
 	}
 }
