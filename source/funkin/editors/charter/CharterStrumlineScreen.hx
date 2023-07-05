@@ -90,9 +90,15 @@ class CharterStrumlineScreen extends UISubstateWindow {
 
 		scrollSpeedStepper = new UINumericStepper(typeDropdown.x, typeDropdown.y + 32 + 58, usesChartscrollSpeed.checked ? PlayState.SONG.scrollSpeed : strumLine.scrollSpeed, 0.1, 2, 0, 100, 82);
 		if(usesChartscrollSpeed.checked)
+		{
 			scrollSpeedStepper.alpha = 0.4;
-		else
+			scrollSpeedStepper.label.alpha = 0.4;
+			scrollSpeedStepper.active = false;
+		} else {
 			scrollSpeedStepper.alpha = 1;
+			scrollSpeedStepper.label.alpha = 1;
+			scrollSpeedStepper.active = true;
+		}
 		add(scrollSpeedStepper);
 		addLabelOn(scrollSpeedStepper, "Scroll Speed");
 
