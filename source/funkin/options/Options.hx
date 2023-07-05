@@ -17,44 +17,45 @@ class Options
 	/**
 	 * SETTINGS
 	 */
-	public static var naughtyness:Bool = true;
-	public static var downscroll:Bool = false;
-	public static var ghostTapping:Bool = true;
-	public static var flashingMenu:Bool = true;
-	public static var camZoomOnBeat:Bool = true;
-	public static var fpsCounter:Bool = true;
-	public static var autoPause:Bool = true;
-	public static var antialiasing:Bool = true;
-	public static var volume:Float = 1;
-	public static var week6PixelPerfect:Bool = true;
-	public static var lowMemoryMode:Bool = false;
-	public static var betaUpdates:Bool = false;
-	public static var splashesEnabled:Bool = true;
-	public static var hitWindow:Float = 250;
-	public static var framerate:Int = 120;
-	public static var gpuOnlyBitmaps:Bool = #if mac false #else true #end; // causes issues on mac
+	public static var naughtyness:Bool = true; // If you want your game to be on the nice list, disable this.
+	public static var downscroll:Bool = false; // If you like OSU Mania or Guitar Hero, then feel free to enable this.
+	public static var ghostTapping:Bool = false; // If you're a chicken, go ahead!
+	public static var flashingMenu:Bool = true; // If you're sensitive to flashing lights, disable this.
+	public static var camZoomOnBeat:Bool = true; // If you don't like it when the camera zooms in on the beat, then don't leave this on.
+	public static var fpsCounter:Bool = true; // If the FPS counter is buggin' you, then you can always hide it here.
+	public static var autoPause:Bool = true; // If you want the game to pause when you're not focused on it, then you can leave this option as is, but if you wanna listen to the main menu music as you do other stuff, then disable this option and jam to the menu music all you like!
+	public static var antialiasing:Bool = true; // If you want your game to look more clean than it already is, there's this stupid option.
+	public static var volume:Float = 1; // Ow, my ears.
+	public static var week6PixelPerfect:Bool = true; // If you'd like Week 6 to be pixel perfect, then feel free to enable this!
+	public static var lowMemoryMode:Bool = false; // If your PC can't handle many background elements, or the fact you want to save on resources, enable this.
+	public static var betaUpdates:Bool = false; // This is best left off, not like anyone's gonna need this.
+	public static var splashesEnabled:Bool = true; // If you don't like seeing cool splashes when you get a Sick! rating or if it lags on your PC, then disable this.
+	public static var hitWindow:Float = 250; // I don't know what this does.
+	public static var framerate:Int = 120; // If you want your game to have less friction, set this to a higher value.
+	public static var gpuOnlyBitmaps:Bool = #if mac false #else true #end; // causes issues on mac :(
+	// This loads graphics to your GPU unless you're on macOS X.
 
-	public static var lastLoadedMod:String = null;
+	public static var lastLoadedMod:String = null; // This checks your last loaded mod, which by default is set to null since you're not expected to be loaded into a mod when you first download this.
 
 	/**
 	 * EDITORS SETTINGS
 	 */
-	public static var intensiveBlur:Bool = true;
-	public static var editorSFX:Bool = true;
-	public static var resizableEditors:Bool = true;
-	public static var maxUndos:Int = 120;
+	public static var intensiveBlur:Bool = true; // This makes the backgrounds blurry for when you're focused on an editor window rather than the rest of the game. Disable if needed.
+	public static var editorSFX:Bool = true; // This enables fun sound effects for the editors, you can disable them if it distracts you or if you don't like them.
+	public static var resizableEditors:Bool = true; // This allows you to be able to resize the window of your game, and have the editors resize with the game window too! Very useful!
+	public static var maxUndos:Int = 150; // This controls how many undos you can do in the editors.
 
 	/**
 	 * QOL FEATURES
 	 */
-	public static var freeplayLastSong:String = null;
-	public static var freeplayLastDifficulty:String = "normal";
+	public static var freeplayLastSong:String = null; // This value is set to the last played song in Freeplay mode. By default, there is no value.
+	public static var freeplayLastDifficulty:String = "normal"; // This value is set to the difficulty of the last played song in Freeplay mode. Although I think it might be broken since the game launches me in Easy mode.
 
 	// CHARTER
-	public static var charterMetronomeEnabled:Bool = false;
-	public static var charterShowSections:Bool = true;
-	public static var charterShowBeats:Bool = true;
-	public static var charterEnablePlaytestScripts:Bool = true;
+	public static var charterMetronomeEnabled:Bool = false; // This enables the metronome in the charter, useful if you need to place notes with an easier beat to follow with.
+	public static var charterShowSections:Bool = true; // This shows the sections in the charter, which makes it easier to chart via section.
+	public static var charterShowBeats:Bool = true; // This shows the beats of the song.
+	public static var charterEnablePlaytestScripts:Bool = true; // This allows you to use Scripts as you playtest a chart.
 
 	/**
 	 * PLAYER 1 CONTROLS
