@@ -29,7 +29,8 @@
 - [ ] New Switch Mod menu
 - [x] Port shader camera stuff over to new flixel fork
 - [ ] Add note offset
-- [ ] Dialogue
+- [ ] Dialogue Editor
+- [ ] Week 6 Dialogue
 - [ ] Finish Base Game port
 - [ ] Add credits
 - [ ] Verbose mode (`--verbose`)
