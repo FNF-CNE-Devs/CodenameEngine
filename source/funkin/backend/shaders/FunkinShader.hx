@@ -46,6 +46,8 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 
 	@:noCompletion override private function set_glFragmentSource(value:String):String
 	{
+		if(value == null)
+			value = ShaderTemplates.defaultFragmentSource;
 		value = value.replace("#pragma header", ShaderTemplates.fragHeader).replace("#pragma body", ShaderTemplates.fragBody);
 		if (value != __glFragmentSource)
 		{
@@ -57,6 +59,8 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 
 	@:noCompletion override private function set_glVertexSource(value:String):String
 	{
+		if(value == null)
+			value = ShaderTemplates.defaultVertexSource;
 		value = value.replace("#pragma header", ShaderTemplates.vertHeader).replace("#pragma body", ShaderTemplates.vertBody);
 		if (value != __glVertexSource)
 		{
