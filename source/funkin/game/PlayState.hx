@@ -1093,6 +1093,7 @@ class PlayState extends MusicBeatState
 
 		if (canAccessDebugMenus) {
 			if (chartingMode && FlxG.keys.justPressed.SEVEN) {
+				Logs.trace('Going to chart editor...', WARNING, GREEN);
 				FlxG.switchState(new funkin.editors.charter.Charter(SONG.meta.name, difficulty, false));
 			}
 			if (FlxG.keys.justPressed.F5) {
@@ -1101,7 +1102,7 @@ class PlayState extends MusicBeatState
 				Logs.trace('Song scripts successfully reloaded.', WARNING, GREEN);
 			}
 		}
-
+		// I hate this code below.
 		iconP1.scale.set(lerp(iconP1.scale.x, 1, 0.33), lerp(iconP1.scale.y, 1, 0.33));
 		iconP2.scale.set(lerp(iconP2.scale.x, 1, 0.33), lerp(iconP2.scale.y, 1, 0.33));
 
