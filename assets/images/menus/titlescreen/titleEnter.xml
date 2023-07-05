@@ -1,16 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TextureAtlas imagePath="titleEnter.png">
-	<!-- Created with Adobe Animate version 20.0.0.17400 -->
+	<!-- Created with Adobe Animate version 20.0.0.17400 and edited by Nex_isDumb -->
 	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="ENTER PRESSED0000" x="0" y="0" width="1477" height="79"/>
-	<SubTexture name="ENTER PRESSED0001" x="1487" y="0" width="1477" height="79"/>
-	<SubTexture name="ENTER PRESSED0002" x="0" y="0" width="1477" height="79"/>
-	<SubTexture name="ENTER PRESSED0003" x="1487" y="0" width="1477" height="79"/>
-	<SubTexture name="ENTER PRESSED0004" x="0" y="0" width="1477" height="79"/>
-	<SubTexture name="ENTER PRESSED0005" x="1487" y="0" width="1477" height="79"/>
-	<SubTexture name="ENTER PRESSED0006" x="1487" y="0" width="1477" height="79"/>
-	<SubTexture name="ENTER PRESSED0007" x="0" y="0" width="1477" height="79"/>
-	<SubTexture name="ENTER PRESSED0008" x="1487" y="0" width="1477" height="79"/>
+	<SubTexture name="ENTER PRESSED0000" x="0" y="0" width="1477" height="96"/>
+	<SubTexture name="ENTER PRESSED0001" x="1505" y="0" width="1477" height="96"/>
+	<SubTexture name="ENTER PRESSED0002" x="0" y="0" width="1477" height="96"/>
+	<SubTexture name="ENTER PRESSED0003" x="1505" y="0" width="1477" height="96"/>
+	<SubTexture name="ENTER PRESSED0004" x="0" y="0" width="1477" height="96"/>
+	<SubTexture name="ENTER PRESSED0005" x="1505" y="0" width="1477" height="96"/>
+	<SubTexture name="ENTER PRESSED0007" x="0" y="0" width="1477" height="96"/>
+	<SubTexture name="ENTER PRESSED0008" x="1505" y="0" width="1477" height="96"/>
 	<SubTexture name="Press Enter to Begin0000" x="0" y="89" width="1495" height="96"/>
 	<SubTexture name="Press Enter to Begin0001" x="1505" y="89" width="1495" height="96"/>
 	<SubTexture name="Press Enter to Begin0002" x="0" y="195" width="1495" height="96"/>
