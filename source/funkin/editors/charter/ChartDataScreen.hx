@@ -17,7 +17,6 @@ class ChartDataScreen extends UISubstateWindow {
 	public function new(data:ChartData) {
 		super();
 		this.data = data;
-		//trace(data);
 	}
 
 	public override function create() {
@@ -47,7 +46,6 @@ class ChartDataScreen extends UISubstateWindow {
 		add(saveButton);
 		
 		closeButton = new UIButton(saveButton.x - 20, saveButton.y, "Cancel", function() {
-			//if (creatingStrumLine) onSave(null);
 			close();
 		}, 125);
 		add(closeButton);
@@ -58,7 +56,6 @@ class ChartDataScreen extends UISubstateWindow {
 	{
 		PlayState.SONG.stage = stageBox.label.text;
 		PlayState.SONG.scrollSpeed = scrollSpeedStepper.value;
-		trace('chart speed: ${PlayState.SONG.scrollSpeed}, Stepper: ${scrollSpeedStepper.value}');
 	}
 
 }
