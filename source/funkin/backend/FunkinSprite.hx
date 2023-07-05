@@ -209,6 +209,13 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public override function destroy()
 	{
 		animateAtlas = FlxDestroyUtil.destroy(animateAtlas);
+
+		for (key in animOffsets.keys()) {
+			final point = animOffsets[key];
+			animOffsets.remove(key);
+			point.put();
+		}
+		animOffsets = null;
 		super.destroy();
 	}
 	#end
