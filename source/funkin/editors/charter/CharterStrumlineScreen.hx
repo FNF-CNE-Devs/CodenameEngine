@@ -78,7 +78,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			{
 				scrollSpeedStepper.alpha = 0.4;
 				scrollSpeedStepper.label.alpha = 0.4;
-				scrollSpeedStepper.label.text = Std.string(PlayState.SONG.scrollSpeed);
+				scrollSpeedStepper.value = PlayState.SONG.scrollSpeed;
 				scrollSpeedStepper.active = false;
 			} else {
 				scrollSpeedStepper.alpha = 1;
