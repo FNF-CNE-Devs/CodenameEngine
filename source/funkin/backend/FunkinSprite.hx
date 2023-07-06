@@ -209,6 +209,15 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public override function destroy()
 	{
 		animateAtlas = FlxDestroyUtil.destroy(animateAtlas);
+
+		if (animOffsets != null){
+			for (key in animOffsets.keys()) {
+				final point = animOffsets[key];
+				animOffsets.remove(key);
+				point.put();
+			}
+			animOffsets = null;
+		}
 		super.destroy();
 	}
 	#end
@@ -248,7 +257,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
 	{
-		animOffsets[name] = new FlxPoint(x, y);
+		animOffsets[name] = FlxPoint.get(x, y);
 	}
 
 	public function switchOffset(anim1:String, anim2:String)
