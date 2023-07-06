@@ -58,11 +58,11 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		if (members.length <= 0 || sel == 0) return;
 
 		CoolUtil.playMenuSFX(SCROLL);
-
 		curSelected = FlxMath.wrap(curSelected + sel, 0, members.length-1);
-
-		for(o in members)
 		members[curSelected].selected = true;
+		if (parent.treeParent != null) {
+			parent.treeParent.updateDesc(members[curSelected].desc);
+		}
 	}
 
 	public dynamic function onClose(o:OptionsScreen) {}
