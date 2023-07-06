@@ -72,7 +72,9 @@ class TreeMenu extends MusicBeatState {
 			for(o in optionsTree.members)
 				t += '${o.name} > ';
 			pathLabel.text = t;
-			updateDesc(optionsTree.members.last().members[optionsTree.members.last().curSelected].desc);
+
+			var idk:OptionsScreen = optionsTree.members.last();
+			if (idk.members.length > 0) updateDesc(idk.members[idk.curSelected].desc);
 		}
 	}
 
