@@ -1,3 +1,4 @@
 story mode
 freeplay
 options
+donate
