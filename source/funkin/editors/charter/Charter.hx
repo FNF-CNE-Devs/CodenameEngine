@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.backend.system.framerate.Framerate;
 import haxe.Json;
 import flixel.input.keyboard.FlxKey;
 import flixel.sound.FlxSound;
@@ -424,6 +425,10 @@ class Charter extends UIState {
 		add(uiGroup);
 
 		loadSong();
+
+		Framerate.fpsCounter.alpha = 0.4;
+		Framerate.memoryCounter.alpha = 0.4;
+		Framerate.codenameBuildField.alpha = 0.4;
 	}
 
 	var instPath:String;
@@ -1075,6 +1080,13 @@ class Charter extends UIState {
 		}
 		if (v != null)
 			undoList.insert(0, v);
+	}
+
+	override function destroy() {
+		Framerate.fpsCounter.alpha = 1;
+		Framerate.memoryCounter.alpha = 1;
+		Framerate.codenameBuildField.alpha = 1;
+		super.destroy();
 	}
 
 	inline function _chart_playtest(_)

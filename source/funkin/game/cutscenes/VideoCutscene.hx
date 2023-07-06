@@ -16,7 +16,7 @@ import hxcodec.flixel.FlxVideo;
  * Substate made for video cutscenes. To use it in a scripted cutscene, call `startVideo`.
  */
 class VideoCutscene extends Cutscene {
-	public static var curVideo:Int = 0;
+	private static var curVideo:Int = 0; // internal for zip videos
 	var path:String;
 	var localPath:String;
 
