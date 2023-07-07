@@ -54,8 +54,8 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		onClose(this);
 	}
 
-	public function changeSelection(sel:Int) {
-		if (members.length <= 0 || sel == 0) return;
+	public function changeSelection(sel:Int, force:Bool = false) {
+		if (members.length <= 0 || (sel == 0 && !force)) return;
 
 		CoolUtil.playMenuSFX(SCROLL);
 		curSelected = FlxMath.wrap(curSelected + sel, 0, members.length-1);
