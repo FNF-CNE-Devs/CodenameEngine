@@ -1,5 +1,6 @@
 package funkin.menus.credits;
 
+using StringTools;
 class CreditsCodename extends funkin.options.OptionsScreen {
 	public override function new()
 	{
@@ -9,25 +10,32 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 	}
 
 	public override function update(elapsed:Float) {
-		if (funkin.options.PlayerSettings.solo.controls.RESET && checkUpdate()) displayList();
+		if (funkin.options.PlayerSettings.solo.controls.RESET && checkUpdate()) {
+			displayList();
+			updateMenuDesc();
+		}
 		super.update(elapsed);
 	}
 
 	public function checkUpdate():Bool {
-		var curTime:Float = Date.now().getTime();
-		if (Options.lastUpdated == null) Options.lastUpdated = curTime;  // First time???  - Nex_isDumb
-		else if (curTime < Options.lastUpdated + 120000) return false;  // Fuck you Github rate limits  - Nex_isDumb
-		Options.lastUpdated = curTime;
-
 		var error:Bool = false;
 		//Main.execAsync(function() {
 		var idk = funkin.backend.system.github.GitHub.getContributors("FNF-CNE-Devs", "CodenameEngine", function(e) {
 			error = true;
-			trace(Std.string(e));
+			var errMsg:String = ~/\d+.\d+.\d+.\d+/.replace(e.message, "[Your IP]");  // Removing sensitive stuff  - Nex_isDumb
+			errMsg = 'Error while trying to download contributors list:\n$errMsg';
+
+			Logs.traceColored([Logs.logText(errMsg.replace('\n', ' '), RED)], ERROR);
+			funkin.backend.utils.NativeAPI.showMessageBox("Codename Engine Warning", errMsg, MSG_WARNING);
 		});
 		//});
 		if(error) return false;
+
+		var curTime:Float = Date.now().getTime();
+		if (Options.lastUpdated == null) Options.lastUpdated = curTime;  // First time???  - Nex_isDumb
+		else if (curTime < Options.lastUpdated + 120000) return false;  // Fuck you Github rate limits  - Nex_isDumb
 		
+		Options.lastUpdated = curTime;
 		Options.contributors = idk;
 		trace('List Updated!');
 		return true;
