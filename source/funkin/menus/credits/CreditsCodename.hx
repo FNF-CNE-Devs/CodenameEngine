@@ -1,6 +1,10 @@
 package funkin.menus.credits;
 
+import funkin.backend.system.github.GitHub;
+import funkin.options.type.PortraitOption;
+
 using StringTools;
+
 class CreditsCodename extends funkin.options.OptionsScreen {
 	public override function new()
 	{
@@ -18,9 +22,13 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 	}
 
 	public function checkUpdate():Bool {
+		var curTime:Float = Date.now().getTime();
+		if(Options.lastUpdated != null && curTime < Options.lastUpdated + 120000) return false;  // Fuck you Github rate limits  - Nex_isDumb
+		Options.lastUpdated = curTime;
+
 		var error:Bool = false;
 		//Main.execAsync(function() {
-		var idk = funkin.backend.system.github.GitHub.getContributors("FNF-CNE-Devs", "CodenameEngine", function(e) {
+		var idk = GitHub.getContributors("FNF-CNE-Devs", "CodenameEngine", function(e) {
 			error = true;
 			var errMsg:String = ~/\d+.\d+.\d+.\d+/.replace(e.message, "[Your IP]");  // Removing sensitive stuff  - Nex_isDumb
 			errMsg = 'Error while trying to download contributors list:\n$errMsg';
@@ -30,12 +38,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		});
 		//});
 		if(error) return false;
-
-		var curTime:Float = Date.now().getTime();
-		if (Options.lastUpdated == null) Options.lastUpdated = curTime;  // First time???  - Nex_isDumb
-		else if (curTime < Options.lastUpdated + 120000) return false;  // Fuck you Github rate limits  - Nex_isDumb
 		
-		Options.lastUpdated = curTime;
 		Options.contributors = idk;
 		trace('List Updated!');
 		return true;
@@ -54,11 +57,13 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		var totalContributions = 0;
 		for(c in Options.contributors) totalContributions += c.contributions;
 		for(c in Options.contributors) {
-			add(new funkin.options.type.TextOption(
+			var opt:PortraitOption = new PortraitOption(
 				c.login,
 				'Total Contributions: ${c.contributions} / ${totalContributions} (${FlxMath.roundDecimal(c.contributions / totalContributions * 100, 2)}%) - Select to open GitHub account',
 				function() CoolUtil.openURL(c.html_url)
-			));
+			);
+			opt.loadFromGithub(c);
+			add(opt);
 		}
 	}
 }
