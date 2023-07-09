@@ -16,16 +16,23 @@ class NumOption extends OptionType {
 
 	var optionName:String;
 
+	public var parent:Dynamic;
+
 	public var text(get, set):String;
 	private function get_text() {return __text.text;}
 	private function set_text(v:String) {return __text.text = v;}
 
-	public function new(text:String, desc:String, min:Float, max:Float, changeVal:Float, optionName:String, ?selectCallback:Float->Void = null) {
+	public function new(text:String, desc:String, min:Float, max:Float, changeVal:Float, optionName:String, ?selectCallback:Float->Void = null, ?parent:Dynamic) {
 		super(desc);
 		this.selectCallback = selectCallback;
 		this.min = min;
 		this.max = max;
-		if(Reflect.field(Options, optionName) != null)
+		if (parent == null)
+			parent = Options;
+
+		this.parent = parent;
+
+		if(Reflect.field(parent, optionName) != null)
 			this.currentSelection = Reflect.field(Options, optionName);
 		this.changeVal = changeVal;
 		this.optionName = optionName;

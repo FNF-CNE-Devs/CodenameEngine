@@ -120,7 +120,7 @@ class OptionsMenu extends TreeMenu {
 						Logs.trace("A number option requires an \"id\" for option saving.", WARNING);
 						continue;
 					}
-					options.push(new NumOption(name, desc, Std.parseFloat(node.att.min), Std.parseFloat(node.att.max), Std.parseFloat(node.att.change), node.att.id));
+					options.push(new NumOption(name, desc, Std.parseFloat(node.att.min), Std.parseFloat(node.att.max), Std.parseFloat(node.att.change), node.att.id, null, FlxG.save.data));
 				case "menu":
 					options.push(new TextOption(name + " >", desc, function() {
 						optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node)));
