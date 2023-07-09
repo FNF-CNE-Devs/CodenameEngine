@@ -43,6 +43,7 @@ class TreeMenu extends MusicBeatState {
 		optionsTree = new OptionsTree();
 		optionsTree.onMenuChange = onMenuChange;
 		optionsTree.onMenuClose = onMenuClose;
+		optionsTree.treeParent = this;
 		optionsTree.add(main);
 
 
@@ -72,10 +73,16 @@ class TreeMenu extends MusicBeatState {
 				t += '${o.name} > ';
 			pathLabel.text = t;
 
-			pathDesc.text = optionsTree.members.last().desc;
-			pathBG.scale.set(FlxG.width, pathDesc.y + pathDesc.height + 2);
-			pathBG.updateHitbox();
+			var idk:OptionsScreen = optionsTree.members.last();
+			if (idk.members.length > 0) updateDesc(idk.members[idk.curSelected].desc);
 		}
+	}
+
+	public function updateDesc(moreTxt:String = '') {
+		pathDesc.text = optionsTree.members.last().desc;
+		if (moreTxt != null && moreTxt.length > 0) pathDesc.text += '\n' + moreTxt;
+		pathBG.scale.set(FlxG.width, pathDesc.y + pathDesc.height + 2);
+		pathBG.updateHitbox();
 	}
 
 	public function exit() {

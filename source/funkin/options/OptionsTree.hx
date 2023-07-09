@@ -2,6 +2,7 @@ package funkin.options;
 
 class OptionsTree extends FlxTypedGroup<OptionsScreen> {
 	public var lastMenu:OptionsScreen;
+	public var treeParent:TreeMenu;
 	public override function new() {
 		super();
 
