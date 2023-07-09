@@ -22,7 +22,7 @@ class ScriptsMacro {
 			// OTHER LIBRARIES & STUFF
 			"away3d", "flx3d", #if sys "sys", #end "openfl.net",
 			"funkin.backend.system.net",
-			"hxcodec.flixel", "hxcodec.openfl", "hxcodec.lime",
+			#if VIDEO_CUTSCENES "hxcodec.flixel", "hxcodec.openfl", "hxcodec.lime", #end
 			// BASE HAXE
 			"DateTools", "EReg", "Lambda", "StringBuf", "haxe.crypto", "haxe.display", "haxe.exceptions", "haxe.extern", "scripting"
 		])

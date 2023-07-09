@@ -17,11 +17,11 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	 */
 	public var onHit:FlxTypedSignal<NoteHitEvent->Void> = new FlxTypedSignal<NoteHitEvent->Void>();
 	/**
-	 * Signal that triggers whenever a note is missed. Similar to onPlayerMiss and onDadMiss, except strumline specific.
+	 * Signal that triggers whenever a note is missed. Similar to onPlayerMiss, except strumline specific.
 	 * To add a listener, do
-	 * `strumLine.onMiss.add(function(e:NoteHitEvent) {});`
+	 * `strumLine.onMiss.add(function(e:NoteMissEvent) {});`
 	 */
-	public var onMiss:FlxTypedSignal<NoteHitEvent->Void> = new FlxTypedSignal<NoteHitEvent->Void>();
+	public var onMiss:FlxTypedSignal<NoteMissEvent->Void> = new FlxTypedSignal<NoteMissEvent->Void>();
 	/**
 	 * Signal that triggers whenever a note is being updated. Similar to onNoteUpdate, except strumline specific.
 	 * To add a listener, do
