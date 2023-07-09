@@ -135,7 +135,7 @@ class XMLUtil {
 		if (anim.has.name) animData.name = anim.att.name;
 		if (anim.has.type) animData.animType = XMLAnimType.fromString(anim.att.type, animData.animType);
 		if (anim.has.anim) animData.anim = anim.att.anim;
-		if (anim.has.fps) animData.fps = Std.parseInt(anim.att.fps);
+		if (anim.has.fps) animData.fps = Std.parseFloat(anim.att.fps);
 		if (anim.has.x) animData.x = Std.parseFloat(anim.att.x);
 		if (anim.has.y) animData.y = Std.parseFloat(anim.att.y);
 		if (anim.has.loop) animData.loop = anim.att.loop == "true";
@@ -208,7 +208,7 @@ class XMLUtil {
 typedef AnimData = {
 	var name:String;
 	var anim:String;
-	var fps:Int;
+	var fps:Float;
 	var loop:Bool;
 	var x:Float;
 	var y:Float;

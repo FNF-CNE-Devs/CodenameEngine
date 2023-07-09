@@ -317,7 +317,6 @@ class Charter extends UIState {
 			}
 		];
 
-
 		hitsound = FlxG.sound.load(Paths.sound('editors/charter/hitsound'));
 		metronome = FlxG.sound.load(Paths.sound('editors/charter/metronome'));
 

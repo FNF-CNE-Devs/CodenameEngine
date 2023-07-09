@@ -1,6 +1,5 @@
 package funkin.game;
 
-import funkin.editors.character.CharacterConfig;
 import flixel.util.FlxColor;
 import funkin.backend.FunkinSprite;
 import flixel.graphics.frames.FlxFrame;
@@ -22,27 +21,6 @@ import funkin.backend.scripting.events.*;
 import funkin.backend.scripting.events.PlayAnimEvent.PlayAnimContext;
 
 using StringTools;
-
-typedef CharacterData =
-{
-	var offsetX:Float;
-	var offsetY:Float;
-	var camOffsetX:Float;
-	var camOffsetY:Float;
-	var quickDancer:Bool;
-	var holdTime:Float;
-	var isPlayer:Bool;
-	var flipX:Bool;
-	var antialiasing:Bool;
-	var sprite:String;
-	var name:String;
-	var animations:Array<AnimData>;
-	@:optional var isGF:Bool;
-	@:optional var icon:String;
-	@:optional var iconColor:FlxColor;
-	@:optional var scale:Float;
-	@:optional var gameOverChar:String;
-}
 
 @:allow(funkin.desktop.editors.CharacterEditor)
 @:allow(funkin.game.StrumLine)
@@ -67,6 +45,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public var isPlayer:Bool = false;
 	public var isGF:Bool = false;
 	public var curCharacter:String = 'bf';
+	public var sprite:String = 'bf';
 
 	public var lastHit:Float = Math.NEGATIVE_INFINITY;
 	public var holdTime:Float = 4;
@@ -82,21 +61,14 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public var script:Script;
 	public var xml:Access;
 
-	public var characterData:CharacterData;
-
 	public var shadowFrame:CharacterShadowFrame;
 
 	public inline function getCameraPosition()
 	{
 		var midpoint = getMidpoint();
-		var event = EventManager.get(PointEvent)
-			.recycle(midpoint.x
-				+ (isPlayer ? -100 : 150)
-				+ globalOffset.x
-				+ cameraOffset.x, midpoint.y
-				- 100
-				+ globalOffset.y
-				+ cameraOffset.y);
+		var event = EventManager.get(PointEvent).recycle(
+			midpoint.x + (isPlayer ? -100 : 150) + globalOffset.x + cameraOffset.x,
+			midpoint.y - 100 + globalOffset.y + cameraOffset.y);
 		script.call("onGetCamPos", [event]);
 		midpoint.put();
 		// this event cannot be cancelled
@@ -141,59 +113,16 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 					try
 					{
 						var charXML = Xml.parse(plainXML).firstElement();
-						if (charXML == null)
-							throw new Exception("Missing \"character\" node in XML.");
+						if (charXML == null) throw new Exception("Missing \"character\" node in XML.");
 						xml = new Access(charXML);
-					}
-					catch (e)
-					{
+					} catch (e) {
 						Logs.trace('Error while loading character ${curCharacter}: ${e}', ERROR);
 						curCharacter = "bf";
 						continue;
 					}
-					var sprite:String = curCharacter;
+					applyXML(xml);
 
-					if (xml.has.isPlayer)
-						playerOffsets = (xml.att.isPlayer == "true");
-					if (xml.has.isGF)
-						isGF = (xml.att.isGF == "true");
-					if (xml.has.x)
-						globalOffset.x = Std.parseFloat(xml.att.x);
-					if (xml.has.y)
-						globalOffset.y = Std.parseFloat(xml.att.y);
-					if (xml.has.gameOverChar)
-						gameOverCharacter = xml.att.gameOverChar;
-					if (xml.has.camx)
-						cameraOffset.x = Std.parseFloat(xml.att.camx);
-					if (xml.has.camy)
-						cameraOffset.y = Std.parseFloat(xml.att.camy);
-					if (xml.has.holdTime)
-						holdTime = CoolUtil.getDefault(Std.parseFloat(xml.att.holdTime), 4);
-					if (xml.has.flipX)
-						flipX = (xml.att.flipX == "true");
-					if (xml.has.icon)
-						icon = xml.att.icon;
-					if (xml.has.scale)
-					{
-						var scale = Std.parseFloat(xml.att.scale).getDefault(1);
-						this.scale.set(scale, scale);
-						updateHitbox();
-					}
-					if (xml.has.antialiasing)
-						antialiasing = (xml.att.antialiasing == "true");
-					if (xml.has.sprite)
-						sprite = xml.att.sprite;
-
-					loadSprite(Paths.image('characters/$sprite'));
-
-					for (anim in xml.nodes.anim)
-					{
-						XMLUtil.addXMLAnimation(this, anim);
-					}
-
-					characterData = CharacterConfig.loadCharacterData(curCharacter);
-
-					// Loads the script and calls it's "create" function
+					// Loads the script and calls it's "create" functions
 					script = Script.create(Paths.script(Path.withoutExtension(xmlPath), null, true));
 					script.setParent(this);
 					script.load();
@@ -226,7 +155,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		// 		flipX = true;
 
 		fixChar(true);
-
 		dance();
 		script.call("postCreate");
 	}
@@ -242,6 +170,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		// [ true  ][ false ][ true  ]
 		// [ false ][ true  ][ true  ]
 		// [ true  ][ true  ][ false ]
+		// bros provided evedince :skull:
 		if (isPlayer != playerOffsets && switchAnims)
 		{
 			// character is flipped
@@ -302,8 +231,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 	public function tryDance()
 	{
-		switch (lastAnimContext)
-		{
+		switch (lastAnimContext) {
 			case SING | MISS:
 				if (lastHit + (Conductor.stepCrochet * holdTime) < Conductor.songPosition)
 					dance();
@@ -328,8 +256,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	 */
 	public var danceInterval:Int = 1;
 
-	public override function beatHit(curBeat:Int)
-	{
+	public override function beatHit(curBeat:Int) {
 		script.call("beatHit", [curBeat]);
 		if (danceInterval < 1)
 			danceInterval = 1;
@@ -340,16 +267,14 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		}
 	}
 
-	public override function stepHit(curStep:Int)
-	{
+	public override function stepHit(curStep:Int) {
 		script.call("stepHit", [curStep]);
 		// nothing
 	}
 
 	var __reverseDrawProcedure:Bool = false;
 
-	public override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
-	{
+	public override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect {
 		if (__reverseDrawProcedure)
 		{
 			scale.x *= -1;
@@ -363,10 +288,8 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	var __drawingShadowFrame = false;
 	var __oldColorTransform = new ColorTransform();
 
-	public override function draw()
-	{
-		if (!__drawingShadowFrame && shadowFrame != null)
-		{
+	public override function draw() {
+		if (!__drawingShadowFrame && shadowFrame != null) {
 			__drawingShadowFrame = true;
 
 			var oldFrame = _frame;
@@ -436,17 +359,77 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		globalOffset.put();
 	}
 
-	public inline function getIcon()
-	{
-		return (icon != null) ? icon : curCharacter;
+	public function applyXML(xml:Access) {
+		sprite = curCharacter;
+
+		if (xml.has.isPlayer) playerOffsets = (xml.att.isPlayer == "true");
+		if (xml.has.isGF) isGF = (xml.att.isGF == "true");
+		if (xml.has.x) globalOffset.x = Std.parseFloat(xml.att.x); //
+		if (xml.has.y) globalOffset.y = Std.parseFloat(xml.att.y); //
+		if (xml.has.gameOverChar) gameOverCharacter = xml.att.gameOverChar; //
+		if (xml.has.camx) cameraOffset.x = Std.parseFloat(xml.att.camx); //
+		if (xml.has.camy) cameraOffset.y = Std.parseFloat(xml.att.camy); //
+		if (xml.has.holdTime) holdTime = CoolUtil.getDefault(Std.parseFloat(xml.att.holdTime), 4); //
+		if (xml.has.flipX) flipX = (xml.att.flipX == "true");
+		if (xml.has.icon) icon = xml.att.icon; //
+		if (xml.has.scale) { // 
+			var scale = Std.parseFloat(xml.att.scale).getDefault(1);
+			this.scale.set(scale, scale);
+			updateHitbox();
+		}
+		if (xml.has.antialiasing) antialiasing = (xml.att.antialiasing == "true");
+		if (xml.has.sprite) sprite = xml.att.sprite; //
+
+		loadSprite(Paths.image('characters/$sprite'));
+
+		animation.destroyAnimations();
+		for (anim in xml.nodes.anim)
+		{
+			XMLUtil.addXMLAnimation(this, anim);
+		}
 	}
+
+	public function buildXML():Xml {
+		var xml = Xml.createElement("character");
+		xml.set("isPlayer", playerOffsets == true ? "true" : "false");
+		xml.set("isGF", isGF == true ? "true" : "false");
+		xml.set("x", Std.string(globalOffset.x));
+		xml.set("y", Std.string(globalOffset.y));
+		xml.set("gameOverChar", gameOverCharacter);
+		xml.set("camx", Std.string(cameraOffset.x));
+		xml.set("camy", Std.string(cameraOffset.y));
+		xml.set("holdTime", Std.string(holdTime));
+		xml.set("flipX", Std.string(flipX));
+		xml.set("icon", icon);
+		xml.set("scale", Std.string(scale.x));
+		xml.set("antialiasing", antialiasing == true ? "true" : "false");
+		xml.set("sprite", sprite);
+
+		for (anim in animation.getAnimationList())
+		{
+			var animXml:Xml = Xml.createElement('anim');
+			animXml.set("name", anim.name);
+			animXml.set("anim", anim.prefix);
+			animXml.set("loop", Std.string(anim.looped));
+			animXml.set("fps", Std.string(anim.frameRate));
+			var offset:FlxPoint = getAnimOffset(anim.name);
+			animXml.set("x", Std.string(offset.x));
+			animXml.set("y", Std.string(offset.y));
+			if (anim.usesIndicies)
+				animXml.set("indices", anim.frames.join(","));
+			xml.addChild(animXml);
+		}
+		return xml;
+	}
+
+	public inline function getIcon()
+		return (icon != null) ? icon : curCharacter;
 
 	public static function getIconFromCharName(?curCharacter:String) {
 		if(curCharacter == null) return "face";
 		var icon = curCharacter;
 		while(true) {
-			switch (curCharacter)
-			{
+			switch (curCharacter) {
 				// case 'your-char': // To hardcode characters icons
 				default:
 					// load xml
@@ -473,6 +456,13 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			break;
 		}
 		return icon;
+	}
+
+	public static function getList():Array<String> {
+		return [
+			for (path in Paths.getFolderContent('data/characters/', true, BOTH))
+				if (Path.extension(path) == "xml") Path.withoutDirectory(Path.withoutExtension(path))
+		];
 	}
 }
 
