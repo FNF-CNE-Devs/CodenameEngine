@@ -21,12 +21,13 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		super.update(elapsed);
 	}
 
+	var error:Bool = false;
 	public function checkUpdate():Bool {
 		var curTime:Float = Date.now().getTime();
 		if(Options.lastUpdated != null && curTime < Options.lastUpdated + 120000) return false;  // Fuck you Github rate limits  - Nex_isDumb
 		Options.lastUpdated = curTime;
 
-		var error:Bool = false;
+		error = false;
 		//Main.execAsync(function() {
 		var idk = GitHub.getContributors("FNF-CNE-Devs", "CodenameEngine", function(e) {
 			error = true;
@@ -62,7 +63,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 				'Total Contributions: ${c.contributions} / ${totalContributions} (${FlxMath.roundDecimal(c.contributions / totalContributions * 100, 2)}%) - Select to open GitHub account',
 				function() CoolUtil.openURL(c.html_url)
 			);
-			opt.loadFromGithub(c);
+			if(!error) opt.loadFromGithub(c);
 			add(opt);
 		}
 	}
