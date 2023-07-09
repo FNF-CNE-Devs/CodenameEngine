@@ -45,6 +45,7 @@ class NumOption extends OptionType {
 		__number.text = ': $currentSelection';
 
 		Reflect.setField(Options, optionName, currentSelection);
-		selectCallback(currentSelection);
+		if(selectCallback != null)
+			selectCallback(currentSelection);
 	}
 }

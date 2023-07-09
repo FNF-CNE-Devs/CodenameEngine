@@ -114,6 +114,13 @@ class OptionsMenu extends TreeMenu {
 						continue;
 					}
 					options.push(new Checkbox(name, desc, node.att.id, FlxG.save.data));
+
+				case "number":
+					if (!node.has.id) {
+						Logs.trace("A number option requires an \"id\" for option saving.", WARNING);
+						continue;
+					}
+					options.push(new NumOption(name, desc, Std.parseFloat(node.att.min), Std.parseFloat(node.att.max), Std.parseFloat(node.att.change), node.att.id));
 				case "menu":
 					options.push(new TextOption(name + " >", desc, function() {
 						optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node)));
