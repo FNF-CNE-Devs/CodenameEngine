@@ -3,6 +3,14 @@ package funkin.options.categories;
 class AppearanceOptions extends OptionsScreen {
 	public override function new() {
 		super("Appearance", "Change Appearance options such as Flashing menus...");
+		add(new NumOption(
+			"Framerate",
+			"Pretty self explanitory isn't it?",
+			30, // minimum
+			240, // maximum
+			10, // change
+			"framerate", // save name or smth
+			__changeFPS)); // callback
 		add(new Checkbox(
 			"Antialiasing",
 			"If unchecked, will disable antialiasing on every sprite. Can boost performances at the cost of sharper, more pixely sprites",
@@ -31,5 +39,14 @@ class AppearanceOptions extends OptionsScreen {
 			"Auto Pause",
 			"If checked, switching windows will pause the game",
 			"autoPause"));
+	}
+	
+	private function __changeFPS(change:Float)
+	{
+		// if statement cause of the flixel warning
+		if(FlxG.updateFramerate < Std.int(change))
+			FlxG.drawFramerate = FlxG.updateFramerate = Std.int(change);
+		else
+			FlxG.updateFramerate = FlxG.drawFramerate = Std.int(change);
 	}
 }

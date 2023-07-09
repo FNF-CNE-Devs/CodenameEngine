@@ -1,5 +1,6 @@
 package funkin.options;
 
+import funkin.backend.system.framerate.Framerate;
 import funkin.options.type.Checkbox;
 import haxe.xml.Access;
 import flixel.tweens.FlxTween;
@@ -47,6 +48,8 @@ class OptionsMenu extends TreeMenu {
 		bg.scrollFactor.set();
 		bg.antialiasing = true;
 		add(bg);
+
+		Framerate.offset.y = 60;
 
 		main = new OptionsScreen("Options", "Select a category to continue.", [for(o in mainOptions) new TextOption(o.name, o.desc, function() {
 			if (o.substate != null) {
