@@ -33,7 +33,7 @@ class NumOption extends OptionType {
 		this.parent = parent;
 
 		if(Reflect.field(parent, optionName) != null)
-			this.currentSelection = Reflect.field(Options, optionName);
+			this.currentSelection = Reflect.field(parent, optionName);
 		this.changeVal = changeVal;
 		this.optionName = optionName;
 		
@@ -51,7 +51,7 @@ class NumOption extends OptionType {
 		currentSelection += change*changeVal;
 		__number.text = ': $currentSelection';
 
-		Reflect.setField(Options, optionName, currentSelection);
+		Reflect.setField(parent, optionName, currentSelection);
 		if(selectCallback != null)
 			selectCallback(currentSelection);
 	}
