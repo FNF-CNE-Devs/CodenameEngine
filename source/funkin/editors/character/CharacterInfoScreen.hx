@@ -16,6 +16,7 @@ class CharacterInfoScreen extends UISubstateWindow {
 	public var scaleStepper:UINumericStepper;
 	public var singTimeStepper:UINumericStepper;
 	public var isPlayerCheckbox:UICheckbox;
+	// TODO: ADD THESE OPTIONS AND A HEALTH BAR COLOR OPTION
 	public var isGFCheckbox:UICheckbox;
 	public var flipXCheckbox:UICheckbox;
 	public var antialiasingCheckbox:UICheckbox;
@@ -81,7 +82,7 @@ class CharacterInfoScreen extends UISubstateWindow {
 
 		singTimeStepper = new UINumericStepper(scaleStepper.x + 74 - 32 + 36, scaleStepper.y, character.holdTime, 0.001, 2, null, null, 74);
 		add(singTimeStepper);
-		addLabelOn(singTimeStepper, "Sing Time");
+		addLabelOn(singTimeStepper, "Sing Duration (Steps)");
 
 		isPlayerCheckbox = new UICheckbox(positionXStepper.x, positionXStepper.y + 10 + 32 + 26, "isPlayer", character.playerOffsets);
 		add(isPlayerCheckbox);

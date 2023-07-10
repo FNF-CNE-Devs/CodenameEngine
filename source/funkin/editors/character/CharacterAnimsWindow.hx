@@ -27,7 +27,11 @@ class CharacterAnimsWindow extends UIWindow {
 		for (i=>anim in character.animation.getNameList()) 
 			createNewButton(anim, character.getAnimOffset(anim), false, -1, false);
 
-		addButton = new UIButton(25, 16+((32+16)*(character.animation.getNameList().length)), "", null, 429);
+		addButton = new UIButton(25, 16+((32+16)*(character.animation.getNameList().length)), "", 
+			function () {
+				CharacterEditor.instance.createAnimWithUI();
+			}
+		, 426);
 		addButton.cameras = [CharacterEditor.instance.animsCamera];
 		addButton.color = FlxColor.GREEN;
 
@@ -40,7 +44,7 @@ class CharacterAnimsWindow extends UIWindow {
 		updateButtonsPos();
 	}
 
-	public function createNewButton(anim:String, offset:FlxPoint, ghost:Bool = false, id:Int = -1, updatePos:Bool = true) {
+	public function createNewButton(anim:String, offset:FlxPoint, ghost:Bool = false, id:Int = -1, ?updatePos:Bool = true) {
 		var button = new CharacterAnimButtons(0,0, anim, offset);
 		if (id == -1) buttons.add(button);
 		else buttons.members.insert(id, button);

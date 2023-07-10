@@ -338,21 +338,33 @@ class CharacterEditor extends UIState {
 	}
 
 	function _char_add_anim(_) {
-		FlxG.state.openSubState(new CharacterAnimScreen(null, null));
+		createAnimWithUI();
 	}
 
 	function _char_update_anim(_) {
 	}
 
 	function _char_remove_anim(_) {
+		deleteAnim(character.animation.name);
 	}
 
 	function _char_edit_info(_) {
 		FlxG.state.openSubState(new CharacterInfoScreen(character));
 	}
 
+	public function createAnimWithUI() {
+		FlxG.state.openSubState(new CharacterAnimScreen(null, (_) -> {
+			if (_ != null) createAnim(_);
+		}));
+	}
+
+	public function editAnimWithUI() {
+		
+	}
+
 	public function createAnim(animData:AnimData, animID:Int = -1, addtoUndo:Bool = true) {
 		XMLUtil.addAnimToSprite(character, animData);
+		trace(character.animation.getNameList());
 		characterAnimsWindow.createNewButton(animData.name, FlxPoint.get(animData.x,animData.y), false, animID);
 
 		playAnimation(animData.name);
@@ -364,21 +376,11 @@ class CharacterEditor extends UIState {
 	public function deleteAnim(name:String, addtoUndo:Bool = true) {
 		playAnimation(character.animation.getNameList()[Std.int(Math.abs(character.animation.getNameList().indexOf(name)-1))]);
 
-		@:privateAccess var flxanim:FlxAnimation = character.animation._animations.get(name);
+		// undo shit blah blah
 		var oldID:Int = character.animation.getNameList().indexOf(name);
-		var oldAnimData:AnimData = {
-			name: name,
-			anim: flxanim.prefix,
-			fps: flxanim.frameRate,
-			loop: flxanim.looped,
-			x: character.animOffsets.get(name).x,
-			y: character.animOffsets.get(name).y,
-			indices: flxanim.usesIndicies ? flxanim.frames : [],
-			animType: NONE
-		};
-		@:privateAccess character.animation._animations.remove(name);
-		flxanim.destroy();
+		var oldAnimData:AnimData = XMLUtil.getAnimationData(character, name);
 
+		character.animation.remove(name);
 		character.animOffsets.remove(name);
 		characterAnimsWindow.removeButton(name);
 
