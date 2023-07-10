@@ -338,7 +338,7 @@ class CharacterEditor extends UIState {
 	}
 
 	function _char_add_anim(_) {
-		FlxG.state.openSubState(new CharacterAnimScreen(null));
+		FlxG.state.openSubState(new CharacterAnimScreen(null, null));
 	}
 
 	function _char_update_anim(_) {
@@ -362,7 +362,7 @@ class CharacterEditor extends UIState {
 	}
 
 	public function deleteAnim(name:String, addtoUndo:Bool = true) {
-		playAnimation(character.animation.getNameList()[character.animation.getNameList().indexOf(name)-1]);
+		playAnimation(character.animation.getNameList()[Std.int(Math.abs(character.animation.getNameList().indexOf(name)-1))]);
 
 		@:privateAccess var flxanim:FlxAnimation = character.animation._animations.get(name);
 		var oldID:Int = character.animation.getNameList().indexOf(name);

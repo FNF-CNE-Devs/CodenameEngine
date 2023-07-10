@@ -2,22 +2,19 @@ package funkin.editors.character;
 
 import flixel.math.FlxPoint;
 import flixel.animation.FlxAnimation;
+import funkin.backend.utils.XMLUtil.AnimData;
 
 class CharacterAnimScreen extends UISubstateWindow {
 	public var animName:Null<String>;
-	public var offset:FlxPoint;
-	public var flxanim:FlxAnimation;
+	public var animData:AnimData;
 
 	public var saveButton:UIButton;
 	public var closeButton:UIButton;
 
-	private var onSave:(animName:Null<String>, offset:FlxPoint, flxanim:FlxAnimation) -> Void = null;
+	private var onSave:(animData:AnimData) -> Void = null;
 
-	public function new(animName:Null<String>, ?offset:FlxPoint, ?flxanim:FlxAnimation, ?onSave:(animName:Null<String>, offset:FlxPoint, flxanim:FlxAnimation) -> Void) {
+	public function new(animName:Null<String>, animData:AnimData) {
 		this.animName = animName;
-		this.offset = offset;
-		this.flxanim = flxanim;
-		this.onSave = onSave;
 		super();
 	}
 
@@ -26,8 +23,6 @@ class CharacterAnimScreen extends UISubstateWindow {
 
 		if (creatingAnim) {
 			animName = "";
-			offset = FlxPoint.get(0,0);
-			flxanim = new FlxAnimation(CharacterEditor.instance.character.animation, animName, []);
 		}
 
 		winTitle = creatingAnim ? 'Creating Animation' : 'Animation $animName properties';
@@ -48,7 +43,7 @@ class CharacterAnimScreen extends UISubstateWindow {
 		add(saveButton);
 
 		closeButton = new UIButton(saveButton.x - 20, saveButton.y, creatingAnim ? "Cancel" : "Close", function() {
-			if (creatingAnim) onSave(null, null, null);
+			if (creatingAnim) onSave(null);
 			close();
 		}, 125);
 		add(closeButton);
