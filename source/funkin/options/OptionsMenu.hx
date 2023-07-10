@@ -1,5 +1,6 @@
 package funkin.options;
 
+import funkin.backend.system.framerate.Framerate;
 import funkin.options.type.Checkbox;
 import haxe.xml.Access;
 import flixel.tweens.FlxTween;
@@ -47,6 +48,8 @@ class OptionsMenu extends TreeMenu {
 		bg.scrollFactor.set();
 		bg.antialiasing = true;
 		add(bg);
+
+		Framerate.offset.y = 60;
 
 		main = new OptionsScreen("Options", "Select a category to continue.", [for(o in mainOptions) new TextOption(o.name, o.desc, function() {
 			if (o.substate != null) {
@@ -111,6 +114,13 @@ class OptionsMenu extends TreeMenu {
 						continue;
 					}
 					options.push(new Checkbox(name, desc, node.att.id, FlxG.save.data));
+
+				case "number":
+					if (!node.has.id) {
+						Logs.trace("A number option requires an \"id\" for option saving.", WARNING);
+						continue;
+					}
+					options.push(new NumOption(name, desc, Std.parseFloat(node.att.min), Std.parseFloat(node.att.max), Std.parseFloat(node.att.change), node.att.id, null, FlxG.save.data));
 				case "menu":
 					options.push(new TextOption(name + " >", desc, function() {
 						optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node)));

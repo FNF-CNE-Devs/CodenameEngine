@@ -2,6 +2,7 @@
 <!-- TEMPLATE FOR CUSTOM OPTIONS!!! -->
 <menu name="Mod Options" desc="Modify mod options here">
 	<checkbox id="checkboxExample" name="Checkbox example" />
+	<number id="numberExample" name="Number example" min="0" max="10" change="1"/>
 	<choice id="choiceExample" name="Choice Example">
 		<value name="Disabled" value="disabled" />
 		<value name="This Only" value="thisonly" />

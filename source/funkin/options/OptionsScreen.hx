@@ -45,6 +45,10 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 			members[curSelected].selected = true;
 			if (controls.ACCEPT || FlxG.mouse.justReleased)
 				members[curSelected].onSelect();
+			if (controls.LEFT_P)
+				members[curSelected].onChangeSelection(-1);
+			if (controls.RIGHT_P)
+				members[curSelected].onChangeSelection(1);
 		}
 		if (controls.BACK || FlxG.mouse.justReleasedRight)
 			close();

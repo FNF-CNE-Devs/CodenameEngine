@@ -16,9 +16,9 @@ class OptionType extends FlxSpriteGroup {
 
 	private function get_controls() {return PlayerSettings.solo.controls;}
 
-	public function onSelect() {
+	public function onSelect() {}
 
-	}
+	public function onChangeSelection(change:Float) {}
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
