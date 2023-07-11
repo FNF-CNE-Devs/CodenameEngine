@@ -1,5 +1,6 @@
 package funkin.editors.character;
 
+import funkin.editors.character.CharacterAnimsWindow.CharacterAnimButtons;
 import funkin.backend.utils.XMLUtil.AnimData;
 import flixel.math.FlxPoint;
 import flixel.animation.FlxAnimation;
@@ -302,6 +303,8 @@ class CharacterEditor extends UIState {
 				// do nothing
 			case CCreateAnim(animID, animData):
 				deleteAnim(animData.name, false);
+			case CEditAnim(name, oldData, animData):
+				editAnim(name, oldData, false);
 			case CDeleteAnim(animID, animData):
 				createAnim(animData, animID, false);
 			case CChangeOffset(name, change):
@@ -326,6 +329,8 @@ class CharacterEditor extends UIState {
 				// do nothing
 			case CCreateAnim(animID, animData):
 				createAnim(animData, animID, false);
+			case CEditAnim(name, oldData, animData):
+				editAnim(oldData.name, animData, false);
 			case CDeleteAnim(animID, animData):
 				deleteAnim(animData.name, false);
 			case CChangeOffset(name, change):
@@ -361,7 +366,7 @@ class CharacterEditor extends UIState {
 
 	public function editAnimWithUI(name:String) {
 		FlxG.state.openSubState(new CharacterAnimScreen(character.animDatas.get(name), (_) -> {
-			trace("this dont work yet looooll");
+			if (_ != null) editAnim(name, _);
 		}));
 	}
 
@@ -375,6 +380,18 @@ class CharacterEditor extends UIState {
 			addToUndo(CCreateAnim(character.animation.getNameList().length, animData));
 	}
 
+	public function editAnim(name:String, animData:AnimData, addtoUndo:Bool = true) {
+		var oldAnimData:AnimData = character.animDatas.get(name);
+		var button:CharacterAnimButtons = characterAnimsWindow.animButtons[name];
+
+		XMLUtil.addAnimToSprite(character, animData);
+		button.updateInfo(animData.name, character.getAnimOffset(animData.name), false);
+		playAnimation(animData.name);
+
+		if (addtoUndo)
+			addToUndo(CEditAnim(animData.name, oldAnimData, animData));
+	}
+
 	public function deleteAnim(name:String, addtoUndo:Bool = true) {
 		playAnimation(character.animation.getNameList()[Std.int(Math.abs(character.animation.getNameList().indexOf(name)-1))]);
 
@@ -382,12 +399,9 @@ class CharacterEditor extends UIState {
 		var oldID:Int = character.animation.getNameList().indexOf(name);
 		var oldAnimData:AnimData = character.animDatas.get(name);
 
-		if (character.animation.exists(name))
-			character.animation.remove(name);
-		if (character.animOffsets.exists(name))
-			character.animOffsets.remove(name);
-		if (character.animDatas.exists(name))
-			character.animDatas.remove(name);
+		if (character.animation.exists(name)) character.animation.remove(name);
+		if (character.animOffsets.exists(name)) character.animOffsets.remove(name);
+		if (character.animDatas.exists(name)) character.animDatas.remove(name);
 		characterAnimsWindow.removeButton(name);
 
 		if (addtoUndo)
@@ -492,6 +506,7 @@ class CharacterEditor extends UIState {
 
 enum CharacterChange {
 	CCreateAnim(animID:Int, animData:AnimData);
+	CEditAnim(name:String, oldData:AnimData, animData:AnimData);
 	CDeleteAnim(animID:Int, animData:AnimData);
 	CChangeOffset(name:String, change:FlxPoint);
 	CResetOffsets(oldOffsets:Map<String, FlxPoint>);
