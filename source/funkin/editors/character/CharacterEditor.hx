@@ -97,7 +97,7 @@ class CharacterEditor extends UIState {
 					},
 					{
 						label: "Edit Animation",
-						onSelect: _char_update_anim,
+						onSelect: _char_edit_anim,
 					},
 					{
 						label: "Delete Animation",
@@ -341,7 +341,8 @@ class CharacterEditor extends UIState {
 		createAnimWithUI();
 	}
 
-	function _char_update_anim(_) {
+	function _char_edit_anim(_) {
+		editAnimWithUI(character.animation.name);
 	}
 
 	function _char_remove_anim(_) {
@@ -358,13 +359,14 @@ class CharacterEditor extends UIState {
 		}));
 	}
 
-	public function editAnimWithUI() {
-		
+	public function editAnimWithUI(name:String) {
+		FlxG.state.openSubState(new CharacterAnimScreen(character.animDatas.get(name), (_) -> {
+			trace("this dont work yet looooll");
+		}));
 	}
 
 	public function createAnim(animData:AnimData, animID:Int = -1, addtoUndo:Bool = true) {
 		XMLUtil.addAnimToSprite(character, animData);
-		trace(character.animation.getNameList());
 		characterAnimsWindow.createNewButton(animData.name, FlxPoint.get(animData.x,animData.y), false, animID);
 
 		playAnimation(animData.name);
@@ -378,10 +380,12 @@ class CharacterEditor extends UIState {
 
 		// undo shit blah blah
 		var oldID:Int = character.animation.getNameList().indexOf(name);
-		var oldAnimData:AnimData = XMLUtil.getAnimationData(character, name);
+		var oldAnimData:AnimData = character.animDatas.get(name);
 
-		character.animation.remove(name);
-		character.animOffsets.remove(name);
+		if (character.animation.exists(name)) {
+			character.animation.remove(name);
+			character.animOffsets.remove(name);
+		}
 		characterAnimsWindow.removeButton(name);
 
 		if (addtoUndo)

@@ -108,8 +108,15 @@ class CharacterAnimScreen extends UISubstateWindow {
 			animType: NONE,
 			x: offsetXStepper.value,
 			y: offsetYStepper.value,
-			indices:  [for (indice in indicesTextBox.label.text.split(",")) Std.parseInt(indice.trim())]
+			indices:  []
+		};
+		var indicesSplit = indicesTextBox.label.text.split(",");
+		for(indice in indicesSplit) {
+			var i = Std.parseInt(indice.trim());
+			if (i != null)
+				animData.indices.push(i);
 		}
+		
 		if (onSave != null) onSave(animData);
 	}
 }

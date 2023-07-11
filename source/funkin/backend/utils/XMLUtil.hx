@@ -164,25 +164,6 @@ class XMLUtil {
 		return addAnimToSprite(sprite, extractAnimFromXML(anim, animType, loop));
 	}
 
-	public static function getAnimationData(sprite:FlxSprite, name:String):AnimData {
-		var flxanim:FlxAnimation = sprite.animation.getByName(name);
-		var animData:AnimData = {
-			name: name,
-			anim: flxanim.prefix,
-			fps: flxanim.frameRate,
-			loop: flxanim.looped,
-			x: 0,
-			y: 0,
-			indices: flxanim.usesIndicies ? flxanim.frames : [],
-			animType: NONE
-		};
-		if (sprite is FunkinSprite) {
-			var animOffset = cast(sprite, FunkinSprite).getAnimOffset(name);
-			animData.x = animOffset.x; animData.y = animOffset.y;
-		}
-		return animData;
-	}
-
 	public static function addAnimToSprite(sprite:FlxSprite, animData:AnimData):ErrorCode {
 		if (animData.name != null && animData.anim != null) {
 			if (animData.fps <= 0 #if web || animData.fps == null #end) animData.fps = 24;
@@ -194,7 +175,6 @@ class XMLUtil {
 				else
 					animateAnim.addBySymbol(animData.name, animData.anim, animData.fps, animData.loop);
 			} else {
-				trace("ge");
 				if (animData.indices.length > 0)
 					sprite.animation.addByIndices(animData.name, animData.anim, animData.indices, "", animData.fps, animData.loop);
 				else
@@ -214,6 +194,7 @@ class XMLUtil {
 					default:
 						// nothing
 				}
+				xmlSpr.animDatas.set(animData.name, animData);
 			}
 			return OK;
 		}

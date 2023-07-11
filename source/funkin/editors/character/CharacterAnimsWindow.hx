@@ -66,7 +66,7 @@ class CharacterAnimsWindow extends UIWindow {
 		for (i => button in buttons.members)
 			cast(button, CharacterAnimButtons).updatePos(23,16+((32+16)*i));
 
-		addButton.y = 16+((32+16)*(character.animation.getNameList().length));
+		addButton.y = 16+((32+16)*(buttons.members.length));
 		addIcon.x = addButton.x + (440/2) - 8; addIcon.y = addButton.y + (32/2) - 8;
 	}
 
@@ -125,7 +125,9 @@ class CharacterAnimButtons extends UIButton {
 		ghostIcon.updateHitbox();
 		members.push(ghostIcon);
 
-		editButton = new UIButton(ghostButton.x+32+17, y, "", null, 32);
+		editButton = new UIButton(ghostButton.x+32+17, y, "", function () {
+			CharacterEditor.instance.editAnimWithUI(this.anim);
+		}, 32);
 		members.push(editButton);
 
 		editIcon = new FlxSprite(editButton.x + 8, editButton.y + 8).loadGraphic(Paths.image('editors/character/edit-button'));

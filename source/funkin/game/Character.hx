@@ -40,8 +40,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		return stunned = b;
 	}
 
-	public var debugMode:Bool = false;
-
 	public var isPlayer:Bool = false;
 	public var isGF:Bool = false;
 	public var curCharacter:String = 'bf';
