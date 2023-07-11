@@ -84,8 +84,7 @@ class CharacterEditor extends UIState {
 						label: "Redo",
 						keybinds: [[CONTROL, Y], [CONTROL, SHIFT, Z]],
 						onSelect: _edit_redo
-					},
-					null
+					}
 				]
 			},
 			{
@@ -413,6 +412,7 @@ class CharacterEditor extends UIState {
 	}
 
 	function _playback_stop_anim(_) {
+		character.animation.stop();
 	}
 
 	public function playAnimation(anim:String) {
