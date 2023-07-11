@@ -56,11 +56,11 @@ class CharacterAnimScreen extends UISubstateWindow {
 		add(nameTextBox);
 		addLabelOn(nameTextBox, "Name");
 
-		animTextBox = new UITextBox(nameTextBox.x + 160 + 26, nameTextBox.y, animData.anim, 180);
+		animTextBox = new UITextBox(nameTextBox.x + 160 + 26, nameTextBox.y, animData.anim, 200);
 		add(animTextBox);
 		addLabelOn(animTextBox, "Animation");
 
-		fpsStepper = new UINumericStepper(animTextBox.x + 180 + 26, animTextBox.y, animData.fps, 0.1, 2, 1, 100, 82);
+		fpsStepper = new UINumericStepper(animTextBox.x + 200 + 26, animTextBox.y, animData.fps, 0.1, 2, 1, 100, 82);
 		add(fpsStepper);
 		addLabelOn(fpsStepper, "FPS");
 

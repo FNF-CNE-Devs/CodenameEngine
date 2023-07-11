@@ -382,10 +382,12 @@ class CharacterEditor extends UIState {
 		var oldID:Int = character.animation.getNameList().indexOf(name);
 		var oldAnimData:AnimData = character.animDatas.get(name);
 
-		if (character.animation.exists(name)) {
+		if (character.animation.exists(name))
 			character.animation.remove(name);
+		if (character.animOffsets.exists(name))
 			character.animOffsets.remove(name);
-		}
+		if (character.animDatas.exists(name))
+			character.animDatas.remove(name);
 		characterAnimsWindow.removeButton(name);
 
 		if (addtoUndo)
