@@ -392,7 +392,10 @@ class CharacterEditor extends UIState {
 	}
 
 	public function deleteAnim(name:String, addtoUndo:Bool = true) {
-		playAnimation(character.animation.getNameList()[Std.int(Math.abs(character.animation.getNameList().indexOf(name)-1))]);
+		if (character.animation.getNameList().length-1 == 0)
+			@:privateAccess character.animation._curAnim = null;
+		else
+			playAnimation(character.animation.getNameList()[Std.int(Math.abs(character.animation.getNameList().indexOf(name)-1))]);
 
 		// undo shit blah blah
 		var oldID:Int = character.animation.getNameList().indexOf(name);
@@ -408,11 +411,13 @@ class CharacterEditor extends UIState {
 	}
 
 	function _playback_play_anim(_) {
-		playAnimation(character.animation.name);
+		if (character.animation.getNameList().length != 0)
+			playAnimation(character.animation.name);
 	}
 
 	function _playback_stop_anim(_) {
-		character.animation.stop();
+		if (character.animation.getNameList().length != 0)
+			character.animation.stop();
 	}
 
 	public function playAnimation(anim:String) {
@@ -457,6 +462,8 @@ class CharacterEditor extends UIState {
 	}
 
 	function changeOffset(anim:String, change:FlxPoint, addtoUndo:Bool = true) {
+		if (character.animation.getNameList().length == 0) return;
+
 		character.animOffsets.set(anim, character.getAnimOffset(anim) + change);
 		characterAnimsWindow.animButtons[anim].updateInfo(anim, character.getAnimOffset(anim), false);
 		character.frameOffset.set(character.getAnimOffset(anim).x, character.getAnimOffset(anim).y);
@@ -466,6 +473,8 @@ class CharacterEditor extends UIState {
 	}
 
 	function clearOffsets(addtoUndo:Bool = true) {
+		if (character.animation.getNameList().length == 0) return;
+
 		var oldOffsets:Map<String, FlxPoint> = [
 			for (anim => offsets in character.animOffsets)
 				anim => offsets.clone()
