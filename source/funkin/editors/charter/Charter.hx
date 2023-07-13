@@ -356,7 +356,6 @@ class Charter extends UIState {
 			sep.cameras = [charterCamera];
 		}
 
-
 		selectionBox = new UISliceSprite(0, 0, 2, 2, 'editors/ui/selection');
 		selectionBox.visible = false;
 		selectionBox.scrollFactor.set(1, 1);

@@ -84,7 +84,7 @@ class CharacterAnimsWindow extends UIWindow {
 		__rect.width = bWidth; __rect.height = bHeight;
 		if(UIState.state.isOverlapping(this, __rect)) {
 			var nextscrollY = scrollY - FlxG.mouse.wheel * 12;
-			if (nextscrollY >= 0 && nextscrollY + CharacterEditor.instance.animsCamera.height <= (addButton.y +32 +26))
+			if (nextscrollY >= 0 && nextscrollY + CharacterEditor.instance.animsCamera.height <= (addButton.y +32 +23))
 				scrollY = nextscrollY;
 			hovered = true;
 		} else

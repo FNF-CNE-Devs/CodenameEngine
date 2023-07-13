@@ -52,7 +52,8 @@ class CharacterEditor extends UIState {
 				label: "File",
 				childs: [
 					{
-						label: "New"
+						label: "New",
+						onSelect: _file_new,
 					},
 					null,
 					{
@@ -122,11 +123,7 @@ class CharacterEditor extends UIState {
 					{
 						label: "Stop Animation",
 						onSelect: _playback_stop_anim
-					},
-					null,
-					{
-						label: "Go to frame",
-					},
+					}
 				]
 			},
 			{
@@ -222,7 +219,7 @@ class CharacterEditor extends UIState {
 		topMenuSpr = new UITopMenu(topMenu);
 		topMenuSpr.cameras = uiGroup.cameras = [uiCamera];
 
-		characterPropertiresWindow = new CharacterPropertiesWindow(800-23,23 + 23, 450 + 23, 140, "Character Properties");
+		characterPropertiresWindow = new CharacterPropertiesWindow();
 		characterAnimsWindow = new CharacterAnimsWindow(character);
 		uiGroup.add(characterPropertiresWindow);
 		uiGroup.add(characterAnimsWindow);
@@ -246,6 +243,9 @@ class CharacterEditor extends UIState {
 				UIUtil.processShortcuts(topMenu);
 		}
 
+		if (character != null)
+			characterPropertiresWindow.characterInfo.text = '(Num) Animations: ${character.animation.getNameList().length}\nFlipped: ${character.flipX}\nSprite: ${character.sprite}\nAnim: ${character.animation.name}';
+
 		if (FlxG.mouse.wheel != 0 && !(characterPropertiresWindow.hovered || characterAnimsWindow.hovered)) {
 			zoom += 0.25 * FlxG.mouse.wheel;
 			__camZoom = Math.pow(2, zoom);
@@ -263,8 +263,8 @@ class CharacterEditor extends UIState {
 		}
 
 		charCamera.scroll.set(
-			lerp(charCamera.scroll.x, nextScroll.x, 0.5),
-			lerp(charCamera.scroll.y, nextScroll.y, 0.5)
+			lerp(charCamera.scroll.x, nextScroll.x, 0.25),
+			lerp(charCamera.scroll.y, nextScroll.y, 0.25)
 		);
 
 		charCamera.zoom = lerp(charCamera.zoom, __camZoom, 0.125);
@@ -286,13 +286,13 @@ class CharacterEditor extends UIState {
 		FlxG.switchState(new CharacterSelection());
 	}
 
+	function _file_new(_) {
+	}
+
 	function _file_save(_) {
 	}
 
 	function _file_saveas(_) {
-	}
-
-	function _edit_delete(_) {
 	}
 
 	function _edit_undo(_) {
