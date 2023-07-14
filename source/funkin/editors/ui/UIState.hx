@@ -60,6 +60,16 @@ class UIState extends MusicBeatState {
 		updateRectButtonHandler(spr, spr.__rect, buttonHandler);
 	}
 
+	public function checkMouseOnCam(spr:UISprite) {
+		for(camera in spr.__lastDrawCameras) {
+			var pos = FlxG.mouse.getScreenPosition(FlxG.camera, FlxPoint.get());
+
+			if (((pos.x > camera.x) && (pos.x < camera.x + camera.width)) && ((pos.y > camera.y) && (pos.y < camera.y + camera.height)))
+				return true;
+		}
+		return false;
+	}
+
 	public function isOverlapping(spr:UISprite, rect:FlxRect) {
 		for(camera in spr.__lastDrawCameras) {
 			var pos = FlxG.mouse.getScreenPosition(camera, FlxPoint.get());

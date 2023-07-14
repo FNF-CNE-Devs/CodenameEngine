@@ -113,8 +113,10 @@ class CharacterAnimButtons extends UIButton {
 		super(x,y, '$anim (${offset.x}, ${offset.y})', function () {
 			CharacterEditor.instance.playAnimation(this.anim);
 		}, 282);
+		cameraLocked = true;
 
 		ghostButton = new UIButton(x+282+17, y, "", null, 32);
+		ghostButton.cameraLocked = true;
 		members.push(ghostButton);
 
 		ghostIcon = new FlxSprite(ghostButton.x + 8, ghostButton.y + 8).loadGraphic(Paths.image('editors/character/ghost-button'), true, 16, 16);
@@ -128,6 +130,7 @@ class CharacterAnimButtons extends UIButton {
 		editButton = new UIButton(ghostButton.x+32+17, y, "", function () {
 			CharacterEditor.instance.editAnimWithUI(this.anim);
 		}, 32);
+		editButton.cameraLocked = true;
 		members.push(editButton);
 
 		editIcon = new FlxSprite(editButton.x + 8, editButton.y + 8).loadGraphic(Paths.image('editors/character/edit-button'));
@@ -137,6 +140,7 @@ class CharacterAnimButtons extends UIButton {
 		deleteButton = new UIButton(editButton.x+32+17, y, "", function () {
 			CharacterEditor.instance.deleteAnim(this.anim);
 		}, 32);
+		deleteButton.cameraLocked = true;
 		deleteButton.color = FlxColor.RED;
 		members.push(deleteButton);
 
