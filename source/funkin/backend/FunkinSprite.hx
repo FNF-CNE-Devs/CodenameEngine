@@ -327,6 +327,27 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		return name;
 	}
 
+	public inline function removeAnimation(name:String) {
+		if (animateAtlas != null)
+			@:privateAccess animateAtlas.anim.animsMap.remove(name);
+		else
+			animation.remove(name);
+	}
+
+	public inline function getNameList():Array<String> {
+		if (animateAtlas != null) 
+			return [for (name in @:privateAccess animateAtlas.anim.animsMap.keys()) name];
+		else
+			return animation.getNameList();
+	}
+
+	public inline function stopAnimation() {
+		if (animateAtlas != null)
+			animateAtlas.anim.pause();
+		else
+			animation.stop();
+	}
+
 	public inline function isAnimFinished()
 	{
 		return animateAtlas != null ? (animateAtlas.anim.finished) : (animation.curAnim != null ? animation.curAnim.finished : true);

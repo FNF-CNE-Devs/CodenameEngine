@@ -24,10 +24,10 @@ class CharacterAnimsWindow extends UIWindow {
 	}
 
 	public function createButtons() {
-		for (i=>anim in character.animation.getNameList()) 
-			createNewButton(anim, character.getAnimOffset(anim), false, -1, false);
+		for (i=>anim in character.animDatas) 
+			createNewButton(anim.name, character.getAnimOffset(anim.name), false, -1, false);
 
-		addButton = new UIButton(25, 16+((32+16)*(character.animation.getNameList().length)), "", 
+		addButton = new UIButton(25, 16+((32+16)*(character.getNameList().length)), "", 
 			function () {
 				CharacterEditor.instance.createAnimWithUI();
 			}

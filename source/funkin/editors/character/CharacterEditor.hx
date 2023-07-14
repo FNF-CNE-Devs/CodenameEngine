@@ -224,7 +224,7 @@ class CharacterEditor extends UIState {
 		uiGroup.add(characterPropertiresWindow);
 		uiGroup.add(characterAnimsWindow);
 
-		playAnimation(character.animation.getNameList()[0]);
+		playAnimation(character.getNameList()[0]);
 
 		add(topMenuSpr);
 		add(uiGroup);
@@ -244,7 +244,7 @@ class CharacterEditor extends UIState {
 		}
 
 		if (character != null)
-			characterPropertiresWindow.characterInfo.text = '(Num) Animations: ${character.animation.getNameList().length}\nFlipped: ${character.flipX}\nSprite: ${character.sprite}\nAnim: ${character.animation.name}';
+			characterPropertiresWindow.characterInfo.text = '(Num) Animations: ${character.getNameList().length}\nFlipped: ${character.flipX}\nSprite: ${character.sprite}\nAnim: ${character.getAnimName()}';
 
 		if (FlxG.mouse.wheel != 0 && !(characterPropertiresWindow.hovered || characterAnimsWindow.hovered)) {
 			zoom += 0.25 * FlxG.mouse.wheel;
@@ -311,10 +311,10 @@ class CharacterEditor extends UIState {
 				for (anim => offsets in oldOffsets)
 					character.animOffsets.set(anim, offsets.clone());
 			
-				for (anim in character.animation.getNameList())
+				for (anim in character.getNameList())
 					characterAnimsWindow.animButtons[anim].updateInfo(anim, character.getAnimOffset(anim), false);
 				
-				changeOffset(character.animation.name, FlxPoint.get(0, 0), false); // apply da new offsets
+				changeOffset(character.getAnimName(), FlxPoint.get(0, 0), false); // apply da new offsets
 		}
 		if (v != null)
 			redoList.insert(0, v);
@@ -345,11 +345,11 @@ class CharacterEditor extends UIState {
 	}
 
 	function _char_edit_anim(_) {
-		editAnimWithUI(character.animation.name);
+		editAnimWithUI(character.getAnimName());
 	}
 
 	function _char_remove_anim(_) {
-		deleteAnim(character.animation.name);
+		deleteAnim(character.getAnimName());
 	}
 
 	function _char_edit_info(_) {
@@ -375,7 +375,7 @@ class CharacterEditor extends UIState {
 		playAnimation(animData.name);
 
 		if (addtoUndo)
-			addToUndo(CCreateAnim(character.animation.getNameList().length, animData));
+			addToUndo(CCreateAnim(character.getNameList().length, animData));
 	}
 
 	public function editAnim(name:String, animData:AnimData, addtoUndo:Bool = true) {
@@ -385,7 +385,7 @@ class CharacterEditor extends UIState {
 		XMLUtil.addAnimToSprite(character, animData);
 		button.updateInfo(animData.name, character.getAnimOffset(animData.name), false);
 
-		if (character.animation.name == animData.name) // update anim ifs its currently selected
+		if (character.getAnimName() == animData.name) // update anim ifs its currently selected
 			playAnimation(animData.name);
 
 		if (addtoUndo)
@@ -393,16 +393,16 @@ class CharacterEditor extends UIState {
 	}
 
 	public function deleteAnim(name:String, addtoUndo:Bool = true) {
-		if (character.animation.getNameList().length-1 == 0)
+		if (character.getNameList().length-1 == 0)
 			@:privateAccess character.animation._curAnim = null;
 		else
-			playAnimation(character.animation.getNameList()[Std.int(Math.abs(character.animation.getNameList().indexOf(name)-1))]);
+			playAnimation(character.getNameList()[Std.int(Math.abs(character.getNameList().indexOf(name)-1))]);
 
 		// undo shit blah blah
-		var oldID:Int = character.animation.getNameList().indexOf(name);
+		var oldID:Int = character.getNameList().indexOf(name);
 		var oldAnimData:AnimData = character.animDatas.get(name);
 
-		if (character.animation.exists(name)) character.animation.remove(name);
+		character.removeAnimation(name);
 		if (character.animOffsets.exists(name)) character.animOffsets.remove(name);
 		if (character.animDatas.exists(name)) character.animDatas.remove(name);
 		characterAnimsWindow.removeButton(name);
@@ -416,13 +416,13 @@ class CharacterEditor extends UIState {
 	} 
 
 	function _playback_play_anim(_) {
-		if (character.animation.getNameList().length != 0)
-			playAnimation(character.animation.name);
+		if (character.getNameList().length != 0)
+			playAnimation(character.getAnimName());
 	}
 
 	function _playback_stop_anim(_) {
-		if (character.animation.getNameList().length != 0)
-			character.animation.stop();
+		if (character.getNameList().length != 0)
+			character.stopAnimation();
 	}
 
 	public function playAnimation(anim:String) {
@@ -431,35 +431,35 @@ class CharacterEditor extends UIState {
 	}
 
 	function _offsets_left(_) {
-		changeOffset(character.animation.name, FlxPoint.get(1, 0));
+		changeOffset(character.getAnimName(), FlxPoint.get(1, 0));
 	}
 
 	function _offsets_up(_) {
-		changeOffset(character.animation.name, FlxPoint.get(0, 1));
+		changeOffset(character.getAnimName(), FlxPoint.get(0, 1));
 	} 
 
 	function _offsets_down(_) {
-		changeOffset(character.animation.name, FlxPoint.get(0, -1));
+		changeOffset(character.getAnimName(), FlxPoint.get(0, -1));
 	}
 
 	function _offsets_right(_) {
-		changeOffset(character.animation.name, FlxPoint.get(-1, 0));
+		changeOffset(character.getAnimName(), FlxPoint.get(-1, 0));
 	}
 
 	function _offsets_extra_left(_) {
-		changeOffset(character.animation.name, FlxPoint.get(5, 0));
+		changeOffset(character.getAnimName(), FlxPoint.get(5, 0));
 	}
 
 	function _offsets_extra_up(_) {
-		changeOffset(character.animation.name, FlxPoint.get(0, 5));
+		changeOffset(character.getAnimName(), FlxPoint.get(0, 5));
 	} 
 
 	function _offsets_extra_down(_) {
-		changeOffset(character.animation.name, FlxPoint.get(0, -5));
+		changeOffset(character.getAnimName(), FlxPoint.get(0, -5));
 	}
 
 	function _offsets_extra_right(_) {
-		changeOffset(character.animation.name, FlxPoint.get(-5, 0));
+		changeOffset(character.getAnimName(), FlxPoint.get(-5, 0));
 	}
 
 	function _offsets_clear(_) {
@@ -467,7 +467,7 @@ class CharacterEditor extends UIState {
 	}
 
 	function changeOffset(anim:String, change:FlxPoint, addtoUndo:Bool = true) {
-		if (character.animation.getNameList().length == 0) return;
+		if (character.getNameList().length == 0) return;
 
 		character.animOffsets.set(anim, character.getAnimOffset(anim) + change);
 		characterAnimsWindow.animButtons[anim].updateInfo(anim, character.getAnimOffset(anim), false);
@@ -478,14 +478,14 @@ class CharacterEditor extends UIState {
 	}
 
 	function clearOffsets(addtoUndo:Bool = true) {
-		if (character.animation.getNameList().length == 0) return;
+		if (character.getNameList().length == 0) return;
 
 		var oldOffsets:Map<String, FlxPoint> = [
 			for (anim => offsets in character.animOffsets)
 				anim => offsets.clone()
 		];
 
-		for (anim in character.animation.getNameList()) {
+		for (anim in character.getNameList()) {
 			character.animOffsets[anim].zero();
 			characterAnimsWindow.animButtons[anim].updateInfo(anim, character.getAnimOffset(anim), false);
 		}
