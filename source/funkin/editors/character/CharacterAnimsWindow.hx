@@ -32,6 +32,7 @@ class CharacterAnimsWindow extends UIWindow {
 				CharacterEditor.instance.createAnimWithUI();
 			}
 		, 426);
+		addButton.cameraLocked = true;
 		addButton.cameras = [CharacterEditor.instance.animsCamera];
 		addButton.color = FlxColor.GREEN;
 
