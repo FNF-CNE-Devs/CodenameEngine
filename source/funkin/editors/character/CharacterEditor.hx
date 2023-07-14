@@ -232,6 +232,7 @@ class CharacterEditor extends UIState {
 
 	private var movingCam:Bool = false;
 	private var camDrag:FlxPoint = FlxPoint.get(0,0);
+	private var camDragSpeed:Float = 1.2;
 
 	private var nextScroll:FlxPoint = FlxPoint.get(0,0);
 
@@ -253,11 +254,13 @@ class CharacterEditor extends UIState {
 
 		if (FlxG.mouse.justPressedMiddle) {
 			FlxG.mouse.getScreenPosition(charCamera, camDrag);
+			camDrag *= camDragSpeed;
 			camDrag += charCamera.scroll;
 		}
 
 		if (FlxG.mouse.pressedMiddle) {
 			var pos = FlxG.mouse.getScreenPosition(charCamera);
+			pos *= camDragSpeed;
 			nextScroll.set((camDrag.x - pos.x), (camDrag.y - pos.y));
 		}
 
