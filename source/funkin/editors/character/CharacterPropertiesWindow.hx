@@ -15,7 +15,9 @@ class CharacterPropertiesWindow extends UIWindow {
 		members.push(newButton);
 		newButton.color = FlxColor.GREEN;
 
-		editButton = new UIButton(newButton.x, newButton.y + 12 + 30 + 4, "Edit Character Info", null, 200);
+		editButton = new UIButton(newButton.x, newButton.y + 12 + 30 + 4, "Edit Character Info", function () {
+			CharacterEditor.instance.editInfoWithUI();
+		}, 200);
 		members.push(editButton);
 
 		characterInfo = new UIText(x + 450 + 20 - 42 - 400, y + 36 + 16, 400, "(Num) Animations:\nFlipped:\nSprite:\nCurrent Anim:");

@@ -9,6 +9,8 @@ class CharacterInfoScreen extends UISubstateWindow {
 	public var iconTextBox:UITextBox;
 	public var iconSprite:FlxSprite;
 	public var gameOverCharTextBox:UITextBox;
+	public var antialiasingCheckbox:UICheckbox;
+	public var flipXCheckbox:UICheckbox;
 	public var positionXStepper:UINumericStepper;
 	public var positionYStepper:UINumericStepper;
 	public var cameraXStepper:UINumericStepper;
@@ -16,10 +18,7 @@ class CharacterInfoScreen extends UISubstateWindow {
 	public var scaleStepper:UINumericStepper;
 	public var singTimeStepper:UINumericStepper;
 	public var isPlayerCheckbox:UICheckbox;
-	// TODO: ADD THESE OPTIONS AND A HEALTH BAR COLOR OPTION
 	public var isGFCheckbox:UICheckbox;
-	public var flipXCheckbox:UICheckbox;
-	public var antialiasingCheckbox:UICheckbox;
 
 	public var saveButton:UIButton;
 	public var closeButton:UIButton;
@@ -31,7 +30,8 @@ class CharacterInfoScreen extends UISubstateWindow {
 
 	public override function create() {
 		winTitle = "Editing Character";
-		winWidth = 960;
+		winWidth = 714;
+		winHeight = 500;
 
 		super.create();
 
@@ -52,11 +52,19 @@ class CharacterInfoScreen extends UISubstateWindow {
 
 		updateIcon(character.getIcon());
 
-		gameOverCharTextBox = new UITextBox(iconTextBox.x + 150 + (75 + 16), iconTextBox.y, character.gameOverCharacter, 200);
+		gameOverCharTextBox = new UITextBox(iconTextBox.x + 150 + (75 + 12), iconTextBox.y, character.gameOverCharacter, 200);
 		add(gameOverCharTextBox);
 		addLabelOn(gameOverCharTextBox, "Game Over Character");
 
-		add(title = new UIText(spriteTextBox.x, spriteTextBox.y + 10 + 46, 0, "Character Data", 28));
+		antialiasingCheckbox = new UICheckbox(spriteTextBox.x, spriteTextBox.y + 10 + 32 + 28, "Antialiasing", character.antialiasing);
+		add(antialiasingCheckbox);
+		addLabelOn(antialiasingCheckbox, "Antialiased");
+
+		flipXCheckbox = new UICheckbox(antialiasingCheckbox.x + 172, spriteTextBox.y + 10 + 32 + 28, "FlipX", character.flipX);
+		add(flipXCheckbox);
+		addLabelOn(flipXCheckbox, "Flipped");
+
+		add(title = new UIText(spriteTextBox.x, spriteTextBox.y + 10 + 46 + 64, 0, "Character Data", 28));
 
 		positionXStepper = new UINumericStepper(title.x, title.y + title.height + 36, character.globalOffset.x, 0.001, 2, null, null, 84);
 		add(positionXStepper);
@@ -84,12 +92,16 @@ class CharacterInfoScreen extends UISubstateWindow {
 		add(singTimeStepper);
 		addLabelOn(singTimeStepper, "Sing Duration (Steps)");
 
-		isPlayerCheckbox = new UICheckbox(positionXStepper.x, positionXStepper.y + 10 + 32 + 26, "isPlayer", character.playerOffsets);
+		isPlayerCheckbox = new UICheckbox(positionXStepper.x, positionXStepper.y + 10 + 32 + 28, "isPlayer", character.playerOffsets);
 		add(isPlayerCheckbox);
 		addLabelOn(isPlayerCheckbox, "Is Player");
 
-		for (checkbox in [isPlayerCheckbox])
-			{checkbox.y += 6; checkbox.x += 4;}
+		isGFCheckbox = new UICheckbox(isPlayerCheckbox.x + 128, positionXStepper.y + 10 + 32 + 28, "isGF", character.isGF);
+		add(isGFCheckbox);
+		addLabelOn(isGFCheckbox, "Is GF");
+
+		for (checkbox in [isPlayerCheckbox, isGFCheckbox, antialiasingCheckbox, flipXCheckbox])
+			{checkbox.y += 4; checkbox.x += 6;}
 
 		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20, windowSpr.y + windowSpr.bHeight- 20, "Save & Close", function() {
 			close();

@@ -253,13 +253,12 @@ class CharacterEditor extends UIState {
 
 		if (FlxG.mouse.justPressedMiddle) {
 			FlxG.mouse.getScreenPosition(charCamera, camDrag);
-			camDrag *= 1.2;
 			camDrag += charCamera.scroll;
 		}
 
 		if (FlxG.mouse.pressedMiddle) {
 			var pos = FlxG.mouse.getScreenPosition(charCamera);
-			nextScroll.set((camDrag.x - (pos.x*1.2)), (camDrag.y - (pos.y*1.2)));
+			nextScroll.set((camDrag.x - pos.x), (camDrag.y - pos.y));
 		}
 
 		charCamera.scroll.set(
@@ -385,7 +384,9 @@ class CharacterEditor extends UIState {
 
 		XMLUtil.addAnimToSprite(character, animData);
 		button.updateInfo(animData.name, character.getAnimOffset(animData.name), false);
-		playAnimation(animData.name);
+
+		if (character.animation.name == animData.name) // update anim ifs its currently selected
+			playAnimation(animData.name);
 
 		if (addtoUndo)
 			addToUndo(CEditAnim(animData.name, oldAnimData, animData));
@@ -409,6 +410,10 @@ class CharacterEditor extends UIState {
 		if (addtoUndo)
 			addToUndo(CDeleteAnim(oldID, oldAnimData));
 	}
+
+	public function editInfoWithUI(addtoUndo:Bool = true) {
+		FlxG.state.openSubState(new CharacterInfoScreen(character));
+	} 
 
 	function _playback_play_anim(_) {
 		if (character.animation.getNameList().length != 0)
