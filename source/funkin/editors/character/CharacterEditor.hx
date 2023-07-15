@@ -262,11 +262,14 @@ class CharacterEditor extends UIState {
 			var pos = FlxG.mouse.getScreenPosition(charCamera);
 			pos *= camDragSpeed;
 			nextScroll.set((camDrag.x - pos.x), (camDrag.y - pos.y));
-		}
+
+			currentCursor = HAND;
+		} else
+			currentCursor = ARROW;
 
 		charCamera.scroll.set(
-			lerp(charCamera.scroll.x, nextScroll.x, 0.25),
-			lerp(charCamera.scroll.y, nextScroll.y, 0.25)
+			lerp(charCamera.scroll.x, nextScroll.x, 0.35),
+			lerp(charCamera.scroll.y, nextScroll.y, 0.35)
 		);
 
 		charCamera.zoom = lerp(charCamera.zoom, __camZoom, 0.125);
