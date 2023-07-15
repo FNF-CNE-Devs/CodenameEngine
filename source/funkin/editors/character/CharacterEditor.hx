@@ -308,7 +308,7 @@ class CharacterEditor extends UIState {
 			case null:
 				// do nothing
 			case CEditInfo(oldInfo, newInfo):
-				editInfo(oldInfo);
+				editInfo(oldInfo, false);
 			case CCreateAnim(animID, animData):
 				deleteAnim(animData.name, false);
 			case CEditAnim(name, oldData, animData):
@@ -336,7 +336,7 @@ class CharacterEditor extends UIState {
 			case null:
 				// do nothing
 			case CEditInfo(oldInfo, newInfo):
-				editInfo(newInfo);
+				editInfo(newInfo, false);
 			case CCreateAnim(animID, animData):
 				createAnim(animData, animID, false);
 			case CEditAnim(name, oldData, animData):
@@ -430,8 +430,12 @@ class CharacterEditor extends UIState {
 	}
 
 	public function editInfo(newInfo:Xml, addtoUndo:Bool = true) {
+		var lastAnim:String = character.getAnimName();
+
 		var oldInfo = character.buildXML();
 		character.applyXML(new Access(newInfo));
+
+		playAnimation(lastAnim);
 
 		if (addtoUndo)
 			addToUndo(CEditInfo(oldInfo, newInfo));

@@ -1,5 +1,6 @@
 package funkin.editors.character;
 
+import flixel.math.FlxPoint;
 import haxe.xml.Access;
 import funkin.game.Character;
 
@@ -160,6 +161,21 @@ class CharacterInfoScreen extends UISubstateWindow {
 		xml.set("scale", Std.string(scaleStepper.value));
 		xml.set("antialiasing", antialiasingCheckbox.checked ? "true" : "false");
 		xml.set("sprite", spriteTextBox.label.text);
+
+		for (anim in character.animDatas)
+		{
+			var animXml:Xml = Xml.createElement('anim');
+			animXml.set("name", anim.name);
+			animXml.set("anim", anim.anim);
+			animXml.set("loop", Std.string(anim.loop));
+			animXml.set("fps", Std.string(anim.fps));
+			var offset:FlxPoint = character.getAnimOffset(anim.name);
+			animXml.set("x", Std.string(offset.x));
+			animXml.set("y", Std.string(offset.y));
+			if (anim.indices.length > 0)
+				animXml.set("indices", anim.indices.join(","));
+			xml.addChild(animXml);
+		}
 
 		if (onSave != null) onSave(xml);
 	}

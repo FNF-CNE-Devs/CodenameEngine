@@ -176,6 +176,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			switchOffset('singLEFT', 'singRIGHT');
 			switchOffset('singLEFTmiss', 'singRIGHTmiss');
 		}
+		frameOffset.set(getAnimOffset(getAnimName()).x, getAnimOffset(getAnimName()).y);
 		if (isPlayer)
 			flipX = !flipX;
 		__baseFlipped = flipX;
