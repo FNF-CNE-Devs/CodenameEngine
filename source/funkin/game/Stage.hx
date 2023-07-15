@@ -195,6 +195,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 			charPos.camyoffset = Std.parseFloat(node.getAtt("camyoffset")).getDefault(charPos.camyoffset);
 			charPos.skewX = Std.parseFloat(node.getAtt("skewx")).getDefault(charPos.skewX);
 			charPos.skewY = Std.parseFloat(node.getAtt("skewy")).getDefault(charPos.skewY);
+			charPos.alpha = Std.parseFloat(node.getAtt("alpha")).getDefault(charPos.alpha);
 			charPos.flipX = (node.has.flip || node.has.flipX) ? (node.getAtt("flip") == "true" || node.getAtt("flipX") == "true") : charPos.flipX;
 
 			var scale = Std.parseFloat(node.getAtt("scale")).getDefault(charPos.scale.x);
@@ -246,6 +247,7 @@ class StageCharPos extends FlxObject {
 	public var camyoffset:Float = 0;
 	public var skewX:Float = 0;
 	public var skewY:Float = 0;
+	public var alpha:Float = 1;
 	public var flipX:Bool = false;
 	public var scale:FlxPoint = FlxPoint.get(1, 1);
 
@@ -266,6 +268,7 @@ class StageCharPos extends FlxObject {
 		char.scale.x *= scale.x; char.scale.y *= scale.y;
 		char.cameraOffset += FlxPoint.weak(camxoffset, camyoffset);
 		char.skew.x += skewX; char.skew.y += skewY;
+		char.alpha *= alpha;
 	}
 }
 typedef StageCharPosInfo = {

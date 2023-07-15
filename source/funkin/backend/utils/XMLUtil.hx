@@ -114,6 +114,9 @@ class XMLUtil {
 
 		spr.zoomFactor = Std.parseFloat(node.getAtt("zoomfactor")).getDefault(spr.zoomFactor);
 
+		if (node.has.alpha)
+			spr.alpha = Std.parseFloat(node.getAtt("alpha")).getDefault(spr.alpha);
+
 		for(anim in node.nodes.anim)
 			addXMLAnimation(spr, anim);
 
