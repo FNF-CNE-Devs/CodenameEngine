@@ -32,7 +32,6 @@ class CharacterAnimsWindow extends UIWindow {
 				CharacterEditor.instance.createAnimWithUI();
 			}
 		, 426);
-		addButton.cameraLocked = true;
 		addButton.cameras = [CharacterEditor.instance.animsCamera];
 		addButton.color = FlxColor.GREEN;
 
@@ -81,8 +80,8 @@ class CharacterAnimsWindow extends UIWindow {
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		__rect.x = x; __rect.y = y;
-		__rect.width = bWidth; __rect.height = bHeight;
+		__rect.x = x; __rect.y = y+23;
+		__rect.width = bWidth; __rect.height = bHeight-23;
 		if(UIState.state.isOverlapping(this, __rect)) {
 			var nextscrollY = scrollY - FlxG.mouse.wheel * 12;
 			if (nextscrollY >= 0 && nextscrollY + CharacterEditor.instance.animsCamera.height <= (addButton.y +32 +23))
@@ -90,6 +89,10 @@ class CharacterAnimsWindow extends UIWindow {
 			hovered = true;
 		} else
 			hovered = false;
+
+		for (button in buttons.members)
+			cast(button, UISprite).selectable = hovered;
+		addButton.selectable = hovered;
 
 		CharacterEditor.instance.animsCamera.scroll.y = FlxMath.lerp(CharacterEditor.instance.animsCamera.scroll.y, scrollY, 1/3);
 
@@ -114,10 +117,8 @@ class CharacterAnimButtons extends UIButton {
 		super(x,y, '$anim (${offset.x}, ${offset.y})', function () {
 			CharacterEditor.instance.playAnimation(this.anim);
 		}, 282);
-		cameraLocked = true;
 
 		ghostButton = new UIButton(x+282+17, y, "", null, 32);
-		ghostButton.cameraLocked = true;
 		members.push(ghostButton);
 
 		ghostIcon = new FlxSprite(ghostButton.x + 8, ghostButton.y + 8).loadGraphic(Paths.image('editors/character/ghost-button'), true, 16, 16);
@@ -131,23 +132,24 @@ class CharacterAnimButtons extends UIButton {
 		editButton = new UIButton(ghostButton.x+32+17, y, "", function () {
 			CharacterEditor.instance.editAnimWithUI(this.anim);
 		}, 32);
-		editButton.cameraLocked = true;
 		members.push(editButton);
 
 		editIcon = new FlxSprite(editButton.x + 8, editButton.y + 8).loadGraphic(Paths.image('editors/character/edit-button'));
-		editIcon.antialiasing = false;
 		members.push(editIcon);
 
 		deleteButton = new UIButton(editButton.x+32+17, y, "", function () {
 			CharacterEditor.instance.deleteAnim(this.anim);
 		}, 32);
-		deleteButton.cameraLocked = true;
 		deleteButton.color = FlxColor.RED;
 		members.push(deleteButton);
 
 		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 8).loadGraphic(Paths.image('editors/character/delete-button'));
-		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);
+	}
+
+	public override function update(elapsed:Float) {
+		editButton.selectable = ghostButton.selectable = deleteButton.selectable = selectable;
+		super.update(elapsed);
 	}
 
 	public function updateInfo(anim:String, offset:FlxPoint, ghost:Bool) {
