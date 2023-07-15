@@ -1,5 +1,6 @@
 package funkin.editors.character;
 
+import haxe.xml.Access;
 import funkin.game.Character;
 
 class CharacterInfoScreen extends UISubstateWindow {
@@ -23,9 +24,12 @@ class CharacterInfoScreen extends UISubstateWindow {
 	public var saveButton:UIButton;
 	public var closeButton:UIButton;
 
-	public function new(character:Character) {
-		super();
+	public var onSave:(xml:Xml) -> Void = null;
+
+	public function new(character:Character, ?onSave:(xml:Xml) -> Void) {
 		this.character = character;
+		this.onSave = onSave;
+		super();
 	}
 
 	public override function create() {
@@ -104,12 +108,14 @@ class CharacterInfoScreen extends UISubstateWindow {
 			{checkbox.y += 4; checkbox.x += 6;}
 
 		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20, windowSpr.y + windowSpr.bHeight- 20, "Save & Close", function() {
+			saveCharacterInfo();
 			close();
 		}, 125);
 		saveButton.x -= saveButton.bWidth;
 		saveButton.y -= saveButton.bHeight;
 
 		closeButton = new UIButton(saveButton.x - 20, saveButton.y, "Close", function() {
+			if (onSave != null) onSave(null);
 			close();
 		}, 125);
 		closeButton.x -= closeButton.bWidth;
@@ -134,5 +140,27 @@ class CharacterInfoScreen extends UISubstateWindow {
 		iconSprite.scale.set(0.5, 0.5);
 		iconSprite.updateHitbox();
 		iconSprite.setPosition(iconTextBox.x + 150 + 8, (iconTextBox.y + 16) - (iconSprite.height/2));
+	}
+
+	function saveCharacterInfo() {
+		for (stepper in [positionXStepper, positionYStepper, cameraXStepper, cameraYStepper, singTimeStepper, scaleStepper])
+			@:privateAccess stepper.__onChange(stepper.label.text);
+
+		var xml = Xml.createElement("character");
+		xml.set("isPlayer", isPlayerCheckbox.checked ? "true" : "false");
+		xml.set("isGF", isGFCheckbox.checked ? "true" : "false");
+		xml.set("x", Std.string(positionXStepper.value));
+		xml.set("y", Std.string(positionYStepper.value));
+		xml.set("gameOverChar", gameOverCharTextBox.label.text);
+		xml.set("camx", Std.string(cameraXStepper.value));
+		xml.set("camy", Std.string(cameraYStepper.value));
+		xml.set("holdTime", Std.string(singTimeStepper.value));
+		xml.set("flipX", Std.string(flipXCheckbox.checked));
+		xml.set("icon", iconTextBox.label.text);
+		xml.set("scale", Std.string(scaleStepper.value));
+		xml.set("antialiasing", antialiasingCheckbox.checked ? "true" : "false");
+		xml.set("sprite", spriteTextBox.label.text);
+
+		if (onSave != null) onSave(xml);
 	}
 }

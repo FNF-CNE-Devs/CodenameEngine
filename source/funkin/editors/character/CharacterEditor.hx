@@ -1,5 +1,7 @@
 package funkin.editors.character;
 
+import hscript.Printer;
+import haxe.xml.Access;
 import funkin.editors.character.CharacterAnimsWindow.CharacterAnimButtons;
 import funkin.backend.utils.XMLUtil.AnimData;
 import flixel.math.FlxPoint;
@@ -305,6 +307,8 @@ class CharacterEditor extends UIState {
 		switch (v) {
 			case null:
 				// do nothing
+			case CEditInfo(oldInfo, newInfo):
+				editInfo(oldInfo);
 			case CCreateAnim(animID, animData):
 				deleteAnim(animData.name, false);
 			case CEditAnim(name, oldData, animData):
@@ -331,6 +335,8 @@ class CharacterEditor extends UIState {
 		switch (v) {
 			case null:
 				// do nothing
+			case CEditInfo(oldInfo, newInfo):
+				editInfo(newInfo);
 			case CCreateAnim(animID, animData):
 				createAnim(animData, animID, false);
 			case CEditAnim(name, oldData, animData):
@@ -359,7 +365,7 @@ class CharacterEditor extends UIState {
 	}
 
 	function _char_edit_info(_) {
-		FlxG.state.openSubState(new CharacterInfoScreen(character));
+		editInfoWithUI();
 	}
 
 	public function createAnimWithUI() {
@@ -417,9 +423,19 @@ class CharacterEditor extends UIState {
 			addToUndo(CDeleteAnim(oldID, oldAnimData));
 	}
 
-	public function editInfoWithUI(addtoUndo:Bool = true) {
-		FlxG.state.openSubState(new CharacterInfoScreen(character));
-	} 
+	public function editInfoWithUI() {
+		FlxG.state.openSubState(new CharacterInfoScreen(character, (_) -> {
+			if (_ != null) editInfo(_);
+		}));
+	}
+
+	public function editInfo(newInfo:Xml, addtoUndo:Bool = true) {
+		var oldInfo = character.buildXML();
+		character.applyXML(new Access(newInfo));
+
+		if (addtoUndo)
+			addToUndo(CEditInfo(oldInfo, newInfo));
+	}
 
 	function _playback_play_anim(_) {
 		if (character.getNameList().length != 0)
@@ -525,6 +541,7 @@ class CharacterEditor extends UIState {
 }
 
 enum CharacterChange {
+	CEditInfo(oldInfo:Xml, newInfo:Xml);
 	CCreateAnim(animID:Int, animData:AnimData);
 	CEditAnim(name:String, oldData:AnimData, animData:AnimData);
 	CDeleteAnim(animID:Int, animData:AnimData);

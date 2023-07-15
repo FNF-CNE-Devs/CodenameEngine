@@ -1,5 +1,6 @@
 package funkin.game;
 
+import haxe.xml.Printer;
 import flixel.util.FlxColor;
 import funkin.backend.FunkinSprite;
 import flixel.graphics.frames.FlxFrame;
@@ -404,18 +405,18 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		xml.set("antialiasing", antialiasing == true ? "true" : "false");
 		xml.set("sprite", sprite);
 
-		for (anim in animation.getAnimationList())
+		for (anim in animDatas)
 		{
 			var animXml:Xml = Xml.createElement('anim');
 			animXml.set("name", anim.name);
-			animXml.set("anim", anim.prefix);
-			animXml.set("loop", Std.string(anim.looped));
-			animXml.set("fps", Std.string(anim.frameRate));
+			animXml.set("anim", anim.anim);
+			animXml.set("loop", Std.string(anim.loop));
+			animXml.set("fps", Std.string(anim.fps));
 			var offset:FlxPoint = getAnimOffset(anim.name);
 			animXml.set("x", Std.string(offset.x));
 			animXml.set("y", Std.string(offset.y));
-			if (anim.usesIndicies)
-				animXml.set("indices", anim.frames.join(","));
+			if (anim.indices.length > 0)
+				animXml.set("indices", anim.indices.join(","));
 			xml.addChild(animXml);
 		}
 		return xml;
