@@ -17,7 +17,7 @@ class CharacterSelection extends EditorTreeMenu
 		super.create();
 
 		main = new OptionsScreen("Character Editor", "Select a character to edit", [
-			for (char in Character.getList())
+			for (char in Character.getList(true))
 				new IconOption(char, "Press ACCEPT to edit this character.", Character.getIconFromCharName(char),
 			 	function() {
 					FlxG.switchState(new CharacterEditor(char));
