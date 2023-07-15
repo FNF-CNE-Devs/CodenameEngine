@@ -118,12 +118,11 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 						curCharacter = "bf";
 						continue;
 					}
-					applyXML(xml);
-
-					// Loads the script and calls it's "create" functions
+					// Loads the script
 					script = Script.create(Paths.script(Path.withoutExtension(xmlPath), null, true));
 					script.setParent(this);
 					script.load();
+					applyXML(xml);
 					script.call("create");
 			}
 			break;
@@ -152,8 +151,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		// 		antialiasing = false;
 		// 		flipX = true;
 
-		fixChar(true);
-		dance();
 		script.call("postCreate");
 	}
 
@@ -381,10 +378,14 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		loadSprite(Paths.image('characters/$sprite'));
 
 		animation.destroyAnimations();
+		animDatas.clear();
 		for (anim in xml.nodes.anim)
 		{
 			XMLUtil.addXMLAnimation(this, anim);
 		}
+
+		fixChar(true);
+		dance();
 	}
 
 	public function buildXML():Xml {
