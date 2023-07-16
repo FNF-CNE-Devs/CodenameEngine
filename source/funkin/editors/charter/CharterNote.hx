@@ -17,6 +17,7 @@ class CharterNote extends UISprite {
 
 	public var sustainSpr:FlxSprite;
 	public var selected:Bool = false;
+	public var numberLabel:UIText;
 
 	var __doAnim:Bool = false;
 
@@ -35,6 +36,11 @@ class CharterNote extends UISprite {
 		sustainSpr = new FlxSprite(10, 40);
 		sustainSpr.makeGraphic(1, 1, -1);
 		members.push(sustainSpr);
+		
+		numberLabel = new UIText(30,20,200,'',24,FlxColor.WHITE);
+		numberLabel.borderStyle = OUTLINE;
+		numberLabel.borderSize = 1;
+		numberLabel.borderColor = FlxColor.BLACK;
 	}
 
 	public override function updateButton() {
@@ -72,6 +78,9 @@ class CharterNote extends UISprite {
 			case 3: 90;
 			default: 0; // how is that even possible
 		};
+
+		// 0 is default !
+		numberLabel.text = type == 0 ? '' : Std.string(this.type);
 
 		sustainSpr.color = colors[animation.curAnim.curFrame];
 
@@ -111,6 +120,7 @@ class CharterNote extends UISprite {
 		super.update(elapsed);
 
 		sustainSpr.follow(this, 15, 20);
+		numberLabel.follow(this, 19, 15);
 
 		if (__passed != (__passed = step < Conductor.curStepFloat)) {
 			alpha = __passed ? 0.6 : 1;
@@ -129,5 +139,6 @@ class CharterNote extends UISprite {
 	public override function draw() {
 		drawMembers();
 		drawSuper();
+		numberLabel.draw();
 	}
 }

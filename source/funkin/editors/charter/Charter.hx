@@ -86,6 +86,11 @@ class Charter extends UIState {
 
 	public var clipboard:Array<CharterCopyboardObject> = [];
 
+	public var curCustomNote:Int = 0; //default 
+	public var noteTypeDropdown:UIDropDown;
+
+	public var noteTypeColors:Array<FlxColor> = [];
+
 	public function new(song:String, diff:String, reload:Bool = true) {
 		super();
 		__song = song;
@@ -225,12 +230,9 @@ class Charter extends UIState {
 					},
 					null,
 					{
-						label: "(0) Default Note",
-						keybind: [ZERO]
-					},
-					{
-						label: "(1) Hurt Note",
-						keybind: [ONE]
+						label: "Edit note types",
+						keybind: [],
+						onSelect: _edit_notetype
 					}
 				]
 			},
@@ -405,6 +407,13 @@ class Charter extends UIState {
 		addEventSpr.alpha = 0;
 		addEventSpr.cameras = [charterCamera];
 
+		var noteTypes:Array<String> = ['default'];
+		noteTypeDropdown = new UIDropDown(10,105,200,32,noteTypes);
+		noteTypeDropdown.onChange = function(n) {
+			for(note in selection)
+				note.updatePos(note.step,note.id,note.susLength,n); 
+		}
+		uiGroup.add(noteTypeDropdown);
 
 		// adds grid and notes so that they're ALWAYS behind the UI
 		add(gridBackdrop);
@@ -465,6 +474,7 @@ class Charter extends UIState {
 		for(e in eventsGroup.members)
 			e.refreshEventIcons();
 
+		_reload_notetypes();
 		refreshBPMSensitive();
 	}
 
@@ -499,6 +509,8 @@ class Charter extends UIState {
 						selection.remove(n);
 					else
 						selection = [n];
+
+					noteTypeDropdown.setOption(n.type);
 				}
 				if (FlxG.mouse.justReleasedRight) {
 					if (!selection.contains(n))
@@ -612,8 +624,11 @@ class Charter extends UIState {
 							var id = Math.floor(mousePos.x / 40);
 							if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0) {
 								var note = new CharterNote();
-								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id, 0, 0);
+								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id, 0, noteTypeDropdown.index);
+								if(noteTypeDropdown.index != 0)
+									note.color = noteTypeColors[noteTypeDropdown.index];
 								notesGroup.add(note);
+								trace(note.type);
 								selection = [note];
 								addToUndo(CPlaceNote(note));
 							}
@@ -922,7 +937,8 @@ class Charter extends UIState {
 	}
 
 	function _file_saveas(_) {
-		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false)), {
+		buildChart(); // note types are not saved i think
+		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false), null, "\t"), {
 			defaultSaveFile: '${__diff.toLowerCase()}.json'
 		}));
 	}
@@ -1161,13 +1177,28 @@ class Charter extends UIState {
 
 	#end
 
+	function _edit_notetype(t):Void
+	{
+		var state = new NoteTypeScreen(PlayState.SONG);
+		state.closeCallback = function() {_reload_notetypes();};
+		FlxG.state.openSubState(state);
+	}
+
+	public function _reload_notetypes()
+	{
+		var noteTypes:Array<String> = ['default'];
+		for(noteType in PlayState.SONG.noteTypes)
+			noteTypes.push(noteType);
+		noteTypeDropdown.options = noteTypes;
+	}
+	
 	function changeNoteSustain(change:Float) {
 		if (selection.length <= 0 || change == 0) return;
 
 		addToUndo(CSustainChange([
 			for(n in selection) {
 				var old:Float = n.susLength;
-				n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0));
+				n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0),n.type);
 
 				{
 					before: old,
@@ -1203,6 +1234,7 @@ class Charter extends UIState {
 			var strLineID = Std.int(n.id / 4);
 			if (PlayState.SONG.strumLines[strLineID] != null) {
 				var time = Conductor.getTimeForStep(n.step);
+				trace(n.type);
 				PlayState.SONG.strumLines[strLineID].notes.push({
 					type: n.type,
 					time: time,
