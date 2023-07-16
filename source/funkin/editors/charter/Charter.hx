@@ -1178,7 +1178,6 @@ class Charter extends UIState {
 		state.closeCallback = function() { _reload_notetypes(); };
 		state.closeRemoveNoteCallback = function(n) {
 			_reload_notetypes();
-			trace(n);
 			noteTypeDropdown.setOption(0);
 			notesGroup.forEach(function(note) {
 				if(note.type == n)
@@ -1240,7 +1239,6 @@ class Charter extends UIState {
 			var strLineID = Std.int(n.id / 4);
 			if (PlayState.SONG.strumLines[strLineID] != null) {
 				var time = Conductor.getTimeForStep(n.step);
-				trace(n.type);
 				PlayState.SONG.strumLines[strLineID].notes.push({
 					type: n.type,
 					time: time,
