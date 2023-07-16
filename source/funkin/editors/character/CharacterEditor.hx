@@ -22,6 +22,7 @@ class CharacterEditor extends UIState {
 	/**
 	 * CHARACTER UI STUFF
 	*/
+	public var characterBG:FunkinSprite;
 	public var topMenu:Array<UIContextMenuOption>;
 	public var topMenuSpr:UITopMenu;
 
@@ -210,6 +211,13 @@ class CharacterEditor extends UIState {
 		animsCamera = new FlxCamera(800-23,140+23+30+46,450+23,511-24-30);
 		animsCamera.bgColor = 0;
 
+		characterBG = new FunkinSprite(0, 0, Paths.image('editors/character/WOAH'));
+		characterBG.cameras = [charCamera];
+		characterBG.screenCenter();
+		characterBG.scale.set(FlxG.width/characterBG.width, FlxG.height/characterBG.height);
+		characterBG.scrollFactor.set();
+		add(characterBG);
+
 		FlxG.cameras.add(uiCamera);
 		FlxG.cameras.add(animsCamera);
 
@@ -283,6 +291,9 @@ class CharacterEditor extends UIState {
 		);
 
 		charCamera.zoom = lerp(charCamera.zoom, __camZoom, 0.125);
+		
+		characterBG.scale.set(FlxG.width/characterBG.width, FlxG.height/characterBG.height);
+		characterBG.scale.set(characterBG.scale.x / charCamera.zoom, characterBG.scale.y / charCamera.zoom);
 	}
 
 	// UNDO/REDO LOGIC
