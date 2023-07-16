@@ -299,7 +299,7 @@ class CharacterEditor extends UIState {
 	function _file_save(_) {
 		#if sys
 		sys.io.File.saveContent(
-			Paths.xml('characters/${character.curCharacter}'), 
+			Assets.getPath(Paths.xml('characters/${character.curCharacter}')), 
 			buildCharacter()
 		);
 		return;
