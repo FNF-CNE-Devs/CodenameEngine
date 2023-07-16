@@ -227,12 +227,17 @@ class Charter extends UIState {
 					},
 					null,
 					{
-						label: "Switch to previous note",
+						label: "Switch to default note type",
+						keybind: [ZERO],
+						onSelect: _note_defaultnote
+					},
+					{
+						label: "Switch to previous note type",
 						keybind: [ONE],
 						onSelect: _note_prevnote
 					},
 					{
-						label: "Switch to next note",
+						label: "Switch to next note type",
 						keybind: [TWO],
 						onSelect: _note_nextnote
 					},
@@ -1198,6 +1203,10 @@ class Charter extends UIState {
 		};
 		FlxG.state.openSubState(state);
 	}
+
+	inline function _note_defaultnote(_)
+		noteTypeDropdown.setOption(0);
+	
 
 	inline function _note_prevnote(_) {
 		if(noteTypeDropdown.index == 0)
