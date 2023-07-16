@@ -17,6 +17,8 @@ class UISprite extends FlxSprite {
 	public var hoveredByChild:Bool = false;
 	public var pressed:Bool = false;
 
+	public var canBeHovered:Bool = true;
+
 	public var hoverCallback:Void->Void = null;
 
 	public var cursor:MouseCursor = ARROW;
@@ -85,6 +87,16 @@ class UISprite extends FlxSprite {
 	}
 
 	public function updateButton() {
+		if(canBeHovered)
+			updateButtonHandler();
+		else {
+			if(FlxG.mouse.pressed) {
+				updateButtonHandler();
+			}
+		}
+	}
+
+	public function updateButtonHandler() {
 		UIState.state.updateButtonHandler(this, onHovered);
 	}
 
