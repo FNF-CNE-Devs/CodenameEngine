@@ -360,23 +360,23 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		this.xml = xml; // modders wassup
 		sprite = curCharacter;
 
-		if (xml.has.isPlayer) playerOffsets = (xml.att.isPlayer == "true");
-		if (xml.has.isGF) isGF = (xml.att.isGF == "true");
-		if (xml.has.x) globalOffset.x = Std.parseFloat(xml.att.x); //
-		if (xml.has.y) globalOffset.y = Std.parseFloat(xml.att.y); //
-		if (xml.has.gameOverChar) gameOverCharacter = xml.att.gameOverChar; //
-		if (xml.has.camx) cameraOffset.x = Std.parseFloat(xml.att.camx); //
-		if (xml.has.camy) cameraOffset.y = Std.parseFloat(xml.att.camy); //
-		if (xml.has.holdTime) holdTime = CoolUtil.getDefault(Std.parseFloat(xml.att.holdTime), 4); //
-		if (xml.has.flipX) flipX = (xml.att.flipX == "true");
-		if (xml.has.icon) icon = xml.att.icon; //
-		if (xml.has.scale) { // 
-			var scale = Std.parseFloat(xml.att.scale).getDefault(1);
+		if (xml.x.exists("isPlayer")) playerOffsets = (xml.x.get("isPlayer") == "true");
+		if (xml.x.exists("isGF")) isGF = (xml.x.get("isGF") == "true");
+		if (xml.x.exists("x")) globalOffset.x = Std.parseFloat(xml.x.get("x"));
+		if (xml.x.exists("y")) globalOffset.y = Std.parseFloat(xml.x.get("y"));
+		if (xml.x.exists("gameOverChar")) gameOverCharacter = xml.x.get("gameOverChar");
+		if (xml.x.exists("camx")) cameraOffset.x = Std.parseFloat(xml.x.get("camx"));
+		if (xml.x.exists("camy")) cameraOffset.y = Std.parseFloat(xml.x.get("camy"));
+		if (xml.x.exists("holdTime")) holdTime = CoolUtil.getDefault(Std.parseFloat(xml.x.get("holdTime")), 4);
+		if (xml.x.exists("flipX")) flipX = (xml.x.get("flipX") == "true");
+		if (xml.x.exists("icon")) icon = xml.x.get("icon"); // idk why this is broke it just is
+		if (xml.x.exists("scale")) {
+			var scale = Std.parseFloat(xml.x.get("scale")).getDefault(1);
 			this.scale.set(scale, scale);
 			updateHitbox();
 		}
-		if (xml.has.antialiasing) antialiasing = (xml.att.antialiasing == "true");
-		if (xml.has.sprite) sprite = xml.att.sprite; //
+		if (xml.x.exists("antialiasing")) antialiasing = (xml.x.get("antialiasing") == "true");
+		if (xml.x.exists("sprite")) sprite = xml.x.get("sprite");
 
 		loadSprite(Paths.image('characters/$sprite'));
 
@@ -453,7 +453,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 						continue;
 					}
 
-					if (xml.has.icon) icon = xml.att.icon;
+					if (xml.x.exists("icon")) icon = xml.x.get("icon");
 				}
 			break;
 		}
