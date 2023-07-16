@@ -24,4 +24,12 @@ class CharacterPropertiesWindow extends UIWindow {
 		characterInfo.alignment = LEFT;
 		members.push(characterInfo);
 	}
+
+	public override function update(elapsed:Float) {
+		super.update(elapsed);
+
+		__rect.x = x; __rect.y = y+23;
+		__rect.width = bWidth; __rect.height = bHeight-23;
+		hovered = UIState.state.isOverlapping(this, __rect);
+	}
 }

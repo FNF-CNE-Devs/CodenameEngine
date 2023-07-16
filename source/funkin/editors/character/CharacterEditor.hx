@@ -249,10 +249,18 @@ class CharacterEditor extends UIState {
 		if (character != null)
 			characterPropertiresWindow.characterInfo.text = '(${character.getNameList().length}) Animations\nFlipped: ${character.flipX}\nSprite: ${character.sprite}\nAnim: ${character.getAnimName()}\nOffset: (${character.frameOffset.x}, ${character.frameOffset.y})';
 
-		if (FlxG.mouse.wheel != 0 && !(characterPropertiresWindow.hovered || characterAnimsWindow.hovered)) {
-			zoom += 0.25 * FlxG.mouse.wheel;
-			__camZoom = Math.pow(2, zoom);
+		if (!(characterPropertiresWindow.hovered || characterAnimsWindow.hovered)) {
+			if (FlxG.mouse.wheel != 0) {
+				zoom += 0.25 * FlxG.mouse.wheel;
+				__camZoom = Math.pow(2, zoom);
+			}
+
+			if (FlxG.mouse.justReleasedRight) {
+				closeCurrentContextMenu();
+				openContextMenu(topMenu[2].childs);
+			}
 		}
+
 
 		if (FlxG.mouse.justPressedMiddle) {
 			FlxG.mouse.getScreenPosition(charCamera, camDrag);
