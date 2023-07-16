@@ -86,10 +86,7 @@ class Charter extends UIState {
 
 	public var clipboard:Array<CharterCopyboardObject> = [];
 
-	public var curCustomNote:Int = 0; //default 
 	public var noteTypeDropdown:UIDropDown;
-
-	public var noteTypeColors:Array<FlxColor> = [];
 
 	public function new(song:String, diff:String, reload:Bool = true) {
 		super();
@@ -625,8 +622,6 @@ class Charter extends UIState {
 							if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0) {
 								var note = new CharterNote();
 								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id, 0, noteTypeDropdown.index);
-								if(noteTypeDropdown.index != 0)
-									note.color = noteTypeColors[noteTypeDropdown.index];
 								notesGroup.add(note);
 								trace(note.type);
 								selection = [note];
@@ -1180,7 +1175,18 @@ class Charter extends UIState {
 	function _edit_notetype(t):Void
 	{
 		var state = new NoteTypeScreen(PlayState.SONG);
-		state.closeCallback = function() {_reload_notetypes();};
+		state.closeCallback = function() { _reload_notetypes(); };
+		state.closeRemoveNoteCallback = function(n) {
+			_reload_notetypes();
+			trace(n);
+			noteTypeDropdown.setOption(0);
+			notesGroup.forEach(function(note) {
+				if(note.type == n)
+					note.updatePos(note.step, note.id, note.susLength, 0);
+				if(note.type >= n)
+					note.updatePos(note.step, note.id, note.susLength, note.type-1);
+			});
+		};
 		FlxG.state.openSubState(state);
 	}
 

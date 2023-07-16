@@ -14,6 +14,12 @@ class NoteTypeScreen extends UISubstateWindow {
 
 	public var scrollSpeedStepper:UINumericStepper;
 	public var stageBox:UITextBox;
+	
+	public var noteTypeDropdown:UIDropDown;
+
+	public var noteTypeNameBox:UITextBox;
+
+	public var closeRemoveNoteCallback:Int->Void;
 
 	public function new(data:ChartData) {
 		super();
@@ -27,28 +33,37 @@ class NoteTypeScreen extends UISubstateWindow {
 		function addLabelOn(ui:UISprite, text:String)
 			add(new UIText(ui.x, ui.y - 24, 0, text));
 
-		winTitle = 'Edit custom notes';
+		winTitle = 'Edit note types';
 		winWidth = 420; winHeight = 69*4; // guys look, the funny numbers!
 
 		super.create();
 
-		stageBox = new UITextBox(windowSpr.x + 20, windowSpr.y + 60, '');
-		add(stageBox);
-		addLabelOn(stageBox, "Note");
+		noteTypeDropdown = new UIDropDown(windowSpr.x + 20, windowSpr.y + 60,200,32,PlayState.SONG.noteTypes);
+		addLabelOn(noteTypeDropdown, "Note");
+		add(noteTypeDropdown);
 
-		addButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20 - 125, windowSpr.y + windowSpr.bHeight - 16 - 32, "Add & Close", function() {
-			onSave();
-			close();
+		addButton = new UIButton(windowSpr.x + 200 + 40, windowSpr.y + 60 + 32 + 16, "Add new note type", function() {
+			noteTypeDropdown.visible = false;
+			noteTypeDropdown.active = false;
+			removeButton.visible = false;
+			removeButton.active = false;
+
+			addButton.field.text = 'Create note type';
+			addButton.callback = function() {onSave(); close();}
+
+			noteTypeNameBox = new UITextBox(windowSpr.x + 20, windowSpr.y + 60, '');
+			add(noteTypeNameBox);
+			
 		}, 125);
 		add(addButton);
 
-		removeButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20 - 125, windowSpr.y + windowSpr.bHeight - 16 - 32 - 32 - 16, "Remove & Close", function() {
+		removeButton = new UIButton(windowSpr.x + 200 + 40, windowSpr.y + 60, "Remove note type", function() {
 			onRemove();
 			close();
 		}, 125);
 		add(removeButton);
 		
-		closeButton = new UIButton(addButton.x - 20, addButton.y, "Cancel", function() {
+		closeButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20 - 125, windowSpr.y + windowSpr.bHeight - 16 - 32, "Cancel", function() {
 			close();
 		}, 125);
 		add(closeButton);
@@ -57,12 +72,13 @@ class NoteTypeScreen extends UISubstateWindow {
 
 	public function onSave()
 	{
-		PlayState.SONG.noteTypes.push(stageBox.label.text);
+		PlayState.SONG.noteTypes.push(noteTypeNameBox.label.text);
 	}
 
 	public function onRemove()
 	{
-		PlayState.SONG.noteTypes.remove(stageBox.label.text);
+		closeRemoveNoteCallback(noteTypeDropdown.index + 1);
+		PlayState.SONG.noteTypes.remove(noteTypeDropdown.label.text);
 	}
 
 }
