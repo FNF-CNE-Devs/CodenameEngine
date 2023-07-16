@@ -118,7 +118,9 @@ class CharacterAnimButtons extends UIButton {
 			CharacterEditor.instance.playAnimation(this.anim);
 		}, 282);
 
-		ghostButton = new UIButton(x+282+17, y, "", null, 32);
+		ghostButton = new UIButton(x+282+17, y, "", function () {
+			CharacterEditor.instance.ghostAnim(this.anim);
+		}, 32);
 		members.push(ghostButton);
 
 		ghostIcon = new FlxSprite(ghostButton.x + 8, ghostButton.y + 8).loadGraphic(Paths.image('editors/character/ghost-button'), true, 16, 16);

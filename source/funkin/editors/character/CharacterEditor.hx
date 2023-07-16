@@ -14,6 +14,8 @@ class CharacterEditor extends UIState {
 	var __character:String;
 	public var character:Character;
 
+	public var ghosts:CharacterGhostsHandler;
+
 	public static var instance(get, null):CharacterEditor;
 
 	private static inline function get_instance()
@@ -224,6 +226,11 @@ class CharacterEditor extends UIState {
 		character = new Character(0,0,__character);
 		character.debugMode = true;
 		character.cameras = [charCamera];
+
+		ghosts = new CharacterGhostsHandler(character);
+		ghosts.cameras = [charCamera];
+
+		add(ghosts);
 		add(character);
 
 		topMenuSpr = new UITopMenu(topMenu);
@@ -291,7 +298,7 @@ class CharacterEditor extends UIState {
 		);
 
 		charCamera.zoom = lerp(charCamera.zoom, __camZoom, 0.125);
-		
+
 		characterBG.scale.set(FlxG.width/characterBG.width, FlxG.height/characterBG.height);
 		characterBG.scale.set(characterBG.scale.x / charCamera.zoom, characterBG.scale.y / charCamera.zoom);
 	}
@@ -352,11 +359,13 @@ class CharacterEditor extends UIState {
 			case CChangeOffset(name, change):
 				changeOffset(name, change * -1, false);
 			case CResetOffsets(oldOffsets):
-				for (anim => offsets in oldOffsets)
+				for (anim => offsets in oldOffsets) {
 					character.animOffsets.set(anim, offsets.clone());
+					ghosts.setOffsets(anim, offsets.clone());
+				}
 			
 				for (anim in character.getNameList())
-					characterAnimsWindow.animButtons[anim].updateInfo(anim, character.getAnimOffset(anim), false);
+					characterAnimsWindow.animButtons[anim].updateInfo(anim, character.getAnimOffset(anim), ghosts.animGhosts[anim].visible);
 				
 				changeOffset(character.getAnimName(), FlxPoint.get(0, 0), false); // apply da new offsets
 		}
@@ -416,6 +425,7 @@ class CharacterEditor extends UIState {
 
 	public function createAnim(animData:AnimData, animID:Int = -1, addtoUndo:Bool = true) {
 		XMLUtil.addAnimToSprite(character, animData);
+		ghosts.createGhost(animData.name);
 		characterAnimsWindow.createNewButton(animData.name, FlxPoint.get(animData.x,animData.y), false, animID);
 
 		playAnimation(animData.name);
@@ -428,8 +438,10 @@ class CharacterEditor extends UIState {
 		var oldAnimData:AnimData = character.animDatas.get(name);
 		var button:CharacterAnimButtons = characterAnimsWindow.animButtons[name];
 
+		ghosts.removeGhost(name);
 		XMLUtil.addAnimToSprite(character, animData);
-		button.updateInfo(animData.name, character.getAnimOffset(animData.name), false);
+		ghosts.createGhost(animData.name);
+		button.updateInfo(animData.name, character.getAnimOffset(animData.name), ghosts.animGhosts[animData.name].visible);
 
 		if (character.getAnimName() == animData.name) // update anim ifs its currently selected
 			playAnimation(animData.name);
@@ -448,6 +460,7 @@ class CharacterEditor extends UIState {
 		var oldID:Int = character.getNameList().indexOf(name);
 		var oldAnimData:AnimData = character.animDatas.get(name);
 
+		ghosts.removeGhost(name);
 		character.removeAnimation(name);
 		if (character.animOffsets.exists(name)) character.animOffsets.remove(name);
 		if (character.animDatas.exists(name)) character.animDatas.remove(name);
@@ -468,11 +481,20 @@ class CharacterEditor extends UIState {
 
 		var oldInfo = character.buildXML();
 		character.applyXML(new Access(newInfo));
+		ghosts.updateInfos(newInfo);
 
 		playAnimation(lastAnim);
 
 		if (addtoUndo)
 			addToUndo(CEditInfo(oldInfo, newInfo));
+	}
+
+	public function ghostAnim(anim:String) {
+		var ghost:Character = ghosts.animGhosts.get(anim);
+		ghost.visible = !ghost.visible;
+
+		var button:CharacterAnimButtons = characterAnimsWindow.animButtons[anim];
+		button.updateInfo(anim, character.getAnimOffset(anim), ghost.visible);
 	}
 
 	function _playback_play_anim(_) {
@@ -530,8 +552,10 @@ class CharacterEditor extends UIState {
 		if (character.getNameList().length == 0) return;
 
 		character.animOffsets.set(anim, character.getAnimOffset(anim) + change);
-		characterAnimsWindow.animButtons[anim].updateInfo(anim, character.getAnimOffset(anim), false);
+		characterAnimsWindow.animButtons[anim].updateInfo(anim, character.getAnimOffset(anim), ghosts.animGhosts[anim].visible);
 		character.frameOffset.set(character.getAnimOffset(anim).x, character.getAnimOffset(anim).y);
+
+		ghosts.updateOffsets(anim, change);
 
 		if (addtoUndo)
 			addToUndo(CChangeOffset(anim, change));
@@ -547,8 +571,10 @@ class CharacterEditor extends UIState {
 
 		for (anim in character.getNameList()) {
 			character.animOffsets[anim].zero();
-			characterAnimsWindow.animButtons[anim].updateInfo(anim, character.getAnimOffset(anim), false);
+			characterAnimsWindow.animButtons[anim].updateInfo(anim, character.getAnimOffset(anim), ghosts.animGhosts[anim].visible);
 		}
+
+		ghosts.clearOffsets();
 
 		if (addtoUndo)
 			addToUndo(CResetOffsets(oldOffsets));

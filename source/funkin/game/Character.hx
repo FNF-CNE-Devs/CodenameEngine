@@ -421,6 +421,8 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 				animXml.set("indices", anim.indices.join(","));
 			xml.addChild(animXml);
 		}
+
+		this.xml = new Access(xml);
 		return xml;
 	}
 
