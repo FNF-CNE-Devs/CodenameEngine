@@ -141,6 +141,7 @@ class CharterNote extends UISprite {
 	public override function draw() {
 		drawMembers();
 		drawSuper();
-		numberLabel.draw();
+		if(type != 0)
+			numberLabel.draw();
 	}
 }

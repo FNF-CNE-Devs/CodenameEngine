@@ -227,6 +227,16 @@ class Charter extends UIState {
 					},
 					null,
 					{
+						label: "Switch to previous note",
+						keybind: [ONE],
+						onSelect: _note_prevnote
+					},
+					{
+						label: "Switch to next note",
+						keybind: [TWO],
+						onSelect: _note_nextnote
+					},
+					{
 						label: "Edit note types",
 						keybind: [],
 						onSelect: _edit_notetype
@@ -1188,6 +1198,21 @@ class Charter extends UIState {
 		};
 		FlxG.state.openSubState(state);
 	}
+
+	inline function _note_prevnote(_) {
+		if(noteTypeDropdown.index == 0)
+			noteTypeDropdown.setOption(noteTypeDropdown.options.length - 1);
+		else
+			noteTypeDropdown.setOption(noteTypeDropdown.index - 1);
+	}
+		
+	inline function _note_nextnote(_) {
+		if(noteTypeDropdown.index == noteTypeDropdown.options.length - 1)
+			noteTypeDropdown.setOption(0);
+		else
+			noteTypeDropdown.setOption(noteTypeDropdown.index + 1);
+	}
+		
 
 	public function _reload_notetypes()
 	{
