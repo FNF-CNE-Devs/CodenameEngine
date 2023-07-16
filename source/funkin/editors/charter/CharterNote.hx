@@ -31,6 +31,8 @@ class CharterNote extends UISprite {
 
 		cursor = BUTTON;
 
+		//canBeHovered = false;
+
 		moves = false;
 
 		sustainSpr = new FlxSprite(10, 40);
@@ -43,7 +45,7 @@ class CharterNote extends UISprite {
 		numberLabel.borderColor = FlxColor.BLACK;
 	}
 
-	public override function updateButton() {
+	public override function updateButtonHandler() {
 		__rect.x = x;
 		__rect.y = y;
 		__rect.width = 40;

@@ -37,7 +37,7 @@
 	<girlfriend />
 	<sprite name="limo" x="-120" y="550" sprite="limoDrive" />
 	<boyfriend x="1030" y="-120" camxoffset="-300"/>
-	
+
 	<high-memory>
 		<sprite name="overlayShit" x="-500" y="480" sprite="limoOverlay" scroll="0">
 			<property name="alpha" type="float" value="0.5" />
