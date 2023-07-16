@@ -20,7 +20,7 @@ class CharacterPropertiesWindow extends UIWindow {
 		}, 200);
 		members.push(editButton);
 
-		characterInfo = new UIText(x + 450 + 20 - 42 - 400, y + 36 + 16, 400, "(Num) Animations:\nFlipped:\nSprite:\nCurrent Anim:");
+		characterInfo = new UIText(x + 450 + 20 - 42 - 400, y + 36 + 10, 400, "() Animations:\nFlipped:\nSprite:\nAnim:\nOffset: (,)");
 		characterInfo.alignment = LEFT;
 		members.push(characterInfo);
 	}
