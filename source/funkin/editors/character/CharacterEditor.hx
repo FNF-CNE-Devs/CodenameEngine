@@ -1,6 +1,6 @@
 package funkin.editors.character;
 
-import hscript.Printer;
+import haxe.xml.Printer;
 import haxe.xml.Access;
 import funkin.editors.character.CharacterAnimsWindow.CharacterAnimButtons;
 import funkin.backend.utils.XMLUtil.AnimData;
@@ -297,9 +297,24 @@ class CharacterEditor extends UIState {
 	}
 
 	function _file_save(_) {
+		#if sys
+		sys.io.File.saveContent(
+			Paths.xml('characters/${character.curCharacter}'), 
+			buildCharacter()
+		);
+		return;
+		#end
+		_file_saveas(_);
 	}
 
 	function _file_saveas(_) {
+		openSubState(new SaveSubstate(buildCharacter(), {
+			defaultSaveFile: '${character.curCharacter}.xml'
+		}));
+	}
+
+	function buildCharacter():String {
+		return "<!DOCTYPE codename-engine-character>\n" + Printer.print(character.buildXML(), true);
 	}
 
 	function _edit_undo(_) {

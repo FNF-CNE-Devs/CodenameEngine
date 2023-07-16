@@ -357,6 +357,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	}
 
 	public function applyXML(xml:Access) {
+		this.xml = xml; // modders wassup
 		sprite = curCharacter;
 
 		if (xml.has.isPlayer) playerOffsets = (xml.att.isPlayer == "true");
