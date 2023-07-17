@@ -1015,7 +1015,7 @@ class PlayState extends MusicBeatState
 	@:dox(hide)
 	override public function onFocus():Void
 	{
-		if (!paused) {
+		if (!paused && FlxG.autoPause) {
 			inst.resume();
 			vocals.resume();
 		}
@@ -1027,7 +1027,7 @@ class PlayState extends MusicBeatState
 	@:dox(hide)
 	override public function onFocusLost():Void
 	{
-		if (!paused) {
+		if (!paused && FlxG.autoPause) {
 			inst.pause();
 			vocals.pause();
 		}
