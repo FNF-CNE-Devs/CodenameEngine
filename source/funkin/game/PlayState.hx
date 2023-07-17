@@ -81,11 +81,6 @@ class PlayState extends MusicBeatState
 	public static var coopMode:Bool = false;
 
 	/**
-	 * Script Pack of all the scripts being ran.
-	 */
-	public var scripts:ScriptPack;
-
-	/**
 	 * Array of all the players in the stage.
 	 */
 	public var strumLines:FlxTypedGroup<StrumLine> = new FlxTypedGroup<StrumLine>();
@@ -897,11 +892,9 @@ class PlayState extends MusicBeatState
 	}
 
 	public override function destroy() {
-		scripts.call("destroy");
 		for(g in __cachedGraphics)
 			g.useCount--;
 		super.destroy();
-		scripts = FlxDestroyUtil.destroy(scripts);
 		@:privateAccess {
 			FlxG.sound.destroySound(inst);
 			FlxG.sound.destroySound(vocals);
@@ -1186,13 +1179,6 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 
 		scripts.call("postUpdate", [elapsed]);
-	}
-
-	override function draw() {
-		var e = scripts.event("draw", EventManager.get(DrawEvent).recycle());
-		if (!e.cancelled)
-			super.draw();
-		scripts.event("postDraw", e);
 	}
 
 	public function executeEvent(event:ChartEvent) {
@@ -1616,12 +1602,6 @@ class PlayState extends MusicBeatState
 		iconP2.updateHitbox();
 
 		scripts.call("beatHit", [curBeat]);
-	}
-
-	public function addScript(file:String) {
-		var ext = Path.extension(file).toLowerCase();
-		if (Script.scriptExtensions.contains(ext))
-			scripts.add(Script.create(file));
 	}
 
 	// GETTERS & SETTERS

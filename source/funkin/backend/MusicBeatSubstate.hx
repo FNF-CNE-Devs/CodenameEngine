@@ -3,6 +3,7 @@ package funkin.backend;
 import flixel.FlxState;
 import funkin.backend.scripting.events.*;
 import funkin.backend.scripting.Script;
+import funkin.backend.scripting.ScriptPack;
 import funkin.backend.scripting.DummyScript;
 import funkin.backend.system.interfaces.IBeatReceiver;
 import funkin.backend.system.Conductor.BPMChangeEvent;
@@ -63,7 +64,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	/**
 	 * Current injected script attached to the state. To add one, create a file at path "data/states/stateName" (ex: "data/states/PauseMenuSubstate.hx")
 	 */
-	public var stateScript:Script;
+	public var scripts:ScriptPack;
 
 	public var scriptsAllowed:Bool = true;
 
@@ -97,27 +98,33 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
 		this.scriptName = scriptName;
 	}
-
+	public function addScript(file:String)
+		scripts.add(Script.create(file));
 	function loadScript() {
 		if (scriptsAllowed) {
-			if (stateScript == null || stateScript is DummyScript) {
-				var className = Type.getClassName(Type.getClass(this));
-				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
-
-				stateScript = Script.create(Paths.script('data/states/${scriptName}'));
-				stateScript.setParent(this);
-				stateScript.load();
-			} else
-				stateScript.reload();
+			if (scripts == null) 
+				(scripts = new ScriptPack(scriptName)).setParent(this);
+			else
+				scripts.reload();
+			
+			var className = Type.getClassName(Type.getClass(this));
+			var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
+			var scriptPaths = [];
+			scriptPaths = Paths.getFolderContent('data/states/$scriptName', true, funkin.backend.assets.ModsFolder.currentModFolder != null ? MODS : BOTH);
+			for (i in Paths.getFolderContent('data/states', true)) 
+				if (i.contains(scriptName)) scriptPaths.push(Paths.script(i));
+			trace(scriptPaths);
+			for (i in scriptPaths) addScript(i);
+			scripts.load();
 		}
 	}
 
 	public override function tryUpdate(elapsed:Float):Void
 	{
 		if (persistentUpdate || subState == null) {
-			call("preUpdate", [elapsed]);
+			scripts.call("preUpdate", [elapsed]);
 			update(elapsed);
-			call("postUpdate", [elapsed]);
+			scripts.call("postUpdate", [elapsed]);
 		}
 
 		if (_requestSubStateReset)
@@ -132,10 +139,10 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	}
 
 	override function close() {
-		var event = event("onClose", new CancellableEvent());
+		var event = scripts.event("onClose", new CancellableEvent());
 		if (!event.cancelled) {
 			super.close();
-			call("onClosePost");
+			scripts.call("onClosePost");
 		}
 	}
 
@@ -143,23 +150,12 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	{
 		loadScript();
 		super.create();
-		call("create");
+		scripts.call("create");
 	}
 
 	public override function createPost() {
 		super.createPost();
-		call("postCreate");
-	}
-	public function call(name:String, ?args:Array<Dynamic>, ?defaultVal:Dynamic):Dynamic {
-		// calls the function on the assigned script
-		if (stateScript == null) return defaultVal;
-		return stateScript.call(name, args);
-	}
-
-	public function event<T:CancellableEvent>(name:String, event:T):T {
-		if (stateScript == null) return event;
-		stateScript.call(name, [event]);
-		return event;
+		scripts.call("postCreate");
 	}
 
 	override function update(elapsed:Float)
@@ -170,26 +166,26 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 			if (stateScript != null && !(stateScript is DummyScript))
 				Logs.trace('State script successfully reloaded', WARNING, GREEN);
 		}
-		call("update", [elapsed]);
+		scripts.call("update", [elapsed]);
 		super.update(elapsed);
 	}
 
 	@:dox(hide) public function stepHit(curStep:Int):Void
 	{
 		for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).stepHit(curStep);
-		call("stepHit", [curStep]);
+		scripts.call("stepHit", [curStep]);
 	}
 
 	@:dox(hide) public function beatHit(curBeat:Int):Void
 	{
 		for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).beatHit(curBeat);
-		call("beatHit", [curBeat]);
+		scripts.call("beatHit", [curBeat]);
 	}
 
 	@:dox(hide) public function measureHit(curMeasure:Int):Void
 	{
 		for(e in members) if (e is IBeatReceiver) cast(e, IBeatReceiver).measureHit(curMeasure);
-		call("measureHit", [curMeasure]);
+		scripts.call("measureHit", [curMeasure]);
 	}
 
 	/**
@@ -210,25 +206,25 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	 * SCRIPTING STUFF
 	 */
 	public override function openSubState(subState:FlxSubState) {
-		var e = event("onOpenSubState", EventManager.get(StateEvent).recycle(subState));
+		var e = scripts.event("onOpenSubState", EventManager.get(StateEvent).recycle(subState));
 		if (!e.cancelled)
 			super.openSubState(subState);
 	}
 
 	public override function onResize(w:Int, h:Int) {
 		super.onResize(w, h);
-		event("onResize", EventManager.get(ResizeEvent).recycle(w, h, null, null));
+		scripts.event("onResize", EventManager.get(ResizeEvent).recycle(w, h, null, null));
 	}
 
 	public override function destroy() {
 		super.destroy();
-		call("onDestroy");
+		scripts.call("onDestroy");
 		if(stateScript != null)
 			stateScript.destroy();
 	}
 
 	public override function switchTo(nextState:FlxState) {
-		var e = event("onStateSwitch", EventManager.get(StateEvent).recycle(nextState));
+		var e = scripts.event("onStateSwitch", EventManager.get(StateEvent).recycle(nextState));
 		if (e.cancelled)
 			return false;
 		return super.switchTo(nextState);
@@ -236,12 +232,12 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 
 	public override function onFocus() {
 		super.onFocus();
-		call("onFocus");
+		scripts.call("onFocus");
 	}
 
 	public override function onFocusLost() {
 		super.onFocusLost();
-		call("onFocusLost");
+		scripts.call("onFocusLost");
 	}
 
 	public var parent:FlxState;

@@ -100,7 +100,7 @@ class Paths
 
 	inline static public function script(key:String, ?library:String, isAssetsPath:Bool = false) {
 		var scriptPath = isAssetsPath ? key : getPath(key, library);
-		if (!OpenFlAssets.exists(scriptPath)) {
+		if (!Script.scriptExtensions.contains(Path.extension(scriptPath))) {
 			var p:String;
 			for(ex in Script.scriptExtensions) {
 				p = '$scriptPath.$ex';
