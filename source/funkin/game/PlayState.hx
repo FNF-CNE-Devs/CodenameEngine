@@ -1015,13 +1015,22 @@ class PlayState extends MusicBeatState
 	@:dox(hide)
 	override public function onFocus():Void
 	{
+		if (!paused) {
+			inst.resume();
+			vocals.resume();
+		}
 		scripts.call("onFocus");
+		updateDiscordPresence();
 		super.onFocus();
 	}
 
 	@:dox(hide)
 	override public function onFocusLost():Void
 	{
+		if (!paused) {
+			inst.pause();
+			vocals.pause();
+		}
 		scripts.call("onFocusLost");
 		updateDiscordPresence();
 		super.onFocusLost();
