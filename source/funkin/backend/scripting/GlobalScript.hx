@@ -50,10 +50,6 @@ class GlobalScript {
 				} else {
 					Logs.trace('Loading global script...', WARNING, YELLOW);
 					onModSwitch(#if MOD_SUPPORT ModsFolder.currentModFolder #else null #end);
-					if (scripts is DummyScript)
-						Logs.trace('Global script not found. Are you sure "data/global.hx" exists?', ERROR, RED);
-					else
-						Logs.trace('Global script successfully loaded.', WARNING, GREEN);
 				}
 			}
 		});
