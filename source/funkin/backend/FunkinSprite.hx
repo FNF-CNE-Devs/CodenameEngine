@@ -1,5 +1,6 @@
 package funkin.backend;
 
+import funkin.backend.utils.XMLUtil.AnimData;
 import funkin.backend.utils.XMLUtil.IXMLEvents;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.addons.effects.FlxSkewedSprite;
@@ -37,6 +38,8 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public var name:String;
 	public var zoomFactor:Float = 1;
 	public var initialZoom:Float = 1;
+	public var debugMode:Bool = false;
+	public var animDatas:Map<String, AnimData> = [];
 
 	public var animateAtlas:FlxAnimate;
 	@:noCompletion public var atlasPlayingAnim:String;
@@ -287,7 +290,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		}
 		else
 		{
-			if (!animation.exists(AnimName))
+			if (!animation.exists(AnimName) && !debugMode)
 				return;
 			animation.play(AnimName, Force, Reversed, Frame);
 		}
@@ -323,6 +326,27 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 				name = animation.curAnim.name;
 		}
 		return name;
+	}
+
+	public inline function removeAnimation(name:String) {
+		if (animateAtlas != null)
+			@:privateAccess animateAtlas.anim.animsMap.remove(name);
+		else
+			animation.remove(name);
+	}
+
+	public inline function getNameList():Array<String> {
+		if (animateAtlas != null) 
+			return [for (name in @:privateAccess animateAtlas.anim.animsMap.keys()) name];
+		else
+			return animation.getNameList();
+	}
+
+	public inline function stopAnimation() {
+		if (animateAtlas != null)
+			animateAtlas.anim.pause();
+		else
+			animation.stop();
 	}
 
 	public inline function isAnimFinished()

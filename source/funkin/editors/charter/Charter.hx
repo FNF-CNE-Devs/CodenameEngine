@@ -317,7 +317,6 @@ class Charter extends UIState {
 			}
 		];
 
-
 		hitsound = FlxG.sound.load(Paths.sound('editors/charter/hitsound'));
 		metronome = FlxG.sound.load(Paths.sound('editors/charter/metronome'));
 
@@ -356,7 +355,6 @@ class Charter extends UIState {
 			sep.scrollFactor.set(1, 1);
 			sep.cameras = [charterCamera];
 		}
-
 
 		selectionBox = new UISliceSprite(0, 0, 2, 2, 'editors/ui/selection');
 		selectionBox.visible = false;
