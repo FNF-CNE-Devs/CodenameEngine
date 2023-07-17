@@ -45,16 +45,16 @@ class CharacterGhostsHandler extends FlxTypedGroup<Character> {
 		rePositionGhosts();
 	}
 
-	public function updateOffsets(anim:String, change:FlxPoint) {
+	public function updateOffsets(name:String, change:FlxPoint) {
 		for (anim => ghost in animGhosts)
-			ghost.animOffsets.set(anim, ghost.getAnimOffset(anim) + change);
+			ghost.animOffsets.set(name, ghost.getAnimOffset(name) + change);
 
 		rePositionGhosts();
 	}
 
-	public function setOffsets(anim:String, offset:FlxPoint) {
+	public function setOffsets(name:String, offset:FlxPoint) {
 		for (anim => ghost in animGhosts)
-			ghost.animOffsets.set(anim, offset);
+			ghost.animOffsets.set(name, offset);
 
 		rePositionGhosts();
 	}
