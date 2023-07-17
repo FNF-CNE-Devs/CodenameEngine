@@ -97,7 +97,22 @@ class Paths
 		}
 		return getPath('images/$key.png', library);
 	}
-
+	static public function getScriptPaths(key:String, excep:String = ""):Array<String> {
+		var scriptsPaths:Array<String> = [];
+		var reallib = assetsTree.libraries.copy();
+		reallib.pop();
+		if (!key.endsWith("/")) key += "/";
+		for (e in reallib) {
+			if (!OpenFlAssets.exists(e.getPath(key).startsWith(".") ? "." + e.getPath(key) : e.getPath(key))) continue;
+			for (i in sys.FileSystem.readDirectory(e.getPath(key))) 
+				if (Script.scriptExtensions.contains(Path.extension(i))) {
+					var path = '${e.getPath(key)}$i';
+					if (path.startsWith(".")) path = "." + path;
+					if (path.contains(excep) || excep == "") scriptsPaths.push(path.replace("//", "/"));
+				}
+		}
+		return scriptsPaths;
+	}
 	inline static public function script(key:String, ?library:String, isAssetsPath:Bool = false) {
 		var scriptPath = isAssetsPath ? key : getPath(key, library);
 		if (!Script.scriptExtensions.contains(Path.extension(scriptPath))) {

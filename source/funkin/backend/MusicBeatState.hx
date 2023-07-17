@@ -113,27 +113,36 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	}
 
 	public function addScript(file:String)
-		scripts.add(Script.create(file));
+		scripts.add(Script.create(Paths.script(file, null, true)));
 
 	function loadScript() {
 		if (scriptsAllowed) {
-			if (scripts == null) 
+			if (scripts == null) {
+				var className = Type.getClassName(Type.getClass(this));
+				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
+				var scriptPaths = [];
 				(scripts = new ScriptPack(scriptName)).setParent(this);
+				scriptPaths = Paths.getScriptPaths('assets/data/states/$scriptName');
+				for (i in Paths.getScriptPaths('assets/data/states', '/$scriptName.')) 
+					scriptPaths.push(i);
+				if (scriptPaths.length > 0) for (i in scriptPaths) addScript(i);
+				if (Type.getClass(this) != PlayState) scripts.load();
+			}
 			else
 				scripts.reload();
-
-			var className = Type.getClassName(Type.getClass(this));
-			var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
-			var scriptPaths = [];
-			scriptPaths = Paths.getFolderContent('data/states/$scriptName', true, funkin.backend.assets.ModsFolder.currentModFolder != null ? MODS : BOTH);
-			for (i in Paths.getFolderContent('data/states', true)) 
-				if (i.contains(scriptName)) scriptPaths.push(Paths.script(i));
-			trace(scriptPaths);
-			for (i in scriptPaths) addScript(i);
-			scripts.load();
 		}
 	}
-	
+	public function call(name:String, ?args:Array<Dynamic>, ?defaultVal:Dynamic):Dynamic {
+		// calls the function on the assigned script
+		if (scripts == null) return defaultVal;
+		return scripts.call(name, args);
+	}
+
+	public function event<T:CancellableEvent>(name:String, event:T):T {
+		if (scripts == null) return event;
+		scripts.event(name, event);
+		return event;
+	}
 
 	public override function tryUpdate(elapsed:Float):Void
 	{
@@ -155,10 +164,10 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	}
 	override function create()
 	{
-		super.create();
-		loadScript();
+		if (Type.getClass(this) != PlayState) loadScript();
 		Framerate.offset.y = 0;
-		scripts.call("create");
+		super.create();
+		if (Type.getClass(this) != PlayState) scripts.call("create");
 	}
 
 	public override function createPost() {

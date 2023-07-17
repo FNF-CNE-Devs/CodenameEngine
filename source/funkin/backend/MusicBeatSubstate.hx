@@ -99,26 +99,36 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 		this.scriptName = scriptName;
 	}
 	public function addScript(file:String)
-		scripts.add(Script.create(file));
+		scripts.add(Script.create(Paths.script(file, null, true)));
+
 	function loadScript() {
 		if (scriptsAllowed) {
-			if (scripts == null) 
+			if (scripts == null) {
 				(scripts = new ScriptPack(scriptName)).setParent(this);
+				var className = Type.getClassName(Type.getClass(this));
+				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
+				var scriptPaths = [];
+				scriptPaths = Paths.getScriptPaths('assets/data/states/$scriptName');
+				for (i in Paths.getScriptPaths('assets/data/states', '/$scriptName.')) 
+					scriptPaths.push(i);
+				if (scriptPaths.length > 0) for (i in scriptPaths) addScript(i);
+				scripts.load();
+			}
 			else
 				scripts.reload();
-			
-			var className = Type.getClassName(Type.getClass(this));
-			var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
-			var scriptPaths = [];
-			scriptPaths = Paths.getFolderContent('data/states/$scriptName', true, funkin.backend.assets.ModsFolder.currentModFolder != null ? MODS : BOTH);
-			for (i in Paths.getFolderContent('data/states', true)) 
-				if (i.contains(scriptName)) scriptPaths.push(Paths.script(i));
-			trace(scriptPaths);
-			for (i in scriptPaths) addScript(i);
-			scripts.load();
 		}
 	}
+	public function call(name:String, ?args:Array<Dynamic>, ?defaultVal:Dynamic):Dynamic {
+		// calls the function on the assigned script
+		if (scripts == null) return defaultVal;
+		return scripts.call(name, args);
+	}
 
+	public function event<T:CancellableEvent>(name:String, event:T):T {
+		if (scripts == null) return event;
+		scripts.call(name, [event]);
+		return event;
+	}
 	public override function tryUpdate(elapsed:Float):Void
 	{
 		if (persistentUpdate || subState == null) {
@@ -163,8 +173,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 		// TODO: DEBUG MODE!!
 		if (FlxG.keys.justPressed.F5) {
 			loadScript();
-			if (stateScript != null && !(stateScript is DummyScript))
-				Logs.trace('State script successfully reloaded', WARNING, GREEN);
+			Logs.trace('State script successfully reloaded', WARNING, GREEN);
 		}
 		scripts.call("update", [elapsed]);
 		super.update(elapsed);
@@ -219,8 +228,8 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	public override function destroy() {
 		super.destroy();
 		scripts.call("onDestroy");
-		if(stateScript != null)
-			stateScript.destroy();
+		scripts.call("destroy");
+		scripts = FlxDestroyUtil.destroy(scripts);
 	}
 
 	public override function switchTo(nextState:FlxState) {

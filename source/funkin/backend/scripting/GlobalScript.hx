@@ -81,12 +81,12 @@ class GlobalScript {
 	}
 
 	public static function onModSwitch(newMod:String) {
-		scripts.call("onDestroy");
+		if (scripts != null) scripts.call("onDestroy");
 		scripts = FlxDestroyUtil.destroy(scripts);
 		scripts = new ScriptPack("global");
-		var scriptPaths = [for (i in Paths.getFolderContent('data', true)) if (i.contains("/global.")) i];
-		for (i in Paths.getFolderContent('data/global', true)) scriptPaths.push(i);
-		for (i in scriptPaths) scripts.add(Script.create(Paths.script(i)));
+		var scriptPaths = Paths.getScriptPaths("assets/data", "/global.");
+		for (i in Paths.getScriptPaths("assets/data/global")) scriptPaths.push(i);
+		for (i in scriptPaths) scripts.add(Script.create(Paths.script(i, null, true)));
 		scripts.load();
 	}
 

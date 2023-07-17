@@ -506,7 +506,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		PauseSubState.script = "";
-		(scripts = new ScriptPack("PlayState")).setParent(this);
+		loadScript();
 
 		camGame = camera;
 		FlxG.cameras.add(camHUD = new HudCamera(), false);
@@ -556,21 +556,20 @@ class PlayState extends MusicBeatState
 				// case "":
 					// ADD YOUR HARDCODED SCRIPTS HERE!
 				default:
-					for(content in [Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH), Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)])
+					for(content in [Paths.getScriptPaths('assets/songs/${SONG.meta.name.toLowerCase()}/scripts'), Paths.getScriptPaths('assets/data/charts/')])
 						for(file in content) addScript(file);
 
 					var songEvents:Array<String> = [];
 					for (event in SONG.events) 
 						if (!songEvents.contains(event.name)) songEvents.push(event.name);
 
-					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH)) {
+					for (file in Paths.getScriptPaths('assets/data/events/')) {
 						var fileName:String = Path.withoutExtension(Path.withoutDirectory(file));
 						if (EventsData.eventsList.contains(fileName) && songEvents.contains(fileName)) addScript(file);
 					}
 						
 			}
 		}
-
 		add(comboGroup);
 		#end
 
@@ -719,7 +718,6 @@ class PlayState extends MusicBeatState
 		#end
 
 		startingSong = true;
-
 		super.create();
 
 		for(s in introSprites)
@@ -738,8 +736,6 @@ class PlayState extends MusicBeatState
 		updateDiscordPresence();
 
 		__updateNote_event = EventManager.get(NoteUpdateEvent);
-
-		scripts.call("postCreate");
 	}
 
 	/**
@@ -1059,11 +1055,9 @@ class PlayState extends MusicBeatState
 	@:dox(hide)
 	override public function update(elapsed:Float)
 	{
-		scripts.call("update", [elapsed]);
 
 		if (inCutscene) {
 			super.update(elapsed);
-			scripts.call("postUpdate", [elapsed]);
 			return;
 		}
 
