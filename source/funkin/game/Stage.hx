@@ -51,6 +51,10 @@ class Stage extends FlxBasic implements IBeatReceiver {
 					var parsed:Null<Float> = Std.parseFloat(stageXML.att.zoom);
 					if (parsed != null && PlayState.instance != null) PlayState.instance.defaultCamZoom = parsed;
 				}
+				if (stageXML.has.speed) {
+					var parsed:Null<Float> = Std.parseFloat(stageXML.att.speed);
+					if (parsed != null && PlayState.instance != null) PlayState.instance.camSpeed = parsed;
+				}
 				PlayState.instance.curStage = stageXML.has.name ? stageXML.att.name : stage;
 			}
 			if (stageXML.has.folder) {

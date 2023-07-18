@@ -229,6 +229,11 @@ class PlayState extends MusicBeatState
 	public var curStage:String = "";
 
 	/**
+	 * Camera Speed
+	 */
+	public var camSpeed:Float = 0.05; // 0.9 / 1 in Psych Engine.
+
+	/**
 	 * Interval at which Girlfriend dances.
 	 */
 	public var gfSpeed(get, set):Int;
@@ -718,6 +723,8 @@ class PlayState extends MusicBeatState
 
 		startingSong = true;
 		super.create();
+
+		FlxG.camera.followLerp = camSpeed; // ehhh????
 
 		for(s in introSprites)
 			if (s != null)

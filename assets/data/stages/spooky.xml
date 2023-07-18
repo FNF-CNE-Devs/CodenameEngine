@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-stage>
-<stage zoom="1.05" name="spooky" folder="stages/spooky/">
+<stage zoom="1.05" name="spooky" speed="0.05" folder="stages/spooky/">
 	<sprite name="bg" x="-200" y="-100" sprite="halloween_bg" anim="idle" type="none" scale="1.05">
 		<anim name="idle" anim="halloweem bg0" type="loop" />
 		<anim name="lightning" anim="halloweem bg lightning strike" loop="false"/>

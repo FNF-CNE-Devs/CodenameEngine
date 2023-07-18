@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-stage>
-<stage zoom="0.9" name="tank" folder="stages/tank/">
+<stage zoom="0.9" name="tank" speed="0.05" folder="stages/tank/">
 	<!-- BG STUFF -->
 	<sprite name="tankBg" x="-500" y="0" sprite="tankBg" scroll="0" zoomfactor="0"/>
 	
