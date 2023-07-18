@@ -1556,15 +1556,11 @@ class PlayState extends MusicBeatState
 
 	@:dox(hide)
 	override function stepHit(curStep:Int)
-	{
 		super.stepHit(curStep);
-	}
 
 	@:dox(hide)
 	override function measureHit(curMeasure:Int)
-	{
 		super.measureHit(curMeasure);
-	}
 
 	@:dox(hide)
 	override function beatHit(curBeat:Int)
@@ -1582,7 +1578,7 @@ class PlayState extends MusicBeatState
 
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
-		
+
 		super.beatHit(curBeat);
 	}
 
