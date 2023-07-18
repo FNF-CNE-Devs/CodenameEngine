@@ -1001,6 +1001,17 @@ class PlayState extends MusicBeatState
 	var __songPlaying:Bool = false;
 	var __wasAutoPause:Bool = false;
 	@:dox(hide)
+	override public function onFocus():Void
+	{
+		if (!paused && FlxG.autoPause) {
+			inst.resume();
+			vocals.resume();
+		}
+		updateDiscordPresence();
+		super.onFocus();
+	}
+
+	@:dox(hide)
 	override public function onFocusLost():Void
 	{
 		if (!paused && FlxG.autoPause) {
