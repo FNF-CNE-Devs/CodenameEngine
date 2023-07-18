@@ -1003,6 +1003,10 @@ class PlayState extends MusicBeatState
 	@:dox(hide)
 	override public function onFocusLost():Void
 	{
+		if (!paused && FlxG.autoPause) {
+			inst.pause();
+			vocals.pause();
+		}
 		updateDiscordPresence();
 		super.onFocusLost();
 	}
@@ -1565,7 +1569,6 @@ class PlayState extends MusicBeatState
 	@:dox(hide)
 	override function beatHit(curBeat:Int)
 	{
-
 		if (camZoomingInterval < 1) camZoomingInterval = 1;
 		if (Options.camZoomOnBeat && camZooming && FlxG.camera.zoom < maxCamZoom && curBeat % camZoomingInterval == 0)
 		{
