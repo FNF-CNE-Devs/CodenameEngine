@@ -1007,7 +1007,6 @@ class PlayState extends MusicBeatState
 			inst.resume();
 			vocals.resume();
 		}
-		scripts.call("onFocus");
 		updateDiscordPresence();
 		super.onFocus();
 	}
@@ -1019,7 +1018,6 @@ class PlayState extends MusicBeatState
 			inst.pause();
 			vocals.pause();
 		}
-		scripts.call("onFocusLost");
 		updateDiscordPresence();
 		super.onFocusLost();
 	}
@@ -1573,23 +1571,15 @@ class PlayState extends MusicBeatState
 
 	@:dox(hide)
 	override function stepHit(curStep:Int)
-	{
 		super.stepHit(curStep);
-		scripts.call("stepHit", [curStep]);
-	}
 
 	@:dox(hide)
 	override function measureHit(curMeasure:Int)
-	{
 		super.measureHit(curMeasure);
-		scripts.call("measureHit", [curMeasure]);
-	}
 
 	@:dox(hide)
 	override function beatHit(curBeat:Int)
 	{
-		super.beatHit(curBeat);
-
 		if (camZoomingInterval < 1) camZoomingInterval = 1;
 		if (Options.camZoomOnBeat && camZooming && FlxG.camera.zoom < maxCamZoom && curBeat % camZoomingInterval == 0)
 		{
@@ -1603,7 +1593,7 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		scripts.call("beatHit", [curBeat]);
+		super.beatHit(curBeat);
 	}
 
 	// GETTERS & SETTERS
