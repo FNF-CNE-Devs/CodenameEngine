@@ -167,7 +167,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		if (Type.getClass(this) != PlayState) loadScript();
 		Framerate.offset.y = 0;
 		super.create();
-		if (Type.getClass(this) != PlayState) scripts.call("create");
+		scripts.call("create");
 	}
 
 	public override function createPost() {

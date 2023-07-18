@@ -641,7 +641,6 @@ class PlayState extends MusicBeatState
 		add(splashHandler);
 
 		scripts.load();
-		scripts.call("create");
 		#end
 
 		// CAMERA & HUD INITIALISATION
