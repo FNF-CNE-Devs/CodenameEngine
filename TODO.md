@@ -37,7 +37,7 @@
 - [ ] Dialogue
 - [ ] Finish Base Game port
 - [x] Add credits
-- [ ] Verbose mode (`--verbose`)
+- [ ] Verbose mode (`--verbose`)
 - [ ] Tooltips
 - [ ] Fix bugs
 
