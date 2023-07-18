@@ -1,6 +1,5 @@
 package funkin.menus.credits;
 
-import flixel.addons.transition.FlxTransitionableState;
 import funkin.options.OptionsScreen;
 import funkin.options.type.*;
 import funkin.options.TreeMenu;
@@ -20,17 +19,19 @@ class CreditsMain extends TreeMenu {
 		add(bg);
 
 		var selectables:Array<OptionType> = [];
-		if (Paths.assetsTree.existsSpecific(Paths.xml('config/credits'), "TEXT", MODS)) {
-			var access:Access = null;
-			try {
-				access = new Access(Xml.parse(Paths.assetsTree.getSpecificAsset(Paths.xml('config/credits'), "TEXT", MODS)));
-			} catch(e) {
-				Logs.trace('Error while parsing list.xml: ${Std.string(e)}', ERROR);
+		for(source in [funkin.backend.assets.AssetsLibraryList.AssetSource.SOURCE, funkin.backend.assets.AssetsLibraryList.AssetSource.MODS]) {
+			if (Paths.assetsTree.existsSpecific(Paths.xml('config/credits'), "TEXT", source)) {
+				var access:Access = null;
+				try {
+					access = new Access(Xml.parse(Paths.assetsTree.getSpecificAsset(Paths.xml('config/credits'), "TEXT", source)));
+				} catch(e) {
+					Logs.trace('Error while parsing credits.xml: ${Std.string(e)}', ERROR);
+				}
+				
+				if (access != null)
+					for(c in parseCreditsFromXML(access, source))
+						selectables.push(c);
 			}
-			
-			if (access != null)
-				for(c in parseCreditsFromXML(access))
-					selectables.push(c);
 		}
 		selectables.push(new TextOption("Codename Engine >", "Select this to see all the contributors of the engine!", function() {
 			optionsTree.add(Type.createInstance(CreditsCodename, []));
@@ -46,7 +47,7 @@ class CreditsMain extends TreeMenu {
 	/**
 	 * XML STUFF
 	 */
-	public function parseCreditsFromXML(xml:Access):Array<OptionType> {
+	public function parseCreditsFromXML(xml:Access, source:Bool):Array<OptionType> {
 		var credsMenus:Array<OptionType> = [];
 
 		for(node in xml.elements) {
@@ -60,13 +61,13 @@ class CreditsMain extends TreeMenu {
 			switch(node.name) {
 				case "credit":
 					credsMenus.push(new PortraitOption(name, desc, function() if(node.has.url) CoolUtil.openURL(node.att.url),
-						node.has.icon && Paths.assetsTree.existsSpecific(Paths.image('credits/${node.att.icon}'), "IMAGE", MODS) ?
+						node.has.icon && Paths.assetsTree.existsSpecific(Paths.image('credits/${node.att.icon}'), "IMAGE", source) ?
 						FlxG.bitmap.add(Paths.image('credits/${node.att.icon}')) : null, node.has.size ? Std.parseInt(node.att.size) : 96
 					));
 
 				case "menu":
 					credsMenus.push(new TextOption(name + " >", desc, function() {
-						optionsTree.add(new OptionsScreen(name, desc, parseCreditsFromXML(node)));
+						optionsTree.add(new OptionsScreen(name, desc, parseCreditsFromXML(node, source)));
 					}));
 			}
 		}
