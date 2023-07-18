@@ -355,7 +355,7 @@ class CharacterEditor extends UIState {
 	}
 
 	function _edit_undo(_) {
-		var v = undoList.shift();s
+		var v = undoList.shift();
 		switch (v) {
 			case null:
 				// do nothing
