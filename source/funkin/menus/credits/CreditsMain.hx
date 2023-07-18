@@ -4,13 +4,13 @@ import flixel.addons.transition.FlxTransitionableState;
 import funkin.options.OptionsScreen;
 import funkin.options.type.*;
 import funkin.options.TreeMenu;
+import haxe.xml.Access;
 
 class CreditsMain extends TreeMenu {
-	var editable:Array<OptionCategory> = [];
 	var bg:FlxSprite;
 
 	public override function create() {
-		bg = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBGBlue'));
+		bg = new FlxSprite(-80).loadGraphic(Paths.image('menus/menuBGBlue'));
 		// bg.scrollFactor.set();
 		bg.scale.set(1.15, 1.15);
 		bg.updateHitbox();
@@ -20,10 +20,19 @@ class CreditsMain extends TreeMenu {
 		add(bg);
 
 		var selectables:Array<OptionType> = [];
-		for (s in editable) selectables.push(new TextOption(s.name, s.desc, function() {
-			// TODO: Custom Credits
-		}));
-		selectables.push(new TextOption("Codename Engine", "Select this to see all the contributors of the engine!", function() {
+		if (Paths.assetsTree.existsSpecific(Paths.xml('config/credits'), "TEXT", MODS)) {
+			var access:Access = null;
+			try {
+				access = new Access(Xml.parse(Paths.assetsTree.getSpecificAsset(Paths.xml('config/credits'), "TEXT", MODS)));
+			} catch(e) {
+				Logs.trace('Error while parsing list.xml: ${Std.string(e)}', ERROR);
+			}
+			
+			if (access != null)
+				for(c in parseCreditsFromXML(access))
+					selectables.push(c);
+		}
+		selectables.push(new TextOption("Codename Engine >", "Select this to see all the contributors of the engine!", function() {
 			optionsTree.add(Type.createInstance(CreditsCodename, []));
 		}));
 		selectables.push(new TextOption("Friday Night Funkin'", "Select this to open the itch.io page of the original game to donate!", function() {
@@ -32,5 +41,36 @@ class CreditsMain extends TreeMenu {
 
 		main = new OptionsScreen('Credits', 'The people who made this possible!', selectables);
 		super.create();
+	}
+
+	/**
+	 * XML STUFF
+	 */
+	public function parseCreditsFromXML(xml:Access):Array<OptionType> {
+		var credsMenus:Array<OptionType> = [];
+
+		for(node in xml.elements) {
+			if (!node.has.name) {
+				Logs.trace("A credit node requires a name attribute.", WARNING);
+				continue;
+			}
+			var name = node.getAtt("name");
+			var desc = node.getAtt("desc").getDefault("No Description");
+
+			switch(node.name) {
+				case "credit":
+					credsMenus.push(new PortraitOption(name, desc, function() if(node.has.url) CoolUtil.openURL(node.att.url),
+						node.has.icon && Paths.assetsTree.existsSpecific(Paths.image('credits/${node.att.icon}'), "IMAGE", MODS) ?
+						FlxG.bitmap.add(Paths.image('credits/${node.att.icon}')) : null, node.has.size ? Std.parseInt(node.att.size) : 96
+					));
+
+				case "menu":
+					credsMenus.push(new TextOption(name + " >", desc, function() {
+						optionsTree.add(new OptionsScreen(name, desc, parseCreditsFromXML(node)));
+					}));
+			}
+		}
+
+		return credsMenus;
 	}
 }
