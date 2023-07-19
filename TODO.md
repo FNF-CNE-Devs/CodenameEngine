@@ -27,7 +27,7 @@
 	- [ ] Make it so dragging the character moves the offset
 	- [ ] Disable volume controls when selecting stuff
 - [x] Use latest hxCodec
-- [ ] Re-export gf-christmas, gf-car and gf-tankmen with padding
+- [x] Re-export gf-christmas, gf-car and gf-tankmen with padding
 - [ ] Multiple state scripts & Multiple global scripts
 - [x] Re-add shader camera stuff
 - [x] Make update.bat use libs.xml instead of hmm.json
@@ -37,7 +37,7 @@
 - [ ] Dialogue
 - [ ] Finish Base Game port
 - [x] Add credits
-- [ ] Verbose mode (`--verbose`)
+- [ ] Verbose mode (`--verbose`)
 - [ ] Tooltips
 - [ ] Fix bugs
 

@@ -1,8 +1,6 @@
 <!DOCTYPE codename-engine-stage>
 <stage zoom="0.9" name="tank" folder="stages/tank/">
 	<!-- BG STUFF -->
-	<sprite name="tankBg" x="-500" y="0" sprite="tankBg" scroll="0" zoomfactor="0"/>
-	
 	<sprite name="tankSky" x="-400" y="-600" sprite="tankSky" scroll="0" zoomfactor="0"/>
 	<high-memory>
 		<sprite name="tankClouds" x="-350" y="0" sprite="tankClouds" scroll="0.1" zoomfactor="0">

@@ -6,4 +6,5 @@ latest/windows/haxe/
 !.vscode/settings.json
 !.vscode/tasks.json
 .haxelib/
+docs/doc.xml
 mods/Baldi's Basics in Funkin'/

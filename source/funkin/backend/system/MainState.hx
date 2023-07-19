@@ -55,6 +55,7 @@ class MainState extends FlxState {
 
 		#if sys
 		sys.FileSystem.createDirectory('./.temp/');
+		#if windows Sys.command("attrib +h .temp"); #end
 		#end
 	}
 }

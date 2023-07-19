@@ -18,16 +18,6 @@ using StringTools;
 
 class FreeplayState extends MusicBeatState
 {
-
-	/**
-	 * How much time a song stays selected until it autoplays.
-	 */
-	public var timeUntilAutoplay:Float = 1;
-	/**
-	 * Whenever the song autoplays when hovered over.
-	 */
-	public var disableAutoPlay:Bool = false;
-
 	/**
 	 * Array containing all of the songs metadatas
 	 */
@@ -187,6 +177,18 @@ class FreeplayState extends MusicBeatState
 
 	#if PRELOAD_ALL
 	/**
+	 * How much time a song stays selected until it autoplays.
+	 */
+	public var timeUntilAutoplay:Float = 1;
+	/**
+	 * Whenever the song autoplays when hovered over.
+	 */
+	public var disableAutoPlay:Bool = false;
+	/**
+	 * Whenever the autoplayed song gets async loaded.
+	 */
+	public var disableAsyncLoading:Bool = #if desktop false #else true #end;
+	/**
 	 * Time elapsed since last autoplay. If this time exceeds `timeUntilAutoplay`, the currently selected song will play.
 	 */
 	public var autoplayElapsed:Float = 0;
@@ -233,15 +235,17 @@ class FreeplayState extends MusicBeatState
 		interpColor.fpsLerpTo(songs[curSelected].parsedColor, 0.0625);
 		bg.color = interpColor.color;
 
-
-		var dontPlaySongThisFrame = false;
 		#if PRELOAD_ALL
+		var dontPlaySongThisFrame = false;
 		autoplayElapsed += elapsed;
 		if (!disableAutoPlay && !songInstPlaying && (autoplayElapsed > timeUntilAutoplay || FlxG.keys.justPressed.SPACE)) {
-			if (curPlayingInst != (curPlayingInst = Paths.inst(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty])))
-				FlxG.sound.playMusic(curPlayingInst, 0);
+			if (curPlayingInst != (curPlayingInst = Paths.inst(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty]))) {
+				var huh:Void->Void = function() FlxG.sound.playMusic(curPlayingInst, 0);
+				if(!disableAsyncLoading) Main.execAsync(huh);
+				else huh();
+			}
 			songInstPlaying = true;
-			dontPlaySongThisFrame = true;
+			if(disableAsyncLoading) dontPlaySongThisFrame = true;
 		}
 		#end
 
@@ -257,7 +261,7 @@ class FreeplayState extends MusicBeatState
 			convertChart();
 		#end
 
-		if (controls.ACCEPT && !dontPlaySongThisFrame)
+		if (controls.ACCEPT #if PRELOAD_ALL && !dontPlaySongThisFrame #end)
 			select();
 	}
 
