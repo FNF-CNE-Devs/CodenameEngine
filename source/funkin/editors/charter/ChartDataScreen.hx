@@ -12,7 +12,7 @@ class ChartDataScreen extends UISubstateWindow {
 	public var closeButton:UIButton;
 
 	public var scrollSpeedStepper:UINumericStepper;
-	public var stageBox:UITextBox;
+	public var stageTextBox:UITextBox;
 
 	public function new(data:ChartData) {
 		super();
@@ -23,38 +23,43 @@ class ChartDataScreen extends UISubstateWindow {
 		FlxG.sound.music.pause();
 		Charter.instance.vocals.pause();
 
-		function addLabelOn(ui:UISprite, text:String)
-			add(new UIText(ui.x, ui.y - 24, 0, text));
-
-		winTitle = 'Editing chart data';
-		winWidth = 420; winHeight = 69*4; // guys look, the funny numbers!
+		winTitle = 'Chart Properties';
+		winWidth = 420; winHeight = 230; // guys look, the funny numbers!
 
 		super.create();
 
-		scrollSpeedStepper = new UINumericStepper(windowSpr.x + 20, windowSpr.y + 60, data.scrollSpeed, 0.1, 2, 0, 10, 82);
+		function addLabelOn(ui:UISprite, text:String)
+			add(new UIText(ui.x, ui.y - 24, 0, text));
+
+		var title:UIText;
+		add(title = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, "Edit Chart Data", 28));
+
+		stageTextBox = new UITextBox(title.x, title.y + title.height + 38, PlayState.SONG.stage, 160);
+		add(stageTextBox);
+		addLabelOn(stageTextBox, "Stage");
+
+		scrollSpeedStepper = new UINumericStepper(stageTextBox.x + 160 + 26, stageTextBox.y, data.scrollSpeed, 0.1, 2, 0, 10, 82);
 		add(scrollSpeedStepper);
 		addLabelOn(scrollSpeedStepper, "Scroll Speed");
 
-		stageBox = new UITextBox(scrollSpeedStepper.x, scrollSpeedStepper.y + 60, PlayState.SONG.stage);
-		add(stageBox);
-		addLabelOn(stageBox, "Stage");
-
 		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20 - 125, windowSpr.y + windowSpr.bHeight - 16 - 32, "Save & Close", function() {
-			onSave();
+			saveInfo();
 			close();
 		}, 125);
 		add(saveButton);
 		
-		closeButton = new UIButton(saveButton.x - 20, saveButton.y, "Cancel", function() {
+		closeButton = new UIButton(saveButton.x - 20, saveButton.y, "Close", function() {
 			close();
 		}, 125);
 		add(closeButton);
 		closeButton.x -= closeButton.bWidth;
 	}
 
-	public function onSave()
+	public function saveInfo()
 	{
-		PlayState.SONG.stage = stageBox.label.text;
+		@:privateAccess scrollSpeedStepper.__onChange(scrollSpeedStepper.label.text);
+		
+		PlayState.SONG.stage = stageTextBox.label.text;
 		PlayState.SONG.scrollSpeed = scrollSpeedStepper.value;
 	}
 

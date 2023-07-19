@@ -121,8 +121,10 @@ class UIState extends MusicBeatState {
 	}
 
 	public function closeCurrentContextMenu() {
-		if(curContextMenu != null)
+		if(curContextMenu != null) {
 			curContextMenu.close();
+			curContextMenu = null;
+		}
 	}
 
 	public function openContextMenu(options:Array<UIContextMenuOption>, ?callback:UIContextMenuCallback, ?x:Float, ?y:Float) {
