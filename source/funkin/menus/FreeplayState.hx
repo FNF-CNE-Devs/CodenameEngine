@@ -233,15 +233,21 @@ class FreeplayState extends MusicBeatState
 		interpColor.fpsLerpTo(songs[curSelected].parsedColor, 0.0625);
 		bg.color = interpColor.color;
 
-
+		#if !desktop
 		var dontPlaySongThisFrame = false;
+		#end
+		
 		#if PRELOAD_ALL
 		autoplayElapsed += elapsed;
 		if (!disableAutoPlay && !songInstPlaying && (autoplayElapsed > timeUntilAutoplay || FlxG.keys.justPressed.SPACE)) {
 			if (curPlayingInst != (curPlayingInst = Paths.inst(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty])))
-				FlxG.sound.playMusic(curPlayingInst, 0);
+				#if desktop Main.execAsync(function() { #end  // Checking if desktop just in case the device isn't fast enough to load  - Nex_isDumb
+					FlxG.sound.playMusic(curPlayingInst, 0);
+				#if desktop }); #end
 			songInstPlaying = true;
+			#if !desktop
 			dontPlaySongThisFrame = true;
+			#end
 		}
 		#end
 
@@ -257,7 +263,7 @@ class FreeplayState extends MusicBeatState
 			convertChart();
 		#end
 
-		if (controls.ACCEPT && !dontPlaySongThisFrame)
+		if (controls.ACCEPT #if !desktop && !dontPlaySongThisFrame #end)
 			select();
 	}
 
