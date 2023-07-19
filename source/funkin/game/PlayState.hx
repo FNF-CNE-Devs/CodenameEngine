@@ -81,11 +81,6 @@ class PlayState extends MusicBeatState
 	public static var coopMode:Bool = false;
 
 	/**
-	 * Script Pack of all the scripts being ran.
-	 */
-	public var scripts:ScriptPack;
-
-	/**
 	 * Array of all the players in the stage.
 	 */
 	public var strumLines:FlxTypedGroup<StrumLine> = new FlxTypedGroup<StrumLine>();
@@ -511,7 +506,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		PauseSubState.script = "";
-		(scripts = new ScriptPack("PlayState")).setParent(this);
+		loadScript();
 
 		camGame = camera;
 		FlxG.cameras.add(camHUD = new HudCamera(), false);
@@ -561,21 +556,20 @@ class PlayState extends MusicBeatState
 				// case "":
 					// ADD YOUR HARDCODED SCRIPTS HERE!
 				default:
-					for(content in [Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH), Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)])
+					for(content in [Paths.getScriptPaths('assets/songs/${SONG.meta.name.toLowerCase()}/scripts'), Paths.getScriptPaths('assets/data/charts/')])
 						for(file in content) addScript(file);
 
 					var songEvents:Array<String> = [];
 					for (event in SONG.events) 
 						if (!songEvents.contains(event.name)) songEvents.push(event.name);
 
-					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH)) {
+					for (file in Paths.getScriptPaths('assets/data/events/')) {
 						var fileName:String = Path.withoutExtension(Path.withoutDirectory(file));
 						if (EventsData.eventsList.contains(fileName) && songEvents.contains(fileName)) addScript(file);
 					}
 						
 			}
 		}
-
 		add(comboGroup);
 		#end
 
@@ -647,7 +641,6 @@ class PlayState extends MusicBeatState
 		add(splashHandler);
 
 		scripts.load();
-		scripts.call("create");
 		#end
 
 		// CAMERA & HUD INITIALISATION
@@ -724,7 +717,6 @@ class PlayState extends MusicBeatState
 		#end
 
 		startingSong = true;
-
 		super.create();
 
 		for(s in introSprites)
@@ -743,8 +735,6 @@ class PlayState extends MusicBeatState
 		updateDiscordPresence();
 
 		__updateNote_event = EventManager.get(NoteUpdateEvent);
-
-		scripts.call("postCreate");
 	}
 
 	/**
@@ -897,11 +887,9 @@ class PlayState extends MusicBeatState
 	}
 
 	public override function destroy() {
-		scripts.call("destroy");
 		for(g in __cachedGraphics)
 			g.useCount--;
 		super.destroy();
-		scripts = FlxDestroyUtil.destroy(scripts);
 		@:privateAccess {
 			FlxG.sound.destroySound(inst);
 			FlxG.sound.destroySound(vocals);
@@ -1019,7 +1007,6 @@ class PlayState extends MusicBeatState
 			inst.resume();
 			vocals.resume();
 		}
-		scripts.call("onFocus");
 		updateDiscordPresence();
 		super.onFocus();
 	}
@@ -1031,7 +1018,6 @@ class PlayState extends MusicBeatState
 			inst.pause();
 			vocals.pause();
 		}
-		scripts.call("onFocusLost");
 		updateDiscordPresence();
 		super.onFocusLost();
 	}
@@ -1075,11 +1061,9 @@ class PlayState extends MusicBeatState
 	@:dox(hide)
 	override public function update(elapsed:Float)
 	{
-		scripts.call("update", [elapsed]);
 
 		if (inCutscene) {
 			super.update(elapsed);
-			scripts.call("postUpdate", [elapsed]);
 			return;
 		}
 
@@ -1195,13 +1179,6 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 
 		scripts.call("postUpdate", [elapsed]);
-	}
-
-	override function draw() {
-		var e = scripts.event("draw", EventManager.get(DrawEvent).recycle());
-		if (!e.cancelled)
-			super.draw();
-		scripts.event("postDraw", e);
 	}
 
 	public function executeEvent(event:ChartEvent) {
@@ -1594,23 +1571,15 @@ class PlayState extends MusicBeatState
 
 	@:dox(hide)
 	override function stepHit(curStep:Int)
-	{
 		super.stepHit(curStep);
-		scripts.call("stepHit", [curStep]);
-	}
 
 	@:dox(hide)
 	override function measureHit(curMeasure:Int)
-	{
 		super.measureHit(curMeasure);
-		scripts.call("measureHit", [curMeasure]);
-	}
 
 	@:dox(hide)
 	override function beatHit(curBeat:Int)
 	{
-		super.beatHit(curBeat);
-
 		if (camZoomingInterval < 1) camZoomingInterval = 1;
 		if (Options.camZoomOnBeat && camZooming && FlxG.camera.zoom < maxCamZoom && curBeat % camZoomingInterval == 0)
 		{
@@ -1624,13 +1593,7 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		scripts.call("beatHit", [curBeat]);
-	}
-
-	public function addScript(file:String) {
-		var ext = Path.extension(file).toLowerCase();
-		if (Script.scriptExtensions.contains(ext))
-			scripts.add(Script.create(file));
+		super.beatHit(curBeat);
 	}
 
 	// GETTERS & SETTERS
