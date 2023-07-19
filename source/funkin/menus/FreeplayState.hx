@@ -18,16 +18,6 @@ using StringTools;
 
 class FreeplayState extends MusicBeatState
 {
-
-	/**
-	 * How much time a song stays selected until it autoplays.
-	 */
-	public var timeUntilAutoplay:Float = 1;
-	/**
-	 * Whenever the song autoplays when hovered over.
-	 */
-	public var disableAutoPlay:Bool = false;
-
 	/**
 	 * Array containing all of the songs metadatas
 	 */
@@ -187,6 +177,18 @@ class FreeplayState extends MusicBeatState
 
 	#if PRELOAD_ALL
 	/**
+	 * How much time a song stays selected until it autoplays.
+	 */
+	public var timeUntilAutoplay:Float = 1;
+	/**
+	 * Whenever the song autoplays when hovered over.
+	 */
+	public var disableAutoPlay:Bool = false;
+	/**
+	 * Whenever the autoplayed song gets async loaded.
+	 */
+	public var disableAsyncLoading:Bool = #if desktop false #else true #end;
+	/**
 	 * Time elapsed since last autoplay. If this time exceeds `timeUntilAutoplay`, the currently selected song will play.
 	 */
 	public var autoplayElapsed:Float = 0;
@@ -233,21 +235,17 @@ class FreeplayState extends MusicBeatState
 		interpColor.fpsLerpTo(songs[curSelected].parsedColor, 0.0625);
 		bg.color = interpColor.color;
 
-		#if !desktop
-		var dontPlaySongThisFrame = false;
-		#end
-		
 		#if PRELOAD_ALL
+		var dontPlaySongThisFrame = false;
 		autoplayElapsed += elapsed;
 		if (!disableAutoPlay && !songInstPlaying && (autoplayElapsed > timeUntilAutoplay || FlxG.keys.justPressed.SPACE)) {
-			if (curPlayingInst != (curPlayingInst = Paths.inst(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty])))
-				#if desktop Main.execAsync(function() { #end  // Checking if desktop just in case the device isn't fast enough to load  - Nex_isDumb
-					FlxG.sound.playMusic(curPlayingInst, 0);
-				#if desktop }); #end
+			if (curPlayingInst != (curPlayingInst = Paths.inst(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty]))) {
+				var huh:Void->Void = function() FlxG.sound.playMusic(curPlayingInst, 0);
+				if(!disableAsyncLoading) Main.execAsync(huh);
+				else huh();
+			}
 			songInstPlaying = true;
-			#if !desktop
-			dontPlaySongThisFrame = true;
-			#end
+			if(disableAsyncLoading) dontPlaySongThisFrame = true;
 		}
 		#end
 
@@ -263,7 +261,7 @@ class FreeplayState extends MusicBeatState
 			convertChart();
 		#end
 
-		if (controls.ACCEPT #if !desktop && !dontPlaySongThisFrame #end)
+		if (controls.ACCEPT #if PRELOAD_ALL && !dontPlaySongThisFrame #end)
 			select();
 	}
 
