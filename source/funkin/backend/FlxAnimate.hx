@@ -66,7 +66,7 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 			}
 
 			rMatrix.translate(_point.x, _point.y);
-			camera.drawPixels(limb, null, rMatrix, colorTransform, blend, antialiasing);
+			camera.drawPixels(limb, null, rMatrix, colorTransform, blend, antialiasing, shaderEnabled ? shader : null);
 			#if FLX_DEBUG
 			FlxBasic.visibleCount++;
 			#end

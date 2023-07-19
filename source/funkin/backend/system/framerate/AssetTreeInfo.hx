@@ -1,6 +1,7 @@
 package funkin.backend.system.framerate;
 
 import funkin.backend.assets.IModsAssetLibrary;
+import funkin.backend.assets.ScriptedAssetLibrary;
 
 class AssetTreeInfo extends FramerateCategory {
 	public function new() {
@@ -20,7 +21,9 @@ class AssetTreeInfo extends FramerateCategory {
 					if (al.__proxy != null) l = al.__proxy;
 				}
 
-				if (l is IModsAssetLibrary)
+				if (l is ScriptedAssetLibrary)
+					text += '${Type.getClassName(Type.getClass(l))} - ${cast(l, ScriptedAssetLibrary).scriptName} (${cast(l, ScriptedAssetLibrary).libName} | ${cast(l, ScriptedAssetLibrary).prefix})\n';
+				else if (l is IModsAssetLibrary)
 					text += '${Type.getClassName(Type.getClass(l))} - ${cast(l, IModsAssetLibrary).libName} (${cast(l, IModsAssetLibrary).prefix})\n';
 				else
 					text += Std.string(e) + "\n";
