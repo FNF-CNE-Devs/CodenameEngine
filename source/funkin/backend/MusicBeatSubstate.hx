@@ -149,11 +149,14 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	}
 
 	override function close() {
-		var event = scripts.event("onClose", new CancellableEvent());
-		if (!event.cancelled) {
+		if (scripts != null) {
+			var event = scripts.event("onClose", new CancellableEvent());
+			if (!event.cancelled) {
+				super.close();
+				scripts.call("onClosePost");
+			}
+		} else
 			super.close();
-			scripts.call("onClosePost");
-		}
 	}
 
 	override function create()
