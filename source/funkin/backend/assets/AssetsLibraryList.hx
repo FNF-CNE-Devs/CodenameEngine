@@ -1,6 +1,6 @@
 package funkin.backend.assets;
 
-import funkin.backend.assets.ModsAssetLibrary;
+import funkin.backend.assets.IModsAssetLibrary;
 import lime.utils.AssetLibrary;
 
 class AssetsLibraryList extends AssetLibrary {
@@ -60,8 +60,8 @@ class AssetsLibraryList extends AssetLibrary {
 
 			// TODO: do base folder scanning
 			#if MOD_SUPPORT
-			if (l is ModsAssetLibrary) {
-				var lib = cast(l, ModsAssetLibrary);
+			if (l is IModsAssetLibrary) {
+				var lib = cast(l, IModsAssetLibrary);
 				for(e in lib.getFiles(folder))
 					content.push(e);
 			}
@@ -84,8 +84,8 @@ class AssetsLibraryList extends AssetLibrary {
 
 			// TODO: do base folder scanning
 			#if MOD_SUPPORT
-			if (l is ModsAssetLibrary) {
-				var lib = cast(l, ModsAssetLibrary);
+			if (l is IModsAssetLibrary) {
+				var lib = cast(l, IModsAssetLibrary);
 				for(e in lib.getFolders(folder))
 					content.push(e);
 			}

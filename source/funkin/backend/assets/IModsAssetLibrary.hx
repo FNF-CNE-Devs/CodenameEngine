@@ -21,7 +21,7 @@ import sys.FileSystem;
 
 using StringTools;
 
-interface ModsAssetLibrary {
+interface IModsAssetLibrary {
 	public var prefix:String;
 	public var libName:String;
 

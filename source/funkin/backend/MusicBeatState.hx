@@ -123,9 +123,15 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 				var scriptPaths = [];
 				(scripts = new ScriptPack(scriptName)).setParent(this);
 				scriptPaths = Paths.getScriptPaths('assets/data/states/$scriptName');
-				for (i in Paths.getScriptPaths('assets/data/states', '/$scriptName.')) 
+				for (i in Paths.getScriptPaths('assets/data/states', '/$scriptName.'))
 					scriptPaths.push(i);
-				if (scriptPaths.length > 0) for (i in scriptPaths) addScript(i);
+				if (scriptPaths.length > 0)
+					for (i in scriptPaths) {
+						var old = Assets.forceAssetLibrary;
+						Assets.forceAssetLibrary = i.library;
+						addScript(i.file);
+						Assets.forceAssetLibrary = old;
+					}
 				if (Type.getClass(this) != PlayState) scripts.load();
 			}
 			else

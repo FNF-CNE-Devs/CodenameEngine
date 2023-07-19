@@ -25,7 +25,6 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import haxe.io.Path;
-import lime.utils.Assets;
 import funkin.backend.system.Conductor;
 import funkin.game.cutscenes.*;
 
@@ -557,17 +556,26 @@ class PlayState extends MusicBeatState
 					// ADD YOUR HARDCODED SCRIPTS HERE!
 				default:
 					for(content in [Paths.getScriptPaths('assets/songs/${SONG.meta.name.toLowerCase()}/scripts'), Paths.getScriptPaths('assets/data/charts/')])
-						for(file in content) addScript(file);
+						for(file in content) {
+							var old = Assets.forceAssetLibrary;
+							Assets.forceAssetLibrary = file.library;
+							addScript(file.file);
+							Assets.forceAssetLibrary = old;
+						}
 
 					var songEvents:Array<String> = [];
-					for (event in SONG.events) 
+					for (event in SONG.events)
 						if (!songEvents.contains(event.name)) songEvents.push(event.name);
 
 					for (file in Paths.getScriptPaths('assets/data/events/')) {
-						var fileName:String = Path.withoutExtension(Path.withoutDirectory(file));
-						if (EventsData.eventsList.contains(fileName) && songEvents.contains(fileName)) addScript(file);
+						var old = Assets.forceAssetLibrary;
+						Assets.forceAssetLibrary = file.library;
+
+						var fileName:String = Path.withoutExtension(Path.withoutDirectory(file.file));
+						if (EventsData.eventsList.contains(fileName) && songEvents.contains(fileName)) addScript(file.file);
+
+						Assets.forceAssetLibrary = old;
 					}
-						
 			}
 		}
 		add(comboGroup);

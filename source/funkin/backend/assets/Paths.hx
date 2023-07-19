@@ -1,5 +1,6 @@
 package funkin.backend.assets;
 
+import lime.utils.AssetLibrary;
 import flixel.graphics.frames.FlxFramesCollection;
 import haxe.io.Path;
 import funkin.backend.assets.LimeLibrarySymbol;
@@ -97,22 +98,32 @@ class Paths
 		}
 		return getPath('images/$key.png', library);
 	}
-	static public function getScriptPaths(key:String, excep:String = ""):Array<String> {
-		var scriptsPaths:Array<String> = [];
+	static public function getScriptPaths(key:String, excep:String = ""):Array<ScriptPathInfo> {
+		var scriptsPaths:Array<ScriptPathInfo> = [];
 		var reallib = assetsTree.libraries.copy();
-		reallib.pop();
+
+		key = key.replace("//", "/");
+
 		if (!key.endsWith("/")) key += "/";
-		for (e in reallib) {
-			if (!OpenFlAssets.exists(e.getPath(key).startsWith(".") ? "." + e.getPath(key) : e.getPath(key))) continue;
-			for (i in sys.FileSystem.readDirectory(e.getPath(key))) 
-				if (Script.scriptExtensions.contains(Path.extension(i))) {
-					var path = '${e.getPath(key)}$i';
-					if (path.startsWith(".")) path = "." + path;
-					if (path.contains(excep) || excep == "") scriptsPaths.push(path.replace("//", "/"));
+		for (library in reallib) {
+			if (!library.exists(key, null)) continue;
+
+			var path = library.getPath(key);
+			if(path == null) continue;
+
+			for (i in sys.FileSystem.readDirectory(path)) {
+				var file = Path.withoutDirectory(i);
+				if (Script.scriptExtensions.contains(Path.extension(file))) {
+					var filepath = '${key}$file'.replace("//", "/");
+
+					if (filepath.contains(excep) || excep == "")
+						scriptsPaths.push(new ScriptPathInfo(filepath, library));
 				}
+			}
 		}
 		return scriptsPaths;
 	}
+
 	inline static public function script(key:String, ?library:String, isAssetsPath:Bool = false) {
 		var scriptPath = isAssetsPath ? key : getPath(key, library);
 		if (!Script.scriptExtensions.contains(Path.extension(scriptPath))) {
@@ -280,9 +291,9 @@ class Paths
 
 		var content:Array<String> = [];
 		#if MOD_SUPPORT
-		if (library is funkin.backend.assets.ModsAssetLibrary) {
+		if (library is funkin.backend.assets.IModsAssetLibrary) {
 			// easy task, can immediately scan for files!
-			var lib = cast(library, funkin.backend.assets.ModsAssetLibrary);
+			var lib = cast(library, funkin.backend.assets.IModsAssetLibrary);
 			content = lib.getFiles(libThing.symbolName);
 			if (addPath)
 				for(i in 0...content.length)
@@ -314,5 +325,15 @@ class Paths
 
 		return content;
 		*/
+	}
+}
+
+class ScriptPathInfo {
+	public var file:String;
+	public var library:AssetLibrary;
+
+	public function new(file:String, library:AssetLibrary) {
+		this.file = file;
+		this.library = library;
 	}
 }

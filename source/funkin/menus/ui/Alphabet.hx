@@ -3,7 +3,7 @@ package funkin.menus.ui;
 import openfl.utils.AssetLibrary;
 import haxe.xml.Access;
 import funkin.backend.assets.LimeLibrarySymbol;
-import funkin.backend.assets.ModsAssetLibrary;
+import funkin.backend.assets.IModsAssetLibrary;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxTimer;
@@ -100,8 +100,8 @@ class Alphabet extends FlxSpriteGroup
 					@:privateAccess
 					library = cast(library.__proxy, AssetLibrary);
 				}
-				if (library is ModsAssetLibrary) {
-					var modLib = cast(library, ModsAssetLibrary);
+				if (library is IModsAssetLibrary) {
+					var modLib = cast(library, IModsAssetLibrary);
 					@:privateAccess
 					if (!modLib.__isCacheValid(library.cachedBytes, libThing.symbolName)) {
 						refreshAlphabetXML(alphabetPath);

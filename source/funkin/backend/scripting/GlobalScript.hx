@@ -82,7 +82,12 @@ class GlobalScript {
 		scripts = new ScriptPack("global");
 		var scriptPaths = Paths.getScriptPaths("assets/data", "/global.");
 		for (i in Paths.getScriptPaths("assets/data/global")) scriptPaths.push(i);
-		for (i in scriptPaths) scripts.add(Script.create(Paths.script(i, null, true)));
+		var old = Assets.forceAssetLibrary;
+		for (i in scriptPaths) {
+			Assets.forceAssetLibrary = i.library;
+			scripts.add(Script.create(Paths.script(i.file, null, true)));
+		}
+		Assets.forceAssetLibrary = old;
 		scripts.load();
 	}
 

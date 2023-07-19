@@ -15,7 +15,7 @@ import sys.FileSystem;
 
 using StringTools;
 
-class ModsFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
+class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	public var folderPath:String;
 	public var libName:String;
 	public var useImageCache:Bool = true;

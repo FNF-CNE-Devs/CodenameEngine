@@ -48,6 +48,8 @@ class Assets
 {
 	public static var cache:IAssetCache = new AssetCache();
 
+	public static var forceAssetLibrary:LimeAssetLibrary = null;
+
 	@:noCompletion private static var dispatcher:EventDispatcher #if !macro = new EventDispatcher() #end;
 	private static var libraryBindings:Map<String, AssetLibrary> = new Map();
 
@@ -76,6 +78,9 @@ class Assets
 	**/
 	public static function exists(id:String, type:AssetType = null):Bool
 	{
+		if(forceAssetLibrary != null) {
+			return forceAssetLibrary.exists(id, cast type);
+		}
 		#if lime
 		return LimeAssets.exists(id, cast type);
 		#else
@@ -260,6 +265,9 @@ class Assets
 	**/
 	public static function getPath(id:String):String
 	{
+		if(forceAssetLibrary != null) {
+			return forceAssetLibrary.getPath(id);
+		}
 		#if lime
 		return LimeAssets.getPath(id);
 		#else
@@ -317,6 +325,9 @@ class Assets
 	**/
 	public static function getText(id:String):String
 	{
+		if(forceAssetLibrary != null) {
+			return forceAssetLibrary.getText(id);
+		}
 		#if lime
 		return LimeAssets.getText(id);
 		#else

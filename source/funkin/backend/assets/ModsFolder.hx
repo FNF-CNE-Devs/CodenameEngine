@@ -102,7 +102,7 @@ class ModsFolder {
 		return font;
 	}
 
-	public static function prepareModLibrary(libName:String, lib:ModsAssetLibrary, force:Bool = false) {
+	public static function prepareModLibrary(libName:String, lib:IModsAssetLibrary, force:Bool = false) {
 		var openLib = prepareLibrary(libName, force);
 		lib.prefix = 'assets/';
 		@:privateAccess

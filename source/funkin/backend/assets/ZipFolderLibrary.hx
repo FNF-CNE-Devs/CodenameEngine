@@ -25,7 +25,7 @@ import haxe.zip.Reader;
 import funkin.backend.utils.SysZip;
 import funkin.backend.utils.SysZip.SysZipEntry;
 
-class ZipFolderLibrary extends AssetLibrary implements ModsAssetLibrary {
+class ZipFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	public var zipPath:String;
 	public var libName:String;
 	public var useImageCache:Bool = false;
