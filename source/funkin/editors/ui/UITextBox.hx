@@ -30,6 +30,8 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 		members.push(caretSpr);
 		this.multiline = multiline;
 		position = text.length;
+
+		cursor = IBEAM;
 	}
 
 	var cacheRect:Rectangle = new Rectangle();

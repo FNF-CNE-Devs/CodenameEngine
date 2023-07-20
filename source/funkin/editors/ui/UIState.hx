@@ -104,6 +104,8 @@ class UIState extends MusicBeatState {
 		if (FlxG.mouse.justReleased)
 			currentFocus = (hoveredSprite is IUIFocusable) ? (cast hoveredSprite) : null;
 
+		FlxG.sound.keysAllowed = currentFocus != null ? !(currentFocus is UITextBox) : true;
+
 		if (hoveredSprite != null) {
 			Mouse.cursor = hoveredSprite.cursor;
 			hoveredSprite = null;
