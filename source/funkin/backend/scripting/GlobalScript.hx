@@ -9,7 +9,7 @@ import funkin.backend.assets.ModsFolder;
  * Class for THE Global Script, aka script that runs in the background at all times.
  */
 class GlobalScript {
-	public static var scripts:ScriptPack;
+	public static var script:Script;
 
 	public static function init() {
 		#if MOD_SUPPORT
@@ -20,83 +20,92 @@ class GlobalScript {
 		Conductor.onStepHit.add(stepHit);
 
 		FlxG.signals.focusGained.add(function() {
-			scripts.call("focusGained");
+			call("focusGained");
 		});
 		FlxG.signals.focusLost.add(function() {
-			scripts.call("focusLost");
+			call("focusLost");
 		});
 		FlxG.signals.gameResized.add(function(w:Int, h:Int) {
-			scripts.call("gameResized", [w, h]);
+			call("gameResized", [w, h]);
 		});
 		FlxG.signals.postDraw.add(function() {
-			scripts.call("postDraw");
+			call("postDraw");
 		});
 		FlxG.signals.postGameReset.add(function() {
-			scripts.call("postGameReset");
+			call("postGameReset");
 		});
 		FlxG.signals.postGameStart.add(function() {
-			scripts.call("postGameStart");
+			call("postGameStart");
 		});
 		FlxG.signals.postStateSwitch.add(function() {
-			scripts.call("postStateSwitch");
+			call("postStateSwitch");
 		});
 		FlxG.signals.postUpdate.add(function() {
-			scripts.call("postUpdate", [FlxG.elapsed]);
+			call("postUpdate", [FlxG.elapsed]);
 			if (FlxG.keys.justPressed.F5) {
-				if (scripts != null) {
+				if (script != null && !(script is DummyScript)) {
 					Logs.trace('Reloading global script...', WARNING, YELLOW);
-					scripts.reload();
+					script.reload();
 					Logs.trace('Global script successfully reloaded.', WARNING, GREEN);
 				} else {
 					Logs.trace('Loading global script...', WARNING, YELLOW);
 					onModSwitch(#if MOD_SUPPORT ModsFolder.currentModFolder #else null #end);
+					if (script is DummyScript)
+						Logs.trace('Global script not found. Are you sure "data/global.hx" exists?', ERROR, RED);
+					else
+						Logs.trace('Global script successfully loaded.', WARNING, GREEN);
 				}
 			}
 		});
 		FlxG.signals.preDraw.add(function() {
-			scripts.call("preDraw");
+			call("preDraw");
 		});
 		FlxG.signals.preGameReset.add(function() {
-			scripts.call("preGameReset");
+			call("preGameReset");
 		});
 		FlxG.signals.preGameStart.add(function() {
-			scripts.call("preGameStart");
+			call("preGameStart");
 		});
 		FlxG.signals.preStateCreate.add(function(state:FlxState) {
-			scripts.call("preStateCreate", [state]);
+			call("preStateCreate", [state]);
 		});
 		FlxG.signals.preStateSwitch.add(function() {
-			scripts.call("preStateSwitch", []);
+			call("preStateSwitch", []);
 		});
 		FlxG.signals.preUpdate.add(function() {
-			scripts.call("preUpdate", [FlxG.elapsed]);
-			scripts.call("update", [FlxG.elapsed]);
+			call("preUpdate", [FlxG.elapsed]);
+			call("update", [FlxG.elapsed]);
 		});
 
 		onModSwitch(#if MOD_SUPPORT ModsFolder.currentModFolder #else null #end);
 	}
 
+	public static function event<T:CancellableEvent>(name:String, event:T):T {
+		if (script == null) return event;
+		script.call(name, [event]);
+		return event;
+	}
+
+	public static function call(name:String, ?args:Array<Dynamic>) {
+		if (script == null) return;
+		script.call(name, args);
+	}
 	public static function onModSwitch(newMod:String) {
-		if (scripts != null) scripts.call("onDestroy");
-		scripts = FlxDestroyUtil.destroy(scripts);
-		scripts = new ScriptPack("global");
-		var scriptPaths = Paths.getScriptPaths("assets/data", "/global.");
-		for (i in Paths.getScriptPaths("assets/data/global")) scriptPaths.push(i);
-		var old = Assets.forceAssetLibrary;
-		for (i in scriptPaths) {
-			Assets.forceAssetLibrary = i.library;
-			scripts.add(Script.create(Paths.script(i.file, null, true)));
+		call("onDestroy");
+		if (script != null) {
+			script.destroy();
+			script = null;
 		}
-		Assets.forceAssetLibrary = old;
-		scripts.load();
+		script = Script.create(Paths.script('data/global'));
+		script.load();
 	}
 
 	public static function beatHit(curBeat:Int) {
-		scripts.call("beatHit", [curBeat]);
+		call("beatHit", [curBeat]);
 	}
 
 	public static function stepHit(curStep:Int) {
-		scripts.call("stepHit", [curStep]);
+		call("stepHit", [curStep]);
 	}
 }
 #end

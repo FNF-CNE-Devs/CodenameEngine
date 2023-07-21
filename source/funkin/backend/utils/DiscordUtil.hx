@@ -96,7 +96,7 @@ class DiscordUtil {
 			data.largeImageText = DiscordUtil.data.logoText;
 
 		#if GLOBAL_SCRIPT
-		var event = funkin.backend.scripting.GlobalScript.scripts.event("onDiscordPresenceUpdate", EventManager.get(DiscordPresenceUpdateEvent).recycle(data));
+		var event = funkin.backend.scripting.GlobalScript.event("onDiscordPresenceUpdate", EventManager.get(DiscordPresenceUpdateEvent).recycle(data));
 		if (event.cancelled) return;
 
 		#end

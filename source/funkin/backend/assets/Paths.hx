@@ -98,35 +98,10 @@ class Paths
 		}
 		return getPath('images/$key.png', library);
 	}
-	static public function getScriptPaths(key:String, excep:String = ""):Array<ScriptPathInfo> {
-		var scriptsPaths:Array<ScriptPathInfo> = [];
-		var reallib = assetsTree.libraries.copy();
-
-		key = key.replace("//", "/");
-
-		if (!key.endsWith("/")) key += "/";
-		for (library in reallib) {
-			if (!library.exists(key, null)) continue;
-
-			var path = library.getPath(key);
-			if(path == null) continue;
-
-			for (i in sys.FileSystem.readDirectory(path)) {
-				var file = Path.withoutDirectory(i);
-				if (Script.scriptExtensions.contains(Path.extension(file))) {
-					var filepath = '${key}$file'.replace("//", "/");
-
-					if (filepath.contains(excep) || excep == "")
-						scriptsPaths.push(new ScriptPathInfo(filepath, library));
-				}
-			}
-		}
-		return scriptsPaths;
-	}
-
+	
 	inline static public function script(key:String, ?library:String, isAssetsPath:Bool = false) {
 		var scriptPath = isAssetsPath ? key : getPath(key, library);
-		if (!Script.scriptExtensions.contains(Path.extension(scriptPath))) {
+		if (!OpenFlAssets.exists(scriptPath)) {
 			var p:String;
 			for(ex in Script.scriptExtensions) {
 				p = '$scriptPath.$ex';
