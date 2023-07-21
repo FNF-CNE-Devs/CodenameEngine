@@ -101,13 +101,16 @@ class Note extends FlxSprite
 			return __customNoteTypeExists[path];
 		return __customNoteTypeExists[path] = Assets.exists(path);
 	}
-	public function new(strumLine:StrumLine, noteData:ChartNote, sustain:Bool = false, sustainLength:Float = 0, sustainOffset:Float = 0)
+	public function new(strumLine:StrumLine, noteData:ChartNote, sustain:Bool = false, sustainLength:Float = 0, sustainOffset:Float = 0, ?prev:Note)
 	{
 		super();
 
 		moves = false;
 
-		this.prevNote = strumLine.notes.members.last();
+		if(prev != null)
+			this.prevNote = prev;
+		else
+			this.prevNote = strumLine.notes.members.last();
 		this.noteTypeID = noteData.type.getDefault(0);
 		this.isSustainNote = sustain;
 		this.sustainLength = sustainLength;

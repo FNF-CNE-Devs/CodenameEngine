@@ -116,22 +116,23 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		}
 
 		notes.preallocate(total);
-		notes.length = total;
 
 		var il = 0;
+
+		var prev:Note = null;
 
 		if (strumLine.notes != null) for(note in strumLine.notes) {
 			if (startTime != null && startTime > note.time)
 				continue;
 
-			notes.members[total-(il++)-1] = new Note(this, note, false);
+			notes.members[total-(il++)-1] = prev = new Note(this, note, false, prev);
 
 			if (note.sLen > Conductor.stepCrochet * 0.75) {
 				var len:Float = note.sLen;
 				var curLen:Float = 0;
 				while(len > 10) {
 					curLen = Math.min(len, Conductor.stepCrochet);
-					notes.members[total-(il++)-1] = new Note(this, note, true, curLen, note.sLen - len);
+					notes.members[total-(il++)-1] = prev = new Note(this, note, true, curLen, note.sLen - len, prev);
 					len -= curLen;
 				}
 			}
