@@ -8,6 +8,14 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	var i:Int = 0;
 	var __currentlyLooping:Bool = false;
 
+	/**
+	 * Preallocates the members array with nulls, but if theres anything before it clears it
+	 **/
+	public inline function preallocate(len:Int) {
+		members = cast new haxe.ds.Vector<Note>(len);
+		length = len;
+	}
+
 	public inline function addNotes(notes:Array<Note>) {
 		for(e in notes) add(e);
 		sortNotes();

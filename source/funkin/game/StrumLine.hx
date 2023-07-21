@@ -97,18 +97,41 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	}
 
 	public function generate(strumLine:ChartStrumLine, ?startTime:Float) {
+		// TODO: implement double generate call support if needed
+
+		var total = 0;
 		if (strumLine.notes != null) for(note in strumLine.notes) {
 			if (startTime != null && startTime > note.time)
 				continue;
 
-			notes.add(new Note(this, note, false));
+			total++;
+
+			if (note.sLen > Conductor.stepCrochet * 0.75) {
+				var len:Float = note.sLen;
+				while(len > 10) {
+					total++;
+					len -= Math.min(len, Conductor.stepCrochet);
+				}
+			}
+		}
+
+		notes.preallocate(total);
+		notes.length = total;
+
+		var il = 0;
+
+		if (strumLine.notes != null) for(note in strumLine.notes) {
+			if (startTime != null && startTime > note.time)
+				continue;
+
+			notes.members[total-(il++)-1] = new Note(this, note, false);
 
 			if (note.sLen > Conductor.stepCrochet * 0.75) {
 				var len:Float = note.sLen;
 				var curLen:Float = 0;
 				while(len > 10) {
 					curLen = Math.min(len, Conductor.stepCrochet);
-					notes.add(new Note(this, note, true, curLen, note.sLen - len));
+					notes.members[total-(il++)-1] = new Note(this, note, true, curLen, note.sLen - len);
 					len -= curLen;
 				}
 			}
@@ -246,6 +269,12 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	public inline function generateStrums(amount:Int = 4) {
 		for (i in 0...amount)
 			add(createStrum(i));
+	}
+
+	override function destroy() {
+		super.destroy();
+		if(startingPos != null)
+			startingPos.put();
 	}
 
 	/**
