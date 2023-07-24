@@ -1,11 +1,13 @@
 package funkin.editors.charter;
 
+import flixel.math.FlxPoint;
+import funkin.editors.charter.Charter.ICharterSelectable;
 import funkin.backend.system.Conductor;
 import flixel.tweens.FlxTween;
 import funkin.backend.shaders.CustomShader;
 import flixel.util.FlxColor;
 
-class CharterNote extends UISprite {
+class CharterNote extends UISprite implements ICharterSelectable {
 	var angleTween:FlxTween;
 
 	private static var colors:Array<FlxColor> = [
@@ -16,9 +18,9 @@ class CharterNote extends UISprite {
 	];
 
 	public var sustainSpr:FlxSprite;
-	public var selected:Bool = false;
-
 	var __doAnim:Bool = false;
+
+	public var selected:Bool = false;
 
 	public function new() {
 		super();
@@ -126,6 +128,21 @@ class CharterNote extends UISprite {
 		colorTransform.blueOffset = selected ? 168 : 0;
 
 		__doAnim = true;
+	}
+
+	public function handleSelection(selectionBox:UISliceSprite):Bool {
+		var minX = Std.int(selectionBox.x / 40);
+		var minY = (selectionBox.y / 40) - 1;
+		var maxX = Std.int(Math.ceil((selectionBox.x + selectionBox.bWidth) / 40));
+		var maxY = ((selectionBox.y + selectionBox.bHeight) / 40);
+
+		return this.id >= minX && this.id < maxX && this.step >= minY && this.step < maxY;
+	}
+
+	public function handleDrag(change:FlxPoint) {
+		updatePos(step + change.x, id + Std.int(change.y), susLength, type);
+		Charter.instance.notesGroup.remove(this);
+		Charter.instance.notesGroup.add(this);
 	}
 
 	public override function draw() {

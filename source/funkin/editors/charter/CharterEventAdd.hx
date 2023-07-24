@@ -25,6 +25,7 @@ class CharterEventAdd extends UISliceSprite {
 			} else {
 				var event:CharterEvent = new CharterEvent(step, []);
 				state.eventsGroup.add(event);
+
 				FlxG.state.openSubState(new CharterEventScreen(event));
 			}
 		}
