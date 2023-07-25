@@ -158,6 +158,11 @@ class Charter extends UIState {
 					},
 					null,
 					{
+						label: "Cut",
+						keybind: [CONTROL, X],
+						onSelect: _edit_cut
+					},
+					{
 						label: "Delete",
 						keybind: [DELETE],
 						onSelect: _edit_delete
@@ -990,12 +995,19 @@ class Charter extends UIState {
 			}
 		}
 		selection = sObjects;
-		trace(sObjects);
-		addToUndo(CCreateSelection(sObjects.copy()));
+		addToUndo(CCreateSelection(sObjects));
+	}
+
+	function _edit_cut(_) {
+		if (selection == null || selection.length == 0) return;
+
+		_edit_copy(_);
+		deleteSelection(selection, false);
+		selection = [];
 	}
 
 	function _edit_delete(_) {
-		if (selection == null) return;
+		if (selection == null || selection.length == 0) return;
 		selection = deleteSelection(selection);
 	}
 
