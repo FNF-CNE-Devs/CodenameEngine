@@ -1259,19 +1259,13 @@ class Charter extends UIState {
 	}
 
 	public function updateBPMEvents(newEvent:CharterEvent) {
-		var hasBPMChange = false;
-		for (event in newEvent.events)
-			if (event.name == "BPM Change") {
-				hasBPMChange = true;
-				break;
-			}
-
-		if (!hasBPMChange) return;
 		buildEvents();
 
 		// Za BPM
 		Conductor.mapBPMChanges(PlayState.SONG);
 		Conductor.changeBPM(PlayState.SONG.meta.bpm, cast PlayState.SONG.meta.beatsPerMesure.getDefault(4), cast PlayState.SONG.meta.stepsPerBeat.getDefault(4));
+
+		refreshBPMSensitive();
 	}
 
 	public inline function hitsoundsEnabled(id:Int)
