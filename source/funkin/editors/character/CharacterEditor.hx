@@ -524,35 +524,35 @@ class CharacterEditor extends UIState {
 	}
 
 	function _offsets_left(_) {
-		changeOffset(character.getAnimName(), FlxPoint.get(1, 0));
+		changeOffset(character.getAnimName(), FlxPoint.get(!character.isFlippedOffsets() ? 1 : -1, 0));
 	}
 
 	function _offsets_up(_) {
 		changeOffset(character.getAnimName(), FlxPoint.get(0, 1));
-	} 
+	}
 
 	function _offsets_down(_) {
 		changeOffset(character.getAnimName(), FlxPoint.get(0, -1));
 	}
 
 	function _offsets_right(_) {
-		changeOffset(character.getAnimName(), FlxPoint.get(-1, 0));
+		changeOffset(character.getAnimName(), FlxPoint.get(!character.isFlippedOffsets() ? -1 : 1, 0));
 	}
 
 	function _offsets_extra_left(_) {
-		changeOffset(character.getAnimName(), FlxPoint.get(5, 0));
+		changeOffset(character.getAnimName(), FlxPoint.get(!character.isFlippedOffsets() ? 5 : -5, 0));
 	}
 
 	function _offsets_extra_up(_) {
 		changeOffset(character.getAnimName(), FlxPoint.get(0, 5));
-	} 
+	}
 
 	function _offsets_extra_down(_) {
 		changeOffset(character.getAnimName(), FlxPoint.get(0, -5));
 	}
 
 	function _offsets_extra_right(_) {
-		changeOffset(character.getAnimName(), FlxPoint.get(-5, 0));
+		changeOffset(character.getAnimName(), FlxPoint.get(!character.isFlippedOffsets() ? -5 : 5, 0));
 	}
 
 	function _offsets_clear(_) {

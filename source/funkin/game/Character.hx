@@ -282,6 +282,10 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		return super.getScreenBounds(newRect, camera);
 	}
 
+	public function isFlippedOffsets() {
+		return (isPlayer != playerOffsets) != (flipX != __baseFlipped);
+	}
+
 	var __drawingShadowFrame = false;
 	var __oldColorTransform = new ColorTransform();
 
@@ -318,7 +322,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			__drawingShadowFrame = false;
 		}
 
-		if ((isPlayer != playerOffsets) != (flipX != __baseFlipped))
+		if (isFlippedOffsets())
 		{
 			__reverseDrawProcedure = true;
 
