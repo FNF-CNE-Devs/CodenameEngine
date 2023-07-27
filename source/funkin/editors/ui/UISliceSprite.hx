@@ -34,17 +34,17 @@ class UISliceSprite extends UISprite {
 		var x:Float = this.x;
 		var y:Float = this.y;
 
-		var topleft:FlxFrame = frames.frames[framesOffset];
-		var top:FlxFrame = frames.frames[framesOffset + 1];
-		var topright:FlxFrame = frames.frames[framesOffset + 2];
-		var middleleft:FlxFrame = frames.frames[framesOffset + 3];
-		var middle:FlxFrame = frames.frames[framesOffset + 4];
-		var middleright:FlxFrame = frames.frames[framesOffset + 5];
-		var bottomleft:FlxFrame = frames.frames[framesOffset + 6];
-		var bottom:FlxFrame = frames.frames[framesOffset + 7];
-		var bottomright:FlxFrame = frames.frames[framesOffset + 8];
-
 		@:privateAccess if (visible) {
+			var topleft:FlxFrame = frames.frames[framesOffset];
+			var top:FlxFrame = frames.frames[framesOffset + 1];
+			var topright:FlxFrame = frames.frames[framesOffset + 2];
+			var middleleft:FlxFrame = frames.frames[framesOffset + 3];
+			var middle:FlxFrame = frames.frames[framesOffset + 4];
+			var middleright:FlxFrame = frames.frames[framesOffset + 5];
+			var bottomleft:FlxFrame = frames.frames[framesOffset + 6];
+			var bottom:FlxFrame = frames.frames[framesOffset + 7];
+			var bottomright:FlxFrame = frames.frames[framesOffset + 8];
+
 			// TOP LEFT
 			frame = topleft;
 			setPosition(x, y);

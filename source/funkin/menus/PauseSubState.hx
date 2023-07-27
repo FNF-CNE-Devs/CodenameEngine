@@ -60,8 +60,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		if (__cancelDefault = event.cancelled) return;
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		bg.scale.set(FlxG.width, FlxG.height);
+		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.updateHitbox();
 		bg.alpha = 0;
 		bg.scrollFactor.set();

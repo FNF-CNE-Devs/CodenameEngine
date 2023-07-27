@@ -233,7 +233,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		__justPressed = CoolUtil.getDefault(event.justPressed, []);
 		__justReleased = CoolUtil.getDefault(event.justReleased, []);
 
-		__notePerStrum = [for(_ in 0...members.length) null];
+		__notePerStrum = cast new haxe.ds.Vector(members.length);//[for(_ in 0...members.length) null];
 
 
 		if (__pressed.contains(true)) {
