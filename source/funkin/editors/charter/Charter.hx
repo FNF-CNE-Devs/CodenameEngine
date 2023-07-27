@@ -676,9 +676,11 @@ class Charter extends UIState {
 		selection.loop(function (note:CharterNote) {
 			notesGroup.remove(note, true);
 			note.kill();
+			this.selection.remove(note);
 		}, function (event:CharterEvent) {
 			eventsGroup.remove(event, true);
 			event.kill();
+			this.selection.remove(event);
 		});
 
 		if (addToUndo)
@@ -995,7 +997,7 @@ class Charter extends UIState {
 			}
 		}
 		selection = sObjects;
-		addToUndo(CCreateSelection(sObjects));
+		addToUndo(CCreateSelection(sObjects.copy()));
 	}
 
 	function _edit_cut(_) {
@@ -1003,7 +1005,6 @@ class Charter extends UIState {
 
 		_edit_copy(_);
 		deleteSelection(selection, false);
-		selection = [];
 	}
 
 	function _edit_delete(_) {
@@ -1018,15 +1019,14 @@ class Charter extends UIState {
 			case null:
 				// do nothing
 			case CCreateSelection(selection):
-				trace(selection);
 				selection.loop(function (n:CharterNote) {
 					notesGroup.remove(n, true);
 					n.kill();
-					selection.remove(n);
+					this.selection.remove(n);
 				}, function (e:CharterEvent) {
 					eventsGroup.remove(e, true);
 					e.kill();
-					selection.remove(e);
+					this.selection.remove(e);
 				});
 			case CDeleteSelection(selection):
 				selection.loop(function (n:CharterNote) {
