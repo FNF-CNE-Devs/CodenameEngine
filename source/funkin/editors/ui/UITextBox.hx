@@ -37,7 +37,7 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 	var cacheRect:Rectangle = new Rectangle();
 
 	public override function update(elapsed:Float) {
-		if (hovered && FlxG.mouse.justReleased && __lastDrawCameras.length > 0) {
+		if (selectable && hovered && FlxG.mouse.justReleased && __lastDrawCameras.length > 0) {
 			// get caret pos
 			var pos = FlxG.mouse.getScreenPosition(__lastDrawCameras[0], FlxPoint.get());
 			pos.x -= label.x;
@@ -57,11 +57,20 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 		}
 
 		super.update(elapsed);
+
+		var selected = selectable && focused;
+
+		if(selectable) {
+			alpha = label.alpha = 1;
+		} else {
+			alpha = label.alpha = 0.4;
+		}
+
 		var off = multiline ? 4 : ((bHeight - label.height) / 2);
 		label.follow(this, 4, off);
-		framesOffset = (focused ? 18 : (hovered ? 9 : 0));
+		framesOffset = (selected ? 18 : (hovered ? 9 : 0));
 		@:privateAccess {
-			if (focused) {
+			if (selected) {
 				__wasFocused = true;
 				caretSpr.alpha = (FlxG.game.ticks % 666) >= 333 ? 1 : 0;
 

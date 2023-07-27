@@ -166,6 +166,8 @@ class Main extends Sprite
 
 	public static function refreshAssets() {
 		FlxSoundTray.volumeChangeSFX = Paths.sound('menu/volume');
+		FlxSoundTray.volumeUpChangeSFX = null;
+		FlxSoundTray.volumeDownChangeSFX = null;
 
 		if (FlxG.game.soundTray != null)
 			FlxG.game.soundTray.text.setTextFormat(new TextFormat(Paths.font("vcr.ttf")));

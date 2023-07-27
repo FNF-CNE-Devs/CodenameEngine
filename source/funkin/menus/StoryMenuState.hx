@@ -45,9 +45,8 @@ class StoryMenuState extends MusicBeatState {
 		persistentUpdate = persistentDraw = true;
 
 		// WEEK INFO
-		blackBar = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFFFFFFFF);
+		blackBar = new FlxSprite(0, 0).makeSolid(FlxG.width, 56, 0xFFFFFFFF);
 		blackBar.color = 0xFF000000;
-		blackBar.setGraphicSize(FlxG.width, 56);
 		blackBar.updateHitbox();
 
 		scoreText = new FunkinText(10, 10, 0, "SCORE: -", 36);
@@ -57,9 +56,8 @@ class StoryMenuState extends MusicBeatState {
 		weekTitle.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 		weekTitle.alpha = 0.7;
 
-		weekBG = new FlxSprite(0, 56).makeGraphic(1, 1, 0xFFFFFFFF);
+		weekBG = new FlxSprite(0, 56).makeSolid(FlxG.width, 400, 0xFFFFFFFF);
 		weekBG.color = 0xFFF9CF51;
-		weekBG.setGraphicSize(FlxG.width, 400);
 		weekBG.updateHitbox();
 
 		weekSprites = new FlxTypedGroup<MenuItem>();

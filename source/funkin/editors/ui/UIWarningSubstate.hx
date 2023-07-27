@@ -1,12 +1,13 @@
 package funkin.editors.ui;
 
+import openfl.filters.ShaderFilter;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import funkin.backend.shaders.CustomShader;
 
 class UIWarningSubstate extends MusicBeatSubstate {
 	var camShaders:Array<FlxCamera> = [];
-	var blurShader:CustomShader = Options.intensiveBlur ? new CustomShader("engine/editorBlur") : new CustomShader("engine/editorBlurFast");
+	var blurShader:CustomShader = new CustomShader(Options.intensiveBlur ? "engine/editorBlur" : "engine/editorBlurFast");
 
 	var title:String;
 	var message:String;
@@ -25,6 +26,25 @@ class UIWarningSubstate extends MusicBeatSubstate {
 
 	public override function create() {
 		for(c in FlxG.cameras.list) {
+			// Prevent adding a shader if it already has one
+			@:privateAccess if(c._filters != null) {
+				var shouldSkip = false;
+				for(filter in c._filters) {
+					if(filter is ShaderFilter) {
+						var filter:ShaderFilter = cast filter;
+						if(filter.shader is CustomShader) {
+							var shader:CustomShader = cast filter.shader;
+
+							if(shader.path == blurShader.path) {
+								shouldSkip = true;
+								break;
+							}
+						}
+					}
+				}
+				if(shouldSkip)
+					continue;
+			}
 			camShaders.push(c);
 			c.addShader(blurShader);
 		}

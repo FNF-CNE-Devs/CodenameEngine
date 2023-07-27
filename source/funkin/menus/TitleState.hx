@@ -66,7 +66,7 @@ class TitleState extends MusicBeatState
 
 		persistentUpdate = true;
 
-		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
 		#if TITLESCREEN_XML
