@@ -21,6 +21,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	var __doAnim:Bool = false;
 
 	public var selected:Bool = false;
+	public var draggable:Bool = true;
 
 	public function new() {
 		super();

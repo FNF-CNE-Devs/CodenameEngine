@@ -13,6 +13,7 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 	public var icons:Array<FlxSprite> = [];
 
 	public var selected:Bool = false;
+	public var draggable:Bool = true;
 
 	public function new(step:Float, ?events:Array<ChartEvent>) {
 		super(-100, (step * 40) - 17, 100, 34, 'editors/charter/event-spr');
@@ -93,6 +94,13 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 			icons.push(spr);
 			members.push(spr);
 		}
+
+		draggable = true;
+		for (event in events)
+			if (event.name == "BPM Change") {
+				draggable = false;
+				break;
+			}
 
 		x = -(bWidth = 37 + (icons.length * 22));
 	}

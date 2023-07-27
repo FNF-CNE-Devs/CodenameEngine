@@ -569,6 +569,7 @@ class Charter extends UIState {
 					var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
 
 					for (s in selection) {
+						if (!s.draggable) continue;
 						s.handleDrag(changePoint);
 						if (s is UISprite) cast(s, UISprite).cursor = BUTTON;
 					}
@@ -1051,7 +1052,8 @@ class Charter extends UIState {
 			case CEditEvent(event, oldEvents, newEvents):
 				//
 			case CSelectionDrag(selection, change):
-				for (s in selection) s.handleDrag(change * -1);
+				for (s in selection) 
+					if (s.draggable) s.handleDrag(change * -1);
 				this.selection = selection;
 			case CDeleteStrumLine(strumLineID, strumLine):
 				createStrumline(strumLineID, strumLine, false);
@@ -1107,7 +1109,8 @@ class Charter extends UIState {
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.after, n.note.type);
 			case CSelectionDrag(selection, change):
-				for (s in selection) s.handleDrag(change);
+				for (s in selection) 
+					if (s.draggable) s.handleDrag(change);
 				this.selection = selection;
 			case CDeleteStrumLine(strumLineID, strumLine):
 				deleteStrumline(strumLineID, false);
@@ -1302,9 +1305,9 @@ typedef NoteSustainChange = {
 	// too lazy to put this in every for loop so i made it a abstract
 	public inline function loop(onNote:CharterNote->Void, ?onEvent:CharterEvent->Void) {
 		for (s in this) {
-			if (s is CharterNote && onNote != null)
+			if (s is CharterNote && onNote != null && s.draggable)
 				onNote(cast(s, CharterNote));
-			else if (s is CharterEvent && onEvent != null)
+			else if (s is CharterEvent && onEvent != null && s.draggable)
 				onEvent(cast(s, CharterEvent));
 		}
 	}
@@ -1312,8 +1315,10 @@ typedef NoteSustainChange = {
 
 interface ICharterSelectable {
 	public var step:Float;
+
 	public var selected:Bool;
 	public var hovered:Bool;
+	public var draggable:Bool;
 
 	public function handleSelection(selectionBox:UISliceSprite):Bool;
 	public function handleDrag(change:FlxPoint):Void;
