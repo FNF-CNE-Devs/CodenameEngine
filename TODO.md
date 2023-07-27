@@ -15,20 +15,27 @@
 	- [x] Events (including Camera Movement)
 	- [x] Metadata Editing
 	- [ ] Custom Notetypes
+	- [ ] Reorderable Strumlines
 	- [ ] Step based zooming
+	- [ ] Add Undo to more actions
+	- [ ] New Button
 	- [ ] Bug fixes
 		- [ ] Zooming in causing notes to disappear
 		- [ ] Holds disappear too early
 		- [ ] Time signature fixes
-	- [ ] Optimization
+		- [ ] BPM Changes Events
 - [ ] Character Editor
-	- [ ] Change ghost anim
-	- [ ] Make gf characters be positioned correctly
-	- [ ] Make it so dragging the character moves the offset
-	- [ ] Disable volume controls when selecting stuff
-- [x] Use latest hxCodec
+	- [x] Animation Editing
+	- [x] Animation Deletion/Creationg
+	- [x] Character Info Editing
+	- [x] Character Saving
+	- [x] Add Undos to Actions
+	- [ ] Change Stage
+	- [ ] New Button
+- [ ] Port Videos to a more stable video lib
+- [ ] Optimization to Editors
+- [ ] Fix Ratings Lag
 - [x] Re-export gf-christmas, gf-car and gf-tankmen with padding
-- [ ] Multiple state scripts & Multiple global scripts
 - [x] Re-add shader camera stuff
 - [x] Make update.bat use libs.xml instead of hmm.json
 - [ ] New Switch Mod menu
