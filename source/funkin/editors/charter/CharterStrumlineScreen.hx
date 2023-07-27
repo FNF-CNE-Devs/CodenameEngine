@@ -76,29 +76,20 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		usesChartscrollSpeed.onChecked = function(b) {
 			if(b)
 			{
-				scrollSpeedStepper.alpha = 0.4;
-				scrollSpeedStepper.label.alpha = 0.4;
 				scrollSpeedStepper.value = PlayState.SONG.scrollSpeed;
-				scrollSpeedStepper.active = false;
+				scrollSpeedStepper.selectable = false;
 			} else {
-				scrollSpeedStepper.alpha = 1;
-				scrollSpeedStepper.label.alpha = 1;
-				scrollSpeedStepper.active = true;
+				scrollSpeedStepper.selectable = true;
 			}
-				
 		}
 		add(usesChartscrollSpeed);
 
 		scrollSpeedStepper = new UINumericStepper(typeDropdown.x, typeDropdown.y + 32 + 58, usesChartscrollSpeed.checked ? PlayState.SONG.scrollSpeed : strumLine.scrollSpeed, 0.1, 2, 0, 10, 82);
 		if(usesChartscrollSpeed.checked)
 		{
-			scrollSpeedStepper.alpha = 0.4;
-			scrollSpeedStepper.label.alpha = 0.4;
-			scrollSpeedStepper.active = false;
+			scrollSpeedStepper.selectable = false;
 		} else {
-			scrollSpeedStepper.alpha = 1;
-			scrollSpeedStepper.label.alpha = 1;
-			scrollSpeedStepper.active = true;
+			scrollSpeedStepper.selectable = true;
 		}
 		add(scrollSpeedStepper);
 		addLabelOn(scrollSpeedStepper, "Scroll Speed");

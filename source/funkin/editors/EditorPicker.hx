@@ -121,6 +121,13 @@ class EditorPicker extends MusicBeatSubstate {
 			close();
 	}
 
+	override function destroy() {
+		super.destroy();
+
+		oldMousePos.put();
+		curMousePos.put();
+	}
+
 	public function changeSelection(change:Int) {
 		if (change == 0) return;
 

@@ -14,8 +14,7 @@ class ModSwitchMenu extends MusicBeatSubstate {
 	public override function create() {
 		super.create();
 
-		var bg = new FlxSprite(0, 0).makeGraphic(1, 1, 0xFF000000);
-		bg.scale.set(FlxG.width, FlxG.height);
+		var bg = new FlxSprite(0, 0).makeSolid(FlxG.width, FlxG.height, 0xFF000000);
 		bg.updateHitbox();
 		bg.scrollFactor.set();
 		add(bg);

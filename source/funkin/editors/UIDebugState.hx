@@ -8,8 +8,7 @@ class UIDebugState extends UIState {
 
 		FlxG.mouse.useSystemCursor = FlxG.mouse.visible = true;
 
-		var bg = new FlxSprite().makeGraphic(1, 1, 0xFF444444);
-		bg.scale.set(FlxG.width, FlxG.height);
+		var bg = new FlxSprite().makeSolid(FlxG.width, FlxG.height, 0xFF444444);
 		bg.updateHitbox();
 		bg.scrollFactor.set();
 		add(bg);
