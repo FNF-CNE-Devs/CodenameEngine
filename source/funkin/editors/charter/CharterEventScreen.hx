@@ -69,11 +69,10 @@ class CharterEventScreen extends UISubstateWindow {
 			saveCurTab();
 			chartEvent.refreshEventIcons();
 
-			if (chartEvent.events.length <= 0) {
-				var state = cast(FlxG.state, Charter);
-				state.eventsGroup.remove(chartEvent, true);
-			}
+			if (chartEvent.events.length <= 0)
+				Charter.instance.eventsGroup.remove(chartEvent, true);
 			close();
+			Charter.instance.updateBPMEvents(chartEvent);
 		});
 		saveButton.x -= saveButton.bWidth;
 		saveButton.y -= saveButton.bHeight;

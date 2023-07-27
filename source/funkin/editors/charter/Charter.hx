@@ -378,7 +378,7 @@ class Charter extends UIState {
 		};
 		uiGroup.add(scrollBar);
 
-		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0");
+		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0\nBPM: 0");
 		songPosInfo.alignment = RIGHT;
 		uiGroup.add(songPosInfo);
 
@@ -402,7 +402,6 @@ class Charter extends UIState {
 		addEventSpr = new CharterEventAdd();
 		addEventSpr.alpha = 0;
 		addEventSpr.cameras = [charterCamera];
-
 
 		// adds grid and notes so that they're ALWAYS behind the UI
 		add(gridBackdrop);
@@ -851,7 +850,8 @@ class Charter extends UIState {
 		songPosInfo.text = '${CoolUtil.timeToStr(Conductor.songPosition)} / ${CoolUtil.timeToStr(FlxG.sound.music.length)}'
 		+ '\nStep: ${curStep}'
 		+ '\nBeat: ${curBeat}'
-		+ '\nMeasure: ${curMeasure}';
+		+ '\nMeasure: ${curMeasure}'
+		+ '\nBPM: ${Conductor.bpm}';
 
 		if (FlxG.sound.music.playing) {
 			conductorFollowerSpr.y = curStepFloat * 40;
@@ -1229,15 +1229,9 @@ class Charter extends UIState {
 
 	public function buildChart() {
 		PlayState.SONG.strumLines = [];
-		PlayState.SONG.events = [];
 		for(s in strumLines) {
 			s.strumLine.notes = [];
 			PlayState.SONG.strumLines.push(s.strumLine);
-		}
-		for(e in eventsGroup.members) {
-			for(event in e.events) {
-				PlayState.SONG.events.push(event);
-			}
 		}
 		for(n in notesGroup.members) {
 			var strLineID = Std.int(n.id / 4);
@@ -1251,6 +1245,33 @@ class Charter extends UIState {
 				});
 			}
 		}
+		buildEvents();
+	}
+
+	public function buildEvents() {
+		PlayState.SONG.events = [];
+		for(e in eventsGroup.members) {
+			for(event in e.events) {
+				event.time = Conductor.getTimeForStep(e.step);
+				PlayState.SONG.events.push(event);
+			}
+		}
+	}
+
+	public function updateBPMEvents(newEvent:CharterEvent) {
+		var hasBPMChange = false;
+		for (event in newEvent.events)
+			if (event.name == "BPM Change") {
+				hasBPMChange = true;
+				break;
+			}
+
+		if (!hasBPMChange) return;
+		buildEvents();
+
+		// Za BPM
+		Conductor.mapBPMChanges(PlayState.SONG);
+		Conductor.changeBPM(PlayState.SONG.meta.bpm, cast PlayState.SONG.meta.beatsPerMesure.getDefault(4), cast PlayState.SONG.meta.stepsPerBeat.getDefault(4));
 	}
 
 	public inline function hitsoundsEnabled(id:Int)
