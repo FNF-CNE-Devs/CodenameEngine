@@ -809,7 +809,7 @@ class PlayState extends MusicBeatState
 
 		startedCountdown = true;
 		Conductor.songPosition = 0;
-		Conductor.songPosition -= Conductor.crochet * introLength;
+		Conductor.songPosition -= Conductor.crochet * introLength - Conductor.songOffset;
 
 		var swagCounter:Int = 0;
 
@@ -1040,7 +1040,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.sound.music.play();
 		Conductor.songPosition = FlxG.sound.music.time;
-		vocals.time = Conductor.songPosition;
+		vocals.time = Conductor.songPosition + Conductor.songOffset;
 		vocals.play();
 		scripts.call("onVocalsResync");
 	}
@@ -1128,7 +1128,7 @@ class PlayState extends MusicBeatState
 		{
 			if (startedCountdown)
 			{
-				Conductor.songPosition += elapsed * 1000;
+				Conductor.songPosition += Conductor.songOffset + elapsed * 1000;
 				if (Conductor.songPosition >= 0)
 					startSong();
 			}

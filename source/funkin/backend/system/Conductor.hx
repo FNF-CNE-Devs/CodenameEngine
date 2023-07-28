@@ -58,8 +58,16 @@ class Conductor
 	/**
 	 * Current position of the song, in milliseconds.
 	 */
-	public static var songPosition:Float;
+	public static var songPosition(get, default):Float;
+	private static function get_songPosition() {
+		if (songOffset != Options.songOffset) trace(songOffset = Options.songOffset);
+		return songPosition - songOffset;
+	}
 
+	/**
+	 * Offset of the song
+	 */
+	 public static var songOffset:Float = 0;
 
 	/**
 	 * Current step
@@ -159,15 +167,15 @@ class Conductor
 
 	private static function __updateSongPos(elapsed:Float) {
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
-			lastSongPos = FlxG.sound.music != null ? FlxG.sound.music.time : 0;
+			lastSongPos = FlxG.sound.music != null ? FlxG.sound.music.time - songOffset : -songOffset;
 			return;
 		}
 
-		if (lastSongPos != (lastSongPos = FlxG.sound.music.time)) {
+		if (lastSongPos != (lastSongPos = FlxG.sound.music.time - songOffset)) {
 			// update conductor
 			songPosition = lastSongPos;
 		} else {
-			songPosition += elapsed * 1000;
+			songPosition = songPosition + songOffset + elapsed * 1000;
 		}
 	}
 
