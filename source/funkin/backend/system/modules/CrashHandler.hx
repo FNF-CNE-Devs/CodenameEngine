@@ -12,6 +12,11 @@ import haxe.CallStack;
 class CrashHandler {
 	public static function init() {
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onError);
+		#if cpp
+		untyped __global__.__hxcpp_set_critical_error_handler(onError);
+		#elseif hl
+		Api.setErrorHandler(onError);
+		#end
 	}
 
 	public static function onError(e:UncaughtErrorEvent) {
