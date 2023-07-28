@@ -11,7 +11,7 @@ import haxe.CallStack;
 
 class CrashHandler {
 	public static function init() {
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onError);
+		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError);
 		#if cpp
 		untyped __global__.__hxcpp_set_critical_error_handler(onError);
 		#elseif hl
@@ -19,7 +19,7 @@ class CrashHandler {
 		#end
 	}
 
-	public static function onError(e:UncaughtErrorEvent) {
+	public static function onUncaughtError(e:UncaughtErrorEvent) {
 		var m:String = e.error;
 		if (Std.isOfType(e.error, Error)) {
 			var err = cast(e.error, Error);
@@ -58,4 +58,11 @@ class CrashHandler {
 		Sys.exit(1);
 		#end
 	}
+
+	#if (cpp || hl)
+	private static function onError(message:Dynamic):Void
+	{
+		throw Std.string(message);
+	}
+	#end
 }
