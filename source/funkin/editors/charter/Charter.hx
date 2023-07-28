@@ -585,8 +585,6 @@ class Charter extends UIState {
 				if (FlxG.mouse.justPressed)
 					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
 				if (gridBackdropDummy.hovered) {
-					// SETUP
-
 					// AUTO DETECT
 					if (FlxG.mouse.pressed && (Math.abs(mousePos.x - dragStartPos.x) > 20 || Math.abs(mousePos.y - dragStartPos.y) > 20))
 						gridActionType = BOX;
@@ -602,7 +600,7 @@ class Charter extends UIState {
 								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id, 0, 0);
 								notesGroup.add(note);
 								selection = [note];
-								addToUndo(CPlaceNote(note));
+								addToUndo(CCreateSelection([note]));
 							}
 						}
 					}
@@ -670,18 +668,37 @@ class Charter extends UIState {
 		return null;
 	}
 
+	public function createSelection(selection:Selection, addToUndo:Bool = true) {
+		if (selection.length <= 0) return [];
+
+		selection.loop(function (n:CharterNote) {
+			notesGroup.add(n);
+			n.revive();
+		}, function (e:CharterEvent) {
+			eventsGroup.add(e);
+			e.revive();
+		});
+		sortNotes();
+
+		if (addToUndo)
+			this.addToUndo(CCreateSelection(selection));
+		return [];
+	}
+
 	public function deleteSelection(selection:Selection, addToUndo:Bool = true) {
 		if (selection.length <= 0) return [];
 
-		selection.loop(function (note:CharterNote) {
-			notesGroup.remove(note, true);
-			note.kill();
-			this.selection.remove(note);
-		}, function (event:CharterEvent) {
-			eventsGroup.remove(event, true);
-			event.kill();
-			this.selection.remove(event);
-		});
+		for (objects in [notesGroup, eventsGroup]) {
+			var group = cast(objects, FlxTypedGroup<Dynamic>);
+			var member = 0;
+			while(member < group.members.length) {
+				var s = group.members[member];
+				if (selection.contains(s))
+					deleteSingleSelection(s, false);
+				else member++;
+			}
+		}
+		sortNotes();
 
 		if (addToUndo)
 			this.addToUndo(CDeleteSelection(selection));
@@ -1017,40 +1034,14 @@ class Charter extends UIState {
 		selection = [];
 		var v = undoList.shift();
 		switch(v) {
-			case null:
-				// do nothing
+			case null: // do nothing
 			case CCreateSelection(selection):
-				selection.loop(function (n:CharterNote) {
-					notesGroup.remove(n, true);
-					n.kill();
-					this.selection.remove(n);
-				}, function (e:CharterEvent) {
-					eventsGroup.remove(e, true);
-					e.kill();
-					this.selection.remove(e);
-				});
+				deleteSelection(selection, false);
 			case CDeleteSelection(selection):
-				selection.loop(function (n:CharterNote) {
-					notesGroup.add(n);
-					n.revive();
-				}, function (e:CharterEvent) {
-					eventsGroup.add(e);
-					e.revive();
-				});
-				sortNotes();
-			case CPlaceNote(note):
-				notesGroup.remove(note, true);
-				note.kill();
-				selection.remove(note);
+				createSelection(selection, false);
 			case CSustainChange(changes):
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.before, n.note.type);
-			case CPlaceEvent(event):
-				eventsGroup.remove(event, true);
-				event.kill();
-				selection.remove(event);
-			case CEditEvent(event, oldEvents, newEvents):
-				//
 			case CSelectionDrag(selection, change):
 				for (s in selection) 
 					if (s.draggable) s.handleDrag(change * -1);
@@ -1079,32 +1070,11 @@ class Charter extends UIState {
 		selection = [];
 		var v = redoList.shift();
 		switch(v) {
-			case null:
-				// do nothing
+			case null: // do nothing
 			case CCreateSelection(selection):
-				selection.loop(function (n:CharterNote) {
-					notesGroup.add(n);
-					n.revive();
-				}, function (e:CharterEvent) {
-					eventsGroup.add(e);
-					e.revive();
-				});
+				createSelection(selection, false);
 			case CDeleteSelection(selection):
-				selection.loop(function (n:CharterNote) {
-					notesGroup.remove(n, true);
-					n.kill();
-				}, function (e:CharterEvent) {
-					eventsGroup.remove(e, true);
-					e.kill();
-				});
-			case CPlaceNote(note):
-				notesGroup.add(note);
-				note.revive();
-			case CPlaceEvent(event):
-				eventsGroup.add(event);
-				event.revive();
-			case CEditEvent(event, oldEvents, newEvents):
-				//
+				deleteSelection(selection, false);
 			case CSustainChange(changes):
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.after, n.note.type);
@@ -1264,7 +1234,6 @@ class Charter extends UIState {
 	public function updateBPMEvents(newEvent:CharterEvent) {
 		buildEvents();
 
-		// Za BPM
 		Conductor.mapBPMChanges(PlayState.SONG);
 		Conductor.changeBPM(PlayState.SONG.meta.bpm, cast PlayState.SONG.meta.beatsPerMesure.getDefault(4), cast PlayState.SONG.meta.stepsPerBeat.getDefault(4));
 
@@ -1276,13 +1245,10 @@ class Charter extends UIState {
 }
 
 enum CharterChange {
-	CPlaceNote(note:CharterNote);
-	CSustainChange(notes:Array<NoteSustainChange>);
-	CPlaceEvent(event:CharterEvent); // TODO
-	CEditEvent(event:CharterEvent, oldEvents:Array<ChartEvent>, newEvents:Array<ChartEvent>); // TODO
 	CCreateSelection(selection:Selection);
 	CDeleteSelection(selection:Selection);
 	CSelectionDrag(selection:Selection, change:FlxPoint);
+	CSustainChange(notes:Array<NoteSustainChange>);
 	CCreateStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
 	CDeleteStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
 }
