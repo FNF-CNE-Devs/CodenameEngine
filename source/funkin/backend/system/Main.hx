@@ -63,6 +63,9 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
+
+		instance = this;
+
 		CrashHandler.init();
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));

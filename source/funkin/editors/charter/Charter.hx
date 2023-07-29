@@ -622,7 +622,7 @@ class Charter extends UIState {
 				}
 		}
 
-		if (gridActionType == NONE && mousePos.x < 0) {
+		if (gridActionType == NONE && mousePos.x < 0 && mousePos.x > -addEventSpr.bWidth) {
 			addEventSpr.incorporeal = false;
 			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0.75, 0.25);
 			var event = getHoveredEvent(mousePos.y);
@@ -677,8 +677,15 @@ class Charter extends UIState {
 		}, function (e:CharterEvent) {
 			eventsGroup.add(e);
 			e.revive();
-		});
+			e.refreshEventIcons();
+		}, false);
 		sortNotes();
+
+		for (s in selection)
+			if (s is CharterEvent) {
+				Charter.instance.updateBPMEvents();
+				break;
+			}
 
 		if (addToUndo)
 			this.addToUndo(CCreateSelection(selection));
@@ -699,6 +706,12 @@ class Charter extends UIState {
 			}
 		}
 		sortNotes();
+
+		for (s in selection)
+			if (s is CharterEvent) {
+				Charter.instance.updateBPMEvents();
+				break;
+			}
 
 		if (addToUndo)
 			this.addToUndo(CDeleteSelection(selection));
@@ -1035,21 +1048,26 @@ class Charter extends UIState {
 		var v = undoList.shift();
 		switch(v) {
 			case null: // do nothing
-			case CCreateSelection(selection):
-				deleteSelection(selection, false);
-			case CDeleteSelection(selection):
-				createSelection(selection, false);
-			case CSustainChange(changes):
-				for(n in changes)
-					n.note.updatePos(n.note.step, n.note.id, n.before, n.note.type);
-			case CSelectionDrag(selection, change):
-				for (s in selection) 
-					if (s.draggable) s.handleDrag(change * -1);
-				this.selection = selection;
 			case CDeleteStrumLine(strumLineID, strumLine):
 				createStrumline(strumLineID, strumLine, false);
 			case CCreateStrumLine(strumLineID, strumLine):
 				deleteStrumline(strumLineID, false);
+			case CCreateSelection(selection):
+				deleteSelection(selection, false);
+			case CDeleteSelection(selection):
+				createSelection(selection, false);
+			case CSelectionDrag(selection, change):
+				for (s in selection) 
+					if (s.draggable) s.handleDrag(change * -1);
+				this.selection = selection;
+			case CEditSustains(changes):
+				for(n in changes)
+					n.note.updatePos(n.note.step, n.note.id, n.before, n.note.type);
+			case CEditEvent(event, oldEvents, newEvents):
+				event.events = oldEvents.copy();
+				event.refreshEventIcons();
+
+				Charter.instance.updateBPMEvents();
 		}
 		if (v != null)
 			redoList.insert(0, v);
@@ -1071,21 +1089,26 @@ class Charter extends UIState {
 		var v = redoList.shift();
 		switch(v) {
 			case null: // do nothing
-			case CCreateSelection(selection):
-				createSelection(selection, false);
-			case CDeleteSelection(selection):
-				deleteSelection(selection, false);
-			case CSustainChange(changes):
-				for(n in changes)
-					n.note.updatePos(n.note.step, n.note.id, n.after, n.note.type);
-			case CSelectionDrag(selection, change):
-				for (s in selection) 
-					if (s.draggable) s.handleDrag(change);
-				this.selection = selection;
 			case CDeleteStrumLine(strumLineID, strumLine):
 				deleteStrumline(strumLineID, false);
 			case CCreateStrumLine(strumLineID, strumLine):
 				createStrumline(strumLineID, strumLine, false);
+			case CCreateSelection(selection):
+				createSelection(selection, false);
+			case CDeleteSelection(selection):
+				deleteSelection(selection, false);
+			case CSelectionDrag(selection, change):
+				for (s in selection) 
+					if (s.draggable) s.handleDrag(change);
+				this.selection = selection;
+			case CEditSustains(changes):
+				for(n in changes)
+					n.note.updatePos(n.note.step, n.note.id, n.after, n.note.type);
+			case CEditEvent(event, oldEvents, newEvents):
+				event.events = newEvents.copy();
+				event.refreshEventIcons();
+
+				Charter.instance.updateBPMEvents();
 		}
 		if (v != null)
 			undoList.insert(0, v);
@@ -1174,7 +1197,7 @@ class Charter extends UIState {
 	function changeNoteSustain(change:Float) {
 		if (selection.length <= 0 || change == 0) return;
 
-		addToUndo(CSustainChange([
+		addToUndo(CEditSustains([
 			for(s in selection) {
 				if (s is CharterNote) {
 					var n:CharterNote = cast(s, CharterNote);
@@ -1231,7 +1254,7 @@ class Charter extends UIState {
 		}
 	}
 
-	public function updateBPMEvents(newEvent:CharterEvent) {
+	public function updateBPMEvents() {
 		buildEvents();
 
 		Conductor.mapBPMChanges(PlayState.SONG);
@@ -1245,12 +1268,13 @@ class Charter extends UIState {
 }
 
 enum CharterChange {
+	CCreateStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
+	CDeleteStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
 	CCreateSelection(selection:Selection);
 	CDeleteSelection(selection:Selection);
 	CSelectionDrag(selection:Selection, change:FlxPoint);
-	CSustainChange(notes:Array<NoteSustainChange>);
-	CCreateStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
-	CDeleteStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
+	CEditSustains(notes:Array<NoteSustainChange>);
+	CEditEvent(event:CharterEvent, oldEvents:Array<ChartEvent>, newEvents:Array<ChartEvent>);
 }
 
 enum CharterCopyboardObject {
@@ -1269,11 +1293,11 @@ typedef NoteSustainChange = {
 		this = array == null ? [] : array;
 
 	// too lazy to put this in every for loop so i made it a abstract
-	public inline function loop(onNote:CharterNote->Void, ?onEvent:CharterEvent->Void) {
+	public inline function loop(onNote:CharterNote->Void, ?onEvent:CharterEvent->Void, ?draggableOnly:Bool = true) {
 		for (s in this) {
-			if (s is CharterNote && onNote != null && s.draggable)
+			if (s is CharterNote && onNote != null && (draggableOnly ? s.draggable: true))
 				onNote(cast(s, CharterNote));
-			else if (s is CharterEvent && onEvent != null && s.draggable)
+			else if (s is CharterEvent && onEvent != null && (draggableOnly ? s.draggable: true))
 				onEvent(cast(s, CharterEvent));
 		}
 	}

@@ -197,6 +197,9 @@
 
 	<haxeflag name="--macro" value="exclude('funkin.backend.system.updating')" unless="UPDATE_CHECKING"/>
 
+	<!-- Fix compiling issues -->
+	<setenv name="HAXEPATH" value="./"/>
+
 	<haxedef name="HXCPP_CHECK_POINTER" if="release" />
 	<haxedef name="HXCPP_STACK_LINE" if="release" />
 	<haxedef name="HXCPP_DEBUG_LINK" if="release" />
