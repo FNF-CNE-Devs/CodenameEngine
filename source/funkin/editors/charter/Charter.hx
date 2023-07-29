@@ -677,6 +677,7 @@ class Charter extends UIState {
 		}, function (e:CharterEvent) {
 			eventsGroup.add(e);
 			e.revive();
+			e.refreshEventIcons();
 		});
 		sortNotes();
 
@@ -1035,21 +1036,26 @@ class Charter extends UIState {
 		var v = undoList.shift();
 		switch(v) {
 			case null: // do nothing
-			case CCreateSelection(selection):
-				deleteSelection(selection, false);
-			case CDeleteSelection(selection):
-				createSelection(selection, false);
-			case CSustainChange(changes):
-				for(n in changes)
-					n.note.updatePos(n.note.step, n.note.id, n.before, n.note.type);
-			case CSelectionDrag(selection, change):
-				for (s in selection) 
-					if (s.draggable) s.handleDrag(change * -1);
-				this.selection = selection;
 			case CDeleteStrumLine(strumLineID, strumLine):
 				createStrumline(strumLineID, strumLine, false);
 			case CCreateStrumLine(strumLineID, strumLine):
 				deleteStrumline(strumLineID, false);
+			case CCreateSelection(selection):
+				deleteSelection(selection, false);
+			case CDeleteSelection(selection):
+				createSelection(selection, false);
+			case CSelectionDrag(selection, change):
+				for (s in selection) 
+					if (s.draggable) s.handleDrag(change * -1);
+				this.selection = selection;
+			case CEditSustains(changes):
+				for(n in changes)
+					n.note.updatePos(n.note.step, n.note.id, n.before, n.note.type);
+			case CEditEvent(event, oldEvents, newEvents):
+				event.events = oldEvents.copy();
+				event.refreshEventIcons();
+
+				Charter.instance.updateBPMEvents(event);
 		}
 		if (v != null)
 			redoList.insert(0, v);
@@ -1071,21 +1077,26 @@ class Charter extends UIState {
 		var v = redoList.shift();
 		switch(v) {
 			case null: // do nothing
-			case CCreateSelection(selection):
-				createSelection(selection, false);
-			case CDeleteSelection(selection):
-				deleteSelection(selection, false);
-			case CSustainChange(changes):
-				for(n in changes)
-					n.note.updatePos(n.note.step, n.note.id, n.after, n.note.type);
-			case CSelectionDrag(selection, change):
-				for (s in selection) 
-					if (s.draggable) s.handleDrag(change);
-				this.selection = selection;
 			case CDeleteStrumLine(strumLineID, strumLine):
 				deleteStrumline(strumLineID, false);
 			case CCreateStrumLine(strumLineID, strumLine):
 				createStrumline(strumLineID, strumLine, false);
+			case CCreateSelection(selection):
+				createSelection(selection, false);
+			case CDeleteSelection(selection):
+				deleteSelection(selection, false);
+			case CSelectionDrag(selection, change):
+				for (s in selection) 
+					if (s.draggable) s.handleDrag(change);
+				this.selection = selection;
+			case CEditSustains(changes):
+				for(n in changes)
+					n.note.updatePos(n.note.step, n.note.id, n.after, n.note.type);
+			case CEditEvent(event, oldEvents, newEvents):
+				event.events = newEvents.copy();
+				event.refreshEventIcons();
+
+				Charter.instance.updateBPMEvents(event);
 		}
 		if (v != null)
 			undoList.insert(0, v);
@@ -1174,7 +1185,7 @@ class Charter extends UIState {
 	function changeNoteSustain(change:Float) {
 		if (selection.length <= 0 || change == 0) return;
 
-		addToUndo(CSustainChange([
+		addToUndo(CEditSustains([
 			for(s in selection) {
 				if (s is CharterNote) {
 					var n:CharterNote = cast(s, CharterNote);
@@ -1245,12 +1256,13 @@ class Charter extends UIState {
 }
 
 enum CharterChange {
+	CCreateStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
+	CDeleteStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
 	CCreateSelection(selection:Selection);
 	CDeleteSelection(selection:Selection);
 	CSelectionDrag(selection:Selection, change:FlxPoint);
-	CSustainChange(notes:Array<NoteSustainChange>);
-	CCreateStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
-	CDeleteStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
+	CEditSustains(notes:Array<NoteSustainChange>);
+	CEditEvent(event:CharterEvent, oldEvents:Array<ChartEvent>, newEvents:Array<ChartEvent>);
 }
 
 enum CharterCopyboardObject {

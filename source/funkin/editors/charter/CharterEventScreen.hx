@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.backend.chart.ChartData.ChartEvent;
 import funkin.backend.system.Conductor;
 import flixel.group.FlxGroup;
 import funkin.editors.charter.EventsData;
@@ -10,6 +11,9 @@ using StringTools;
 class CharterEventScreen extends UISubstateWindow {
 	public var cam:FlxCamera;
 	public var chartEvent:CharterEvent;
+
+	public var step:Float = 0;
+	public var events:Array<ChartEvent> = [];
 
 	public var iconsPanel:FlxGroup;
 
@@ -22,19 +26,25 @@ class CharterEventScreen extends UISubstateWindow {
 	public var saveButton:UIButton;
 	public var deleteButton:UIButton;
 
-	public function new(chartEvent:CharterEvent) {
+	public function new(step:Float, ?chartEvent:Null<CharterEvent>) {
+		if (chartEvent != null) this.chartEvent = chartEvent;
+		this.step = step;
 		super();
-		this.chartEvent = chartEvent;
 	}
 
 	public override function create() {
-		winTitle = "Event group properties";
+		var creatingEvent:Bool = chartEvent == null;
+		if (creatingEvent) chartEvent = new CharterEvent(step, []);
+
+		winTitle = creatingEvent ? "Create Event Group" : "Edit Event Group";
 		winWidth = 960;
 
 		super.create();
 
 		FlxG.sound.music.pause(); // prevent the song from continuing
 		Charter.instance.vocals.pause();
+
+		events = chartEvent.events.copy();
 
 		var bg:FlxSprite = new FlxSprite(windowSpr.x + 1, windowSpr.y + 31, Paths.image('editors/ui/scrollbar-bg'));
 		bg.setGraphicSize(30, windowSpr.bHeight - 32);
@@ -46,12 +56,12 @@ class CharterEventScreen extends UISubstateWindow {
 
 		addButton = new UIButton(windowSpr.x + 1, windowSpr.y + 31, "", function() {
 			openSubState(new CharterEventTypeSelection(function(eventName) {
-				chartEvent.events.push({
+				events.push({
 					time: Conductor.getTimeForStep(chartEvent.step),
 					params: [],
 					name: eventName
 				});
-				changeTab(chartEvent.events.length-1);
+				changeTab(events.length-1);
 			}));
 		});
 		addButton.bWidth = addButton.bHeight = 30;
@@ -69,8 +79,22 @@ class CharterEventScreen extends UISubstateWindow {
 			saveCurTab();
 			chartEvent.refreshEventIcons();
 
-			if (chartEvent.events.length <= 0)
-				Charter.instance.eventsGroup.remove(chartEvent, true);
+			if (events.length <= 0) 
+				Charter.instance.deleteSelection([chartEvent]);
+			else {
+				var oldEvents:Array<ChartEvent> = chartEvent.events.copy();
+				chartEvent.events = events;
+
+				if (creatingEvent)
+					Charter.instance.createSelection([chartEvent]);	
+				else {
+					chartEvent.events = events;
+					chartEvent.refreshEventIcons();
+
+					Charter.instance.addToUndo(CEditEvent(chartEvent, oldEvents, events.copy()));
+				}
+			}
+
 			close();
 			Charter.instance.updateBPMEvents(chartEvent);
 		});
@@ -80,7 +104,7 @@ class CharterEventScreen extends UISubstateWindow {
 
 		deleteButton = new UIButton(saveButton.x - 10, saveButton.y, "Delete", function() {
 			if (curEvent >= 0) {
-				chartEvent.events.splice(curEvent, 1);
+				events.splice(curEvent, 1);
 				changeTab(curEvent, false);
 			}
 		});
@@ -106,9 +130,9 @@ class CharterEventScreen extends UISubstateWindow {
 			paramsPanel.remove(e);
 		}
 
-		if (id >= 0 && id < chartEvent.events.length) {
+		if (id >= 0 && id < events.length) {
 			curEvent = id;
-			var curEvent = chartEvent.events[curEvent];
+			var curEvent = events[curEvent];
 			eventName.text = curEvent.name;
 			// add new elements
 			var y:Float = eventName.y + eventName.height + 10;
@@ -176,7 +200,7 @@ class CharterEventScreen extends UISubstateWindow {
 		while(iconsPanel.members.length > 0)
 			iconsPanel.remove(iconsPanel.members[0], true).destroy();
 
-		for(k=>e in chartEvent.events) {
+		for(k=>e in events) {
 			var butt = new UIButton(windowSpr.x + 1, windowSpr.y + 66 + (k*30), "", function() {
 				changeTab(k);
 			});
@@ -197,10 +221,10 @@ class CharterEventScreen extends UISubstateWindow {
 	public function saveCurTab() {
 		if (curEvent < 0) return;
 
-		chartEvent.events[curEvent].params = [
+		events[curEvent].params = [
 			for(p in paramsFields) {
 				if (p is UIDropDown) {
-					var dataParams = EventsData.getEventParams(chartEvent.events[curEvent].name);
+					var dataParams = EventsData.getEventParams(events[curEvent].name);
 					if (dataParams[paramsFields.indexOf(p)].type == TStrumLine) cast(p, UIDropDown).index;
 					else cast(p, UIDropDown).label.text;
 				}
