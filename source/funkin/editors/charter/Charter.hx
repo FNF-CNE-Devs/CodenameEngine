@@ -622,7 +622,7 @@ class Charter extends UIState {
 				}
 		}
 
-		if (gridActionType == NONE && mousePos.x < 0) {
+		if (gridActionType == NONE && mousePos.x < 0 && mousePos.x > -addEventSpr.bWidth) {
 			addEventSpr.incorporeal = false;
 			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0.75, 0.25);
 			var event = getHoveredEvent(mousePos.y);
@@ -678,8 +678,14 @@ class Charter extends UIState {
 			eventsGroup.add(e);
 			e.revive();
 			e.refreshEventIcons();
-		});
+		}, false);
 		sortNotes();
+
+		for (s in selection)
+			if (s is CharterEvent) {
+				Charter.instance.updateBPMEvents();
+				break;
+			}
 
 		if (addToUndo)
 			this.addToUndo(CCreateSelection(selection));
@@ -700,6 +706,12 @@ class Charter extends UIState {
 			}
 		}
 		sortNotes();
+
+		for (s in selection)
+			if (s is CharterEvent) {
+				Charter.instance.updateBPMEvents();
+				break;
+			}
 
 		if (addToUndo)
 			this.addToUndo(CDeleteSelection(selection));
@@ -1055,7 +1067,7 @@ class Charter extends UIState {
 				event.events = oldEvents.copy();
 				event.refreshEventIcons();
 
-				Charter.instance.updateBPMEvents(event);
+				Charter.instance.updateBPMEvents();
 		}
 		if (v != null)
 			redoList.insert(0, v);
@@ -1096,7 +1108,7 @@ class Charter extends UIState {
 				event.events = newEvents.copy();
 				event.refreshEventIcons();
 
-				Charter.instance.updateBPMEvents(event);
+				Charter.instance.updateBPMEvents();
 		}
 		if (v != null)
 			undoList.insert(0, v);
@@ -1242,7 +1254,7 @@ class Charter extends UIState {
 		}
 	}
 
-	public function updateBPMEvents(newEvent:CharterEvent) {
+	public function updateBPMEvents() {
 		buildEvents();
 
 		Conductor.mapBPMChanges(PlayState.SONG);
@@ -1281,11 +1293,11 @@ typedef NoteSustainChange = {
 		this = array == null ? [] : array;
 
 	// too lazy to put this in every for loop so i made it a abstract
-	public inline function loop(onNote:CharterNote->Void, ?onEvent:CharterEvent->Void) {
+	public inline function loop(onNote:CharterNote->Void, ?onEvent:CharterEvent->Void, ?draggableOnly:Bool = true) {
 		for (s in this) {
-			if (s is CharterNote && onNote != null && s.draggable)
+			if (s is CharterNote && onNote != null && (draggableOnly ? s.draggable: true))
 				onNote(cast(s, CharterNote));
-			else if (s is CharterEvent && onEvent != null && s.draggable)
+			else if (s is CharterEvent && onEvent != null && (draggableOnly ? s.draggable: true))
 				onEvent(cast(s, CharterEvent));
 		}
 	}

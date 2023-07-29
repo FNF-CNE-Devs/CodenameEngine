@@ -96,7 +96,7 @@ class CharterEventScreen extends UISubstateWindow {
 			}
 
 			close();
-			Charter.instance.updateBPMEvents(chartEvent);
+			Charter.instance.updateBPMEvents();
 		});
 		saveButton.x -= saveButton.bWidth;
 		saveButton.y -= saveButton.bHeight;

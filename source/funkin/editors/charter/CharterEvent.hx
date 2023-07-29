@@ -77,10 +77,8 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 		return (selectionBox.x + selectionBox.bWidth > x) && (selectionBox.x < x + bWidth) && (selectionBox.y + selectionBox.bHeight > y) && (selectionBox.y < y + bHeight);
 	}
 
-	public function handleDrag(change:FlxPoint) {
+	public function handleDrag(change:FlxPoint)
 		y = ((step += change.x) * 40) - 17;
-		Charter.instance.updateBPMEvents(this);
-	}
 
 	public function refreshEventIcons() {
 		while(icons.length > 0) {
