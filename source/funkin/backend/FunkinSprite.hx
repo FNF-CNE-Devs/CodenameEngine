@@ -125,15 +125,6 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public function measureHit(curMeasure:Int)
 	{
 	}
-
-	public override function getScreenBounds(?newRect:FlxRect, ?camera:FlxCamera):FlxRect
-	{
-		__doPreZoomScaleProcedure(camera);
-		var r = super.getScreenBounds(newRect, camera);
-		__doPostZoomScaleProcedure();
-		return r;
-	}
-
 	public override function drawComplex(camera:FlxCamera)
 	{
 		super.drawComplex(camera);

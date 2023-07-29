@@ -5,6 +5,7 @@ import flixel.graphics.frames.FlxFrame;
 class UIButton extends UISliceSprite {
 	public var callback:Void->Void = null;
 	public var field:UIText;
+	public var shouldPress = true;
 
 	public override function new(x:Float, y:Float, text:String, callback:Void->Void, w:Int = 120, h:Int = 32) {
 		super(x, y, w, h, 'editors/ui/button');
@@ -27,13 +28,13 @@ class UIButton extends UISliceSprite {
 
 	public override function onHovered() {
 		super.onHovered();
-		if (FlxG.mouse.justReleased && callback != null)
+		if (FlxG.mouse.justReleased && callback != null && shouldPress)
 			callback();
 	}
 
 	public override function update(elapsed:Float) {
-		super.update(elapsed);
 		field.follow(this, 0, (bHeight - field.height) / 2);
+		super.update(elapsed);
 	}
 
 	public override function draw() {
