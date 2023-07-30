@@ -1,6 +1,6 @@
 package funkin.editors.charter;
 
-import funkin.editors.charter.EventsData;
+import funkin.backend.chart.EventsData;
 
 class CharterEventTypeSelection extends UISubstateWindow {
 	var callback:String->Void;

@@ -1,4 +1,4 @@
-package funkin.editors.charter;
+package funkin.backend.chart;
 
 import hscript.Parser;
 import hscript.Interp;

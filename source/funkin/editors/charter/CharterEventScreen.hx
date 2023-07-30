@@ -3,7 +3,7 @@ package funkin.editors.charter;
 import funkin.backend.chart.ChartData.ChartEvent;
 import funkin.backend.system.Conductor;
 import flixel.group.FlxGroup;
-import funkin.editors.charter.EventsData;
+import funkin.backend.chart.EventsData;
 import flixel.util.FlxColor;
 
 using StringTools;

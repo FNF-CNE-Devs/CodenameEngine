@@ -1,6 +1,6 @@
 package funkin.game;
 
-import funkin.editors.charter.EventsData;
+import funkin.backend.chart.EventsData;
 import funkin.backend.system.RotatingSpriteGroup;
 import funkin.editors.charter.Charter;
 import funkin.savedata.FunkinSave;
