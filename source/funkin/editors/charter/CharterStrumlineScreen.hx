@@ -10,7 +10,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 	public var strumLineID:Int = -1;
 	public var strumLine:ChartStrumLine;
 
-	public var charactersTextBox:UITextBox;
+	public var charactersList:UIButtonList;
 	public var typeDropdown:UIDropDown;
 	public var stagePositionDropdown:UIDropDown;
 	public var hudScaleStepper:UINumericStepper;
@@ -45,7 +45,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 				visible: true
 			};
 
-		winTitle = creatingStrumLine ? 'Creating Strumline #$strumLineID' : 'Strumline #$strumLineID properties';
+		winTitle = creatingStrumLine ? 'Creating strumline #$strumLineID' : 'Editting strumline #$strumLineID properties';
 		winWidth = 690; winHeight = 390;
 
 		FlxG.sound.music.pause();
@@ -56,23 +56,18 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		function addLabelOn(ui:UISprite, text:String)
 			add(new UIText(ui.x, ui.y - 24, 0, text));
 
-		var title:UIText;
-		add(title = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, creatingStrumLine ? "Create New Strumline" : "Edit Strumline Properties", 28));
+		charactersList = new UIButtonList(15, 43, 250, 330, "", () -> charactersList.add(new CharacterButton(0,0,"New Char", charactersList)), 2, 2);
+		for (i in strumLine.characters) charactersList.add(new CharacterButton(0,0,i, charactersList));
+		charactersList.cameraSpacing = 2;
+		add(charactersList);
 
-		charactersTextBox = new UITextBox(title.x, title.y + title.height + 38, strumLine.characters.join(", "));
-		charactersTextBox.onChange = (newChars:String) -> {
-			updateCharacterIcons([for (char in newChars.split(",")) char.trim()]);
-		};
-		add(charactersTextBox);
-		addLabelOn(charactersTextBox, "Characters");
+		charactersList.frames = Paths.getFrames('editors/ui/inputbox');
 
-		updateCharacterIcons(strumLine.characters);
-
-		typeDropdown = new UIDropDown(charactersTextBox.x, charactersTextBox.y + 32 + 58, 200, 32, ["OPPONENT", "PLAYER", "ADDITIONAL"], strumLine.type);
+		typeDropdown = new UIDropDown(charactersList.x + 265, charactersList.y + 20, 200, 32, ["OPPONENT", "PLAYER", "ADDITIONAL"], strumLine.type);
 		add(typeDropdown);
 		addLabelOn(typeDropdown, "Type");
 
-		usesChartscrollSpeed = new UICheckbox(typeDropdown.x + 200 - 32 + 26, typeDropdown.y + 32 + 58, "Uses charts scroll speed?", strumLine.scrollSpeed == null);
+		usesChartscrollSpeed = new UICheckbox(typeDropdown.x + 104, typeDropdown.y + 130, "Uses charts scroll speed?", strumLine.scrollSpeed == null);
 		usesChartscrollSpeed.onChecked = function(b) {
 			if(b)
 			{
@@ -84,7 +79,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		}
 		add(usesChartscrollSpeed);
 
-		scrollSpeedStepper = new UINumericStepper(typeDropdown.x, typeDropdown.y + 32 + 58, usesChartscrollSpeed.checked ? PlayState.SONG.scrollSpeed : strumLine.scrollSpeed, 0.1, 2, 0, 10, 82);
+		scrollSpeedStepper = new UINumericStepper(typeDropdown.x, typeDropdown.y + 128, usesChartscrollSpeed.checked ? PlayState.SONG.scrollSpeed : strumLine.scrollSpeed, 0.1, 2, 0, 10, 82);
 		if(usesChartscrollSpeed.checked)
 		{
 			scrollSpeedStepper.selectable = false;
@@ -100,7 +95,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		add(stagePositionDropdown);
 		addLabelOn(stagePositionDropdown, "Stage Position");
 
-		hudScaleStepper = new UINumericStepper(stagePositionDropdown.x + 200 - 32 + 26, stagePositionDropdown.y, strumLine.strumScale == null ? 1 : strumLine.strumScale, 0.001, 2, null, null, 74);
+		hudScaleStepper = new UINumericStepper(typeDropdown.x, typeDropdown.y + 64, strumLine.strumScale == null ? 1 : strumLine.strumScale, 0.001, 2, null, null, 74);
 		add(hudScaleStepper);
 		addLabelOn(hudScaleStepper, "Scale");
 
@@ -133,34 +128,16 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		closeButton.x -= closeButton.bWidth;
 	}
 
-	function updateCharacterIcons(characters:Array<String>) {
-		for (icon in characterIcons) {
-			remove(icon);
-			icon.destroy();
-		}
-		characterIcons = [];
-
-		for (i => char in characters) {
-			var iconSprite = new HealthIcon(Character.getIconFromCharName(char));
-			iconSprite.scrollFactor.set(1,1);
-			iconSprite.scale.set(0.5, 0.5);
-			iconSprite.updateHitbox();
-
-			iconSprite.setPosition(
-				charactersTextBox.x + 320 + 8 + ((iconSprite.width + 4) * i),
-				(charactersTextBox.y + 16) - (iconSprite.height/2)
-			);
-			add(iconSprite);
-			characterIcons.push(iconSprite);
-		}
-	}
-
 	function saveStrumline() {
 		for (stepper in [hudXStepper, hudYStepper, hudScaleStepper])
 			@:privateAccess stepper.__onChange(stepper.label.text);
 
 		strumLine = {
-			characters: [for (char in charactersTextBox.label.text.split(",")) char.trim()],
+			characters: [for (char in charactersList.buttons.members)
+			if(char is CharacterButton) {
+				var char:CharacterButton = cast char;
+				char.textBox.label.text.trim();
+			}],
 			type: typeDropdown.index,
 			notes: strumLine.notes,
 			position: ["DAD", "BOYFRIEND", "GIRLFRIEND"][stagePositionDropdown.index].toLowerCase(),
@@ -171,4 +148,39 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		if(!usesChartscrollSpeed.checked) strumLine.scrollSpeed = scrollSpeedStepper.value;
 		if (onSave != null) onSave(strumLine);
 	}
+}
+class CharacterButton extends UIButton {
+	public var charIcon:HealthIcon;
+	public var textBox:UITextBox;
+	public var deleteButton:UIButton;
+	public var deleteIcon:FlxSprite;
+	public function new(x:Float, y:Float, char:String, parent:UIButtonList) {
+		charIcon = new HealthIcon(char);
+		charIcon.scale.set(0.5, 0.5);
+		charIcon.updateHitbox();
+		super(x, y, "", null, 246, Math.floor(charIcon.height));
+		charIcon.setPosition(x + 10, bHeight/2 - charIcon.height / 2);
+		members.push(charIcon);
+		members.remove(field);
+		members.push(textBox = new UITextBox(95, bHeight/2 - 16, char, 100));
+		textBox.onChange = function(char:String) {
+			charIcon.loadGraphic(Assets.exists(Paths.image("icons/" + char)) ? Paths.image("icons/" + char) : Paths.image("icons/face"), true, 150, 150);
+			charIcon.updateHitbox();
+		}
+		deleteButton = new UIButton(textBox.x + 105, y, "", function () {
+			parent.remove(this);
+		}, 32);
+		deleteButton.color = 0xFFFF0000;
+		members.push(deleteButton);
+		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 8).loadGraphic(Paths.image('editors/character/delete-button'));
+		deleteIcon.antialiasing = false;
+		members.push(deleteIcon);
+	}
+	override function update(elapsed) {
+		charIcon.y = y + bHeight / 2 - charIcon.height / 2;
+		deleteButton.y = y + bHeight / 2 - deleteButton.bHeight / 2;
+		textBox.y = y + bHeight/2 - 16;
+		deleteIcon.x = deleteButton.x + (15/2); deleteIcon.y = deleteButton.y + 8;
+		super.update(elapsed);
+	} 
 }
