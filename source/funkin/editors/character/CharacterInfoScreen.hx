@@ -120,6 +120,7 @@ class CharacterInfoScreen extends UISubstateWindow {
 			close();
 		}, 125);
 		closeButton.x -= closeButton.bWidth;
+		closeButton.color = 0xFFFF0000;
 		add(closeButton);
 		add(saveButton);
 	}

@@ -27,7 +27,6 @@ class MetaDataScreen extends UISubstateWindow {
 	public function new(metadata:ChartMetaData) {
 		super();
 		this.metadata = metadata;
-		trace(metadata);
 	}
 
 	public override function create() {
@@ -108,6 +107,7 @@ class MetaDataScreen extends UISubstateWindow {
 		closeButton = new UIButton(saveButton.x - 20, saveButton.y, "Close", function() {
 			close();
 		}, 125);
+		closeButton.color = 0xFFFF0000;
 		closeButton.x -= closeButton.bWidth;
 		//closeButton.y -= closeButton.bHeight;
 		add(closeButton);
