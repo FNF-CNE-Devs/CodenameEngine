@@ -9,7 +9,6 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import funkin.backend.assets.ModsFolder;
 import funkin.backend.scripting.Script;
-import animateatlas.AtlasFrameMaker;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.graphics.FlxGraphic;
@@ -215,10 +214,6 @@ class Paths
 							f.parent = frames.parent;
 						}
 			return finalFrames;
-		} else if (!SkipAtlasCheck && Assets.exists('$noExt/Animation.json')
-		&& Assets.exists('$noExt/spritemap.json')
-		&& Assets.exists('$noExt/spritemap.png')) {
-			return AtlasFrameMaker.construct(noExt);
 		} else if (Assets.exists('$noExt.xml')) {
 			return Paths.getSparrowAtlasAlt(noExt);
 		} else if (Assets.exists('$noExt.txt')) {
