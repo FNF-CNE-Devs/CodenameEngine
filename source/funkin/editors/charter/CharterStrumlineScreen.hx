@@ -45,7 +45,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 				visible: true
 			};
 
-		winTitle = creatingStrumLine ? 'Creating strumline #$strumLineID' : 'Editting strumline #$strumLineID properties';
+		winTitle = creatingStrumLine ? 'Creating strumline #$strumLineID' : 'Editing strumline #$strumLineID properties';
 		winWidth = 690; winHeight = 390;
 
 		FlxG.sound.music.pause();
@@ -67,7 +67,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		add(typeDropdown);
 		addLabelOn(typeDropdown, "Type");
 
-		usesChartscrollSpeed = new UICheckbox(typeDropdown.x + 104, typeDropdown.y + 130, "Uses charts scroll speed?", strumLine.scrollSpeed == null);
+		usesChartscrollSpeed = new UICheckbox(typeDropdown.x + 104, typeDropdown.y + 135, "Uses charts scroll speed?", strumLine.scrollSpeed == null);
 		usesChartscrollSpeed.onChecked = function(b) {
 			if(b)
 			{
@@ -125,6 +125,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			close();
 		}, 125);
 		add(closeButton);
+		closeButton.color = 0xFFFF0000;
 		closeButton.x -= closeButton.bWidth;
 	}
 
