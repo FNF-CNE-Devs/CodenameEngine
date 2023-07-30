@@ -79,13 +79,13 @@ class CharterEventScreen extends UISubstateWindow {
 			saveCurTab();
 			chartEvent.refreshEventIcons();
 
-			if (events.length <= 0) 
+			if (events.length <= 0 && !creatingEvent) 
 				Charter.instance.deleteSelection([chartEvent]);
-			else {
+			else if (events.length > 0) {
 				var oldEvents:Array<ChartEvent> = chartEvent.events.copy();
 				chartEvent.events = events;
 
-				if (creatingEvent)
+				if (creatingEvent && events.length > 0)
 					Charter.instance.createSelection([chartEvent]);	
 				else {
 					chartEvent.events = events;
