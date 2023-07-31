@@ -305,4 +305,12 @@ class Conductor
 
 		return bpmChange.stepTime + ((time - bpmChange.songTime) / ((60 / bpmChange.bpm) * 250));
 	}
+
+	public static inline function getMeasureLength()
+		return stepsPerBeat * beatsPerMesure;
+
+	public static inline function getMeasuresLength() {
+		if (FlxG.sound.music == null) return 0.0;
+		return getStepForTime(FlxG.sound.music.length) / getMeasureLength();
+	}
 }

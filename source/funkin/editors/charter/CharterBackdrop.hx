@@ -8,10 +8,10 @@ class CharterBackdrop extends FlxBackdrop {
 
 	public function new() {
 		super(null, Y, 0, 0);
-
+ 
 		makeGraphic(160, 160, 0xFF272727, true);
 		pixels.lock();
-
+ 
 		// Checkerboard
 		for(y in 0...4)
 			for(x in 0...2)
