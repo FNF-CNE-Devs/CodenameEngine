@@ -14,17 +14,15 @@ class CharterEventScreen extends UISubstateWindow {
 
 	public var step:Float = 0;
 	public var events:Array<ChartEvent> = [];
-
-	public var iconsPanel:FlxGroup;
+	public var eventsList:UIButtonList = null;
 
 	public var eventName:UIText;
 
 	public var paramsPanel:FlxGroup;
 	public var paramsFields:Array<FlxBasic> = [];
 	
-	public var addButton:UIButton;
 	public var saveButton:UIButton;
-	public var deleteButton:UIButton;
+	public var closeButton:UIButton;
 
 	public function new(step:Float, ?chartEvent:Null<CharterEvent>) {
 		if (chartEvent != null) this.chartEvent = chartEvent;
@@ -43,35 +41,19 @@ class CharterEventScreen extends UISubstateWindow {
 
 		FlxG.sound.music.pause(); // prevent the song from continuing
 		Charter.instance.vocals.pause();
-
+		eventsList = new UIButtonList(0,0,75, 570, "", ()->	openSubState(new CharterEventTypeSelection(function(eventName) {
+			events.push({
+				time: Conductor.getTimeForStep(chartEvent.step),
+				params: [],
+				name: eventName
+			});
+			eventsList.add(new EventButton(events[events.length-1], CharterEvent.generateEventIcon(events[events.length-1]), events.length-1, this, eventsList));
+			changeTab(events.length-1);
+		})), 1, 2);
 		events = chartEvent.events.copy();
-
-		var bg:FlxSprite = new FlxSprite(windowSpr.x + 1, windowSpr.y + 31, Paths.image('editors/ui/scrollbar-bg'));
-		bg.setGraphicSize(30, windowSpr.bHeight - 32);
-		bg.updateHitbox();
-		add(bg);
-
-		iconsPanel = new FlxGroup();
-		add(iconsPanel);
-
-		addButton = new UIButton(windowSpr.x + 1, windowSpr.y + 31, "", function() {
-			openSubState(new CharterEventTypeSelection(function(eventName) {
-				events.push({
-					time: Conductor.getTimeForStep(chartEvent.step),
-					params: [],
-					name: eventName
-				});
-				changeTab(events.length-1);
-			}));
-		});
-		addButton.bWidth = addButton.bHeight = 30;
-		add(addButton);
-
-		var addButtonIcon = new FlxSprite(addButton.x, addButton.y, Paths.image('editors/charter/add-button'));
-		addButtonIcon.x += (30 - addButtonIcon.width) / 2;
-		addButtonIcon.y += (30 - addButtonIcon.height) / 2;
-		add(addButtonIcon);
-
+		for (k=>i in events)
+			eventsList.add(new EventButton(i, CharterEvent.generateEventIcon(i), k, this, eventsList));
+		add(eventsList);
 		paramsPanel = new FlxGroup();
 		add(paramsPanel);
 
@@ -83,12 +65,22 @@ class CharterEventScreen extends UISubstateWindow {
 				Charter.instance.deleteSelection([chartEvent]);
 			else if (events.length > 0) {
 				var oldEvents:Array<ChartEvent> = chartEvent.events.copy();
-				chartEvent.events = events;
+				chartEvent.events = [for (i in eventsList.buttons.members) {
+					if(i is EventButton) {
+						var i:EventButton = cast i;
+						i.event;
+					}
+				}];
 
 				if (creatingEvent && events.length > 0)
 					Charter.instance.createSelection([chartEvent]);	
 				else {
-					chartEvent.events = events;
+					chartEvent.events = [for (i in eventsList.buttons.members) {
+						if(i is EventButton) {
+							var i:EventButton = cast i;
+							i.event;
+						}
+					}];
 					chartEvent.refreshEventIcons();
 
 					Charter.instance.addToUndo(CEditEvent(chartEvent, oldEvents, events.copy()));
@@ -102,16 +94,12 @@ class CharterEventScreen extends UISubstateWindow {
 		saveButton.y -= saveButton.bHeight;
 		add(saveButton);
 
-		deleteButton = new UIButton(saveButton.x - 10, saveButton.y, "Delete", function() {
-			if (curEvent >= 0) {
-				events.splice(curEvent, 1);
-				changeTab(curEvent, false);
-			}
-		});
-		deleteButton.x -= deleteButton.bWidth;
-		add(deleteButton);
+		closeButton = new UIButton(saveButton.x - 10, saveButton.y, "Close", ()->close());
+		closeButton.color = 0xFFFF0000;
+		closeButton.x -= closeButton.bWidth;
+		add(closeButton);
 
-		eventName = new UIText(windowSpr.x + addButton.bWidth + 15, windowSpr.y + 41, 0, "", 24);
+		eventName = new UIText(eventsList.bWidth + windowSpr.x + 15, windowSpr.y + 41, 0, "", 24);
 		add(eventName);
 
 		changeTab(0);
@@ -192,30 +180,6 @@ class CharterEventScreen extends UISubstateWindow {
 			eventName.text = "No event";
 			curEvent = -1;
 		}
-
-		refreshIcons();
-	}
-
-	public function refreshIcons() {
-		while(iconsPanel.members.length > 0)
-			iconsPanel.remove(iconsPanel.members[0], true).destroy();
-
-		for(k=>e in events) {
-			var butt = new UIButton(windowSpr.x + 1, windowSpr.y + 66 + (k*30), "", function() {
-				changeTab(k);
-			});
-			butt.bWidth = butt.bHeight = 30;
-			if (k == curEvent) {
-				butt.framesOffset = 18;
-				butt.active = false;
-			}
-			
-			iconsPanel.add(butt);
-
-			var icon = CharterEvent.generateEventIcon(e);
-			icon.setPosition(butt.x + ((butt.bWidth - icon.width) / 2), butt.y + ((butt.bHeight - icon.height) / 2));
-			iconsPanel.add(icon);
-		}
 	}
 
 	public function saveCurTab() {
@@ -246,5 +210,44 @@ class CharterEventScreen extends UISubstateWindow {
 					null;
 			}
 		];
+	}
+}
+class EventButton extends UIButton {
+	public var icon:FlxSprite = null;
+	public var event:ChartEvent = null;
+	public var deleteButton:UIButton;
+	public var deleteIcon:FlxSprite;
+	public function new(event:ChartEvent, icon:FlxSprite, id:Int, substate:CharterEventScreen, parent:UIButtonList) {
+		super(0,0,"",function() {
+			substate.changeTab(id);
+			for(i in parent.buttons.members) {
+				if(i is EventButton) {
+					var i:EventButton = cast i;
+					i.alpha = i == this ? 1 : 0.25;
+				}
+			}
+		},73,40);
+		members.push(icon);
+		this.icon = icon;
+		this.event = event;
+		icon.setPosition(18 - icon.width / 2, 20 - icon.height / 2);
+		deleteButton = new UIButton(bWidth - 30, y + (bHeight - 26) / 2, "", function () {
+			substate.events.splice(id, 1);
+			substate.changeTab(id, false);
+			parent.remove(this);
+		}, 26, 26);
+		deleteButton.color = FlxColor.RED;
+		members.push(deleteButton);
+
+		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 4).loadGraphic(Paths.image('editors/character/delete-button'));
+		
+		deleteIcon.antialiasing = false;
+		members.push(deleteIcon);
+	}
+	override function update(elapsed) {
+		super.update(elapsed);
+		icon.setPosition(x + (18 - icon.width / 2),y + (20 - icon.height / 2));
+		deleteButton.setPosition(x + (bWidth - 30), y + (bHeight - 26) / 2);
+		deleteIcon.setPosition(deleteButton.x + (10/2), deleteButton.y + 4);
 	}
 }

@@ -99,8 +99,7 @@ class UIButtonList extends UIWindow {
 		}
 		scrollY = FlxMath.bound(nextscrollY, 0, -_buttonYOffset + Math.abs(Math.min(bHeight - ((addButton.bHeight + _buttonYOffset) * buttons.members.length + (cameraSpacing + _buttonYOffset)), 0)));
 		for (button in buttons.members)
-			if (button != null) button.selectable = (hovered);
-		addButton.selectable = hovered;
+			if (button != null) button.selectable = (hovered && _curMoving == null);
 		if (__lastDrawCameras[0] != null) {
 			buttonCameras.height = bHeight - cameraSpacing;
 			buttonCameras.x = x - __lastDrawCameras[0].scroll.x;
