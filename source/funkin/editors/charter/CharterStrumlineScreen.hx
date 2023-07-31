@@ -150,11 +150,13 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		if (onSave != null) onSave(strumLine);
 	}
 }
+
 class CharacterButton extends UIButton {
 	public var charIcon:HealthIcon;
 	public var textBox:UITextBox;
 	public var deleteButton:UIButton;
 	public var deleteIcon:FlxSprite;
+
 	public function new(x:Float, y:Float, char:String, parent:UIButtonList) {
 		charIcon = new HealthIcon(char);
 		charIcon.scale.set(0.5, 0.5);
@@ -164,6 +166,7 @@ class CharacterButton extends UIButton {
 		members.push(charIcon);
 		members.remove(field);
 		members.push(textBox = new UITextBox(95, bHeight/2 - 16, char, 100));
+		textBox.antialiasing = true;
 		textBox.onChange = function(char:String) {
 			charIcon.loadGraphic(Assets.exists(Paths.image("icons/" + char)) ? Paths.image("icons/" + char) : Paths.image("icons/face"), true, 150, 150);
 			charIcon.updateHitbox();
@@ -177,6 +180,7 @@ class CharacterButton extends UIButton {
 		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);
 	}
+
 	override function update(elapsed) {
 		charIcon.y = y + bHeight / 2 - charIcon.height / 2;
 		deleteButton.y = y + bHeight / 2 - deleteButton.bHeight / 2;
