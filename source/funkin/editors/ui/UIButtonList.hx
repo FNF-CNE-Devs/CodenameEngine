@@ -14,6 +14,7 @@ class UIButtonList extends UIWindow {
 	public var addIcon:FlxSprite;
 	public var buttonCameras:FlxCamera;
 	public var cameraSpacing = 36;
+	public var dragging:Bool = false;
 
 	var _buttonXOffset:Float = 16;
 	var _buttonYOffset:Float = 16;
@@ -106,5 +107,6 @@ class UIButtonList extends UIWindow {
 			buttonCameras.y = y + cameraSpacing - __lastDrawCameras[0].scroll.y;
 			buttonCameras.zoom = __lastDrawCameras[0].zoom;
 		}
+		dragging = _curMoving != null;
 	}
 }

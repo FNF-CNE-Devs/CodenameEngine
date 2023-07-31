@@ -265,7 +265,7 @@ class CharacterEditor extends UIState {
 		if (character != null)
 			characterPropertiresWindow.characterInfo.text = '(${character.getNameList().length}) Animations\nFlipped: ${character.flipX}\nSprite: ${character.sprite}\nAnim: ${character.getAnimName()}\nOffset: (${character.frameOffset.x}, ${character.frameOffset.y})';
 
-		if (!(characterPropertiresWindow.hovered || characterAnimsWindow.hovered)) {
+		if (!(characterPropertiresWindow.hovered || characterAnimsWindow.hovered) && !characterAnimsWindow.dragging) {
 			if (FlxG.mouse.wheel != 0) {
 				zoom += 0.25 * FlxG.mouse.wheel;
 				__camZoom = Math.pow(2, zoom);
@@ -275,22 +275,22 @@ class CharacterEditor extends UIState {
 				closeCurrentContextMenu();
 				openContextMenu(topMenu[2].childs);
 			}
-		}
 
+			if (FlxG.mouse.justPressed) {
+				FlxG.mouse.getScreenPosition(charCamera, camDrag);
+				camDrag *= camDragSpeed;
+				camDrag += charCamera.scroll;
+			}
 
-		if (FlxG.mouse.justPressed) {
-			FlxG.mouse.getScreenPosition(charCamera, camDrag);
-			camDrag *= camDragSpeed;
-			camDrag += charCamera.scroll;
-		}
+			if (FlxG.mouse.pressed) {
+				var pos = FlxG.mouse.getScreenPosition(charCamera);
+				pos *= camDragSpeed;
+				nextScroll.set((camDrag.x - pos.x), (camDrag.y - pos.y));
 
-		if (FlxG.mouse.pressed) {
-			var pos = FlxG.mouse.getScreenPosition(charCamera);
-			pos *= camDragSpeed;
-			nextScroll.set((camDrag.x - pos.x), (camDrag.y - pos.y));
-
-			currentCursor = HAND;
-		} else
+				currentCursor = HAND;
+			} else
+				currentCursor = ARROW;
+		} else if (!FlxG.mouse.pressed)
 			currentCursor = ARROW;
 
 		charCamera.scroll.set(
