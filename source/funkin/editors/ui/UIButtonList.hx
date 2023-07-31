@@ -58,7 +58,7 @@ class UIButtonList extends UIWindow {
 						var i:UIButton = cast(i, UIButton);
 						i.selectable = true;
 					}
-				button.y = CoolUtil.fpsLerp(button.y, -scrollY + ((buttons.members[i-1] != null ? buttons.members[i-1].bHeight : 0) + _buttonYOffset) * i, 0.1);
+				button.y = CoolUtil.fpsLerp(button.y, -scrollY + ((buttons.members[i-1] != null ? buttons.members[i-1].bHeight : 0) + _buttonYOffset) * i, 0.25);
 				button.shouldPress = true;
 			}
 			if (button != addButton && button.hovered && FlxG.mouse.justPressed) _curMoving = button;
@@ -68,7 +68,7 @@ class UIButtonList extends UIWindow {
 			if (Math.abs(_curMovingInterval) > addButton.bHeight / 2) {
 				_curMovingInterval = 999;
 				_curMoving.shouldPress = false;
-				_curMoving.y = CoolUtil.fpsLerp(_curMoving.y, FlxG.mouse.getScreenPosition(buttonCameras).y - (_curMoving.bHeight / 2), 0.2);
+				_curMoving.y = CoolUtil.fpsLerp(_curMoving.y, FlxG.mouse.getScreenPosition(buttonCameras).y - (_curMoving.bHeight / 2), 0.3);
 				buttons.sort(function(o,a,b) return flixel.util.FlxSort.byValues(o, a == addButton ? 999 : a.y + (a.bHeight / 2), b == addButton ? 999 : b.y + (a.bHeight / 2)), -1);
 			}
 			if (FlxG.mouse.justReleased) {
