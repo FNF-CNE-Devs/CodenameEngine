@@ -44,7 +44,7 @@ class CharterEventScreen extends UISubstateWindow {
 
 		events = chartEvent.events.copy();
 
-		eventsList = new UIButtonList<EventButton>(0,0,75, 570, "", FlxPoint.get(73, 40));
+		eventsList = new UIButtonList<EventButton>(0,0,75, 570, "", FlxPoint.get(73, 40), null, 0);
 		eventsList.addButton.callback = () -> openSubState(new CharterEventTypeSelection(function(eventName) {
 			events.push({
 				time: Conductor.getTimeForStep(chartEvent.step),
@@ -69,22 +69,16 @@ class CharterEventScreen extends UISubstateWindow {
 				Charter.instance.deleteSelection([chartEvent]);
 			else if (events.length > 0) {
 				var oldEvents:Array<ChartEvent> = chartEvent.events.copy();
-				chartEvent.events = [for (i in eventsList.buttons.members) {
-					if(i is EventButton) {
-						var i:EventButton = cast i;
-						i.event;
-					}
-				}];
+				chartEvent.events = [
+					for (i in eventsList.buttons.members) i.event
+				];
 
 				if (creatingEvent && events.length > 0)
 					Charter.instance.createSelection([chartEvent]);	
 				else {
-					chartEvent.events = [for (i in eventsList.buttons.members) {
-						if(i is EventButton) {
-							var i:EventButton = cast i;
-							i.event;
-						}
-					}];
+					chartEvent.events = [
+						for (i in eventsList.buttons.members) i.event
+					];
 					chartEvent.refreshEventIcons();
 
 					Charter.instance.addToUndo(CEditEvent(chartEvent, oldEvents, events.copy()));
@@ -253,6 +247,10 @@ class EventButton extends UIButton {
 
 	override function update(elapsed) {
 		super.update(elapsed);
+
+		deleteButton.selectable = selectable;
+		deleteButton.shouldPress = shouldPress;
+
 		icon.setPosition(x + (18 - icon.width / 2),y + (20 - icon.height / 2));
 		deleteButton.setPosition(x + (bWidth - 30), y + (bHeight - 26) / 2);
 		deleteIcon.setPosition(deleteButton.x + (10/2), deleteButton.y + 4);

@@ -6,6 +6,7 @@ import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 import funkin.game.Character;
 import flixel.util.FlxSort;
+import flixel.math.FlxMath;
 
 class UIButtonList<T:UIButton> extends UIWindow {
 	public var buttons:FlxTypedGroup<T> = new FlxTypedGroup<T>();
@@ -30,7 +31,7 @@ class UIButtonList<T:UIButton> extends UIWindow {
 		if (buttonOffset != null) this.buttonOffset = buttonOffset;
 		super(x, y, width, height, windowName);
 
-		buttonCameras = new FlxCamera(x, y+cameraSpacing, width-2, height-cameraSpacing);
+		buttonCameras = new FlxCamera(x, y+cameraSpacing, width, height-cameraSpacing);
 		FlxG.cameras.add(buttonCameras, false);
 		buttonCameras.bgColor = 0;
 
@@ -47,8 +48,11 @@ class UIButtonList<T:UIButton> extends UIWindow {
 		scrollY = buttonCameras.scroll.y = -this.buttonSpacing;
 	}
 
-	public inline function add(button:T)
+	public inline function add(button:T) {
 		buttons.add(button);
+		curMovingInterval = 0;
+	}
+
 
 	public inline function insert(button:T, position:Int) {
 		buttons.insert(position, button);
@@ -110,11 +114,11 @@ class UIButtonList<T:UIButton> extends UIWindow {
 
 		if (nextscrollY >= (-buttonSpacing) && nextscrollY + buttonCameras.height <= (addButton.y + 32 + (buttonSpacing*1.5)))
 			scrollY = nextscrollY;
-
+		
 		buttonCameras.scroll.y = FlxMath.lerp(buttonCameras.scroll.y, nextscrollY, 1/3);
 
 		for (button in buttons) {
-			if (button != null) button.selectable = (hovered && !dragging);
+			if (button != null) button.selectable = button.shouldPress = (hovered && !dragging);
 			button.cameras = [buttonCameras];
 		}
 		addButton.selectable = (hovered && !dragging);

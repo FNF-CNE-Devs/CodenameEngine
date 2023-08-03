@@ -56,7 +56,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		function addLabelOn(ui:UISprite, text:String)
 			add(new UIText(ui.x, ui.y - 24, 0, text));
 
-		charactersList = new UIButtonList<CharacterButton>(15, 43, 250, 330, "", FlxPoint.get(246, 75));
+		charactersList = new UIButtonList<CharacterButton>(15, 43, 250, 330, "", FlxPoint.get(246, 75), null, 0);
 		charactersList.addButton.callback = () -> charactersList.add(new CharacterButton(0,0,"New Char", charactersList));
 		for (i in strumLine.characters) 
 			charactersList.add(new CharacterButton(0,0,i, charactersList));
@@ -136,11 +136,10 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			@:privateAccess stepper.__onChange(stepper.label.text);
 
 		strumLine = {
-			characters: [for (char in charactersList.buttons.members)
-			if(char is CharacterButton) {
-				var char:CharacterButton = cast char;
-				char.textBox.label.text.trim();
-			}],
+			characters: [
+				for (char in charactersList.buttons.members)
+					char.textBox.label.text.trim()
+			],
 			type: typeDropdown.index,
 			notes: strumLine.notes,
 			position: ["DAD", "BOYFRIEND", "GIRLFRIEND"][stagePositionDropdown.index].toLowerCase(),
@@ -188,6 +187,10 @@ class CharacterButton extends UIButton {
 		deleteButton.y = y + bHeight / 2 - deleteButton.bHeight / 2;
 		textBox.y = y + bHeight/2 - 16;
 		deleteIcon.x = deleteButton.x + (15/2); deleteIcon.y = deleteButton.y + 8;
+
+		deleteButton.selectable = selectable;
+		deleteButton.shouldPress = shouldPress;
+
 		super.update(elapsed);
 	} 
 }
