@@ -30,6 +30,8 @@ class UISliceSprite extends UISprite {
 		bHeight = h;
 	}
 
+	public var drawTop:Bool = true;
+
 	public override function draw() {
 		var x:Float = this.x;
 		var y:Float = this.y;
@@ -45,25 +47,27 @@ class UISliceSprite extends UISprite {
 			var bottom:FlxFrame = frames.frames[framesOffset + 7];
 			var bottomright:FlxFrame = frames.frames[framesOffset + 8];
 
-			// TOP LEFT
-			frame = topleft;
-			setPosition(x, y);
-			__setSize(topleft.frame.width, topleft.frame.height);
-			super.drawSuper();
+			if (drawTop) {
+				// TOP LEFT
+				frame = topleft;
+				setPosition(x, y);
+				__setSize(topleft.frame.width, topleft.frame.height);
+				super.drawSuper();
 
-			// TOP
-			if (bWidth > topleft.frame.width + topright.frame.width) {
-				frame = top;
-				setPosition(x + topleft.frame.width, y);
-				__setSize(bWidth - topleft.frame.width - topright.frame.width, top.frame.height);
+				// TOP
+				if (bWidth > topleft.frame.width + topright.frame.width) {
+					frame = top;
+					setPosition(x + topleft.frame.width, y);
+					__setSize(bWidth - topleft.frame.width - topright.frame.width, top.frame.height);
+					super.drawSuper();
+				}
+
+				// TOP RIGHT
+				frame = topright;
+				setPosition(x + bWidth - topright.frame.width, y);
+				__setSize(topright.frame.width, topright.frame.height);
 				super.drawSuper();
 			}
-
-			// TOP RIGHT
-			frame = topright;
-			setPosition(x + bWidth - topright.frame.width, y);
-			__setSize(topright.frame.width, topright.frame.height);
-			super.drawSuper();
 
 			// MIDDLE LEFT
 			if (bHeight > top.frame.height + bottom.frame.height) {

@@ -45,6 +45,7 @@ class CharterEventScreen extends UISubstateWindow {
 		events = chartEvent.events.copy();
 
 		eventsList = new UIButtonList<EventButton>(0,0,75, 570, "", FlxPoint.get(73, 40), null, 0);
+		eventsList.drawTop = false;
 		eventsList.addButton.callback = () -> openSubState(new CharterEventTypeSelection(function(eventName) {
 			events.push({
 				time: Conductor.getTimeForStep(chartEvent.step),
