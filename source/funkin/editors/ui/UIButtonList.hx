@@ -5,76 +5,88 @@ import flixel.group.FlxGroup;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
 import funkin.game.Character;
+import flixel.util.FlxSort;
 
-class UIButtonList extends UIWindow {
-	public var character:Character;
-
-	public var buttons:FlxTypedGroup<UIButton> = new FlxTypedGroup<UIButton>();
+class UIButtonList<T:UIButton> extends UIWindow {
+	public var buttons:FlxTypedGroup<T> = new FlxTypedGroup<T>();
 	public var addButton:UIButton;
 	public var addIcon:FlxSprite;
+
 	public var buttonCameras:FlxCamera;
-	public var cameraSpacing = 36;
+	public var cameraSpacing = 30;
+
+	public var buttonSpacing:Float = 16;
+	public var buttonSize:FlxPoint = FlxPoint.get();
+	public var buttonOffset:FlxPoint = FlxPoint.get();
+
 	public var dragging:Bool = false;
 
-	var _buttonXOffset:Float = 16;
-	var _buttonYOffset:Float = 16;
+	var curMoving:T = null;
+	var curMovingInterval:Float = 0;
 
-	public function new(x:Int, y:Int, width:Int, height:Int, windowName:String, addButtonCallback:Void->Void = null, buttonXOffset:Float = 16, buttonYOffset:Float = 16) {
+	public function new(x:Int, y:Int, width:Int, height:Int, windowName:String, buttonSize:FlxPoint, ?buttonOffset:FlxPoint, ?buttonSpacing:Float) {
+		if (buttonSpacing != null) this.buttonSpacing = buttonSpacing;
+		this.buttonSize = buttonSize;
+		if (buttonOffset != null) this.buttonOffset = buttonOffset;
 		super(x, y, width, height, windowName);
-		members.push(buttons);
-		_buttonXOffset = buttonXOffset;
-		_buttonYOffset = buttonYOffset;
-		buttonCameras = new FlxCamera(x, y+cameraSpacing, width, height-cameraSpacing);
+
+		buttonCameras = new FlxCamera(x, y+cameraSpacing, width-2, height-cameraSpacing);
 		FlxG.cameras.add(buttonCameras, false);
 		buttonCameras.bgColor = 0;
 
-		addButton = new UIButton(25, 16, "", addButtonCallback != null ? addButtonCallback : function() return false, Math.floor(bWidth - buttonXOffset * 2));
+		addButton = new UIButton(25, 16, "", null, Std.int(buttonSize.x));
 		addButton.color = 0xFF00FF00;
+		addButton.cameras = [buttonCameras];
 
 		addIcon = new FlxSprite(addButton.x + addButton.bHeight / 2, addButton.y + (32/2) - 8).loadGraphic(Paths.image('editors/charter/add-button'));
 		addIcon.antialiasing = false;
 		addButton.members.push(addIcon);
-		add(addButton);
+		members.push(addButton);
+
+		members.push(buttons);
+		scrollY = buttonCameras.scroll.y = -this.buttonSpacing;
 	}
-	public function add(button:UIButton)
-		insert(button, Math.floor(Math.max(buttons.members.indexOf(addButton), 0)));
-	public function insert(button:UIButton, position:Int) {
+
+	public inline function add(button:T)
+		buttons.add(button);
+
+	public inline function insert(button:T, position:Int) {
 		buttons.insert(position, button);
-		button.cameras = [buttonCameras];
-		button.x = _buttonXOffset;
-		if (addButton.bHeight != button.bHeight) addButton.bHeight = button.bHeight;
 		scrollY += button.bHeight;
 	}
-	public function remove(button:UIButton) {
-		buttons.remove(button, true);
+
+	public inline function remove(button:T) {
+		buttons.members.remove(button);
 		button.destroy();
 	}
-	var _curMoving:UIButton = null;
-	var _curMovingInterval:Float = 0;
-	public function updateButtonsPos(elapsed:Float) {
+
+	public inline function updateButtonsPos(elapsed:Float) {
 		for (i => button in buttons.members) {
-			if (_curMoving != button) {
-				for (i in button.members) 
-					if (i is UIButton) {
-						var i:UIButton = cast(i, UIButton);
-						i.selectable = true;
-					}
-				button.y = CoolUtil.fpsLerp(button.y, -scrollY + ((buttons.members[i-1] != null ? buttons.members[i-1].bHeight : 0) + _buttonYOffset) * i, 0.25);
-				button.shouldPress = true;
+			if (button == null) continue;
+
+			if (curMoving != button) {
+				button.setPosition(
+					(bWidth/2) - (buttonSize.x/2),
+					CoolUtil.fpsLerp(button.y, (buttonSize.y+buttonSpacing) * i, 0.25));
 			}
-			if (button != addButton && button.hovered && FlxG.mouse.justPressed) _curMoving = button;
+			if (button.hovered && FlxG.mouse.justPressed) curMoving = button;
 		}
-		if (_curMoving != null) {
-			_curMovingInterval += FlxG.mouse.deltaY;
-			if (Math.abs(_curMovingInterval) > addButton.bHeight / 2) {
-				_curMovingInterval = 999;
-				_curMoving.shouldPress = false;
-				_curMoving.y = CoolUtil.fpsLerp(_curMoving.y, FlxG.mouse.getScreenPosition(buttonCameras).y - (_curMoving.bHeight / 2), 0.3);
-				buttons.sort(function(o,a,b) return flixel.util.FlxSort.byValues(o, a == addButton ? 999 : a.y + (a.bHeight / 2), b == addButton ? 999 : b.y + (a.bHeight / 2)), -1);
+
+		if (addButton != null)
+			addButton.setPosition(
+				(bWidth/2) - (buttonSize.x/2),
+				CoolUtil.fpsLerp(addButton.y, (buttonSize.y+buttonSpacing) * buttons.members.length, 0.25));
+
+		if (curMoving != null) {
+			curMovingInterval += FlxG.mouse.deltaY;
+			if (Math.abs(curMovingInterval) > addButton.bHeight / 2) {
+				curMovingInterval = 999;
+				curMoving.y = CoolUtil.fpsLerp(curMoving.y, FlxG.mouse.getWorldPosition(buttonCameras).y - (curMoving.bHeight / 2), 0.3);
+				buttons.sort(function(o, a:T, b:T) return FlxSort.byValues(o, a.y + (a.bHeight / 2), b.y + (a.bHeight / 2)), -1);
 			}
 			if (FlxG.mouse.justReleased) {
-				_curMoving = null;
-				_curMovingInterval = 0;
+				curMoving = null;
+				curMovingInterval = 0;
 			}
 		}
 		addIcon.x = addButton.x + addButton.bWidth / 2 - addIcon.width / 2; addIcon.y = addButton.y + addButton.bHeight / 2 - addIcon.height / 2;
@@ -84,28 +96,33 @@ class UIButtonList extends UIWindow {
 
 	public override function update(elapsed:Float) {
 		updateButtonsPos(elapsed);
+		dragging = curMoving != null;
+
 		super.update(elapsed);
-		__rect.x = x; __rect.y = y+23;
-		__rect.width = bWidth; __rect.height = bHeight-23;
-		var nextscrollY = scrollY - ((hovered = UIState.state.isOverlapping(this, __rect)) ? FlxG.mouse.wheel : 0) * 12;
-		if (_curMoving != null) {
-			for (i in _curMoving.members) 
-				if (i is UIButton) {
-					var i:UIButton = cast(i, UIButton);
-					i.selectable = false;
-				}
-			nextscrollY -= Math.min((bHeight - 100) - FlxG.mouse.getScreenPosition(buttonCameras).y, 0) / 5;
-			nextscrollY += Math.min(FlxG.mouse.getScreenPosition(buttonCameras).y - 100, 0) / 5;
+
+		// Camera Stuff
+		var nextscrollY = scrollY - (hovered ? FlxG.mouse.wheel : 0) * 12;
+
+		if (curMoving != null) {
+			nextscrollY -= Math.min((bHeight - 100) - FlxG.mouse.getWorldPosition(buttonCameras).y, 0) / 8;
+			nextscrollY += Math.min(FlxG.mouse.getWorldPosition(buttonCameras).y - 100, 0) / 8;
 		}
-		scrollY = FlxMath.bound(nextscrollY, 0, -_buttonYOffset + Math.abs(Math.min(bHeight - ((addButton.bHeight + _buttonYOffset) * buttons.members.length + (cameraSpacing + _buttonYOffset)), 0)));
-		for (button in buttons.members)
-			if (button != null) button.selectable = (hovered && _curMoving == null);
+
+		if (nextscrollY >= (-buttonSpacing) && nextscrollY + buttonCameras.height <= (addButton.y + 32 + (buttonSpacing*1.5)))
+			scrollY = nextscrollY;
+
+		buttonCameras.scroll.y = FlxMath.lerp(buttonCameras.scroll.y, nextscrollY, 1/3);
+
+		for (button in buttons) {
+			if (button != null) button.selectable = (hovered && !dragging);
+			button.cameras = [buttonCameras];
+		}
+
 		if (__lastDrawCameras[0] != null) {
 			buttonCameras.height = bHeight - cameraSpacing;
 			buttonCameras.x = x - __lastDrawCameras[0].scroll.x;
 			buttonCameras.y = y + cameraSpacing - __lastDrawCameras[0].scroll.y;
 			buttonCameras.zoom = __lastDrawCameras[0].zoom;
 		}
-		dragging = _curMoving != null;
 	}
 }

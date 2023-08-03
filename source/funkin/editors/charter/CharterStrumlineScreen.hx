@@ -10,7 +10,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 	public var strumLineID:Int = -1;
 	public var strumLine:ChartStrumLine;
 
-	public var charactersList:UIButtonList;
+	public var charactersList:UIButtonList<CharacterButton>;
 	public var typeDropdown:UIDropDown;
 	public var stagePositionDropdown:UIDropDown;
 	public var hudScaleStepper:UINumericStepper;
@@ -56,8 +56,10 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		function addLabelOn(ui:UISprite, text:String)
 			add(new UIText(ui.x, ui.y - 24, 0, text));
 
-		charactersList = new UIButtonList(15, 43, 250, 330, "", () -> charactersList.add(new CharacterButton(0,0,"New Char", charactersList)), 2, 2);
-		for (i in strumLine.characters) charactersList.add(new CharacterButton(0,0,i, charactersList));
+		charactersList = new UIButtonList<CharacterButton>(15, 43, 250, 330, "", FlxPoint.get(246, 75));
+		charactersList.addButton.callback = () -> charactersList.add(new CharacterButton(0,0,"New Char", charactersList));
+		for (i in strumLine.characters) 
+			charactersList.add(new CharacterButton(0,0,i, charactersList));
 		charactersList.cameraSpacing = 2;
 		add(charactersList);
 
@@ -157,7 +159,7 @@ class CharacterButton extends UIButton {
 	public var deleteButton:UIButton;
 	public var deleteIcon:FlxSprite;
 
-	public function new(x:Float, y:Float, char:String, parent:UIButtonList) {
+	public function new(x:Float, y:Float, char:String, parent:UIButtonList<CharacterButton>) {
 		charIcon = new HealthIcon(char);
 		charIcon.scale.set(0.5, 0.5);
 		charIcon.updateHitbox();

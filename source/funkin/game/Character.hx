@@ -52,6 +52,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public var playerOffsets:Bool = false;
 
 	public var icon:String = null;
+	public var iconColor:FlxColor = -1;
 	public var gameOverCharacter:String = "bf-dead";
 
 	public var cameraOffset:FlxPoint = new FlxPoint(0, 0);
@@ -373,7 +374,8 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		if (xml.x.exists("camy")) cameraOffset.y = Std.parseFloat(xml.x.get("camy"));
 		if (xml.x.exists("holdTime")) holdTime = CoolUtil.getDefault(Std.parseFloat(xml.x.get("holdTime")), 4);
 		if (xml.x.exists("flipX")) flipX = (xml.x.get("flipX") == "true");
-		if (xml.x.exists("icon")) icon = xml.x.get("icon"); // idk why this is broke it just is
+		if (xml.x.exists("icon")) icon = xml.x.get("icon");
+		if (xml.x.exists("color")) iconColor = FlxColor.fromString(xml.x.get("color"));
 		if (xml.x.exists("scale")) {
 			var scale = Std.parseFloat(xml.x.get("scale")).getDefault(1);
 			this.scale.set(scale, scale);
@@ -407,6 +409,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		xml.set("holdTime", Std.string(holdTime));
 		xml.set("flipX", Std.string(flipX));
 		xml.set("icon", icon);
+		xml.set("color", iconColor.toHexString(false).replace("0x", "#"));
 		xml.set("scale", Std.string(scale.x));
 		xml.set("antialiasing", antialiasing == true ? "true" : "false");
 		xml.set("sprite", sprite);

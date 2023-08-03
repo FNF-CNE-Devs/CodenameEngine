@@ -16,6 +16,10 @@ class AppearanceOptions extends OptionsScreen {
 			"If unchecked, will disable antialiasing on every sprite. Can boost performances at the cost of sharper, more pixely sprites",
 			"antialiasing"));
 		add(new Checkbox(
+			"Colored Healthbar",
+			"If unchecked, the game will use the orginal red/green health bar from the week 6 fnf game.",
+			"colorHealthBar"));
+		add(new Checkbox(
 			"Pixel Perfect Effect",
 			"If checked, Week 6 will have a pixel perfect effect to it enabled, aligning every pixel on the screen.",
 			"week6PixelPerfect"));

@@ -14,7 +14,7 @@ class CharterEventScreen extends UISubstateWindow {
 
 	public var step:Float = 0;
 	public var events:Array<ChartEvent> = [];
-	public var eventsList:UIButtonList = null;
+	public var eventsList:UIButtonList<EventButton>;
 
 	public var eventName:UIText;
 
@@ -41,7 +41,11 @@ class CharterEventScreen extends UISubstateWindow {
 
 		FlxG.sound.music.pause(); // prevent the song from continuing
 		Charter.instance.vocals.pause();
-		eventsList = new UIButtonList(0,0,75, 570, "", ()->	openSubState(new CharterEventTypeSelection(function(eventName) {
+
+		events = chartEvent.events.copy();
+
+		eventsList = new UIButtonList<EventButton>(0,0,75, 570, "", FlxPoint.get(73, 40));
+		eventsList.addButton.callback = () -> openSubState(new CharterEventTypeSelection(function(eventName) {
 			events.push({
 				time: Conductor.getTimeForStep(chartEvent.step),
 				params: [],
@@ -49,11 +53,11 @@ class CharterEventScreen extends UISubstateWindow {
 			});
 			eventsList.add(new EventButton(events[events.length-1], CharterEvent.generateEventIcon(events[events.length-1]), events.length-1, this, eventsList));
 			changeTab(events.length-1);
-		})), 1, 2);
-		events = chartEvent.events.copy();
+		}));
 		for (k=>i in events)
 			eventsList.add(new EventButton(i, CharterEvent.generateEventIcon(i), k, this, eventsList));
 		add(eventsList);
+
 		paramsPanel = new FlxGroup();
 		add(paramsPanel);
 
@@ -212,13 +216,15 @@ class CharterEventScreen extends UISubstateWindow {
 		];
 	}
 }
+
 class EventButton extends UIButton {
 	public var icon:FlxSprite = null;
 	public var event:ChartEvent = null;
 	public var deleteButton:UIButton;
 	public var deleteIcon:FlxSprite;
-	public function new(event:ChartEvent, icon:FlxSprite, id:Int, substate:CharterEventScreen, parent:UIButtonList) {
-		super(0,0,"",function() {
+
+	public function new(event:ChartEvent, icon:FlxSprite, id:Int, substate:CharterEventScreen, parent:UIButtonList<EventButton>) {
+		super(0,0,"" ,function() {
 			substate.changeTab(id);
 			for(i in parent.buttons.members) {
 				if(i is EventButton) {
@@ -244,6 +250,7 @@ class EventButton extends UIButton {
 		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);
 	}
+
 	override function update(elapsed) {
 		super.update(elapsed);
 		icon.setPosition(x + (18 - icon.width / 2),y + (20 - icon.height / 2));

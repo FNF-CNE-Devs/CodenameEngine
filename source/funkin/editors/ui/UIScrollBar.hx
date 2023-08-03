@@ -17,6 +17,7 @@ class UIScrollBar extends UISprite {
 	public function new(x:Float, y:Float, length:Float, start:Float, size:Float, w:Int = 20, ?h:Int) {
 		super(x, y, Paths.image("editors/ui/scrollbar-bg"));
 		scale.y = h.getDefault(Std.int(FlxG.height - y));
+		alpha = 0.5;
 		updateHitbox();
 		this.start = start;
 		this.size = size;

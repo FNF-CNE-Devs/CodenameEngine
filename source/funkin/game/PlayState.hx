@@ -682,15 +682,13 @@ class PlayState extends MusicBeatState
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
 
-
-
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, maxHealth);
 		healthBar.scrollFactor.set();
-		if (opponentMode)
-			healthBar.createFilledBar(0xFF66FF33, 0xFFFF0000); // switch the colors
-		else
-			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		var leftColor:Int = dad.iconColor != -1 && Options.colorHealthBar ? dad.iconColor : 0xFFFF0000;
+		var rightColor:Int = boyfriend.iconColor != -1 && Options.colorHealthBar ? boyfriend.iconColor : 0xFF66FF33;
+		if (opponentMode) healthBar.createFilledBar(rightColor, leftColor); // switch the colors
+		else healthBar.createFilledBar(leftColor, rightColor);
 		add(healthBar);
 
 		health = maxHealth / 2;
