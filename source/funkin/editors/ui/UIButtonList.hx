@@ -96,14 +96,14 @@ class UIButtonList<T:UIButton> extends UIWindow {
 
 	public override function update(elapsed:Float) {
 		updateButtonsPos(elapsed);
-		dragging = curMoving != null;
+		dragging = Math.abs(curMovingInterval) > addButton.bHeight / 2;
 
 		super.update(elapsed);
 
 		// Camera Stuff
 		var nextscrollY = scrollY - (hovered ? FlxG.mouse.wheel : 0) * 12;
 
-		if (curMoving != null) {
+		if (curMoving != null && dragging) {
 			nextscrollY -= Math.min((bHeight - 100) - FlxG.mouse.getWorldPosition(buttonCameras).y, 0) / 8;
 			nextscrollY += Math.min(FlxG.mouse.getWorldPosition(buttonCameras).y - 100, 0) / 8;
 		}
@@ -117,6 +117,7 @@ class UIButtonList<T:UIButton> extends UIWindow {
 			if (button != null) button.selectable = (hovered && !dragging);
 			button.cameras = [buttonCameras];
 		}
+		addButton.selectable = (hovered && !dragging);
 
 		if (__lastDrawCameras[0] != null) {
 			buttonCameras.height = bHeight - cameraSpacing;
