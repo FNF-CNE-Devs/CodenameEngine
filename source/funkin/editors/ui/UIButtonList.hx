@@ -45,21 +45,23 @@ class UIButtonList<T:UIButton> extends UIWindow {
 		members.push(addButton);
 
 		members.push(buttons);
-		scrollY = buttonCameras.scroll.y = -this.buttonSpacing;
+		nextscrollY = buttonCameras.scroll.y = -this.buttonSpacing;
 	}
 
 	public inline function add(button:T) {
 		buttons.add(button);
 		curMovingInterval = 0;
+		nextscrollY += button.bHeight;
 	}
 
 
 	public inline function insert(button:T, position:Int) {
 		buttons.insert(position, button);
-		scrollY += button.bHeight;
+		nextscrollY += button.bHeight;
 	}
 
 	public inline function remove(button:T) {
+		nextscrollY -= button.bHeight;
 		buttons.members.remove(button);
 		button.destroy();
 	}
@@ -95,25 +97,19 @@ class UIButtonList<T:UIButton> extends UIWindow {
 		}
 		addIcon.x = addButton.x + addButton.bWidth / 2 - addIcon.width / 2; addIcon.y = addButton.y + addButton.bHeight / 2 - addIcon.height / 2;
 	}
-
-	var scrollY:Float = 0;
-
+	var nextscrollY:Float = 0;
 	public override function update(elapsed:Float) {
 		updateButtonsPos(elapsed);
 		dragging = Math.abs(curMovingInterval) > addButton.bHeight / 2;
 
 		super.update(elapsed);
 
-		// Camera Stuff
-		var nextscrollY = scrollY - (hovered ? FlxG.mouse.wheel : 0) * 12;
+		nextscrollY = FlxMath.bound(buttonCameras.scroll.y - (hovered ? FlxG.mouse.wheel : 0) * 12, -buttonSpacing, Math.max((addButton.y + 32 + (buttonSpacing*1.5)) - buttonCameras.height, -buttonSpacing));
 
 		if (curMoving != null && dragging) {
 			nextscrollY -= Math.min((bHeight - 100) - FlxG.mouse.getWorldPosition(buttonCameras).y, 0) / 8;
 			nextscrollY += Math.min(FlxG.mouse.getWorldPosition(buttonCameras).y - 100, 0) / 8;
 		}
-
-		if (nextscrollY >= (-buttonSpacing) && nextscrollY + buttonCameras.height <= (addButton.y + 32 + (buttonSpacing*1.5)))
-			scrollY = nextscrollY;
 		
 		buttonCameras.scroll.y = FlxMath.lerp(buttonCameras.scroll.y, nextscrollY, 1/3);
 
