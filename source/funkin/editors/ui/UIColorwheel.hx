@@ -17,7 +17,7 @@ class UIColorwheel extends UISliceSprite {
 	var colorHexTextBox:UITextBox;
 	var rgbNumSteppers:Array<UINumericStepper> = []; // r,g,b
 
-	public var curColor:Null<FlxColor> = FlxColor.WHITE;
+	public var curColor:Null<FlxColor>;
 	public var curColorString:String = "#FFFFFF";
 
 	public var saturation:Float;
@@ -118,6 +118,9 @@ class UIColorwheel extends UISliceSprite {
 		}
 	}
 
+	// For Character Editor
+	public var colorChanged:Bool = false;
+
 	// Make the colorwhell feel better
 	static inline var hitBoxExtenstion:Float = 8;
 
@@ -135,6 +138,7 @@ class UIColorwheel extends UISliceSprite {
 					if (sprite == colorSlider) updateColorSliderMouse(mousePos);
 					if (sprite == colorPicker) updateColorPickerMouse(mousePos);
 					updateWheel();
+					colorChanged = true;
 
 					spritePos.put();
 					break;

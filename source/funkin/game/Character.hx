@@ -52,7 +52,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public var playerOffsets:Bool = false;
 
 	public var icon:String = null;
-	public var iconColor:FlxColor = -1;
+	public var iconColor:Null<FlxColor> = null;
 	public var gameOverCharacter:String = "bf-dead";
 
 	public var cameraOffset:FlxPoint = new FlxPoint(0, 0);
@@ -409,7 +409,8 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		xml.set("holdTime", Std.string(holdTime));
 		xml.set("flipX", Std.string(flipX));
 		xml.set("icon", icon);
-		xml.set("color", iconColor.toHexString(false).replace("0x", "#"));
+		if (iconColor != null)
+			xml.set("color", iconColor.toHexString(false).replace("0x", "#"));
 		xml.set("scale", Std.string(scale.x));
 		xml.set("antialiasing", antialiasing == true ? "true" : "false");
 		xml.set("sprite", sprite);
