@@ -327,6 +327,8 @@ class CharacterEditor extends UIState {
 	}
 
 	function _file_save(_) {
+		if (characterAnimsWindow.dragging) return;
+
 		#if sys
 		sys.io.File.saveContent(
 			Assets.getPath(Paths.xml('characters/${character.curCharacter}')), 
@@ -338,13 +340,18 @@ class CharacterEditor extends UIState {
 	}
 
 	function _file_saveas(_) {
+		if (characterAnimsWindow.dragging) return;
+
 		openSubState(new SaveSubstate(buildCharacter(), {
 			defaultSaveFile: '${character.curCharacter}.xml'
 		}));
 	}
 
 	function buildCharacter():String {
-		var charXML:Xml = character.buildXML();
+		var charXML:Xml = character.buildXML([
+			for (button in characterAnimsWindow.buttons.members)
+				button.anim
+		]);
 
 		// clean
 		if (charXML.exists("gameOverChar") && character.gameOverCharacter == "bf-dead") charXML.remove("gameOverChar");

@@ -397,7 +397,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		dance();
 	}
 
-	public function buildXML():Xml {
+	public function buildXML(?animsOrder:Array<String>):Xml {
 		var xml = Xml.createElement("character");
 		xml.set("isPlayer", playerOffsets == true ? "true" : "false");
 		xml.set("isGF", isGF == true ? "true" : "false");
@@ -408,14 +408,21 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		xml.set("camy", Std.string(cameraOffset.y));
 		xml.set("holdTime", Std.string(holdTime));
 		xml.set("flipX", Std.string(flipX));
-		xml.set("icon", icon);
+		xml.set("icon", getIcon());
 		if (iconColor != null)
 			xml.set("color", iconColor.toHexString(false).replace("0x", "#"));
 		xml.set("scale", Std.string(scale.x));
 		xml.set("antialiasing", antialiasing == true ? "true" : "false");
 		xml.set("sprite", sprite);
 
-		for (anim in animDatas)
+		var anims:Array<AnimData> = [];
+		if (animsOrder != null) {
+			for (name in animsOrder)
+				if (animDatas.exists(name)) anims.push(animDatas.get(name));
+		} else
+			anims = [for (anim in animDatas) anim];
+
+		for (anim in anims)
 		{
 			var animXml:Xml = Xml.createElement('anim');
 			animXml.set("name", anim.name);
