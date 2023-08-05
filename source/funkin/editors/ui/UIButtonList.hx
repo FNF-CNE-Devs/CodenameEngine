@@ -35,7 +35,7 @@ class UIButtonList<T:UIButton> extends UIWindow {
 		FlxG.cameras.add(buttonCameras, false);
 		buttonCameras.bgColor = 0;
 
-		addButton = new UIButton(25, 16, "", null, Std.int(buttonSize.x));
+		addButton = new UIButton(25, 16, "", null, Std.int(this.buttonSize.x));
 		addButton.color = 0xFF00FF00;
 		addButton.cameras = [buttonCameras];
 
@@ -80,8 +80,8 @@ class UIButtonList<T:UIButton> extends UIWindow {
 
 		if (addButton != null)
 			addButton.setPosition(
-				(bWidth/2) - (buttonSize.x/2),
-				CoolUtil.fpsLerp(addButton.y, (buttonSize.y+buttonSpacing) * buttons.members.length, 0.25));
+				(bWidth/2) - (buttonSize.x/2) + buttonOffset.x,
+				CoolUtil.fpsLerp(addButton.y, ((buttonSize.y+buttonSpacing) * buttons.members.length) + buttonOffset.y, 0.25));
 
 		if (curMoving != null) {
 			curMovingInterval += FlxG.mouse.deltaY;

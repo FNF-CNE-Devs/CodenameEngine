@@ -238,7 +238,7 @@ class CharacterEditor extends UIState {
 		characterPropertiresWindow = new CharacterPropertiesWindow();
 		uiGroup.add(characterPropertiresWindow);
 
-		characterAnimsWindow = new UIButtonList<CharacterAnimButtons>(777, 209, 473, 488, "Character Animations", FlxPoint.get(429, 32), FlxPoint.get(0, 16));
+		characterAnimsWindow = new UIButtonList<CharacterAnimButtons>(777, 209, 473, 488, "Character Animations", FlxPoint.get(429, 32));
 		characterAnimsWindow.addButton.callback = 
 			function() CharacterEditor.instance.createAnimWithUI();
 		for (i=>anim in character.getNameList())
@@ -532,12 +532,9 @@ class CharacterEditor extends UIState {
 
 	public function playAnimation(anim:String) {
 		character.playAnim(anim, true);
-		for(i in characterAnimsWindow.buttons.members) {
-			if(i is CharacterAnimButtons) {
-				var i:CharacterAnimButtons = cast i;
-				i.alpha = i.anim == anim ? 1 : 0.25;
-			}
-		}
+
+		for(i in characterAnimsWindow.buttons.members)
+			i.alpha = i.anim == anim ? 1 : 0.25;
 	}
 
 	function _offsets_left(_) {
@@ -580,7 +577,9 @@ class CharacterEditor extends UIState {
 		if (character.getNameList().length == 0) return;
 
 		character.animOffsets.set(anim, character.getAnimOffset(anim) + change);
-		for (i in characterAnimsWindow.members) if (cast(i, CharacterAnimButtons).anim == anim) cast(i ,CharacterAnimButtons).updateInfo(anim, character.getAnimOffset(anim), ghosts.animGhosts[anim].visible);
+		for (i in characterAnimsWindow.buttons.members) 
+			if (i.anim == anim) 
+				i.updateInfo(anim, character.getAnimOffset(anim), ghosts.animGhosts[anim].visible);
 		character.frameOffset.set(character.getAnimOffset(anim).x, character.getAnimOffset(anim).y);
 
 		ghosts.updateOffsets(anim, change);
@@ -598,7 +597,9 @@ class CharacterEditor extends UIState {
 		];
 		for (anim in character.getNameList()) {
 			character.animOffsets[anim].zero();
-			for (i in characterAnimsWindow.members) if (cast(i, CharacterAnimButtons).anim == anim) cast(i ,CharacterAnimButtons).updateInfo(anim, character.getAnimOffset(anim), ghosts.animGhosts[anim].visible);
+			for (i in characterAnimsWindow.buttons.members) 
+				if (i.anim == anim) 
+					i.updateInfo(anim, character.getAnimOffset(anim), ghosts.animGhosts[anim].visible);
 		}
 
 		ghosts.clearOffsets();
