@@ -473,16 +473,21 @@ class CharacterEditor extends UIState {
 	}
 
 	public function deleteAnim(name:String, addtoUndo:Bool = true) {
+		var animOrder:Array<String> = [
+			for (button in characterAnimsWindow.buttons.members)
+				button.anim
+		];
+
 		if (character.getNameList().length-1 == 0)
 			@:privateAccess character.animation._curAnim = null;
 		else
-			playAnimation(character.getNameList()[Std.int(Math.abs(character.getNameList().indexOf(name)-1))]);
+			playAnimation(animOrder[Std.int(Math.abs(animOrder.indexOf(name)-1))]);
 
 		for(button in characterAnimsWindow.buttons.members)
 			if(button.anim == name) characterAnimsWindow.remove(button);
 
 		// undo shit blah blah
-		var oldID:Int = character.getNameList().indexOf(name);
+		var oldID:Int = animOrder.indexOf(name);
 		var oldAnimData:AnimData = character.animDatas.get(name);
 
 		ghosts.removeGhost(name);
