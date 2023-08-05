@@ -18,7 +18,7 @@
 	- [ ] Reorderable Strumlines
 	- [ ] Step based zooming
 	- [ ] Add Undo to more actions
-	- [ ] New Button
+	- [ ] New Chart Button
 	- [ ] Bug fixes
 		- [ ] Zooming in causing notes to disappear
 		- [ ] Holds disappear too early
@@ -31,7 +31,7 @@
 	- [x] Character Saving
 	- [x] Add Undos to Actions
 	- [ ] Change Stage
-	- [ ] New Button
+	- [ ] New Character Button
 - [ ] Port Videos to a more stable video lib
 - [ ] Optimization to Editors
 - [ ] Fix Ratings Lag

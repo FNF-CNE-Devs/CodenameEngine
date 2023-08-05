@@ -114,6 +114,7 @@ typedef UIContextMenuOption = {
 	var label:String;
 	var ?keybind:Array<FlxKey>;
 	var ?keybinds:Array<Array<FlxKey>>;
+	var ?keybindText:String;
 	var ?icon:Int;
 	var ?onSelect:UIContextMenuOption->Void;
 	var ?childs:Array<UIContextMenuOption>;
@@ -144,14 +145,18 @@ class UIContextMenuOptionSpr extends UISliceSprite {
 			}
 		}
 
-		if (option.keybinds != null) {
-			var textKeys:Array<String> = [];
-			for (o in option.keybinds[0]) {
-				if (Std.int(o) > 0) {
-					textKeys.push(o.toUIString());
+		if (option.keybinds != null || option.keybindText != null) {
+			var text = if(option.keybindText == null) {
+				var textKeys:Array<String> = [];
+				for (o in option.keybinds[0]) {
+					if (Std.int(o) > 0) {
+						textKeys.push(o.toUIString());
+					}
 				}
+				textKeys.join("+");
+			} else {
+				option.keybindText;
 			}
-			var text = textKeys.join("+");
 			labelKeybind = new UIText(label.x + label.frameWidth + 10, 2, 0, text);
 			labelKeybind.alpha = 0.75;
 		}
