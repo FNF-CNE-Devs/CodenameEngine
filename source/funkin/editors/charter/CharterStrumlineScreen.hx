@@ -56,16 +56,20 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		function addLabelOn(ui:UISprite, text:String)
 			add(new UIText(ui.x, ui.y - 24, 0, text));
 
-		charactersList = new UIButtonList<CharacterButton>(15, 43, 250, 330, "", FlxPoint.get(246, 75), null, 0);
+		var title:UIText;
+		add(title = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, creatingStrumLine ? "Create New Strumline" : "Edit Strumline Properties", 28));
+
+		charactersList = new UIButtonList<CharacterButton>(15, title.y + title.height + 36, 250, 259, "", FlxPoint.get(250, 54), null, 0);
 		charactersList.addButton.callback = () -> charactersList.add(new CharacterButton(0,0,"New Char", charactersList));
+		charactersList.cameraSpacing = 0;
 		for (i in strumLine.characters) 
 			charactersList.add(new CharacterButton(0,0,i, charactersList));
-		charactersList.cameraSpacing = 2;
 		add(charactersList);
+		addLabelOn(charactersList, "Characters");
 
 		charactersList.frames = Paths.getFrames('editors/ui/inputbox');
 
-		typeDropdown = new UIDropDown(charactersList.x + 265, charactersList.y + 20, 200, 32, ["OPPONENT", "PLAYER", "ADDITIONAL"], strumLine.type);
+		typeDropdown = new UIDropDown(charactersList.x + charactersList.bWidth + 16, charactersList.y, 200, 32, ["OPPONENT", "PLAYER", "ADDITIONAL"], strumLine.type);
 		add(typeDropdown);
 		addLabelOn(typeDropdown, "Type");
 
@@ -159,24 +163,28 @@ class CharacterButton extends UIButton {
 	public var deleteIcon:FlxSprite;
 
 	public function new(x:Float, y:Float, char:String, parent:UIButtonList<CharacterButton>) {
+		super(x, y, "", null, 250, 54);
+
 		charIcon = new HealthIcon(char);
-		charIcon.scale.set(0.5, 0.5);
+		charIcon.scale.set(0.3, 0.3);
 		charIcon.updateHitbox();
-		super(x, y, "", null, 246, Math.floor(charIcon.height));
 		charIcon.setPosition(x + 10, bHeight/2 - charIcon.height / 2);
+
 		members.push(charIcon);
-		members.remove(field);
-		members.push(textBox = new UITextBox(95, bHeight/2 - 16, char, 100));
+
+		members.push(textBox = new UITextBox(charIcon.x + charIcon.width + 16, bHeight/2 - (32/2), char, 115));
 		textBox.antialiasing = true;
 		textBox.onChange = function(char:String) {
 			charIcon.loadGraphic(Assets.exists(Paths.image("icons/" + char)) ? Paths.image("icons/" + char) : Paths.image("icons/face"), true, 150, 150);
 			charIcon.updateHitbox();
 		}
-		deleteButton = new UIButton(textBox.x + 105, y, "", function () {
+
+		deleteButton = new UIButton(textBox.x + 115 + 16, bHeight/2 - (32/2), "", function () {
 			parent.remove(this);
 		}, 32);
 		deleteButton.color = 0xFFFF0000;
 		members.push(deleteButton);
+		
 		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 8).loadGraphic(Paths.image('editors/character/delete-button'));
 		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);

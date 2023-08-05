@@ -25,13 +25,13 @@ class UIButtonList<T:UIButton> extends UIWindow {
 	var curMoving:T = null;
 	var curMovingInterval:Float = 0;
 
-	public function new(x:Int, y:Int, width:Int, height:Int, windowName:String, buttonSize:FlxPoint, ?buttonOffset:FlxPoint, ?buttonSpacing:Float) {
+	public function new(x:Float, y:Float, width:Int, height:Int, windowName:String, buttonSize:FlxPoint, ?buttonOffset:FlxPoint, ?buttonSpacing:Float) {
 		if (buttonSpacing != null) this.buttonSpacing = buttonSpacing;
 		this.buttonSize = buttonSize;
 		if (buttonOffset != null) this.buttonOffset = buttonOffset;
 		super(x, y, width, height, windowName);
 
-		buttonCameras = new FlxCamera(x, y+cameraSpacing, width, height-cameraSpacing);
+		buttonCameras = new FlxCamera(Std.int(x), Std.int(y+cameraSpacing), width, height-cameraSpacing-1);
 		FlxG.cameras.add(buttonCameras, false);
 		buttonCameras.bgColor = 0;
 
@@ -72,8 +72,8 @@ class UIButtonList<T:UIButton> extends UIWindow {
 
 			if (curMoving != button) {
 				button.setPosition(
-					(bWidth/2) - (buttonSize.x/2),
-					CoolUtil.fpsLerp(button.y, (buttonSize.y+buttonSpacing) * i, 0.25));
+					(bWidth/2) - (buttonSize.x/2) + buttonOffset.x,
+					CoolUtil.fpsLerp(button.y, ((buttonSize.y+buttonSpacing) * i) + buttonOffset.y, 0.25));
 			}
 			if (button.hovered && FlxG.mouse.justPressed) curMoving = button;
 		}
@@ -104,14 +104,14 @@ class UIButtonList<T:UIButton> extends UIWindow {
 
 		super.update(elapsed);
 
-		nextscrollY = FlxMath.bound(buttonCameras.scroll.y - (hovered ? FlxG.mouse.wheel : 0) * 12, -buttonSpacing, Math.max((addButton.y + 32 + (buttonSpacing*1.5)) - buttonCameras.height, -buttonSpacing));
+		nextscrollY = FlxMath.bound(buttonCameras.scroll.y - (hovered ? FlxG.mouse.wheel : 0) * 6, -buttonSpacing, Math.max((addButton.y + 32 + (buttonSpacing*1.5)) - buttonCameras.height, -buttonSpacing));
 
 		if (curMoving != null && dragging) {
 			nextscrollY -= Math.min((bHeight - 100) - FlxG.mouse.getWorldPosition(buttonCameras).y, 0) / 8;
 			nextscrollY += Math.min(FlxG.mouse.getWorldPosition(buttonCameras).y - 100, 0) / 8;
 		}
 		
-		buttonCameras.scroll.y = FlxMath.lerp(buttonCameras.scroll.y, nextscrollY, 1/3);
+		buttonCameras.scroll.y = nextscrollY;
 
 		for (button in buttons) {
 			if (button != null) button.selectable = button.shouldPress = (hovered && !dragging);
@@ -120,7 +120,7 @@ class UIButtonList<T:UIButton> extends UIWindow {
 		addButton.selectable = (hovered && !dragging);
 
 		if (__lastDrawCameras[0] != null) {
-			buttonCameras.height = bHeight - cameraSpacing;
+			buttonCameras.height = bHeight - cameraSpacing - 1; // -1 for the little gap at the bottom of the window
 			buttonCameras.x = x - __lastDrawCameras[0].scroll.x;
 			buttonCameras.y = y + cameraSpacing - __lastDrawCameras[0].scroll.y;
 			buttonCameras.zoom = __lastDrawCameras[0].zoom;
