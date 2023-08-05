@@ -239,13 +239,13 @@ class CharacterEditor extends UIState {
 		uiGroup.add(characterPropertiresWindow);
 
 		characterAnimsWindow = new UIButtonList<CharacterAnimButtons>(777, 209, 473, 488, "Character Animations", FlxPoint.get(429, 32));
-		characterAnimsWindow.addButton.callback = 
-			function() CharacterEditor.instance.createAnimWithUI();
-		for (i=>anim in character.getNameList())
+		characterAnimsWindow.addButton.callback = function() CharacterEditor.instance.createAnimWithUI();
+		var animOrder = character.getAnimOrder();
+		for (i=>anim in animOrder)
 			characterAnimsWindow.add(new CharacterAnimButtons(0,0, anim, character.getAnimOffset(anim)));
 		uiGroup.add(characterAnimsWindow);
 
-		playAnimation(character.getNameList()[0]);
+		playAnimation(animOrder[0]);
 
 		add(topMenuSpr);
 		add(uiGroup);

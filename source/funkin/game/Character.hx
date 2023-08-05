@@ -444,6 +444,12 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public inline function getIcon()
 		return (icon != null) ? icon : curCharacter;
 
+	public function getAnimOrder() {
+		return [for(a in xml.nodes.anim) if(a.has.name) a.att.name];
+	}
+
+	// Statics
+
 	public static function getIconFromCharName(?curCharacter:String) {
 		if(curCharacter == null) return "face";
 		var icon = curCharacter;

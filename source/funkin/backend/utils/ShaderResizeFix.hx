@@ -11,7 +11,7 @@ class ShaderResizeFix {
 
 	public inline static function fixSpritesShadersSizes() {
 		if (!doResizeFix) return;
-		
+
 		fixSpriteShaderSize(Main.instance);
 		if (FlxG.game != null) fixSpriteShaderSize(FlxG.game);
 
@@ -20,7 +20,7 @@ class ShaderResizeFix {
 			@:privateAccess
 			if (cam != null && (cam._filters != null || cam._filters != []))
 				fixSpriteShaderSize(cam.flashSprite);
-		}	
+		}
 	}
 
 	public inline static function fixSpriteShaderSize(sprite:Sprite) // Shout out to Ne_Eo for bringing this to my attention
