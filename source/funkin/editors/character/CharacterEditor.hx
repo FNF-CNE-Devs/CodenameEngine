@@ -278,18 +278,8 @@ class CharacterEditor extends UIState {
 				closeCurrentContextMenu();
 				openContextMenu(topMenu[2].childs);
 			}
-
-			if (FlxG.mouse.justPressed) {
-				FlxG.mouse.getScreenPosition(charCamera, camDrag);
-				camDrag *= camDragSpeed;
-				camDrag += charCamera.scroll;
-			}
-
 			if (FlxG.mouse.pressed) {
-				var pos = FlxG.mouse.getScreenPosition(charCamera);
-				pos *= camDragSpeed;
-				nextScroll.set((camDrag.x - pos.x), (camDrag.y - pos.y));
-
+				nextScroll.set(nextScroll.x - FlxG.mouse.deltaScreenX, nextScroll.y - FlxG.mouse.deltaScreenY);
 				currentCursor = HAND;
 			} else
 				currentCursor = ARROW;
