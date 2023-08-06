@@ -75,7 +75,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 			for(node in elems) {
 				var sprite:Dynamic = switch(node.name) {
 					case "sprite" | "spr" | "sparrow":
-						if (!node.has.sprite || !node.has.name || !node.has.x || !node.has.y) continue;
+						if (!node.has.sprite || !node.has.name) continue;
 
 						var spr = XMLUtil.createSpriteFromXML(node, spritesParentFolder, BEAT);
 
