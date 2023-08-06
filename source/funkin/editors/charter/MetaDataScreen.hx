@@ -32,6 +32,7 @@ class MetaDataScreen extends UISubstateWindow {
 	public override function create() {
 		winTitle = "Edit Metadata";
 		winWidth = 748 - 32 + 40;
+		winHeight = 520;
 
 		super.create();
 
@@ -97,7 +98,7 @@ class MetaDataScreen extends UISubstateWindow {
 		for (checkbox in [opponentModeCheckbox, coopAllowedCheckbox])
 			{checkbox.y += 6; checkbox.x += 4;}
 
-		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20, colorWheel.y + 32 + 197 + 26, "Save & Close", function() {
+		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20, windowSpr.y + windowSpr.bHeight - 20, "Save & Close", function() {
 			saveMeta();
 			close();
 		}, 125);
@@ -151,5 +152,7 @@ class MetaDataScreen extends UISubstateWindow {
 			coopAllowed: coopAllowedCheckbox.checked,
 			difficulties: [for (diff in difficulitesTextBox.label.text.split(",")) diff.trim()],
 		};
+
+		Charter.instance.updateBPMEvents();
 	}
 }
