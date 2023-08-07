@@ -39,6 +39,7 @@ class ScriptsMacro {
 		// FOR ABSTRACTS
 		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');
 		Compiler.addGlobalMetadata('haxe.CallStack', '@:build(hscript.UsingHandler.build())');
+		#if HL HashLinkFixer.init(); #end
 	}
 }
 #end
