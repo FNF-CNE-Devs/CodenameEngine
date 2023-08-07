@@ -1017,11 +1017,11 @@ class Charter extends UIState {
 			switch(c) {
 				case CNote(step, id, sLen, type):
 					var note = new CharterNote();
-					note.updatePos(minStep + step, id, sLen, type);
+					note.updatePos(minStep + step + 1, id, sLen, type);
 					notesGroup.add(note);
 					sObjects.push(note);
 				case CEvent(step, events):
-					var event = new CharterEvent(minStep - step, events);
+					var event = new CharterEvent(minStep + step + 1, events);
 					event.refreshEventIcons();
 					eventsGroup.add(event);
 					sObjects.push(event);
