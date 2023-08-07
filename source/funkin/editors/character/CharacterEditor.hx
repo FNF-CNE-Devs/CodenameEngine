@@ -611,6 +611,7 @@ class CharacterEditor extends UIState {
 					i.updateInfo(anim, character.getAnimOffset(anim), ghosts.animGhosts[anim].visible);
 		}
 
+		changeOffset(character.getAnimName(), FlxPoint.get(), false);
 		ghosts.clearOffsets();
 
 		if (addtoUndo)
