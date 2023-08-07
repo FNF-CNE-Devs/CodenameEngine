@@ -15,7 +15,7 @@ class CrashHandler {
 		#if cpp
 		untyped __global__.__hxcpp_set_critical_error_handler(onError);
 		#elseif hl
-		Api.setErrorHandler(onError);
+		hl.Api.setErrorHandler(onError);
 		#end
 	}
 

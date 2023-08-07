@@ -49,7 +49,8 @@
 
 	<set name="BUILD_DIR" value="export/debug" if="debug" />
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
-	<set name="BUILD_DIR" value="export/32bit" if="32bit" />
+	<set name="BUILD_DIR" value="export/debug-32bit" if="debug 32bit" />
+	<set name="BUILD_DIR" value="export/release-32bit" if="32bit" unless="debug" />
 	<set name="BUILD_DIR" value="latest/" if="beta" />
 
 	<classpath name="source" />
@@ -109,6 +110,9 @@
 
 	<!-- Comment this out to disable updates !-->
 	<!-- <define name="UPDATE_CHECKING" unless="web || hl || neko"/> -->
+
+	<!-- Fixes thing with hl -->
+	<define name="HL" if="hl"/>
 
 	<!-- Comment this out to disable Discord RPC !-->
 	<define name="DISCORD_RPC" unless="web || hl || neko"/>
