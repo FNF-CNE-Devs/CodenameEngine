@@ -1,5 +1,6 @@
 package funkin.editors.character;
 
+import funkin.backend.system.framerate.Framerate;
 import haxe.xml.Printer;
 import haxe.xml.Access;
 import funkin.backend.utils.XMLUtil.AnimData;
@@ -249,11 +250,21 @@ class CharacterEditor extends UIState {
 
 		add(topMenuSpr);
 		add(uiGroup);
+
+		Framerate.fpsCounter.alpha = 0.4;
+		Framerate.memoryCounter.alpha = 0.4;
+		Framerate.codenameBuildField.alpha = 0.4;
 	}
 
-	private var movingCam:Bool = false;
-	private var camDrag:FlxPoint = FlxPoint.get(0,0);
-	private var camDragSpeed:Float = 1.2;
+	override function destroy() {
+		super.destroy();
+		Framerate.fpsCounter.alpha = 1;
+		Framerate.memoryCounter.alpha = 1;
+		Framerate.codenameBuildField.alpha = 1;
+	}
+
+	//private var movingCam:Bool = false;
+	//private var camDragSpeed:Float = 1.2;
 
 	private var nextScroll:FlxPoint = FlxPoint.get(0,0);
 

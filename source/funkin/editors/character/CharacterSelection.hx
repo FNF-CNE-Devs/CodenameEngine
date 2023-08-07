@@ -1,5 +1,7 @@
 package funkin.editors.character;
 
+import funkin.options.type.OptionType;
+import funkin.options.type.NewOption;
 import flixel.util.FlxColor;
 import funkin.game.Character;
 import funkin.backend.chart.Chart;
@@ -16,12 +18,26 @@ class CharacterSelection extends EditorTreeMenu
 		super.create();
 
 		var modsList:Array<String> = Character.getList(true);
-		main = new OptionsScreen("Character Editor", "Select a character to edit", [
+
+		var list:Array<OptionType> = [
 			for (char in (modsList.length == 0 ? Character.getList(false) : modsList))
 				new IconOption(char, "Press ACCEPT to edit this character.", Character.getIconFromCharName(char),
 			 	function() {
 					FlxG.switchState(new CharacterEditor(char));
 				})
-		]);
+		];
+
+		list.insert(0, new NewOption("New Character", "New Character", function() {
+
+		}));
+
+		main = new OptionsScreen("Character Editor", "Select a character to edit", list);
+	}
+
+	override function createPost() {
+		super.createPost();
+
+		var idk:OptionsScreen = optionsTree.members.last();
+		if (idk.members.length > 0) idk.changeSelection(1);
 	}
 }
