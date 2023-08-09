@@ -361,6 +361,36 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		globalOffset.put();
 	}
 
+	// FlxTrail Stuff for fixing position
+
+	var __reverseTrailProcedure:Bool = false;
+
+	/**
+	 * When using trails on characters you should do `trail.beforeCache = char.beforeTrailCache;`
+	 **/
+	dynamic function beforeTrailCache() {
+		if (isFlippedOffsets())
+		{
+			flipX = !flipX;
+			scale.x *= -1;
+			__reverseTrailProcedure = true;
+		}
+	}
+
+	/**
+	 * When using trails on characters you should do `trail.afterCache = char.afterTrailCache;`
+	 **/
+	dynamic function afterTrailCache() {
+		if (__reverseTrailProcedure)
+		{
+			flipX = !flipX;
+			scale.x *= -1;
+			__reverseTrailProcedure = false;
+		}
+	}
+
+	// Character editor and loading
+
 	public function applyXML(xml:Access) {
 		this.xml = xml; // modders wassup
 		sprite = curCharacter;
