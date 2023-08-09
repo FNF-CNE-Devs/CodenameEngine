@@ -378,7 +378,7 @@ class Charter extends UIState {
 		};
 		uiGroup.add(scrollBar);
 
-		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0\nBPM: 0");
+		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0\nBPM: 0\nTime Signature: 4/4");
 		songPosInfo.alignment = RIGHT;
 		uiGroup.add(songPosInfo);
 
@@ -882,7 +882,8 @@ class Charter extends UIState {
 		+ '\nStep: ${curStep}'
 		+ '\nBeat: ${curBeat}'
 		+ '\nMeasure: ${curMeasure}'
-		+ '\nBPM: ${Conductor.bpm}';
+		+ '\nBPM: ${Conductor.bpm}'
+		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}';
 
 		if (FlxG.sound.music.playing) {
 			conductorFollowerSpr.y = curStepFloat * 40;

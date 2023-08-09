@@ -53,13 +53,13 @@ class MetaDataScreen extends UISubstateWindow {
 		add(bpmStepper);
 		addLabelOn(bpmStepper, "BPM");
 
-		beatsPerMesureStepper = new UINumericStepper(bpmStepper.x + 60 + 26, bpmStepper.y, metadata.stepsPerBeat, 1, 0, 1, null, 54);
+		beatsPerMesureStepper = new UINumericStepper(bpmStepper.x + 60 + 26, bpmStepper.y, metadata.beatsPerMesure, 1, 0, 1, null, 54);
 		add(beatsPerMesureStepper);
 		addLabelOn(beatsPerMesureStepper, "Time Signature");
 
 		add(new UIText(beatsPerMesureStepper.x + 30, beatsPerMesureStepper.y + 3, 0, "/", 22));
 
-		stepsPerBeatStepper = new UINumericStepper(beatsPerMesureStepper.x + 30 + 24, beatsPerMesureStepper.y, metadata.beatsPerMesure, 1, 0, 1, null, 54);
+		stepsPerBeatStepper = new UINumericStepper(beatsPerMesureStepper.x + 30 + 24, beatsPerMesureStepper.y, metadata.stepsPerBeat, 1, 0, 1, null, 54);
 		add(stepsPerBeatStepper);
 
 		needsVoicesCheckbox = new UICheckbox(stepsPerBeatStepper.x + 80 + 26, stepsPerBeatStepper.y, "Voices", metadata.needsVoices);
