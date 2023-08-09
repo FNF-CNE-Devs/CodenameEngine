@@ -12,8 +12,8 @@ class MetaDataScreen extends UISubstateWindow {
 
 	public var songNameTextBox:UITextBox;
 	public var bpmStepper:UINumericStepper;
-	public var stepsPerBeatStepper:UINumericStepper;
 	public var beatsPerMesureStepper:UINumericStepper;
+	public var stepsPerBeatStepper :UINumericStepper;
 	public var needsVoicesCheckbox:UICheckbox;
 
 	public var displayNameTextBox:UITextBox;
@@ -53,16 +53,16 @@ class MetaDataScreen extends UISubstateWindow {
 		add(bpmStepper);
 		addLabelOn(bpmStepper, "BPM");
 
-		stepsPerBeatStepper = new UINumericStepper(bpmStepper.x + 60 + 26, bpmStepper.y, metadata.stepsPerBeat, 1, 0, 1, null, 54);
-		add(stepsPerBeatStepper);
-		addLabelOn(stepsPerBeatStepper, "Time Signature");
-
-		add(new UIText(stepsPerBeatStepper.x + 30, stepsPerBeatStepper.y + 3, 0, "/", 22));
-
-		beatsPerMesureStepper = new UINumericStepper(stepsPerBeatStepper.x + 30 + 24, stepsPerBeatStepper.y, metadata.beatsPerMesure, 1, 0, 1, null, 54);
+		beatsPerMesureStepper = new UINumericStepper(bpmStepper.x + 60 + 26, bpmStepper.y, metadata.stepsPerBeat, 1, 0, 1, null, 54);
 		add(beatsPerMesureStepper);
+		addLabelOn(beatsPerMesureStepper, "Time Signature");
 
-		needsVoicesCheckbox = new UICheckbox(beatsPerMesureStepper.x + 80 + 26, beatsPerMesureStepper.y, "Voices", metadata.needsVoices);
+		add(new UIText(beatsPerMesureStepper.x + 30, beatsPerMesureStepper.y + 3, 0, "/", 22));
+
+		stepsPerBeatStepper = new UINumericStepper(beatsPerMesureStepper.x + 30 + 24, beatsPerMesureStepper.y, metadata.beatsPerMesure, 1, 0, 1, null, 54);
+		add(stepsPerBeatStepper);
+
+		needsVoicesCheckbox = new UICheckbox(stepsPerBeatStepper.x + 80 + 26, stepsPerBeatStepper.y, "Voices", metadata.needsVoices);
 		add(needsVoicesCheckbox);
 		addLabelOn(needsVoicesCheckbox, "Needs Voices");
 		needsVoicesCheckbox.y += 6; needsVoicesCheckbox.x += 4;
@@ -135,14 +135,14 @@ class MetaDataScreen extends UISubstateWindow {
 	}
 
 	public function saveMeta() {
-		for (stepper in [bpmStepper, stepsPerBeatStepper, beatsPerMesureStepper])
+		for (stepper in [bpmStepper, beatsPerMesureStepper, stepsPerBeatStepper])
 			@:privateAccess stepper.__onChange(stepper.label.text);
 
 		PlayState.SONG.meta = {
 			name: songNameTextBox.label.text,
 			bpm: bpmStepper.value,
-			stepsPerBeat: Std.int(stepsPerBeatStepper.value),
 			beatsPerMesure: Std.int(beatsPerMesureStepper.value),
+			stepsPerBeat: Std.int(stepsPerBeatStepper.value),
 			needsVoices: needsVoicesCheckbox.checked,
 			displayName: displayNameTextBox.label.text,
 			icon: iconTextBox.label.text,

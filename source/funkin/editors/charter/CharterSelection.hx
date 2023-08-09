@@ -46,30 +46,4 @@ class CharterSelection extends EditorTreeMenu {
 		var idk:OptionsScreen = optionsTree.members.last();
 		if (idk.members.length > 0) idk.changeSelection(1);
 	}
-
-	public override function update(elapsed:Float) {
-		super.update(elapsed);
-
-		bg.colorTransform.redOffset = lerp(bg.colorTransform.redOffset, 0, 0.0625);
-		bg.colorTransform.greenOffset = lerp(bg.colorTransform.greenOffset, 0, 0.0625);
-		bg.colorTransform.blueOffset = lerp(bg.colorTransform.blueOffset, 0, 0.0625);
-		bg.colorTransform.redMultiplier = lerp(bg.colorTransform.redMultiplier, 1, 0.0625);
-		bg.colorTransform.greenMultiplier = lerp(bg.colorTransform.greenMultiplier, 1, 0.0625);
-		bg.colorTransform.blueMultiplier = lerp(bg.colorTransform.blueMultiplier, 1, 0.0625);
-	}
-
-	public override function onMenuChange() {
-		super.onMenuChange();
-		if (optionsTree.members.length > 1) { // selected a song
-			// small flashbang
-			var color:FlxColor = freeplayList.songs[main.curSelected].parsedColor.getDefault(0xFFFFFFFF);
-
-			bg.colorTransform.redOffset = 0.25 * color.red;
-			bg.colorTransform.greenOffset = 0.25 * color.green;
-			bg.colorTransform.blueOffset = 0.25 * color.blue;
-			bg.colorTransform.redMultiplier = FlxMath.lerp(1, color.redFloat, 0.25);
-			bg.colorTransform.greenMultiplier = FlxMath.lerp(1, color.greenFloat, 0.25);
-			bg.colorTransform.blueMultiplier = FlxMath.lerp(1, color.blueFloat, 0.25);
-		}
-	}
 }
