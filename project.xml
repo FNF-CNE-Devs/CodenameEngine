@@ -125,13 +125,13 @@
 	<define name="CUSTOM_CLASSES" />
 
 	<!-- Comment this out to disable multithreading !-->
-	<haxedef name="ALLOW_MULTITHREADING" unless="web || flash" />
+	<haxedef name="ALLOW_MULTITHREADING" unless="web || mobile || flash" />
 
 	<!-- Comment this out to disable titlescreen.xml !-->
 	<haxedef name="TITLESCREEN_XML" />
 
 	<!-- Comment this out to disable mods folder !-->
-	<haxedef name="MOD_SUPPORT" unless="web"/>
+	<haxedef name="MOD_SUPPORT" unless="web" />
 
 	<!-- Comment this out to disable global scripts !-->
 	<haxedef name="GLOBAL_SCRIPT" />
@@ -143,7 +143,7 @@
 	<haxedef name="USE_ADAPTED_ASSETS" />
 
 	<!-- Comment this out to disable support for custom ndlls. !-->
-	<haxedef name="NDLLS_SUPPORTED" />
+	<haxedef name="NDLLS_SUPPORTED" unless="mobile" />
 
 	<!-- Comment this out to disable support for custom extended classes (data/classes). !-->
 	<define name="SOFTCODED_CLASSES" />
