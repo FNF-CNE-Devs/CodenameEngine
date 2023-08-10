@@ -111,10 +111,10 @@
 	<!-- <define name="UPDATE_CHECKING" unless="web || hl || neko"/> -->
 
 	<!-- Comment this out to disable Discord RPC !-->
-	<define name="DISCORD_RPC" unless="web || hl || neko"/>
+	<define name="DISCORD_RPC" it="cpp" />
 
 	<!-- Comment this out to disable GitHub API integration !-->
-	<define name="GITHUB_API" unless="web || hl"/>
+	<define name="GITHUB_API" unless="web || hl" />
 
 	<!-- Comment this out to prevent unused classes from being compiled.
 		 Reduces compilation time at the cost of limited HScript flexibility. !-->
@@ -185,6 +185,7 @@
 	<haxelib name="discord-rpc" if="DISCORD_RPC"/>
 
 	<haxelib name="markdown" />
+	<haxelib name="extension-androidtools" if="android" />
 
 	<haxedef name="no-deprecation-warnings"/>
 
