@@ -368,7 +368,7 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 		}
 		if (!Reflect.hasField(data, name)) return null;
 		var field = Reflect.field(data, name);
-		var cl = Std.string(Type.getClass(field));
+		var cl = Type.getClassName(Type.getClass(field));
 
 		// cant do "field is ShaderInput" for some reason
 		if (cl.startsWith("openfl.display.ShaderParameter")) {
@@ -393,8 +393,7 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 			return val;
 		} else {
 			var field = Reflect.field(data, name);
-			var cl = Std.string(Type.getClass(field));
-
+			var cl = Type.getClassName(Type.getClass(field));
 			// cant do "field is ShaderInput" for some reason
 			if (cl.startsWith("openfl.display.ShaderParameter")) {
 				@:privateAccess
