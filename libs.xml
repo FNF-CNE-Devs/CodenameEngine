@@ -16,6 +16,7 @@
     <lib name="away3d" />
 	<lib name="format" />
 	<lib name="markdown" />
+	<lib name="extension-androidtools" />
 	<lib name="hxcpp-debug-server" />
 
     <!-- OpenFL & Lime (Required for Flixel) -->
