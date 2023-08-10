@@ -1,8 +1,8 @@
-name: Building
+name: Android Build
 on:
   push:
 jobs:
-  Building:
+  Android Build:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
@@ -26,7 +26,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
-          haxe-version: 4.3.1
+          haxe-version: 4.2.5
 
       - name: Restore Previous Cache
         id: cache-build-restore
