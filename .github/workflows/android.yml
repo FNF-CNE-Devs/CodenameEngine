@@ -1,0 +1,100 @@
+name: Building
+on:
+  push:
+jobs:
+  Building:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+        with:
+          submodules: true
+
+      - name: Setup Android NDK
+        id: setup-ndk
+        uses: nttld/setup-ndk@main
+        with:
+          ndk-version: r21e
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@main
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.3.1
+
+      - name: Restore Previous Cache
+        id: cache-build-restore
+        uses: actions/cache/restore@main
+        with:
+          path: |
+            .haxelib
+            export/release/android/haxe
+            export/release/android/obj
+          key: cache-android-build
+
+      - name: Installing/Updating libraries
+        run: |
+          haxe -cp commandline -D analyzer-optimize --run Main setup
+
+      - name: Configure Android
+        run: |
+          haxelib run lime setup -alias -y
+          haxelib run lime config ANDROID_SDK $ANDROID_HOME
+          haxelib run lime config ANDROID_NDK_ROOT $ANDROID_NDK_HOME
+          haxelib run lime config JAVA_HOME $JAVA_HOME
+          haxelib run lime config ANDROID_SETUP true
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+
+      - name: Building
+        run: haxelib run lime build android
+
+      - name: Clear Previous Cache
+        uses: actions/github-script@main
+        with:
+          script: |
+            try {
+            	const caches = await github.rest.actions.getActionsCacheList({
+            		owner: context.repo.owner,
+            		repo: context.repo.repo,
+            	})
+
+            	if (typeof caches.data.actions_caches != null && caches.data.actions_caches.length > 0) {
+            		for (const cache of caches.data.actions_caches) {
+            			if (cache.key == "cache-android-build") {
+            				console.log('Clearing ' + cache.key + '...')
+            				await github.rest.actions.deleteActionsCacheById({
+            					owner: context.repo.owner,
+            					repo: context.repo.repo,
+            					cache_id: cache.id,
+            				})
+            				console.log("Previous Cache Cleared!")
+            			}
+            		}
+            	}
+            } catch (error) {
+            	console.log(error.message)
+            }
+
+      - name: Save Current Cache
+        id: cache-build-save
+        uses: actions/cache/save@main
+        with:
+          path: |
+            .haxelib
+            export/release/android/haxe
+            export/release/android/obj
+          key: cache-android-build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: androidBuild
+          path: export/release/android/bin/app/build/outputs/apk/debug
+          if-no-files-found: warn
