@@ -2,7 +2,8 @@ name: Android Build
 on:
   push:
 jobs:
-  Android-Build:
+  build:
+    name: Android Build
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
