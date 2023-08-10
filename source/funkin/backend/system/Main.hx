@@ -1,5 +1,10 @@
 package funkin.backend.system;
 
+#if android
+import android.content.Context;
+#elseif ios
+import lime.system.System;
+#end
 import funkin.backend.assets.AssetsLibraryList;
 import funkin.backend.system.framerate.SystemInfo;
 import openfl.utils.AssetLibrary;
@@ -63,6 +68,12 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
+
+		#if android
+		Sys.setCwd(Context.getExternalFilesDir() + '/');
+		#elseif ios
+		Sys.setCwd(System.applicationStorageDirectory);
+		#end
 
 		instance = this;
 
