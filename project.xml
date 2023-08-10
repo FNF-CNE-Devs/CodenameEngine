@@ -111,7 +111,7 @@
 	<!-- <define name="UPDATE_CHECKING" unless="web || hl || neko"/> -->
 
 	<!-- Comment this out to disable Discord RPC !-->
-	<define name="DISCORD_RPC" it="cpp" />
+	<define name="DISCORD_RPC" it="cpp" unless="mobile" />
 
 	<!-- Comment this out to disable GitHub API integration !-->
 	<define name="GITHUB_API" unless="web || hl" />
