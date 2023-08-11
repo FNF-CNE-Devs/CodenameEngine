@@ -169,6 +169,7 @@ class CharacterButton extends UIButton {
 		charIcon.scale.set(0.3, 0.3);
 		charIcon.updateHitbox();
 		charIcon.setPosition(x + 10, bHeight/2 - charIcon.height / 2);
+		charIcon.scrollFactor.set(1,1);
 
 		members.push(charIcon);
 
