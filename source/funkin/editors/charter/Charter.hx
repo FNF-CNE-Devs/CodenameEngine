@@ -653,7 +653,7 @@ class Charter extends UIState {
 					openContextMenu(topMenu[1].childs);
 				}
 		}
-
+		addEventSpr.selectable = !selectionBox.visible;
 		if (gridActionType == NONE && mousePos.x < 0 && mousePos.x > -addEventSpr.bWidth) {
 			addEventSpr.incorporeal = false;
 			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0.75, 0.25);
