@@ -9,7 +9,7 @@ import flixel.util.FlxColor;
 using StringTools;
 
 class CharterEventScreen extends UISubstateWindow {
-	public var cam:FlxCamera;
+	//public var cam:FlxCamera;
 	public var chartEvent:CharterEvent;
 
 	public var step:Float = 0;

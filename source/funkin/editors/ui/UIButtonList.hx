@@ -126,4 +126,13 @@ class UIButtonList<T:UIButton> extends UIWindow {
 			buttonCameras.zoom = __lastDrawCameras[0].zoom;
 		}
 	}
+
+	override function destroy() {
+		super.destroy();
+
+		if(buttonCameras != null) {
+			FlxG.cameras.remove(buttonCameras);
+			buttonCameras = null;
+		}
+	}
 }

@@ -10,11 +10,14 @@ float uBlur = 0.015;
 float uBrightness = 0.6;
 
 vec4 getColor(vec2 pos) {
-	if (pos.x < 0) pos.x = 0;
-	else if (pos.x > 1.0 - (1.0 / iResolution.x)) pos.x = 1.0 - (1.0 / iResolution.x);
-	if (pos.y < 0) pos.y = 0;
-	else if (pos.y > 1.0 - (1.0 / iResolution.y)) pos.y = 1.0 - (1.0 / iResolution.y);
-	return getTexture(bitmap, pos);
+	vec2 ps = camToOg(pos);
+	if (ps.x < 0) ps.x = 0;
+	//else if (ps.x > 1.0 - (1.0 / iResolution.x)) ps.x = 1.0 - (1.0 / iResolution.x);
+	else if (ps.x > 1.0) return vec4(0.0);
+	if (ps.y < 0) ps.y = 0;
+	//else if (ps.y > 1.0 - (1.0 / iResolution.y)) return ps.y = 1.0 - (1.0 / iResolution.y);
+	else if (ps.y > 1.0) return vec4(0.0);
+	return flixel_texture2D(bitmap, (ps));
 }
 
 
