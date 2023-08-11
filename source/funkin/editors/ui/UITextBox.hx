@@ -1,6 +1,7 @@
 package funkin.editors.ui;
 
 import flixel.math.FlxPoint;
+import flixel.FlxG;
 import lime.ui.KeyModifier;
 import lime.ui.KeyCode;
 import openfl.desktop.Clipboard;
@@ -72,6 +73,10 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 		@:privateAccess {
 			if (selected) {
 				__wasFocused = true;
+				#if mobile
+				if (!FlxG.stage.window.textInputEnabled)
+					FlxG.stage.window.textInputEnabled = true;
+				#end
 				caretSpr.alpha = (FlxG.game.ticks % 666) >= 333 ? 1 : 0;
 
 				var curPos = switch(position) {
@@ -91,6 +96,10 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 			} else {
 				if (__wasFocused) {
 					__wasFocused = false;
+					#if mobile
+					if (FlxG.stage.window.textInputEnabled)
+						FlxG.stage.window.textInputEnabled = false;
+					#end
 					if (onChange != null)
 						onChange(label.text);
 				}
