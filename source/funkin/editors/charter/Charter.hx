@@ -53,6 +53,8 @@ class Charter extends UIState {
 	public var gridBackdropDummy:CharterBackdropDummy;
 	public var conductorFollowerSpr:FlxSprite;
 	public var topLimit:FlxSprite;
+	public var bottomLimit:FlxSprite;
+	public var bottomSeparator:FlxSprite;
 
 	public var strumlineInfoBG:FlxSprite;
 	public var strumlineAddButton:CharterStrumlineExtraButton;
@@ -346,7 +348,7 @@ class Charter extends UIState {
 		sectionSeparator.y = -2;
 		sectionSeparator.visible = Options.charterShowSections;
 		beatSeparator = new FlxBackdrop(null, Y, 0, 0);
-		beatSeparator.x = -10;
+		beatSeparator.x = -10; 
 		beatSeparator.y = -1;
 		sectionSeparator.visible = Options.charterShowBeats;
 		for(sep in [sectionSeparator, beatSeparator]) {
@@ -387,6 +389,20 @@ class Charter extends UIState {
 		topLimit.color = 0xFF888888;
 		topLimit.blend = MULTIPLY;
 
+		bottomLimit = new FlxSprite();
+		bottomLimit.makeGraphic(1, 1, -1);
+		bottomLimit.color = 0xFF888888;
+		bottomLimit.blend = MULTIPLY;
+
+		bottomSeparator = new FlxSprite();
+		bottomSeparator.makeGraphic(1, 1, -1);
+		bottomSeparator.alpha = 0.5;
+		bottomSeparator.scrollFactor.set(1, 1);
+		bottomSeparator.cameras = [charterCamera];
+
+		bottomSeparator.x = -20;
+		bottomSeparator.y = -2;
+
 		strumlineInfoBG = new UISprite();
 		strumlineInfoBG.loadGraphic(Paths.image('editors/charter/strumline-info-bg'));
 		strumlineInfoBG.y = 23;
@@ -411,6 +427,8 @@ class Charter extends UIState {
 		add(eventsGroup);
 		add(notesGroup);
 		add(topLimit);
+		add(bottomLimit);
+		add(bottomSeparator);
 		add(conductorFollowerSpr);
 		add(selectionBox);
 		add(strumlineInfoBG);
@@ -468,6 +486,9 @@ class Charter extends UIState {
 	public function refreshBPMSensitive() {
 		// refreshes everything dependant on BPM, and BPM changes
 		scrollBar.length = Conductor.getStepForTime(FlxG.sound.music.getDefault(vocals).length);
+
+		bottomLimit.y = Conductor.getStepForTime(FlxG.sound.music.getDefault(vocals).length) * 40;
+		bottomSeparator.y = bottomLimit.y-2;
 	}
 
 	public override function beatHit(curBeat:Int) {
@@ -876,7 +897,12 @@ class Charter extends UIState {
 			}
 		}
 
-		Conductor.songPosition = FlxMath.bound(Conductor.songPosition, 0, FlxG.sound.music.length);
+		Conductor.songPosition = FlxMath.bound(Conductor.songPosition, 0, FlxG.sound.music.getDefault(vocals).length);
+
+		if (Conductor.songPosition >= FlxG.sound.music.getDefault(vocals).length) {
+			FlxG.sound.music.pause();
+			vocals.pause();
+		}
 
 		songPosInfo.text = '${CoolUtil.timeToStr(Conductor.songPosition)} / ${CoolUtil.timeToStr(FlxG.sound.music.length)}'
 		+ '\nStep: ${curStep}'
@@ -915,6 +941,12 @@ class Charter extends UIState {
 		topLimit.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, Math.ceil(FlxG.height / charterCamera.zoom));
 		topLimit.updateHitbox();
 		topLimit.y = -topLimit.height;
+
+		bottomLimit.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, Math.ceil(FlxG.height / charterCamera.zoom));
+		bottomLimit.updateHitbox();
+
+		bottomSeparator.scale.set((gridBackdrop.strumlinesAmount * 4 * 40) + 20, 4);
+		bottomSeparator.updateHitbox();
 
 		strumlineInfoBG.scale.set(FlxG.width / charterCamera.zoom, 1);
 		strumlineInfoBG.updateHitbox();
@@ -1075,6 +1107,8 @@ class Charter extends UIState {
 	}
 
 	function _playback_play(_) {
+		if (Conductor.songPosition >= FlxG.sound.music.getDefault(vocals).length) return;
+
 		if (FlxG.sound.music.playing) {
 			FlxG.sound.music.pause();
 			vocals.pause();
