@@ -1146,7 +1146,7 @@ class PlayState extends MusicBeatState
 			var pos = FlxPoint.get();
 			var r = 0;
 			for(c in strumLines.members[curCameraTarget].characters) {
-				if (c == null) continue;
+				if (c == null || !c.visible) continue;
 				var cpos = c.getCameraPosition();
 				pos.x += cpos.x;
 				pos.y += cpos.y;

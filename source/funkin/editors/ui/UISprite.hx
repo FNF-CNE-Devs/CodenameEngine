@@ -77,7 +77,8 @@ class UISprite extends FlxSprite {
 			FlxCamera._defaultCameras = cameras;
 
 			for(m in members)
-				m.draw();
+				if(m.exists && m.visible)
+					m.draw();
 
 			FlxCamera._defaultCameras = __oldDefCams;
 		}

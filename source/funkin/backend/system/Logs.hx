@@ -35,7 +35,7 @@ class Logs {
 			if (Style == LogStyle.CONSOLE)  {prefix = "> ";					color = WHITE;	level = INFO;   } else
 			if (Style == LogStyle.ERROR)    {prefix = "[FLIXEL]";		    color = RED;	level = ERROR;  } else
 			if (Style == LogStyle.NORMAL)   {prefix = "[FLIXEL]";			color = WHITE;	level = INFO;   } else
-			if (Style == LogStyle.NOTICE)   {prefix = "[FLIXEL]";	        color = GREEN;	level = WARNING;} else
+			if (Style == LogStyle.NOTICE)   {prefix = "[FLIXEL]";	        color = GREEN;	level = VERBOSE;} else
 			if (Style == LogStyle.WARNING)  {prefix = "[FLIXEL]";	        color = YELLOW;	level = WARNING;}
 
 			var d:Dynamic = Data;

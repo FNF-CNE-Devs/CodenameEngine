@@ -54,7 +54,10 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
 
-		forEach((n) -> n.draw());
+		forEach((n) -> {
+			if(n.exists && n.visible)
+				n.draw();
+		});
 
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
 	}
@@ -63,7 +66,10 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
 
-		forEach((n) -> n.update(elapsed));
+		forEach((n) -> {
+			if(n.exists && n.active)
+				n.update(elapsed);
+		});
 
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
 	}

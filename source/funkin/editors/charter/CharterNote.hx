@@ -67,6 +67,8 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 		sustainSpr.scale.set(10, (40 * susLength));
 		sustainSpr.updateHitbox();
+		sustainSpr.exists = susLength != 0;
+		sustainSpr.alpha = alpha;
 
 		if (angleTween != null) angleTween.cancel();
 
@@ -115,14 +117,16 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		sustainSpr.follow(this, 15, 20);
+		if(sustainSpr.exists)
+			sustainSpr.follow(this, 15, 20);
 
 		if (__passed != (__passed = step < Conductor.curStepFloat)) {
 			alpha = __passed ? 0.6 : 1;
 			if (__passed && FlxG.sound.music.playing && Charter.instance.hitsoundsEnabled(id))
 				Charter.instance.hitsound.replay();
 		}
-		sustainSpr.alpha = alpha;
+		if(sustainSpr.exists)
+			sustainSpr.alpha = alpha;
 
 		colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;
 		colorTransform.redOffset = colorTransform.greenOffset = selected ? 96 : 0;
