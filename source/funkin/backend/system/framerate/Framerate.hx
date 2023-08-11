@@ -12,6 +12,7 @@ import openfl.ui.Keyboard;
 
 class Framerate extends Sprite {
 	public static var instance:Framerate;
+	public static var isLoaded:Bool = false;
 
 	public static var textFormat:TextFormat;
 	public static var fpsCounter:FramerateCounter;
@@ -47,6 +48,8 @@ class Framerate extends Sprite {
 		if (instance != null) throw "Cannot create another instance";
 		instance = this;
 		textFormat = new TextFormat("Consolas", 12, -1);
+
+		isLoaded = true;
 
 		x = 10;
 		y = 2;

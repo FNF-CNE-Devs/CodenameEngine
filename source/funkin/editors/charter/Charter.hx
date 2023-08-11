@@ -441,9 +441,20 @@ class Charter extends UIState {
 
 		loadSong();
 
-		Framerate.fpsCounter.alpha = 0.4;
-		Framerate.memoryCounter.alpha = 0.4;
-		Framerate.codenameBuildField.alpha = 0.4;
+		if(Framerate.isLoaded) {
+			Framerate.fpsCounter.alpha = 0.4;
+			Framerate.memoryCounter.alpha = 0.4;
+			Framerate.codenameBuildField.alpha = 0.4;
+		}
+	}
+
+	override function destroy() {
+		if(Framerate.isLoaded) {
+			Framerate.fpsCounter.alpha = 1;
+			Framerate.memoryCounter.alpha = 1;
+			Framerate.codenameBuildField.alpha = 1;
+		}
+		super.destroy();
 	}
 
 	var instPath:String;
@@ -1147,13 +1158,6 @@ class Charter extends UIState {
 		}
 		if (v != null)
 			undoList.insert(0, v);
-	}
-
-	override function destroy() {
-		Framerate.fpsCounter.alpha = 1;
-		Framerate.memoryCounter.alpha = 1;
-		Framerate.codenameBuildField.alpha = 1;
-		super.destroy();
 	}
 
 	inline function _chart_playtest(_)
