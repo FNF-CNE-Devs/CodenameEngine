@@ -50,7 +50,7 @@ class NativeAPI {
 	 * Sets the console colors
 	 */
 	public static function setConsoleColors(foregroundColor:ConsoleColor = NONE, ?backgroundColor:ConsoleColor = NONE) {
-		#if windows
+		#if (windows && !hl)
 		if(foregroundColor == NONE)
 			foregroundColor = LIGHTGRAY;
 		if(backgroundColor == NONE)
