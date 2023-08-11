@@ -96,9 +96,7 @@ class UIWarningSubstate extends MusicBeatSubstate {
 		this.buttons = buttons;
 	}
 }
-typedef WarningCamShader = {
-	var cam:FlxCamera;
-}
+
 typedef WarningButton = {
 	var label:String;
 	var onClick:UIWarningSubstate->Void;

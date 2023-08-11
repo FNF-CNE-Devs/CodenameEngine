@@ -39,7 +39,7 @@ class EditorPicker extends MusicBeatSubstate {
 
 	public var curSelected:Int = 0;
 
-
+	public var subCam:FlxCamera;
 	public var oldMousePos:FlxPoint = FlxPoint.get();
 	public var curMousePos:FlxPoint = FlxPoint.get();
 
@@ -52,9 +52,9 @@ class EditorPicker extends MusicBeatSubstate {
 	public override function create() {
 		super.create();
 
-		camera = new FlxCamera();
-		camera.bgColor = 0;
-		FlxG.cameras.add(camera, false);
+		camera = subCam = new FlxCamera();
+		subCam.bgColor = 0;
+		FlxG.cameras.add(subCam, false);
 
 		bg = new FlxSprite().makeGraphic(1, 1, 0xFF000000);
 		bg.scrollFactor.set();
@@ -72,7 +72,7 @@ class EditorPicker extends MusicBeatSubstate {
 		}
 		sprites[0].selected = true;
 
-		FlxG.mouse.getScreenPosition(camera, oldMousePos);
+		FlxG.mouse.getScreenPosition(subCam, oldMousePos);
 	}
 
 	public override function update(elapsed:Float) {
@@ -82,12 +82,12 @@ class EditorPicker extends MusicBeatSubstate {
 
 		if (selected) {
 			camVelocity += FlxG.width * elapsed * 2;
-			camera.scroll.x += camVelocity * elapsed;
+			subCam.scroll.x += camVelocity * elapsed;
 			return;
 		}
 		changeSelection(-FlxG.mouse.wheel + (controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
 
-		FlxG.mouse.getScreenPosition(camera, curMousePos);
+		FlxG.mouse.getScreenPosition(subCam, curMousePos);
 		if (curMousePos.x != oldMousePos.x || curMousePos.y != oldMousePos.y) {
 			oldMousePos.set(curMousePos.x, curMousePos.y);
 			curSelected = -1;
@@ -102,13 +102,13 @@ class EditorPicker extends MusicBeatSubstate {
 				MusicBeatState.skipTransIn = true;
 				MusicBeatState.skipTransOut = true;
 
-				FlxG.sound.music.fadeOut(0.7, 0, function(n) {
-					FlxG.sound.music.stop();
-				});
+				if (FlxG.sound.music != null)
+					FlxG.sound.music.fadeOut(0.7, 0, function(n) {
+						FlxG.sound.music.stop();
+					});
 
 				sprites[curSelected].flicker(function() {
-					if (FlxG.sound.music != null)
-					camera.fade(0xFF000000, 0.25, false, function() {
+					subCam.fade(0xFF000000, 0.25, false, function() {
 						FlxG.switchState(Type.createInstance(options[curSelected].state, []));
 					});
 				});
@@ -126,6 +126,8 @@ class EditorPicker extends MusicBeatSubstate {
 
 		oldMousePos.put();
 		curMousePos.put();
+
+		FlxG.cameras.remove(subCam);
 	}
 
 	public function changeSelection(change:Int) {
