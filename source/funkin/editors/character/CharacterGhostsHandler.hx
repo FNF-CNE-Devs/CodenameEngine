@@ -30,9 +30,11 @@ class CharacterGhostsHandler extends FlxTypedGroup<Character> {
 
 	public function removeGhost(anim:String) {
 		var ghost:Character = animGhosts.get(anim);
-		@:privateAccess ghost.animation._curAnim = null;
-		animGhosts.remove(anim);
-		ghost.destroy();
+		@:privateAccess if (ghost != null) {
+			ghost.animation._curAnim = null;
+			animGhosts.remove(anim);
+			ghost.destroy();
+		}
 	}
 
 	public function updateInfos(xml:Xml) {
