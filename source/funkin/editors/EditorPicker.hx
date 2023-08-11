@@ -127,7 +127,8 @@ class EditorPicker extends MusicBeatSubstate {
 		oldMousePos.put();
 		curMousePos.put();
 
-		FlxG.cameras.remove(subCam);
+		if (FlxG.cameras.list.contains(subCam))
+			FlxG.cameras.remove(subCam);
 	}
 
 	public function changeSelection(change:Int) {
