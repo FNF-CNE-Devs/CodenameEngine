@@ -18,6 +18,8 @@ class SongCreationScreen extends UISubstateWindow {
 	public var beatsPerMesureStepper:UINumericStepper;
 	public var stepsPerBeatStepper :UINumericStepper;
 	public var needsVoicesCheckbox:UICheckbox;
+	public var instExplorer:UIFileExplorer;
+	public var voicesExplorer:UIFileExplorer;
 
 	public var displayNameTextBox:UITextBox;
 	public var iconTextBox:UITextBox;
@@ -79,6 +81,22 @@ class SongCreationScreen extends UISubstateWindow {
 		addLabelOn(needsVoicesCheckbox, "Needs Voices");
 		needsVoicesCheckbox.y += 6; needsVoicesCheckbox.x += 4;
 
+		instExplorer = new UIFileExplorer(songNameTextBox.x, songNameTextBox.y + 32 + 36, #if html5 "mp3" #else "ogg" #end, function (res) {
+			var audioPlayer:UIAudioPlayer = new UIAudioPlayer(instExplorer.x + 16, instExplorer.y + 8, res);
+			instExplorer.members.push(audioPlayer);
+			instExplorer.uiElement = audioPlayer;
+		});
+		songDataGroup.add(instExplorer);
+		addLabelOn(instExplorer, "Inst Audio File");
+
+		voicesExplorer = new UIFileExplorer(instExplorer.x + 320 + 26, instExplorer.y, #if html5 "mp3" #else "ogg" #end, function (res) {
+			var audioPlayer:UIAudioPlayer = new UIAudioPlayer(voicesExplorer.x + 16, voicesExplorer.y + 8, res);
+			voicesExplorer.members.push(audioPlayer);
+			voicesExplorer.uiElement = audioPlayer;
+		});
+		songDataGroup.add(voicesExplorer);
+		addLabelOn(voicesExplorer, "Vocal Audio File");
+
 		var menuTitle:UIText;
 		menuDataGroup.add(menuTitle = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, "Menus Data (Freeplay/Story)", 28));
 
@@ -139,7 +157,7 @@ class SongCreationScreen extends UISubstateWindow {
 		closeButton.color = 0xFFFF0000;
 
 		pages.push(cast add(songDataGroup));
-		pageSizes.push(FlxPoint.get(748 - 32 + 40, 520));
+		pageSizes.push(FlxPoint.get(748 - 32 + 40, 340));
 
 		pages.push(cast add(menuDataGroup));
 		pageSizes.push(FlxPoint.get(748 - 32 + 40, 400));

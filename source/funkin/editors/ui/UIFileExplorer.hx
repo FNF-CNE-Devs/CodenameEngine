@@ -1,0 +1,59 @@
+package funkin.editors.ui;
+
+import haxe.io.Bytes;
+import lime.ui.FileDialog;
+
+class UIFileExplorer extends UISliceSprite {
+	public var uploadButton:UIButton;
+	public var uploadIcon:FlxSprite;
+
+	public var deleteButton:UIButton;
+	public var deleteIcon:FlxSprite;
+
+	public var file:Bytes = null;
+	public var onFile:Bytes->Void;
+
+	public var uiElement:UISprite;
+
+	public function new(x:Float, y:Float, fileType:String = "txt", ?onFile:Bytes->Void) {
+		super(x, y, 320, 58, 'editors/ui/inputbox');
+
+		if (onFile != null) this.onFile = onFile;
+
+		uploadButton = new UIButton(x + 8, y+ 8, "", function () {
+			var fileDialog = new FileDialog();
+			fileDialog.onOpen.add(function(res) {
+				file = cast res;
+				deleteButton.visible = deleteButton.selectable = deleteIcon.visible = !(uploadButton.visible = uploadButton.selectable = false);
+
+				if (this.onFile != null) this.onFile(file);
+			});
+			fileDialog.open(fileType);
+		}, 320 - 16, 58 - 18);
+		members.push(uploadButton);
+
+		uploadIcon = new FlxSprite(uploadButton.x + (uploadButton.bWidth / 2) - 8, uploadButton.y + ((58-18)/2) - 8).loadGraphic(Paths.image('editors/charter/upload-button'));
+		uploadIcon.antialiasing = false;
+		uploadButton.members.push(uploadIcon);
+
+		deleteButton = new UIButton(x + 320 - (58 - 18) - 16, y + 8, "", function () {
+			if (uiElement != null) {
+				members.remove(uiElement);
+				uiElement.destroy();
+			}
+
+			file = null;
+			MemoryUtil.clearMajor();
+
+			deleteButton.visible = deleteButton.selectable = deleteIcon.visible = !(uploadButton.visible = uploadButton.selectable = true);
+		}, 58 - 18, 58 - 18);
+		deleteButton.color = 0xFFFF0000;
+		members.push(deleteButton);
+
+		deleteIcon = new FlxSprite(deleteButton.x + ((58 - 18)/2) - 8, deleteButton.y + ((58 - 18)/2) - 8).loadGraphic(Paths.image('editors/character/delete-button'));
+		deleteIcon.antialiasing = false;
+		members.push(deleteIcon);
+
+		deleteButton.visible = deleteButton.selectable = deleteIcon.visible = false;
+	}
+}
