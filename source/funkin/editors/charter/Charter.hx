@@ -496,9 +496,10 @@ class Charter extends UIState {
 
 	public function refreshBPMSensitive() {
 		// refreshes everything dependant on BPM, and BPM changes
-		scrollBar.length = Conductor.getStepForTime(FlxG.sound.music.getDefault(vocals).length);
+		var length = FlxG.sound.music.getDefault(vocals).length;
+		scrollBar.length = Conductor.getStepForTime(length);
 
-		bottomLimit.y = Conductor.getStepForTime(FlxG.sound.music.getDefault(vocals).length) * 40;
+		bottomLimit.y = Conductor.getStepForTime(length) * 40;
 		bottomSeparator.y = bottomLimit.y-2;
 	}
 
@@ -761,10 +762,12 @@ class Charter extends UIState {
 				note.updatePos(note.step, note.id + 4, note.susLength, note.type);
 		}
 
+		var noteOffset = (strumLines.members.indexOf(cStr)) * 4;
+
 		for(note in strL.notes) {
 			var n = new CharterNote();
 			var t = Conductor.getStepForTime(note.time);
-			n.updatePos(t, ((strumLines.members.indexOf(cStr)) * 4) + note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type);
+			n.updatePos(t, noteOffset + note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type);
 			notesGroup.add(n);
 		}
 		sortNotes();
@@ -908,14 +911,15 @@ class Charter extends UIState {
 			}
 		}
 
-		Conductor.songPosition = FlxMath.bound(Conductor.songPosition, 0, FlxG.sound.music.getDefault(vocals).length);
+		var songLength = FlxG.sound.music.getDefault(vocals).length;
+		Conductor.songPosition = FlxMath.bound(Conductor.songPosition, 0, songLength);
 
-		if (Conductor.songPosition >= FlxG.sound.music.getDefault(vocals).length) {
+		if (Conductor.songPosition >= songLength) {
 			FlxG.sound.music.pause();
 			vocals.pause();
 		}
 
-		songPosInfo.text = '${CoolUtil.timeToStr(Conductor.songPosition)} / ${CoolUtil.timeToStr(FlxG.sound.music.length)}'
+		songPosInfo.text = '${CoolUtil.timeToStr(Conductor.songPosition)} / ${CoolUtil.timeToStr(songLength)}'
 		+ '\nStep: ${curStep}'
 		+ '\nBeat: ${curBeat}'
 		+ '\nMeasure: ${curMeasure}'

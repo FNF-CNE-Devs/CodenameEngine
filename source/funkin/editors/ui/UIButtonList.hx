@@ -131,7 +131,8 @@ class UIButtonList<T:UIButton> extends UIWindow {
 		super.destroy();
 
 		if(buttonCameras != null) {
-			FlxG.cameras.remove(buttonCameras);
+			if (FlxG.cameras.list.contains(buttonCameras))
+				FlxG.cameras.remove(buttonCameras);
 			buttonCameras = null;
 		}
 	}
