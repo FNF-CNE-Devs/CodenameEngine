@@ -17,6 +17,8 @@ class UIDropDown extends UISliceSprite {
 		this.options = options;
 		this.index = index;
 
+		cursor = BUTTON;
+
 		label = new UIText(0, 0, width - height, options[index]);
 		members.push(label);
 
@@ -33,7 +35,6 @@ class UIDropDown extends UISliceSprite {
 	}
 
 	public override function update(elapsed:Float) {
-
 		var opened = curMenu.contextMenuOpened();
 		framesOffset = (opened || (hovered && FlxG.mouse.pressed)) ? 18 : (hovered ? 9 : 0);
 		if (FlxG.mouse.justReleased && (hovered || dropButton.hovered)) {
