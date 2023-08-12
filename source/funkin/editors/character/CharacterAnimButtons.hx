@@ -58,7 +58,7 @@ class CharacterAnimButtons extends UIButton {
 	public override function update(elapsed:Float) {
 		editButton.selectable = ghostButton.selectable = deleteButton.selectable = selectable;
 		editButton.shouldPress = ghostButton.shouldPress = deleteButton.shouldPress = shouldPress;
-		
+
 		hovered = !deleteButton.hovered;
 		updatePos();
 		super.update(elapsed);

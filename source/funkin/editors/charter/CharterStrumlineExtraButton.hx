@@ -13,7 +13,7 @@ class CharterStrumlineExtraButton extends UISprite {
 
 		scrollFactor.set(1, 0);
 		alpha = 0;
-		
+
 		button = new UISprite();
 		button.loadGraphic(Paths.image(imagePath));
 		button.scale.set(0.75,0.75);

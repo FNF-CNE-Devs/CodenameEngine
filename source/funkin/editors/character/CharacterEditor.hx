@@ -33,7 +33,7 @@ class CharacterEditor extends UIState {
 	// WINDOWS
 	public var characterPropertiresWindow:CharacterPropertiesWindow;
 	public var characterAnimsWindow:UIButtonList<CharacterAnimButtons>;
-	
+
 	// camera for the character itself so that it can be unzoomed/zoomed in again
 	public var charCamera:FlxCamera;
 	// camera for the animations list
@@ -51,7 +51,7 @@ class CharacterEditor extends UIState {
 
 	public override function create() {
 		super.create();
-		
+
 		topMenu = [
 			{
 				label: "File",
@@ -334,7 +334,7 @@ class CharacterEditor extends UIState {
 	function _file_save(_) {
 		#if sys
 		sys.io.File.saveContent(
-			Assets.getPath(Paths.xml('characters/${character.curCharacter}')), 
+			Assets.getPath(Paths.xml('characters/${character.curCharacter}')),
 			buildCharacter()
 		);
 		return;
@@ -386,7 +386,7 @@ class CharacterEditor extends UIState {
 					character.animOffsets.set(anim, offsets.clone());
 					ghosts.setOffsets(anim, offsets.clone());
 				}
-			
+
 				for (charButton in characterAnimsWindow.buttons.members)
 					charButton.updateInfo(charButton.anim, character.getAnimOffset(charButton.anim), ghosts.animGhosts[charButton.anim].visible);
 
@@ -462,7 +462,7 @@ class CharacterEditor extends UIState {
 	public function editAnim(name:String, animData:AnimData, addtoUndo:Bool = true) {
 		var oldAnimData:AnimData = character.animDatas.get(name);
 		var buttoner:CharacterAnimButtons = null;
-		for (button in characterAnimsWindow.buttons.members) 
+		for (button in characterAnimsWindow.buttons.members)
 			if (button.anim == name) buttoner = button;
 
 		ghosts.removeGhost(name);
@@ -528,7 +528,7 @@ class CharacterEditor extends UIState {
 		ghost.visible = !ghost.visible;
 
 		var animButton:CharacterAnimButtons = null;
-		for (button in characterAnimsWindow.buttons.members) 
+		for (button in characterAnimsWindow.buttons.members)
 			if (button.anim == anim) animButton = button;
 		animButton.updateInfo(anim, character.getAnimOffset(anim), ghost.visible);
 	}
@@ -590,8 +590,8 @@ class CharacterEditor extends UIState {
 		if (character.getNameList().length == 0) return;
 
 		character.animOffsets.set(anim, character.getAnimOffset(anim) + change);
-		for (i in characterAnimsWindow.buttons.members) 
-			if (i.anim == anim) 
+		for (i in characterAnimsWindow.buttons.members)
+			if (i.anim == anim)
 				i.updateInfo(anim, character.getAnimOffset(anim), ghosts.animGhosts[anim].visible);
 		character.frameOffset.set(character.getAnimOffset(anim).x, character.getAnimOffset(anim).y);
 
@@ -610,8 +610,8 @@ class CharacterEditor extends UIState {
 		];
 		for (anim in character.getNameList()) {
 			character.animOffsets[anim].zero();
-			for (i in characterAnimsWindow.buttons.members) 
-				if (i.anim == anim) 
+			for (i in characterAnimsWindow.buttons.members)
+				if (i.anim == anim)
 					i.updateInfo(anim, character.getAnimOffset(anim), ghosts.animGhosts[anim].visible);
 		}
 

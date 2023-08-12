@@ -348,7 +348,7 @@ class Charter extends UIState {
 		sectionSeparator.y = -2;
 		sectionSeparator.visible = Options.charterShowSections;
 		beatSeparator = new FlxBackdrop(null, Y, 0, 0);
-		beatSeparator.x = -10; 
+		beatSeparator.x = -10;
 		beatSeparator.y = -1;
 		sectionSeparator.visible = Options.charterShowBeats;
 		for(sep in [sectionSeparator, beatSeparator]) {
@@ -414,7 +414,7 @@ class Charter extends UIState {
 		strumlineAddButton.cameras = [charterCamera];
 		strumlineInfoBG.cameras = [charterCamera];
 		strumLines.cameras = [charterCamera];
-		
+
 		addEventSpr = new CharterEventAdd();
 		addEventSpr.alpha = 0;
 		addEventSpr.cameras = [charterCamera];
@@ -522,7 +522,7 @@ class Charter extends UIState {
 			cast(group, FlxTypedGroup<Dynamic>).forEach(function(n) {
 				n.selected = false;
 				if (n.hovered && gridActionType == NONE) {
-					if (FlxG.mouse.justReleased) { 
+					if (FlxG.mouse.justReleased) {
 						if (FlxG.keys.pressed.CONTROL)
 							selection.push(cast n);
 						else if (FlxG.keys.pressed.SHIFT)
@@ -559,18 +559,18 @@ class Charter extends UIState {
 						selectionBox.bHeight = Std.int(Math.abs(mousePos.y - dragStartPos.y));
 					} else {
 						if (FlxG.keys.pressed.SHIFT) {
-							for (group in [notesGroup, eventsGroup]) 
+							for (group in [notesGroup, eventsGroup])
 								for(n in cast(group, FlxTypedGroup<Dynamic>))
 									if (n.handleSelection(selectionBox) && selection.contains(n))
 										selection.remove(n);
 						} else if (FlxG.keys.pressed.CONTROL) {
-							for (group in [notesGroup, eventsGroup]) 
+							for (group in [notesGroup, eventsGroup])
 								for(n in cast(group, FlxTypedGroup<Dynamic>))
 									if (n.handleSelection(selectionBox) && !selection.contains(n))
 										selection.push(n);
 						} else {
 							selection = [];
-							for (group in [notesGroup, eventsGroup]) 
+							for (group in [notesGroup, eventsGroup])
 								for(n in cast(group, FlxTypedGroup<Dynamic>))
 									if (n.handleSelection(selectionBox))
 										selection.push(n);
@@ -612,7 +612,7 @@ class Charter extends UIState {
 
 					currentCursor = ARROW;
 				}
-					
+
 			case NONE:
 				if (FlxG.mouse.justPressed)
 					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
@@ -786,9 +786,9 @@ class Charter extends UIState {
 		while(i < notesGroup.members.length) {
    			var note = notesGroup.members[i];
    			if (Std.int(note.id / 4) == strumLineID) { // thanks neo lol!!!!!
-				deletedstrumNotes.push(note); 
+				deletedstrumNotes.push(note);
 				deleteSingleSelection(note, false);
-			} else 
+			} else
 				i++;
 		}
 
@@ -803,7 +803,7 @@ class Charter extends UIState {
 		if (addToUndo) {
 			var newStrL = Reflect.copy(strL);
 			newStrL.notes.clear();
-			
+
 			for (note in deletedstrumNotes) {
 				var time = Conductor.getTimeForStep(note.step);
 				newStrL.notes.push({
@@ -843,7 +843,7 @@ class Charter extends UIState {
 	}
 
 	public inline function removeStrumlineFromSelection(strumLineID:Int) {
-		var i = 0; 
+		var i = 0;
 		while(i < selection.length) {
 			if (selection[i] is CharterNote) {
 				var note = cast (selection[i], CharterNote);
@@ -1013,7 +1013,7 @@ class Charter extends UIState {
 		var metaDiffPath = Paths.file('songs/${__song.toLowerCase()}/meta-${__diff.toLowerCase()}.json');
 
 		sys.io.File.saveContent(
-			Assets.getPath(Assets.exists(metaDiffPath) ? metaDiffPath : metaPath), 
+			Assets.getPath(Assets.exists(metaDiffPath) ? metaDiffPath : metaPath),
 			Json.stringify(PlayState.SONG.meta == null ? {} : PlayState.SONG.meta, null, "\t")
 		);
 		return;
@@ -1036,8 +1036,8 @@ class Charter extends UIState {
 
 	function _edit_copy(_) {
 		if(selection.length == 0) return;
-		
-		var minStep:Float = selection[0].step; 
+
+		var minStep:Float = selection[0].step;
 		for(s in selection)
 			if (s.step < minStep) minStep = s.step;
 
@@ -1101,7 +1101,7 @@ class Charter extends UIState {
 			case CDeleteSelection(selection):
 				createSelection(selection, false);
 			case CSelectionDrag(selection, change):
-				for (s in selection) 
+				for (s in selection)
 					if (s.draggable) s.handleDrag(change * -1);
 				this.selection = selection;
 			case CEditSustains(changes):
@@ -1144,7 +1144,7 @@ class Charter extends UIState {
 			case CDeleteSelection(selection):
 				deleteSelection(selection, false);
 			case CSelectionDrag(selection, change):
-				for (s in selection) 
+				for (s in selection)
 					if (s.draggable) s.handleDrag(change);
 				this.selection = selection;
 			case CEditSustains(changes):
@@ -1176,7 +1176,7 @@ class Charter extends UIState {
 		FlxG.state.openSubState(new ChartDataScreen(PlayState.SONG));
 	function chart_edit_metadata(_)
 		FlxG.state.openSubState(new MetaDataScreen(PlayState.SONG.meta));
-	
+
 	function _playback_metronome(t) {
 		t.icon = (Options.charterMetronomeEnabled = !Options.charterMetronomeEnabled) ? 1 : 0;
 	}

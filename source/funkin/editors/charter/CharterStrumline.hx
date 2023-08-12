@@ -99,7 +99,7 @@ class CharterStrumlineButton extends UITopMenuButton {
 				}
 			},
 			{
-				label: "Delete",  
+				label: "Delete",
 				onSelect: function (_) {
 					Charter.instance.deleteStrumlineFromData(strLine.strumLine);
 				}

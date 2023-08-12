@@ -27,7 +27,6 @@ class CharterWaveForms extends FlxTypedGroup<WaveformSprite> {
 				Conductor.getTimeForStep((measure+1) * Conductor.getMeasureLength())
 			);
 			add(waveFormMeasure);
-			
 		}
 	}
 
@@ -78,7 +77,7 @@ class WaveformSprite extends FlxSprite {
         startPos -= startPos % buffer.bitsPerSample;
         endPos -= endPos % buffer.bitsPerSample;
         pixels.lock();
-        pixels.fillRect(new Rectangle(0, 0, pixels.width, pixels.height), 0); 
+        pixels.fillRect(new Rectangle(0, 0, pixels.width, pixels.height), 0);
         var diff = endPos - startPos;
         var diffRange = Math.floor(diff / pixels.height);
         for(y in 0...pixels.height) {

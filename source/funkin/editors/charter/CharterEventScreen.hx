@@ -20,7 +20,7 @@ class CharterEventScreen extends UISubstateWindow {
 
 	public var paramsPanel:FlxGroup;
 	public var paramsFields:Array<FlxBasic> = [];
-	
+
 	public var saveButton:UIButton;
 	public var closeButton:UIButton;
 
@@ -66,7 +66,7 @@ class CharterEventScreen extends UISubstateWindow {
 			saveCurTab();
 			chartEvent.refreshEventIcons();
 
-			if (events.length <= 0 && !creatingEvent) 
+			if (events.length <= 0 && !creatingEvent)
 				Charter.instance.deleteSelection([chartEvent]);
 			else if (events.length > 0) {
 				var oldEvents:Array<ChartEvent> = chartEvent.events.copy();
@@ -75,7 +75,7 @@ class CharterEventScreen extends UISubstateWindow {
 				];
 
 				if (creatingEvent && events.length > 0)
-					Charter.instance.createSelection([chartEvent]);	
+					Charter.instance.createSelection([chartEvent]);
 				else {
 					chartEvent.events = [
 						for (i in eventsList.buttons.members) i.event
@@ -241,7 +241,7 @@ class EventButton extends UIButton {
 		members.push(deleteButton);
 
 		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 4).loadGraphic(Paths.image('editors/character/delete-button'));
-		
+
 		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);
 	}

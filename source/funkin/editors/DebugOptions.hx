@@ -10,7 +10,6 @@ class DebugOptions extends TreeMenu {
 		super.create();
 
 		FlxG.camera.fade(0xFF000000, 0.5, true);
-		
 
 		var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBGBlue'));
 		// bg.scrollFactor.set();
