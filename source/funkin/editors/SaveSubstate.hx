@@ -34,14 +34,12 @@ class SaveSubstate extends MusicBeatSubstate {
 
 		var fileDialog = new FileDialog();
 		fileDialog.onCancel.add(function() {
-			trace("h");
 			close();
 		});
 		fileDialog.onSelect.add(function(str) {
 			#if desktop
 			File.saveContent(str, data);
 			#end
-			trace("h");
 			close();
 		});
 		fileDialog.browse(SAVE, options.saveExt.getDefault(Path.extension(options.defaultSaveFile)), options.defaultSaveFile);

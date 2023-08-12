@@ -12,7 +12,6 @@ import openfl.ui.MouseCursor;
 import flixel.math.FlxRect;
 
 class UIState extends MusicBeatState {
-
 	public var curContextMenu:UIContextMenu = null;
 
 	public static var state(get, null):UIState;

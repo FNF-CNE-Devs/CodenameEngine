@@ -1,5 +1,6 @@
 package funkin.options;
 
+import funkin.editors.ui.UIState;
 import flixel.FlxState;
 import funkin.backend.FunkinText;
 import flixel.tweens.FlxTween;
@@ -9,7 +10,7 @@ import flixel.util.typeLimit.OneOfTwo;
 import funkin.options.type.OptionType;
 import funkin.options.categories.*;
 
-class TreeMenu extends MusicBeatState {
+class TreeMenu extends UIState {
 	public var main:OptionsScreen;
 	public var optionsTree:OptionsTree;
 	public var pathLabel:FunkinText;

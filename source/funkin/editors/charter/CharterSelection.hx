@@ -29,12 +29,12 @@ class CharterSelection extends EditorTreeMenu {
 				list.push(new NewOption("New Difficulty", "New Difficulty", function() {
 
 				}));
-				optionsTree.add(new OptionsScreen(s.name, "Select a difficulty to continue, or press 1 to add a new one.", list));
+				optionsTree.add(new OptionsScreen(s.name, "Select a difficulty to continue.", list));
 			})
 		];
 
 		list.insert(0, new NewOption("New Chart", "New Chart", function() {
-
+			FlxG.state.openSubState(new SongCreationScreen());
 		}));
 
 		main = new OptionsScreen("Chart Editor", "Select a song to modify the charts from.", list);
