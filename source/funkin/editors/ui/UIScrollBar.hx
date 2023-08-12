@@ -24,6 +24,7 @@ class UIScrollBar extends UISprite {
 		this.length = length;
 
 		thumb = new UISliceSprite(0, 0, w, h, 'editors/ui/scrollbar');
+		thumb.cursor = BUTTON;
 		members.push(thumb);
 
 		thumbIcon = new FlxSprite(0, 0, Paths.image('editors/ui/scrollbar-icon'));

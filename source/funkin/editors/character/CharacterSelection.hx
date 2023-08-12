@@ -37,7 +37,6 @@ class CharacterSelection extends EditorTreeMenu
 	override function createPost() {
 		super.createPost();
 
-		var idk:OptionsScreen = optionsTree.members.last();
-		if (idk.members.length > 0) idk.changeSelection(1);
+		main.changeSelection(1);
 	}
 }

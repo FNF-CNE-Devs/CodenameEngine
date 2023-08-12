@@ -37,6 +37,7 @@ class UIState extends MusicBeatState {
 		FlxG.stage.window.onKeyDown.add(onKeyDown);
 		FlxG.stage.window.onKeyUp.add(onKeyUp);
 		FlxG.stage.window.onTextInput.add(onTextInput);
+		FlxG.stage.window.onTextEdit.add(onTextEdit);
 	}
 
 	private function onKeyDown(e:KeyCode, modifier:KeyModifier) {
@@ -52,6 +53,10 @@ class UIState extends MusicBeatState {
 	private function onTextInput(str:String) {
 		if (currentFocus != null)
 			currentFocus.onTextInput(str);
+	}
+	private function onTextEdit(str:String, start:Int, end:Int) {
+		if (currentFocus != null)
+			currentFocus.onTextEdit(str, start, end);
 	}
 
 	public function updateButtonHandler(spr:UISprite, buttonHandler:Void->Void) {
@@ -119,6 +124,7 @@ class UIState extends MusicBeatState {
 		FlxG.stage.window.onKeyDown.remove(onKeyDown);
 		FlxG.stage.window.onKeyUp.remove(onKeyUp);
 		FlxG.stage.window.onTextInput.remove(onTextInput);
+		FlxG.stage.window.onTextEdit.remove(onTextEdit);
 	}
 
 	public function closeCurrentContextMenu() {

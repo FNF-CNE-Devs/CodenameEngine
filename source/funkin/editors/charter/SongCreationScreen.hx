@@ -44,10 +44,10 @@ class SongCreationScreen extends UISubstateWindow {
 		super();
 		if (onSave != null) this.onSave = onSave;
 	}
-		
+
 	public override function create() {
 		winTitle = "Creating New Song";
-		
+
 		winWidth = 748 - 32 + 40;
 		winHeight = 520;
 
@@ -175,7 +175,7 @@ class SongCreationScreen extends UISubstateWindow {
 		windowSpr.bWidth = Std.int(pageSizes[curPage].x);
 		windowSpr.bHeight = Std.int(pageSizes[curPage].y);
 
-		titleSpr.x = windowSpr.x + 25; 
+		titleSpr.x = windowSpr.x + 25;
 		titleSpr.y = windowSpr.y + ((30 - titleSpr.height) / 2);
 
 		saveButton.field.text = curPage == pages.length-1 ? "Save & Close" : 'Next (${curPage+1+1}/${pages.length}) >';

@@ -13,12 +13,13 @@ class CharterStrumlineExtraButton extends UISprite {
 
 		scrollFactor.set(1, 0);
 		alpha = 0;
-		
+
 		button = new UISprite();
 		button.loadGraphic(Paths.image(imagePath));
 		button.scale.set(0.75,0.75);
 		button.updateHitbox();
 		button.antialiasing = false;
+		button.cursor = BUTTON;
 		members.push(button);
 
 		this.text = new UIText(0,0, 160, text);
@@ -48,5 +49,11 @@ class CharterStrumlineExtraButton extends UISprite {
 			FlxMath.lerp(button.scale.x, buttonScale.x, 1/6),
 			FlxMath.lerp(button.scale.y, buttonScale.y, 1/6)
 		);
+	}
+
+	public override function destroy() {
+		super.destroy();
+
+		buttonScale.put();
 	}
 }

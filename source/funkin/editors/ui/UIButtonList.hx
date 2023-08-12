@@ -110,7 +110,7 @@ class UIButtonList<T:UIButton> extends UIWindow {
 			nextscrollY -= Math.min((bHeight - 100) - FlxG.mouse.getWorldPosition(buttonCameras).y, 0) / 8;
 			nextscrollY += Math.min(FlxG.mouse.getWorldPosition(buttonCameras).y - 100, 0) / 8;
 		}
-		
+
 		buttonCameras.scroll.y = nextscrollY;
 
 		for (button in buttons) {
@@ -131,7 +131,8 @@ class UIButtonList<T:UIButton> extends UIWindow {
 		super.destroy();
 
 		if(buttonCameras != null) {
-			FlxG.cameras.remove(buttonCameras);
+			if (FlxG.cameras.list.contains(buttonCameras))
+				FlxG.cameras.remove(buttonCameras);
 			buttonCameras = null;
 		}
 	}

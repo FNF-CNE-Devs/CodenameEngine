@@ -12,7 +12,7 @@ class CharacterGhostsHandler extends FlxTypedGroup<Character> {
 		this.character = character;
 		super();
 
-		for (anim in character.getNameList()) 
+		for (anim in character.getNameList())
 			createGhost(anim);
 	}
 
@@ -21,7 +21,7 @@ class CharacterGhostsHandler extends FlxTypedGroup<Character> {
 		ghost.applyXML(character.xml); // apply cur character stuff
 		ghost.playAnim(anim);
 		ghost.stopAnimation();
-		ghost.alpha = 0.5; 
+		ghost.alpha = 0.5;
 		ghost.visible = false;
 		add(ghost);
 
@@ -69,7 +69,7 @@ class CharacterGhostsHandler extends FlxTypedGroup<Character> {
 	}
 
 	inline function rePositionGhosts() {
-		for (ghost in animGhosts) 
+		for (ghost in animGhosts)
 			ghost.frameOffset.set(ghost.getAnimOffset(ghost.getAnimName()).x, ghost.getAnimOffset(ghost.getAnimName()).y);
 	}
 }

@@ -39,6 +39,7 @@ class Main extends Sprite
 
 	public static var modToLoad:String = null;
 	public static var forceGPUOnlyBitmapsOff:Bool = false;
+	public static var noTerminalColor:Bool = false;
 
 	public static var scaleMode:FunkinRatioScaleMode;
 	#if !mobile

@@ -117,7 +117,7 @@ class CharacterAnimScreen extends UISubstateWindow {
 			if (i != null)
 				animData.indices.push(i);
 		}
-		
+
 		if (onSave != null) onSave(animData);
 	}
 }

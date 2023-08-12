@@ -60,10 +60,10 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		add(title = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, creatingStrumLine ? "Create New Strumline" : "Edit Strumline Properties", 28));
 
 		charactersList = new UIButtonList<CharacterButton>(15, title.y + title.height + 36, 250, 259, "", FlxPoint.get(250, 54), null, 0);
-		charactersList.addButton.callback = () -> charactersList.add(new CharacterButton(0,0,"New Char", charactersList));
+		charactersList.addButton.callback = () -> charactersList.add(new CharacterButton(0, 0, "New Char", charactersList));
 		charactersList.cameraSpacing = 0;
-		for (i in strumLine.characters) 
-			charactersList.add(new CharacterButton(0,0,i, charactersList));
+		for (i in strumLine.characters)
+			charactersList.add(new CharacterButton(0, 0, i, charactersList));
 		add(charactersList);
 		addLabelOn(charactersList, "Characters");
 
@@ -176,7 +176,11 @@ class CharacterButton extends UIButton {
 		members.push(textBox = new UITextBox(charIcon.x + charIcon.width + 16, bHeight/2 - (32/2), char, 115));
 		textBox.antialiasing = true;
 		textBox.onChange = function(char:String) {
-			charIcon.loadGraphic(Assets.exists(Paths.image("icons/" + char)) ? Paths.image("icons/" + char) : Paths.image("icons/face"), true, 150, 150);
+			char = Character.getIconFromCharName(char);
+			var image = Paths.image("icons/" + char);
+			if(!Assets.exists(image))
+				image = Paths.image("icons/face");
+			charIcon.loadGraphic(image, true, 150, 150);
 			charIcon.updateHitbox();
 		}
 
@@ -185,7 +189,7 @@ class CharacterButton extends UIButton {
 		}, 32);
 		deleteButton.color = 0xFFFF0000;
 		members.push(deleteButton);
-		
+
 		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 8).loadGraphic(Paths.image('editors/character/delete-button'));
 		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);
@@ -201,5 +205,5 @@ class CharacterButton extends UIButton {
 		deleteButton.shouldPress = shouldPress;
 
 		super.update(elapsed);
-	} 
+	}
 }

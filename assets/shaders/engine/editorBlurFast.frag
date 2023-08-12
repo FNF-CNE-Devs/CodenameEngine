@@ -10,7 +10,7 @@ float uBlur = 0.015;
 float uBrightness = 0.6;
 
 vec4 getColor(vec2 pos) {
-	vec2 ps = camToOg(pos);
+	vec2 ps = (pos);
 	if (ps.x < 0) ps.x = 0;
 	//else if (ps.x > 1.0 - (1.0 / iResolution.x)) ps.x = 1.0 - (1.0 / iResolution.x);
 	else if (ps.x > 1.0) return vec4(0.0);
@@ -40,7 +40,7 @@ vec2 random(vec2 p) {
 }
 
 void main() {
-	vec2 camPos = getCamPos(openfl_TextureCoordv);
+	vec2 camPos = (openfl_TextureCoordv);
 	//vec2 camPos = openfl_TextureCoordv;
 	if (camPos.x < 0 || camPos.x > 1 || camPos.y < 0 || camPos.y > 1)
 		return;
