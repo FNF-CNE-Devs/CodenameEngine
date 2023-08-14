@@ -29,14 +29,14 @@ class UIFileExplorer extends UISliceSprite {
 				if (this.onFile != null) this.onFile(file);
 			});
 			fileDialog.open(fileType);
-		}, 320 - 16, 58 - 18);
+		}, 320 - 16, 58 - 16);
 		members.push(uploadButton);
 
-		uploadIcon = new FlxSprite(uploadButton.x + (uploadButton.bWidth / 2) - 8, uploadButton.y + ((58-18)/2) - 8).loadGraphic(Paths.image('editors/charter/upload-button'));
+		uploadIcon = new FlxSprite(uploadButton.x + (uploadButton.bWidth / 2) - 8, uploadButton.y + ((58-16)/2) - 8).loadGraphic(Paths.image('editors/charter/upload-button'));
 		uploadIcon.antialiasing = false;
 		uploadButton.members.push(uploadIcon);
 
-		deleteButton = new UIButton(x + 320 - (58 - 18) - 16, y + 8, "", function () {
+		deleteButton = new UIButton(x + 320 - (58 - 16) - 8, y + 8, "", function () {
 			if (uiElement != null) {
 				members.remove(uiElement);
 				uiElement.destroy();
@@ -46,11 +46,11 @@ class UIFileExplorer extends UISliceSprite {
 			MemoryUtil.clearMajor();
 
 			deleteButton.visible = deleteButton.selectable = deleteIcon.visible = !(uploadButton.visible = uploadButton.selectable = true);
-		}, 58 - 18, 58 - 18);
+		}, 58 - 16, 58 - 16);
 		deleteButton.color = 0xFFFF0000;
 		members.push(deleteButton);
 
-		deleteIcon = new FlxSprite(deleteButton.x + ((58 - 18)/2) - 8, deleteButton.y + ((58 - 18)/2) - 8).loadGraphic(Paths.image('editors/character/delete-button'));
+		deleteIcon = new FlxSprite(deleteButton.x + ((58 - 16)/2) - 8, deleteButton.y + ((58 - 16)/2) - 8).loadGraphic(Paths.image('editors/character/delete-button'));
 		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);
 
