@@ -31,7 +31,7 @@ class NdllUtil {
 	 * @param name Name of the function.
 	 * @param args Number of arguments of that function.
 	 */
-	public static function getFunction(ndll:String, name:String, args:Int) {
+	public static function getFunction(ndll:String, name:String, args:Int):Dynamic {
 		#if NDLLS_SUPPORTED
 		return getFunctionFromPath(Paths.ndll('$ndll-$os'), name, args);
 		#else
@@ -47,7 +47,7 @@ class NdllUtil {
 	 * @param name Name of the function.
 	 * @param args Number of arguments of that function.
 	 */
-	public static function getFunctionFromPath(ndll:String, name:String, args:Int) {
+	public static function getFunctionFromPath(ndll:String, name:String, args:Int):Dynamic {
 		#if NDLLS_SUPPORTED
 		if (!Assets.exists(ndll)) {
 			Logs.trace('Couldn\'t find ndll at ${ndll}.', WARNING);
