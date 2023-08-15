@@ -62,6 +62,9 @@ class UIAudioPlayer extends UIButton {
 		members.push(timeBarSpr);
 
 		volumeBar = new FlxBar(timeBar.x + timeBar.barWidth - 56, y + 6, LEFT_TO_RIGHT, 56, 10, sound, "volume", 0, 1);
+		volumeBar.createImageBar(Paths.image('editors/ui/audio-volume-empty'), Paths.image('editors/ui/audio-volume-full'));
+		volumeBar.numDivisions = volumeBar.barWidth;
+		volumeBar.unbounded = true;
 		members.push(volumeBar);
 
 		volumeBarSpr = cast new UISprite(volumeBar.x, volumeBar.y).makeSolid(volumeBar.barWidth, volumeBar.barHeight, 0x00FFFFFF);
