@@ -6,7 +6,12 @@ import funkin.backend.system.Conductor;
 class Strum extends FlxSprite {
 	public var extra:Map<String, Dynamic> = [];
 
-	public var cpu = false;
+	/**
+	 * Which animation suffix on characters that should be used when hitting notes.
+	 */
+	public var animSuffix:String = "";
+
+	public var cpu = false; // Unused
 	public var lastHit:Float = -5000;
 
 	public var scrollSpeed:Null<Float> = null; // custom scroll speed per strum

@@ -20,6 +20,7 @@ class ScriptsMacro {
 			"flixel.addons.plugin", "flixel.addons.text", "flixel.addons.tile", "flixel.addons.transition",
 			"flixel.addons.util",
 			// OTHER LIBRARIES & STUFF
+			"funkin",
 			"away3d", "flx3d",
 			#if VIDEO_CUTSCENES "hxcodec.flixel", "hxcodec.openfl", "hxcodec.lime", #end
 			// BASE HAXE

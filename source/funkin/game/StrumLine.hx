@@ -65,7 +65,11 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	/**
 	 * Whenever alt animation is enabled on this strumline.
 	 */
-	public var altAnim:Bool = false;
+	public var altAnim(get, set):Bool;
+	/**
+	 * Which animation suffix on characters that should be used when hitting notes.
+	 */
+	public var animSuffix(default, set):String = "";
 	/**
 	 * TODO: Write documention about this being a variable that can help when making multi key
 	 */
@@ -352,6 +356,19 @@ class StrumLine extends FlxTypedGroup<Strum> {
 			if (s != null)
 				s.cpu = b;
 		return cpu = b;
+	}
+	private inline function set_animSuffix(str:String):String {
+		for(s in members)
+			if (s != null)
+				s.animSuffix = str;
+		return animSuffix = str;
+	}
+	private inline function set_altAnim(b:Bool):Bool {
+		animSuffix = b ? "-alt" : "";
+		return b;
+	}
+	private inline function get_altAnim():Bool {
+		return animSuffix == "-alt";
 	}
 	#end
 }
