@@ -20,7 +20,7 @@ class UIAudioPlayer extends UIButton {
 	public var timeText:UIText;
 
 	public var timeBar:FlxBar;
-	public var timeBarPlayer:FlxClipSprite;
+	public var timeBarPlayer:FlxSprite;
 	public var timeBarSpr:UISprite;
 
 	public var volumeIcon:FlxSprite;
@@ -35,7 +35,7 @@ class UIAudioPlayer extends UIButton {
 			else sound.play(false, sound.time);
 		}, 58 - 16, 58 - 16);
 
-		playingSprite = new FlxSprite(x + ((58 - 16)/2) - 8, y + ((58 - 16)/2) - 8).loadGraphic(Paths.image('editors/charter/audio-buttons'), true, 16, 16);
+		playingSprite = new FlxSprite(x + ((58 - 16)/2) - 8, y + ((58 - 16)/2) - 8).loadGraphic(Paths.image('editors/ui/audio-buttons'), true, 16, 16);
 		playingSprite.animation.add("paused", [0]);
 		playingSprite.animation.add("playing", [1]);
 		playingSprite.antialiasing = false;
@@ -47,12 +47,12 @@ class UIAudioPlayer extends UIButton {
 		members.push(timeText);
 
 		timeBar = new FlxBar(x + bWidth + 8, y + (58 - 16) - ((58 - 16)/3) - 4, LEFT_TO_RIGHT, 202, Std.int((58 - 16)/3), sound, "time", 0, sound.length);
-		timeBar.createImageBar(Paths.image('editors/charter/audio-time-empty'), Paths.image('editors/charter/audio-time-full'));
+		timeBar.createImageBar(Paths.image('editors/ui/audio-time-empty'), Paths.image('editors/ui/audio-time-full'));
 		timeBar.numDivisions = timeBar.barWidth;
 		timeBar.unbounded = true;
 		members.push(timeBar);
 
-		timeBarPlayer = cast new FlxClipSprite(timeBar.x, timeBar.y).loadGraphic(Paths.image('editors/charter/audio-time-empty'));
+		timeBarPlayer = new FlxSprite(timeBar.x, timeBar.y).loadGraphic(Paths.image('editors/ui/audio-time-empty'));
 		timeBarPlayer.colorTransform.color = 0x440364;
 		timeBarPlayer.scale.y = (timeBarPlayer.frameHeight + 2) / timeBarPlayer.frameHeight;
 		members.push(timeBarPlayer);
@@ -68,7 +68,7 @@ class UIAudioPlayer extends UIButton {
 		volumeBarSpr.cursor = BUTTON;
 		members.push(volumeBarSpr);
 
-		volumeIcon = new FlxSprite(volumeBar.x - 12 - 8, volumeBar.y-1).loadGraphic(Paths.image('editors/charter/audio-icon'));
+		volumeIcon = new FlxSprite(volumeBar.x - 12 - 8, volumeBar.y-1).loadGraphic(Paths.image('editors/ui/audio-icon'));
 		volumeIcon.antialiasing = false;
 		members.push(volumeIcon);
 	}
@@ -120,9 +120,10 @@ class UIAudioPlayer extends UIButton {
 			}
 		}
 
-		if (FlxG.mouse.released && draggingObj == timeBar && wasPlaying) {
+		if (FlxG.mouse.released) {
+			if (draggingObj == timeBar && wasPlaying)
+				sound.play(wasPlaying = false, sound.time);
 			draggingObj = null;
-			sound.play(wasPlaying = false, sound.time);
 		}
 	}
 

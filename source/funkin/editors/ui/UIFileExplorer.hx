@@ -32,7 +32,7 @@ class UIFileExplorer extends UISliceSprite {
 		}, 320 - 16, 58 - 16);
 		members.push(uploadButton);
 
-		uploadIcon = new FlxSprite(uploadButton.x + (uploadButton.bWidth / 2) - 8, uploadButton.y + ((58-16)/2) - 8).loadGraphic(Paths.image('editors/charter/upload-button'));
+		uploadIcon = new FlxSprite(uploadButton.x + (uploadButton.bWidth / 2) - 8, uploadButton.y + ((58-16)/2) - 8).loadGraphic(Paths.image('editors/ui/upload-button'));
 		uploadIcon.antialiasing = false;
 		uploadButton.members.push(uploadIcon);
 
