@@ -37,53 +37,32 @@ class NdllUtil {
 		var func:Dynamic = getFunctionFromPath(Paths.ndll('$ndll-$os'), name, args);
 
 		// I hate this code below, at least it wasnt 390625 switch cases, but like reflect.callmethod doesnt work with c++ functions
-		return Reflect.makeVarArgs(function(_args:Array<Dynamic>) {
-			var arg0:Dynamic = _args.length > 0 ? _args[0] : null;
-			var arg1:Dynamic = _args.length > 1 ? _args[1] : null;
-			var arg2:Dynamic = _args.length > 2 ? _args[2] : null;
-			var arg3:Dynamic = _args.length > 3 ? _args[3] : null;
-			var arg4:Dynamic = _args.length > 4 ? _args[4] : null;
-			var arg5:Dynamic = _args.length > 5 ? _args[5] : null;
-			var arg6:Dynamic = _args.length > 6 ? _args[6] : null;
-			var arg7:Dynamic = _args.length > 7 ? _args[7] : null;
-			var arg8:Dynamic = _args.length > 8 ? _args[8] : null;
-			var arg9:Dynamic = _args.length > 9 ? _args[9] : null;
-			var arg10:Dynamic = _args.length > 10 ? _args[10] : null;
-			var arg11:Dynamic = _args.length > 11 ? _args[11] : null;
-			var arg12:Dynamic = _args.length > 12 ? _args[12] : null;
-			var arg13:Dynamic = _args.length > 13 ? _args[13] : null;
-			var arg14:Dynamic = _args.length > 14 ? _args[14] : null;
-			var arg15:Dynamic = _args.length > 15 ? _args[15] : null;
-			var arg16:Dynamic = _args.length > 16 ? _args[16] : null;
-			var arg17:Dynamic = _args.length > 17 ? _args[17] : null;
-			var arg18:Dynamic = _args.length > 18 ? _args[18] : null;
-			var arg19:Dynamic = _args.length > 19 ? _args[19] : null;
-
-			return switch(_args.length) {
+		return Reflect.makeVarArgs(function(a:Array<Dynamic>) {
+			return switch(a.length) {
 				case 0:  func();
-				case 1:  func(arg0);
-				case 2:  func(arg0, arg1);
-				case 3:  func(arg0, arg1, arg2);
-				case 4:  func(arg0, arg1, arg2, arg3);
-				case 5:  func(arg0, arg1, arg2, arg3, arg4);
-				case 6:  func(arg0, arg1, arg2, arg3, arg4, arg5);
-				case 7:  func(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
-				case 8:  func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
-				case 9:  func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
-				case 10: func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);
-				case 11: func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10);
-				case 12: func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11);
-				case 13: func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12);
-				case 14: func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13);
-				case 15: func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
-				case 16: func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15);
-				case 17: func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16);
-				case 18: func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17);
-				case 19: func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18);
-				case 20: func(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19);
+				case 1:  func(a[0]);
+				case 2:  func(a[0], a[1]);
+				case 3:  func(a[0], a[1], a[2]);
+				case 4:  func(a[0], a[1], a[2], a[3]);
+				case 5:  func(a[0], a[1], a[2], a[3], a[4]);
+				case 6:  func(a[0], a[1], a[2], a[3], a[4], a[5]);
+				case 7:  func(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
+				case 8:  func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
+				case 9:  func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
+				case 10: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9]);
+				case 11: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10]);
+				case 12: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11]);
+				case 13: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12]);
+				case 14: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13]);
+				case 15: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14]);
+				case 16: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15]);
+				case 17: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15], a[16]);
+				case 18: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15], a[16], a[17]);
+				case 19: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15], a[16], a[17], a[18]);
+				case 20: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15], a[16], a[17], a[18], a[19]);
 				default: throw "Too many arguments";
 			};
-			//return Reflect.callMethod(null, func, _args);
+			//return Reflect.callMethod(null, func, a); // wouldnt work for some reason, maybe cause like c++ functions doesnt have reflection enabled
 		});
 		#else
 		Logs.trace('NDLLs are not supported on this platform.', WARNING);
