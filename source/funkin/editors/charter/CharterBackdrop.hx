@@ -29,7 +29,7 @@ class CharterBackdrop extends FlxBackdrop {
 		for(_ in 0...strumlinesAmount) {
 			if (Charter.instance.strumLines.members[_] != null)
 				alpha = Charter.instance.strumLines.members[_].strumLine.visible ? 1 : 0.4;
-			else alpha = 1;
+			else alpha = 0.9;
 			super.draw();
 			x += width;
 		}

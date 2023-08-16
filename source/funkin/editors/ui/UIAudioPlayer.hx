@@ -103,6 +103,8 @@ class UIAudioPlayer extends UIButton {
 		var mousePos = FlxG.mouse.getScreenPosition(__lastDrawCameras[0], FlxPoint.get());
 
 		for (sprite in [timeBar, volumeBar]) {
+			if (!selectable) continue;
+
 			var spritePos:FlxPoint = sprite.getScreenPosition(FlxPoint.get(), __lastDrawCameras[0]);
 
 			if (((mousePos.x > (spritePos.x)) && (mousePos.x < (spritePos.x) + timeBar.barWidth)) 

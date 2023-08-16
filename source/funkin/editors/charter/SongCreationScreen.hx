@@ -1,5 +1,7 @@
 package funkin.editors.charter;
 
+import flixel.text.FlxText.FlxTextFormat;
+import flixel.text.FlxText.FlxTextFormatMarkerPair;
 import flixel.group.FlxGroup;
 import funkin.backend.chart.ChartData;
 import haxe.io.Bytes;
@@ -53,8 +55,11 @@ class SongCreationScreen extends UISubstateWindow {
 
 		super.create();
 
-		function addLabelOn(ui:UISprite, text:String)
-			ui.members.push(new UIText(ui.x, ui.y - 24, 0, text));
+		function addLabelOn(ui:UISprite, text:String):UIText {
+			var text:UIText = new UIText(ui.x, ui.y - 24, 0, text);
+			ui.members.push(text);
+			return text;
+		}
 
 		var songTitle:UIText;
 		songDataGroup.add(songTitle = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, "Song Info", 28));
@@ -76,7 +81,23 @@ class SongCreationScreen extends UISubstateWindow {
 		stepsPerBeatStepper = new UINumericStepper(beatsPerMesureStepper.x + 30 + 24, beatsPerMesureStepper.y, 4, 1, 0, 1, null, 54);
 		songDataGroup.add(stepsPerBeatStepper);
 
+		var voicesUIText:UIText = null;
+
 		needsVoicesCheckbox = new UICheckbox(stepsPerBeatStepper.x + 80 + 26, stepsPerBeatStepper.y, "Voices", true);
+		needsVoicesCheckbox.onChecked = function(checked) {
+			if (voicesExplorer == null) return;
+
+			if(!checked) {
+				voicesExplorer.removeFile();
+				voicesExplorer.selectable = voicesExplorer.uploadButton.selectable = false;
+				voicesUIText.text = "Vocal Audio File";
+			} else {
+				voicesExplorer.selectable = voicesExplorer.uploadButton.selectable = true;
+				voicesUIText.applyMarkup(
+					"Vocal Audio File $* Required$",
+					[new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFAD1212), "$")]);
+			}
+		}
 		songDataGroup.add(needsVoicesCheckbox);
 		addLabelOn(needsVoicesCheckbox, "Needs Voices");
 		needsVoicesCheckbox.y += 6; needsVoicesCheckbox.x += 4;
@@ -87,7 +108,9 @@ class SongCreationScreen extends UISubstateWindow {
 			instExplorer.uiElement = audioPlayer;
 		});
 		songDataGroup.add(instExplorer);
-		addLabelOn(instExplorer, "Inst Audio File");
+		addLabelOn(instExplorer, "Inst Audio File").applyMarkup(
+			"Inst Audio File $* Required$",
+			[new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFAD1212), "$")]);
 
 		voicesExplorer = new UIFileExplorer(instExplorer.x + 320 + 26, instExplorer.y, Paths.SOUND_EXT, function (res) {
 			var audioPlayer:UIAudioPlayer = new UIAudioPlayer(voicesExplorer.x + 8, voicesExplorer.y + 8, res);
@@ -95,7 +118,11 @@ class SongCreationScreen extends UISubstateWindow {
 			voicesExplorer.uiElement = audioPlayer;
 		});
 		songDataGroup.add(voicesExplorer);
-		addLabelOn(voicesExplorer, "Vocal Audio File");
+
+		voicesUIText = addLabelOn(voicesExplorer, "Vocal Audio File");
+		voicesUIText.applyMarkup(
+			"Vocal Audio File $* Required$",
+			[new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFAD1212), "$")]);
 
 		var menuTitle:UIText;
 		menuDataGroup.add(menuTitle = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, "Menus Data (Freeplay/Story)", 28));
@@ -166,6 +193,18 @@ class SongCreationScreen extends UISubstateWindow {
 		updatePagesTexts();
 	}
 
+	public override function update(elapsed:Float) {
+		if (curPage == 0) {
+			if (instExplorer.file != null && (needsVoicesCheckbox.checked ? voicesExplorer.file != null : true))
+				saveButton.selectable = true;
+			else saveButton.selectable = false;
+		} else
+			saveButton.selectable = true;
+
+
+		super.update(elapsed);
+	}
+
 	function refreshPages() {
 		for (i=>page in pages)
 			page.visible = page.exists = i == curPage;
@@ -178,10 +217,10 @@ class SongCreationScreen extends UISubstateWindow {
 		titleSpr.x = windowSpr.x + 25;
 		titleSpr.y = windowSpr.y + ((30 - titleSpr.height) / 2);
 
-		saveButton.field.text = curPage == pages.length-1 ? "Save & Close" : 'Next (${curPage+1+1}/${pages.length}) >';
+		saveButton.field.text = curPage == pages.length-1 ? "Save & Close" : 'Next >';
 		titleSpr.text = 'Creating New Song (${curPage+1}/${pages.length})';
 
-		backButton.field.text = '< (${curPage}/${pages.length}) Back';
+		backButton.field.text = '< Back';
 		backButton.visible = backButton.exists = curPage > 0;
 
 		backButton.x = (saveButton.x = windowSpr.x + windowSpr.bWidth - 20 - 125) - 20 - saveButton.bWidth;

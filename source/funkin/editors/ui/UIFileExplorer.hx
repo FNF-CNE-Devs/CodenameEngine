@@ -36,17 +36,7 @@ class UIFileExplorer extends UISliceSprite {
 		uploadIcon.antialiasing = false;
 		uploadButton.members.push(uploadIcon);
 
-		deleteButton = new UIButton(x + 320 - (58 - 16) - 8, y + 8, "", function () {
-			if (uiElement != null) {
-				members.remove(uiElement);
-				uiElement.destroy();
-			}
-
-			file = null;
-			MemoryUtil.clearMajor();
-
-			deleteButton.visible = deleteButton.selectable = deleteIcon.visible = !(uploadButton.visible = uploadButton.selectable = true);
-		}, 58 - 16, 58 - 16);
+		deleteButton = new UIButton(x + 320 - (58 - 16) - 8, y + 8, "", removeFile, 58 - 16, 58 - 16);
 		deleteButton.color = 0xFFFF0000;
 		members.push(deleteButton);
 
@@ -55,5 +45,30 @@ class UIFileExplorer extends UISliceSprite {
 		members.push(deleteIcon);
 
 		deleteButton.visible = deleteButton.selectable = deleteIcon.visible = false;
+	}
+
+	public override function update(elapsed:Float) {
+		super.update(elapsed);
+
+		alpha = selectable ? 1 : 0.4;
+		uploadButton.alpha = deleteButton.alpha = deleteIcon.alpha = uploadIcon.alpha = alpha;
+
+		if (uiElement != null) {
+			uiElement.alpha = alpha;
+			if (uiElement is UIButton)
+				cast(uiElement, UIButton).selectable = selectable;
+		}
+	}
+
+	public function removeFile() {
+		if (uiElement != null) {
+			members.remove(uiElement);
+			uiElement.destroy();
+		}
+
+		file = null;
+		MemoryUtil.clearMajor();
+
+		deleteButton.visible = deleteButton.selectable = deleteIcon.visible = !(uploadButton.visible = uploadButton.selectable = true);
 	}
 }

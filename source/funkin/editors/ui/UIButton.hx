@@ -39,6 +39,7 @@ class UIButton extends UISliceSprite {
 	public override function update(elapsed:Float) {
 		field.follow(this, 0, (bHeight - field.height) / 2);
 		if (!hovered && hasBeenPressed && FlxG.mouse.justReleased) hasBeenPressed = false;
+		alpha = field.alpha = selectable ? 1 : 0.4;
 		super.update(elapsed);
 	}
 
