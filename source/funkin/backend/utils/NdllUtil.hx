@@ -26,7 +26,7 @@ class NdllUtil {
 
 	/**
 	 * Returns an function from a Haxe NDLL.
-	 * Limited to 20 argument due to a limitation
+	 * Limited to 25 argument due to a limitation
 	 *
 	 * @param ndll Name of the NDLL.
 	 * @param name Name of the function.
@@ -36,32 +36,9 @@ class NdllUtil {
 		#if NDLLS_SUPPORTED
 		var func:Dynamic = getFunctionFromPath(Paths.ndll('$ndll-$os'), name, args);
 
-		// I hate this code below, at least it wasnt 390625 switch cases, but like reflect.callmethod doesnt work with c++ functions
 		return Reflect.makeVarArgs(function(a:Array<Dynamic>) {
-			return switch(a.length) {
-				case 0:  func();
-				case 1:  func(a[0]);
-				case 2:  func(a[0], a[1]);
-				case 3:  func(a[0], a[1], a[2]);
-				case 4:  func(a[0], a[1], a[2], a[3]);
-				case 5:  func(a[0], a[1], a[2], a[3], a[4]);
-				case 6:  func(a[0], a[1], a[2], a[3], a[4], a[5]);
-				case 7:  func(a[0], a[1], a[2], a[3], a[4], a[5], a[6]);
-				case 8:  func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
-				case 9:  func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
-				case 10: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9]);
-				case 11: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10]);
-				case 12: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11]);
-				case 13: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12]);
-				case 14: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13]);
-				case 15: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14]);
-				case 16: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15]);
-				case 17: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15], a[16]);
-				case 18: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15], a[16], a[17]);
-				case 19: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15], a[16], a[17], a[18]);
-				case 20: func(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15], a[16], a[17], a[18], a[19]);
-				default: throw "Too many arguments";
-			};
+			// This generates horrific code
+			return funkin.backend.system.macros.Utils.generateReflectionLike(25, "func", "a");
 			//return Reflect.callMethod(null, func, a); // wouldnt work for some reason, maybe cause like c++ functions doesnt have reflection enabled
 		});
 		#else
