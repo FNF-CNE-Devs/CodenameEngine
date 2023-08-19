@@ -27,7 +27,14 @@ class CharacterSelection extends EditorTreeMenu
 		];
 
 		list.insert(0, new NewOption("New Character", "New Character", function() {
+			openSubState(new UIWarningSubstate("New Character", "This feature isnt implemented yet", [
+				{
+					label: "OK",
+					onClick: function(t) {
 
+					}
+				}
+			]));
 		}));
 
 		main = new OptionsScreen("Character Editor", "Select a character to edit", list);

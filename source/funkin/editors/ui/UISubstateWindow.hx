@@ -59,7 +59,7 @@ class UISubstateWindow extends MusicBeatSubstate {
 		subCam.zoom = 0.1;
 		FlxG.cameras.add(subCam, false);
 
-		windowSpr = new UISliceSprite(0, 0, winWidth, winHeight, "editors/ui/warning-popup");
+		windowSpr = new UISliceSprite(0, 0, winWidth, winHeight, "editors/ui/normal-popup");
 		add(windowSpr);
 
 		add(titleSpr = new UIText(windowSpr.x + 25, windowSpr.y, windowSpr.bWidth - 50, winTitle, 15, -1));

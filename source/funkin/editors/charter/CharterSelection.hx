@@ -31,7 +31,16 @@ class CharterSelection extends EditorTreeMenu {
 						FlxG.switchState(new Charter(s.name, d));
 					})
 				];
-				list.push(new NewOption("New Difficulty", "New Difficulty", function() {}));
+				list.push(new NewOption("New Difficulty", "New Difficulty", function() {
+					openSubState(new UIWarningSubstate("New Difficulty", "This feature isnt implemented yet", [
+						{
+							label: "OK",
+							onClick: function(t) {
+
+							}
+						}
+					]));
+				}));
 				optionsTree.add(new OptionsScreen(s.name, "Select a difficulty to continue.", list));
 			})
 		];
