@@ -13,7 +13,7 @@ typedef SongCreationData = {
 }
 
 class SongCreationScreen extends UISubstateWindow {
-	private var onSave:SongCreationData -> Void = null;
+	private var onSave:Null<SongCreationData> -> Void = null;
 
 	public var songNameTextBox:UITextBox;
 	public var bpmStepper:UINumericStepper;
@@ -158,7 +158,7 @@ class SongCreationScreen extends UISubstateWindow {
 
 		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20 - 125, windowSpr.y + windowSpr.bHeight - 16 - 32, "Save & Close", function() {
 			if (curPage == pages.length-1) {
-				if (onSave != null) onSave(null);
+				saveSongInfo();
 				close();
 			} else {
 				curPage++;
@@ -247,6 +247,32 @@ class SongCreationScreen extends UISubstateWindow {
 		iconSprite.scale.set(0.5, 0.5);
 		iconSprite.updateHitbox();
 		iconSprite.setPosition(iconTextBox.x + 150 + 8, (iconTextBox.y + 16) - (iconSprite.height/2));
+	}
+
+	function saveSongInfo() {
+		for (stepper in [bpmStepper, beatsPerMesureStepper, stepsPerBeatStepper])
+			@:privateAccess stepper.__onChange(stepper.label.text);
+
+		var meta:ChartMetaData = {
+			name: songNameTextBox.label.text,
+			bpm: bpmStepper.value,
+			beatsPerMesure: Std.int(beatsPerMesureStepper.value),
+			stepsPerBeat: Std.int(stepsPerBeatStepper.value),
+			needsVoices: needsVoicesCheckbox.checked,
+			displayName: displayNameTextBox.label.text,
+			icon: iconTextBox.label.text,
+			color: colorWheel.curColorString,
+			parsedColor: colorWheel.curColor,
+			opponentModeAllowed: opponentModeCheckbox.checked,
+			coopAllowed: coopAllowedCheckbox.checked,
+			difficulties: [for (diff in difficulitesTextBox.label.text.split(",")) diff.trim()],
+		};
+
+		if (onSave != null) onSave({
+			meta: meta,
+			instBytes: instExplorer.file,
+			voicesBytes: voicesExplorer.file
+		});
 	}
 
 }
