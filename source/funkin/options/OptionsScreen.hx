@@ -30,8 +30,10 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0) - FlxG.mouse.wheel);
 		x = id * FlxG.width;
 		for(k=>option in members) {
+			if(option == null) continue;
+
 			var y:Float = ((FlxG.height - optionHeight) / 2) + ((k - curSelected) * optionHeight);
-			
+
 			option.selected = false;
 			option.y = __firstFrame ? y : CoolUtil.fpsLerp(option.y, y, 0.25);
 			option.x = x + (-50 + (Math.abs(Math.cos((option.y + (optionHeight / 2) - (FlxG.camera.scroll.y + (FlxG.height / 2))) / (FlxG.height * 1.25) * Math.PI)) * 150));
