@@ -8,7 +8,6 @@ import funkin.backend.chart.Chart;
 import funkin.options.type.TextOption;
 import funkin.options.type.IconOption;
 import funkin.options.OptionsScreen;
-import sys.FileSystem;
 
 class CharacterSelection extends EditorTreeMenu
 {

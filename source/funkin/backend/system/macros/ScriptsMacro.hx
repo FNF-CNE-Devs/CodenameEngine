@@ -20,7 +20,6 @@ class ScriptsMacro {
 			"flixel.addons.plugin", "flixel.addons.text", "flixel.addons.tile", "flixel.addons.transition",
 			"flixel.addons.util",
 			// OTHER LIBRARIES & STUFF
-			"funkin",
 			"away3d", "flx3d",
 			#if VIDEO_CUTSCENES "hxcodec.flixel", "hxcodec.openfl", "hxcodec.lime", #end
 			// BASE HAXE
@@ -28,7 +27,7 @@ class ScriptsMacro {
 		])
 			Compiler.include(inc);
 
-		for(inc in [#if sys "sys", #end "openfl.net", "funkin.backend.system.net"]) {
+		for(inc in [#if SYS "sys", "openfl.net", "funkin.backend.system.net" #end]) {
 			#if !HL
 			Compiler.include(inc);
 			#else
@@ -36,6 +35,8 @@ class ScriptsMacro {
 			//Compiler.include(inc, ["sys.net.UdpSocket", "openfl.net.DatagramSocket"]); // fixes FATAL ERROR : Failed to load function std@socket_set_broadcast
 			#end
 		}
+
+		Compiler.include("funkin", #if !UPDATE_CHECKING ['funkin.backend.system.updating'] #end);
 
 		// FOR ABSTRACTS
 		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');

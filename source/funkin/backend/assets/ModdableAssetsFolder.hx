@@ -2,6 +2,7 @@ package funkin.backend.assets;
 
 import lime.utils.AssetLibrary;
 
+#if sys
 /**
  * Used to prevent crashes
  */
@@ -37,3 +38,4 @@ class ModdableAssetsFolder extends ModsFolderLibrary {
 		return true;
 	}
 }
+#end

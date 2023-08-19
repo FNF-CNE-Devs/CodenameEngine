@@ -111,8 +111,9 @@
 	<!-- Comment this out to disable updates !-->
 	<!-- <define name="UPDATE_CHECKING" unless="web || hl || neko"/> -->
 
-	<!-- Fixes thing with hl -->
+	<!-- Fixes thing with macros -->
 	<define name="HL" if="hl"/>
+	<define name="SYS" if="desktop"/>
 
 	<!-- Comment this out to disable Discord RPC !-->
 	<define name="DISCORD_RPC" unless="web || hl || neko"/>
@@ -144,10 +145,10 @@
 	<haxedef name="SOFTCODED_STATES" />
 
 	<!-- Comment this out to use the default OpenFL assets system for the assets/ folder. !-->
-	<haxedef name="USE_ADAPTED_ASSETS" />
+	<haxedef name="USE_ADAPTED_ASSETS" unless="web" />
 
 	<!-- Comment this out to disable support for custom ndlls. !-->
-	<haxedef name="NDLLS_SUPPORTED" />
+	<haxedef name="NDLLS_SUPPORTED" unless="web" />
 
 	<!-- Comment this out to disable support for custom extended classes (data/classes). !-->
 	<define name="SOFTCODED_CLASSES" />
