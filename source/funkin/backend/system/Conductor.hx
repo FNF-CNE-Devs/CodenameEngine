@@ -67,7 +67,7 @@ class Conductor
 	/**
 	 * Offset of the song
 	 */
-	 public static var songOffset:Float = 0;
+	public static var songOffset:Float = 0;
 
 	/**
 	 * Current step

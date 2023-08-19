@@ -1,7 +1,7 @@
 package funkin.backend.system;
 
-import sys.FileSystem;
 #if sys
+import sys.FileSystem;
 class CommandLineHandler {
 	public static function parseCommandLine(cmd:Array<String>) {
 		var i:Int = 0;

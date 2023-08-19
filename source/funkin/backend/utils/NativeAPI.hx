@@ -62,11 +62,13 @@ class NativeAPI {
 		var bg = cast(backgroundColor, Int);
 		Windows.setConsoleColors((bg * 16) + fg);
 		#else
+		#if sys
 		Sys.print("\x1b[0m");
 		if(foregroundColor != NONE)
 			Sys.print("\x1b[" + Std.int(consoleColorToANSI(foregroundColor)) + "m");
 		if(backgroundColor != NONE)
 			Sys.print("\x1b[" + Std.int(consoleColorToANSI(backgroundColor) + 10) + "m");
+		#end
 		#end
 	}
 
