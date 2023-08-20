@@ -594,21 +594,31 @@ class Charter extends UIState {
 					});
 					currentCursor = HAND;
 				} else {
+					var hoverOffset:FlxPoint = FlxPoint.get();
+					for (s in selection)
+						if (s.hovered) {
+							hoverOffset.set(mousePos.x - s.x, mousePos.y - s.y);
+							break;
+						}
+
 					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(dragStartPos.y / 40) * 40);
-					var verticalChange:Float = (mousePos.y - dragStartPos.y) / 40;
-					if (!FlxG.keys.pressed.SHIFT)
-						verticalChange = CoolUtil.floorInt(verticalChange);
+					var verticalChange:Float = 
+						FlxG.keys.pressed.SHIFT ? ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40
+						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / 40);
 					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
 					var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
+					trace(dragStartPos, hoverOffset,changePoint);
 
 					for (s in selection) {
 						if (!s.draggable) continue;
 						s.handleDrag(changePoint);
 						if (s is UISprite) cast(s, UISprite).cursor = BUTTON;
 					}
+					sortNotes();
 					addToUndo(CSelectionDrag(selection, changePoint.clone()));
 
 					changePoint.put();
+					hoverOffset.put();
 					gridActionType = NONE;
 
 					currentCursor = ARROW;
@@ -633,6 +643,7 @@ class Charter extends UIState {
 								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id, 0, 0);
 								notesGroup.add(note);
 								selection = [note];
+								sortNotes();
 								addToUndo(CCreateSelection([note]));
 							}
 						}
@@ -641,10 +652,12 @@ class Charter extends UIState {
 					// TODO: NOTE DRAGGING
 					if (FlxG.mouse.pressed && (Math.abs(mousePos.x - dragStartPos.x) > 5 || Math.abs(mousePos.y - dragStartPos.y) > 5)) {
 						var noteHovered:Bool = false;
-						for(n in selection) if (n.hovered) {
-							noteHovered = true;
-							break;
-						}
+						for(n in selection) 
+							if (n.hovered) {
+								noteHovered = true;
+								break;
+							}
+
 						gridActionType = noteHovered ? DRAG : INVALID_DRAG;
 					}
 				}
@@ -694,6 +707,7 @@ class Charter extends UIState {
 			eventsGroup.remove(event, true);
 			event.kill();
 		}
+		sortNotes();
 
 		if (addToUndo)
 			this.addToUndo(CDeleteSelection([selected]));
@@ -1347,6 +1361,8 @@ typedef NoteSustainChange = {
 }
 
 interface ICharterSelectable {
+	public var x(default, set):Float;
+	public var y(default, set):Float;
 	public var step:Float;
 
 	public var selected:Bool;

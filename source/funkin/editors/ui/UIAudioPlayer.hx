@@ -123,7 +123,9 @@ class UIAudioPlayer extends UIButton {
 					}
 				}
 			}
+			spritePos.put();
 		}
+		mousePos.put();
 
 		if (FlxG.mouse.released) {
 			if (draggingObj == timeBar && wasPlaying)

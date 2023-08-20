@@ -104,6 +104,7 @@ class CharterSelection extends EditorTreeMenu {
 		#end
 
 		// Add to List
+		freeplayList.songs.insert(0, creation.meta);
 		main.members.insert(1, new IconOption(creation.meta.name, "Press ACCEPT to choose a difficulty to edit.", creation.meta.icon, function() {
 			var list:Array<OptionType> = [
 				for(d in creation.meta.difficulties) 

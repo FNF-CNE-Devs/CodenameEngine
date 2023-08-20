@@ -201,7 +201,7 @@ class SongCreationScreen extends UISubstateWindow {
 		} else
 			saveButton.selectable = true;
 
-
+		saveButton.alpha = saveButton.field.alpha = saveButton.selectable ? 1 : 0.4;
 		super.update(elapsed);
 	}
 
