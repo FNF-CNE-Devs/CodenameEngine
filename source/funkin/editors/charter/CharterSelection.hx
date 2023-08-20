@@ -25,9 +25,9 @@ class CharterSelection extends EditorTreeMenu {
 		freeplayList = FreeplaySonglist.get(false);
 
 		var list:Array<OptionType> = [
-			for(s in freeplayList.songs) new IconOption(s.name, "Press ACCEPT to choose a difficulty to edit.", s.icon, function() {
+			for(s in freeplayList.songs) new EditorIconOption(s.name, "Press ACCEPT to choose a difficulty to edit.", s.icon, function() {
 				var list:Array<OptionType> = [
-					for(d in s.difficulties) new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
+					for(d in s.difficulties) if (d != "") new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
 						FlxG.switchState(new Charter(s.name, d));
 					})
 				];
@@ -42,7 +42,7 @@ class CharterSelection extends EditorTreeMenu {
 					]));
 				}));
 				optionsTree.add(new OptionsScreen(s.name, "Select a difficulty to continue.", list));
-			})
+			}, s.parsedColor.getDefault(0xFFFFFFFF))
 		];
 
 		list.insert(0, new NewOption("New Chart", "New Chart", function() {
@@ -72,17 +72,21 @@ class CharterSelection extends EditorTreeMenu {
 	public override function onMenuChange() {
 		super.onMenuChange();
 		if (optionsTree.members.length > 1) { // selected a song
-			// small flashbang
-			if(freeplayList.songs.length <= main.curSelected-1) return;
+			if(main != null) {
+				var opt = main.members[main.curSelected];
+				if(opt is EditorIconOption) {
+					var opt:EditorIconOption = cast opt;
 
-			var color:FlxColor = freeplayList.songs[main.curSelected-1].parsedColor.getDefault(0xFFFFFFFF);
-
-			bg.colorTransform.redOffset = 0.25 * color.red;
-			bg.colorTransform.greenOffset = 0.25 * color.green;
-			bg.colorTransform.blueOffset = 0.25 * color.blue;
-			bg.colorTransform.redMultiplier = FlxMath.lerp(1, color.redFloat, 0.25);
-			bg.colorTransform.greenMultiplier = FlxMath.lerp(1, color.greenFloat, 0.25);
-			bg.colorTransform.blueMultiplier = FlxMath.lerp(1, color.blueFloat, 0.25);
+					// small flashbang
+					var color = opt.flashColor;
+					bg.colorTransform.redOffset = 0.25 * color.red;
+					bg.colorTransform.greenOffset = 0.25 * color.green;
+					bg.colorTransform.blueOffset = 0.25 * color.blue;
+					bg.colorTransform.redMultiplier = FlxMath.lerp(1, color.redFloat, 0.25);
+					bg.colorTransform.greenMultiplier = FlxMath.lerp(1, color.greenFloat, 0.25);
+					bg.colorTransform.blueMultiplier = FlxMath.lerp(1, color.blueFloat, 0.25);
+				}
+			}
 		}
 	}
 
@@ -103,17 +107,29 @@ class CharterSelection extends EditorTreeMenu {
 		if (creation.voicesBytes != null) sys.io.File.saveBytes('$songFolder/song/Voices.${Paths.SOUND_EXT}', creation.voicesBytes);
 		#end
 
-		// Add to List
-		freeplayList.songs.insert(0, creation.meta);
-		main.members.insert(1, new IconOption(creation.meta.name, "Press ACCEPT to choose a difficulty to edit.", creation.meta.icon, function() {
+		var option = new EditorIconOption(creation.meta.name, "Press ACCEPT to choose a difficulty to edit.", creation.meta.icon, function() {
 			var list:Array<OptionType> = [
-				for(d in creation.meta.difficulties) 
+				for(d in creation.meta.difficulties)
 					if (d != "") new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
 						FlxG.switchState(new Charter(creation.meta.name, d));
 					})
 			];
-			list.push(new NewOption("New Difficulty", "New Difficulty", function() {}));
+			list.push(new NewOption("New Difficulty", "New Difficulty", function() {
+				openSubState(new UIWarningSubstate("New Difficulty", "This feature isnt implemented yet", [
+					{
+						label: "OK",
+						onClick: function(t) {
+
+						}
+					}
+				]));
+			}));
 			optionsTree.add(new OptionsScreen(creation.meta.name, "Select a difficulty to continue.", list));
-		}));
+		}, creation.meta.parsedColor.getDefault(0xFFFFFFFF));
+
+		// Add to List
+		freeplayList.songs.insert(0, creation.meta);
+		main.members.insert(1, option);
+		// @:privateAccess main.__firstFrame = true;
 	}
 }
