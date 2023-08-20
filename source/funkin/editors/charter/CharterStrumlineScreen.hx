@@ -164,6 +164,7 @@ class CharacterButton extends UIButton {
 
 	public function new(x:Float, y:Float, char:String, parent:UIButtonList<CharacterButton>) {
 		super(x, y, "", null, 250, 54);
+		autoAlpha = false;
 
 		charIcon = new HealthIcon(Character.getIconFromCharName(char));
 		charIcon.scale.set(0.3, 0.3);
@@ -188,6 +189,7 @@ class CharacterButton extends UIButton {
 			parent.remove(this);
 		}, 32);
 		deleteButton.color = 0xFFFF0000;
+		deleteButton.autoAlpha = false;
 		members.push(deleteButton);
 
 		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 8).loadGraphic(Paths.image('editors/character/delete-button'));

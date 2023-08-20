@@ -25,6 +25,7 @@ class UISprite extends FlxSprite {
 
 	public var focused(get, set):Bool;
 	public var selectable:Bool = true;
+	public var autoAlpha:Bool = true;
 
 	private inline function get_focused():Bool
 		return UIState.state.currentFocus == cast this;

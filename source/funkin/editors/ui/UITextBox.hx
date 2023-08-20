@@ -59,11 +59,12 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 		super.update(elapsed);
 
 		var selected = selectable && focused;
-
-		if(selectable) {
-			alpha = label.alpha = 1;
-		} else {
-			alpha = label.alpha = 0.4;
+		if (autoAlpha) {
+			if(selectable) {
+				alpha = label.alpha = 1;
+			} else {
+				alpha = label.alpha = 0.4;
+			}
 		}
 
 		var off = multiline ? 4 : ((bHeight - label.height) / 2);

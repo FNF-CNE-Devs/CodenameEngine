@@ -219,29 +219,28 @@ class EventButton extends UIButton {
 	public var deleteIcon:FlxSprite;
 
 	public function new(event:ChartEvent, icon:FlxSprite, id:Int, substate:CharterEventScreen, parent:UIButtonList<EventButton>) {
-		super(0,0,"" ,function() {
-			substate.changeTab(id);
-			for(i in parent.buttons.members) {
-				if(i is EventButton) {
-					var i:EventButton = cast i;
-					i.alpha = i == this ? 1 : 0.25;
-				}
-			}
-		},73,40);
-		members.push(icon);
 		this.icon = icon;
 		this.event = event;
+		super(0,0,"" ,function() {
+			substate.changeTab(id);
+			for(i in parent.buttons.members)
+				i.alpha = i == this ? 1 : 0.25;
+		},73,40);
+		autoAlpha = false;
+
+		members.push(icon);
 		icon.setPosition(18 - icon.width / 2, 20 - icon.height / 2);
+
 		deleteButton = new UIButton(bWidth - 30, y + (bHeight - 26) / 2, "", function () {
 			substate.events.splice(id, 1);
 			substate.changeTab(id, false);
 			parent.remove(this);
 		}, 26, 26);
 		deleteButton.color = FlxColor.RED;
+		deleteButton.autoAlpha = false;
 		members.push(deleteButton);
 
 		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 4).loadGraphic(Paths.image('editors/character/delete-button'));
-
 		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);
 	}

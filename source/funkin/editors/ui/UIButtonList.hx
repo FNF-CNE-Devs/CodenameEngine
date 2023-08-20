@@ -36,6 +36,7 @@ class UIButtonList<T:UIButton> extends UIWindow {
 		buttonCameras.bgColor = 0;
 
 		addButton = new UIButton(25, 16, "", null, Std.int(this.buttonSize.x));
+		addButton.autoAlpha = false;
 		addButton.color = 0xFF00FF00;
 		addButton.cameras = [buttonCameras];
 

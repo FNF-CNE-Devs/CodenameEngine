@@ -20,10 +20,12 @@ class CharacterAnimButtons extends UIButton {
 		super(x,y, '$anim (${offset.x}, ${offset.y})', function () {
 			CharacterEditor.instance.playAnimation(this.anim);
 		}, 282);
+		autoAlpha = false;
 
 		ghostButton = new UIButton(x+282+17, y, "", function () {
 			CharacterEditor.instance.ghostAnim(this.anim);
 		}, 32);
+		ghostButton.autoAlpha = false;
 		members.push(ghostButton);
 
 		ghostIcon = new FlxSprite(ghostButton.x + 8, ghostButton.y + 8).loadGraphic(Paths.image('editors/character/ghost-button'), true, 16, 16);
@@ -38,6 +40,7 @@ class CharacterAnimButtons extends UIButton {
 			CharacterEditor.instance.editAnimWithUI(this.anim);
 		}, 32);
 		editButton.color = FlxColor.YELLOW;
+		editButton.autoAlpha = false;
 		members.push(editButton);
 
 		editIcon = new FlxSprite(editButton.x + 8, editButton.y + 8).loadGraphic(Paths.image('editors/character/edit-button'));
@@ -48,6 +51,7 @@ class CharacterAnimButtons extends UIButton {
 			CharacterEditor.instance.deleteAnim(this.anim);
 		}, 32);
 		deleteButton.color = FlxColor.RED;
+		deleteButton.autoAlpha = false;
 		members.push(deleteButton);
 
 		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 8).loadGraphic(Paths.image('editors/character/delete-button'));
