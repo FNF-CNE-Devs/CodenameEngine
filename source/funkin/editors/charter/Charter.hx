@@ -607,7 +607,6 @@ class Charter extends UIState {
 						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / 40);
 					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
 					var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
-					trace(dragStartPos, hoverOffset,changePoint);
 
 					for (s in selection) {
 						if (!s.draggable) continue;

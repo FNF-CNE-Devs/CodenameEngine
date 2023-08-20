@@ -1338,8 +1338,10 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			trace('WENT BACK TO FREEPLAY??');
-			FlxG.switchState(new FreeplayState());
+			if (chartingMode)
+				FlxG.switchState(new funkin.editors.charter.Charter(SONG.meta.name, difficulty, false));
+			else
+				FlxG.switchState(new FreeplayState());
 		}
 	}
 
