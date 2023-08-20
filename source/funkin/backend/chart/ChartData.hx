@@ -9,8 +9,7 @@ typedef ChartData = {
 	public var codenameChart:Bool;
 	public var stage:String;
 	public var scrollSpeed:Float;
-	public var noteTypes:Array<String>;
-
+	
 	public var ?fromMods:Bool;
 }
 
@@ -47,7 +46,7 @@ typedef ChartStrumLine = {
 typedef ChartNote = {
 	var time:Float; // time at which the note will be hit (ms)
 	var id:Int; // strum id of the note
-	var type:Int; // type (int) of the note
+	var type:Null<String>; // type of the note (deafult is null)
 	var sLen:Float; // sustain length of the note (ms)
 }
 

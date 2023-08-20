@@ -14,14 +14,9 @@ final class NoteCreationEvent extends CancellableEvent {
 	public var strumID:Int;
 
 	/**
-	 * Note Type (ex: "My Super Cool Note", or "Mine")
+	 * Note Type (ex: "My Super Cool Note", or "Mine", null as default)
 	 */
 	public var noteType:String;
-
-	/**
-	 * ID of the note type.
-	 */
-	public var noteTypeID:Int;
 
 	/**
 	 * ID of the player.

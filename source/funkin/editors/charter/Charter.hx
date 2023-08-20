@@ -639,7 +639,7 @@ class Charter extends UIState {
 							var id = Math.floor(mousePos.x / 40);
 							if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0) {
 								var note = new CharterNote();
-								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id, 0, 0);
+								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id, 0, null);
 								notesGroup.add(note);
 								selection = [note];
 								sortNotes();
@@ -1061,12 +1061,12 @@ class Charter extends UIState {
 		clipboard = [
 			for (s in selection)
 				if (s is CharterNote) {
-				var note:CharterNote = cast(s, CharterNote);
-				CNote(note.step - minStep, note.id, note.susLength, note.type);
-			} else if (s is CharterEvent) {
-				var event = cast(s,CharterEvent);
-				CEvent(event.step - minStep, event.events);
-			}
+					var note:CharterNote = cast(s, CharterNote);
+					CNote(note.step - minStep, note.id, note.susLength, note.type);
+				} else if (s is CharterEvent) {
+					var event = cast(s,CharterEvent);
+					CEvent(event.step - minStep, event.events);
+				}
 		];
 	}
 	function _edit_paste(_) {
@@ -1334,7 +1334,7 @@ enum CharterChange {
 }
 
 enum CharterCopyboardObject {
-	CNote(step:Float, id:Int, susLength:Float, type:Int);
+	CNote(step:Float, id:Int, susLength:Float, type:String);
 	CEvent(step:Float, events:Array<ChartEvent>);
 }
 
