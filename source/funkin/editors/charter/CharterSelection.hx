@@ -129,8 +129,6 @@ class CharterSelection extends EditorTreeMenu {
 
 		// Add to List
 		freeplayList.songs.insert(0, creation.meta);
-		@:privateAccess main.preAdd(option);
-		main.members.insert(1, option);
-		// @:privateAccess main.__firstFrame = true;
+		main.insert(1, option);
 	}
 }
