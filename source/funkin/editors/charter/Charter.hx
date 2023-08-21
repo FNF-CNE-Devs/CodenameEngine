@@ -953,6 +953,8 @@ class Charter extends UIState {
 			curQuant++;
 			if(curQuant>quantizations.length-1)
 				curQuant = 0;
+			gridBackdropDummy.parent.yMult = quantization / 16;
+			gridBackdropDummy.parent.refreshDrawing();
 
 			quantization = quantizations[curQuant];
 		}
@@ -961,6 +963,8 @@ class Charter extends UIState {
 			curQuant--;
 			if(curQuant<0)
 				curQuant = quantizations.length-1;
+			gridBackdropDummy.parent.yMult = quantization / 16;
+			gridBackdropDummy.parent.refreshDrawing();
 
 			quantization = quantizations[curQuant];
 		}
