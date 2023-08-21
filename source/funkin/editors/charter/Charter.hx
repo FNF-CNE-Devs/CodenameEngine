@@ -698,7 +698,7 @@ class Charter extends UIState {
 			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
 		}
 	}
-	public function snap(a,snapto) return Math.floor(a/snapto) * snapto;
+	public function snap(a,snapto) return Std.int(Math.floor(a/snapto) * snapto);
 	public function getHoveredEvent(y:Float) {
 		var eventHovered:CharterEvent = null;
 		eventsGroup.forEach(function(e) {
