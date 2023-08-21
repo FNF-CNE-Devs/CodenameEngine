@@ -87,7 +87,23 @@ class Charter extends UIState {
 	public var redoList:Array<CharterChange> = [];
 
 	public var clipboard:Array<CharterCopyboardObject> = [];
+	
+	public static var quantization:Int = 16;
+	public static var curQuant = 3;
 
+	public var quantizations:Array<Int> = [
+		4,
+		8,
+		12,
+		16,
+		20,
+		24,
+		32,
+		48,
+		64,
+		96,
+		192
+	];
 	public function new(song:String, diff:String, reload:Bool = true) {
 		super();
 		__song = song;
@@ -638,8 +654,9 @@ class Charter extends UIState {
 							// place note
 							var id = Math.floor(mousePos.x / 40);
 							if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0) {
+								var gridmult = 40 / (quantization / 16);
 								var note = new CharterNote();
-								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id, 0, 0);
+								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y/gridmult), id, 0, 0);
 								notesGroup.add(note);
 								selection = [note];
 								sortNotes();
@@ -932,12 +949,29 @@ class Charter extends UIState {
 			vocals.pause();
 		}
 
+		if(FlxG.keys.justPressed.X){
+			curQuant++;
+			if(curQuant>quantizations.length-1)
+				curQuant = 0;
+
+			quantization = quantizations[curQuant];
+		}
+
+		if(FlxG.keys.justPressed.Z){
+			curQuant--;
+			if(curQuant<0)
+				curQuant = quantizations.length-1;
+
+			quantization = quantizations[curQuant];
+		}
+
 		songPosInfo.text = '${CoolUtil.timeToStr(Conductor.songPosition)} / ${CoolUtil.timeToStr(songLength)}'
 		+ '\nStep: ${curStep}'
 		+ '\nBeat: ${curBeat}'
 		+ '\nMeasure: ${curMeasure}'
 		+ '\nBPM: ${Conductor.bpm}'
-		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}';
+		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}'
+		+ '\nBeat Snap: ${quantization}th';
 
 		if (FlxG.sound.music.playing) {
 			conductorFollowerSpr.y = curStepFloat * 40;
