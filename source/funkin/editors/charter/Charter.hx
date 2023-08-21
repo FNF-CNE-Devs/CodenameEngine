@@ -616,11 +616,11 @@ class Charter extends UIState {
 							hoverOffset.set(mousePos.x - s.x, mousePos.y - s.y);
 							break;
 						}
-
-					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(dragStartPos.y / 40) * 40);
+					var gridmult = 40 / (quantization / 16);
+					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(dragStartPos.y / gridmult) * gridmult);
 					var verticalChange:Float = 
 						FlxG.keys.pressed.SHIFT ? ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40
-						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / 40);
+						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / gridmult);
 					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
 					var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
 
