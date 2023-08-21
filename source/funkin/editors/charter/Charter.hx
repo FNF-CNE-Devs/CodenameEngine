@@ -950,25 +950,10 @@ class Charter extends UIState {
 			vocals.pause();
 		}
 
-		if(FlxG.keys.justPressed.X){
-			curQuant++;
-			if(curQuant>quantizations.length-1)
-				curQuant = 0;
-			gridBackdropDummy.parent.yMult = quantization / 16;
-			gridBackdropDummy.parent.refreshDrawing();
-
-			quantization = quantizations[curQuant];
-		}
-
-		if(FlxG.keys.justPressed.Z){
-			curQuant--;
-			if(curQuant<0)
-				curQuant = quantizations.length-1;
-			gridBackdropDummy.parent.yMult = quantization / 16;
-			gridBackdropDummy.parent.refreshDrawing();
-
-			quantization = quantizations[curQuant];
-		}
+		if(FlxG.keys.justPressed.X)
+			changeQuant(1);
+		else if(FlxG.keys.justPressed.Z)
+			changeQuant(-1);
 
 		songPosInfo.text = '${CoolUtil.timeToStr(Conductor.songPosition)} / ${CoolUtil.timeToStr(songLength)}'
 		+ '\nStep: ${curStep}'
@@ -987,6 +972,18 @@ class Charter extends UIState {
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125))) {
 			updateDisplaySprites();
 		}
+	}
+
+	function changeQuant(n:Int) {
+		curQuant+=n;
+		if(curQuant<0)
+			curQuant = quantizations.length-1;
+		else if (curQuant>quantizations.length-1)
+			curQuant = 0;
+		gridBackdropDummy.parent.yMult = quantization / 16;
+		gridBackdropDummy.parent.refreshDrawing();
+	
+		quantization = quantizations[curQuant];
 	}
 
 	public static var startTime:Float = 0;
