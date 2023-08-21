@@ -1,5 +1,6 @@
 package funkin.game;
 
+import Reflect;
 import funkin.backend.chart.EventsData;
 import funkin.backend.system.RotatingSpriteGroup;
 import funkin.editors.charter.Charter;
@@ -1220,6 +1221,11 @@ class PlayState extends MusicBeatState
 					if (strLine != null)
 						strLine.altAnim = cast event.params[1];
 				}
+			case "Flash Camera":
+				Reflect.getProperty(this, event.params[2]).flash(event.params[0], event.params[1], null, true);
+			case "Play Animation":
+				for (char in strumLines.members[event.params[0]].characters)
+					char.playAnim(event.params[1], event.params[2], null);
 			case "Unknown":
 		}
 	}

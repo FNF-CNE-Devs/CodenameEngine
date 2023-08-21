@@ -10,12 +10,14 @@ import funkin.backend.assets.Paths;
 using StringTools;
 
 class EventsData {
-	public static var defaultEventsList:Array<String> = ["HScript Call", "Camera Movement", "BPM Change", "Alt Animation Toggle"];
+	public static var defaultEventsList:Array<String> = ["HScript Call", "Camera Movement", "BPM Change", "Alt Animation Toggle", "Flash Camera", "Play Animation"];
 	public static var defaultEventsParams:Map<String, Array<EventParamInfo>> = [
 		"HScript Call" => [{name: "Function Name", type: TString, defValue: "myFunc"}, {name: "Function Parameters (String split with commas)", type: TString, defValue: ""}],
 		"Camera Movement" => [{name: "Camera Target", type: TStrumLine, defValue: 0}],
 		"BPM Change" => [{name: "Target BPM", type: TFloat(1), defValue: 100}],
 		"Alt Animation Toggle" => [{name: "Strumline", type: TStrumLine, defValue: 0}, {name: "Enable", type: TBool, defValue: true}],
+		"Flash Camera" => [{name: "Color", type: TColorWheel, defValue: "#FFFFFF"}, {name: "Time", type: TFloat(1, 10, 0.01, 2), defValue: 2}, {name: "Camera", type: TDropDown(["camGame", "camHUD"]), defValue: "camHUD"}], // By: lunarcleint
+		"Play Animation" => [{name: "Character", type: TStrumLine, defValue: 0}, {name: "Animation", type: TString, defValue: ""}] // By: lunarcleint
 	];
 
 	public static var eventsList:Array<String> = defaultEventsList.copy();
