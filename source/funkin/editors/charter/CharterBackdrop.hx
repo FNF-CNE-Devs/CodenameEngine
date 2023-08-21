@@ -5,10 +5,13 @@ import flixel.addons.display.FlxBackdrop;
 
 class CharterBackdrop extends FlxBackdrop {
 	public var strumlinesAmount:Int = 1;
-
+	public var yMult:Float = 1;
 	public function new() {
 		super(null, Y, 0, 0);
+		refreshDrawing();
+	}
 
+	public function refreshDrawing() {
 		makeGraphic(160, 160, 0xFF272727, true);
 		pixels.lock();
 
@@ -21,7 +24,7 @@ class CharterBackdrop extends FlxBackdrop {
 		pixels.fillRect(new Rectangle(0, 0, 1, 160), 0xFFDDDDDD);
 		pixels.fillRect(new Rectangle(159, 0, 1, 160), 0xFFDDDDDD);
 		pixels.unlock();
-		// loadFrame(frame);
+		// loadFrame(frame);	
 	}
 
 	public override function draw() {
