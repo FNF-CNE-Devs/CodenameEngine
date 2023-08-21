@@ -65,22 +65,22 @@ class BaseGameParser {
 
 				var daStrumTime:Float = note[0];
 				var daNoteData:Int = Std.int(note[1] % 8);
+				var daNoteType:Int = Std.int(note[1] / 8);
 				var gottaHitNote:Bool = daNoteData >= 4 ? !section.mustHitSection : section.mustHitSection;
 
-				var noteTypeStr:String = null;
-
 				if (note.length > 2) {
-					if (note[3] is Int) noteTypeStr = data.noteTypes[Std.int(((note[3])-1) > 0 ? ((note[3])-1) : 0)];
-					else if (note[3] is String) noteTypeStr = note[3].trim();
+					if (note[3] is Int)
+						daNoteType = Chart.addNoteType(result, data.noteTypes[Std.int(note[3])-1]);
+					else if (note[3] is String)
+						daNoteType = Chart.addNoteType(result, note[3]);
+				} else {
+					daNoteType = Chart.addNoteType(result, data.noteTypes[daNoteType-1]);
 				}
-
-				if (noteTypeStr == "Default Note" || noteTypeStr == "")
-					noteTypeStr = null;
 
 				result.strumLines[gottaHitNote ? 1 : 0].notes.push({
 					time: daStrumTime,
 					id: daNoteData % 4,
-					type: noteTypeStr,
+					type: daNoteType,
 					sLen: note[2]
 				});
 			}

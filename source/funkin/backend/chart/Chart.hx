@@ -78,6 +78,7 @@ class Chart {
 		var chartPath = Paths.chart(songName, difficulty);
 		var base:ChartData = {
 			strumLines: [],
+			noteTypes: [],
 			events: [],
 			meta: {
 				name: null
@@ -107,8 +108,24 @@ class Chart {
 			 */
 			#if REGION
 			if (Reflect.hasField(data, "codenameChart") && Reflect.field(data, "codenameChart") == true) {
-				// cne chart
-				backwardCompatCNEChart(cast data); // remove this when the engine comes out
+				// backward compat on events since its caused problems
+				var eventTypesToString:Map<Int, String> = [
+					-1 => "HScript Call",
+					0 => "Unknown",
+					1 => "Camera Movement",
+					2 => "BPM Change",
+					3 => "Alt Animation Toggle",
+				];
+
+				for (event in cast(data.events, Array<Dynamic>)) {
+					if (Reflect.hasField(event, "type")) {
+						if(event.type != null)
+							event.name = eventTypesToString[event.type];
+						Reflect.deleteField(event, "type");
+					}
+				}
+
+				// codename chart
 				base = data;
 			} else {
 				// base game chart
@@ -131,15 +148,17 @@ class Chart {
 		return base;
 	}
 
-	public static function getChartNoteTypes(chart:ChartData):Array<String> {
-		var types:Array<String> = [null];
-
-		for (strL in chart.strumLines)
-			for (note in strL.notes)
-				if (note.type != null && !types.contains(note.type))
-					types.push(note.type);
-
-		return types;
+	public static function addNoteType(chart:ChartData, noteTypeName:String):Int {
+		switch(noteTypeName.trim()) {
+			case "Default Note" | null | "":
+				return 0;
+			default:
+				var index = chart.noteTypes.indexOf(noteTypeName);
+				if (index > -1)
+					return index+1;
+				chart.noteTypes.push(noteTypeName);
+				return chart.noteTypes.length;
+		}
 	}
 
 	/**
@@ -190,30 +209,6 @@ class Chart {
 				Reflect.setField(sortedData, f, v);
 		}
 		return sortedData;
-	}
-
-	public static function backwardCompatCNEChart(data:Dynamic) {
-		// Events
-		var eventTypesToString:Map<Int, String> = [
-			-1 => "HScript Call",
-			0 => "Unknown",
-			1 => "Camera Movement",
-			2 => "BPM Change",
-			3 => "Alt Animation Toggle",
-		];
-
-		for (event in cast(data.events, Array<Dynamic>)) {
-			if (Reflect.hasField(event, "type")) {
-				if(event.type != null)
-					event.name = eventTypesToString[event.type];
-				Reflect.deleteField(event, "type");
-			}
-		}
-
-		// Notes
-		for (strL in cast(data.strumLines, Array<Dynamic>))
-			for (note in cast(strL.notes, Array<Dynamic>))
-				if (note.type is Int) note.type = note.type == 0 ? null : data.noteTypes[note.type];
 	}
 }
 

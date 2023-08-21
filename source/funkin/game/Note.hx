@@ -72,15 +72,22 @@ class Note extends FlxSprite
 	public var isSustainNote:Bool = false;
 	public var flipSustain:Bool = true;
 
+	public var noteTypeID:Int = 0;
+
 	// TO APPLY THOSE ON A SINGLE NOTE
 	public var scrollSpeed:Null<Float> = null;
 	public var noteAngle:Null<Float> = null;
 
-	public var noteType:Null<String> = null;
+	public var noteType(get, null):String;
 
 	@:dox(hide) public var __strumCameras:Array<FlxCamera> = null;
 	@:dox(hide) public var __strum:Strum = null;
 	@:dox(hide) public var __noteAngle:Float = 0;
+
+	private function get_noteType() {
+		if (PlayState.instance == null) return null;
+		return PlayState.instance.getNoteType(noteTypeID);
+	}
 
 	public static var swagWidth:Float = 160 * 0.7;
 
@@ -104,9 +111,9 @@ class Note extends FlxSprite
 			this.prevNote = prev;
 		else
 			this.prevNote = strumLine.notes.members.last();
+		this.noteTypeID = noteData.type.getDefault(0);
 		this.isSustainNote = sustain;
 		this.sustainLength = sustainLength;
-		this.noteType = noteData.type;
 		this.strumLine = strumLine;
 
 		x += 50;
@@ -117,7 +124,7 @@ class Note extends FlxSprite
 		this.noteData = noteData.id.getDefault(0);
 
 		var customType = Paths.image('game/notes/${this.noteType}');
-		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, PlayState.instance.strumLines.members.indexOf(strumLine), mustPress,
+		var event = EventManager.get(NoteCreationEvent).recycle(this, strumID, this.noteType, noteTypeID, PlayState.instance.strumLines.members.indexOf(strumLine), mustPress,
 			(this.noteType != null && customTypePathExists(customType)) ? 'game/notes/${this.noteType}' : 'game/notes/default', 0.7, animSuffix);
 
 		if (PlayState.instance != null)

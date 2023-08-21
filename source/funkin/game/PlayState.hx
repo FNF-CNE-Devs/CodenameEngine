@@ -593,7 +593,7 @@ class PlayState extends MusicBeatState
 
 		generateSong(SONG);
 
-		for(noteType in Chart.getChartNoteTypes(SONG)) {
+		for(noteType in SONG.noteTypes) {
 			var scriptPath = Paths.script('data/notes/${noteType}');
 			if (Assets.exists(scriptPath) && !scripts.contains(scriptPath)) {
 				var script = Script.create(scriptPath);
@@ -1412,6 +1412,11 @@ class PlayState extends MusicBeatState
 
 		if (event.deleteNote && strumLine != null && note != null)
 			strumLine.deleteNote(note);
+	}
+
+	@:dox(hide)
+	public function getNoteType(id:Int):String {
+		return SONG.noteTypes[id-1];
 	}
 
 	/**
