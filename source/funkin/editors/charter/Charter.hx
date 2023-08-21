@@ -617,7 +617,7 @@ class Charter extends UIState {
 							break;
 						}
 					var gridmult = 40 / (quantization / 16);
-					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(snap(dragStartPos.y,gridMult)));
+					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(snap(dragStartPos.y,gridmult)));
 					var verticalChange:Float = 
 						FlxG.keys.pressed.SHIFT ? ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40
 						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / 40);
@@ -656,7 +656,7 @@ class Charter extends UIState {
 							if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0) {
 								var gridmult = 40 / (quantization / 16);
 								var note = new CharterNote();
-								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : snap(mousePos.y,gridMult)/40, id, 0, 0);
+								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : snap(mousePos.y,gridmult)/40, id, 0, 0);
 								notesGroup.add(note);
 								selection = [note];
 								sortNotes();
