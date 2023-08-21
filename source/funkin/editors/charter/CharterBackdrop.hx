@@ -5,20 +5,19 @@ import flixel.addons.display.FlxBackdrop;
 
 class CharterBackdrop extends FlxBackdrop {
 	public var strumlinesAmount:Int = 1;
-	public var yMult:Float = 1;
 	public function new() {
 		super(null, Y, 0, 0);
 		refreshDrawing();
 	}
 
 	public function refreshDrawing() {
-		makeGraphic(160, Std.int(160/yMult), 0xFF272727, true);
+		makeGraphic(160, Std.int(160), 0xFF272727, true);
 		pixels.lock();
 
 		// Checkerboard
 		for(y in 0...Std.int(4))
 			for(x in 0...2)
-				pixels.fillRect(new Rectangle(40*((x*2)+(y%2)), (40/yMult)*y, 40, (40/yMult)), 0xFF545454);
+				pixels.fillRect(new Rectangle(40*((x*2)+(y%2)), (40), 40, (40)), 0xFF545454);
 
 		// Edges
 		pixels.fillRect(new Rectangle(0, 0, 1, 160), 0xFFDDDDDD);
