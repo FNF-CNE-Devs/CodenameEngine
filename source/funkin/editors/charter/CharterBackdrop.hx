@@ -17,7 +17,7 @@ class CharterBackdrop extends FlxBackdrop {
 		// Checkerboard
 		for(y in 0...Std.int(4))
 			for(x in 0...2)
-				pixels.fillRect(new Rectangle(40*((x*2)+(y%2)), (40), 40, (40)), 0xFF545454);
+				pixels.fillRect(new Rectangle(40*((x*2)+(y%2)), 40*y, 40, 40), 0xFF545454);
 
 		// Edges
 		pixels.fillRect(new Rectangle(0, 0, 1, 160), 0xFFDDDDDD);
