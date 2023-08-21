@@ -975,12 +975,8 @@ class Charter extends UIState {
 	}
 
 	function changeQuant(n:Int) {
-		curQuant+=n;
-		if(curQuant<0)
-			curQuant = quantizations.length-1;
-		else if (curQuant>quantizations.length-1)
-			curQuant = 0;
-	
+		curQuant = FlxMath.wrap(curQuant+n, 0, quantizations.length-1);
+		
 		quantization = quantizations[curQuant];
 		gridBackdropDummy.parent.yMult = quantization / 16;
 		gridBackdropDummy.parent.refreshDrawing();
