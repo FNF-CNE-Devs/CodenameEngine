@@ -617,10 +617,10 @@ class Charter extends UIState {
 							break;
 						}
 					var gridmult = 40 / (quantization / 16);
-					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(dragStartPos.y / gridmult) * gridmult);
+					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, snap(dragStartPos.y,gridMult));
 					var verticalChange:Float = 
 						FlxG.keys.pressed.SHIFT ? ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40
-						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / gridmult);
+						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / 40);
 					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
 					var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
 
@@ -656,7 +656,7 @@ class Charter extends UIState {
 							if (id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0) {
 								var gridmult = 40 / (quantization / 16);
 								var note = new CharterNote();
-								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y/gridmult), id, 0, 0);
+								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : snap(mousePos.y,gridMult), id, 0, 0);
 								notesGroup.add(note);
 								selection = [note];
 								sortNotes();
@@ -698,7 +698,7 @@ class Charter extends UIState {
 			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
 		}
 	}
-
+	public function snap(a,snapto) return Math.floor(a/snapto) * snapto;
 	public function getHoveredEvent(y:Float) {
 		var eventHovered:CharterEvent = null;
 		eventsGroup.forEach(function(e) {
