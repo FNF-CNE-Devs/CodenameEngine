@@ -41,7 +41,7 @@ class CharterBackdrop extends FlxBackdrop {
 }
 
 class CharterBackdropDummy extends UISprite {
-	var parent:CharterBackdrop;
+	public var parent:CharterBackdrop;
 	public function new(parent:CharterBackdrop) {
 		super();
 		this.parent = parent;
