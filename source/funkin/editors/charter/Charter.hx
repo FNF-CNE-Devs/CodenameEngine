@@ -980,10 +980,10 @@ class Charter extends UIState {
 			curQuant = quantizations.length-1;
 		else if (curQuant>quantizations.length-1)
 			curQuant = 0;
-		gridBackdropDummy.parent.yMult = quantization / 16;
-		gridBackdropDummy.parent.refreshDrawing();
 	
 		quantization = quantizations[curQuant];
+		gridBackdropDummy.parent.yMult = quantization / 16;
+		gridBackdropDummy.parent.refreshDrawing();
 	}
 
 	public static var startTime:Float = 0;
