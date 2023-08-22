@@ -937,9 +937,9 @@ class Charter extends UIState {
 		}
 
 		var songLength = FlxG.sound.music.getDefault(vocals).length;
-		Conductor.songPosition = FlxMath.bound(Conductor.songPosition, 0, songLength);
+		Conductor.songPosition = FlxMath.bound(Conductor.songPosition + Conductor.songOffset, 0, songLength);
 
-		if (Conductor.songPosition >= songLength) {
+		if (Conductor.songPosition >= songLength - Conductor.songOffset) {
 			FlxG.sound.music.pause();
 			vocals.pause();
 		}
