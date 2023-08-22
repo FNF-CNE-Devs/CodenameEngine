@@ -16,7 +16,7 @@ class EventsData {
 		"Camera Movement" => [{name: "Camera Target", type: TStrumLine, defValue: 0}],
 		"BPM Change" => [{name: "Target BPM", type: TFloat(1), defValue: 100}],
 		"Alt Animation Toggle" => [{name: "Strumline", type: TStrumLine, defValue: 0}, {name: "Enable", type: TBool, defValue: true}],
-		"Flash Camera" => [{name: "Color", type: TColorWheel, defValue: "#FFFFFF"}, {name: "Time", type: TFloat(1, 10, 0.01, 2), defValue: 2}, {name: "Camera", type: TDropDown(["camGame", "camHUD"]), defValue: "camHUD"}], // By: lunarcleint
+		"Flash Camera" => [{name: "Color", type: TColorWheel, defValue: "#FFFFFF"}, {name: "Time", type: TFloat(0.1, 10, 0.01, 2), defValue: 2}, {name: "Camera", type: TDropDown(["camGame", "camHUD"]), defValue: "camHUD"}], // By: lunarcleint
 		"Play Animation" => [{name: "Character", type: TStrumLine, defValue: 0}, {name: "Animation", type: TString, defValue: ""}] // By: lunarcleint
 	];
 
@@ -34,7 +34,7 @@ class EventsData {
 		var hscriptInterp:Interp = new Interp();
 		hscriptInterp.variables.set("Bool", TBool);
 		hscriptInterp.variables.set("Int", function (?min:Int, ?max:Int, ?step:Float):EventParamType {return TInt(min, max, step);});
-		hscriptInterp.variables.set("Float", function (?min:Int, ?max:Int, ?step:Float, ?precision:Int):EventParamType {return TFloat(min, max, step, precision);});
+		hscriptInterp.variables.set("Float", function (?min:Float, ?max:Float, ?step:Float, ?precision:Int):EventParamType {return TFloat(min, max, step, precision);});
 		hscriptInterp.variables.set("String", TString);
 		hscriptInterp.variables.set("StrumLine", TStrumLine);
 		hscriptInterp.variables.set("ColorWheel", TColorWheel);
@@ -85,7 +85,7 @@ typedef EventParamInfo = {
 enum EventParamType {
 	TBool;
 	TInt(?min:Int, ?max:Int, ?step:Float);
-	TFloat(?min:Int, ?max:Int, ?step:Float, ?precision:Int);
+	TFloat(?min:Float, ?max:Float, ?step:Float, ?precision:Int);
 	TString;
 	TStrumLine;
 	TColorWheel;

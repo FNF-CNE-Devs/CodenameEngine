@@ -114,9 +114,7 @@ class Chart {
 					0 => "Unknown",
 					1 => "Camera Movement",
 					2 => "BPM Change",
-					3 => "Alt Animation Toggle",
-					4 => "Flash Camera",
-					5 => "Play Animation"
+					3 => "Alt Animation Toggle"
 				];
 
 				for (event in cast(data.events, Array<Dynamic>)) {
