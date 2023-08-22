@@ -1077,7 +1077,7 @@ class Charter extends UIState {
 				CNote(note.step - minStep, note.id, note.susLength, note.type);
 			} else if (s is CharterEvent) {
 				var event = cast(s,CharterEvent);
-				CEvent(event.step - minStep, event.events);
+				CEvent(event.step - minStep, [for (event in event.events) Reflect.copy(event)]);
 			}
 		];
 	}
