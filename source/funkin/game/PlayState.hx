@@ -558,13 +558,21 @@ class PlayState extends MusicBeatState
 		if (!chartingMode || Options.charterEnablePlaytestScripts) {
 			switch(SONG.meta.name) {
 				// case "":
-					// ADD YOUR HARDCODED SCRIPTS HERE!
+					// ADD YOUR HARDCODED SCRIPTSa HERE!
 				default:
-					for(content in [Paths.getFolderContent('songs/${SONG.meta.name.toLowerCase()}/scripts', true, fromMods ? MODS : BOTH), Paths.getFolderContent('data/charts/', true, fromMods ? MODS : BOTH)])
-						for(file in content) addScript(file);
+					var scriptsFolders:Array<String> = ['songs/${SONG.meta.name.toLowerCase()}/scripts', 'data/charts/', 'songs/'];
+
+					for(folder in scriptsFolders) {
+						for(file in Paths.getFolderContent(folder, true, fromMods ? MODS : BOTH)) {
+							if (folder == 'data/charts/')
+								Logs.trace('data/charts/ is deprecrated and will be removed in the future. Please move script $file.hx to songs/', WARNING, DARKYELLOW);
+							
+							addScript(file);
+						}
+					}
+
 					var songEvents:Array<String> = [];
-					for (event in SONG.events)
-						if (!songEvents.contains(event.name)) songEvents.push(event.name);
+					for (event in SONG.events) if (!songEvents.contains(event.name)) songEvents.push(event.name);
 
 					for (file in Paths.getFolderContent('data/events/', true, fromMods ? MODS : BOTH)) {
 						var fileName:String = Path.withoutExtension(Path.withoutDirectory(file));
