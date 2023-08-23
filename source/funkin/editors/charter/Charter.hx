@@ -228,6 +228,17 @@ class Charter extends UIState {
 					},
 					null,
 					{
+						label: "Select all",
+						keybind: [CONTROL, A],
+						onSelect: _note_selectall
+					},
+					{
+						label: "Select maeasure",
+						keybind: [CONTROL, SHIFT, A],
+						onSelect: _note_selectmeasure
+					},
+					null,
+					{
 						label: "(0) Default Note",
 						keybind: [ZERO]
 					},
@@ -1266,6 +1277,16 @@ class Charter extends UIState {
 
 	inline function _note_subtractsustain(t)
 		changeNoteSustain(-1);
+
+	function _note_selectall(_) {
+		selection = [for (note in notesGroup.members) note];
+	} 
+
+	function _note_selectmeasure(_) {
+		selection = [for (note in notesGroup.members)
+			if (note.step > Conductor.curMeasure*Conductor.getMeasureLength() && note.step < (Conductor.curMeasure+1)*Conductor.getMeasureLength()) note
+		];
+	}
 
 	#end
 
