@@ -462,7 +462,6 @@ class Charter extends UIState {
 		super.destroy();
 	}
 
-	var instPath:String;
 	public function loadSong() {
 		if (__reload) {
 			EventsData.reloadEvents();
@@ -471,7 +470,7 @@ class Charter extends UIState {
 
 		Conductor.setupSong(PlayState.SONG);
 
-		FlxG.sound.setMusic(FlxG.sound.load(instPath = Paths.inst(__song, __diff)));
+		FlxG.sound.setMusic(FlxG.sound.load(Paths.inst(__song, __diff)));
 		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
 		vocals.group = FlxG.sound.defaultMusicGroup;
 
@@ -1020,12 +1019,8 @@ class Charter extends UIState {
 
 	function _file_save(_) {
 		#if sys
-		for(assetPath in [Paths.chart(__song, __diff.toLowerCase()), instPath]) {
-			var path = Assets.getPath(assetPath);
-			var filteredPath = path.substr(0, path.lastIndexOf(assetPath == instPath ? '/song/' : '/charts/'));
-			saveTo(filteredPath);
-			return;
-		}
+		saveTo('${Paths.getAssetsRoot()}/songs/${__song.toLowerCase().replace("-", " ")}');
+		return;
 		#end
 		_file_saveas(_);
 	}
@@ -1038,11 +1033,8 @@ class Charter extends UIState {
 
 	function _file_meta_save(_) {
 		#if sys
-		var metaPath = Paths.file('songs/${__song.toLowerCase()}/meta.json');
-		var metaDiffPath = Paths.file('songs/${__song.toLowerCase()}/meta-${__diff.toLowerCase()}.json');
-
 		sys.io.File.saveContent(
-			Assets.getPath(Assets.exists(metaDiffPath) ? metaDiffPath : metaPath),
+			'${Paths.getAssetsRoot()}/songs/${__song.toLowerCase().replace("-", " ")}/meta.json',
 			Json.stringify(PlayState.SONG.meta == null ? {} : PlayState.SONG.meta, null, "\t")
 		);
 		return;

@@ -161,6 +161,8 @@ class Paths
 	inline static public function getPackerAtlasAlt(key:String)
 		return FlxAtlasFrames.fromSpriteSheetPacker('$key.png', '$key.txt');
 
+	inline static public function getAssetsRoot():String 
+		return  ModsFolder.currentModFolder != null ? '${ModsFolder.modsPath}${ModsFolder.currentModFolder}' : './assets';
 
 	/**
 	 * Gets frames at specified path.

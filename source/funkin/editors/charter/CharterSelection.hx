@@ -92,7 +92,7 @@ class CharterSelection extends EditorTreeMenu {
 
 	public function saveSong(creation:SongCreationData) {
 		// Paths
-		var songsDir:String = ModsFolder.currentModFolder != null ? '${ModsFolder.modsPath}${ModsFolder.currentModFolder}/songs/' : './assets/songs/';
+		var songsDir:String = '${Paths.getAssetsRoot()}/songs/';
 		var songFolder:String = '$songsDir${creation.meta.name.replace("-", " ")}';
 
 		#if sys
