@@ -83,9 +83,7 @@ class Charter extends UIState {
 	public var selectionBox:UISliceSprite;
 
 	public var selection:Selection = new Selection();
-
-	public var undoList:Array<CharterChange> = [];
-	public var redoList:Array<CharterChange> = [];
+	public var undos:UndoList<CharterChange> = new UndoList<CharterChange>();
 
 	public var clipboard:Array<CharterCopyboardObject> = [];
 
@@ -630,7 +628,7 @@ class Charter extends UIState {
 						if (s is UISprite) cast(s, UISprite).cursor = BUTTON;
 					}
 					sortNotes();
-					addToUndo(CSelectionDrag(selection, changePoint.clone()));
+					undos.addToUndo(CSelectionDrag(selection, changePoint.clone()));
 
 					changePoint.put();
 					hoverOffset.put();
@@ -665,7 +663,7 @@ class Charter extends UIState {
 								notesGroup.add(note);
 								selection = [note];
 								sortNotes();
-								addToUndo(CCreateSelection([note]));
+								undos.addToUndo(CCreateSelection([note]));
 							}
 						}
 					}
@@ -731,7 +729,7 @@ class Charter extends UIState {
 		sortNotes();
 
 		if (addToUndo)
-			this.addToUndo(CDeleteSelection([selected]));
+			undos.addToUndo(CDeleteSelection([selected]));
 
 		return null;
 	}
@@ -756,7 +754,7 @@ class Charter extends UIState {
 			}
 
 		if (addToUndo)
-			this.addToUndo(CCreateSelection(selection));
+			undos.addToUndo(CCreateSelection(selection));
 		return [];
 	}
 
@@ -782,7 +780,7 @@ class Charter extends UIState {
 			}
 
 		if (addToUndo)
-			this.addToUndo(CDeleteSelection(selection));
+			undos.addToUndo(CDeleteSelection(selection));
 		return [];
 	}
 
@@ -808,7 +806,7 @@ class Charter extends UIState {
 		sortNotes();
 
 		if (addToUndo)
-			this.addToUndo(CCreateStrumLine(strumLineID, strL));
+			undos.addToUndo(CCreateStrumLine(strumLineID, strL));
 	}
 
 	public function deleteStrumline(strumLineID:Int, addToUndo:Bool = true) {
@@ -851,7 +849,7 @@ class Charter extends UIState {
 					id: note.id % 4
 				});
 			}
-			this.addToUndo(CDeleteStrumLine(strumLineID, newStrL));
+			undos.addToUndo(CDeleteStrumLine(strumLineID, newStrL));
 		}
 	}
 
@@ -880,7 +878,7 @@ class Charter extends UIState {
 			strumLines.members[strID].strumLine = _;
 			strumLines.members[strID].updateInfo();
 
-			this.addToUndo(CEditStrumLine(strID, oldData, _));
+			undos.addToUndo(CEditStrumLine(strID, oldData, _));
 		}));
 	}
 
@@ -895,16 +893,6 @@ class Charter extends UIState {
 			}
 		}
 	}
-
-	// UNDO/REDO LOGIC
-	#if REGION
-	public inline function addToUndo(c:CharterChange) {
-		redoList = [];
-		undoList.insert(0, c);
-		while(undoList.length > Options.maxUndos)
-			undoList.pop();
-	}
-	#end
 
 	public inline function sortNotes() {
 		notesGroup.sort(function(i, n1, n2) {
@@ -1107,7 +1095,7 @@ class Charter extends UIState {
 			}
 		}
 		selection = sObjects;
-		addToUndo(CCreateSelection(sObjects.copy()));
+		undos.addToUndo(CCreateSelection(sObjects.copy()));
 	}
 
 	function _edit_cut(_) {
@@ -1124,8 +1112,8 @@ class Charter extends UIState {
 
 	function _edit_undo(_) {
 		selection = [];
-		var v = undoList.shift();
-		switch(v) {
+		var undo = undos.undo();
+		switch(undo) {
 			case null: // do nothing
 			case CDeleteStrumLine(strumLineID, strumLine):
 				createStrumline(strumLineID, strumLine, false);
@@ -1154,27 +1142,12 @@ class Charter extends UIState {
 				PlayState.SONG.stage = oldData.stage;
 				PlayState.SONG.scrollSpeed = oldData.speed;
 		}
-		if (v != null)
-			redoList.insert(0, v);
-	}
-
-	function _playback_play(_) {
-		if (Conductor.songPosition >= FlxG.sound.music.getDefault(vocals).length) return;
-
-		if (FlxG.sound.music.playing) {
-			FlxG.sound.music.pause();
-			vocals.pause();
-		} else {
-			FlxG.sound.music.play();
-			vocals.play();
-			vocals.time = FlxG.sound.music.time = Conductor.songPosition;
-		}
 	}
 
 	function _edit_redo(_) {
 		selection = [];
-		var v = redoList.shift();
-		switch(v) {
+		var redo = undos.redo();
+		switch(redo) {
 			case null: // do nothing
 			case CDeleteStrumLine(strumLineID, strumLine):
 				deleteStrumline(strumLineID, false);
@@ -1203,8 +1176,6 @@ class Charter extends UIState {
 				PlayState.SONG.stage = newData.stage;
 				PlayState.SONG.scrollSpeed = newData.speed;
 		}
-		if (v != null)
-			undoList.insert(0, v);
 	}
 
 	inline function _chart_playtest(_)
@@ -1223,6 +1194,19 @@ class Charter extends UIState {
 		FlxG.state.openSubState(new ChartDataScreen(PlayState.SONG));
 	function chart_edit_metadata(_)
 		FlxG.state.openSubState(new MetaDataScreen(PlayState.SONG.meta));
+
+	function _playback_play(_) {
+		if (Conductor.songPosition >= FlxG.sound.music.getDefault(vocals).length) return;
+
+		if (FlxG.sound.music.playing) {
+			FlxG.sound.music.pause();
+			vocals.pause();
+		} else {
+			FlxG.sound.music.play();
+			vocals.play();
+			vocals.time = FlxG.sound.music.time = Conductor.songPosition;
+		}
+	}
 
 	function _playback_metronome(t) {
 		t.icon = (Options.charterMetronomeEnabled = !Options.charterMetronomeEnabled) ? 1 : 0;
@@ -1293,7 +1277,7 @@ class Charter extends UIState {
 	function changeNoteSustain(change:Float) {
 		if (selection.length <= 0 || change == 0) return;
 
-		addToUndo(CEditSustains([
+		undos.addToUndo(CEditSustains([
 			for(s in selection) {
 				if (s is CharterNote) {
 					var n:CharterNote = cast(s, CharterNote);

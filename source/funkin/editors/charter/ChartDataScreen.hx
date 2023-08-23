@@ -65,6 +65,6 @@ class ChartDataScreen extends UISubstateWindow {
 		PlayState.SONG.stage = stageTextBox.label.text;
 		PlayState.SONG.scrollSpeed = scrollSpeedStepper.value;
 
-		Charter.instance.addToUndo(CEditChartData(oldData, {stage: stageTextBox.label.text, speed: scrollSpeedStepper.value}));
+		Charter.instance.undos.addToUndo(CEditChartData(oldData, {stage: stageTextBox.label.text, speed: scrollSpeedStepper.value}));
 	}
 }

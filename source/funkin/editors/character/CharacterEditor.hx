@@ -41,8 +41,7 @@ class CharacterEditor extends UIState {
 	// camera for the ui
 	public var uiCamera:FlxCamera;
 
-	public var undoList:Array<CharacterChange> = [];
-	public var redoList:Array<CharacterChange> = [];
+	public var undos:UndoList<CharacterChange> = new UndoList<CharacterChange>();
 
 	public function new(character:String) {
 		super();
@@ -312,16 +311,6 @@ class CharacterEditor extends UIState {
 		characterBG.scale.set(characterBG.scale.x / charCamera.zoom, characterBG.scale.y / charCamera.zoom);
 	}
 
-	// UNDO/REDO LOGIC
-	#if REGION
-	public inline function addToUndo(c:CharacterChange) {
-		redoList = [];
-		undoList.insert(0, c);
-		while(undoList.length > Options.maxUndos)
-			undoList.pop();
-	}
-	#end
-
 	// TOP MENU OPTIONS
 	#if REGION
 	function _file_exit(_) {
@@ -367,8 +356,8 @@ class CharacterEditor extends UIState {
 	}
 
 	function _edit_undo(_) {
-		var v = undoList.shift();
-		switch (v) {
+		var undo = undos.undo();
+		switch(undo) {
 			case null:
 				// do nothing
 			case CEditInfo(oldInfo, newInfo):
@@ -392,13 +381,11 @@ class CharacterEditor extends UIState {
 
 				changeOffset(character.getAnimName(), FlxPoint.get(0, 0), false); // apply da new offsets
 		}
-		if (v != null)
-			redoList.insert(0, v);
 	}
 
 	function _edit_redo(_) {
-		var v = redoList.shift();
-		switch (v) {
+		var redo = undos.redo();
+		switch(redo) {
 			case null:
 				// do nothing
 			case CEditInfo(oldInfo, newInfo):
@@ -414,8 +401,6 @@ class CharacterEditor extends UIState {
 			case CResetOffsets(oldOffsets):
 				clearOffsets(false);
 		}
-		if (v != null)
-			undoList.insert(0, v);
 	}
 
 	function _char_add_anim(_) {
@@ -456,7 +441,7 @@ class CharacterEditor extends UIState {
 		playAnimation(animData.name);
 
 		if (addtoUndo)
-			addToUndo(CCreateAnim(character.getNameList().length, animData));
+			undos.addToUndo(CCreateAnim(character.getNameList().length, animData));
 	}
 
 	public function editAnim(name:String, animData:AnimData, addtoUndo:Bool = true) {
@@ -474,7 +459,7 @@ class CharacterEditor extends UIState {
 			playAnimation(animData.name);
 
 		if (addtoUndo)
-			addToUndo(CEditAnim(animData.name, oldAnimData, animData));
+			undos.addToUndo(CEditAnim(animData.name, oldAnimData, animData));
 	}
 
 	public function deleteAnim(name:String, addtoUndo:Bool = true) {
@@ -501,7 +486,7 @@ class CharacterEditor extends UIState {
 		if (character.animDatas.exists(name)) character.animDatas.remove(name);
 
 		if (addtoUndo)
-			addToUndo(CDeleteAnim(oldID, oldAnimData));
+			undos.addToUndo(CDeleteAnim(oldID, oldAnimData));
 	}
 
 	public function editInfoWithUI() {
@@ -520,7 +505,7 @@ class CharacterEditor extends UIState {
 		playAnimation(lastAnim);
 
 		if (addtoUndo)
-			addToUndo(CEditInfo(oldInfo, newInfo));
+			undos.addToUndo(CEditInfo(oldInfo, newInfo));
 	}
 
 	public function ghostAnim(anim:String) {
@@ -598,7 +583,7 @@ class CharacterEditor extends UIState {
 		ghosts.updateOffsets(anim, change);
 
 		if (addtoUndo)
-			addToUndo(CChangeOffset(anim, change));
+			undos.addToUndo(CChangeOffset(anim, change));
 	}
 
 	function clearOffsets(addtoUndo:Bool = true) {
@@ -619,7 +604,7 @@ class CharacterEditor extends UIState {
 		ghosts.clearOffsets();
 
 		if (addtoUndo)
-			addToUndo(CResetOffsets(oldOffsets));
+			undos.addToUndo(CResetOffsets(oldOffsets));
 	}
 
 	var zoom(default, set):Float = 0;
