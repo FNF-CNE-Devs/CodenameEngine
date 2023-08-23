@@ -77,12 +77,10 @@ class CharterEventScreen extends UISubstateWindow {
 				if (creatingEvent && events.length > 0)
 					Charter.instance.createSelection([chartEvent]);
 				else {
-					chartEvent.events = [
-						for (i in eventsList.buttons.members) i.event
-					];
+					chartEvent.events = [for (i in eventsList.buttons.members) i.event];
 					chartEvent.refreshEventIcons();
 
-					Charter.instance.addToUndo(CEditEvent(chartEvent, oldEvents, events.copy()));
+					Charter.instance.addToUndo(CEditEvent(chartEvent, oldEvents, [for (event in events) Reflect.copy(event)]));
 				}
 			}
 

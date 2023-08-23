@@ -863,9 +863,13 @@ class Charter extends UIState {
 
 	public inline function editStrumline(strL:ChartStrumLine) {
 		var strID = getStrumlineID(strL);
+		var oldData:ChartStrumLine = Reflect.copy(strL);
+
 		FlxG.state.openSubState(new CharterStrumlineScreen(strID, strL, (_) -> {
 			strumLines.members[strID].strumLine = _;
 			strumLines.members[strID].updateInfo();
+
+			this.addToUndo(CEditStrumLine(strID, oldData, _));
 		}));
 	}
 
@@ -878,7 +882,6 @@ class Charter extends UIState {
 					selection.remove(note);
 				else i++;
 			}
-
 		}
 	}
 
@@ -1117,6 +1120,9 @@ class Charter extends UIState {
 				createStrumline(strumLineID, strumLine, false);
 			case CCreateStrumLine(strumLineID, strumLine):
 				deleteStrumline(strumLineID, false);
+			case CEditStrumLine(strumLineID, oldStrumLine, newStrumLine):
+				strumLines.members[strumLineID].strumLine = oldStrumLine;
+				strumLines.members[strumLineID].updateInfo();
 			case CCreateSelection(selection):
 				deleteSelection(selection, false);
 			case CDeleteSelection(selection):
@@ -1133,6 +1139,9 @@ class Charter extends UIState {
 				event.refreshEventIcons();
 
 				Charter.instance.updateBPMEvents();
+			case CEditChartData(oldData, newData):
+				PlayState.SONG.stage = oldData.stage;
+				PlayState.SONG.scrollSpeed = oldData.speed;
 		}
 		if (v != null)
 			redoList.insert(0, v);
@@ -1160,6 +1169,9 @@ class Charter extends UIState {
 				deleteStrumline(strumLineID, false);
 			case CCreateStrumLine(strumLineID, strumLine):
 				createStrumline(strumLineID, strumLine, false);
+			case CEditStrumLine(strumLineID, oldStrumLine, newStrumLine):
+				strumLines.members[strumLineID].strumLine = newStrumLine;
+				strumLines.members[strumLineID].updateInfo();
 			case CCreateSelection(selection):
 				createSelection(selection, false);
 			case CDeleteSelection(selection):
@@ -1176,6 +1188,9 @@ class Charter extends UIState {
 				event.refreshEventIcons();
 
 				Charter.instance.updateBPMEvents();
+			case CEditChartData(oldData, newData):
+				PlayState.SONG.stage = newData.stage;
+				PlayState.SONG.scrollSpeed = newData.speed;
 		}
 		if (v != null)
 			undoList.insert(0, v);
@@ -1333,8 +1348,10 @@ enum CharterChange {
 	CCreateSelection(selection:Selection);
 	CDeleteSelection(selection:Selection);
 	CSelectionDrag(selection:Selection, change:FlxPoint);
+	CEditStrumLine(strumLineID:Int, oldStrumLine:ChartStrumLine, newStrumLine:ChartStrumLine);
 	CEditSustains(notes:Array<NoteSustainChange>);
 	CEditEvent(event:CharterEvent, oldEvents:Array<ChartEvent>, newEvents:Array<ChartEvent>);
+	CEditChartData(oldData:{stage:String, speed:Float}, newData:{stage:String, speed:Float});
 }
 
 enum CharterCopyboardObject {

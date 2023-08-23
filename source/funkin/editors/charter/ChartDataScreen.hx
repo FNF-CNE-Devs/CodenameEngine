@@ -34,11 +34,11 @@ class ChartDataScreen extends UISubstateWindow {
 		var title:UIText;
 		add(title = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, "Edit Chart Data", 28));
 
-		stageTextBox = new UITextBox(title.x, title.y + title.height + 38, PlayState.SONG.stage, 160);
+		stageTextBox = new UITextBox(title.x, title.y + title.height + 38, PlayState.SONG.stage, 200);
 		add(stageTextBox);
 		addLabelOn(stageTextBox, "Stage");
 
-		scrollSpeedStepper = new UINumericStepper(stageTextBox.x + 160 + 26, stageTextBox.y, data.scrollSpeed, 0.1, 2, 0, 10, 82);
+		scrollSpeedStepper = new UINumericStepper(stageTextBox.x + 200 + 26, stageTextBox.y, data.scrollSpeed, 0.1, 2, 0, 10, 82);
 		add(scrollSpeedStepper);
 		addLabelOn(scrollSpeedStepper, "Scroll Speed");
 
@@ -60,8 +60,11 @@ class ChartDataScreen extends UISubstateWindow {
 	{
 		@:privateAccess scrollSpeedStepper.__onChange(scrollSpeedStepper.label.text);
 
+		var oldData:{stage:String, speed:Float} = {stage: PlayState.SONG.stage, speed: PlayState.SONG.scrollSpeed};
+
 		PlayState.SONG.stage = stageTextBox.label.text;
 		PlayState.SONG.scrollSpeed = scrollSpeedStepper.value;
-	}
 
+		Charter.instance.addToUndo(CEditChartData(oldData, {stage: stageTextBox.label.text, speed: scrollSpeedStepper.value}));
+	}
 }

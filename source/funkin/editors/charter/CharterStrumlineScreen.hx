@@ -139,7 +139,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		for (stepper in [hudXStepper, hudYStepper, hudScaleStepper])
 			@:privateAccess stepper.__onChange(stepper.label.text);
 
-		strumLine = {
+		var newStrumLine:ChartStrumLine = {
 			characters: [
 				for (char in charactersList.buttons.members)
 					char.textBox.label.text.trim()
@@ -151,8 +151,8 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			strumPos: [hudXStepper.value, hudYStepper.value],
 			strumScale: hudScaleStepper.value
 		};
-		if(!usesChartscrollSpeed.checked) strumLine.scrollSpeed = scrollSpeedStepper.value;
-		if (onSave != null) onSave(strumLine);
+		if(!usesChartscrollSpeed.checked) newStrumLine.scrollSpeed = scrollSpeedStepper.value;
+		if (onSave != null) onSave(newStrumLine);
 	}
 }
 
