@@ -97,6 +97,7 @@ class Charter extends UIState {
 	public override function create() {
 		super.create();
 
+		WindowTitle.endfix = " (Chart Editor)";
 		topMenu = [
 			{
 				label: "File",
@@ -468,6 +469,7 @@ class Charter extends UIState {
 			Framerate.memoryCounter.alpha = 1;
 			Framerate.codenameBuildField.alpha = 1;
 		}
+		WindowTitle.reset();
 		super.destroy();
 	}
 
@@ -961,6 +963,8 @@ class Charter extends UIState {
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125))) {
 			updateDisplaySprites();
 		}
+
+		WindowTitle.prefix = undos.unsaved ? "UNSAVED | " : "";
 	}
 
 	public static var startTime:Float = 0;
@@ -1016,12 +1020,25 @@ class Charter extends UIState {
 	// TOP MENU OPTIONS
 	#if REGION
 	function _file_exit(_) {
-		FlxG.switchState(new CharterSelection());
+		if (undos.unsaved) {
+			FlxG.state.openSubState(new UIWarningSubstate("Unsaved Changes", "Your changes will be lost if you don't save them.", [
+				{
+					label: "Exit",
+					onClick: function(_) FlxG.switchState(new CharterSelection())
+				},
+				{
+					label: "Cancel",
+					onClick: function (_) {}
+				}
+			]));
+		} else
+			FlxG.switchState(new CharterSelection());
 	}
 
 	function _file_save(_) {
 		#if sys
 		saveTo('${Paths.getAssetsRoot()}/songs/${__song.toLowerCase().replace("-", " ")}');
+		undos.save();
 		return;
 		#end
 		_file_saveas(_);
@@ -1031,6 +1048,7 @@ class Charter extends UIState {
 		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false)), {
 			defaultSaveFile: '${__diff.toLowerCase()}.json'
 		}));
+		undos.save();
 	}
 
 	function _file_meta_save(_) {

@@ -4,6 +4,12 @@ class UndoList<T> {
 	public var undoList:Array<T> = [];
 	public var redoList:Array<T> = [];
 
+	var savedLength:Int = 0;
+
+	public var unsaved(get, never):Bool;
+	public inline function get_unsaved():Bool
+		return undoList.length != savedLength;
+
 	public function new() {}
 
 	public inline function addToUndo(c:T) {
@@ -26,4 +32,7 @@ class UndoList<T> {
 			undoList.insert(0, redo);
 		return redo;
 	}
+
+	public inline function save()
+		savedLength = undoList.length;
 }

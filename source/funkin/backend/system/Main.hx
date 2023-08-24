@@ -107,6 +107,7 @@ class Main extends Sprite
 	}
 
 	public static function loadGameSettings() {
+		WindowTitle.init();
 		MemoryUtil.init();
 		@:privateAccess
 		FlxG.game.getTimer = getTimer;
