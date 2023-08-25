@@ -12,6 +12,7 @@ class UIWarningSubstate extends MusicBeatSubstate {
 	var title:String;
 	var message:String;
 	var buttons:Array<WarningButton>;
+	var isError:Bool = true;
 
 	var titleSpr:UIText;
 	var messageSpr:UIText;
@@ -55,19 +56,23 @@ class UIWarningSubstate extends MusicBeatSubstate {
 		warnCam.zoom = 0.1;
 		FlxG.cameras.add(warnCam, false);
 
-		var spr = new UISliceSprite(0, 0, CoolUtil.maxInt(560, 30 + (170 * buttons.length)), 280, "editors/ui/warning-popup");
+		var spr = new UISliceSprite(0, 0, CoolUtil.maxInt(560, 30 + (170 * buttons.length)), 232, "editors/ui/normal-popup");
 		spr.x = (FlxG.width - spr.bWidth) / 2;
 		spr.y = (FlxG.height - spr.bHeight) / 2;
+		spr.color = 0xFFFF0000;
 		add(spr);
 
 		add(titleSpr = new UIText(spr.x + 25, spr.y, spr.bWidth - 50, title, 15, -1));
 		titleSpr.y = spr.y + ((30 - titleSpr.height) / 2);
 
-		add(messageSpr = new UIText(spr.x + 10, spr.y + 40, spr.bWidth - 20, message, 15, -1));
+		var sprIcon:FlxSprite = new FlxSprite(spr.x + 26, spr.y + 28 + 26).makeSolid(100, 100, -1);
+		add(sprIcon);
+
+		add(messageSpr = new UIText(sprIcon.x + 100 + 16, sprIcon.y + 12, spr.bWidth - 100 - (26 * 2), message));
 
 		var xPos = (FlxG.width - (30 + (170 * buttons.length))) / 2;
 		for(k=>b in buttons) {
-			var button = new UIButton(xPos + 20 + (170 * k), spr.y + spr.bHeight - 40, b.label, function() {
+			var button = new UIButton(xPos + 20 + (170 * k), spr.y + spr.bHeight - (32 + 16), b.label, function() {
 				b.onClick(this);
 				close();
 			}, 160, 30);
@@ -89,11 +94,12 @@ class UIWarningSubstate extends MusicBeatSubstate {
 		FlxG.cameras.remove(warnCam);
 	}
 
-	public function new(title:String, message:String, buttons:Array<WarningButton>) {
+	public function new(title:String, message:String, buttons:Array<WarningButton>, ?isError:Bool = true) {
 		super();
 		this.title = title;
 		this.message = message;
 		this.buttons = buttons;
+		this.isError = isError;
 	}
 }
 

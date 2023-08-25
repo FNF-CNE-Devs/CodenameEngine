@@ -55,7 +55,6 @@ class Charter extends UIState {
 	public var topLimit:FlxSprite;
 	public var bottomLimit:FlxSprite;
 	public var bottomSeparator:FlxSprite;
-	public var hoverNote:ChartHoverNote;
 
 	public var strumlineInfoBG:FlxSprite;
 	public var strumlineAddButton:CharterStrumlineExtraButton;
@@ -353,9 +352,6 @@ class Charter extends UIState {
 		eventsBackdrop.cameras = [charterCamera];
 		add(eventsBackdrop);
 
-		hoverNote = new ChartHoverNote();
-		hoverNote.cameras = [charterCamera];
-
 		add(gridBackdropDummy = new CharterBackdropDummy(gridBackdrop));
 		sectionSeparator = new FlxBackdrop(null, Y, 0, 0);
 		sectionSeparator.x = -20;
@@ -435,7 +431,6 @@ class Charter extends UIState {
 
 		// adds grid and notes so that they're ALWAYS behind the UI
 		add(gridBackdrop);
-		add(hoverNote);
 		add(sectionSeparator);
 		add(beatSeparator);
 		add(addEventSpr);
@@ -564,7 +559,6 @@ class Charter extends UIState {
 		if (!gridBackdropDummy.hoveredByChild && !FlxG.mouse.pressed)
 			gridActionType = NONE;
 		selectionBox.visible = false;
-		hoverNote.onGrid = false;
 		switch(gridActionType) {
 			case BOX:
 				if (gridBackdropDummy.hoveredByChild) {
@@ -643,8 +637,6 @@ class Charter extends UIState {
 				if (FlxG.mouse.justPressed)
 					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos); 
 
-				hoverNote.visible = hoveredSprite != null ? hoveredSprite is CharterNote : true;
-
 				if (gridBackdropDummy.hovered) {
 					// AUTO DETECT
 					if (FlxG.mouse.pressed && (Math.abs(mousePos.x - dragStartPos.x) > 20 || Math.abs(mousePos.y - dragStartPos.y) > 20))
@@ -653,8 +645,6 @@ class Charter extends UIState {
 					var id = Math.floor(mousePos.x / 40);
 					var mouseOnGrid = id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0;
 	
-					hoverNote.onGrid = mouseOnGrid;
-
 					if (FlxG.mouse.justReleased) {
 						if (selection.length > 1) {
 							selection = []; // clear selection
@@ -1021,16 +1011,16 @@ class Charter extends UIState {
 	#if REGION
 	function _file_exit(_) {
 		if (undos.unsaved) {
-			FlxG.state.openSubState(new UIWarningSubstate("Unsaved Changes", "Your changes will be lost if you don't save them.", [
+			FlxG.state.openSubState(new UIWarningSubstate("Unsaved Changes", "Your changes will be lost if you don't save them. (Can't be recovered)\n\n\nWould you like to Cancel?", [
 				{
-					label: "Exit",
+					label: "Exit To Menu",
 					onClick: function(_) FlxG.switchState(new CharterSelection())
 				},
 				{
 					label: "Cancel",
 					onClick: function (_) {}
 				}
-			]));
+			], false));
 		} else
 			FlxG.switchState(new CharterSelection());
 	}
