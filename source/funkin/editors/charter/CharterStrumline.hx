@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.backend.chart.EventsData;
 import funkin.game.Character;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
@@ -38,32 +39,12 @@ class CharterStrumline extends UISprite {
 		button = new CharterStrumlineButton(this);
 		members.push(button);
 	}
-	var __pastStrumlines:Array<CharterStrumline>;
+
 	public override function update(elapsed:Float) {
 		if (healthIcon != null)
 			healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, 50);
 		button.follow(this, 0, 95);
 		super.update(elapsed);
-		if (FlxG.mouse.overlaps(healthIcon) && FlxG.mouse.justPressed) {
-			dragging = true;
-			trace(__pastStrumlines = Charter.instance.strumLines.members.copy());
-		}
-		if (dragging) x = FlxG.mouse.x - 80;
-		if (FlxG.mouse.justReleased && dragging) {
-			dragging = false;
-			/*if (FlxG.keys.pressed.ALT) {
-				for (i in Charter.instance.notesGroup.members) {
-					trace(i.realId);
-				}
-			}*/
-			for (i in Charter.instance.eventsGroup.members) {
-				for (j in i.events) 
-					if (j.name == "Camera Movement" && !FlxG.keys.pressed.SHIFT)
-						j.params[0] = Charter.instance.strumLines.members.indexOf(__pastStrumlines[j.params[0]]);
-				i.refreshEventIcons();
-			}
-					
-		}
 	}
 
 	public function updateInfo() {

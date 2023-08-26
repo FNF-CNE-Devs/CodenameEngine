@@ -87,7 +87,7 @@ class CharterBackdrop extends FlxBackdrop {
 		for(_ in 0...strumlinesAmount) {
 			if (Charter.instance.strumLines.members[_] != null) {
 				x = Charter.instance.strumLines.members[_].x;
-				alpha = Charter.instance.strumLines.members[_].strumLine.visible ? 1 : 0.4;
+				alpha = Charter.instance.strumLines.members[_].strumLine.visible ? 0.9 : 0.4;
 			} else alpha = 0.9;
 
 			sectionSeparator.spacing.y = (10 * Conductor.beatsPerMesure * Conductor.stepsPerBeat) - 1;
@@ -106,8 +106,10 @@ class CharterBackdrop extends FlxBackdrop {
 
 			// Draw notes
 			notesGroup.forEach((n) -> {
-				if(n.exists && n.visible && (Math.floor(n.id/4) == _))
+				if(n.exists && n.visible && (Math.floor(n.id/4) == _)) {
+					n.cameras = cameras;
 					n.draw();
+				}
 			});
 
 			topLimit.scale.set(4 * 40, Math.ceil(FlxG.height / cameras[0].zoom));

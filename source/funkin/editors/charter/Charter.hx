@@ -62,7 +62,7 @@ class Charter extends UIState {
 	/**
 	 * ACTUAL CHART DATA
 	 */
-	public var strumLines:FlxTypedGroup<CharterStrumline> = new FlxTypedGroup<CharterStrumline>();
+	public var strumLines:CharterStrumLineGroup = new CharterStrumLineGroup();
 	public var notesGroup:CharterNoteGroup = new CharterNoteGroup();
 	public var eventsGroup:CharterEventGroup = new CharterEventGroup();
 
@@ -345,6 +345,7 @@ class Charter extends UIState {
 		eventsBackdrop = new EventBackdrop();
 		eventsBackdrop.x = -eventsBackdrop.width;
 		eventsBackdrop.cameras = [charterCamera];
+		eventsGroup.eventsBackdrop = eventsBackdrop;
 
 		add(gridBackdropDummy = new CharterBackdropDummy(gridBackdrop));
 		selectionBox = new UISliceSprite(0, 0, 2, 2, 'editors/ui/selection');
@@ -546,7 +547,7 @@ class Charter extends UIState {
 				if (FlxG.mouse.pressed) {
 					selection.loop(function (n:CharterNote) {
 						n.setPosition(n.id * 40 + (mousePos.x - dragStartPos.x), n.step * 40 + (mousePos.y - dragStartPos.y));
-						n.dragging = true;
+						n.snappedToStrumline = false;
 						n.cursor = HAND;
 					}, function (e:CharterEvent) {
 						e.y =  e.step * 40 + (mousePos.y - dragStartPos.y) - 17;
@@ -571,7 +572,7 @@ class Charter extends UIState {
 					for (s in selection) {
 						if (!s.draggable) continue;
 						s.handleDrag(changePoint);
-						if (s is CharterNote) cast(s, CharterNote).dragging = false;
+						if (s is CharterNote) cast(s, CharterNote).snappedToStrumline = true;
 						if (s is UISprite) cast(s, UISprite).cursor = BUTTON;
 					}
 					sortNotes();
@@ -598,6 +599,7 @@ class Charter extends UIState {
 	
 					if (FlxG.mouse.justReleased) {
 						if (selection.length > 1) {
+							for (n in selection) n.selected = false;
 							selection = []; // clear selection
 						} else {
 							if (mouseOnGrid) {
@@ -619,7 +621,6 @@ class Charter extends UIState {
 								noteHovered = true;
 								break;
 							}
-
 						gridActionType = noteHovered ? DRAG : INVALID_DRAG;
 					}
 				}
@@ -630,6 +631,7 @@ class Charter extends UIState {
 				}
 		}
 		addEventSpr.selectable = !selectionBox.visible;
+
 		if (gridActionType == NONE && mousePos.x < 0 && mousePos.x > -addEventSpr.bWidth) {
 			addEventSpr.incorporeal = false;
 			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0.75, 0.25);
@@ -906,9 +908,6 @@ class Charter extends UIState {
 			updateDisplaySprites();
 
 		WindowTitle.prefix = undos.unsaved ? "* " : "";
-		strumLines.sort(function(o, a, b) return FlxSort.byValues(o, a.x - 80, b.x - 80), -1);
-		for (it=>i in strumLines.members)
-			if (!i.dragging) i.x = CoolUtil.fpsLerp(i.x, 160 * it, 0.3);
 	}
 
 	public static var startTime:Float = 0;

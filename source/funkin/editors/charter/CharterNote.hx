@@ -22,8 +22,10 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 	public var selected:Bool = false;
 	public var draggable:Bool = true;
-	public var dragging:Bool = false;
+
+	public var snappedToStrumline:Bool = true;
 	public var strumLine:CharterStrumline = null;
+
 	public function new() {
 		super();
 		antialiasing = true;
@@ -33,8 +35,6 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		this.setUnstretchedGraphicSize(40, 40, false);
 
 		cursor = BUTTON;
-
-		//canBeHovered = false;
 
 		moves = false;
 
@@ -60,6 +60,8 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	@:isVar public var id(get, set):Int;
 	function set_id(d:Int) {
 		strumLine = Charter.instance.strumLines.members[Math.floor(d / 4)];
+		if (strumLine != null)
+			alpha = strumLine.strumLine.visible ? 1 : 0.4;
 		realId = d;
 		return id = d % 4;
 	}
@@ -125,7 +127,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	var __passed:Bool = false;
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-		if (!dragging) x = (strumLine != null ? strumLine.button.x : 0) + (id % 4) * 40;
+
 		if(sustainSpr.exists)
 			sustainSpr.follow(this, 15, 20);
 
@@ -165,6 +167,9 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	}
 
 	public override function draw() {
+		if (snappedToStrumline) 
+			x = (strumLine != null ? strumLine.button.x : 0) + (id % 4) * 40;
+
 		drawMembers();
 		drawSuper();
 	}

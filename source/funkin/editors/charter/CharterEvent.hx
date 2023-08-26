@@ -3,8 +3,8 @@ package funkin.editors.charter;
 import funkin.editors.charter.Charter.ICharterSelectable;
 import flixel.math.FlxPoint;
 import funkin.game.Character;
-import funkin.backend.system.Conductor;
 import funkin.game.HealthIcon;
+import funkin.editors.charter.CharterBackdrop.EventBackdrop;
 import funkin.backend.chart.ChartData.ChartEvent;
 
 class CharterEvent extends UISliceSprite implements ICharterSelectable {
@@ -14,6 +14,9 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 
 	public var selected:Bool = false;
 	public var draggable:Bool = true;
+
+	public var eventsBackdrop:EventBackdrop;
+	public var snappedToGrid:Bool = true;
 
 	public function new(step:Float, ?events:Array<ChartEvent>) {
 		super(-100, (step * 40) - 17, 100, 34, 'editors/charter/event-spr');
@@ -25,6 +28,10 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
+
+		if (snappedToGrid && eventsBackdrop != null)
+			x = eventsBackdrop.x + eventsBackdrop.width - (bWidth = 37 + (icons.length * 22));
+
 		for(k=>i in icons) {
 			i.follow(this, (k * 22) + 30 - (i.width / 2), (bHeight - i.height) / 2);
 		}
@@ -100,6 +107,6 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 				break;
 			}
 
-		x = -(bWidth = 37 + (icons.length * 22));
+		x = (snappedToGrid && eventsBackdrop != null ? eventsBackdrop.x : 0) - (bWidth = 37 + (icons.length * 22));
 	}
 }
