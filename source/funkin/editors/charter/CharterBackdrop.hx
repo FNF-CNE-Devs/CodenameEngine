@@ -27,9 +27,10 @@ class CharterBackdrop extends FlxBackdrop {
 	public override function draw() {
 		var ogX:Float = x;
 		for(_ in 0...strumlinesAmount) {
-			if (Charter.instance.strumLines.members[_] != null)
+			if (Charter.instance.strumLines.members[_] != null) {
 				x = Charter.instance.strumLines.members[_].x;
 				alpha = Charter.instance.strumLines.members[_].strumLine.visible ? 1 : 0.4;
+			}
 			else alpha = 0.9;
 			super.draw();
 		}
