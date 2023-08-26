@@ -17,18 +17,18 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 		__currentlyLooping = true;
 
 		var curStep = Conductor.curStepFloat;
-		if (FlxG.state is Charter && !FlxG.sound.music.playing)
-			curStep = cast(FlxG.state, Charter).conductorFollowerSpr.y / 40;
+		if (!FlxG.sound.music.playing)
+			curStep = Charter.instance.gridBackdrop.conductorFollowerSpr.y / 40;
 
 		var begin = SortedArrayUtil.binarySearch(members, curStep - max, getVarForEachAdd);
 		var end = SortedArrayUtil.binarySearch(members, curStep + max, getVarForEachRemove);
 
 		for(i in begin...end) {
 			__loopSprite = members[i];
-			if (!cast(FlxG.state, Charter).selection.contains(__loopSprite))
+			if (!Charter.instance.selection.contains(__loopSprite))
 				noteFunc(__loopSprite);
 		}
-		for(c in cast(FlxG.state, Charter).selection.copy())
+		for(c in Charter.instance.selection.copy())
 			if (c is CharterNote) noteFunc(cast (c, CharterNote));
 
 		__currentlyLooping = oldCur;

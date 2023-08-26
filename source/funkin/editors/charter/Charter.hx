@@ -48,12 +48,9 @@ class Charter extends UIState {
 	public var gridBackdrop:CharterBackdrop;
 	public var eventsBackdrop:FlxBackdrop;
 	public var addEventSpr:CharterEventAdd;
-	public var beatSeparator:FlxBackdrop;
-	public var sectionSeparator:FlxBackdrop;
+	public var eventBeatSeparator:FlxBackdrop;
+	public var eventSecSeparator:FlxBackdrop;
 	public var gridBackdropDummy:CharterBackdropDummy;
-	public var conductorFollowerSpr:FlxSprite;
-	public var topLimit:FlxSprite;
-	public var bottomLimit:FlxSprite;
 	public var bottomSeparator:FlxSprite;
 
 	public var strumlineInfoBG:FlxSprite;
@@ -267,12 +264,12 @@ class Charter extends UIState {
 					null,
 					{
 						label: 'Show Sections Separator',
-						onSelect: _view_showsectionseparator,
+						onSelect: _view_showeventSecSeparator,
 						icon: Options.charterShowSections ? 1 : 0
 					},
 					{
 						label: 'Show Beats Separator',
-						onSelect: _view_showbeatseparator,
+						onSelect: _view_showeventBeatSeparator,
 						icon: Options.charterShowBeats ? 1 : 0
 					}
 				]
@@ -353,15 +350,15 @@ class Charter extends UIState {
 		add(eventsBackdrop);
 
 		add(gridBackdropDummy = new CharterBackdropDummy(gridBackdrop));
-		sectionSeparator = new FlxBackdrop(null, Y, 0, 0);
-		sectionSeparator.x = -20;
-		sectionSeparator.y = -2;
-		sectionSeparator.visible = Options.charterShowSections;
-		beatSeparator = new FlxBackdrop(null, Y, 0, 0);
-		beatSeparator.x = -10;
-		beatSeparator.y = -1;
-		sectionSeparator.visible = Options.charterShowBeats;
-		for(sep in [sectionSeparator, beatSeparator]) {
+		eventSecSeparator = new FlxBackdrop(null, Y, 0, 0);
+		eventSecSeparator.x = -20;
+		eventSecSeparator.y = -2;
+		eventSecSeparator.visible = Options.charterShowSections;
+		eventBeatSeparator = new FlxBackdrop(null, Y, 0, 0);
+		eventBeatSeparator.x = -10;
+		eventBeatSeparator.y = -1;
+		eventSecSeparator.visible = Options.charterShowBeats;
+		for(sep in [eventSecSeparator, eventBeatSeparator]) {
 			sep.makeGraphic(1, 1, -1);
 			sep.alpha = 0.5;
 			sep.scrollFactor.set(1, 1);
@@ -373,11 +370,7 @@ class Charter extends UIState {
 		selectionBox.scrollFactor.set(1, 1);
 		selectionBox.incorporeal = true;
 
-		conductorFollowerSpr = new FlxSprite(0, 0).makeGraphic(1, 1, -1);
-		conductorFollowerSpr.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, 4);
-		conductorFollowerSpr.updateHitbox();
-
-		conductorFollowerSpr.cameras = selectionBox.cameras = notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
+		selectionBox.cameras = notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
 
 		topMenuSpr = new UITopMenu(topMenu);
 		topMenuSpr.cameras = uiGroup.cameras = [uiCamera];
@@ -393,16 +386,6 @@ class Charter extends UIState {
 		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0\nBPM: 0\nTime Signature: 4/4");
 		songPosInfo.alignment = RIGHT;
 		uiGroup.add(songPosInfo);
-
-		topLimit = new FlxSprite();
-		topLimit.makeGraphic(1, 1, -1);
-		topLimit.color = 0xFF888888;
-		topLimit.blend = MULTIPLY;
-
-		bottomLimit = new FlxSprite();
-		bottomLimit.makeGraphic(1, 1, -1);
-		bottomLimit.color = 0xFF888888;
-		bottomLimit.blend = MULTIPLY;
 
 		bottomSeparator = new FlxSprite();
 		bottomSeparator.makeGraphic(1, 1, -1);
@@ -431,15 +414,14 @@ class Charter extends UIState {
 
 		// adds grid and notes so that they're ALWAYS behind the UI
 		add(gridBackdrop);
-		add(sectionSeparator);
-		add(beatSeparator);
+		add(eventSecSeparator);
+		add(eventBeatSeparator);
 		add(addEventSpr);
 		add(eventsGroup);
 		add(notesGroup);
 		add(topLimit);
 		add(bottomLimit);
 		add(bottomSeparator);
-		add(conductorFollowerSpr);
 		add(selectionBox);
 		add(strumlineInfoBG);
 		add(strumlineAddButton);
@@ -909,8 +891,8 @@ class Charter extends UIState {
 		if (gridBackdrop.strumlinesAmount != strumLines.members.length)
 			updateDisplaySprites();
 
-		sectionSeparator.spacing.y = (10 * Conductor.beatsPerMesure * Conductor.stepsPerBeat) - 1;
-		beatSeparator.spacing.y = (20 * Conductor.stepsPerBeat) - 1;
+		eventSecSeparator.spacing.y = (10 * Conductor.beatsPerMesure * Conductor.stepsPerBeat) - 1;
+		eventBeatSeparator.spacing.y = (20 * Conductor.stepsPerBeat) - 1;
 
 		// TODO: canTypeText in case an ui input element is focused
 		if (true) {
@@ -947,16 +929,19 @@ class Charter extends UIState {
 		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}';
 
 		if (FlxG.sound.music.playing) {
-			conductorFollowerSpr.y = curStepFloat * 40;
+			gridBackdrop.conductorFollowerSpr.y = curStepFloat * 40;
 		} else {
-			conductorFollowerSpr.y = lerp(conductorFollowerSpr.y, curStepFloat * 40, 1/3);
+			gridBackdrop.conductorFollowerSpr.y = lerp(gridBackdrop.conductorFollowerSpr.y, curStepFloat * 40, 1/3);
 		}
-		charterCamera.scroll.set(conductorFollowerSpr.x + ((conductorFollowerSpr.scale.x - FlxG.width) / 2), conductorFollowerSpr.y - (FlxG.height * 0.5));
-		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125))) {
-			updateDisplaySprites();
-		}
+		charterCamera.scroll.set(
+			(((gridBackdrop.conductorFollowerSpr.scale.x * gridBackdrop.strumlinesAmount) - FlxG.width) / 2),
+			gridBackdrop.conductorFollowerSpr.y - (FlxG.height * 0.5)
+		);
 
-		WindowTitle.prefix = undos.unsaved ? "● " : "";
+		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125)))
+			updateDisplaySprites();
+
+		WindowTitle.prefix = undos.unsaved ? "* " : "";
 		strumLines.sort(function(o, a, b) return FlxSort.byValues(o, a.x - 80, b.x - 80), -1);
 		for (it=>i in strumLines.members)
 			if (!i.dragging) i.x = CoolUtil.fpsLerp(i.x, 160 * it, 0.3);
@@ -968,14 +953,11 @@ class Charter extends UIState {
 	function updateDisplaySprites() {
 		gridBackdrop.strumlinesAmount = strumLines.members.length;
 
-		conductorFollowerSpr.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, 4);
-		conductorFollowerSpr.updateHitbox();
+		eventSecSeparator.scale.set(20, 4);
+		eventSecSeparator.updateHitbox();
 
-		sectionSeparator.scale.set((gridBackdrop.strumlinesAmount * 4 * 40) + 20, 4);
-		sectionSeparator.updateHitbox();
-
-		beatSeparator.scale.set((gridBackdrop.strumlinesAmount * 4 * 40) + 10, 2);
-		beatSeparator.updateHitbox();
+		eventBeatSeparator.scale.set(10, 2);
+		eventBeatSeparator.updateHitbox();
 
 		charterBG.scale.set(1 / charterCamera.zoom, 1 / charterCamera.zoom);
 		topLimit.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, Math.ceil(FlxG.height / charterCamera.zoom));
@@ -1260,13 +1242,13 @@ class Charter extends UIState {
 		zoom = 0;
 		__camZoom = Math.pow(2, zoom);
 	}
-	function _view_showsectionseparator(t) {
+	function _view_showeventSecSeparator(t) {
 		t.icon = (Options.charterShowSections = !Options.charterShowSections) ? 1 : 0;
-		sectionSeparator.visible = Options.charterShowSections;
+		eventSecSeparator.visible = gridBackdrop.sectionSeparator.visible = Options.charterShowSections;
 	}
-	function _view_showbeatseparator(t) {
+	function _view_showeventBeatSeparator(t) {
 		t.icon = (Options.charterShowBeats = !Options.charterShowBeats) ? 1 : 0;
-		beatSeparator.visible = Options.charterShowBeats;
+		eventBeatSeparator.visible = gridBackdrop.beatSeparator.visible = Options.charterShowBeats;
 	}
 
 	inline function _note_addsustain(t)
