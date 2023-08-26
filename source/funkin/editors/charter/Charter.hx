@@ -456,6 +456,7 @@ class Charter extends UIState {
 			Framerate.memoryCounter.alpha = 0.4;
 			Framerate.codenameBuildField.alpha = 0.4;
 		}
+		updateDisplaySprites();
 	}
 
 	override function destroy() {
@@ -596,6 +597,7 @@ class Charter extends UIState {
 				if (FlxG.mouse.pressed) {
 					selection.loop(function (n:CharterNote) {
 						n.setPosition(n.id * 40 + (mousePos.x - dragStartPos.x), n.step * 40 + (mousePos.y - dragStartPos.y));
+						n.dragging = true;
 						n.cursor = HAND;
 					}, function (e:CharterEvent) {
 						e.y =  e.step * 40 + (mousePos.y - dragStartPos.y) - 17;
@@ -620,6 +622,7 @@ class Charter extends UIState {
 					for (s in selection) {
 						if (!s.draggable) continue;
 						s.handleDrag(changePoint);
+						if (s is CharterNote) cast(s, CharterNote).dragging = false;
 						if (s is UISprite) cast(s, UISprite).cursor = BUTTON;
 					}
 					sortNotes();
@@ -954,6 +957,9 @@ class Charter extends UIState {
 		}
 
 		WindowTitle.prefix = undos.unsaved ? "● " : "";
+		strumLines.sort(function(o, a, b) return FlxSort.byValues(o, a.x - 80, b.x - 80), -1);
+		for (it=>i in strumLines.members)
+			if (!i.dragging) i.x = CoolUtil.fpsLerp(i.x, 160 * it, 0.3);
 	}
 
 	public static var startTime:Float = 0;
@@ -993,7 +999,7 @@ class Charter extends UIState {
 			str.y = strumlineInfoBG.y;
 		}
 
-		strumlineAddButton.x = strumLines.members.length * (40 * 4);
+		strumlineAddButton.x = strumLines.length * (40 * 4);
 		strumlineAddButton.y = strumlineInfoBG.y;
 	}
 
