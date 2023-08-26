@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.editors.charter.CharterBackdrop.EventBackdrop;
 import funkin.backend.system.framerate.Framerate;
 import haxe.Json;
 import flixel.input.keyboard.FlxKey;
@@ -46,12 +47,9 @@ class Charter extends UIState {
 
 	public var topMenuSpr:UITopMenu;
 	public var gridBackdrop:CharterBackdrop;
-	public var eventsBackdrop:FlxBackdrop;
+	public var eventsBackdrop:EventBackdrop;
 	public var addEventSpr:CharterEventAdd;
-	public var eventBeatSeparator:FlxBackdrop;
-	public var eventSecSeparator:FlxBackdrop;
 	public var gridBackdropDummy:CharterBackdropDummy;
-	public var bottomSeparator:FlxSprite;
 
 	public var strumlineInfoBG:FlxSprite;
 	public var strumlineAddButton:CharterStrumlineExtraButton;
@@ -343,28 +341,11 @@ class Charter extends UIState {
 
 		gridBackdrop = new CharterBackdrop();
 
-		eventsBackdrop = new FlxBackdrop(Paths.image('editors/charter/events-grid'), Y, 0, 0);
+		eventsBackdrop = new EventBackdrop();
 		eventsBackdrop.x = -eventsBackdrop.width;
-		eventsBackdrop.alpha = 0.9;
 		eventsBackdrop.cameras = [charterCamera];
-		add(eventsBackdrop);
 
 		add(gridBackdropDummy = new CharterBackdropDummy(gridBackdrop));
-		eventSecSeparator = new FlxBackdrop(null, Y, 0, 0);
-		eventSecSeparator.x = -20;
-		eventSecSeparator.y = -2;
-		eventSecSeparator.visible = Options.charterShowSections;
-		eventBeatSeparator = new FlxBackdrop(null, Y, 0, 0);
-		eventBeatSeparator.x = -10;
-		eventBeatSeparator.y = -1;
-		eventSecSeparator.visible = Options.charterShowBeats;
-		for(sep in [eventSecSeparator, eventBeatSeparator]) {
-			sep.makeGraphic(1, 1, -1);
-			sep.alpha = 0.5;
-			sep.scrollFactor.set(1, 1);
-			sep.cameras = [charterCamera];
-		}
-
 		selectionBox = new UISliceSprite(0, 0, 2, 2, 'editors/ui/selection');
 		selectionBox.visible = false;
 		selectionBox.scrollFactor.set(1, 1);
@@ -387,15 +368,6 @@ class Charter extends UIState {
 		songPosInfo.alignment = RIGHT;
 		uiGroup.add(songPosInfo);
 
-		bottomSeparator = new FlxSprite();
-		bottomSeparator.makeGraphic(1, 1, -1);
-		bottomSeparator.alpha = 0.5;
-		bottomSeparator.scrollFactor.set(1, 1);
-		bottomSeparator.cameras = [charterCamera];
-
-		bottomSeparator.x = -20;
-		bottomSeparator.y = -2;
-
 		strumlineInfoBG = new UISprite();
 		strumlineInfoBG.loadGraphic(Paths.image('editors/charter/strumline-info-bg'));
 		strumlineInfoBG.y = 23;
@@ -414,14 +386,10 @@ class Charter extends UIState {
 
 		// adds grid and notes so that they're ALWAYS behind the UI
 		add(gridBackdrop);
-		add(eventSecSeparator);
-		add(eventBeatSeparator);
+		add(eventsBackdrop);
 		add(addEventSpr);
 		add(eventsGroup);
 		add(notesGroup);
-		add(topLimit);
-		add(bottomLimit);
-		add(bottomSeparator);
 		add(selectionBox);
 		add(strumlineInfoBG);
 		add(strumlineAddButton);
@@ -491,8 +459,8 @@ class Charter extends UIState {
 		var length = FlxG.sound.music.getDefault(vocals).length;
 		scrollBar.length = Conductor.getStepForTime(length);
 
-		bottomLimit.y = Conductor.getStepForTime(length) * 40;
-		bottomSeparator.y = bottomLimit.y-2;
+		gridBackdrop.bottomLimit.y = Conductor.getStepForTime(length) * 40;
+		eventsBackdrop.bottomSeparator.y = gridBackdrop.bottomSeparator.y = gridBackdrop.bottomLimit.y-2;
 	}
 
 	public override function beatHit(curBeat:Int) {
@@ -891,9 +859,6 @@ class Charter extends UIState {
 		if (gridBackdrop.strumlinesAmount != strumLines.members.length)
 			updateDisplaySprites();
 
-		eventSecSeparator.spacing.y = (10 * Conductor.beatsPerMesure * Conductor.stepsPerBeat) - 1;
-		eventBeatSeparator.spacing.y = (20 * Conductor.stepsPerBeat) - 1;
-
 		// TODO: canTypeText in case an ui input element is focused
 		if (true) {
 			__crochet = ((60 / Conductor.bpm) * 1000);
@@ -953,22 +918,7 @@ class Charter extends UIState {
 	function updateDisplaySprites() {
 		gridBackdrop.strumlinesAmount = strumLines.members.length;
 
-		eventSecSeparator.scale.set(20, 4);
-		eventSecSeparator.updateHitbox();
-
-		eventBeatSeparator.scale.set(10, 2);
-		eventBeatSeparator.updateHitbox();
-
 		charterBG.scale.set(1 / charterCamera.zoom, 1 / charterCamera.zoom);
-		topLimit.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, Math.ceil(FlxG.height / charterCamera.zoom));
-		topLimit.updateHitbox();
-		topLimit.y = -topLimit.height;
-
-		bottomLimit.scale.set(gridBackdrop.strumlinesAmount * 4 * 40, Math.ceil(FlxG.height / charterCamera.zoom));
-		bottomLimit.updateHitbox();
-
-		bottomSeparator.scale.set((gridBackdrop.strumlinesAmount * 4 * 40) + 20, 4);
-		bottomSeparator.updateHitbox();
 
 		strumlineInfoBG.scale.set(FlxG.width / charterCamera.zoom, 1);
 		strumlineInfoBG.updateHitbox();
@@ -1244,11 +1194,11 @@ class Charter extends UIState {
 	}
 	function _view_showeventSecSeparator(t) {
 		t.icon = (Options.charterShowSections = !Options.charterShowSections) ? 1 : 0;
-		eventSecSeparator.visible = gridBackdrop.sectionSeparator.visible = Options.charterShowSections;
+		eventsBackdrop.eventSecSeparator.visible = gridBackdrop.sectionSeparator.visible = Options.charterShowSections;
 	}
 	function _view_showeventBeatSeparator(t) {
 		t.icon = (Options.charterShowBeats = !Options.charterShowBeats) ? 1 : 0;
-		eventBeatSeparator.visible = gridBackdrop.beatSeparator.visible = Options.charterShowBeats;
+		eventsBackdrop.eventBeatSeparator.visible = gridBackdrop.beatSeparator.visible = Options.charterShowBeats;
 	}
 
 	inline function _note_addsustain(t)

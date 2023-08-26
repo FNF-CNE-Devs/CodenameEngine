@@ -7,6 +7,11 @@ import flixel.addons.display.FlxBackdrop;
 class CharterBackdrop extends FlxBackdrop {
 	public var strumlinesAmount:Int = 1;
 
+	public var topLimit:FlxSprite;
+	public var topSeparator:FlxSprite;
+	public var bottomLimit:FlxSprite;
+	public var bottomSeparator:FlxSprite;
+
 	public var conductorFollowerSpr:FlxSprite;
 	public var beatSeparator:FlxBackdrop;
 	public var sectionSeparator:FlxBackdrop;
@@ -44,6 +49,31 @@ class CharterBackdrop extends FlxBackdrop {
 			sep.updateHitbox();
 		}
 
+		bottomSeparator = new FlxSprite(0,-2);
+		bottomSeparator.makeGraphic(1, 1, -1);
+		bottomSeparator.alpha = 0.5;
+		bottomSeparator.scrollFactor.set(1, 1);
+		bottomSeparator.scale.set(4 * 40, 4);
+		bottomSeparator.updateHitbox();
+
+		topSeparator = new FlxSprite(0, -2);
+		topSeparator.makeGraphic(1, 1, -1);
+		topSeparator.alpha = 0.5;
+		topSeparator.scrollFactor.set(1, 1);
+		topSeparator.scale.set(4 * 40, 4);
+		topSeparator.updateHitbox();
+
+		// Limits
+		topLimit = new FlxSprite();
+		topLimit.makeGraphic(1, 1, -1);
+		topLimit.color = 0xFF888888;
+		topLimit.blend = MULTIPLY;
+
+		bottomLimit = new FlxSprite();
+		bottomLimit.makeGraphic(1, 1, -1);
+		bottomLimit.color = 0xFF888888;
+		bottomLimit.blend = MULTIPLY;
+
 		// Follower
 		conductorFollowerSpr = new FlxSprite(0, 0).makeGraphic(1, 1, -1);
 		conductorFollowerSpr.scale.set(4 * 40, 4);
@@ -68,6 +98,29 @@ class CharterBackdrop extends FlxBackdrop {
 				sep.cameras = this.cameras;
 				if (sep.visible) sep.draw();
 			}
+
+			topLimit.x = this.x;
+			topLimit.cameras = this.cameras;
+
+			topLimit.scale.set(4 * 40, Math.ceil(FlxG.height / cameras[0].zoom));
+			topLimit.updateHitbox();
+			topLimit.y = -topLimit.height;
+			topLimit.draw();
+
+			bottomLimit.x = this.x;
+			bottomLimit.cameras = this.cameras;
+	
+			bottomLimit.scale.set(4 * 40, Math.ceil(FlxG.height / cameras[0].zoom));
+			bottomLimit.updateHitbox();
+			bottomLimit.draw();
+
+			topSeparator.x = this.x;
+			topSeparator.cameras = this.cameras;
+			if (!sectionSeparator.visible) topSeparator.draw();
+
+			bottomSeparator.x = this.x;
+			bottomSeparator.cameras = this.cameras;
+			bottomSeparator.draw();
 
 			conductorFollowerSpr.x = this.x;
 			conductorFollowerSpr.cameras = this.cameras;
@@ -94,5 +147,77 @@ class CharterBackdropDummy extends UISprite {
 	public override function draw() {
 		@:privateAccess
 		__lastDrawCameras = [for(c in cameras) c];
+	}
+}
+
+class EventBackdrop extends FlxBackdrop {
+	public var eventBeatSeparator:FlxBackdrop;
+	public var eventSecSeparator:FlxBackdrop;
+
+	public var topSeparator:FlxSprite;
+	public var bottomSeparator:FlxSprite;
+
+	public function new() {
+		super(Paths.image('editors/charter/events-grid'), Y, 0, 0);
+		alpha = 0.9;
+
+		// Separators
+		eventSecSeparator = new FlxBackdrop(null, Y, 0, 0);
+		eventSecSeparator.y = -2;
+		eventSecSeparator.visible = Options.charterShowSections;
+
+		eventBeatSeparator = new FlxBackdrop(null, Y, 0, 0);
+		eventBeatSeparator.y = -1;
+		eventBeatSeparator.visible = Options.charterShowBeats;
+
+		for(sep in [eventSecSeparator, eventBeatSeparator]) {
+			sep.makeGraphic(1, 1, -1);
+			sep.alpha = 0.5;
+			sep.scrollFactor.set(1, 1);
+		}
+
+		eventSecSeparator.scale.set(20, 4);
+		eventSecSeparator.updateHitbox();
+
+		eventBeatSeparator.scale.set(10, 2);
+		eventBeatSeparator.updateHitbox();
+
+		bottomSeparator = new FlxSprite(0,-2);
+		bottomSeparator.makeGraphic(1, 1, -1);
+		bottomSeparator.alpha = 0.5;
+		bottomSeparator.scrollFactor.set(1, 1);
+		bottomSeparator.scale.set(20, 4);
+		bottomSeparator.updateHitbox();
+
+		topSeparator = new FlxSprite(0, -2);
+		topSeparator.makeGraphic(1, 1, -1);
+		topSeparator.alpha = 0.5;
+		topSeparator.scrollFactor.set(1, 1);
+		topSeparator.scale.set(20, 4);
+		topSeparator.updateHitbox();
+
+	}
+
+	public override function draw() {
+		super.draw();
+
+		eventSecSeparator.spacing.y = (10 * Conductor.beatsPerMesure * Conductor.stepsPerBeat) - 1;
+		eventBeatSeparator.spacing.y = (20 * Conductor.stepsPerBeat) - 1;
+
+		eventSecSeparator.cameras = cameras;
+		eventSecSeparator.x = (x+width) - 20;
+		if (eventSecSeparator.visible) eventSecSeparator.draw();
+
+		eventBeatSeparator.cameras = cameras;
+		eventBeatSeparator.x = (x+width) - 10;
+		if (eventBeatSeparator.visible) eventBeatSeparator.draw();
+
+		topSeparator.x = (x+width) - 20;
+		topSeparator.cameras = this.cameras;
+		if (!eventSecSeparator.visible) topSeparator.draw();
+
+		bottomSeparator.x = (x+width) - 20;
+		bottomSeparator.cameras = this.cameras;
+		bottomSeparator.draw();
 	}
 }
