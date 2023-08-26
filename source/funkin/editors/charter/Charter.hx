@@ -464,7 +464,6 @@ class Charter extends UIState {
 			Framerate.memoryCounter.alpha = 1;
 			Framerate.codenameBuildField.alpha = 1;
 		}
-		WindowTitle.reset();
 		super.destroy();
 	}
 
@@ -954,7 +953,7 @@ class Charter extends UIState {
 			updateDisplaySprites();
 		}
 
-		WindowTitle.prefix = undos.unsaved ? "UNSAVED | " : "";
+		WindowTitle.prefix = undos.unsaved ? "● " : "";
 	}
 
 	public static var startTime:Float = 0;

@@ -51,6 +51,7 @@ class CharacterEditor extends UIState {
 	public override function create() {
 		super.create();
 
+		WindowTitle.endfix = " (Character Editor)";
 		topMenu = [
 			{
 				label: "File",
@@ -323,7 +324,7 @@ class CharacterEditor extends UIState {
 	function _file_save(_) {
 		#if sys
 		sys.io.File.saveContent(
-			Assets.getPath(Paths.xml('characters/${character.curCharacter}')),
+			'${Paths.getAssetsRoot()}/data/characters/${character.curCharacter}.xml',
 			buildCharacter()
 		);
 		return;
