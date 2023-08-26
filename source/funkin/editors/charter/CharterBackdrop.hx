@@ -16,6 +16,8 @@ class CharterBackdrop extends FlxBackdrop {
 	public var beatSeparator:FlxBackdrop;
 	public var sectionSeparator:FlxBackdrop;
 
+	public var notesGroup:CharterNoteGroup;
+
 	public function new() {
 		super(null, Y, 0, 0);
 
@@ -101,6 +103,12 @@ class CharterBackdrop extends FlxBackdrop {
 
 			topLimit.x = this.x;
 			topLimit.cameras = this.cameras;
+
+			// Draw notes
+			notesGroup.forEach((n) -> {
+				if(n.exists && n.visible && (Math.floor(n.id/4) == _))
+					n.draw();
+			});
 
 			topLimit.scale.set(4 * 40, Math.ceil(FlxG.height / cameras[0].zoom));
 			topLimit.updateHitbox();

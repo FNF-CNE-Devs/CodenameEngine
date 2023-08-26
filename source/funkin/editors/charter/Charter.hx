@@ -340,6 +340,7 @@ class Charter extends UIState {
 		add(charterBG);
 
 		gridBackdrop = new CharterBackdrop();
+		gridBackdrop.notesGroup = this.notesGroup;
 
 		eventsBackdrop = new EventBackdrop();
 		eventsBackdrop.x = -eventsBackdrop.width;
@@ -430,11 +431,9 @@ class Charter extends UIState {
 		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
 		vocals.group = FlxG.sound.defaultMusicGroup;
 
-		trace("generating notes...");
 		for(strL in PlayState.SONG.strumLines)
 			createStrumline(strumLines.members.length, strL, false);
 
-		trace("generating events...");
 		var __last:CharterEvent = null;
 		var __lastTime:Float = Math.NaN;
 		for(e in PlayState.SONG.events) {

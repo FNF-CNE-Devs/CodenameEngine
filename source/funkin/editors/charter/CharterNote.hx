@@ -53,17 +53,20 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 
 	public var step:Float;
-	public var realId:Int;
-	@:isVar public var id(get, set):Int;
 	public var susLength:Float;
 	public var type:Int;
+
+	public var realId:Int;
+	@:isVar public var id(get, set):Int;
 	function set_id(d:Int) {
 		strumLine = Charter.instance.strumLines.members[Math.floor(d / 4)];
-		id = d % 4;
 		realId = d;
-		return id;
+		return id = d % 4;
 	}
-	function get_id() return id + 4 * Charter.instance.strumLines.members.indexOf(strumLine);
+
+	function get_id():Int
+		return id + 4 * Charter.instance.strumLines.members.indexOf(strumLine);
+
 	public function updatePos(step:Float, id:Int, susLength:Float = 0, type:Int = 0) {
 		this.step = step;
 		this.id = id;

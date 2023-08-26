@@ -7,6 +7,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	var i:Int = 0;
 	var max:Float = 0;
 	var __currentlyLooping:Bool = false;
+	var __autoDraw:Bool = false;
 
 	public override function forEach(noteFunc:CharterNote->Void, recursive:Bool = false) {
 		__loopSprite = null;
@@ -54,10 +55,13 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
 
-		forEach((n) -> {
-			if(n.exists && n.visible)
-				n.draw();
-		});
+		if (__autoDraw) {
+			forEach((n) -> {
+				if(n.exists && n.visible)
+					n.draw();
+			});
+		}
+
 
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
 	}
