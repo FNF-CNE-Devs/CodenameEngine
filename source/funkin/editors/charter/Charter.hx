@@ -1164,11 +1164,11 @@ class Charter extends UIState {
 	}
 	function _playback_back(_) {
 		if (FlxG.sound.music.playing) return;
-		Conductor.songPosition -= Conductor.songOffset - (Conductor.beatsPerMesure * __crochet);
+		Conductor.songPosition -= (Conductor.beatsPerMesure * __crochet);
 	}
 	function _playback_forward(_) {
 		if (FlxG.sound.music.playing) return;
-		Conductor.songPosition += (Conductor.beatsPerMesure * __crochet) + Conductor.songOffset;
+		Conductor.songPosition += (Conductor.beatsPerMesure * __crochet);
 	}
 	function _playback_start(_) {
 		if (FlxG.sound.music.playing) return;
