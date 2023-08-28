@@ -362,7 +362,7 @@ class Charter extends UIState {
 		scrollBar.cameras = [uiCamera];
 		scrollBar.onChange = function(v) {
 			if (!FlxG.sound.music.playing)
-				Conductor.songPosition = Conductor.getTimeForStep(v);
+				Conductor.songPosition = Conductor.getTimeForStep(v) + Conductor.songOffset;
 		};
 		uiGroup.add(scrollBar);
 
@@ -874,7 +874,7 @@ class Charter extends UIState {
 				}
 			} else {
 				if (!FlxG.sound.music.playing) {
-					Conductor.songPosition -= __crochet * FlxG.mouse.wheel;
+					Conductor.songPosition -= (__crochet * FlxG.mouse.wheel) - Conductor.songOffset;
 				}
 			}
 		}
@@ -1139,7 +1139,7 @@ class Charter extends UIState {
 		FlxG.state.openSubState(new MetaDataScreen(PlayState.SONG.meta));
 
 	function _playback_play(_) {
-		if (Conductor.songPosition >= FlxG.sound.music.getDefault(vocals).length) return;
+		if (Conductor.songPosition >= FlxG.sound.music.getDefault(vocals).length - Conductor.songOffset) return;
 
 		if (FlxG.sound.music.playing) {
 			FlxG.sound.music.pause();
@@ -1147,7 +1147,7 @@ class Charter extends UIState {
 		} else {
 			FlxG.sound.music.play();
 			vocals.play();
-			vocals.time = FlxG.sound.music.time = Conductor.songPosition;
+			vocals.time = FlxG.sound.music.time = Conductor.songPosition + Conductor.songOffset * 2;
 		}
 	}
 
@@ -1164,11 +1164,11 @@ class Charter extends UIState {
 	}
 	function _playback_back(_) {
 		if (FlxG.sound.music.playing) return;
-		Conductor.songPosition -= Conductor.beatsPerMesure * __crochet;
+		Conductor.songPosition -= Conductor.songOffset - (Conductor.beatsPerMesure * __crochet);
 	}
 	function _playback_forward(_) {
 		if (FlxG.sound.music.playing) return;
-		Conductor.songPosition += Conductor.beatsPerMesure * __crochet;
+		Conductor.songPosition += (Conductor.beatsPerMesure * __crochet) + Conductor.songOffset;
 	}
 	function _playback_start(_) {
 		if (FlxG.sound.music.playing) return;
