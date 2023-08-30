@@ -44,7 +44,7 @@ class CharterBackdrop extends FlxBackdrop {
 		beatSeparator.visible = Options.charterShowBeats;
 		
 		for(sep in [sectionSeparator, beatSeparator]) {
-			sep.makeGraphic(1, 1, -1);
+			sep.makeSolid(1, 1, -1);
 			sep.alpha = 0.5;
 			sep.scrollFactor.set(1, 1);
 			sep.scale.set((4 * 40), sep == sectionSeparator ? 4 : 2);
@@ -52,14 +52,14 @@ class CharterBackdrop extends FlxBackdrop {
 		}
 
 		bottomSeparator = new FlxSprite(0,-2);
-		bottomSeparator.makeGraphic(1, 1, -1);
+		bottomSeparator.makeSolid(1, 1, -1);
 		bottomSeparator.alpha = 0.5;
 		bottomSeparator.scrollFactor.set(1, 1);
 		bottomSeparator.scale.set(4 * 40, 4);
 		bottomSeparator.updateHitbox();
 
 		topSeparator = new FlxSprite(0, -2);
-		topSeparator.makeGraphic(1, 1, -1);
+		topSeparator.makeSolid(1, 1, -1);
 		topSeparator.alpha = 0.5;
 		topSeparator.scrollFactor.set(1, 1);
 		topSeparator.scale.set(4 * 40, 4);
@@ -67,23 +67,24 @@ class CharterBackdrop extends FlxBackdrop {
 
 		// Limits
 		topLimit = new FlxSprite();
-		topLimit.makeGraphic(1, 1, -1);
+		topLimit.makeSolid(1, 1, -1);
 		topLimit.color = 0xFF888888;
 		topLimit.blend = MULTIPLY;
 
 		bottomLimit = new FlxSprite();
-		bottomLimit.makeGraphic(1, 1, -1);
+		bottomLimit.makeSolid(1, 1, -1);
 		bottomLimit.color = 0xFF888888;
 		bottomLimit.blend = MULTIPLY;
 
 		// Follower
-		conductorFollowerSpr = new FlxSprite(0, 0).makeGraphic(1, 1, -1);
+		conductorFollowerSpr = new FlxSprite(0, 0).makeSolid(1, 1, -1);
 		conductorFollowerSpr.scale.set(4 * 40, 4);
 		conductorFollowerSpr.updateHitbox();
 	}
 
 	public override function draw() {
 		var ogX:Float = x;
+		//FlxG.watch.addQuick("gridXs", [for (strum in Charter.instance.strumLines.members) strum.x]);
 		for(_ in 0...strumlinesAmount) {
 			if (Charter.instance.strumLines.members[_] != null) {
 				x = Charter.instance.strumLines.members[_].x;
@@ -181,7 +182,7 @@ class EventBackdrop extends FlxBackdrop {
 		eventBeatSeparator.visible = Options.charterShowBeats;
 
 		for(sep in [eventSecSeparator, eventBeatSeparator]) {
-			sep.makeGraphic(1, 1, -1);
+			sep.makeSolid(1, 1, -1);
 			sep.alpha = 0.5;
 			sep.scrollFactor.set(1, 1);
 		}
@@ -193,14 +194,14 @@ class EventBackdrop extends FlxBackdrop {
 		eventBeatSeparator.updateHitbox();
 
 		bottomSeparator = new FlxSprite(0,-2);
-		bottomSeparator.makeGraphic(1, 1, -1);
+		bottomSeparator.makeSolid(1, 1, -1);
 		bottomSeparator.alpha = 0.5;
 		bottomSeparator.scrollFactor.set(1, 1);
 		bottomSeparator.scale.set(20, 4);
 		bottomSeparator.updateHitbox();
 
 		topSeparator = new FlxSprite(0, -2);
-		topSeparator.makeGraphic(1, 1, -1);
+		topSeparator.makeSolid(1, 1, -1);
 		topSeparator.alpha = 0.5;
 		topSeparator.scrollFactor.set(1, 1);
 		topSeparator.scale.set(20, 4);

@@ -59,6 +59,13 @@ class UIState extends MusicBeatState {
 			currentFocus.onTextEdit(str, start, end);
 	}
 
+	public inline function updateSpriteRect(spr:UISprite) {
+		spr.__rect.x = spr.x;
+		spr.__rect.y = spr.y;
+		spr.__rect.width = spr.width;
+		spr.__rect.height = spr.height;
+	}
+
 	public function updateButtonHandler(spr:UISprite, buttonHandler:Void->Void) {
 		spr.__rect.x = spr.x;
 		spr.__rect.y = spr.y;

@@ -53,6 +53,7 @@ class Charter extends UIState {
 
 	public var strumlineInfoBG:FlxSprite;
 	public var strumlineAddButton:CharterStrumlineExtraButton;
+	public var strumlineLockButton:CharterStrumlineExtraButton;
 
 	public var hitsound:FlxSound;
 	public var metronome:FlxSound;
@@ -375,10 +376,15 @@ class Charter extends UIState {
 		strumlineInfoBG.y = 23;
 		strumlineInfoBG.scrollFactor.set();
 
-		strumlineAddButton = new CharterStrumlineExtraButton("editors/charter/add-strumline", "Add New");
+		strumlineAddButton = new CharterStrumlineExtraButton("editors/charter/add-strumline", "Create New");
 		strumlineAddButton.onClick = createStrumWithUI;
 
-		strumlineAddButton.cameras = [charterCamera];
+		strumlineLockButton = new CharterStrumlineExtraButton("editors/charter/add-strumline", "Lock/Unlock");
+		strumlineLockButton.onClick = function () {
+			if (strumLines != null) strumLines.draggable = !strumLines.draggable;
+		};
+
+		strumlineAddButton.cameras = strumlineLockButton.cameras = [charterCamera];
 		strumlineInfoBG.cameras = [charterCamera];
 		strumLines.cameras = [charterCamera];
 
@@ -394,6 +400,7 @@ class Charter extends UIState {
 		add(notesGroup);
 		add(selectionBox);
 		add(strumlineInfoBG);
+		add(strumlineLockButton);
 		add(strumlineAddButton);
 		add(strumLines);
 		// add the top menu last OUT of the ui group so that it stays on top
@@ -931,6 +938,9 @@ class Charter extends UIState {
 
 		strumlineAddButton.x = strumLines.length * (40 * 4);
 		strumlineAddButton.y = strumlineInfoBG.y;
+
+		strumlineLockButton.x = -1 * (40 * 4);
+		strumlineLockButton.y = strumlineInfoBG.y;
 	}
 
 	var zoom(default, set):Float = 0;

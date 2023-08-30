@@ -9,11 +9,13 @@ import funkin.backend.chart.ChartData.ChartStrumLine;
 
 class CharterStrumline extends UISprite {
 	public var strumLine:ChartStrumLine;
-
 	public var hitsounds:Bool = true;
 
+	public var draggingSprite:UISprite;
 	public var healthIcon:HealthIcon;
 	public var button:CharterStrumlineButton;
+
+	public var draggable:Bool = false;
 	public var dragging:Bool = false;
 
 	public var curMenu:UIContextMenu = null;
@@ -28,22 +30,48 @@ class CharterStrumline extends UISprite {
 		var icon = Character.getIconFromCharName(strumLine.characters != null ? strumLine.characters[0] : null);
 
 		healthIcon = new HealthIcon(icon);
-		healthIcon.scale.set(80 / 150, 80 / 150);
+		healthIcon.scale.set((80 - (draggable ? 21 : 0)) / 150, (80 - (draggable ? 21 : 0)) / 150);
 		healthIcon.updateHitbox();
-		if(strumLine.visible == null)
-			strumLine.visible = true;
+		healthIcon.y = draggable ? 29 : 7;
+
+		if(strumLine.visible == null) strumLine.visible = true;
 		healthIcon.alpha = strumLine.visible ? 1 : 0.4;
 
 		members.push(healthIcon);
+
+		draggingSprite = new UISprite();
+		draggingSprite.loadGraphic(Paths.image("editors/charter/drag-strumline"));
+		draggingSprite.alpha = 0.4;
+		draggingSprite.y = 9;
+		draggingSprite.antialiasing = true;
+		draggingSprite.cursor = BUTTON;
+		members.push(draggingSprite);
 
 		button = new CharterStrumlineButton(this);
 		members.push(button);
 	}
 
 	public override function update(elapsed:Float) {
-		if (healthIcon != null)
-			healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, 50);
+		if (FlxG.keys.justPressed.K) draggable = !draggable;
+		if (healthIcon != null) {
+			var healthScale:Float = FlxMath.lerp(healthIcon.scale.x, (80 - (draggable ? 21 : 0)) / 150, 1/20);
+			healthIcon.scale.set(healthScale, healthScale);
+			healthIcon.updateHitbox();
+
+			healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, FlxMath.lerp(healthIcon.y - y, draggable ? 29 : 7, 1/20));
+		}
+
+		var dragScale:Float = FlxMath.lerp(draggingSprite.scale.x, draggable ? 1 : 0.8, 1/16);
+		draggingSprite.scale.set(dragScale, dragScale);
+		draggingSprite.updateHitbox();
+
+		draggingSprite.follow(this, (160/2) - (draggingSprite.width/2), FlxMath.lerp(draggingSprite.y - y, draggable ? 9 : 6, 1/12));
+		draggingSprite.alpha = FlxMath.lerp(draggingSprite.alpha, draggable ? 0.4 : 0, 1/12);
 		button.follow(this, 0, 95);
+
+		draggingSprite.selectable = draggable;
+
+		UIState.state.updateSpriteRect(draggingSprite);
 		super.update(elapsed);
 	}
 
@@ -54,8 +82,10 @@ class CharterStrumline extends UISprite {
 		var icon = Character.getIconFromCharName(strumLine.characters != null ? strumLine.characters[0] : null);
 
 		healthIcon = new HealthIcon(icon);
-		healthIcon.scale.set(80 / 150, 80 / 150);
+		healthIcon.scale.set((80 - (draggable ? 21 : 0)) / 150, (80 - (draggable ? 21 : 0)) / 150);
 		healthIcon.updateHitbox();
+		healthIcon.y = draggable ? 29 : 7;
+
 		healthIcon.alpha = strumLine.visible ? 1 : 0.4;
 		members.push(healthIcon);
 	}
@@ -72,7 +102,7 @@ class CharterStrumlineButton extends UITopMenuButton {
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-		alpha = FlxMath.lerp(1/3, 1, alpha); // so that instead of 0% it is 33% visible
+		alpha = FlxMath.lerp(1/20, 1, alpha); // so that instead of 0% it is 33% visible
 	}
 
 	public override function openContextMenu() {
