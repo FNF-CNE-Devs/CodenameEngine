@@ -43,9 +43,9 @@ class GameplayOptions extends OptionsScreen {
 				FlxG.camera.zoom += 0.03;
 				__lastBeat = Conductor.curBeat;
 			}
-			if (__lastSongBeat != Math.floor(Conductor.getStepForTime(FlxG.sound.music.time / 2) / Conductor.stepsPerBeat)) {
+			if (__lastSongBeat != Math.floor(Conductor.getStepForTime(FlxG.sound.music.time) / Conductor.stepsPerBeat)) {
 				__metronome.replay();
-				__lastSongBeat = Math.floor(Conductor.getStepForTime(FlxG.sound.music.time / 2) / Conductor.stepsPerBeat);
+				__lastSongBeat = Math.floor(Conductor.getStepForTime(FlxG.sound.music.time) / Conductor.stepsPerBeat);
 			}
 		}
 		else FlxG.sound.music.volume = 1;
