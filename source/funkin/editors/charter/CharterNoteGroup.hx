@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import flixel.util.FlxSort;
 import funkin.backend.system.Conductor;
 
 class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
@@ -8,6 +9,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	var max:Float = 0;
 	var __currentlyLooping:Bool = false;
 	var __autoDraw:Bool = false;
+	var __lastSort:Int = 0;
 
 	public override function forEach(noteFunc:CharterNote->Void, recursive:Bool = false) {
 		__loopSprite = null;
@@ -62,7 +64,6 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 			});
 		}
 
-
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
 	}
 
@@ -70,11 +71,23 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
 
+		if (length != __lastSort)
+			sortNotes();
+		
 		forEach((n) -> {
 			if(n.exists && n.active)
 				n.update(elapsed);
 		});
 
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
+	}
+
+	public function sortNotes() {
+		__lastSort = length;
+		this.sort(function(i, n1, n2) {
+			if (n1.step == n2.step)
+				return FlxSort.byValues(FlxSort.ASCENDING, n1.fullID, n2.fullID);
+			return FlxSort.byValues(FlxSort.ASCENDING, n1.step, n2.step);
+		});
 	}
 }

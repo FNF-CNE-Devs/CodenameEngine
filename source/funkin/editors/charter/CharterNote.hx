@@ -128,7 +128,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 			sustainSpr.follow(this, 15, 20);
 
 		if (__passed != (__passed = step < Conductor.curStepFloat)) {
-			alpha = (__passed ? 0.8 : 1) - (!strumLine.strumLine.visible ? .6 : 0); 
+			alpha = (__passed ? 0.6 : 1); 
 			if (__passed && FlxG.sound.music.playing && Charter.instance.hitsoundsEnabled(strumLineID))
 				Charter.instance.hitsound.replay();
 		}

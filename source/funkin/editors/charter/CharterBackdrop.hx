@@ -105,7 +105,6 @@ class CharterBackdrop extends FlxBackdrop {
 			topLimit.x = this.x;
 			topLimit.cameras = this.cameras;
 
-			// Draw notes
 			notesGroup.forEach((n) -> {
 				if(n.exists && n.visible) {
 					n.cameras = cameras;

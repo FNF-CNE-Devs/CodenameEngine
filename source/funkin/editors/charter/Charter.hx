@@ -583,7 +583,6 @@ class Charter extends UIState {
 						if (s is CharterNote) cast(s, CharterNote).snappedToStrumline = true;
 						if (s is UISprite) cast(s, UISprite).cursor = BUTTON;
 					}
-					sortNotes();
 					undos.addToUndo(CSelectionDrag(selection, changePoint.clone()));
 
 					changePoint.put();
@@ -615,7 +614,6 @@ class Charter extends UIState {
 								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id % 4, 0, 0, strumLines.members[Std.int(id/4)]);
 								notesGroup.add(note);
 								selection = [note];
-								sortNotes();
 								undos.addToUndo(CCreateSelection([note]));
 							}
 						}
@@ -678,7 +676,6 @@ class Charter extends UIState {
 			eventsGroup.remove(event, true);
 			event.kill();
 		}
-		sortNotes();
 
 		if (addToUndo)
 			undos.addToUndo(CDeleteSelection([selected]));
@@ -697,7 +694,6 @@ class Charter extends UIState {
 			e.revive();
 			e.refreshEventIcons();
 		}, false);
-		sortNotes();
 
 		for (s in selection)
 			if (s is CharterEvent) {
@@ -723,7 +719,6 @@ class Charter extends UIState {
 				else member++;
 			}
 		}
-		sortNotes();
 
 		for (s in selection)
 			if (s is CharterEvent) {
@@ -747,7 +742,6 @@ class Charter extends UIState {
 			n.updatePos(t, note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type, cStr);
 			notesGroup.add(n);
 		}
-		sortNotes();
 
 		if (addToUndo)
 			undos.addToUndo(CCreateStrumLine(strumLineID, strL));
@@ -769,8 +763,6 @@ class Charter extends UIState {
 		var strL = strumLines.members[strumLineID].strumLine;
 		strumLines.members[strumLineID].destroy();
 		strumLines.members.remove(strumLines.members[strumLineID]);
-
-		sortNotes();
 
 		if (addToUndo) {
 			var newStrL = Reflect.copy(strL);
@@ -821,14 +813,6 @@ class Charter extends UIState {
 				else i++;
 			}
 		}
-	}
-
-	public inline function sortNotes() {
-		notesGroup.sort(function(i, n1, n2) {
-			if (n1.step == n2.step)
-				return FlxSort.byValues(FlxSort.ASCENDING, n1.id, n2.id);
-			return FlxSort.byValues(FlxSort.ASCENDING, n1.step, n2.step);
-		});
 	}
 	#end
 

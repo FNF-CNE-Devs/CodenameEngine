@@ -28,10 +28,11 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 			}
 		}
 
-		if (draggingObj != null)
+		if (isDragging) {
 			draggingObj.x = mousePos.x - draggingOffset;
+			this.sort(function(o, a, b) return FlxSort.byValues(o, a.x, b.x), -1);
+		}
 
-		this.sort(function(o, a, b) return FlxSort.byValues(o, a.x, b.x), -1);
 		for (i=>strum in members)
 			if (!strum.dragging) strum.x = CoolUtil.fpsLerp(strum.x, 160 * i, 0.225);
 
@@ -42,7 +43,7 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 		if (Charter.instance.strumlineAddButton != null)
 			Charter.instance.strumlineAddButton.x = members[members.length-1].x + (40*4);
 
-		if ((FlxG.mouse.justReleased || !draggable) && draggingObj != null)
+		if ((FlxG.mouse.justReleased || !draggable) && isDragging)
 			finishDrag();
 
 		mousePos.put();
@@ -55,14 +56,11 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 		members.remove(strumLine);
 		members.insert(newID, strumLine);
 
-		for (i=>strum in members)
-			strum.x = 160 * i;
-
 		finishDrag(false);
 	}
 
 	public function finishDrag(?addToUndo:Bool = true) {
-		if (draggingObj != null)
+		if (isDragging)
 			draggingObj.dragging = false;
 
 		// Undo
@@ -71,7 +69,6 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 			var newID = members.indexOf(draggingObj);
 			Charter.instance.undos.addToUndo(COrderStrumLine(draggingObj, oldID, newID));
 		}
-
 
 		draggingObj = null;
 		fixEvents();
