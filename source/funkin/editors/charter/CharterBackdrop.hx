@@ -107,7 +107,7 @@ class CharterBackdrop extends FlxBackdrop {
 
 			// Draw notes
 			notesGroup.forEach((n) -> {
-				if(n.exists && n.visible && (Math.floor(n.id/4) == _)) {
+				if(n.exists && n.visible) {
 					n.cameras = cameras;
 					n.draw();
 				}

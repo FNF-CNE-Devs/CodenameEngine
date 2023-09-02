@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.backend.chart.ChartData.ChartStrumLine;
 import funkin.backend.chart.EventsData;
 import flixel.util.FlxSort;
 
@@ -9,6 +10,9 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 	var draggingOffset:Float = 0;
 
 	public var draggable:Bool = false;
+	public var isDragging(get, never):Bool;
+	public function get_isDragging():Bool
+		return draggingObj != null;
 
 	public override function update(elapsed:Float) {
 		var mousePos = FlxG.mouse.getWorldPosition(cameras[0], FlxPoint.get());
@@ -29,7 +33,7 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 
 		this.sort(function(o, a, b) return FlxSort.byValues(o, a.x, b.x), -1);
 		for (i=>strum in members)
-			if (!strum.dragging) strum.x = CoolUtil.fpsLerp(strum.x, 160 * i, 0.3);
+			if (!strum.dragging) strum.x = CoolUtil.fpsLerp(strum.x, 160 * i, 0.225);
 
 		if (Charter.instance.eventsBackdrop != null)
 			Charter.instance.eventsBackdrop.x = members[0].button.x - Charter.instance.eventsBackdrop.width;
@@ -42,15 +46,38 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 			finishDrag();
 
 		mousePos.put();
-
 		super.update(elapsed);
 	}
 
-	inline function finishDrag() {
-		draggingObj.dragging = false;
-		draggingObj = null;
+	public function orderStrumline(strumLine:CharterStrumline, newID:Int) {
+		__pastStrumlines = members.copy();
 
-		// Fix Events that use strumline param
+		members.remove(strumLine);
+		members.insert(newID, strumLine);
+
+		for (i=>strum in members)
+			strum.x = 160 * i;
+
+		finishDrag(false);
+	}
+
+	public function finishDrag(?addToUndo:Bool = true) {
+		if (draggingObj != null)
+			draggingObj.dragging = false;
+
+		// Undo
+		if (addToUndo) {
+			var oldID = __pastStrumlines.indexOf(draggingObj);
+			var newID = members.indexOf(draggingObj);
+			Charter.instance.undos.addToUndo(COrderStrumLine(draggingObj, oldID, newID));
+		}
+
+
+		draggingObj = null;
+		fixEvents();
+	}
+
+	public inline function fixEvents() { 
 		for (i in Charter.instance.eventsGroup.members) {
 			for (j in i.events) {
 				var paramTypes:Array<EventParamInfo> = EventsData.getEventParams(j.name);
@@ -60,7 +87,6 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 				}
 			}
 		}
-		
 		__pastStrumlines = null;
 	}
 

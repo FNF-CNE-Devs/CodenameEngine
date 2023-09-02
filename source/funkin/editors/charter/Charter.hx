@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.editors.charter.CharterStrumline;
 import funkin.editors.charter.CharterBackdrop.EventBackdrop;
 import funkin.backend.system.framerate.Framerate;
 import haxe.Json;
@@ -553,8 +554,8 @@ class Charter extends UIState {
 			case DRAG:
 				if (FlxG.mouse.pressed) {
 					selection.loop(function (n:CharterNote) {
-						n.setPosition(n.id * 40 + (mousePos.x - dragStartPos.x), n.step * 40 + (mousePos.y - dragStartPos.y));
 						n.snappedToStrumline = false;
+						n.setPosition(n.id * 40 + (mousePos.x - dragStartPos.x), n.step * 40 + (mousePos.y - dragStartPos.y));
 						n.cursor = HAND;
 					}, function (e:CharterEvent) {
 						e.y =  e.step * 40 + (mousePos.y - dragStartPos.y) - 17;
@@ -611,7 +612,7 @@ class Charter extends UIState {
 						} else {
 							if (mouseOnGrid) {
 								var note = new CharterNote();
-								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id, 0, 0);
+								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id % 4, 0, 0, strumLines.members[Std.int(id/4)]);
 								notesGroup.add(note);
 								selection = [note];
 								sortNotes();
@@ -620,7 +621,6 @@ class Charter extends UIState {
 						}
 					}
 				} else if (gridBackdropDummy.hoveredByChild) {
-					// TODO: NOTE DRAGGING
 					if (FlxG.mouse.pressed && (Math.abs(mousePos.x - dragStartPos.x) > 5 || Math.abs(mousePos.y - dragStartPos.y) > 5)) {
 						var noteHovered:Bool = false;
 						for(n in selection) 
@@ -741,18 +741,10 @@ class Charter extends UIState {
 		var cStr = new CharterStrumline(strL);
 		strumLines.insert(strumLineID, cStr);
 
-		// Push forward notes that are infront of the strumLine
-		for (note in notesGroup.members) {
-			if (Std.int(note.id / 4) >= strumLineID)
-				note.updatePos(note.step, note.id + 4, note.susLength, note.type);
-		}
-
-		var noteOffset = (strumLines.members.indexOf(cStr)) * 4;
-
 		for(note in strL.notes) {
 			var n = new CharterNote();
 			var t = Conductor.getStepForTime(note.time);
-			n.updatePos(t, noteOffset + note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type);
+			n.updatePos(t, note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type, cStr);
 			notesGroup.add(n);
 		}
 		sortNotes();
@@ -762,45 +754,28 @@ class Charter extends UIState {
 	}
 
 	public function deleteStrumline(strumLineID:Int, addToUndo:Bool = true) {
+		var undoNotes:Array<ChartNote> = [];
 		removeStrumlineFromSelection(strumLineID);
+
+		var i = 0;
+		while(i < notesGroup.members.length) {
+   			var note = notesGroup.members[i];
+   			if (note.strumLineID == strumLineID) {
+				undoNotes.push(buildNote(note));
+				deleteSingleSelection(note, false);
+			} else i++;
+		}
 
 		var strL = strumLines.members[strumLineID].strumLine;
 		strumLines.members[strumLineID].destroy();
 		strumLines.members.remove(strumLines.members[strumLineID]);
 
-		var deletedstrumNotes:Array<CharterNote> = [];
-		// Delete this strums notes
-		var i = 0; // thanks yosh!!!!! (deleteNote removes a index)
-		while(i < notesGroup.members.length) {
-   			var note = notesGroup.members[i];
-   			if (Std.int(note.id / 4) == strumLineID) { // thanks neo lol!!!!!
-				deletedstrumNotes.push(note);
-				deleteSingleSelection(note, false);
-			} else
-				i++;
-		}
-
-		// Push back strumline notes that are infront
-		for (note in notesGroup.members) {
-			if (Std.int(note.id / 4) > strumLineID)
-				note.updatePos(note.step, note.id - 4, note.susLength, note.type);
-		}
 		sortNotes();
 
-		// Undo shit
 		if (addToUndo) {
 			var newStrL = Reflect.copy(strL);
-			newStrL.notes.clear();
+			newStrL.notes = undoNotes;
 
-			for (note in deletedstrumNotes) {
-				var time = Conductor.getTimeForStep(note.step);
-				newStrL.notes.push({
-					type: note.type,
-					time: time,
-					sLen: Conductor.getTimeForStep(note.step + note.susLength) - time,
-					id: note.id % 4
-				});
-			}
 			undos.addToUndo(CDeleteStrumLine(strumLineID, newStrL));
 		}
 	}
@@ -818,6 +793,8 @@ class Charter extends UIState {
 			if (_ != null) createStrumline(strumLines.members.length, _);
 		}));
 	}
+
+	public function orderStrumline() {}
 
 	public inline function deleteStrumlineFromData(strL:ChartStrumLine)
 		deleteStrumline(getStrumlineID(strL));
@@ -839,7 +816,7 @@ class Charter extends UIState {
 		while(i < selection.length) {
 			if (selection[i] is CharterNote) {
 				var note = cast (selection[i], CharterNote);
-				if (Std.int(note.id / 4) == strumLineID)
+				if (note.strumLineID == strumLineID)
 					selection.remove(note);
 				else i++;
 			}
@@ -1021,7 +998,7 @@ class Charter extends UIState {
 			for (s in selection)
 				if (s is CharterNote) {
 				var note:CharterNote = cast(s, CharterNote);
-				CNote(note.step - minStep, note.id, note.susLength, note.type);
+				CNote(note.step - minStep, note.id, note.strumLineID, note.susLength, note.type);
 			} else if (s is CharterEvent) {
 				var event = cast(s,CharterEvent);
 				CEvent(event.step - minStep, [for (event in event.events) Reflect.copy(event)]);
@@ -1035,13 +1012,13 @@ class Charter extends UIState {
 		var sObjects:Array<ICharterSelectable> = [];
 		for(c in clipboard) {
 			switch(c) {
-				case CNote(step, id, sLen, type):
+				case CNote(step, id, strumLineID, susLength, type):
 					var note = new CharterNote();
-					note.updatePos(minStep + step + 1, id, sLen, type);
+					note.updatePos(minStep + step, id, susLength, type, strumLines.members[Std.int(FlxMath.bound(strumLineID, 0, strumLines.length-1))]);
 					notesGroup.add(note);
 					sObjects.push(note);
 				case CEvent(step, events):
-					var event = new CharterEvent(minStep + step + 1, events);
+					var event = new CharterEvent(minStep + step, events);
 					event.refreshEventIcons();
 					eventsGroup.add(event);
 					sObjects.push(event);
@@ -1064,6 +1041,8 @@ class Charter extends UIState {
 	}
 
 	function _edit_undo(_) {
+		if (strumLines.isDragging) return;
+		
 		selection = [];
 		var undo = undos.undo();
 		switch(undo) {
@@ -1072,6 +1051,8 @@ class Charter extends UIState {
 				createStrumline(strumLineID, strumLine, false);
 			case CCreateStrumLine(strumLineID, strumLine):
 				deleteStrumline(strumLineID, false);
+			case COrderStrumLine(strumLine, oldID, newID):
+				strumLines.orderStrumline(strumLine, oldID);
 			case CEditStrumLine(strumLineID, oldStrumLine, newStrumLine):
 				strumLines.members[strumLineID].strumLine = oldStrumLine;
 				strumLines.members[strumLineID].updateInfo();
@@ -1098,6 +1079,8 @@ class Charter extends UIState {
 	}
 
 	function _edit_redo(_) {
+		if (strumLines.isDragging) return;
+
 		selection = [];
 		var redo = undos.redo();
 		switch(redo) {
@@ -1106,6 +1089,8 @@ class Charter extends UIState {
 				deleteStrumline(strumLineID, false);
 			case CCreateStrumLine(strumLineID, strumLine):
 				createStrumline(strumLineID, strumLine, false);
+			case COrderStrumLine(strumLine, oldID, newID):
+				strumLines.orderStrumline(strumLine, newID);
 			case CEditStrumLine(strumLineID, oldStrumLine, newStrumLine):
 				strumLines.members[strumLineID].strumLine = newStrumLine;
 				strumLines.members[strumLineID].updateInfo();
@@ -1236,12 +1221,7 @@ class Charter extends UIState {
 					var n:CharterNote = cast(s, CharterNote);
 					var old:Float = n.susLength;
 					n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0));
-
-					{
-						before: old,
-						after: n.susLength,
-						note: n
-					};
+					{before: old, after: n.susLength, note: n};
 				}
 			}
 		]));
@@ -1256,6 +1236,16 @@ class Charter extends UIState {
 		FlxG.switchState(new PlayState());
 	}
 
+	public inline function buildNote(note:CharterNote):ChartNote {
+		var time = Conductor.getTimeForStep(note.step);
+		return {
+			type: note.type,
+			time: time,
+			sLen: Conductor.getTimeForStep(note.step + note.susLength) - time,
+			id: note.id
+		};
+	}
+
 	public function buildChart() {
 		PlayState.SONG.strumLines = [];
 		for(s in strumLines) {
@@ -1263,16 +1253,8 @@ class Charter extends UIState {
 			PlayState.SONG.strumLines.push(s.strumLine);
 		}
 		for(n in notesGroup.members) {
-			var strLineID = Std.int(n.id / 4);
-			if (PlayState.SONG.strumLines[strLineID] != null) {
-				var time = Conductor.getTimeForStep(n.step);
-				PlayState.SONG.strumLines[strLineID].notes.push({
-					type: n.type,
-					time: time,
-					sLen: Conductor.getTimeForStep(n.step + n.susLength) - time,
-					id: n.id % 4
-				});
-			}
+			if (PlayState.SONG.strumLines[n.strumLineID] != null) 
+				PlayState.SONG.strumLines[n.strumLineID].notes.push(buildNote(n));
 		}
 		buildEvents();
 	}
@@ -1297,23 +1279,24 @@ class Charter extends UIState {
 	}
 
 	public inline function hitsoundsEnabled(id:Int)
-		return strumLines.members[Std.int(id / 4)] != null && strumLines.members[Std.int(id / 4)].hitsounds;
+		return strumLines.members[id] != null && strumLines.members[id].hitsounds;
 }
 
 enum CharterChange {
 	CCreateStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
+	CEditStrumLine(strumLineID:Int, oldStrumLine:ChartStrumLine, newStrumLine:ChartStrumLine);
+	COrderStrumLine(strumLine:CharterStrumline, oldID:Int, newID:Int);
 	CDeleteStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
 	CCreateSelection(selection:Selection);
 	CDeleteSelection(selection:Selection);
 	CSelectionDrag(selection:Selection, change:FlxPoint);
-	CEditStrumLine(strumLineID:Int, oldStrumLine:ChartStrumLine, newStrumLine:ChartStrumLine);
 	CEditSustains(notes:Array<NoteSustainChange>);
 	CEditEvent(event:CharterEvent, oldEvents:Array<ChartEvent>, newEvents:Array<ChartEvent>);
 	CEditChartData(oldData:{stage:String, speed:Float}, newData:{stage:String, speed:Float});
 }
 
 enum CharterCopyboardObject {
-	CNote(step:Float, id:Int, susLength:Float, type:Int);
+	CNote(step:Float, id:Int, strumLineID:Int, susLength:Float, type:Int);
 	CEvent(step:Float, events:Array<ChartEvent>);
 }
 
