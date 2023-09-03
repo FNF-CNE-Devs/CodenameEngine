@@ -786,8 +786,6 @@ class Charter extends UIState {
 		}));
 	}
 
-	public function orderStrumline() {}
-
 	public inline function deleteStrumlineFromData(strL:ChartStrumLine)
 		deleteStrumline(getStrumlineID(strL));
 
@@ -1035,8 +1033,10 @@ class Charter extends UIState {
 				createStrumline(strumLineID, strumLine, false);
 			case CCreateStrumLine(strumLineID, strumLine):
 				deleteStrumline(strumLineID, false);
-			case COrderStrumLine(strumLine, oldID, newID):
+			case COrderStrumLine(strumLineID, oldID, newID):
+				var strumLine:CharterStrumline = strumLines.members[strumLineID];
 				strumLines.orderStrumline(strumLine, oldID);
+				undos.redoList[0] = COrderStrumLine(strumLines.members.indexOf(strumLine), oldID, newID);
 			case CEditStrumLine(strumLineID, oldStrumLine, newStrumLine):
 				strumLines.members[strumLineID].strumLine = oldStrumLine;
 				strumLines.members[strumLineID].updateInfo();
@@ -1073,8 +1073,10 @@ class Charter extends UIState {
 				deleteStrumline(strumLineID, false);
 			case CCreateStrumLine(strumLineID, strumLine):
 				createStrumline(strumLineID, strumLine, false);
-			case COrderStrumLine(strumLine, oldID, newID):
+			case COrderStrumLine(strumLineID, oldID, newID):
+				var strumLine:CharterStrumline = strumLines.members[strumLineID];
 				strumLines.orderStrumline(strumLine, newID);
+				undos.undoList[0] = COrderStrumLine(strumLines.members.indexOf(strumLine), oldID, newID);
 			case CEditStrumLine(strumLineID, oldStrumLine, newStrumLine):
 				strumLines.members[strumLineID].strumLine = newStrumLine;
 				strumLines.members[strumLineID].updateInfo();
@@ -1269,7 +1271,7 @@ class Charter extends UIState {
 enum CharterChange {
 	CCreateStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
 	CEditStrumLine(strumLineID:Int, oldStrumLine:ChartStrumLine, newStrumLine:ChartStrumLine);
-	COrderStrumLine(strumLine:CharterStrumline, oldID:Int, newID:Int);
+	COrderStrumLine(strumLineID:Int, oldID:Int, newID:Int);
 	CDeleteStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
 	CCreateSelection(selection:Selection);
 	CDeleteSelection(selection:Selection);

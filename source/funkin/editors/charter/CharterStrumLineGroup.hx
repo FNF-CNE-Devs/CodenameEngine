@@ -17,6 +17,7 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 	public override function update(elapsed:Float) {
 		var mousePos = FlxG.mouse.getWorldPosition(cameras[0], FlxPoint.get());
 		for (strumLine in members) {
+			if (strumLine == null) continue;
 			strumLine.draggable = draggable;
 			if (draggable && UIState.state.isOverlapping(strumLine.draggingSprite, @:privateAccess strumLine.draggingSprite.__rect) && FlxG.mouse.justPressed) {
 				draggingObj = strumLine;
@@ -34,7 +35,7 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 		}
 
 		for (i=>strum in members)
-			if (!strum.dragging) strum.x = CoolUtil.fpsLerp(strum.x, 160 * i, 0.225);
+			if (strum != null && !strum.dragging) strum.x = CoolUtil.fpsLerp(strum.x, 160 * i, 0.225);
 
 		if (Charter.instance.eventsBackdrop != null)
 			Charter.instance.eventsBackdrop.x = members[0].button.x - Charter.instance.eventsBackdrop.width;
@@ -67,8 +68,7 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 		if (addToUndo) {
 			var oldID = __pastStrumlines.indexOf(draggingObj);
 			var newID = members.indexOf(draggingObj);
-			if (newID != oldID)
-				Charter.instance.undos.addToUndo(COrderStrumLine(draggingObj, oldID, newID));
+			if (newID != oldID) Charter.instance.undos.addToUndo(COrderStrumLine(newID, oldID, newID));
 		}
 
 		draggingObj = null;
