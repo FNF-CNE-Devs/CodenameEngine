@@ -555,7 +555,7 @@ class Charter extends UIState {
 				if (FlxG.mouse.pressed) {
 					selection.loop(function (n:CharterNote) {
 						n.snappedToStrumline = false;
-						n.setPosition(n.id * 40 + (mousePos.x - dragStartPos.x), n.step * 40 + (mousePos.y - dragStartPos.y));
+						n.setPosition(n.fullID * 40 + (mousePos.x - dragStartPos.x), n.step * 40 + (mousePos.y - dragStartPos.y));
 						n.cursor = HAND;
 					}, function (e:CharterEvent) {
 						e.y =  e.step * 40 + (mousePos.y - dragStartPos.y) - 17;
