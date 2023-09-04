@@ -464,10 +464,11 @@ class Charter extends UIState {
 		refreshBPMSensitive();
 	}
 
+	public var __endStep:Float = 0;
 	public function refreshBPMSensitive() {
 		// refreshes everything dependant on BPM, and BPM changes
 		var length = FlxG.sound.music.getDefault(vocals).length;
-		scrollBar.length = Conductor.getStepForTime(length);
+		scrollBar.length = __endStep = Conductor.getStepForTime(length);
 
 		gridBackdropGroup.bottomLimitY = Conductor.getStepForTime(length) * 40;
 		eventsBackdrop.bottomSeparator.y = gridBackdropGroup.bottomLimitY-2;
@@ -558,6 +559,7 @@ class Charter extends UIState {
 					selection.loop(function (n:CharterNote) {
 						n.snappedToStrumline = false;
 						n.setPosition(n.fullID * 40 + (mousePos.x - dragStartPos.x), n.step * 40 + (mousePos.y - dragStartPos.y));
+						n.y = FlxMath.bound(n.y, 0, (__endStep*40) - n.height);
 						n.cursor = HAND;
 					}, function (e:CharterEvent) {
 						e.y =  e.step * 40 + (mousePos.y - dragStartPos.y) - 17;
@@ -611,9 +613,9 @@ class Charter extends UIState {
 							for (n in selection) n.selected = false;
 							selection = []; // clear selection
 						} else {
-							if (mouseOnGrid) {
+							if (mouseOnGrid && mousePos.y > 0 && mousePos.y < (__endStep)*40) {
 								var note = new CharterNote();
-								note.updatePos(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), id % 4, 0, 0, strumLines.members[Std.int(id/4)]);
+								note.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), 0, __endStep-1), id % 4, 0, 0, strumLines.members[Std.int(id/4)]);
 								notesGroup.add(note);
 								selection = [note];
 								undos.addToUndo(CCreateSelection([note]));
