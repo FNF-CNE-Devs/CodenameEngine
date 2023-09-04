@@ -4,7 +4,7 @@ import funkin.editors.charter.Charter.ICharterSelectable;
 import flixel.math.FlxPoint;
 import funkin.game.Character;
 import funkin.game.HealthIcon;
-import funkin.editors.charter.CharterBackdrop.EventBackdrop;
+import funkin.editors.charter.CharterBackdropGroup.EventBackdrop;
 import funkin.backend.chart.ChartData.ChartEvent;
 
 class CharterEvent extends UISliceSprite implements ICharterSelectable {

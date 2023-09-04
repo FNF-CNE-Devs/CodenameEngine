@@ -8,7 +8,6 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	var i:Int = 0;
 	var max:Float = 0;
 	var __currentlyLooping:Bool = false;
-	var __autoDraw:Bool = false;
 	var __lastSort:Int = 0;
 
 	public override function forEach(noteFunc:CharterNote->Void, recursive:Bool = false) {
@@ -21,7 +20,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 
 		var curStep = Conductor.curStepFloat;
 		if (!FlxG.sound.music.playing)
-			curStep = Charter.instance.gridBackdrop.conductorFollowerSpr.y / 40;
+			curStep = Charter.instance.gridBackdropGroup.conductorSprY / 40;
 
 		var begin = SortedArrayUtil.binarySearch(members, curStep - max, getVarForEachAdd);
 		var end = SortedArrayUtil.binarySearch(members, curStep + max, getVarForEachRemove);
@@ -53,19 +52,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	private static function getVarForEachRemove(n:CharterNote)
 		return n.step - n.susLength;
 
-	public override function draw() {
-		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
-		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
-
-		if (__autoDraw) {
-			forEach((n) -> {
-				if(n.exists && n.visible)
-					n.draw();
-			});
-		}
-
-		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
-	}
+	public override function draw() {}
 
 	public override function update(elapsed:Float) {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;

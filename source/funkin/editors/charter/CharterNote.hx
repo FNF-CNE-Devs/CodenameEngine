@@ -64,7 +64,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	public function get_fullID():Int
 		return (strumLineID * 4) + id;
 
-	public function updatePos(step:Float, id:Int, susLength:Float = 0, type:Int = 0, ?strumLine:CharterStrumline) {
+	public function updatePos(step:Float, id:Int, susLength:Float = 0, ?type:Int = 0, ?strumLine:CharterStrumline) {
 		this.step = step;
 		this.id = id;
 		this.susLength = susLength;
@@ -128,12 +128,12 @@ class CharterNote extends UISprite implements ICharterSelectable {
 			sustainSpr.follow(this, 15, 20);
 
 		if (__passed != (__passed = step < Conductor.curStepFloat)) {
-			alpha = (__passed ? 0.6 : 1); 
 			if (__passed && FlxG.sound.music.playing && Charter.instance.hitsoundsEnabled(strumLineID))
 				Charter.instance.hitsound.replay();
 		}
-		if(sustainSpr.exists)
-			sustainSpr.alpha = alpha;
+
+		alpha = strumLine != null && !strumLine.strumLine.visible ? (__passed ? 0.2 : 0.4) : (__passed ? 0.6 : 1); 
+		if(sustainSpr.exists) sustainSpr.alpha = alpha;
 
 		colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;
 		colorTransform.redOffset = colorTransform.greenOffset = selected ? 96 : 0;
@@ -148,7 +148,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		var maxX = Std.int(Math.ceil((selectionBox.x + selectionBox.bWidth) / 40));
 		var maxY = ((selectionBox.y + selectionBox.bHeight) / 40);
 
-		return this.id >= minX && this.id < maxX && this.step >= minY && this.step < maxY;
+		return this.fullID >= minX && this.fullID < maxX && this.step >= minY && this.step < maxY;
 	}
 
 	public function handleDrag(change:FlxPoint) {

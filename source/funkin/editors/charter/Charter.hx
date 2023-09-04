@@ -1,14 +1,14 @@
 package funkin.editors.charter;
 
 import funkin.editors.charter.CharterStrumline;
-import funkin.editors.charter.CharterBackdrop.EventBackdrop;
+import funkin.editors.charter.CharterBackdropGroup.EventBackdrop;
 import funkin.backend.system.framerate.Framerate;
 import haxe.Json;
 import flixel.input.keyboard.FlxKey;
 import flixel.sound.FlxSound;
 import flixel.util.FlxSort;
 import flixel.math.FlxPoint;
-import funkin.editors.charter.CharterBackdrop.CharterBackdropDummy;
+import funkin.editors.charter.CharterBackdropGroup.CharterBackdropDummy;
 import funkin.backend.system.Conductor;
 import funkin.backend.chart.*;
 import funkin.backend.chart.ChartData;
@@ -47,7 +47,7 @@ class Charter extends UIState {
 	public var songPosInfo:UIText;
 
 	public var topMenuSpr:UITopMenu;
-	public var gridBackdrop:CharterBackdrop;
+	public var gridBackdropGroup:CharterBackdropGroup;
 	public var eventsBackdrop:EventBackdrop;
 	public var addEventSpr:CharterEventAdd;
 	public var gridBackdropDummy:CharterBackdropDummy;
@@ -341,21 +341,21 @@ class Charter extends UIState {
 		charterBG.scrollFactor.set();
 		add(charterBG);
 
-		gridBackdrop = new CharterBackdrop();
-		gridBackdrop.notesGroup = this.notesGroup;
+		gridBackdropGroup = new CharterBackdropGroup(strumLines);
+		gridBackdropGroup.notesGroup = this.notesGroup;
 
 		eventsBackdrop = new EventBackdrop();
 		eventsBackdrop.x = -eventsBackdrop.width;
 		eventsBackdrop.cameras = [charterCamera];
 		eventsGroup.eventsBackdrop = eventsBackdrop;
 
-		add(gridBackdropDummy = new CharterBackdropDummy(gridBackdrop));
+		add(gridBackdropDummy = new CharterBackdropDummy(gridBackdropGroup));
 		selectionBox = new UISliceSprite(0, 0, 2, 2, 'editors/ui/selection');
 		selectionBox.visible = false;
 		selectionBox.scrollFactor.set(1, 1);
 		selectionBox.incorporeal = true;
 
-		selectionBox.cameras = notesGroup.cameras = gridBackdrop.cameras = [charterCamera];
+		selectionBox.cameras = notesGroup.cameras = gridBackdropGroup.cameras = [charterCamera];
 
 		topMenuSpr = new UITopMenu(topMenu);
 		topMenuSpr.cameras = uiGroup.cameras = [uiCamera];
@@ -394,7 +394,7 @@ class Charter extends UIState {
 		addEventSpr.cameras = [charterCamera];
 
 		// adds grid and notes so that they're ALWAYS behind the UI
-		add(gridBackdrop);
+		add(gridBackdropGroup);
 		add(eventsBackdrop);
 		add(addEventSpr);
 		add(eventsGroup);
@@ -440,6 +440,8 @@ class Charter extends UIState {
 		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
 		vocals.group = FlxG.sound.defaultMusicGroup;
 
+		gridBackdropGroup.createGrids(PlayState.SONG.strumLines.length);
+
 		for(strL in PlayState.SONG.strumLines)
 			createStrumline(strumLines.members.length, strL, false);
 
@@ -467,8 +469,8 @@ class Charter extends UIState {
 		var length = FlxG.sound.music.getDefault(vocals).length;
 		scrollBar.length = Conductor.getStepForTime(length);
 
-		gridBackdrop.bottomLimit.y = Conductor.getStepForTime(length) * 40;
-		eventsBackdrop.bottomSeparator.y = gridBackdrop.bottomSeparator.y = gridBackdrop.bottomLimit.y-2;
+		gridBackdropGroup.bottomLimitY = Conductor.getStepForTime(length) * 40;
+		eventsBackdrop.bottomSeparator.y = gridBackdropGroup.bottomLimitY-2;
 	}
 
 	public override function beatHit(curBeat:Int) {
@@ -602,7 +604,7 @@ class Charter extends UIState {
 						gridActionType = BOX;
 
 					var id = Math.floor(mousePos.x / 40);
-					var mouseOnGrid = id >= 0 && id < 4 * gridBackdrop.strumlinesAmount && mousePos.y >= 0;
+					var mouseOnGrid = id >= 0 && id < 4 * gridBackdropGroup.strumlinesAmount && mousePos.y >= 0;
 	
 					if (FlxG.mouse.justReleased) {
 						if (selection.length > 1) {
@@ -823,7 +825,7 @@ class Charter extends UIState {
 		scrollBar.size = (FlxG.height / 40 / charterCamera.zoom);
 		scrollBar.start = Conductor.curStepFloat - (scrollBar.size / 2);
 
-		if (gridBackdrop.strumlinesAmount != strumLines.members.length)
+		if (gridBackdropGroup.strumlinesAmount != strumLines.members.length)
 			updateDisplaySprites();
 
 		// TODO: canTypeText in case an ui input element is focused
@@ -861,13 +863,13 @@ class Charter extends UIState {
 		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}';
 
 		if (FlxG.sound.music.playing) {
-			gridBackdrop.conductorFollowerSpr.y = curStepFloat * 40;
+			gridBackdropGroup.conductorSprY = curStepFloat * 40;
 		} else {
-			gridBackdrop.conductorFollowerSpr.y = lerp(gridBackdrop.conductorFollowerSpr.y, curStepFloat * 40, 1/3);
+			gridBackdropGroup.conductorSprY = lerp(gridBackdropGroup.conductorSprY, curStepFloat * 40, 1/3);
 		}
 		charterCamera.scroll.set(
-			(((gridBackdrop.conductorFollowerSpr.scale.x * gridBackdrop.strumlinesAmount) - FlxG.width) / 2),
-			gridBackdrop.conductorFollowerSpr.y - (FlxG.height * 0.5)
+			((((40*4) * gridBackdropGroup.strumlinesAmount) - FlxG.width) / 2),
+			gridBackdropGroup.conductorSprY - (FlxG.height * 0.5)
 		);
 
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125)))
@@ -880,7 +882,7 @@ class Charter extends UIState {
 	public static var startHere:Bool = false;
 
 	function updateDisplaySprites() {
-		gridBackdrop.strumlinesAmount = strumLines.members.length;
+		gridBackdropGroup.strumlinesAmount = strumLines.members.length;
 
 		charterBG.scale.set(1 / charterCamera.zoom, 1 / charterCamera.zoom);
 
@@ -1173,11 +1175,11 @@ class Charter extends UIState {
 	}
 	function _view_showeventSecSeparator(t) {
 		t.icon = (Options.charterShowSections = !Options.charterShowSections) ? 1 : 0;
-		eventsBackdrop.eventSecSeparator.visible = gridBackdrop.sectionSeparator.visible = Options.charterShowSections;
+		eventsBackdrop.eventSecSeparator.visible = gridBackdropGroup.sectionsVisible = Options.charterShowSections;
 	}
 	function _view_showeventBeatSeparator(t) {
 		t.icon = (Options.charterShowBeats = !Options.charterShowBeats) ? 1 : 0;
-		eventsBackdrop.eventBeatSeparator.visible = gridBackdrop.beatSeparator.visible = Options.charterShowBeats;
+		eventsBackdrop.eventBeatSeparator.visible = gridBackdropGroup.beatsVisible = Options.charterShowBeats;
 	}
 
 	inline function _note_addsustain(t)
