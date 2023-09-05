@@ -47,7 +47,7 @@ class Charter extends UIState {
 	public var songPosInfo:UIText;
 
 	public var topMenuSpr:UITopMenu;
-	public var gridBackdropGroup:CharterBackdropGroup;
+	public var gridBackdrops:CharterBackdropGroup;
 	public var eventsBackdrop:EventBackdrop;
 	public var addEventSpr:CharterEventAdd;
 	public var gridBackdropDummy:CharterBackdropDummy;
@@ -341,21 +341,21 @@ class Charter extends UIState {
 		charterBG.scrollFactor.set();
 		add(charterBG);
 
-		gridBackdropGroup = new CharterBackdropGroup(strumLines);
-		gridBackdropGroup.notesGroup = this.notesGroup;
+		gridBackdrops = new CharterBackdropGroup(strumLines);
+		gridBackdrops.notesGroup = this.notesGroup;
 
 		eventsBackdrop = new EventBackdrop();
 		eventsBackdrop.x = -eventsBackdrop.width;
 		eventsBackdrop.cameras = [charterCamera];
 		eventsGroup.eventsBackdrop = eventsBackdrop;
 
-		add(gridBackdropDummy = new CharterBackdropDummy(gridBackdropGroup));
+		add(gridBackdropDummy = new CharterBackdropDummy(gridBackdrops));
 		selectionBox = new UISliceSprite(0, 0, 2, 2, 'editors/ui/selection');
 		selectionBox.visible = false;
 		selectionBox.scrollFactor.set(1, 1);
 		selectionBox.incorporeal = true;
 
-		selectionBox.cameras = notesGroup.cameras = gridBackdropGroup.cameras = [charterCamera];
+		selectionBox.cameras = notesGroup.cameras = gridBackdrops.cameras = [charterCamera];
 
 		topMenuSpr = new UITopMenu(topMenu);
 		topMenuSpr.cameras = uiGroup.cameras = [uiCamera];
@@ -394,7 +394,7 @@ class Charter extends UIState {
 		addEventSpr.cameras = [charterCamera];
 
 		// adds grid and notes so that they're ALWAYS behind the UI
-		add(gridBackdropGroup);
+		add(gridBackdrops);
 		add(eventsBackdrop);
 		add(addEventSpr);
 		add(eventsGroup);
@@ -440,7 +440,7 @@ class Charter extends UIState {
 		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
 		vocals.group = FlxG.sound.defaultMusicGroup;
 
-		gridBackdropGroup.createGrids(PlayState.SONG.strumLines.length);
+		gridBackdrops.createGrids(PlayState.SONG.strumLines.length);
 
 		for(strL in PlayState.SONG.strumLines)
 			createStrumline(strumLines.members.length, strL, false);
@@ -470,8 +470,8 @@ class Charter extends UIState {
 		var length = FlxG.sound.music.getDefault(vocals).length;
 		scrollBar.length = __endStep = Conductor.getStepForTime(length);
 
-		gridBackdropGroup.bottomLimitY = Conductor.getStepForTime(length) * 40;
-		eventsBackdrop.bottomSeparator.y = gridBackdropGroup.bottomLimitY-2;
+		gridBackdrops.bottomLimitY = Conductor.getStepForTime(length) * 40;
+		eventsBackdrop.bottomSeparator.y = gridBackdrops.bottomLimitY-2;
 	}
 
 	public override function beatHit(curBeat:Int) {
@@ -556,6 +556,7 @@ class Charter extends UIState {
 					gridActionType = NONE;
 			case DRAG:
 				if (FlxG.mouse.pressed) {
+					gridBackdrops.draggingObj = null;
 					selection.loop(function (n:CharterNote) {
 						n.snappedToStrumline = false;
 						n.setPosition(n.fullID * 40 + (mousePos.x - dragStartPos.x), n.step * 40 + (mousePos.y - dragStartPos.y));
@@ -606,7 +607,7 @@ class Charter extends UIState {
 						gridActionType = BOX;
 
 					var id = Math.floor(mousePos.x / 40);
-					var mouseOnGrid = id >= 0 && id < 4 * gridBackdropGroup.strumlinesAmount && mousePos.y >= 0;
+					var mouseOnGrid = id >= 0 && id < 4 * gridBackdrops.strumlinesAmount && mousePos.y >= 0;
 	
 					if (FlxG.mouse.justReleased) {
 						if (selection.length > 1) {
@@ -739,6 +740,7 @@ class Charter extends UIState {
 	public function createStrumline(strumLineID:Int, strL:ChartStrumLine, addToUndo:Bool = true) {
 		var cStr = new CharterStrumline(strL);
 		strumLines.insert(strumLineID, cStr);
+		strumLines.snapStrums();
 
 		for(note in strL.notes) {
 			var n = new CharterNote();
@@ -767,6 +769,7 @@ class Charter extends UIState {
 		var strL = strumLines.members[strumLineID].strumLine;
 		strumLines.members[strumLineID].destroy();
 		strumLines.members.remove(strumLines.members[strumLineID]);
+		strumLines.snapStrums();
 
 		if (addToUndo) {
 			var newStrL = Reflect.copy(strL);
@@ -827,7 +830,7 @@ class Charter extends UIState {
 		scrollBar.size = (FlxG.height / 40 / charterCamera.zoom);
 		scrollBar.start = Conductor.curStepFloat - (scrollBar.size / 2);
 
-		if (gridBackdropGroup.strumlinesAmount != strumLines.members.length)
+		if (gridBackdrops.strumlinesAmount != strumLines.members.length)
 			updateDisplaySprites();
 
 		// TODO: canTypeText in case an ui input element is focused
@@ -865,13 +868,13 @@ class Charter extends UIState {
 		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}';
 
 		if (FlxG.sound.music.playing) {
-			gridBackdropGroup.conductorSprY = curStepFloat * 40;
+			gridBackdrops.conductorSprY = curStepFloat * 40;
 		} else {
-			gridBackdropGroup.conductorSprY = lerp(gridBackdropGroup.conductorSprY, curStepFloat * 40, 1/3);
+			gridBackdrops.conductorSprY = lerp(gridBackdrops.conductorSprY, curStepFloat * 40, 1/3);
 		}
 		charterCamera.scroll.set(
-			((((40*4) * gridBackdropGroup.strumlinesAmount) - FlxG.width) / 2),
-			gridBackdropGroup.conductorSprY - (FlxG.height * 0.5)
+			((((40*4) * gridBackdrops.strumlinesAmount) - FlxG.width) / 2),
+			gridBackdrops.conductorSprY - (FlxG.height * 0.5)
 		);
 
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125)))
@@ -884,7 +887,7 @@ class Charter extends UIState {
 	public static var startHere:Bool = false;
 
 	function updateDisplaySprites() {
-		gridBackdropGroup.strumlinesAmount = strumLines.members.length;
+		gridBackdrops.strumlinesAmount = strumLines.members.length;
 
 		charterBG.scale.set(1 / charterCamera.zoom, 1 / charterCamera.zoom);
 
@@ -893,16 +896,10 @@ class Charter extends UIState {
 		strumlineInfoBG.screenCenter(X);
 		strumlineInfoBG.y = -(((FlxG.height - (2 * topMenuSpr.bHeight)) / charterCamera.zoom) - FlxG.height) / 2;
 
-		for(id=>str in strumLines.members) {
-			if (str == null) continue;
-			str.x = id * 40 * 4;
-			str.y = strumlineInfoBG.y;
-		}
+		for(id=>str in strumLines.members)
+			if (str != null) str.y = strumlineInfoBG.y;
 
-		strumlineAddButton.x = strumLines.length * (40 * 4);
 		strumlineAddButton.y = strumlineInfoBG.y;
-
-		strumlineLockButton.x = -1 * (40 * 4);
 		strumlineLockButton.y = strumlineInfoBG.y;
 	}
 
@@ -1177,11 +1174,11 @@ class Charter extends UIState {
 	}
 	function _view_showeventSecSeparator(t) {
 		t.icon = (Options.charterShowSections = !Options.charterShowSections) ? 1 : 0;
-		eventsBackdrop.eventSecSeparator.visible = gridBackdropGroup.sectionsVisible = Options.charterShowSections;
+		eventsBackdrop.eventSecSeparator.visible = gridBackdrops.sectionsVisible = Options.charterShowSections;
 	}
 	function _view_showeventBeatSeparator(t) {
 		t.icon = (Options.charterShowBeats = !Options.charterShowBeats) ? 1 : 0;
-		eventsBackdrop.eventBeatSeparator.visible = gridBackdropGroup.beatsVisible = Options.charterShowBeats;
+		eventsBackdrop.eventBeatSeparator.visible = gridBackdrops.beatsVisible = Options.charterShowBeats;
 	}
 
 	inline function _note_addsustain(t)

@@ -51,6 +51,11 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 		super.update(elapsed);
 	}
 
+	public function snapStrums() {
+		for (i=>strum in members)
+			if (strum != null && !strum.dragging) strum.x = 160 * i;
+	}
+
 	public function orderStrumline(strumLine:CharterStrumline, newID:Int) {
 		__pastStrumlines = members.copy();
 

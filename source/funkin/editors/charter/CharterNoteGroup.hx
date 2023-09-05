@@ -20,7 +20,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 
 		var curStep = Conductor.curStepFloat;
 		if (!FlxG.sound.music.playing)
-			curStep = Charter.instance.gridBackdropGroup.conductorSprY / 40;
+			curStep = Charter.instance.gridBackdrops.conductorSprY / 40;
 
 		var begin = SortedArrayUtil.binarySearch(members, curStep - max, getVarForEachAdd);
 		var end = SortedArrayUtil.binarySearch(members, curStep + max, getVarForEachRemove);
