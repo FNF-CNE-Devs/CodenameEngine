@@ -113,7 +113,7 @@
 
 	<!-- Fixes thing with macros -->
 	<define name="HL" if="hl"/>
-	<define name="SYS" if="desktop"/>
+	<define name="SYS" if="desktop || hl"/>
 
 	<!-- Comment this out to disable Discord RPC !-->
 	<define name="DISCORD_RPC" unless="web || hl || neko"/>

@@ -158,7 +158,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 
 class CharacterButton extends UIButton {
 	public var charIcon:HealthIcon;
-	public var textBox:UITextBox;
+	public var textBox:UIAutoCompleteTextBox;
 	public var deleteButton:UIButton;
 	public var deleteIcon:FlxSprite;
 
@@ -174,7 +174,8 @@ class CharacterButton extends UIButton {
 
 		members.push(charIcon);
 
-		members.push(textBox = new UITextBox(charIcon.x + charIcon.width + 16, bHeight/2 - (32/2), char, 115));
+		members.push(textBox = new UIAutoCompleteTextBox(charIcon.x + charIcon.width + 16, bHeight/2 - (32/2), char, 115));
+		textBox.suggestItems = Character.getList(false);
 		textBox.antialiasing = true;
 		textBox.onChange = function(char:String) {
 			char = Character.getIconFromCharName(char);
