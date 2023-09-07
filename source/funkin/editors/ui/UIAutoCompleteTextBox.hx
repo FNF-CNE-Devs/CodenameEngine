@@ -66,6 +66,7 @@ class UIAutoCompleteTextBox extends UITextBox {
 				//for(i in suggestItems) if(!_suggestions.contains(i) && i.contains(text)) _suggestions.push(i);
 				_suggestions.remove(text);
 			}
+			_suggestions.sort(function(a, b) return a.length - b.length);
 		}
 
 		if(suggestionText.visible = (_suggestions.length != 0)) {
