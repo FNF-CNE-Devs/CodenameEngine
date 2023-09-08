@@ -118,6 +118,8 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.BACK)
 				FlxG.switchState(new TitleState());
+				trace("Returning to title.");
+
 
 			#if MOD_SUPPORT
 			// make it customisable
@@ -179,6 +181,7 @@ class MainMenuState extends MusicBeatState
 
 				case 'options':
 					FlxG.switchState(new OptionsMenu());
+					trace("Options Menu Selected");
 			}
 		});
 	}
