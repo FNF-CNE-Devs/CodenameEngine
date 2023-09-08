@@ -5,10 +5,10 @@ import funkin.backend.system.Conductor;
 class GameplayOptions extends OptionsScreen {
 	var __metronome = FlxG.sound.load(Paths.sound('editors/charter/metronome'));
 	public override function new() {
-		super("Gameplay", 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...');
+		super("Gameplay", 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtiness...');
 		add(new Checkbox(
 			"Downscroll",
-			"If checked, notes will go from up to down instead of down to up, like if they were falling",
+			"If checked, notes will go from up to down instead of down to up, as if they were falling",
 			"downscroll"));
 		add(new Checkbox(
 			"Ghost Tapping",
@@ -23,12 +23,12 @@ class GameplayOptions extends OptionsScreen {
 			"songOffset", // save name or smth
 			__changeOffset)); // callback
 		add(new Checkbox(
-			"Naughtyness",
+			"Naughtiness",
 			"If unchecked, will censor Week 7 cutscenes",
-			"naughtyness"));
+			"naughtyness")); //I didn't feel like changing this line to be spelled right as naughtiness (with an I) as I think it would break stuff.
 		add(new Checkbox(
 			"Camera Zoom on Beat",
-			"If unchecked, will disable camera zooming every 4 beats",
+			"If unchecked, will disable the camera from zooming every four beats",
 			"camZoomOnBeat"));
 	}
 	private function __changeOffset(offset) Conductor.songOffset = offset; 
