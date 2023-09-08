@@ -14,13 +14,13 @@ class OptionsMenu extends TreeMenu {
 	public static var mainOptions:Array<OptionCategory> = [
 		{
 			name: 'Controls',
-			desc: 'Change Controls for Player 1 and Player 2!',
+			desc: 'Change the Controls for Player 1 and Player 2!',
 			state: null,
 			substate: funkin.options.keybinds.KeybindsOptions
 		},
 		{
 			name: 'Gameplay >',
-			desc: 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...',
+			desc: 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtiness...',
 			state: GameplayOptions
 		},
 		{
@@ -30,7 +30,7 @@ class OptionsMenu extends TreeMenu {
 		},
 		{
 			name: 'Miscellaneous >',
-			desc: 'Use this menu to reset save data or engine settings.',
+			desc: 'Options that do not fit above. Use this menu to reset save data or engine settings.',
 			state: MiscOptions
 		}
 	];
