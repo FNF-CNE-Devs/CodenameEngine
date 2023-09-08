@@ -1,7 +1,7 @@
 # Codename Engine features
 This markdown file contains every single feature Codename has, separated into multiple categories. List may be incomplete.
 
-_**QOL = Quality of Life**_
+(_**QOL = Quality of Life**_)
 
 <details>
   <summary><h2>Player QOL Features</h2></summary>
@@ -12,11 +12,12 @@ _**QOL = Quality of Life**_
     - Controls rebinds (for P1 and P2)
     - Downscroll
     - Ghost Tapping
+    - Colored HP Bar
 - Opponent & Co-op modes
 - Memory optimisation (most of the game runs < 500mb)
     - Usage of [flxanimate](https://github.com/Dot-Stuff/flxanimate) on big sprites, such as Girlfriend to save memory.
     - You can further optimize it on certain stages by enabling `Low Memory Mode` in `Options > Appearance`.
-- New volume change SFX (no more loud flixel beep, customizable)
+- New volume change SFX (no more loud flixel beep, customizable.)
 - New FPS counter allowing you to see advanced info by pressing F3.
 - Simple but advanced modding system (press TAB on main menu)
 - **Windows only:**
@@ -33,18 +34,24 @@ _**QOL = Quality of Life**_
     <summary><h2>Modding QOL features</h2></summary>
 
 - New assets and scripting management - **Applies both to the `assets` folder and mods.**
-    - Support for `hscript-improved`, a fork made to allow HScript to push modding even further
-        - Allows for imports
-        - Allows for public variables (variables shared between every script in a ScriptPack such as a song scripts)
-        - Allows for static variables (variabels shared between every single script ran in this mod)
+    - Support for `hscript-improved`, a fork made to allow HScript to push modding even further.
+        - Allows for imports.
+        - Allows for public variables (variables shared between every script in a ScriptPack such as a song scripts.)
+        - Allows for static variables (variabels shared between every single script ran in this mod.)
         - Allows you to use for example `boyfriend` instead of `PlayState.boyfriend` or `game.boyfriend`, for smaller and easier to comprehend code.
-        - Allows you to use `@:bypassAccessor`
-        - Allows you to use maps
+        - Allows you to use `@:bypassAccessor`.
+        - Allows you to use maps.
     - Usage of XML files for Characters instead of hardcoding them.
         - Animation names, prefixes, indices, etc... can be set in the XML without an additional line of code.
         - Offsets are automatically fixed. That means changes such as scaling, rotation, and playing as an opponent character wont break them.
-    - Entirely new song structure (`songs/name/`)
-        - Usage of `meta.json`, which allows you to synchronize data between charts and the Freeplay menu.
+    - Entirely new song structure (`songs/name/`).
+        - Usage of meta files in the form of `meta.json`, which allows you to synchronize data between charts and the Freeplay menu.'
+            - Meta files allow you to:
+              - Change the Freeplay background color
+              - Change the character icon used for the song's appearance on the freeplay menu.
+              - The song's BPM.
+              - The display name for the song (incase you want to show a different name than the song's actual name.)
+              - Set difficulties. 
             - Charts can use their own by specifying `meta` in the JSON (Codename charts only)
         - Charts are now located in `songs/name/charts/`, and are named after the difficulty `hard.json` instead of `name-hard.json`
             - Difficulties are auto-detected in case they aren't specified in the `meta.json` file.
@@ -58,10 +65,8 @@ _**QOL = Quality of Life**_
         - Add elements to the stage and
             - Position them
             - Add animations
-            - Change their scale
-            - Change their scrollfactor
-            - Change their zoomfactor
-            - Turn on/off their antialiasing (on by default)
+            - Change their size, scrollfactor, and zoomfactor.
+            - Turn on/off antialiasing for said element (enabled by default)
             - Change additional properties via child nodes.
         - Change boyfriend, girlfriend and dad's info
             - Moving the `<boyfriend />`, `<girlfriend />` and `<dad />` nodes will move them in the layers
@@ -72,5 +77,6 @@ _**QOL = Quality of Life**_
         - Weeks are located in `data/weeks/weeks/`
         - If you need to rearrange the weeks in-game, you can use the `data/weeks/weeks.txt` file.
     - Every single state & substate can be modified via HScript (`data/states/StateName.hx`)
+    - If you want a script to run across the game, put some code in `data/global.hx` and now your code runs globally, wonderful!
 - **Instances launched via `lime test windows` will automatically use assets from source.**
 </details>
