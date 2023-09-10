@@ -65,7 +65,7 @@ class UIAutoCompleteTextBox extends UITextBox {
 				for(i in suggestItems) if(!_suggestions.contains(i) && i.startsWith(text)) _suggestions.push(i);
 
 				// Clean up suggestions
-				for(i in suggestItems) if(i == text) {_suggestions = [];}
+				if(suggestItems.contains(text)) {_suggestions = [];}
 				if (_suggestions.length > 0) _suggestions.sort(function(a, b) return a.length - b.length);
 			}
 		}
