@@ -140,7 +140,6 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 	}
 	// untested, but this should be a fix for if the text wont type
 	public function onTextEdit(text:String, start:Int, end:Int):Void {
-		trace(text, start, end);
 		label.text = label.text.substr(0, position) + text + label.text.substr(position);
 		position += text.length;
 	}

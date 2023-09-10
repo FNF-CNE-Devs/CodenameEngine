@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.game.Stage;
 import funkin.backend.chart.ChartData;
 import flixel.math.FlxPoint;
 import funkin.backend.chart.ChartData.ChartMetaData;
@@ -12,7 +13,7 @@ class ChartDataScreen extends UISubstateWindow {
 	public var closeButton:UIButton;
 
 	public var scrollSpeedStepper:UINumericStepper;
-	public var stageTextBox:UITextBox;
+	public var stageTextBox:UIAutoCompleteTextBox;
 
 	public function new(data:ChartData) {
 		super();
@@ -34,7 +35,11 @@ class ChartDataScreen extends UISubstateWindow {
 		var title:UIText;
 		add(title = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, "Edit Chart Data", 28));
 
-		stageTextBox = new UITextBox(title.x, title.y + title.height + 38, PlayState.SONG.stage, 200);
+		var stageFileList = Stage.getList(true);
+		if (stageFileList.length == 0) stageFileList = Stage.getList(false);
+
+		stageTextBox = new UIAutoCompleteTextBox(title.x, title.y + title.height + 38, PlayState.SONG.stage, 200);
+		stageTextBox.suggestItems = stageFileList;
 		add(stageTextBox);
 		addLabelOn(stageTextBox, "Stage");
 

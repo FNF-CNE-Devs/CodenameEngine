@@ -59,7 +59,9 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		var title:UIText;
 		add(title = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, creatingStrumLine ? "Create New Strumline" : "Edit Strumline Properties", 28));
 
-		var charFileList = Character.getList(false);
+		var charFileList = Character.getList(true);
+		if (charFileList.length == 0) charFileList = Character.getList(false);
+		
 		charactersList = new UIButtonList<CharacterButton>(15, title.y + title.height + 36, 250, 259, "", FlxPoint.get(250, 54), null, 0);
 		charactersList.addButton.callback = () -> charactersList.add(new CharacterButton(0, 0, "New Char", charFileList, charactersList));
 		charactersList.cameraSpacing = 0;
@@ -133,7 +135,6 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		}, 125);
 		add(closeButton);
 		closeButton.color = 0xFFFF0000;
-		closeButton.x -= closeButton.bWidth;
 	}
 
 	function saveStrumline() {
