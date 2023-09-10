@@ -127,7 +127,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		}, 125);
 		add(saveButton);
 
-		closeButton = new UIButton(saveButton.x - 20, saveButton.y, creatingStrumLine ? "Cancel" : "Close", function() {
+		closeButton = new UIButton(saveButton.x - 20 - saveButton.bWidth, saveButton.y, creatingStrumLine ? "Cancel" : "Close", function() {
 			if (creatingStrumLine && onSave != null) onSave(null);
 			close();
 		}, 125);

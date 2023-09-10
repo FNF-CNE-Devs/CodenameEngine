@@ -51,6 +51,9 @@ class CharterStrumline extends UISprite {
 		members.push(button);
 	}
 
+	private var __healthYOffset:Float = 0;
+	private var __draggingYOffset:Float = 0;
+
 	public override function update(elapsed:Float) {
 		if (FlxG.keys.justPressed.K) draggable = !draggable;
 		if (healthIcon != null) {
@@ -58,20 +61,21 @@ class CharterStrumline extends UISprite {
 			healthIcon.scale.set(healthScale, healthScale);
 			healthIcon.updateHitbox();
 
-			healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, FlxMath.lerp(healthIcon.y - y, draggable ? 29 : 7, 1/20));
+			healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, 7 + (__healthYOffset = FlxMath.lerp(__healthYOffset, draggable ? 22 : 0, 1/20)));
 		}
+
+		draggingSprite.selectable = draggable;
+		UIState.state.updateSpriteRect(draggingSprite);
 
 		var dragScale:Float = FlxMath.lerp(draggingSprite.scale.x, draggable ? 1 : 0.8, 1/16);
 		draggingSprite.scale.set(dragScale, dragScale);
 		draggingSprite.updateHitbox();
 
-		draggingSprite.follow(this, (160/2) - (draggingSprite.width/2), FlxMath.lerp(draggingSprite.y - y, draggable ? 9 : 6, 1/12));
-		draggingSprite.alpha = FlxMath.lerp(draggingSprite.alpha, draggable ? 0.4 : 0, 1/12);
+		draggingSprite.follow(this, (160/2) - (draggingSprite.width/2), 6 + (__draggingYOffset = FlxMath.lerp(__draggingYOffset, draggable ? 3 : 0, 1/12)));
+		var fullAlpha:Float = UIState.state.isOverlapping(draggingSprite, @:privateAccess draggingSprite.__rect) ? 0.8 : 0.35;
+		draggingSprite.alpha = FlxMath.lerp(draggingSprite.alpha, draggable ? fullAlpha : 0, 1/12);
 		button.follow(this, 0, 95);
 
-		draggingSprite.selectable = draggable;
-
-		UIState.state.updateSpriteRect(draggingSprite);
 		super.update(elapsed);
 	}
 

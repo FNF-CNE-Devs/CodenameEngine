@@ -62,7 +62,7 @@ class CharterEventScreen extends UISubstateWindow {
 		paramsPanel = new FlxGroup();
 		add(paramsPanel);
 
-		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 10, windowSpr.y + windowSpr.bHeight - 10, "Save & Close", function() {
+		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20, windowSpr.y + windowSpr.bHeight - 16 - 32, "Save & Close", function() {
 			saveCurTab();
 			chartEvent.refreshEventIcons();
 
@@ -88,7 +88,6 @@ class CharterEventScreen extends UISubstateWindow {
 			Charter.instance.updateBPMEvents();
 		});
 		saveButton.x -= saveButton.bWidth;
-		saveButton.y -= saveButton.bHeight;
 		add(saveButton);
 
 		closeButton = new UIButton(saveButton.x - 10, saveButton.y, "Close", ()->close());

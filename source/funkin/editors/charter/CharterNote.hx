@@ -162,7 +162,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 	public override function draw() {
 		if (snappedToStrumline)
-			x = (strumLine != null ? strumLine.button.x : 0) + (id % 4) * 40;
+			x = (strumLine != null ? strumLine.x : 0) + (id % 4) * 40;
 
 		drawMembers();
 		drawSuper();

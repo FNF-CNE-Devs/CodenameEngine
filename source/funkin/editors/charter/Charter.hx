@@ -616,7 +616,7 @@ class Charter extends UIState {
 						} else {
 							if (mouseOnGrid && mousePos.y > 0 && mousePos.y < (__endStep)*40) {
 								var note = new CharterNote();
-								note.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? (mousePos.y / 40) : Math.floor(mousePos.y / 40), 0, __endStep-1), id % 4, 0, 0, strumLines.members[Std.int(id/4)]);
+								note.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : Math.floor(mousePos.y / 40), 0, __endStep-1), id % 4, 0, 0, strumLines.members[Std.int(id/4)]);
 								notesGroup.add(note);
 								selection = [note];
 								undos.addToUndo(CCreateSelection([note]));
