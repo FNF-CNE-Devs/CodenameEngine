@@ -8,6 +8,7 @@ class CharterEventGroup extends FlxTypedGroup<CharterEvent> {
 	var __lastSort:Int = 0;
 
 	public override function update(elapsed:Float) {
+		filterEvents();
 		if (length != __lastSort)
 			sortEvents();
 
@@ -22,10 +23,18 @@ class CharterEventGroup extends FlxTypedGroup<CharterEvent> {
 		super.draw();
 	}
 
-	public function sortEvents() {
+	public inline function sortEvents() {
 		__lastSort = length;
 		this.sort(function(i, e1, e2) {
 			return FlxSort.byValues(FlxSort.ASCENDING, e1.step, e2.step);
 		});
+	}
+
+	public inline function filterEvents() {
+		for (event in members)
+			if (event.events.length == 0) {
+				remove(event, true);
+				event.kill();
+			}
 	}
 }

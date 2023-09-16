@@ -40,7 +40,7 @@ class CharterStrumline extends UISprite {
 		members.push(healthIcon);
 
 		draggingSprite = new UISprite();
-		draggingSprite.loadGraphic(Paths.image("editors/charter/drag-strumline"));
+		draggingSprite.loadGraphic(Paths.image("editors/charter/strumline-drag"));
 		draggingSprite.alpha = 0.4;
 		draggingSprite.y = 9;
 		draggingSprite.antialiasing = true;
@@ -98,7 +98,7 @@ class CharterStrumline extends UISprite {
 class CharterStrumlineButton extends UITopMenuButton {
 	var strLine:CharterStrumline;
 	public function new(parent:CharterStrumline) {
-		super(0, 95, null, "Options", []);
+		super(0, 95, null, "Options ↓", []);
 		strLine = parent;
 		bWidth = 40 * 4;
 		this.label.fieldWidth = bWidth;
