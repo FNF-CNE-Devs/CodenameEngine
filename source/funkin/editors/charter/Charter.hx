@@ -561,6 +561,7 @@ class Charter extends UIState {
 						n.snappedToStrumline = false;
 						n.setPosition(n.fullID * 40 + (mousePos.x - dragStartPos.x), n.step * 40 + (mousePos.y - dragStartPos.y));
 						n.y = FlxMath.bound(n.y, 0, (__endStep*40) - n.height);
+						n.x = FlxMath.bound(n.x, 0, ((strumLines.members.length * 4)-1) * 40);
 						n.cursor = HAND;
 					}, function (e:CharterEvent) {
 						e.y =  e.step * 40 + (mousePos.y - dragStartPos.y) - 17;
@@ -581,14 +582,30 @@ class Charter extends UIState {
 						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / 40);
 					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
 					var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
+					var undoDrags:Array<SelectionDragChange> = [];
 
 					for (s in selection) {
-						if (!s.draggable) continue;
-						s.handleDrag(changePoint);
+						if (s.draggable) {
+							var boundedChange:FlxPoint = changePoint.clone();
+							
+							// Some maths, so cool bro -lunar (i dont know why i quopte my self here)
+							if (s.step + changePoint.x < 0) boundedChange.x += Math.abs(s.step + changePoint.x);
+							if (s.step + changePoint.x > Charter.instance.__endStep-1) boundedChange.x -= (s.step + changePoint.x) - (Charter.instance.__endStep-1);
+
+							if (s is CharterNote) {
+								var note:CharterNote = cast (s, CharterNote);
+								if (note.fullID + changePoint.y < 0) boundedChange.y += Math.abs(note.fullID + changePoint.y);
+								if (note.fullID + changePoint.y > (strumLines.members.length*4)-1) boundedChange.y -= (note.fullID + changePoint.y) - ((strumLines.members.length*4)-1);
+							}
+
+							s.handleDrag(changePoint);
+							undoDrags.push({selectable:s, change: boundedChange});
+						}
+
 						if (s is CharterNote) cast(s, CharterNote).snappedToStrumline = true;
 						if (s is UISprite) cast(s, UISprite).cursor = BUTTON;
 					}
-					undos.addToUndo(CSelectionDrag(selection, changePoint.clone()));
+					if (!(changePoint.x == 0 && changePoint.y == 0)) undos.addToUndo(CSelectionDrag(undoDrags));
 
 					changePoint.put();
 					hoverOffset.put();
@@ -1045,10 +1062,11 @@ class Charter extends UIState {
 				deleteSelection(selection, false);
 			case CDeleteSelection(selection):
 				createSelection(selection, false);
-			case CSelectionDrag(selection, change):
-				for (s in selection)
-					if (s.draggable) s.handleDrag(change * -1);
-				this.selection = selection;
+			case CSelectionDrag(selectionDrags):
+				for (s in selectionDrags)
+					if (s.selectable.draggable) s.selectable.handleDrag(s.change * -1);
+					
+				this.selection = [for (s in selectionDrags) s.selectable];
 			case CEditSustains(changes):
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.before, n.note.type);
@@ -1085,10 +1103,10 @@ class Charter extends UIState {
 				createSelection(selection, false);
 			case CDeleteSelection(selection):
 				deleteSelection(selection, false);
-			case CSelectionDrag(selection, change):
-				for (s in selection)
-					if (s.draggable) s.handleDrag(change);
-				this.selection = selection;
+			case CSelectionDrag(selectionDrags):
+				for (s in selectionDrags)
+					if (s.selectable.draggable) s.selectable.handleDrag(s.change);
+				//this.selection = selection;
 			case CEditSustains(changes):
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.after, n.note.type);
@@ -1276,7 +1294,7 @@ enum CharterChange {
 	CDeleteStrumLine(strumLineID:Int, strumLine:ChartStrumLine);
 	CCreateSelection(selection:Selection);
 	CDeleteSelection(selection:Selection);
-	CSelectionDrag(selection:Selection, change:FlxPoint);
+	CSelectionDrag(selectionDrags:Array<SelectionDragChange>);
 	CEditSustains(notes:Array<NoteSustainChange>);
 	CEditEvent(event:CharterEvent, oldEvents:Array<ChartEvent>, newEvents:Array<ChartEvent>);
 	CEditChartData(oldData:{stage:String, speed:Float}, newData:{stage:String, speed:Float});
@@ -1291,6 +1309,11 @@ typedef NoteSustainChange = {
 	var note:CharterNote;
 	var before:Float;
 	var after:Float;
+}
+
+typedef SelectionDragChange = {
+	var selectable:ICharterSelectable;
+	var change:FlxPoint;
 }
 
 @:forward abstract Selection(Array<ICharterSelectable>) from Array<ICharterSelectable> to Array<ICharterSelectable> {
