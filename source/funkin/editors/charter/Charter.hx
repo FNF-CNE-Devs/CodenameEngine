@@ -565,6 +565,7 @@ class Charter extends UIState {
 						n.cursor = HAND;
 					}, function (e:CharterEvent) {
 						e.y =  e.step * 40 + (mousePos.y - dragStartPos.y) - 17;
+						e.y = FlxMath.bound(e.y, -17, (__endStep*40)-17);
 						e.cursor = HAND;
 					});
 					currentCursor = HAND;
@@ -627,10 +628,9 @@ class Charter extends UIState {
 					var mouseOnGrid = id >= 0 && id < 4 * gridBackdrops.strumlinesAmount && mousePos.y >= 0;
 	
 					if (FlxG.mouse.justReleased) {
-						if (selection.length > 1) {
 							for (n in selection) n.selected = false;
-							selection = []; // clear selection
-						} else {
+							selection = [];
+						
 							if (mouseOnGrid && mousePos.y > 0 && mousePos.y < (__endStep)*40) {
 								var note = new CharterNote();
 								note.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : Math.floor(mousePos.y / 40), 0, __endStep-1), id % 4, 0, 0, strumLines.members[Std.int(id/4)]);
@@ -638,7 +638,6 @@ class Charter extends UIState {
 								selection = [note];
 								undos.addToUndo(CCreateSelection([note]));
 							}
-						}
 					}
 				} else if (gridBackdropDummy.hoveredByChild) {
 					if (FlxG.mouse.pressed && (Math.abs(mousePos.x - dragStartPos.x) > 5 || Math.abs(mousePos.y - dragStartPos.y) > 5)) {
