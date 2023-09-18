@@ -72,10 +72,14 @@ class UIWarningSubstate extends MusicBeatSubstate {
 
 		var xPos = (FlxG.width - (30 + (170 * buttons.length))) / 2;
 		for(k=>b in buttons) {
-			var button = new UIButton(xPos + 20 + (170 * k), spr.y + spr.bHeight - (32 + 16), b.label, function() {
+			var button = new UIButton(xPos + 20 + (170 * k), spr.y + spr.bHeight - (42 + 16), b.label, function() {
 				b.onClick(this);
 				close();
 			}, 160, 30);
+			if (b.color != null) {
+				button.frames = Paths.getFrames("editors/ui/grayscale-button");
+				button.color = b.color;
+			}
 			add(button);
 		}
 
@@ -105,5 +109,6 @@ class UIWarningSubstate extends MusicBeatSubstate {
 
 typedef WarningButton = {
 	var label:String;
+	var ?color:Int;
 	var onClick:UIWarningSubstate->Void;
 }

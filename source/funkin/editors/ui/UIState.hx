@@ -129,7 +129,7 @@ class UIState extends MusicBeatState {
 		super.destroy();
 		__mousePos.put();
 
-		WindowUtils.reset();
+		WindowUtils.resetTitle();
 		SaveWarning.reset();
 
 		FlxG.stage.window.onKeyDown.remove(onKeyDown);

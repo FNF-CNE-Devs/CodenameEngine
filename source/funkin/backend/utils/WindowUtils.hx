@@ -29,7 +29,8 @@ class WindowUtils {
 	public static inline function resetClosing() __triedClosing = false;
 
 	public static inline function init() {
-		reset();
+		resetTitle();
+		resetClosing();
 
 		Lib.application.window.onClose.add(function () {
 			if (preventClosing && !__triedClosing) {
@@ -39,9 +40,8 @@ class WindowUtils {
 			if (onClosing != null) onClosing();
 		});
 	}
-		
 
-	public static inline function reset() {
+	public static inline function resetTitle() {
 		winTitle = Lib.application.meta["name"];
 		prefix = endfix = "";
 		updateTitle();
