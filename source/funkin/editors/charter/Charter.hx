@@ -93,7 +93,8 @@ class Charter extends UIState {
 	public override function create() {
 		super.create();
 
-		WindowTitle.endfix = " (Chart Editor)";
+		WindowUtils.endfix = " (Chart Editor)";
+		SaveWarning.selectionClass = CharterSelection;
 		topMenu = [
 			{
 				label: "File",
@@ -591,7 +592,7 @@ class Charter extends UIState {
 							
 							// Some maths, so cool bro -lunar (i dont know why i quopte my self here)
 							if (s.step + changePoint.x < 0) boundedChange.x += Math.abs(s.step + changePoint.x);
-							if (s.step + changePoint.x > Charter.instance.__endStep-1) boundedChange.x -= (s.step + changePoint.x) - (Charter.instance.__endStep-1);
+							if (s.step + changePoint.x > __endStep-1) boundedChange.x -= (s.step + changePoint.x) - (__endStep-1);
 
 							if (s is CharterNote) {
 								var note:CharterNote = cast (s, CharterNote);
@@ -896,7 +897,8 @@ class Charter extends UIState {
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125)))
 			updateDisplaySprites();
 
-		WindowTitle.prefix = undos.unsaved ? "* " : "";
+		WindowUtils.prefix = undos.unsaved ? "* " : "";
+		SaveWarning.showWarning = undos.unsaved;
 	}
 
 	public static var startTime:Float = 0;
@@ -931,19 +933,8 @@ class Charter extends UIState {
 	// TOP MENU OPTIONS
 	#if REGION
 	function _file_exit(_) {
-		if (undos.unsaved) {
-			FlxG.state.openSubState(new UIWarningSubstate("Unsaved Changes", "Your changes will be lost if you don't save them. (Can't be recovered)\n\n\nWould you like to Cancel?", [
-				{
-					label: "Exit To Menu",
-					onClick: function(_) FlxG.switchState(new CharterSelection())
-				},
-				{
-					label: "Cancel",
-					onClick: function (_) {}
-				}
-			], false));
-		} else
-			FlxG.switchState(new CharterSelection());
+		if (undos.unsaved) SaveWarning.triggerWarning();
+		else FlxG.switchState(new CharterSelection());
 	}
 
 	function _file_save(_) {

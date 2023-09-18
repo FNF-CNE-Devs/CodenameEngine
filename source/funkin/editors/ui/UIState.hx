@@ -127,8 +127,11 @@ class UIState extends MusicBeatState {
 
 	public override function destroy() {
 		super.destroy();
-		WindowTitle.reset();
 		__mousePos.put();
+
+		WindowUtils.reset();
+		SaveWarning.reset();
+
 		FlxG.stage.window.onKeyDown.remove(onKeyDown);
 		FlxG.stage.window.onKeyUp.remove(onKeyUp);
 		FlxG.stage.window.onTextInput.remove(onTextInput);

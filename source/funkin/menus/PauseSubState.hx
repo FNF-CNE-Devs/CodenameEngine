@@ -22,7 +22,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Change Controls', 'Options','Exit to menu'];
+	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Change Controls', 'Change Options', 'Exit to menu', "Exit to charter"];
 	var curSelected:Int = 0;
 
 	var pauseMusic:FlxSound;
@@ -41,6 +41,9 @@ class PauseSubState extends MusicBeatSubstate
 	override function create()
 	{
 		super.create();
+
+		if (menuItems.contains("Exit to charter") && !PlayState.chartingMode) 
+			menuItems.remove("Exit to charter");
 
 		add(parentDisabler = new FunkinParentDisabler());
 
@@ -147,8 +150,10 @@ class PauseSubState extends MusicBeatSubstate
 			case "Change Controls":
 				persistentDraw = false;
 				openSubState(new KeybindsOptions());
-			case "Options":
+			case "Change Options":
 				FlxG.switchState(new OptionsMenu());
+			case "Exit to charter":
+				FlxG.switchState(new funkin.editors.charter.Charter(PlayState.SONG.meta.name, PlayState.difficulty, false));
 			case "Exit to menu":
 				CoolUtil.playMenuSong();
 				FlxG.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
