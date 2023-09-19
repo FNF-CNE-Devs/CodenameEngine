@@ -69,12 +69,13 @@ class BaseGameParser {
 				var gottaHitNote:Bool = daNoteData >= 4 ? !section.mustHitSection : section.mustHitSection;
 
 				if (note.length > 2) {
-					if (note[3] is Int)
+					if (note[3] is Int && data.noteTypes != null)
 						daNoteType = Chart.addNoteType(result, data.noteTypes[Std.int(note[3])-1]);
 					else if (note[3] is String)
 						daNoteType = Chart.addNoteType(result, note[3]);
 				} else {
-					daNoteType = Chart.addNoteType(result, data.noteTypes[daNoteType-1]);
+					if(data.noteTypes != null)
+						daNoteType = Chart.addNoteType(result, data.noteTypes[daNoteType-1]);
 				}
 
 				result.strumLines[gottaHitNote ? 1 : 0].notes.push({
