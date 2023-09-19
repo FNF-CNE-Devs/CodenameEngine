@@ -489,6 +489,7 @@ class Charter extends UIState {
 	#if REGION
 	var gridActionType:CharterGridActionType = NONE;
 	var dragStartPos:FlxPoint = new FlxPoint();
+	var selectionDragging:Bool = false;
 
 	public function updateNoteLogic(elapsed:Float) {
 		for (group in [notesGroup, eventsGroup]) {
@@ -556,7 +557,8 @@ class Charter extends UIState {
 				if (!FlxG.mouse.pressed)
 					gridActionType = NONE;
 			case DRAG:
-				if (FlxG.mouse.pressed) {
+				selectionDragging = FlxG.mouse.pressed;
+				if (selectionDragging) {
 					gridBackdrops.draggingObj = null;
 					selection.loop(function (n:CharterNote) {
 						n.snappedToStrumline = false;
@@ -1031,7 +1033,7 @@ class Charter extends UIState {
 	}
 
 	function _edit_undo(_) {
-		if (strumLines.isDragging) return;
+		if (strumLines.isDragging || selectionDragging) return;
 		
 		selection = [];
 		var undo = undos.undo();
@@ -1072,7 +1074,7 @@ class Charter extends UIState {
 	}
 
 	function _edit_redo(_) {
-		if (strumLines.isDragging) return;
+		if (strumLines.isDragging || selectionDragging) return;
 
 		selection = [];
 		var redo = undos.redo();
