@@ -53,8 +53,8 @@ class Charter extends UIState {
 	public var gridBackdropDummy:CharterBackdropDummy;
 
 	public var strumlineInfoBG:FlxSprite;
-	public var strumlineAddButton:CharterStrumlineExtraButton;
-	public var strumlineLockButton:CharterStrumlineExtraButton;
+	public var strumlineAddButton:CharterStrumlineButton;
+	public var strumlineLockButton:CharterStrumlineButton;
 
 	public var hitsound:FlxSound;
 	public var metronome:FlxSound;
@@ -378,10 +378,10 @@ class Charter extends UIState {
 		strumlineInfoBG.y = 23;
 		strumlineInfoBG.scrollFactor.set();
 
-		strumlineAddButton = new CharterStrumlineExtraButton("editors/charter/add-strumline", "Create New");
+		strumlineAddButton = new CharterStrumlineButton("editors/charter/add-strumline", "Create New");
 		strumlineAddButton.onClick = createStrumWithUI;
 
-		strumlineLockButton = new CharterStrumlineExtraButton("editors/charter/add-strumline", "Lock/Unlock");
+		strumlineLockButton = new CharterStrumlineButton("editors/charter/lock-strumline", "Lock/Unlock");
 		strumlineLockButton.onClick = function () {
 			if (strumLines != null) strumLines.draggable = !strumLines.draggable;
 		};

@@ -13,6 +13,7 @@ class NewOption extends TextOption {
 
 		iconSpr = new FlxSprite().loadGraphic(Paths.image("editors/new"));
 		iconSpr.setPosition(90 - iconSpr.width, (__text.height - iconSpr.height) / 2);
+		iconSpr.offset.set(20, -15);
 		add(iconSpr);
 	}
 }

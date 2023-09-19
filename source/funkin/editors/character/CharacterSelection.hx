@@ -27,13 +27,8 @@ class CharacterSelection extends EditorTreeMenu
 		];
 
 		list.insert(0, new NewOption("New Character", "New Character", function() {
-			openSubState(new UIWarningSubstate("New Character", "This feature isnt implemented yet", [
-				{
-					label: "OK",
-					onClick: function(t) {
-
-					}
-				}
+			openSubState(new UIWarningSubstate("New Character: Feature Not Implemented!", "This feature isnt implemented yet. Please wait for more cne updates to have this functional.\n\n\n- Codename Devs", [
+				{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
 			]));
 		}));
 

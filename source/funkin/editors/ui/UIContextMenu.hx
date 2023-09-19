@@ -115,6 +115,7 @@ typedef UIContextMenuOption = {
 	var ?keybind:Array<FlxKey>;
 	var ?keybinds:Array<Array<FlxKey>>;
 	var ?keybindText:String;
+	var ?color:Int;
 	var ?icon:Int;
 	var ?onSelect:UIContextMenuOption->Void;
 	var ?childs:Array<UIContextMenuOption>;
@@ -132,6 +133,7 @@ class UIContextMenuOptionSpr extends UISliceSprite {
 		label = new UIText(20, 2, 0, option.label);
 		this.option = option;
 		this.parent = parent;
+		this.color = option.color;
 
 		if (option.icon != null && option.icon > 0) {
 			icon = new FlxSprite(0, 0).loadGraphic(Paths.image('editors/ui/context-icons'), true, 20, 20);

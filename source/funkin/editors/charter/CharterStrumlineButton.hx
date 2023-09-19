@@ -2,7 +2,7 @@ package funkin.editors.charter;
 
 import flixel.math.FlxPoint;
 
-class CharterStrumlineExtraButton extends UISprite {
+class CharterStrumlineButton extends UISprite {
 	public var button:UISprite;
 	public var text:UIText;
 
@@ -30,7 +30,7 @@ class CharterStrumlineExtraButton extends UISprite {
 	var buttonScale:FlxPoint = FlxPoint.get(0,0);
 
 	public override function update(elapsed:Float) {
-		button.follow(this, ((40 * 4) - button.width) / 2, 18);
+		button.follow(this, ((40 * 4) - button.width) / 2, 24);
 		text.follow(this, 0, 84);
 
 		super.update(elapsed);

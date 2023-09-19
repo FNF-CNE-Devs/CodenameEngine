@@ -13,7 +13,7 @@ class CharterStrumline extends UISprite {
 
 	public var draggingSprite:UISprite;
 	public var healthIcon:HealthIcon;
-	public var button:CharterStrumlineButton;
+	public var button:CharterStrumlineOptions;
 
 	public var draggable:Bool = false;
 	public var dragging:Bool = false;
@@ -47,7 +47,7 @@ class CharterStrumline extends UISprite {
 		draggingSprite.cursor = BUTTON;
 		members.push(draggingSprite);
 
-		button = new CharterStrumlineButton(this);
+		button = new CharterStrumlineOptions(this);
 		members.push(button);
 	}
 
@@ -95,7 +95,7 @@ class CharterStrumline extends UISprite {
 	}
 }
 
-class CharterStrumlineButton extends UITopMenuButton {
+class CharterStrumlineOptions extends UITopMenuButton {
 	var strLine:CharterStrumline;
 	public function new(parent:CharterStrumline) {
 		super(0, 95, null, "Options ↓", []);
@@ -132,13 +132,17 @@ class CharterStrumlineButton extends UITopMenuButton {
 				label: "Edit",
 				onSelect: function (_) {
 					Charter.instance.editStrumline(strLine.strumLine);
-				}
+				},
+				color: 0xFFFFFF00,
+				icon: 2
 			},
 			{
 				label: "Delete",
 				onSelect: function (_) {
 					Charter.instance.deleteStrumlineFromData(strLine.strumLine);
-				}
+				},
+				color: 0xFFFF0000,
+				icon: 3
 			}
 		];
 		super.openContextMenu();
