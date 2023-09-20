@@ -1212,16 +1212,17 @@ class Charter extends UIState {
 	function changeNoteSustain(change:Float) {
 		if (selection.length <= 0 || change == 0) return;
 
-		undos.addToUndo(CEditSustains([
-			for(s in selection) {
-				if (s is CharterNote) {
-					var n:CharterNote = cast(s, CharterNote);
-					var old:Float = n.susLength;
-					n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0));
-					{before: old, after: n.susLength, note: n};
-				}
+		var undoChanges:Array<NoteSustainChange> = [];
+		for(s in selection) {
+			if (s is CharterNote) {
+				var n:CharterNote = cast(s, CharterNote);
+				var old:Float = n.susLength;
+				n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0));
+				undoChanges.push({before: old, after: n.susLength, note: n});
 			}
-		]));
+		}
+
+		undos.addToUndo(CEditSustains(undoChanges));
 	}
 
 	public function playtestChart(time:Float = 0, opponentMode = false, here = false) {
