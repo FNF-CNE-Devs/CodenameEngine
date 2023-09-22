@@ -21,7 +21,6 @@
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
-	<!-- <app preloader="Preloader" resizable="true" /> -->
 	<app preloader="flixel.system.FlxPreloader" />
 
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
@@ -53,11 +52,10 @@
 	<set name="BUILD_DIR" value="export/release-32bit" if="32bit" unless="debug" />
 	<set name="BUILD_DIR" value="latest/" if="beta" />
 
-	<classpath name="source" />
+	<source name="source" />
 
 	<define name="PRELOAD_ALL" unless="web" />
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
-
 
 	<library name="assets"    preload="true"  if="PRELOAD_ALL"/>
 	<library name="assets"    preload="false" if="NO_PRELOAD_ALL" />
@@ -74,16 +72,10 @@
 
 	<haxeflag name="--macro" value="funkin.backend.system.macros.NewHaxeWarning.warn()" />
 
-	<!--Enable the Flixel core recording system-->
-	<!--<haxedef name="FLX_RECORD" />-->
-
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
-
-	<!--Enable this for Nape release builds for a serious performance improvement-->
-	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 
@@ -177,7 +169,7 @@
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 
-	<haxelib name="hxCodec-cne" if="VIDEO_CUTSCENES" />
+	<haxelib name="hxvlc" if="VIDEO_CUTSCENES" />
 	<section if="THREE_D_SUPPORT">
 		<haxelib name="away3d" />
 	</section>
