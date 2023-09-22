@@ -1,23 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <libraries>
-    <!-- Flixel -->
-    <git name="flixel" url="https://github.com/FNF-CNE-Devs/flixel"/>
-    <git name="flixel-addons" url="https://github.com/FNF-CNE-Devs/flixel-addons"/>
+	<!-- OpenFL & Lime (Required for Flixel) -->
+	<lib name="openfl" />
+	<lib name="lime" />
 
-    <!-- Other Libraries -->
+	<!-- Flixel -->
+	<git name="flixel" url="https://github.com/FNF-CNE-Devs/flixel" />
+	<git name="flixel-addons" url="https://github.com/FNF-CNE-Devs/flixel-addons" />
+
+	<!-- Other Libraries -->
 	<git name="hscript-improved" url="https://www.github.com/FNF-CNE-Devs/hscript-improved" ref="custom-classes" />
-    <git name="discord-rpc" url="https://github.com/Aidan63/linc_discord-rpc"/>
-	<git name="flxanimate" url="https://github.com/FNF-CNE-Devs/flxanimate/" />
-	<git name="hxvlc" url="https://github.com/MAJigsaw77/hxvlc"/>
+	<git name="discord-rpc" url="https://github.com/Aidan63/linc_discord-rpc" />
+	<git name="flxanimate" url="https://github.com/FNF-CNE-Devs/flxanimate" />
+	<git name="hxvlc" url="https://github.com/MAJigsaw77/hxvlc" />
 
 	<!-- Documentation and other features -->
-    <lib name="dox"/>
-    <lib name="away3d" />
+	<lib name="away3d" />
 	<lib name="format" />
 	<lib name="markdown" />
-	<lib name="hxcpp-debug-server" />
-
-    <!-- OpenFL & Lime (Required for Flixel) -->
-    <lib name="openfl" />
-    <lib name="lime" />
 </libraries>
