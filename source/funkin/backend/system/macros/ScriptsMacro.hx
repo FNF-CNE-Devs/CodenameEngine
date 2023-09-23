@@ -38,9 +38,6 @@ class ScriptsMacro {
 
 		Compiler.include("funkin", #if !UPDATE_CHECKING ['funkin.backend.system.updating'] #end);
 
-		// FOR ABSTRACTS
-		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');
-		Compiler.addGlobalMetadata('haxe.CallStack', '@:build(hscript.UsingHandler.build())');
 		#if HL HashLinkFixer.init(); #end
 		// Todo rewrite this to use if(Context.defined(""))
 	}
