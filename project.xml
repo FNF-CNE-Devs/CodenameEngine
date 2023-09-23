@@ -21,7 +21,6 @@
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
-	<!-- <app preloader="Preloader" resizable="true" /> -->
 	<app preloader="flixel.system.FlxPreloader" />
 
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
@@ -53,11 +52,10 @@
 	<set name="BUILD_DIR" value="export/release-32bit" if="32bit" unless="debug" />
 	<set name="BUILD_DIR" value="latest/" if="beta" />
 
-	<classpath name="source" />
+	<source name="source" />
 
 	<define name="PRELOAD_ALL" unless="web" />
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
-
 
 	<library name="assets"    preload="true"  if="PRELOAD_ALL"/>
 	<library name="assets"    preload="false" if="NO_PRELOAD_ALL" />
@@ -74,16 +72,10 @@
 
 	<haxeflag name="--macro" value="funkin.backend.system.macros.NewHaxeWarning.warn()" />
 
-	<!--Enable the Flixel core recording system-->
-	<!--<haxedef name="FLX_RECORD" />-->
-
 	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
 
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />
-
-	<!--Enable this for Nape release builds for a serious performance improvement-->
-	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 
@@ -113,10 +105,12 @@
 
 	<!-- Fixes thing with macros -->
 	<define name="HL" if="hl"/>
-	<define name="SYS" if="desktop || hl"/>
+	<define name="SYS" if="cpp || hl || neko"/>
 
 	<!-- Comment this out to disable Discord RPC !-->
-	<define name="DISCORD_RPC" unless="web || hl || neko"/>
+	<section if="cpp">
+		<define name="DISCORD_RPC" if="desktop"/>
+	</section>
 
 	<!-- Comment this out to disable GitHub API integration !-->
 	<define name="GITHUB_API" unless="web || hl"/>
@@ -157,7 +151,9 @@
 	<define name="THREE_D_SUPPORT" />
 
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
-	<define name="VIDEO_CUTSCENES" unless="web || linux || hl" />
+	<section if="cpp">
+		<define name="VIDEO_CUTSCENES" if="desktop || android" />
+	</section>
 
 	<!-- Comment this out to disable commit number on FPS -->
 	<define name="SHOW_BUILD_ON_FPS" />
@@ -177,18 +173,13 @@
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 
-	<haxelib name="hxCodec-cne" if="VIDEO_CUTSCENES" />
-	<section if="THREE_D_SUPPORT">
-		<haxelib name="away3d" />
-	</section>
+	<haxelib name="hxvlc" if="VIDEO_CUTSCENES" />
+	<haxelib name="away3d" if="THREE_D_SUPPORT" />
 	<haxelib name="format" />
 	<haxelib name="flxanimate" />
 
-	<haxedev set='webgl' />
-
 	<haxelib name="hscript-improved" />
 	<haxelib name="discord-rpc" if="DISCORD_RPC"/>
-
 	<haxelib name="markdown" />
 
 	<haxedef name="no-deprecation-warnings"/>
@@ -208,5 +199,6 @@
 	<haxedef name="HXCPP_CHECK_POINTER" if="release" />
 	<haxedef name="HXCPP_STACK_LINE" if="release" />
 	<haxedef name="HXCPP_DEBUG_LINK" if="release" />
+
 	<haxedef name="hscriptPos" /> <!-- for logging -->
 </project>
