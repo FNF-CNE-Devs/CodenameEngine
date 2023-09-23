@@ -16,6 +16,7 @@
 
 	<!-- Documentation and other features -->
 	<lib name="away3d" />
+	<!-- <lib name="dox" /> -->
 	<lib name="format" />
 	<lib name="markdown" />
 </libraries>
