@@ -941,7 +941,7 @@ class Charter extends UIState {
 
 	function _file_save(_) {
 		#if sys
-		saveTo('${Paths.getAssetsRoot()}/songs/${__song.toLowerCase().replace("-", " ")}');
+		saveTo('${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}');
 		undos.save();
 		return;
 		#end
@@ -958,7 +958,7 @@ class Charter extends UIState {
 	function _file_meta_save(_) {
 		#if sys
 		sys.io.File.saveContent(
-			'${Paths.getAssetsRoot()}/songs/${__song.toLowerCase().replace("-", " ")}/meta.json',
+			'${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}/meta.json',
 			Json.stringify(PlayState.SONG.meta == null ? {} : PlayState.SONG.meta, null, "\t")
 		);
 		return;

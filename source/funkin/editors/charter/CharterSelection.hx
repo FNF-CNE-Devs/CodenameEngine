@@ -86,7 +86,7 @@ class CharterSelection extends EditorTreeMenu {
 	}
 
 	public function saveSong(creation:SongCreationData) {
-		var songAlreadlyExsits:Bool = [for (s in freeplayList.songs) s.name.toLowerCase()].contains(creation.meta.name.toLowerCase().replace("-", " "));
+		var songAlreadlyExsits:Bool = [for (s in freeplayList.songs) s.name.toLowerCase()].contains(creation.meta.name.toLowerCase());
 
 		if (songAlreadlyExsits) {
 			openSubState(new UIWarningSubstate("Creating Song: Error!", "The song you are trying to create alreadly exists, if you would like to override it delete the song first!", [
@@ -97,7 +97,7 @@ class CharterSelection extends EditorTreeMenu {
 
 		// Paths
 		var songsDir:String = '${Paths.getAssetsRoot()}/songs/';
-		var songFolder:String = '$songsDir${creation.meta.name.replace("-", " ")}';
+		var songFolder:String = '$songsDir${creation.meta.name}';
 
 		#if sys
 		// Make Directories
