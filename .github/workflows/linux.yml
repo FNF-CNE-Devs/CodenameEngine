@@ -25,6 +25,9 @@ jobs:
             export/release/linux/obj/
           restore-keys: |
             cache-build-linux
+      - name: Installing LibVLC
+        run: |
+          sudo apt-get install libvlc-dev libvlccore-dev
       - name: Installing/Updating libraries
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup
