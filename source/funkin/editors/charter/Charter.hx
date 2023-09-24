@@ -231,7 +231,7 @@ class Charter extends UIState {
 						onSelect: _note_selectall
 					},
 					{
-						label: "Select maeasure",
+						label: "Select measure",
 						keybind: [CONTROL, SHIFT, A],
 						onSelect: _note_selectmeasure
 					},

@@ -565,8 +565,8 @@ class PlayState extends MusicBeatState
 					for(folder in scriptsFolders) {
 						for(file in Paths.getFolderContent(folder, true, fromMods ? MODS : BOTH)) {
 							if (folder == 'data/charts/')
-								Logs.trace('data/charts/ is deprecrated and will be removed in the future. Please move script $file.hx to songs/', WARNING, DARKYELLOW);
-							
+								Logs.trace('data/charts/ is deprecrated and will be removed in the future. Please move script $file to songs/', WARNING, DARKYELLOW);
+
 							addScript(file);
 						}
 					}
