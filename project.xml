@@ -92,6 +92,7 @@
 	<icon path="art/iconOG.png" size='256' />
 	<icon path="art/iconOG.png" size='512' />
 	<icon path="art/iconOG.png" size='768' />
+	<icon path="art/iconOG.png" size='1024' />
 
 
 	<!-- _________________________________ Engine Settings _______________________________ -->
