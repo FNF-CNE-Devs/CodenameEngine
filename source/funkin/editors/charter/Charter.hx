@@ -45,6 +45,7 @@ class Charter extends UIState {
 
 	public var scrollBar:UIScrollBar;
 	public var songPosInfo:UIText;
+	public var playBackSlider:UISlider;
 
 	public var topMenuSpr:UITopMenu;
 	public var gridBackdrops:CharterBackdropGroup;
@@ -372,6 +373,9 @@ class Charter extends UIState {
 		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0\nBPM: 0\nTime Signature: 4/4");
 		songPosInfo.alignment = RIGHT;
 		uiGroup.add(songPosInfo);
+
+		//playBackSlider = new UISlider(FlxG.width - 180 - 26 - 12, (23/2) - (4/2), 180, [{start: 0.25, end: 1, size: 0.5}, {start: 1, end: 3, size: 0.5}]);
+		//uiGroup.add(playBackSlider);
 
 		strumlineInfoBG = new UISprite();
 		strumlineInfoBG.loadGraphic(Paths.image('editors/charter/strumline-info-bg'));
@@ -1259,6 +1263,7 @@ class Charter extends UIState {
 
 	public function buildEvents() {
 		PlayState.SONG.events = [];
+		eventsGroup.sortEvents();
 		for(e in eventsGroup.members) {
 			for(event in e.events) {
 				event.time = Conductor.getTimeForStep(e.step);
