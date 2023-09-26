@@ -20,9 +20,9 @@ import funkin.editors.ui.UIState;
 import openfl.net.FileReference;
 
 class Charter extends UIState {
-	var __song:String;
-	var __diff:String;
-	var __reload:Bool;
+	static var __song:String;
+	static var __diff:String;
+	static var __reload:Bool;
 
 	var chart(get, null):ChartData;
 	private function get_chart()
@@ -86,9 +86,11 @@ class Charter extends UIState {
 
 	public function new(song:String, diff:String, reload:Bool = true) {
 		super();
-		__song = song;
-		__diff = diff;
-		__reload = reload;
+		if (song != null) {
+			__song = song;
+			__diff = diff;
+			__reload = reload;
+		}
 	}
 
 	public override function create() {
@@ -230,7 +232,7 @@ class Charter extends UIState {
 						onSelect: _note_selectall
 					},
 					{
-						label: "Select maeasure",
+						label: "Select measure",
 						keybind: [CONTROL, SHIFT, A],
 						onSelect: _note_selectmeasure
 					},

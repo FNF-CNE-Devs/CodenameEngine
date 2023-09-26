@@ -9,6 +9,11 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	var __currentlyLooping:Bool = false;
 
 	/**
+	 * How many ms it should show a note before it should be hit
+	 **/
+	public var limit:Float = 1500;
+
+	/**
 	 * Preallocates the members array with nulls, but if theres anything in the array already it clears it
 	 **/
 	public inline function preallocate(len:Int) {
@@ -36,7 +41,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
 			if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.active) {
 				continue;
 			}
-			if (__loopSprite.strumTime - Conductor.songPosition > 1500)
+			if (__loopSprite.strumTime - Conductor.songPosition > limit)
 				break;
 			__loopSprite.update(elapsed);
 		}
@@ -55,7 +60,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
 			__loopSprite = members[i--];
 			if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.visible)
 				continue;
-			if (__loopSprite.strumTime - Conductor.songPosition > 1500) break;
+			if (__loopSprite.strumTime - Conductor.songPosition > limit) break;
 			__loopSprite.draw();
 		}
 		__currentlyLooping = oldCur;
@@ -74,7 +79,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
 			__loopSprite = members[i--];
 			if (__loopSprite == null || !__loopSprite.exists)
 				continue;
-			if (__loopSprite.strumTime - Conductor.songPosition > 1500) break;
+			if (__loopSprite.strumTime - Conductor.songPosition > limit) break;
 			noteFunc(__loopSprite);
 		}
 		__currentlyLooping = oldCur;

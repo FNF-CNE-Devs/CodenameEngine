@@ -11,7 +11,7 @@ import flixel.input.keyboard.FlxKey;
 import funkin.game.Character;
 
 class CharacterEditor extends UIState {
-	var __character:String;
+	static var __character:String;
 	public var character:Character;
 
 	public var ghosts:CharacterGhostsHandler;
@@ -45,7 +45,7 @@ class CharacterEditor extends UIState {
 
 	public function new(character:String) {
 		super();
-		__character = character;
+		if (character != null) __character = character;
 	}
 
 	public override function create() {
