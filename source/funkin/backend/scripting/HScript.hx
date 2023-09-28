@@ -45,6 +45,8 @@ class HScript extends Script {
 			this.trace(v);
 		}));
 
+		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "hscript"]);
+
 		try {
 			if (code != null && code.trim() != "")
 				expr = parser.parseString(code, fileName);
