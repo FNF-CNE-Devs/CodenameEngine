@@ -48,6 +48,9 @@ class Paths
 	inline static public function txt(key:String, ?library:String)
 		return getPath('data/$key.txt', library);
 
+	inline static public function pack(key:String, ?library:String)
+		return getPath('data/$key.pack', library);
+
 	inline static public function ini(key:String, ?library:String)
 		return getPath('data/$key.ini', library);
 
