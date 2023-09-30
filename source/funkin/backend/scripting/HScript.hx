@@ -29,7 +29,7 @@ class HScript extends Script {
 
 		interp = new Interp();
 
-		code = Assets.getText(path);
+		code = Assets.exists(path) ? Assets.getText(path) : null;
 		parser = initParser();
 		folderlessPath = Path.directory(path);
 		__importedPaths = [path];

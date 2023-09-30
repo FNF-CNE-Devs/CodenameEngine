@@ -45,11 +45,14 @@ class EventsData {
 			if (Path.extension(file) != "json" && Path.extension(file) != "pack") continue;
 			var eventName:String = Path.withoutExtension(Path.withoutDirectory(file));
 			var fileTxt:String = Assets.getText(file);
-			if (fileTxt.trim() == "") continue;
+
 			if (Path.extension(file) == "pack") {
-				eventName = Path.withoutExtension(fileTxt.split("________PACKSEP________")[0]);
-				fileTxt = fileTxt.split("________PACKSEP________")[2];
+				var arr = fileTxt.split("________PACKSEP________");
+				eventName = Path.withoutExtension(arr[0]);
+				fileTxt = arr[2];
 			}
+
+			if (fileTxt.trim() == "") continue;
 
 			eventsList.push(eventName);
 			eventsParams.set(eventName, []);
