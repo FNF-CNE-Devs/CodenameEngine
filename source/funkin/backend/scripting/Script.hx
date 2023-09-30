@@ -149,6 +149,22 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	}
 
 	/**
+	 * Creates a script from the specified asset path. The language is automatically determined.
+	 * @param path Path in assets
+	 */
+	public static function fromString(code:String, ext:String, path:String):Script {
+		return switch(ext.toLowerCase()) {
+			case "hx" | "hscript" | "hsc" | "hxs":
+				new HScript(path).loadFromString(code);
+			case "lua":
+				Logs.trace("Lua is not supported in this engine. Use HScript instead.", ERROR);
+				new DummyScript(path).loadFromString(code);
+			default:
+				new DummyScript(path).loadFromString(code);
+		}
+	}
+
+	/**
 	 * Creates a new instance of the script class.
 	 * @param path
 	 */
@@ -222,6 +238,14 @@ class Script extends FlxBasic implements IFlxDestroyable {
 
 		curScript = oldScript;
 		return result;
+	}
+
+	/**
+	 * Loads the code from a string, doesnt really work after the script has been loaded
+	 * @param code The code.
+	 */
+	public function loadFromString(code:String) {
+		return this;
 	}
 
 	/**

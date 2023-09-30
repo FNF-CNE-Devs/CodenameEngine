@@ -47,6 +47,11 @@ class HScript extends Script {
 
 		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "hscript"]);
 
+		if (code != null && code.trim() != "")
+			loadFromString(code);
+	}
+
+	public override function loadFromString(code:String) {
 		try {
 			if (code != null && code.trim() != "")
 				expr = parser.parseString(code, fileName);
@@ -55,6 +60,8 @@ class HScript extends Script {
 		} catch(e) {
 			_errorHandler(new Error(ECustom(e.toString()), 0, 0, fileName, 0));
 		}
+
+		return this;
 	}
 
 	private function importFailedCallback(cl:Array<String>):Bool {
