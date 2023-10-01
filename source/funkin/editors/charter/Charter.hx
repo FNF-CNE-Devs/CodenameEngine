@@ -1026,6 +1026,8 @@ class Charter extends UIState {
 			}
 		}
 		selection = sObjects;
+		_edit_copy(_);
+		
 		undos.addToUndo(CCreateSelection(sObjects.copy()));
 	}
 
