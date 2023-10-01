@@ -376,8 +376,11 @@ class Charter extends UIState {
 		songPosInfo.alignment = RIGHT;
 		uiGroup.add(songPosInfo);
 
-		//playBackSlider = new UISlider(FlxG.width - 180 - 26 - 12, (23/2) - (4/2), 180, [{start: 0.25, end: 1, size: 0.5}, {start: 1, end: 3, size: 0.5}]);
-		//uiGroup.add(playBackSlider);
+		playBackSlider = new UISlider(FlxG.width - 180 - 26 - 12, (23/2) - (4/2), 180, [{start: 0.5, end: 1, size: 0.5}, {start: 1, end: 3, size: 0.5}], 0.5);
+		playBackSlider.onChange = function (v) {
+			FlxG.sound.music.pitch = vocals.pitch = v;
+		};
+		uiGroup.add(playBackSlider);
 
 		strumlineInfoBG = new UISprite();
 		strumlineInfoBG.loadGraphic(Paths.image('editors/charter/strumline-info-bg'));
@@ -1023,6 +1026,8 @@ class Charter extends UIState {
 			}
 		}
 		selection = sObjects;
+		_edit_copy(_);
+		
 		undos.addToUndo(CCreateSelection(sObjects.copy()));
 	}
 
