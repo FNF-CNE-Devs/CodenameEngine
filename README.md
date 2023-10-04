@@ -81,6 +81,7 @@ Latest builds for the engine can be found in the [Actions](https://github.com/Yo
 5. Once the libraries are installed, run `haxelib run lime test mac` to compile and launch the game (may take a long time)
     - ℹ You can run `haxelib run lime setup` to make the lime command global, allowing you to execute `lime test mac` directly.
 
+hi
 
 </details>
             
