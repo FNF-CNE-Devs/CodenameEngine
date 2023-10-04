@@ -97,6 +97,11 @@ class Paths
 		}
 		return getPath('images/$key.png', library);
 	}
+
+	static public function gif(key:String, ?library:String)
+	{
+		return getPath('images/$key.gif', library);
+	}
 	
 	inline static public function script(key:String, ?library:String, isAssetsPath:Bool = false) {
 		var scriptPath = isAssetsPath ? key : getPath(key, library);
