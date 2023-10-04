@@ -47,12 +47,12 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 	private static function generateDefaultIcon(name:String) {
 		var isBase64:Bool = false;
 		var path:String = Paths.image('editors/charter/event-icons/$name');
-		if (!Assets.exists(path) && Assets.exists(Paths.pack('events/$name'))) {
-			path = Assets.getText(Paths.pack('events/$name')).split('________PACKSEP________')[3];
-			isBase64 = true;
+		if (!Assets.exists(path)) path = Paths.image('editors/charter/event-icons/Unknown');
+		if (Assets.exists(Paths.pack('events/$name'))) {
+			var packimg = Assets.getText(Paths.pack('events/$name')).split('________PACKSEP________')[3];
+			if (isBase64 = (packimg != null))
+				path = Assets.getText(Paths.pack('events/$name')).split('________PACKSEP________')[3];	
 		}
-		else if (!Assets.exists(path)) path = Paths.image('editors/charter/event-icons/Unknown');
-
 		var spr = new FlxSprite().loadGraphic(isBase64 ? openfl.display.BitmapData.fromBase64(path.trim(), 'UTF8') : path);
 		return spr;
 	}

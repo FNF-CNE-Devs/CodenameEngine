@@ -48,6 +48,8 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 		for (grid in members)
 			grid.active = grid.visible = false;
 		
+		super.update(elapsed);
+
 		for (i => strumLine in strumLineGroup.members) {
 			if (strumLine == null) continue;
 
@@ -73,8 +75,7 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 			grid.active = grid.visible = true;
 			grid.updateSprites();
 		}
-
-		super.update(elapsed);
+		
 	}
 
 	public var draggingObj:CharterBackdrop = null;

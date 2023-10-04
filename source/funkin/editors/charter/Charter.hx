@@ -853,6 +853,16 @@ class Charter extends UIState {
 	public override function update(elapsed:Float) {
 		updateNoteLogic(elapsed);
 
+		if (FlxG.sound.music.playing) {
+			gridBackdrops.conductorSprY = curStepFloat * 40;
+		} else {
+			gridBackdrops.conductorSprY = lerp(gridBackdrops.conductorSprY, curStepFloat * 40, 1/3);
+		}
+		charterCamera.scroll.set(
+			((((40*4) * gridBackdrops.strumlinesAmount) - FlxG.width) / 2),
+			gridBackdrops.conductorSprY - (FlxG.height * 0.5)
+		);
+		
 		super.update(elapsed);
 
 		scrollBar.size = (FlxG.height / 40 / charterCamera.zoom);
@@ -894,16 +904,6 @@ class Charter extends UIState {
 		+ '\nMeasure: ${curMeasure}'
 		+ '\nBPM: ${Conductor.bpm}'
 		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}';
-
-		if (FlxG.sound.music.playing) {
-			gridBackdrops.conductorSprY = curStepFloat * 40;
-		} else {
-			gridBackdrops.conductorSprY = lerp(gridBackdrops.conductorSprY, curStepFloat * 40, 1/3);
-		}
-		charterCamera.scroll.set(
-			((((40*4) * gridBackdrops.strumlinesAmount) - FlxG.width) / 2),
-			gridBackdrops.conductorSprY - (FlxG.height * 0.5)
-		);
 
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125)))
 			updateDisplaySprites();
