@@ -56,6 +56,8 @@ class GlobalScript {
 						Logs.trace('Global script successfully loaded.', WARNING, GREEN);
 				}
 			}
+			if (FlxG.keys.justPressed.F2)
+				NativeAPI.allocConsole();
 		});
 		FlxG.signals.preDraw.add(function() {
 			call("preDraw");
