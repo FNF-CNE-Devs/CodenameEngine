@@ -453,8 +453,28 @@ class Charter extends UIState {
 		gridBackdrops.createGrids(PlayState.SONG.strumLines.length);
 
 		for(strL in PlayState.SONG.strumLines)
-			createStrumline(strumLines.members.length, strL, false);
+			createStrumline(strumLines.members.length, strL, false, false);
+		
+		// create notes
+		notesGroup.autoSort = false;
+		var noteCount:Int = 0;
+		for (strL in PlayState.SONG.strumLines)
+			for (note in strL.notes) noteCount++;
+		notesGroup.preallocate(noteCount);
 
+		var notesCreated:Int = 0;
+		for (i => strL in PlayState.SONG.strumLines)
+			for (note in strL.notes) {
+				var n = new CharterNote();
+				var t = Conductor.getStepForTime(note.time);
+				n.updatePos(t, note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type, strumLines.members[i]);
+				notesGroup.members[notesCreated++] = n;
+			}
+		notesGroup.sortNotes();
+		notesGroup.autoSort = true;
+				
+
+		// create events
 		var __last:CharterEvent = null;
 		var __lastTime:Float = Math.NaN;
 		for(e in PlayState.SONG.events) {
@@ -719,6 +739,7 @@ class Charter extends UIState {
 	public function createSelection(selection:Selection, addToUndo:Bool = true) {
 		if (selection.length <= 0) return [];
 
+		notesGroup.autoSort = false;
 		selection.loop(function (n:CharterNote) {
 			notesGroup.add(n);
 			n.revive();
@@ -727,6 +748,8 @@ class Charter extends UIState {
 			e.revive();
 			e.refreshEventIcons();
 		}, false);
+		notesGroup.sortNotes();
+		notesGroup.autoSort = true;
 
 		for (s in selection)
 			if (s is CharterEvent) {
@@ -742,6 +765,7 @@ class Charter extends UIState {
 	public function deleteSelection(selection:Selection, addToUndo:Bool = true) {
 		if (selection.length <= 0) return [];
 
+		notesGroup.autoSort = false;
 		for (objects in [notesGroup, eventsGroup]) {
 			var group = cast(objects, FlxTypedGroup<Dynamic>);
 			var member = 0;
@@ -752,6 +776,8 @@ class Charter extends UIState {
 				else member++;
 			}
 		}
+		notesGroup.sortNotes();
+		notesGroup.autoSort = true;
 
 		for (s in selection)
 			if (s is CharterEvent) {
@@ -765,16 +791,20 @@ class Charter extends UIState {
 	}
 
 	// STRUMLINE DELETION/CREATION
-	public function createStrumline(strumLineID:Int, strL:ChartStrumLine, addToUndo:Bool = true) {
+	public function createStrumline(strumLineID:Int, strL:ChartStrumLine, addToUndo:Bool = true, ?__createNotes:Bool = true) {
 		var cStr = new CharterStrumline(strL);
 		strumLines.insert(strumLineID, cStr);
 		strumLines.snapStrums();
 
-		for(note in strL.notes) {
-			var n = new CharterNote();
-			var t = Conductor.getStepForTime(note.time);
-			n.updatePos(t, note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type, cStr);
-			notesGroup.add(n);
+		if (__createNotes) {
+			var toBeCreated:Selection = [];
+			for(note in strL.notes) {
+				var n = new CharterNote();
+				var t = Conductor.getStepForTime(note.time);
+				n.updatePos(t, note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type, cStr);
+				notesGroup.add(n);
+			}
+			createSelection(toBeCreated, false);
 		}
 
 		if (addToUndo)
@@ -786,13 +816,15 @@ class Charter extends UIState {
 		removeStrumlineFromSelection(strumLineID);
 
 		var i = 0;
+		var toBeDeleted:Selection = [];
 		while(i < notesGroup.members.length) {
    			var note = notesGroup.members[i];
    			if (note.strumLineID == strumLineID) {
 				undoNotes.push(buildNote(note));
-				deleteSingleSelection(note, false);
+				toBeDeleted.push(note);
 			} else i++;
 		}
+		deleteSelection(toBeDeleted, false);
 
 		var strL = strumLines.members[strumLineID].strumLine;
 		strumLines.members[strumLineID].destroy();

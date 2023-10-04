@@ -8,6 +8,8 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	var i:Int = 0;
 	var max:Float = 0;
 	var __currentlyLooping:Bool = false;
+
+	public var autoSort:Bool = true;
 	var __lastSort:Int = 0;
 
 	public override function forEach(noteFunc:CharterNote->Void, recursive:Bool = false) {
@@ -58,7 +60,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
 
-		if (length != __lastSort)
+		if (length != __lastSort && autoSort)
 			sortNotes();
 		
 		forEach((n) -> {
@@ -76,5 +78,10 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 				return FlxSort.byValues(FlxSort.ASCENDING, n1.fullID, n2.fullID);
 			return FlxSort.byValues(FlxSort.ASCENDING, n1.step, n2.step);
 		});
+	}
+
+	public inline function preallocate(len:Int) {
+		members = cast new haxe.ds.Vector<CharterNote>(len);
+		length = len;
 	}
 }
