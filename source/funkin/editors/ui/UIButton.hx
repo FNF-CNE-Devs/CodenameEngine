@@ -12,9 +12,6 @@ class UIButton extends UISliceSprite {
 		super(x, y, w, h, 'editors/ui/button');
 		this.callback = callback;
 		members.push(field = new UIText(x, y, w, text));
-		field.borderStyle = OUTLINE;
-		field.borderColor = 0x88000000;
-		field.borderSize = 1;
 		field.alignment = CENTER;
 		field.fieldWidth = w;
 

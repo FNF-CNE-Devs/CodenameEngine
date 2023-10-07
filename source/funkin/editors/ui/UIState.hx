@@ -33,6 +33,7 @@ class UIState extends MusicBeatState {
 		__mousePos = FlxPoint.get();
 		super.create();
 		Framerate.offset.y = 30;
+		FlxG.mouse.visible = true;
 
 		FlxG.stage.window.onKeyDown.add(onKeyDown);
 		FlxG.stage.window.onKeyUp.add(onKeyUp);
