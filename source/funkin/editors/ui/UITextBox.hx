@@ -104,6 +104,7 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 		switch(e) {
 			case RETURN:
 				focused = false;
+				if (onChange != null) onChange(label.text);
 			case LEFT:
 				changeSelection(-1);
 			case RIGHT:

@@ -906,7 +906,7 @@ class Charter extends UIState {
 		if (true) {
 			__crochet = ((60 / Conductor.bpm) * 1000);
 
-			if(FlxG.keys.justPressed.ANY)
+			if(FlxG.keys.justPressed.ANY && !strumLines.isDragging && this.currentFocus == null)
 				UIUtil.processShortcuts(topMenu);
 
 			if (FlxG.keys.pressed.CONTROL) {

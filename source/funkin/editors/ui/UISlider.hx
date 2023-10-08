@@ -75,11 +75,11 @@ class UISlider extends UISprite {
 		selectableHitbox.alpha = 0;
 		members.push(selectableHitbox);
 
-		valueStepper = new UINumericStepper(x - 64 - 64, y, 1, 0.01, 2, segments[0].start, segments[segments.length-1].end, 0, 18);
-		valueStepper.antialiasing = true;
+		valueStepper = new UINumericStepper(x - 64 - 64, y, 1, 0.01, 2, segments[0].start, segments[segments.length-1].end, 0, 16);
+		valueStepper.antialiasing = valueStepper.label.antialiasing = true;
 		valueStepper.onChange = function (text:String) {
 			@:privateAccess valueStepper.__onChange(text);
-			value = valueStepper.value;
+			visualProgress = __barProgress = __calcProgress(value = valueStepper.value);
 		}
 		members.push(valueStepper);
 	}
@@ -87,8 +87,6 @@ class UISlider extends UISprite {
 	var __barProgress:Float = 0;
 	var visualProgress:Float = 0;
 	
-	var __highLightTimer:Float = 0;
-
 	public override function update(elapsed:Float) {
 		selectableHitbox.follow(this, 0, (height-selectableHitbox.height)/2);
 
