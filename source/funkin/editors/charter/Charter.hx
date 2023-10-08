@@ -1,6 +1,5 @@
 package funkin.editors.charter;
 
-import funkin.editors.ui.UISlider.UISliderExtras;
 import funkin.editors.charter.CharterStrumline;
 import funkin.editors.charter.CharterBackdropGroup.EventBackdrop;
 import funkin.backend.system.framerate.Framerate;
@@ -377,18 +376,7 @@ class Charter extends UIState {
 		songPosInfo.alignment = RIGHT;
 		uiGroup.add(songPosInfo);
 
-		/*
-		var extraInfo = new UISliderExtras(FlxG.width - 20 - (5*42) - 18, scrollBar.y + 8, [
-			{value: .25, barProgress: 0.5, color: 0xFF870000},
-			{value: .5, barProgress: 0.5, color: 0xFF870000},
-			{value: 1, barProgress: 0.5, color: 0x6B6B6B},
-			{value: 1.5, barProgress: 0.5, color: 0xFF008000},
-			{value: 2, barProgress: 0.5, color: 0xFF008000}]
-		, "Preset Playback Speeds:");
-		uiGroup.add(extraInfo);
-		*/
-
-		playBackSlider = new UISlider(FlxG.width - 160 - 26 - 20, (23/2) - (12/2), 160, [{start: 0.25, end: 1, size: 0.5}, {start: 1, end: 2, size: 0.5}], true, 0.5);
+		playBackSlider = new UISlider(FlxG.width - 160 - 26 - 20, (23/2) - (12/2), 160, 1, [{start: 0.25, end: 1, size: 0.5}, {start: 1, end: 2, size: 0.5}], true);
 		playBackSlider.onChange = function (v) {
 			FlxG.sound.music.pitch = vocals.pitch = v;
 		};

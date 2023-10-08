@@ -21,18 +21,19 @@ class UISlider extends UISprite {
 	public var endText:UIText;
 
 	public var selectableBar:UISprite;
+	public var selectableBarHighlight:UISprite;
 	public var selectableHitbox:UISprite;
 
 	public var value(default, set):Float = 0;
 	public function set_value(newVal:Float):Float {
-		__barProgress = calcProgress(newVal); onChange(newVal);
+		__barProgress = __calcProgress(newVal); onChange(newVal);
 		return value = newVal;
 	}
 
 	public var valueStepper:UINumericStepper;
 	public var onChange:Float->Void;
 
-	public function new(x:Float, y:Float, width:Int = 120, segments:Array<SliderSegement>, centered:Bool, defaultStart:Float = 0) {
+	public function new(x:Float, y:Float, width:Int = 120, value:Float, segments:Array<SliderSegement>, centered:Bool) {
 		this.segments = segments;
 		this.barWidth = width;
 		this.progressCentered = centered;
@@ -50,16 +51,23 @@ class UISlider extends UISprite {
         progressbar.origin.x = 0; progressbar.colorTransform.color = 0xFF67009B;
     	members.push(progressbar);
 
-		__barProgress = defaultStart;
+		__barProgress = visualProgress = __calcProgress(value);
 
 		members.push(startText = new UIText(x, y, 0, Std.string(segments[0].start).replace("0.", ".")));
 		members.push(endText = new UIText(x + (barWidth) + 8, y, 0, Std.string(segments[segments.length-1].end).replace("0.", ".")));
 		
-		selectableBar = new UISprite(x,y);
-		selectableBar.loadGraphic(Paths.image("editors/ui/slider"));
-		selectableBar.antialiasing = true;
-		selectableBar.cursor = BUTTON;
-		members.push(selectableBar);
+		for (i in 0...2) {
+			var selectableBar:UISprite = new UISprite(x,y);
+			selectableBar.loadGraphic(Paths.image("editors/ui/slider"));
+			selectableBar.antialiasing = true;
+			selectableBar.cursor = BUTTON;
+			members.push(selectableBar);
+
+			switch (i) {
+				case 0: this.selectableBar = selectableBar;
+				case 1: this.selectableBarHighlight = selectableBar; selectableBarHighlight.colorTransform.color = 0xFFFFFFFF; selectableBarHighlight.alpha = 0;
+			}
+		}
 
 		selectableHitbox = new UISprite(x,y);
 		selectableHitbox.makeSolid(barWidth, 18, -1);
@@ -77,6 +85,9 @@ class UISlider extends UISprite {
 	}
 
 	var __barProgress:Float = 0;
+	var visualProgress:Float = 0;
+	
+	var __highLightTimer:Float = 0;
 
 	public override function update(elapsed:Float) {
 		selectableHitbox.follow(this, 0, (height-selectableHitbox.height)/2);
@@ -93,16 +104,17 @@ class UISlider extends UISprite {
 		}
 
 		if (__barProgress != lastBarProgress) {
-			onChange(@:bypassAccessor value = calcValue(__barProgress));
+			onChange(@:bypassAccessor value = __calcValue(__barProgress));
 			valueStepper.value = value;
 		}
-			
+		
+		visualProgress = FlxMath.lerp(visualProgress, __barProgress, 1/2.25);
 		progressbar.follow(this, progressCentered ? barWidth/2 : 0, (height-progressbar.height)/2);
-		progressbar.scale.x = FlxMath.bound(__barProgress-(progressCentered?0.5:0),-1,1);
-		progressbar.colorTransform.color = FlxColor.interpolate(progressbar.colorTransform.color, selectableHitbox.hovered ? 0xFFB235F0 : 0xFF67009B, 1/14);
+		progressbar.scale.x = FlxMath.bound(visualProgress-(progressCentered?0.5:0),-1,1);
+		progressbar.colorTransform.color = FlxColor.interpolate(progressbar.colorTransform.color, selectableHitbox.hovered ? 0xFF7F00BF : 0xFF67009B, 1/14);
 
-		selectableBar.follow(this, (__barProgress * barWidth) - (selectableBar.width/2), (height-selectableBar.height)/2);
-		//selectableBar.colorTransform.color = FlxColor.interpolate(selectableBar.colorTransform.color, selectableHitbox.hovered ? 0x6DFFFFFF : 0x00000000, 1/14);
+		selectableBar.follow(this, (visualProgress * barWidth) - (selectableBar.width/2), (height-selectableBar.height)/2); selectableBarHighlight.follow(selectableBar); 
+		selectableBarHighlight.alpha = FlxMath.lerp(selectableBarHighlight.alpha, selectableHitbox.hovered ? 0.075: 0, 1/14);
 
 		startText.follow(this, -startText.width-10, (height/2) - (startText.height/2));
 		endText.follow(this, barWidth + 10, (height/2) - (endText.height/2));
@@ -110,7 +122,7 @@ class UISlider extends UISprite {
 		super.update(elapsed);
 	}
 
-	private function calcValue(progress:Float):Float {
+	private function __calcValue(progress:Float):Float {
 		var totalProgress:Float = 0;
         for (segment in segments) {
             if (progress < totalProgress + segment.size) {
@@ -122,7 +134,7 @@ class UISlider extends UISprite {
 		return segments[segments.length-1].end;
 	}
 
-	private function calcProgress(value:Float):Float {
+	private function __calcProgress(value:Float):Float {
 		if (value >= segments[segments.length-1].end) return 1;
 		if (value <= segments[0].start) return 0;
 
@@ -135,33 +147,5 @@ class UISlider extends UISprite {
             totalProgress += segment.size;
         }
 		return -1;
-	}
-}
-
-typedef UISliderPreset = {
-	var value:Float;
-	var barProgress:Float;
-	var ?color:Int;
-}
-
-class UISliderExtras extends UISliceSprite {
-	public var buttonText:UIText;
-	public var buttons:Map<UISliderPreset, UIButton> = [];
-
-	public function new(x:Float, y:Float, presets:Array<UISliderPreset>, presetValueName:String = "Presets:") {
-		super(x - 12, y, (presets.length * (40 + 2)) + 22, 40+10, 'editors/ui/inputbox');
-		alpha = 0.6;
-
-		members.push(buttonText = new UIText(x-4,y+5, 0, presetValueName, 12));
-		buttonText.borderStyle = OUTLINE; buttonText.borderColor = 0x88000000; buttonText.borderSize = 1;
-
-		for (i => preset in presets) {
-			var button = new UIButton(x + (i*(40 + 2)), y + buttonText.height + 5 + 2, Std.string(preset.value).replace("0.", "."), null, 40, 20);
-			button.field.size = 14;
-			if (preset.color != null) button.color = preset.color;
-			members.push(button);
-
-			buttons.set(preset, button);
-		}
 	}
 }
