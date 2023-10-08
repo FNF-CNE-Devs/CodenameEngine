@@ -16,4 +16,29 @@ class UIText extends FunkinText {
 		}
 		this.active = false;
 	}
+
+	public override function applyBorderStyle() {
+		if (borderStyle == OUTLINE_FAST) {
+			var iterations:Int = Std.int(borderSize * borderQuality);
+			if (iterations <= 0)
+			{
+				iterations = 1;
+			}
+			var delta:Float = borderSize / iterations;
+
+			applyFormats(_formatAdjusted, true);
+
+			var curDelta:Float = delta;
+			for (i in 0...iterations)
+			{
+				copyTextWithOffset(-curDelta, -curDelta); // upper-left
+				copyTextWithOffset(curDelta * 2, curDelta * 2); // lower-right
+
+				_matrix.translate(-curDelta, -curDelta); // return to center
+				curDelta += delta;
+			}
+			return;
+		}
+		super.applyBorderStyle();
+	}
 }

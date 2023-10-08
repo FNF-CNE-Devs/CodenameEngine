@@ -39,7 +39,7 @@ class UISlider extends UISprite {
 
         progressbar = new UISprite(centered ? barWidth/2 : 0);
 		progressbar.makeGraphic(barWidth, 8, 0x00000000, true);
-		progressbar.drawRoundRect(2, 0, barWidth-4, 8-.1, 8, 2, 0xFF67009B);
+		progressbar.drawRoundRect(2, 0, barWidth-4, 8, 8, 2, 0xFF67009B);
         progressbar.origin.x = 0;
     	members.push(progressbar);
 
