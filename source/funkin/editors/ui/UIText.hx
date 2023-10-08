@@ -4,6 +4,7 @@ import flixel.util.FlxColor;
 import funkin.backend.FunkinText;
 
 class UIText extends FunkinText {
+	public var optimized:Bool = false;
 	// PUTTING THIS HERE IN CASE IMMA MAKE FUTURE CHANGES
 	public function new(x, y, w, text, size:Int = 15, color:FlxColor = 0xFFFFFFFF, ?outline:Bool = true) {
 		super(x, y, w, text, size, false);
@@ -18,7 +19,7 @@ class UIText extends FunkinText {
 	}
 
 	public override function applyBorderStyle() {
-		if (borderStyle == OUTLINE_FAST) {
+		if (borderStyle == OUTLINE_FAST && optimized) {
 			var iterations:Int = Std.int(borderSize * borderQuality);
 			if (iterations <= 0)
 			{

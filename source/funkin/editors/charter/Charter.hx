@@ -373,7 +373,7 @@ class Charter extends UIState {
 		uiGroup.add(scrollBar);
 
 		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0\nBPM: 0\nTime Signature: 4/4");
-		songPosInfo.alignment = RIGHT;
+		songPosInfo.alignment = RIGHT; songPosInfo.optimized = true;
 		uiGroup.add(songPosInfo);
 
 		playBackSlider = new UISlider(FlxG.width - 160 - 26 - 20, (23/2) - (12/2), 160, 1, [{start: 0.25, end: 1, size: 0.5}, {start: 1, end: 2, size: 0.5}], true);
