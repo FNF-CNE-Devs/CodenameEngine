@@ -68,7 +68,7 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 		}
 
 		var off = multiline ? 4 : ((bHeight - label.height) / 2);
-		label.follow(this, 4, off);
+		label.follow(this, label.autoSize ? (bWidth-label.textField.width)/2 : 4, off);
 		framesOffset = (selected ? 18 : (hovered ? 9 : 0));
 		@:privateAccess {
 			if (selected) {

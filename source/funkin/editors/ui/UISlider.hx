@@ -1,5 +1,6 @@
 package funkin.editors.ui;
 
+import flixel.util.FlxColor;
 using flixel.util.FlxSpriteUtil;
 using StringTools;
 
@@ -22,7 +23,13 @@ class UISlider extends UISprite {
 	public var selectableBar:UISprite;
 	public var selectableHitbox:UISprite;
 
-	public var value:Float = 0;
+	public var value(default, set):Float = 0;
+	public function set_value(newVal:Float):Float {
+		__barProgress = calcProgress(newVal); onChange(newVal);
+		return value = newVal;
+	}
+
+	public var valueStepper:UINumericStepper;
 	public var onChange:Float->Void;
 
 	public function new(x:Float, y:Float, width:Int = 120, segments:Array<SliderSegement>, centered:Bool, defaultStart:Float = 0) {
@@ -39,8 +46,8 @@ class UISlider extends UISprite {
 
         progressbar = new UISprite(centered ? barWidth/2 : 0);
 		progressbar.makeGraphic(barWidth, 8, 0x00000000, true);
-		progressbar.drawRoundRect(2, 0, barWidth-4, 8, 8, 2, 0xFF67009B);
-        progressbar.origin.x = 0;
+		progressbar.drawRoundRect(2, 0, barWidth-4, 8, 8, 2, 0xFFFFFFFF);
+        progressbar.origin.x = 0; progressbar.colorTransform.color = 0xFF67009B;
     	members.push(progressbar);
 
 		__barProgress = defaultStart;
@@ -55,16 +62,27 @@ class UISlider extends UISprite {
 		members.push(selectableBar);
 
 		selectableHitbox = new UISprite(x,y);
-		selectableHitbox.makeSolid(barWidth, 16, -1);
+		selectableHitbox.makeSolid(barWidth, 18, -1);
 		selectableHitbox.cursor = BUTTON;
 		selectableHitbox.alpha = 0;
 		members.push(selectableHitbox);
+
+		valueStepper = new UINumericStepper(x - 64 - 64, y, 1, 0.01, 2, segments[0].start, segments[segments.length-1].end, 0, 18);
+		valueStepper.antialiasing = true;
+		valueStepper.onChange = function (text:String) {
+			@:privateAccess valueStepper.__onChange(text);
+			value = valueStepper.value;
+		}
+		members.push(valueStepper);
 	}
 
 	var __barProgress:Float = 0;
 
 	public override function update(elapsed:Float) {
 		selectableHitbox.follow(this, 0, (height-selectableHitbox.height)/2);
+
+		valueStepper.bWidth = valueStepper.label.text.length <= 0 ? 25 : Std.int(valueStepper.label.textField.width) + 12;
+		valueStepper.follow(this, -startText.width-10 - valueStepper.bWidth - 4, (height-valueStepper.bHeight)/2);
 		
 		var lastBarProgress:Float = __barProgress;
 
@@ -74,13 +92,17 @@ class UISlider extends UISprite {
 			mousePos.put();
 		}
 
-		if (__barProgress != lastBarProgress)
-			onChange(value = calcValue(__barProgress));
+		if (__barProgress != lastBarProgress) {
+			onChange(@:bypassAccessor value = calcValue(__barProgress));
+			valueStepper.value = value;
+		}
 			
 		progressbar.follow(this, progressCentered ? barWidth/2 : 0, (height-progressbar.height)/2);
 		progressbar.scale.x = FlxMath.bound(__barProgress-(progressCentered?0.5:0),-1,1);
+		progressbar.colorTransform.color = FlxColor.interpolate(progressbar.colorTransform.color, selectableHitbox.hovered ? 0xFFB235F0 : 0xFF67009B, 1/14);
 
 		selectableBar.follow(this, (__barProgress * barWidth) - (selectableBar.width/2), (height-selectableBar.height)/2);
+		//selectableBar.colorTransform.color = FlxColor.interpolate(selectableBar.colorTransform.color, selectableHitbox.hovered ? 0x6DFFFFFF : 0x00000000, 1/14);
 
 		startText.follow(this, -startText.width-10, (height/2) - (startText.height/2));
 		endText.follow(this, barWidth + 10, (height/2) - (endText.height/2));
@@ -88,7 +110,7 @@ class UISlider extends UISprite {
 		super.update(elapsed);
 	}
 
-	function calcValue(progress:Float):Float {
+	private function calcValue(progress:Float):Float {
 		var totalProgress:Float = 0;
         for (segment in segments) {
             if (progress < totalProgress + segment.size) {
@@ -98,6 +120,21 @@ class UISlider extends UISprite {
             totalProgress += segment.size;
         }
 		return segments[segments.length-1].end;
+	}
+
+	private function calcProgress(value:Float):Float {
+		if (value >= segments[segments.length-1].end) return 1;
+		if (value <= segments[0].start) return 0;
+
+        var totalProgress:Float = 0;
+        for (segment in segments) {
+            if (value >= segment.start && value <= segment.end) {
+                var relativeProgress = FlxMath.remapToRange(value, segment.start, segment.end, 0, 1);
+                return totalProgress + relativeProgress * segment.size;
+            }
+            totalProgress += segment.size;
+        }
+		return -1;
 	}
 }
 
