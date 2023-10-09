@@ -1486,7 +1486,7 @@ class PlayState extends MusicBeatState
 				if (event.showRating || (event.showRating == null && event.player))
 				{
 					displayCombo(event);
-					displayRating(daRating, event);
+					displayRating(event.rating, event);
 					ratingNum += 1;
 				}
 			}

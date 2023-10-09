@@ -199,25 +199,18 @@ class Paths
 			// MULTIPLE SPRITESHEETS!!
 
 			var graphic = FlxG.bitmap.add("flixel/images/logo/default.png", false, '$noExt/mult');
-			var frames = FlxAtlasFrames.findFrame(graphic);
+			var frames = MultiFramesCollection.findFrame(graphic);
 			if (frames != null)
 				return frames;
 
 			trace("no frames yet for multiple atlases!!");
-			var spritesheets = [];
 			var cur = 1;
-			var finalFrames = new FlxFramesCollection(graphic, ATLAS);
+			var finalFrames = new MultiFramesCollection(graphic);
 			while(Assets.exists('$noExt/$cur.png')) {
-				spritesheets.push(loadFrames('$noExt/$cur.png'));
+				var spr = loadFrames('$noExt/$cur.png');
+				finalFrames.addFrames(spr);
 				cur++;
 			}
-			for(frames in spritesheets)
-				if (frames != null && frames.frames != null)
-					for(f in frames.frames)
-						if (f != null) {
-							finalFrames.frames.push(f);
-							f.parent = frames.parent;
-						}
 			return finalFrames;
 		} else if (Assets.exists('$noExt.xml')) {
 			return Paths.getSparrowAtlasAlt(noExt);
