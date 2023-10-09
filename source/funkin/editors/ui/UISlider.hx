@@ -80,17 +80,21 @@ class UISlider extends UISprite {
 		valueStepper.onChange = function (text:String) {
 			@:privateAccess valueStepper.__onChange(text);
 			visualProgress = __barProgress = __calcProgress(value = valueStepper.value);
+			if (onChange != null) onChange(value);
 		}
 		members.push(valueStepper);
 	}
 
 	var __barProgress:Float = 0;
 	var visualProgress:Float = 0;
+
+	var __stepperWidth = 25;
 	
 	public override function update(elapsed:Float) {
 		selectableHitbox.follow(this, 0, (height-selectableHitbox.height)/2);
 
-		valueStepper.bWidth = valueStepper.label.text.length <= 0 ? 25 : Std.int(valueStepper.label.textField.width) + 12;
+		__stepperWidth = valueStepper.label.text.length <= 0 ? 25 : Std.int(valueStepper.label.textField.width) + 12;
+		valueStepper.bWidth = Std.int(FlxMath.lerp(valueStepper.bWidth, __stepperWidth, 1/2.25));
 		valueStepper.follow(this, -startText.width-10 - valueStepper.bWidth - 4, (height-valueStepper.bHeight)/2);
 		
 		var lastBarProgress:Float = __barProgress;
@@ -102,7 +106,7 @@ class UISlider extends UISprite {
 		}
 
 		if (__barProgress != lastBarProgress) {
-			onChange(@:bypassAccessor value = __calcValue(__barProgress));
+			if (onChange != null) onChange(@:bypassAccessor value = __calcValue(__barProgress));
 			valueStepper.value = value;
 		}
 		
@@ -112,7 +116,7 @@ class UISlider extends UISprite {
 		progressbar.colorTransform.color = FlxColor.interpolate(progressbar.colorTransform.color, selectableHitbox.hovered ? 0xFF7F00BF : 0xFF67009B, 1/14);
 
 		selectableBar.follow(this, (visualProgress * barWidth) - (selectableBar.width/2), (height-selectableBar.height)/2); selectableBarHighlight.follow(selectableBar); 
-		selectableBarHighlight.alpha = FlxMath.lerp(selectableBarHighlight.alpha, selectableHitbox.hovered ? 0.075: 0, 1/14);
+		selectableBarHighlight.alpha = FlxMath.lerp(selectableBarHighlight.alpha, selectableHitbox.hovered ? 0.1: 0, 1/14);
 
 		startText.follow(this, -startText.width-10, (height/2) - (startText.height/2));
 		endText.follow(this, barWidth + 10, (height/2) - (endText.height/2));

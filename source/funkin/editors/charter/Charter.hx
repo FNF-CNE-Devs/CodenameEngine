@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.editors.charter.CharterStrumline;
 import funkin.editors.charter.CharterBackdropGroup.EventBackdrop;
 import funkin.backend.system.framerate.Framerate;
@@ -893,6 +894,12 @@ class Charter extends UIState {
 			((((40*4) * gridBackdrops.strumlinesAmount) - FlxG.width) / 2),
 			gridBackdrops.conductorSprY - (FlxG.height * 0.5)
 		);
+
+		if (topMenuSpr.members[5] != null) {
+			var playBackMenu:UITopMenuButton = cast topMenuSpr.members[5];
+			playBackMenu.x = playBackSlider.x-playBackSlider.startText.width-10-playBackSlider.valueStepper.bWidth-playBackMenu.bWidth-10;
+			playBackMenu.label.offset.x = -2;
+		}
 		
 		super.update(elapsed);
 
