@@ -11,13 +11,14 @@ class CommandLineHandler {
 					break;
 				case "-h" | "-help" | "help":
 					Sys.println("-- Codename Engine Command Line help --");
-					Sys.println("-help              | Show this help");
+					Sys.println("-help                | Show this help");
 					#if MOD_SUPPORT
-					Sys.println("-mod [mod name]    | Load a specific mod");
-					Sys.println("-modfolder [path]  | Sets the mod folder path");
+					Sys.println("-mod [mod name]      | Load a specific mod");
+					Sys.println("-modfolder [path]    | Sets the mod folder path");
+					Sys.println("-addonsfolder [path] | Sets the addons folder path");
 					#end
-					Sys.println("-nocolor           | Disables colors in the terminal");
-					Sys.println("-nogpubitmap       | Forces GPU only bitmaps off");
+					Sys.println("-nocolor             | Disables colors in the terminal");
+					Sys.println("-nogpubitmap         | Forces GPU only bitmaps off");
 					Sys.exit(0);
 				#if MOD_SUPPORT
 				case "-m" | "-mod" | "-currentmod":
@@ -39,6 +40,18 @@ class CommandLineHandler {
 						funkin.backend.assets.ModsFolder.modsPath = arg;
 					} else {
 						Sys.println('[ERROR] Mod folder at "${arg}" does not exist.');
+						Sys.exit(0);
+					}
+				case "-addonsfolder":
+					i++;
+					var arg = cmd[i];
+					if (arg == null) {
+						Sys.println("[ERROR] You need to specify the addon folder path");
+						Sys.exit(0);
+					} else if (FileSystem.exists(arg)) {
+						funkin.backend.assets.ModsFolder.addonsPath = arg;
+					} else {
+						Sys.println('[ERROR] Addons folder at "${arg}" does not exist.');
 						Sys.exit(0);
 					}
 				#end

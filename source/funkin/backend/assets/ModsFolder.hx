@@ -42,6 +42,11 @@ class ModsFolder {
 	public static var addonsPath:String = "./addons/";
 
 	/**
+	 * If accessing a file as assets/data/global/LIB_mymod.hx should redirect to mymod:assets/data/global.hx
+	 */
+	public static var useLibFile:Bool = true;
+
+	/**
 	 * Whenever its the first time mods has been reloaded.
 	 */
 	private static var __firstTime:Bool = true;
@@ -72,12 +77,12 @@ class ModsFolder {
 	 * @param modName Name of the mod
 	 * @param force Whenever the mod should be reloaded if it has already been loaded
 	 */
-	public static function loadModLib(path:String, force:Bool = false) {
+	public static function loadModLib(path:String, force:Bool = false, ?modName:String) {
 		#if MOD_SUPPORT
 		if (FileSystem.exists('$path.zip'))
-			return loadLibraryFromZip('$path'.toLowerCase(), '$path.zip', force);
+			return loadLibraryFromZip('$path'.toLowerCase(), '$path.zip', force, modName);
 		else
-			return loadLibraryFromFolder('$path'.toLowerCase(), '$path', force);
+			return loadLibraryFromFolder('$path'.toLowerCase(), '$path', force, modName);
 
 		#else
 		return null;
@@ -111,12 +116,12 @@ class ModsFolder {
 	}
 
 	#if MOD_SUPPORT
-	public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false) {
-		return prepareModLibrary(libName, new ModsFolderLibrary(folder, libName), force);
+	public static function loadLibraryFromFolder(libName:String, folder:String, force:Bool = false, ?modName:String) {
+		return prepareModLibrary(libName, new ModsFolderLibrary(folder, libName, modName), force);
 	}
 
-	public static function loadLibraryFromZip(libName:String, zipPath:String, force:Bool = false) {
-		return prepareModLibrary(libName, new ZipFolderLibrary(zipPath, libName), force);
+	public static function loadLibraryFromZip(libName:String, zipPath:String, force:Bool = false, ?modName:String) {
+		return prepareModLibrary(libName, new ZipFolderLibrary(zipPath, libName, modName), force);
 	}
 	#end
 }

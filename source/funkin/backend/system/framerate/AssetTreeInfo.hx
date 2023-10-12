@@ -22,9 +22,9 @@ class AssetTreeInfo extends FramerateCategory {
 				}
 
 				if (l is ScriptedAssetLibrary)
-					text += '${Type.getClassName(Type.getClass(l))} - ${cast(l, ScriptedAssetLibrary).scriptName} (${cast(l, ScriptedAssetLibrary).libName} | ${cast(l, ScriptedAssetLibrary).prefix})\n';
+					text += '${Type.getClassName(Type.getClass(l))} - ${cast(l, ScriptedAssetLibrary).scriptName} (${cast(l, ScriptedAssetLibrary).modName} | ${cast(l, ScriptedAssetLibrary).libName} | ${cast(l, ScriptedAssetLibrary).prefix})\n';
 				else if (l is IModsAssetLibrary)
-					text += '${Type.getClassName(Type.getClass(l))} - ${cast(l, IModsAssetLibrary).libName} (${cast(l, IModsAssetLibrary).prefix})\n';
+					text += '${Type.getClassName(Type.getClass(l))} - ${cast(l, IModsAssetLibrary).modName} - ${cast(l, IModsAssetLibrary).libName} (${cast(l, IModsAssetLibrary).prefix})\n';
 				else
 					text += Std.string(e) + "\n";
 			}

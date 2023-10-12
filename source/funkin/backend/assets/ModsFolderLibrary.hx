@@ -17,14 +17,19 @@ using StringTools;
 
 class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	public var folderPath:String;
+	public var modName:String;
 	public var libName:String;
 	public var useImageCache:Bool = true;
 	public var prefix = 'assets/';
 
-	public function new(folderPath:String, libName:String) {
+	public function new(folderPath:String, libName:String, ?modName:String) {
 		this.folderPath = folderPath;
 		this.libName = libName;
 		this.prefix = 'assets/$libName/';
+		if(modName == null)
+			this.modName = libName;
+		else
+			this.modName = modName;
 		super();
 	}
 
@@ -133,6 +138,15 @@ class ModsFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	private function __parseAsset(asset:String):Bool {
 		if (!asset.startsWith(prefix)) return false;
 		_parsedAsset = asset.substr(prefix.length);
+		if(ModsFolder.useLibFile) {
+			var file = new haxe.io.Path(_parsedAsset);
+			if(file.file.startsWith("LIB_")) {
+				var library = file.file.substr(4);
+				if(library != modName) return false;
+
+				_parsedAsset = file.dir + "." + file.ext;
+			}
+		}
 		return true;
 	}
 	#end

@@ -21,8 +21,8 @@ class ScriptedAssetLibrary extends ModsFolderLibrary {
 	public var scriptName:String;
 	private static var nullValue:Dynamic = {};
 
-	public function new(scriptName:String, args:Array<Dynamic> = null, folderPath:String="./assets/", libName:String="assets") {
-		super(folderPath, libName);
+	public function new(scriptName:String, args:Array<Dynamic> = null, folderPath:String="./assets/", libName:String="assets", ?modName:String) {
+		super(folderPath, libName, modName);
 
 		this.scriptName = scriptName;
 		script = Script.create(Paths.script("data/library/" + scriptName));
@@ -105,6 +105,14 @@ class ScriptedAssetLibrary extends ModsFolderLibrary {
 			return result == nullValue ? null : result;
 		}
 		return super.getAssetPath();
+	}
+
+	public override function list(type:String) {
+		var result:Dynamic = script.call("list", [type]);
+		if(result != null) {
+			return result == nullValue ? null : result;
+		}
+		return super.list(type);
 	}
 
 	private override function __isCacheValid(cache:Map<String, Dynamic>, asset:String, isLocalCache:Bool = false) {

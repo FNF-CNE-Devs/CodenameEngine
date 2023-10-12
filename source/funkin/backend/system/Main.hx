@@ -136,6 +136,7 @@ class Main extends Sprite
 			trace("Used cne test / cne build. Switching into source assets.");
 			#if MOD_SUPPORT
 				ModsFolder.modsPath = './${pathBack}mods/';
+				ModsFolder.addonsPath = './${pathBack}addons/';
 			#end
 			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', './${pathBack}assets/', true));
 		#elseif USE_ADAPTED_ASSETS
