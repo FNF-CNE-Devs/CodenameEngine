@@ -1527,7 +1527,7 @@ class PlayState extends MusicBeatState
 		rating.velocity.y -= FlxG.random.int(140, 175);
 		rating.velocity.x -= FlxG.random.int(0, 10);
 		if (evt != null) {
-			rating.scale.set(evt.ratingScale,evt.ratingScale);
+			rating.scale.set(evt.ratingScale, evt.ratingScale);
 			rating.antialiasing = evt.ratingAntialiasing;
 		}
 		rating.updateHitbox();
@@ -1543,7 +1543,7 @@ class PlayState extends MusicBeatState
 	public function displayCombo(?evt:NoteHitEvent = null):Void {
 		var pre:String = evt != null ? evt.ratingPrefix : "";
 		var suf:String = evt != null ? evt.ratingSuffix : "";
-		
+
 		var separatedScore:String = Std.string(combo).addZeros(3);
 
 		if (combo == 0 || combo >= 10) {

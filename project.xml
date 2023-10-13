@@ -169,6 +169,8 @@
 	<haxedef name="SOFTCODED_CLASSES" if="SOFTCODED_CLASSES" />
 	<haxedef name="openfl_dpi_aware" if="openfl_dpi_aware" />
 
+	<haxedef name="EXPERIMENTAL_FLXGRAPHIC_DESTROY_FIX" />
+
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel" />
