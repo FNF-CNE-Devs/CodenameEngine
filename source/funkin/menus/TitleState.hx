@@ -48,9 +48,9 @@ class TitleState extends MusicBeatState
 
 		MusicBeatState.skipTransIn = true;
 
-		super.create();
-
 		startIntro();
+		
+		super.create();
 	}
 
 	var logoBl:FlxSprite;
