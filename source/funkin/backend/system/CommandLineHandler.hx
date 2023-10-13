@@ -26,7 +26,7 @@ class CommandLineHandler {
 					var arg = cmd[i];
 					if (arg == null) {
 						Sys.println("[ERROR] You need to specify the mod name");
-						Sys.exit(0);
+						Sys.exit(1);
 					} else {
 						Main.modToLoad = arg.trim();
 					}
@@ -35,24 +35,24 @@ class CommandLineHandler {
 					var arg = cmd[i];
 					if (arg == null) {
 						Sys.println("[ERROR] You need to specify the mod folder path");
-						Sys.exit(0);
+						Sys.exit(1);
 					} else if (FileSystem.exists(arg)) {
 						funkin.backend.assets.ModsFolder.modsPath = arg;
 					} else {
 						Sys.println('[ERROR] Mod folder at "${arg}" does not exist.');
-						Sys.exit(0);
+						Sys.exit(1);
 					}
 				case "-addonsfolder":
 					i++;
 					var arg = cmd[i];
 					if (arg == null) {
 						Sys.println("[ERROR] You need to specify the addon folder path");
-						Sys.exit(0);
+						Sys.exit(1);
 					} else if (FileSystem.exists(arg)) {
 						funkin.backend.assets.ModsFolder.addonsPath = arg;
 					} else {
 						Sys.println('[ERROR] Addons folder at "${arg}" does not exist.');
-						Sys.exit(0);
+						Sys.exit(1);
 					}
 				#end
 				case "-nocolor":
