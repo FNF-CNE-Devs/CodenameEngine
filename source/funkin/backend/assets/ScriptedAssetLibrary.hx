@@ -22,8 +22,8 @@ class ScriptedAssetLibrary extends ModsFolderLibrary {
 	private static var nullValue:Dynamic = {};
 
 	public function new(scriptName:String, args:Array<Dynamic> = null, folderPath:String="./assets/", libName:String="assets", ?modName:String) {
-		super(folderPath, libName, modName);
 		if(modName == null) modName = scriptName;
+		super(folderPath, libName, modName);
 		this.scriptName = scriptName;
 		script = Script.create(Paths.script("data/library/" + scriptName));
 		script.setParent(this);
