@@ -89,6 +89,22 @@ class ModsFolder {
 		#end
 	}
 
+	public static function getLoadedMods():Array<String> {
+		var libs = [];
+		for (i in Paths.assetsTree.libraries) {
+			var l = i;
+			if (l is openfl.utils.AssetLibrary) {
+				var al = cast(l, openfl.utils.AssetLibrary);
+				@:privateAccess
+				if (al.__proxy != null) l = al.__proxy;
+			}
+			var libString:String;
+			if (l is ScriptedAssetLibrary || l is IModsAssetLibrary) libString = cast(l, IModsAssetLibrary).modName;
+			else continue;
+			libs.push(libString);
+		}
+		return libs;
+	}
 	public static function prepareLibrary(libName:String, force:Bool = false) {
 		var assets:AssetManifest = new AssetManifest();
 		assets.name = libName;
