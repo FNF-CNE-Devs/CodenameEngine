@@ -100,10 +100,10 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	}
 
 	function loadScript() {
+		var className = Type.getClassName(Type.getClass(this));
+		if (stateScripts == null)
+			(stateScripts = new ScriptPack(className)).setParent(this);
 		if (scriptsAllowed) {
-			var className = Type.getClassName(Type.getClass(this));
-			if (stateScripts == null)
-				(stateScripts = new ScriptPack(className)).setParent(this);
 			if (stateScripts.scripts.length == 0) {
 				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
 				for (i in funkin.backend.assets.ModsFolder.getLoadedMods()) {
