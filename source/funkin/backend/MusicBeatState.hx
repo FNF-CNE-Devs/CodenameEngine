@@ -171,7 +171,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		// calls the function on the assigned script
 		if(stateScripts != null)
 			return stateScripts.call(name, args);
-		return null;
+		return defaultVal;
 	}
 
 	public function event<T:CancellableEvent>(name:String, event:T):T {
