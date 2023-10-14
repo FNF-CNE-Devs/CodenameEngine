@@ -32,13 +32,8 @@ class CharterSelection extends EditorTreeMenu {
 					})
 				];
 				list.push(new NewOption("New Difficulty", "New Difficulty", function() {
-					openSubState(new UIWarningSubstate("New Difficulty", "This feature isnt implemented yet", [
-						{
-							label: "OK",
-							onClick: function(t) {
-
-							}
-						}
+					openSubState(new UIWarningSubstate("New Difficulty: Feature Not Implemented!", "This feature isnt implemented yet. Please wait for more cne updates to have this functional.\n\n\n- Codename Devs", [
+						{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
 					]));
 				}));
 				optionsTree.add(new OptionsScreen(s.name, "Select a difficulty to continue.", list));
@@ -91,9 +86,18 @@ class CharterSelection extends EditorTreeMenu {
 	}
 
 	public function saveSong(creation:SongCreationData) {
+		var songAlreadlyExsits:Bool = [for (s in freeplayList.songs) s.name.toLowerCase()].contains(creation.meta.name.toLowerCase());
+
+		if (songAlreadlyExsits) {
+			openSubState(new UIWarningSubstate("Creating Song: Error!", "The song you are trying to create alreadly exists, if you would like to override it delete the song first!", [
+				{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+			]));
+			return;
+		}
+
 		// Paths
 		var songsDir:String = '${Paths.getAssetsRoot()}/songs/';
-		var songFolder:String = '$songsDir${creation.meta.name.replace("-", " ")}';
+		var songFolder:String = '$songsDir${creation.meta.name}';
 
 		#if sys
 		// Make Directories
@@ -115,13 +119,8 @@ class CharterSelection extends EditorTreeMenu {
 					})
 			];
 			list.push(new NewOption("New Difficulty", "New Difficulty", function() {
-				openSubState(new UIWarningSubstate("New Difficulty", "This feature isnt implemented yet", [
-					{
-						label: "OK",
-						onClick: function(t) {
-
-						}
-					}
+				openSubState(new UIWarningSubstate("New Difficulty: Feature Not Implemented!", "This feature isnt implemented yet. Please wait for more cne updates to have this functional.\n\n\n- Codename Devs", [
+					{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
 				]));
 			}));
 			optionsTree.add(new OptionsScreen(creation.meta.name, "Select a difficulty to continue.", list));

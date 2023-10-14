@@ -11,14 +11,14 @@ class MusicBeatTransition extends MusicBeatSubstate {
 	public var transitionCamera:FlxCamera;
 	public var newState:FlxState;
 
+	public var blackSpr:FlxSprite;
+	public var transitionSprite:FunkinSprite;
 	public function new(?newState:FlxState) {
 		super();
 		this.newState = newState;
 	}
 
 	public override function create() {
-		super.create();
-
 		if (newState != null)
 			add(new FunkinParentDisabler(true));
 
@@ -29,13 +29,13 @@ class MusicBeatTransition extends MusicBeatSubstate {
 		cameras = [transitionCamera];
 		var out = newState != null;
 
-		var blackSpr = new FlxSprite(0, out ? -transitionCamera.height : transitionCamera.height).makeGraphic(1, 1, -1);
+		blackSpr = new FlxSprite(0, out ? -transitionCamera.height : transitionCamera.height).makeGraphic(1, 1, -1);
 		blackSpr.scale.set(transitionCamera.width, transitionCamera.height);
 		blackSpr.color = 0xFF000000;
 		blackSpr.updateHitbox();
 		add(blackSpr);
 
-		var transitionSprite = new FunkinSprite();
+		transitionSprite = new FunkinSprite();
 		transitionSprite.loadSprite(Paths.image('menus/transitionSpr'));
 		if (transitionSprite.animateAtlas == null) {
 			transitionSprite.setGraphicSize(transitionCamera.width, transitionCamera.height);
@@ -53,6 +53,8 @@ class MusicBeatTransition extends MusicBeatSubstate {
 				finish();
 			}
 		});
+		
+		super.create();
 	}
 
 	public override function update(elapsed:Float) {

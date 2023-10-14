@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="button.png">
+	<!-- Created without animate lol i wrote this-->
+	<SubTexture name="topleft" x="0" y="0" width="30" height="30"/>
+	<SubTexture name="top" x="30" y="0" width="99" height="30"/>
+	<SubTexture name="topright" x="129" y="0" width="30" height="30"/>
+	<SubTexture name="middleleft" x="0" y="30" width="30" height="33"/>
+	<SubTexture name="middle" x="30" y="30" width="99" height="33"/>
+	<SubTexture name="middleright" x="129" y="30" width="30" height="33"/>
+	<SubTexture name="bottomleft" x="0" y="63" width="30" height="30"/>
+	<SubTexture name="bottom" x="30" y="63" width="99" height="30"/>
+	<SubTexture name="bottomright" x="129" y="63" width="30" height="30"/>
+</TextureAtlas>

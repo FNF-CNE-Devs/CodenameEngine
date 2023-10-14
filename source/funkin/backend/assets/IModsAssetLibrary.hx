@@ -23,6 +23,7 @@ using StringTools;
 
 interface IModsAssetLibrary {
 	public var prefix:String;
+	public var modName:String;
 	public var libName:String;
 
 	#if MOD_SUPPORT

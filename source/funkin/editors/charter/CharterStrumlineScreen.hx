@@ -59,11 +59,14 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		var title:UIText;
 		add(title = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, creatingStrumLine ? "Create New Strumline" : "Edit Strumline Properties", 28));
 
+		var charFileList = Character.getList(true);
+		if (charFileList.length == 0) charFileList = Character.getList(false);
+		
 		charactersList = new UIButtonList<CharacterButton>(15, title.y + title.height + 36, 250, 259, "", FlxPoint.get(250, 54), null, 0);
-		charactersList.addButton.callback = () -> charactersList.add(new CharacterButton(0, 0, "New Char", charactersList));
+		charactersList.addButton.callback = () -> charactersList.add(new CharacterButton(0, 0, "New Char", charFileList, charactersList));
 		charactersList.cameraSpacing = 0;
 		for (i in strumLine.characters)
-			charactersList.add(new CharacterButton(0, 0, i, charactersList));
+			charactersList.add(new CharacterButton(0, 0, i, charFileList, charactersList));
 		add(charactersList);
 		addLabelOn(charactersList, "Characters");
 
@@ -126,13 +129,12 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		}, 125);
 		add(saveButton);
 
-		closeButton = new UIButton(saveButton.x - 20, saveButton.y, creatingStrumLine ? "Cancel" : "Close", function() {
+		closeButton = new UIButton(saveButton.x - 20 - saveButton.bWidth, saveButton.y, creatingStrumLine ? "Cancel" : "Close", function() {
 			if (creatingStrumLine && onSave != null) onSave(null);
 			close();
 		}, 125);
 		add(closeButton);
 		closeButton.color = 0xFFFF0000;
-		closeButton.x -= closeButton.bWidth;
 	}
 
 	function saveStrumline() {
@@ -158,11 +160,11 @@ class CharterStrumlineScreen extends UISubstateWindow {
 
 class CharacterButton extends UIButton {
 	public var charIcon:HealthIcon;
-	public var textBox:UITextBox;
+	public var textBox:UIAutoCompleteTextBox;
 	public var deleteButton:UIButton;
 	public var deleteIcon:FlxSprite;
 
-	public function new(x:Float, y:Float, char:String, parent:UIButtonList<CharacterButton>) {
+	public function new(x:Float, y:Float, char:String, charsList:Array<String>, parent:UIButtonList<CharacterButton>) {
 		super(x, y, "", null, 250, 54);
 		autoAlpha = false;
 
@@ -174,7 +176,8 @@ class CharacterButton extends UIButton {
 
 		members.push(charIcon);
 
-		members.push(textBox = new UITextBox(charIcon.x + charIcon.width + 16, bHeight/2 - (32/2), char, 115));
+		members.push(textBox = new UIAutoCompleteTextBox(charIcon.x + charIcon.width + 16, bHeight/2 - (32/2), char, 115));
+		textBox.suggestItems = charsList;
 		textBox.antialiasing = true;
 		textBox.onChange = function(char:String) {
 			char = Character.getIconFromCharName(char);

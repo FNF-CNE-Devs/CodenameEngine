@@ -27,6 +27,7 @@ import funkin.backend.utils.SysZip.SysZipEntry;
 
 class ZipFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	public var zipPath:String;
+	public var modName:String;
 	public var libName:String;
 	public var useImageCache:Bool = false;
 	public var prefix = 'assets/';
@@ -34,9 +35,14 @@ class ZipFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 	public var zip:SysZip;
 	public var assets:Map<String, SysZipEntry> = [];
 
-	public function new(zipPath:String, libName:String) {
+	public function new(zipPath:String, libName:String, ?modName:String) {
 		this.zipPath = zipPath;
 		this.libName = libName;
+
+		if(modName == null)
+			this.modName = libName;
+		else
+			this.modName = modName;
 
 		zip = SysZip.openFromFile(zipPath);
 		zip.read();
@@ -77,7 +83,18 @@ class ZipFolderLibrary extends AssetLibrary implements IModsAssetLibrary {
 
 	public function __parseAsset(asset:String):Bool {
 		if (!asset.startsWith(prefix)) return false;
-		_parsedAsset = asset.substr(prefix.length).toLowerCase();
+		_parsedAsset = asset.substr(prefix.length);
+		if(ModsFolder.useLibFile) {
+			var file = new haxe.io.Path(_parsedAsset);
+			if(file.file.startsWith("LIB_")) {
+				var library = file.file.substr(4);
+				if(library != modName) return false;
+
+				_parsedAsset = file.dir + "." + file.ext;
+			}
+		}
+
+		_parsedAsset = _parsedAsset.toLowerCase();
 		return true;
 	}
 

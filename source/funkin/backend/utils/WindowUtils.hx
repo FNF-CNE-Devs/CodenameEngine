@@ -2,7 +2,7 @@ package funkin.backend.utils;
 
 import openfl.Lib;
 
-class WindowTitle {
+class WindowUtils {
 	public static var winTitle(default, set):String;
 	public static function set_winTitle(newWinTitle:String):String {
 		winTitle = newWinTitle;
@@ -22,10 +22,26 @@ class WindowTitle {
 		return endPrefix;
 	}
 
-	public static inline function init()
-		reset();
+	public static var preventClosing:Bool = true;
+	public static var onClosing:Void->Void;
 
-	public static inline function reset() {
+	static var __triedClosing:Bool = false;
+	public static inline function resetClosing() __triedClosing = false;
+
+	public static inline function init() {
+		resetTitle();
+		resetClosing();
+
+		Lib.application.window.onClose.add(function () {
+			if (preventClosing && !__triedClosing) {
+				Lib.application.window.onClose.cancel();
+				__triedClosing = true;
+			}
+			if (onClosing != null) onClosing();
+		});
+	}
+
+	public static inline function resetTitle() {
 		winTitle = Lib.application.meta["name"];
 		prefix = endfix = "";
 		updateTitle();

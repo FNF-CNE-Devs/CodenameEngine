@@ -9,7 +9,7 @@ import sys.io.File;
 import funkin.backend.FunkinText;
 import haxe.xml.Access;
 #if VIDEO_CUTSCENES
-import hxcodec.flixel.FlxVideo;
+import hxvlc.flixel.FlxVideo;
 #end
 
 /**

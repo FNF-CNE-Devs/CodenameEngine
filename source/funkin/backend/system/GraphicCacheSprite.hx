@@ -25,14 +25,21 @@ class GraphicCacheSprite extends FlxSprite {
 	 * @param path Path to the graphic.
 	 */
 	public function cache(path:String) {
-		var graphic = FlxG.bitmap.add(path);
-		if (graphic != null) {
-			// make their useCount one time higher to prevent them from auto being cleared from cache
-			graphic.useCount++;
-			graphic.destroyOnNoUse = false;
-			cachedGraphics.push(graphic);
-			nonRenderedCachedGraphics.push(graphic);
-		}
+		cacheGraphic(FlxG.bitmap.add(path));
+	}
+
+	/**
+	 * Caches a graphic.
+	 * @param graphic The FlxGraphic
+	 */
+	public function cacheGraphic(graphic:FlxGraphic) {
+		if (graphic == null) return;
+
+		// make their useCount one time higher to prevent them from auto being cleared from cache
+		graphic.useCount++;
+		graphic.destroyOnNoUse = false;
+		cachedGraphics.push(graphic);
+		nonRenderedCachedGraphics.push(graphic);
 	}
 
 	public override function destroy() {

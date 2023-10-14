@@ -33,6 +33,7 @@ class UIState extends MusicBeatState {
 		__mousePos = FlxPoint.get();
 		super.create();
 		Framerate.offset.y = 30;
+		FlxG.mouse.visible = true;
 
 		FlxG.stage.window.onKeyDown.add(onKeyDown);
 		FlxG.stage.window.onKeyUp.add(onKeyUp);
@@ -57,6 +58,13 @@ class UIState extends MusicBeatState {
 	private function onTextEdit(str:String, start:Int, end:Int) {
 		if (currentFocus != null)
 			currentFocus.onTextEdit(str, start, end);
+	}
+
+	public inline function updateSpriteRect(spr:UISprite) {
+		spr.__rect.x = spr.x;
+		spr.__rect.y = spr.y;
+		spr.__rect.width = spr.width;
+		spr.__rect.height = spr.height;
 	}
 
 	public function updateButtonHandler(spr:UISprite, buttonHandler:Void->Void) {
@@ -121,6 +129,10 @@ class UIState extends MusicBeatState {
 	public override function destroy() {
 		super.destroy();
 		__mousePos.put();
+
+		WindowUtils.resetTitle();
+		SaveWarning.reset();
+
 		FlxG.stage.window.onKeyDown.remove(onKeyDown);
 		FlxG.stage.window.onKeyUp.remove(onKeyUp);
 		FlxG.stage.window.onTextInput.remove(onTextInput);

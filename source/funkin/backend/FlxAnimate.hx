@@ -25,7 +25,7 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 
 			getScreenPosition(_point, camera).subtractPoint(offset);
 			rMatrix.translate(-origin.x, -origin.y);
-			if (!showPivot && limb.name != "pivot") {
+			if (limb != _pivot) {
 				if (frameOffsetAngle != null && frameOffsetAngle != angle)
 				{
 					var angleOff = (-angle + frameOffsetAngle) * FlxAngle.TO_RAD;

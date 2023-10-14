@@ -238,6 +238,17 @@ class Stage extends FlxBasic implements IBeatReceiver {
 	public function stepHit(curStep:Int) {}
 
 	public function measureHit(curMeasure:Int) {}
+
+	public static function getList(?mods:Bool = false):Array<String> {
+		var list:Array<String> = [];
+		for (path in Paths.getFolderContent('data/stages/', true, mods ? MODS : BOTH))
+			if (Path.extension(path) == "xml" || Path.extension(path) == "hx") {
+				var file:String = Path.withoutDirectory(Path.withoutExtension(path));
+				if (!list.contains(file)) list.push(file);
+			}
+				
+		return list;
+	}
 }
 
 class StageCharPos extends FlxObject {

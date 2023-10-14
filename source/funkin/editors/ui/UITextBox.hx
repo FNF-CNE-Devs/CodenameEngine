@@ -68,7 +68,7 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 		}
 
 		var off = multiline ? 4 : ((bHeight - label.height) / 2);
-		label.follow(this, 4, off);
+		label.follow(this, label.autoSize ? (bWidth-label.textField.width)/2 : 4, off);
 		framesOffset = (selected ? 18 : (hovered ? 9 : 0));
 		@:privateAccess {
 			if (selected) {
@@ -104,6 +104,7 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 		switch(e) {
 			case RETURN:
 				focused = false;
+				if (onChange != null) onChange(label.text);
 			case LEFT:
 				changeSelection(-1);
 			case RIGHT:
@@ -140,7 +141,6 @@ class UITextBox extends UISliceSprite implements IUIFocusable {
 	}
 	// untested, but this should be a fix for if the text wont type
 	public function onTextEdit(text:String, start:Int, end:Int):Void {
-		trace(text, start, end);
 		label.text = label.text.substr(0, position) + text + label.text.substr(position);
 		position += text.length;
 	}

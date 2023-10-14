@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import flixel.util.FlxSort;
 import funkin.backend.system.Conductor;
 
 class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
@@ -7,6 +8,9 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	var i:Int = 0;
 	var max:Float = 0;
 	var __currentlyLooping:Bool = false;
+
+	public var autoSort:Bool = true;
+	var __lastSort:Int = 0;
 
 	public override function forEach(noteFunc:CharterNote->Void, recursive:Bool = false) {
 		__loopSprite = null;
@@ -17,18 +21,18 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 		__currentlyLooping = true;
 
 		var curStep = Conductor.curStepFloat;
-		if (FlxG.state is Charter && !FlxG.sound.music.playing)
-			curStep = cast(FlxG.state, Charter).conductorFollowerSpr.y / 40;
+		if (!FlxG.sound.music.playing)
+			curStep = Charter.instance.gridBackdrops.conductorSprY / 40;
 
 		var begin = SortedArrayUtil.binarySearch(members, curStep - max, getVarForEachAdd);
 		var end = SortedArrayUtil.binarySearch(members, curStep + max, getVarForEachRemove);
 
 		for(i in begin...end) {
 			__loopSprite = members[i];
-			if (!cast(FlxG.state, Charter).selection.contains(__loopSprite))
+			if (!Charter.instance.selection.contains(__loopSprite))
 				noteFunc(__loopSprite);
 		}
-		for(c in cast(FlxG.state, Charter).selection.copy())
+		for(c in Charter.instance.selection.copy())
 			if (c is CharterNote) noteFunc(cast (c, CharterNote));
 
 		__currentlyLooping = oldCur;
@@ -50,27 +54,34 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 	private static function getVarForEachRemove(n:CharterNote)
 		return n.step - n.susLength;
 
-	public override function draw() {
-		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
-		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
-
-		forEach((n) -> {
-			if(n.exists && n.visible)
-				n.draw();
-		});
-
-		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
-	}
+	public override function draw() {}
 
 	public override function update(elapsed:Float) {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
 		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
 
+		if (length != __lastSort && autoSort)
+			sortNotes();
+		
 		forEach((n) -> {
 			if(n.exists && n.active)
 				n.update(elapsed);
 		});
 
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
+	}
+
+	public function sortNotes() {
+		__lastSort = length;
+		this.sort(function(i, n1, n2) {
+			if (n1.step == n2.step)
+				return FlxSort.byValues(FlxSort.ASCENDING, n1.fullID, n2.fullID);
+			return FlxSort.byValues(FlxSort.ASCENDING, n1.step, n2.step);
+		});
+	}
+
+	public inline function preallocate(len:Int) {
+		members = cast new haxe.ds.Vector<CharterNote>(len);
+		length = len;
 	}
 }

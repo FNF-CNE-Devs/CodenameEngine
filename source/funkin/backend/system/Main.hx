@@ -1,5 +1,6 @@
 package funkin.backend.system;
 
+import funkin.editors.SaveWarning;
 import funkin.backend.assets.AssetsLibraryList;
 import funkin.backend.system.framerate.SystemInfo;
 import openfl.utils.AssetLibrary;
@@ -107,7 +108,8 @@ class Main extends Sprite
 	}
 
 	public static function loadGameSettings() {
-		WindowTitle.init();
+		WindowUtils.init();
+		SaveWarning.init();
 		MemoryUtil.init();
 		@:privateAccess
 		FlxG.game.getTimer = getTimer;
@@ -134,6 +136,7 @@ class Main extends Sprite
 			trace("Used cne test / cne build. Switching into source assets.");
 			#if MOD_SUPPORT
 				ModsFolder.modsPath = './${pathBack}mods/';
+				ModsFolder.addonsPath = './${pathBack}addons/';
 			#end
 			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', './${pathBack}assets/', true));
 		#elseif USE_ADAPTED_ASSETS

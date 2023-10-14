@@ -33,8 +33,6 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 		cursor = BUTTON;
 
-		//canBeHovered = false;
-
 		moves = false;
 
 		sustainSpr = new FlxSprite(10, 40);
@@ -50,19 +48,28 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		UIState.state.updateRectButtonHandler(this, __rect, onHovered);
 	}
 
-
 	public var step:Float;
 	public var id:Int;
 	public var susLength:Float;
 	public var type:Int;
 
-	public function updatePos(step:Float, id:Int, susLength:Float = 0, type:Int = 0) {
+	public var strumLine:CharterStrumline;
+	public var strumLineID(get, never):Int;
+	public function get_strumLineID():Int
+		return strumLine == null ? -1 : Charter.instance.strumLines.members.indexOf(strumLine);
+
+	public var snappedToStrumline:Bool = true;
+
+	public var fullID(get, never):Int; // instead of %4 get fullID (for mousepos stuff)
+	public function get_fullID():Int
+		return (strumLineID * 4) + id;
+
+	public function updatePos(step:Float, id:Int, susLength:Float = 0, ?type:Int = 0, ?strumLine:CharterStrumline = null) {
 		this.step = step;
 		this.id = id;
 		this.susLength = susLength;
 		this.type = type;
-
-		x = id * 40;
+		if (strumLine != null) this.strumLine = strumLine;
 		y = step * 40;
 
 		sustainSpr.scale.set(10, (40 * susLength));
@@ -121,12 +128,12 @@ class CharterNote extends UISprite implements ICharterSelectable {
 			sustainSpr.follow(this, 15, 20);
 
 		if (__passed != (__passed = step < Conductor.curStepFloat)) {
-			alpha = __passed ? 0.6 : 1;
-			if (__passed && FlxG.sound.music.playing && Charter.instance.hitsoundsEnabled(id))
+			if (__passed && FlxG.sound.music.playing && Charter.instance.hitsoundsEnabled(strumLineID))
 				Charter.instance.hitsound.replay();
 		}
-		if(sustainSpr.exists)
-			sustainSpr.alpha = alpha;
+
+		alpha = strumLine != null && !strumLine.strumLine.visible ? (__passed ? 0.2 : 0.4) : (__passed ? 0.6 : 1); 
+		if(sustainSpr.exists) sustainSpr.alpha = alpha;
 
 		colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;
 		colorTransform.redOffset = colorTransform.greenOffset = selected ? 96 : 0;
@@ -141,21 +148,20 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		var maxX = Std.int(Math.ceil((selectionBox.x + selectionBox.bWidth) / 40));
 		var maxY = ((selectionBox.y + selectionBox.bHeight) / 40);
 
-		return this.id >= minX && this.id < maxX && this.step >= minY && this.step < maxY;
+		return this.fullID >= minX && this.fullID < maxX && this.step >= minY && this.step < maxY;
 	}
 
 	public function handleDrag(change:FlxPoint) {
-		var newID:Int = id + Std.int(change.y);
-		if (newID > ((Charter.instance.strumLines.members.length*4)-1)) newID %= 4;
-		else if (newID < 0) newID = (Charter.instance.strumLines.members.length*4) + newID % 4;
+		var newStep = FlxMath.bound(step + change.x, 0, Charter.instance.__endStep-1);
+		var newID:Int = Std.int(FlxMath.bound(fullID + Std.int(change.y), 0, (Charter.instance.strumLines.members.length*4)-1));
 
-		updatePos(step + change.x, newID, susLength, type);
-
-		Charter.instance.notesGroup.remove(this);
-		Charter.instance.notesGroup.add(this);
+		updatePos(newStep, newID % 4, susLength, type, Charter.instance.strumLines.members[Std.int(newID/4)]);
 	}
 
 	public override function draw() {
+		if (snappedToStrumline)
+			x = (strumLine != null ? strumLine.x : 0) + (id % 4) * 40;
+
 		drawMembers();
 		drawSuper();
 	}

@@ -42,14 +42,20 @@ class EventsData {
 		hscriptParser.allowJSON = hscriptParser.allowMetadata = false;
 
 		for (file in Paths.getFolderContent('data/events/', true, BOTH)) {
-			if (Path.extension(file) != "json") continue;
+			if (Path.extension(file) != "json" && Path.extension(file) != "pack") continue;
 			var eventName:String = Path.withoutExtension(Path.withoutDirectory(file));
+			var fileTxt:String = Assets.getText(file);
+
+			if (Path.extension(file) == "pack") {
+				var arr = fileTxt.split("________PACKSEP________");
+				eventName = Path.withoutExtension(arr[0]);
+				fileTxt = arr[2];
+			}
+
+			if (fileTxt.trim() == "") continue;
 
 			eventsList.push(eventName);
 			eventsParams.set(eventName, []);
-
-			var fileTxt:String = Assets.getText(file);
-			if (fileTxt.trim() == "") continue;
 
 			try {
 				var data:Dynamic = Json.parse(fileTxt);

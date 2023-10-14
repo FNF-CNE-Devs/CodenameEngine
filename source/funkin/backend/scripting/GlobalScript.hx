@@ -9,7 +9,7 @@ import funkin.backend.assets.ModsFolder;
  * Class for THE Global Script, aka script that runs in the background at all times.
  */
 class GlobalScript {
-	public static var script:Script;
+	public static var scripts:ScriptPack;
 
 	public static function init() {
 		#if MOD_SUPPORT
@@ -43,19 +43,17 @@ class GlobalScript {
 		FlxG.signals.postUpdate.add(function() {
 			call("postUpdate", [FlxG.elapsed]);
 			if (FlxG.keys.justPressed.F5) {
-				if (script != null && !(script is DummyScript)) {
+				if (scripts.scripts.length > 0) {
 					Logs.trace('Reloading global script...', WARNING, YELLOW);
-					script.reload();
+					scripts.reload();
 					Logs.trace('Global script successfully reloaded.', WARNING, GREEN);
 				} else {
 					Logs.trace('Loading global script...', WARNING, YELLOW);
 					onModSwitch(#if MOD_SUPPORT ModsFolder.currentModFolder #else null #end);
-					if (script is DummyScript)
-						Logs.trace('Global script not found. Are you sure "data/global.hx" exists?', ERROR, RED);
-					else
-						Logs.trace('Global script successfully loaded.', WARNING, GREEN);
 				}
 			}
+			if (FlxG.keys.justPressed.F2)
+				NativeAPI.allocConsole();
 		});
 		FlxG.signals.preDraw.add(function() {
 			call("preDraw");
@@ -81,23 +79,25 @@ class GlobalScript {
 	}
 
 	public static function event<T:CancellableEvent>(name:String, event:T):T {
-		if (script == null) return event;
-		script.call(name, [event]);
+		if (scripts != null) scripts.call(name, [event]);
 		return event;
 	}
 
 	public static function call(name:String, ?args:Array<Dynamic>) {
-		if (script == null) return;
-		script.call(name, args);
+		if (scripts != null) scripts.call(name, args);
 	}
 	public static function onModSwitch(newMod:String) {
 		call("onDestroy");
-		if (script != null) {
-			script.destroy();
-			script = null;
+		scripts = FlxDestroyUtil.destroy(scripts);
+		scripts = new ScriptPack("GlobalScript");
+		for (i in funkin.backend.assets.ModsFolder.getLoadedMods()) {
+			var path = Paths.script('data/global/LIB_$i');
+			var script = Script.create(path);
+			if (script is DummyScript) continue;
+			script.fileName = '$i:global.hx';
+			scripts.add(script);
+			script.load();
 		}
-		script = Script.create(Paths.script('data/global'));
-		script.load();
 	}
 
 	public static function beatHit(curBeat:Int) {

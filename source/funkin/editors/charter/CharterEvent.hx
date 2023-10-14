@@ -3,8 +3,8 @@ package funkin.editors.charter;
 import funkin.editors.charter.Charter.ICharterSelectable;
 import flixel.math.FlxPoint;
 import funkin.game.Character;
-import funkin.backend.system.Conductor;
 import funkin.game.HealthIcon;
+import funkin.editors.charter.CharterBackdropGroup.EventBackdrop;
 import funkin.backend.chart.ChartData.ChartEvent;
 
 class CharterEvent extends UISliceSprite implements ICharterSelectable {
@@ -14,6 +14,9 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 
 	public var selected:Bool = false;
 	public var draggable:Bool = true;
+
+	public var eventsBackdrop:EventBackdrop;
+	public var snappedToGrid:Bool = true;
 
 	public function new(step:Float, ?events:Array<ChartEvent>) {
 		super(-100, (step * 40) - 17, 100, 34, 'editors/charter/event-spr');
@@ -25,6 +28,10 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
+
+		if (snappedToGrid && eventsBackdrop != null)
+			x = eventsBackdrop.x + eventsBackdrop.width - (bWidth = 37 + (icons.length * 22));
+
 		for(k=>i in icons) {
 			i.follow(this, (k * 22) + 30 - (i.width / 2), (bHeight - i.height) / 2);
 		}
@@ -38,10 +45,15 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 	}
 
 	private static function generateDefaultIcon(name:String) {
+		var isBase64:Bool = false;
 		var path:String = Paths.image('editors/charter/event-icons/$name');
 		if (!Assets.exists(path)) path = Paths.image('editors/charter/event-icons/Unknown');
-
-		var spr = new FlxSprite().loadGraphic(path);
+		if (Assets.exists(Paths.pack('events/$name'))) {
+			var packimg = Assets.getText(Paths.pack('events/$name')).split('________PACKSEP________')[3];
+			if (isBase64 = (packimg != null))
+				path = Assets.getText(Paths.pack('events/$name')).split('________PACKSEP________')[3];	
+		}
+		var spr = new FlxSprite().loadGraphic(isBase64 ? openfl.display.BitmapData.fromBase64(path.trim(), 'UTF8') : path);
 		return spr;
 	}
 
@@ -77,8 +89,10 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 		return (selectionBox.x + selectionBox.bWidth > x) && (selectionBox.x < x + bWidth) && (selectionBox.y + selectionBox.bHeight > y) && (selectionBox.y < y + bHeight);
 	}
 
-	public function handleDrag(change:FlxPoint)
-		y = ((step += change.x) * 40) - 17;
+	public function handleDrag(change:FlxPoint) {
+		var newStep:Float = step = FlxMath.bound(step + change.x, 0, Charter.instance.__endStep-1);
+		y = ((newStep) * 40) - 17;
+	}
 
 	public function refreshEventIcons() {
 		while(icons.length > 0) {
@@ -100,6 +114,6 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 				break;
 			}
 
-		x = -(bWidth = 37 + (icons.length * 22));
+		x = (snappedToGrid && eventsBackdrop != null ? eventsBackdrop.x : 0) - (bWidth = 37 + (icons.length * 22));
 	}
 }

@@ -48,6 +48,9 @@ class Paths
 	inline static public function txt(key:String, ?library:String)
 		return getPath('data/$key.txt', library);
 
+	inline static public function pack(key:String, ?library:String)
+		return getPath('data/$key.pack', library);
+
 	inline static public function ini(key:String, ?library:String)
 		return getPath('data/$key.ini', library);
 
@@ -161,7 +164,7 @@ class Paths
 	inline static public function getPackerAtlasAlt(key:String)
 		return FlxAtlasFrames.fromSpriteSheetPacker('$key.png', '$key.txt');
 
-	inline static public function getAssetsRoot():String 
+	inline static public function getAssetsRoot():String
 		return  ModsFolder.currentModFolder != null ? '${ModsFolder.modsPath}${ModsFolder.currentModFolder}' : './assets';
 
 	/**
@@ -196,25 +199,18 @@ class Paths
 			// MULTIPLE SPRITESHEETS!!
 
 			var graphic = FlxG.bitmap.add("flixel/images/logo/default.png", false, '$noExt/mult');
-			var frames = FlxAtlasFrames.findFrame(graphic);
+			var frames = MultiFramesCollection.findFrame(graphic);
 			if (frames != null)
 				return frames;
 
 			trace("no frames yet for multiple atlases!!");
-			var spritesheets = [];
 			var cur = 1;
-			var finalFrames = new FlxFramesCollection(graphic, ATLAS);
+			var finalFrames = new MultiFramesCollection(graphic);
 			while(Assets.exists('$noExt/$cur.png')) {
-				spritesheets.push(loadFrames('$noExt/$cur.png'));
+				var spr = loadFrames('$noExt/$cur.png');
+				finalFrames.addFrames(spr);
 				cur++;
 			}
-			for(frames in spritesheets)
-				if (frames != null && frames.frames != null)
-					for(f in frames.frames)
-						if (f != null) {
-							finalFrames.frames.push(f);
-							f.parent = frames.parent;
-						}
 			return finalFrames;
 		} else if (Assets.exists('$noExt.xml')) {
 			return Paths.getSparrowAtlasAlt(noExt);

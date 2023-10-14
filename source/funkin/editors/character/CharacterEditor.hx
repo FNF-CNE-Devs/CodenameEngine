@@ -11,7 +11,7 @@ import flixel.input.keyboard.FlxKey;
 import funkin.game.Character;
 
 class CharacterEditor extends UIState {
-	var __character:String;
+	static var __character:String;
 	public var character:Character;
 
 	public var ghosts:CharacterGhostsHandler;
@@ -45,12 +45,14 @@ class CharacterEditor extends UIState {
 
 	public function new(character:String) {
 		super();
-		__character = character;
+		if (character != null) __character = character;
 	}
 
 	public override function create() {
 		super.create();
 
+		WindowUtils.endfix = " (Character Editor)";
+		SaveWarning.selectionClass = CharacterSelection;
 		topMenu = [
 			{
 				label: "File",
@@ -309,12 +311,16 @@ class CharacterEditor extends UIState {
 
 		characterBG.scale.set(FlxG.width/characterBG.width, FlxG.height/characterBG.height);
 		characterBG.scale.set(characterBG.scale.x / charCamera.zoom, characterBG.scale.y / charCamera.zoom);
+
+		WindowUtils.prefix = undos.unsaved ? "* " : "";
+		SaveWarning.showWarning = undos.unsaved;
 	}
 
 	// TOP MENU OPTIONS
 	#if REGION
 	function _file_exit(_) {
-		FlxG.switchState(new CharacterSelection());
+		if (undos.unsaved) SaveWarning.triggerWarning();
+		else FlxG.switchState(new CharacterSelection());
 	}
 
 	function _file_new(_) {
@@ -323,9 +329,10 @@ class CharacterEditor extends UIState {
 	function _file_save(_) {
 		#if sys
 		sys.io.File.saveContent(
-			Assets.getPath(Paths.xml('characters/${character.curCharacter}')),
+			'${Paths.getAssetsRoot()}/data/characters/${character.curCharacter}.xml',
 			buildCharacter()
 		);
+		undos.save();
 		return;
 		#end
 		_file_saveas(_);
@@ -335,6 +342,7 @@ class CharacterEditor extends UIState {
 		openSubState(new SaveSubstate(buildCharacter(), {
 			defaultSaveFile: '${character.curCharacter}.xml'
 		}));
+		undos.save();
 	}
 
 	function buildCharacter():String {

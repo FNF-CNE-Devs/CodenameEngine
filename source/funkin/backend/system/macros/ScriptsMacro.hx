@@ -21,7 +21,7 @@ class ScriptsMacro {
 			"flixel.addons.util",
 			// OTHER LIBRARIES & STUFF
 			"away3d", "flx3d",
-			#if VIDEO_CUTSCENES "hxcodec.flixel", "hxcodec.openfl", "hxcodec.lime", #end
+			#if VIDEO_CUTSCENES "hxvlc.flixel", "hxvlc.openfl", #end
 			// BASE HAXE
 			"DateTools", "EReg", "Lambda", "StringBuf", "haxe.crypto", "haxe.display", "haxe.exceptions", "haxe.extern", "scripting"
 		])
@@ -38,10 +38,8 @@ class ScriptsMacro {
 
 		Compiler.include("funkin", #if !UPDATE_CHECKING ['funkin.backend.system.updating'] #end);
 
-		// FOR ABSTRACTS
-		Compiler.addGlobalMetadata('haxe.xml', '@:build(hscript.UsingHandler.build())');
-		Compiler.addGlobalMetadata('haxe.CallStack', '@:build(hscript.UsingHandler.build())');
 		#if HL HashLinkFixer.init(); #end
+		// Todo rewrite this to use if(Context.defined(""))
 	}
 }
 #end

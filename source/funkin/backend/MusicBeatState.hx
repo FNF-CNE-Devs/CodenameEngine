@@ -9,6 +9,7 @@ import flixel.FlxState;
 import flixel.FlxSubState;
 import funkin.backend.scripting.events.*;
 import funkin.backend.scripting.Script;
+import funkin.backend.scripting.ScriptPack;
 import funkin.backend.system.interfaces.IBeatReceiver;
 import funkin.backend.system.Conductor;
 import funkin.options.PlayerSettings;
@@ -89,7 +90,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	/**
 	 * Current injected script attached to the state. To add one, create a file at path "data/states/stateName" (ex: data/states/FreeplayState)
 	 */
-	public var stateScript:Script;
+	public var stateScripts:ScriptPack;
 
 	public var scriptsAllowed:Bool = true;
 
@@ -112,15 +113,22 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	}
 
 	function loadScript() {
+		var className = Type.getClassName(Type.getClass(this));
+		if (stateScripts == null)
+			(stateScripts = new ScriptPack(className)).setParent(this);
 		if (scriptsAllowed) {
-			if (stateScript == null || stateScript is DummyScript) {
-				var className = Type.getClassName(Type.getClass(this));
+			if (stateScripts.scripts.length == 0) {
 				var scriptName = this.scriptName != null ? this.scriptName : className.substr(className.lastIndexOf(".")+1);
-				stateScript = Script.create(Paths.script('data/states/${scriptName}'));
-				stateScript.setParent(this);
-				stateScript.load();
-			} else
-				stateScript.reload();
+				for (i in funkin.backend.assets.ModsFolder.getLoadedMods()) {
+					var path = Paths.script('data/states/${scriptName}/LIB_$i');
+					var script = Script.create(path);
+					if (script is DummyScript) continue;
+					script.fileName = '$i:$scriptName';
+					stateScripts.add(script);
+					script.load();
+				}
+			}
+			else stateScripts.reload();
 		}
 	}
 
@@ -161,13 +169,14 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	}
 	public function call(name:String, ?args:Array<Dynamic>, ?defaultVal:Dynamic):Dynamic {
 		// calls the function on the assigned script
-		if (stateScript == null) return defaultVal;
-		return stateScript.call(name, args);
+		if(stateScripts != null)
+			return stateScripts.call(name, args);
+		return defaultVal;
 	}
 
 	public function event<T:CancellableEvent>(name:String, event:T):T {
-		if (stateScript == null) return event;
-		stateScript.call(name, [event]);
+		if(stateScripts != null)
+			stateScripts.call(name, [event]);
 		return event;
 	}
 
@@ -176,8 +185,6 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		// TODO: DEBUG MODE!!
 		if (FlxG.keys.justPressed.F5) {
 			loadScript();
-			if (stateScript != null && !(stateScript is DummyScript))
-				Logs.trace('State script successfully reloaded', WARNING, GREEN);
 		}
 		call("update", [elapsed]);
 
@@ -234,8 +241,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		super.destroy();
 		graphicCache.destroy();
 		call("onDestroy");
-		if (stateScript != null)
-			stateScript.destroy();
+		stateScripts = FlxDestroyUtil.destroy(stateScripts);
 	}
 
 	public override function draw() {

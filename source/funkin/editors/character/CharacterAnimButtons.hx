@@ -39,6 +39,7 @@ class CharacterAnimButtons extends UIButton {
 		editButton = new UIButton(ghostButton.x+32+17, y, "", function () {
 			CharacterEditor.instance.editAnimWithUI(this.anim);
 		}, 32);
+		editButton.frames = Paths.getFrames("editors/ui/grayscale-button");
 		editButton.color = FlxColor.YELLOW;
 		editButton.autoAlpha = false;
 		members.push(editButton);
