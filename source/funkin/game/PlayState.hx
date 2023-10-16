@@ -1245,11 +1245,15 @@ class PlayState extends MusicBeatState
 	 * @param retrySFX SFX played whenever the player retries. Defaults to `retrySFX` (`gameOverEnd`)
 	 */
 	public function gameOver(?character:Character, ?deathCharID:String, ?gameOverSong:String, ?lossSFX:String, ?retrySFX:String) {
-		character = character.getDefault(opponentMode ? dad : boyfriend);
-		deathCharID = deathCharID.getDefault(character != null ? character.gameOverCharacter : "bf-dead");
-		gameOverSong = gameOverSong.getDefault(this.gameOverSong);
-		lossSFX = lossSFX.getDefault(this.lossSFX);
-		retrySFX = retrySFX.getDefault(this.retrySFX);
+		var event:GameOverEvent = scripts.event("onGameOver", EventManager.get(GameOverEvent).recycle(
+			character.getDefault(opponentMode ? dad : boyfriend),
+			deathCharID.getDefault(character != null ? character.gameOverCharacter : "bf-dead"),
+			gameOverSong.getDefault(this.gameOverSong),
+			lossSFX.getDefault(this.lossSFX),
+			retrySFX.getDefault(this.retrySFX)
+		));
+
+		if (event.cancelled) return;
 
 		if (character != null)
 			character.stunned = true;
@@ -1263,6 +1267,8 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.stop();
 
 		openSubState(new GameOverSubstate(character == null ? 0 : character.x, character == null ? 0 : character.y, deathCharID, character != null ? character.isPlayer : true, gameOverSong, lossSFX, retrySFX));
+
+		scripts.event("onGameOver", event);
 	}
 
 	/**
