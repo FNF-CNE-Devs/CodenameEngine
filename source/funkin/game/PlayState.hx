@@ -75,7 +75,7 @@ class PlayState extends MusicBeatState
 	 */
 	public static var opponentMode:Bool = false;
 	/**
-	// Whenever the song has been started with co-op mode on.
+	 * Whenever the song has been started with co-op mode on.
 	 */
 	public static var coopMode:Bool = false;
 
