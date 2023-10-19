@@ -83,6 +83,14 @@ class Note extends FlxSprite
 	@:dox(hide) public var __strumCameras:Array<FlxCamera> = null;
 	@:dox(hide) public var __strum:Strum = null;
 	@:dox(hide) public var __noteAngle:Float = 0;
+	@:dox(hide) public var __scrollSpeed(default, set):Float = 0;
+	@:dox(hide) public var __length:Float = 0;
+
+	@:dox(hide) private inline function set___scrollSpeed(v:Float) {
+		if(__scrollSpeed != v)
+			__length = 0.45 * CoolUtil.quantize(v, 100);
+		return __scrollSpeed = v;
+	}
 
 	private function get_noteType() {
 		if (PlayState.instance == null) return null;
@@ -251,13 +259,11 @@ class Note extends FlxSprite
 	public var latePressWindow:Float = 1;
 
 	public function updateSustain(strum:Strum) {
-		var scrollSpeed = strum.getScrollSpeed(this);
-
-		if (nextSustain != null && lastScrollSpeed != scrollSpeed) {
+		if (nextSustain != null && lastScrollSpeed != __scrollSpeed) {
 			// is long sustain
-			lastScrollSpeed = scrollSpeed;
+			lastScrollSpeed = __scrollSpeed;
 
-			scale.y = (sustainLength * (0.45 * FlxMath.roundDecimal(scrollSpeed, 2))) / frameHeight;
+			scale.y = (sustainLength * __length) / frameHeight;
 			updateHitbox();
 			if (useAntialiasingFix) {
 				// dumbass antialiasing
@@ -266,7 +272,7 @@ class Note extends FlxSprite
 		}
 
 		if (!wasGoodHit) return;
-		var t = FlxMath.bound((Conductor.songPosition - strumTime) / (height / (0.45 * FlxMath.roundDecimal(scrollSpeed, 2))), 0, 1);
+		var t = FlxMath.bound((Conductor.songPosition - strumTime) / (height) * __length, 0, 1);
 		var swagRect = this.clipRect == null ? new FlxRect() : this.clipRect;
 		swagRect.x = 0;
 		swagRect.y = t * frameHeight;

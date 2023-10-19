@@ -1095,7 +1095,7 @@ class PlayState extends MusicBeatState
 
 		@:privateAccess {
 			accFormat.format.color = curRating.color;
-			accuracyTxt.text = 'Accuracy:${accuracy < 0 ? "-%" : '${FlxMath.roundDecimal(accuracy * 100, 2)}%'} - ${curRating.rating}';
+			accuracyTxt.text = 'Accuracy:${accuracy < 0 ? "-%" : '${CoolUtil.quantize(accuracy * 100, 100)}%'} - ${curRating.rating}';
 
 			accuracyTxt._formatRanges[0].range.start = accuracyTxt.text.length - curRating.rating.length;
 			accuracyTxt._formatRanges[0].range.end = accuracyTxt.text.length;

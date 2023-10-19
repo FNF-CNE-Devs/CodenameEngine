@@ -581,6 +581,10 @@ class CoolUtil
 		return r;
 	}
 
+	public static inline function quantize(Value:Float, Quant:Float) {
+		return Math.fround(Value * Quant) / Quant;
+	}
+
 	/**
 	 * Sets a SoundFrontEnd's music to a FlxSound.
 	 * Example: `FlxG.sound.setMusic(music);`
