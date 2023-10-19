@@ -1246,8 +1246,11 @@ class PlayState extends MusicBeatState
 	 */
 	public function gameOver(?character:Character, ?deathCharID:String, ?gameOverSong:String, ?lossSFX:String, ?retrySFX:String) {
 		var event:GameOverEvent = scripts.event("onGameOver", EventManager.get(GameOverEvent).recycle(
+			character == null ? 0 : character.x,
+			character == null ? 0 : character.y,
 			character.getDefault(opponentMode ? dad : boyfriend),
 			deathCharID.getDefault(character != null ? character.gameOverCharacter : "bf-dead"),
+			character != null ? character.isPlayer : true,
 			gameOverSong.getDefault(this.gameOverSong),
 			lossSFX.getDefault(this.lossSFX),
 			retrySFX.getDefault(this.retrySFX)
@@ -1266,9 +1269,9 @@ class PlayState extends MusicBeatState
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
-		openSubState(new GameOverSubstate(character == null ? 0 : character.x, character == null ? 0 : character.y, deathCharID, character != null ? character.isPlayer : true, gameOverSong, lossSFX, retrySFX));
+		openSubState(new GameOverSubstate(event.x, event.y, event.deathCharID, event.isPlayer, event.gameOverSong, event.lossSFX, event.retrySFX));
 
-		scripts.event("onGameOver", event);
+		scripts.event("onPostGameOver", event);
 	}
 
 	/**
