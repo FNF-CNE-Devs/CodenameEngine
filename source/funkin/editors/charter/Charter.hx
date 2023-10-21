@@ -52,7 +52,9 @@ class Charter extends UIState {
 	public var gridBackdrops:CharterBackdropGroup;
 	public var eventsBackdrop:EventBackdrop;
 	public var addEventSpr:CharterEventAdd;
+
 	public var gridBackdropDummy:CharterBackdropDummy;
+	public var noteHoverer:CharterNote;
 
 	public var strumlineInfoBG:FlxSprite;
 	public var strumlineAddButton:CharterStrumlineButton;
@@ -214,6 +216,37 @@ class Charter extends UIState {
 				]
 			},
 			{
+				label: "View",
+				childs: [
+					{
+						label: "Zoom in",
+						keybind: [CONTROL, NUMPADPLUS],
+						onSelect: _view_zoomin
+					},
+					{
+						label: "Zoom out",
+						keybind: [CONTROL, NUMPADMINUS],
+						onSelect: _view_zoomout
+					},
+					{
+						label: "Reset zoom",
+						keybind: [CONTROL, NUMPADZERO],
+						onSelect: _view_zoomreset
+					},
+					null,
+					{
+						label: 'Show Sections Separator',
+						onSelect: _view_showeventSecSeparator,
+						icon: Options.charterShowSections ? 1 : 0
+					},
+					{
+						label: 'Show Beats Separator',
+						onSelect: _view_showeventBeatSeparator,
+						icon: Options.charterShowBeats ? 1 : 0
+					}
+				]
+			},
+			{
 				label: "Note",
 				childs: [
 					{
@@ -245,37 +278,6 @@ class Charter extends UIState {
 					{
 						label: "(1) Hurt Note",
 						keybind: [ONE]
-					}
-				]
-			},
-			{
-				label: "View",
-				childs: [
-					{
-						label: "Zoom in",
-						keybind: [CONTROL, NUMPADPLUS],
-						onSelect: _view_zoomin
-					},
-					{
-						label: "Zoom out",
-						keybind: [CONTROL, NUMPADMINUS],
-						onSelect: _view_zoomout
-					},
-					{
-						label: "Reset zoom",
-						keybind: [CONTROL, NUMPADZERO],
-						onSelect: _view_zoomreset
-					},
-					null,
-					{
-						label: 'Show Sections Separator',
-						onSelect: _view_showeventSecSeparator,
-						icon: Options.charterShowSections ? 1 : 0
-					},
-					{
-						label: 'Show Beats Separator',
-						onSelect: _view_showeventBeatSeparator,
-						icon: Options.charterShowBeats ? 1 : 0
 					}
 				]
 			},
@@ -360,6 +362,9 @@ class Charter extends UIState {
 		selectionBox.scrollFactor.set(1, 1);
 		selectionBox.incorporeal = true;
 
+		noteHoverer = new CharterNote();
+		noteHoverer.visible = false;
+
 		selectionBox.cameras = notesGroup.cameras = gridBackdrops.cameras = [charterCamera];
 
 		topMenuSpr = new UITopMenu(topMenu);
@@ -410,6 +415,7 @@ class Charter extends UIState {
 		add(addEventSpr);
 		add(eventsGroup);
 		add(notesGroup);
+		add(noteHoverer);
 		add(selectionBox);
 		add(strumlineInfoBG);
 		add(strumlineLockButton);
@@ -898,7 +904,7 @@ class Charter extends UIState {
 		if (topMenuSpr.members[5] != null) {
 			var playBackMenu:UITopMenuButton = cast topMenuSpr.members[5];
 			playBackMenu.x = playBackSlider.x-playBackSlider.startText.width-10-playBackSlider.valueStepper.bWidth-playBackMenu.bWidth-10;
-			playBackMenu.label.offset.x = -2;
+			playBackMenu.label.offset.x = -1;
 		}
 		
 		super.update(elapsed);
