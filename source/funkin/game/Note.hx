@@ -83,14 +83,6 @@ class Note extends FlxSprite
 	@:dox(hide) public var __strumCameras:Array<FlxCamera> = null;
 	@:dox(hide) public var __strum:Strum = null;
 	@:dox(hide) public var __noteAngle:Float = 0;
-	@:dox(hide) public var __scrollSpeed(default, set):Float = 0;
-	@:dox(hide) public var __length:Float = 0;
-
-	@:dox(hide) private inline function set___scrollSpeed(v:Float) {
-		if(__scrollSpeed != v)
-			__length = 0.45 * CoolUtil.quantize(v, 100);
-		return __scrollSpeed = v;
-	}
 
 	private function get_noteType() {
 		if (PlayState.instance == null) return null;
@@ -196,7 +188,17 @@ class Note extends FlxSprite
 
 	public var lastScrollSpeed:Null<Float> = null;
 	public var angleOffsets:Bool = true;
-	public var useAntialiasingFix:Bool = false;
+	public var gapFix:Single = 0;
+	public var useAntialiasingFix(get, set):Bool;
+	inline function set_useAntialiasingFix(v:Bool) {
+		if(v != useAntialiasingFix) {
+			gapFix = v ? 1 : 0;
+		}
+		return v;
+	}
+	inline function get_useAntialiasingFix() {
+		return gapFix>0;
+	}
 
 	/**
 	 * Whenever the position of the note should be relative to the strum position or not.
@@ -215,7 +217,7 @@ class Note extends FlxSprite
 			super.drawComplex(camera);
 	}
 
-	var __notePosFrameOffset:FlxPoint = FlxPoint.get();
+	static var __notePosFrameOffset:FlxPoint = FlxPoint.get();
 
 	override function draw() {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
@@ -259,20 +261,21 @@ class Note extends FlxSprite
 	public var latePressWindow:Float = 1;
 
 	public function updateSustain(strum:Strum) {
-		if (nextSustain != null && lastScrollSpeed != __scrollSpeed) {
-			// is long sustain
-			lastScrollSpeed = __scrollSpeed;
+		var scrollSpeed = strum.getScrollSpeed(this);
 
-			scale.y = (sustainLength * __length) / frameHeight;
+		var len = 0.45 * CoolUtil.quantize(scrollSpeed, 100);
+
+		if (nextSustain != null && lastScrollSpeed != scrollSpeed) {
+			// is long sustain
+			lastScrollSpeed = scrollSpeed;
+
+			scale.y = (sustainLength * len) / frameHeight;
 			updateHitbox();
-			if (useAntialiasingFix) {
-				// dumbass antialiasing
-				scale.y += 1 / frameHeight;
-			}
+			scale.y += gapFix / frameHeight;
 		}
 
 		if (!wasGoodHit) return;
-		var t = FlxMath.bound((Conductor.songPosition - strumTime) / (height) * __length, 0, 1);
+		var t = FlxMath.bound((Conductor.songPosition - strumTime) / (height) * len, 0, 1);
 		var swagRect = this.clipRect == null ? new FlxRect() : this.clipRect;
 		swagRect.x = 0;
 		swagRect.y = t * frameHeight;
