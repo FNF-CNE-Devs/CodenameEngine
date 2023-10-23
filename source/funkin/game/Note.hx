@@ -218,6 +218,7 @@ class Note extends FlxSprite
 	}
 
 	static var __notePosFrameOffset:FlxPoint = new FlxPoint();
+	static var __posPoint:FlxPoint = new FlxPoint();
 
 	override function draw() {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
@@ -227,7 +228,7 @@ class Note extends FlxSprite
 		if (negativeScroll)	offset.y *= -1;
 
 		if (__strum != null && strumRelativePos) {
-			var pos = FlxPoint.get(x, y);
+			var pos = __posPoint.set(x, y);
 
 			setPosition(__strum.x, __strum.y);
 
@@ -246,7 +247,7 @@ class Note extends FlxSprite
 			frameOffset.y += __notePosFrameOffset.y;
 
 			setPosition(pos.x, pos.y);
-			pos.put();
+			//pos.put();
 		} else {
 			__notePosFrameOffset.set(0, 0);
 			super.draw();

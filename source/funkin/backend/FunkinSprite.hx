@@ -154,7 +154,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	{
 		if (__shouldDoScaleProcedure())
 		{
-			__oldScale = FlxPoint.get(scrollFactor.x, scrollFactor.y);
+			__oldScrollFactor.set(scrollFactor.x, scrollFactor.y);
 			var requestedZoom = FlxMath.lerp(initialZoom, camera.zoom, zoomFactor);
 			var diff = requestedZoom / camera.zoom;
 
@@ -162,9 +162,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 
 			var r = super.getScreenPosition(point, Camera);
 
-			scrollFactor.set(__oldScale.x, __oldScale.y);
-			__oldScale.put();
-			__oldScale = null;
+			scrollFactor.set(__oldScrollFactor.x, __oldScrollFactor.y);
 
 			return r;
 		}
@@ -231,14 +229,15 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	private inline function __shouldDoScaleProcedure()
 		return zoomFactor != 1;
 
-	var __oldScale:FlxPoint;
+	static var __oldScrollFactor:FlxPoint = new FlxPoint();
+	static var __oldScale:FlxPoint = new FlxPoint();
 	var __skipZoomProcedure:Bool = false;
 
 	private function __doPreZoomScaleProcedure(camera:FlxCamera)
 	{
 		if (__skipZoomProcedure = !__shouldDoScaleProcedure())
 			return;
-		__oldScale = FlxPoint.get(scale.x, scale.y);
+		__oldScale.set(scale.x, scale.y);
 		var requestedZoom = FlxMath.lerp(initialZoom, camera.zoom, zoomFactor);
 		var diff = requestedZoom * camera.zoom;
 
@@ -250,8 +249,6 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		if (__skipZoomProcedure)
 			return;
 		scale.set(__oldScale.x, __oldScale.y);
-		__oldScale.put();
-		__oldScale = null;
 	}
 	#end
 

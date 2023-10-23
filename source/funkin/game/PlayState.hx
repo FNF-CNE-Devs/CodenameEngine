@@ -1160,7 +1160,7 @@ class PlayState extends MusicBeatState
 				pos.x += cpos.x;
 				pos.y += cpos.y;
 				r++;
-				cpos.put();
+				//cpos.put();
 			}
 			if (r > 0) {
 				pos.x /= r;

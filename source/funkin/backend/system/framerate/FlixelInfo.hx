@@ -21,6 +21,11 @@ class FlixelInfo extends FramerateCategory {
 			_text += '\nSounds Count: ${FlxG.sound.list.length}';
 			_text += '\nFlxG.game Childs Count: ${FlxG.game.numChildren}';
 			// _text += '\nCached objects count: ${cachedObjects}';
+			#if FLX_POINT_POOL
+			var points = flixel.math.FlxPoint.FlxBasePoint.pool;
+			//_text += '\nPoint Count: ${points._count} | +${points.made} | -${points.gotten} | ${points.balance} | >${points.putted}';
+			_text += '\nPoint Count: ${points._count}';
+			#end
 		}
 		
 		this.text.text = _text;
