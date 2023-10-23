@@ -217,7 +217,7 @@ class Note extends FlxSprite
 			super.drawComplex(camera);
 	}
 
-	static var __notePosFrameOffset:FlxPoint = FlxPoint.get();
+	static var __notePosFrameOffset:FlxPoint = new FlxPoint();
 
 	override function draw() {
 		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
@@ -302,6 +302,5 @@ class Note extends FlxSprite
 
 	public override function destroy() {
 		super.destroy();
-		__notePosFrameOffset.put();
 	}
 }
