@@ -632,7 +632,7 @@ class Charter extends UIState {
 							break;
 						}
 					var gridmult = 40 / (noteSnap / 16);
-					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(CoolUtil.quantize(dragStartPos.y, gridmult))); //credits to burgerballs
+					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(snap(dragStartPos.y, gridmult))); //credits to burgerballs
 					var verticalChange:Float = 
 						FlxG.keys.pressed.SHIFT ? ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40
 						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / 40);
