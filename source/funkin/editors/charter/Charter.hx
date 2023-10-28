@@ -65,6 +65,10 @@ class Charter extends UIState {
 
 	public var vocals:FlxSound;
 
+	public var noteSnap:Int = 16;
+
+	public var quantArray:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 192]; // different quants
+
 	/**
 	 * ACTUAL CHART DATA
 	 */
@@ -250,6 +254,17 @@ class Charter extends UIState {
 				label: "Note",
 				childs: [
 					{
+						label: "Increase beat snap",
+						keybind: [Z],
+						onSelect: _note_increasesnap
+					},
+					{
+						label: "Decrease beat snap",
+						keybind: [X],
+						onSelect: _note_decreasesnap
+					},
+					null,
+					{
 						label: "Add sustain length",
 						keybind: [E],
 						onSelect: _note_addsustain
@@ -363,9 +378,11 @@ class Charter extends UIState {
 		selectionBox.incorporeal = true;
 
 		noteHoverer = new CharterNote();
-		noteHoverer.visible = false;
+		noteHoverer.snappedToStrumline = false;
+		noteHoverer.selectable = false;
+		noteHoverer.autoAlpha = false;
 
-		selectionBox.cameras = notesGroup.cameras = gridBackdrops.cameras = [charterCamera];
+		selectionBox.cameras = notesGroup.cameras = gridBackdrops.cameras = noteHoverer.cameras = [charterCamera];
 
 		topMenuSpr = new UITopMenu(topMenu);
 		topMenuSpr.cameras = uiGroup.cameras = [uiCamera];
@@ -378,7 +395,7 @@ class Charter extends UIState {
 		};
 		uiGroup.add(scrollBar);
 
-		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0\nBPM: 0\nTime Signature: 4/4");
+		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0\nBPM: 0\nTime Signature: 4/4\nBeat Snap: 16");
 		songPosInfo.alignment = RIGHT; songPosInfo.optimized = true;
 		uiGroup.add(songPosInfo);
 
@@ -414,8 +431,8 @@ class Charter extends UIState {
 		add(eventsBackdrop);
 		add(addEventSpr);
 		add(eventsGroup);
-		add(notesGroup);
 		add(noteHoverer);
+		add(notesGroup);
 		add(selectionBox);
 		add(strumlineInfoBG);
 		add(strumlineLockButton);
@@ -614,8 +631,8 @@ class Charter extends UIState {
 							hoverOffset.set(mousePos.x - s.x, mousePos.y - s.y);
 							break;
 						}
-
-					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(dragStartPos.y / 40) * 40);
+					var gridmult = 40 / (noteSnap / 16);
+					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(CoolUtil.quantize(dragStartPos.y, gridmult))); //credits to burgerballs
 					var verticalChange:Float = 
 						FlxG.keys.pressed.SHIFT ? ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40
 						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / 40);
@@ -671,7 +688,8 @@ class Charter extends UIState {
 						
 							if (mouseOnGrid && mousePos.y > 0 && mousePos.y < (__endStep)*40) {
 								var note = new CharterNote();
-								note.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : Math.floor(mousePos.y / 40), 0, __endStep-1), id % 4, 0, 0, strumLines.members[Std.int(id/4)]);
+								var gridmult = 40 / (noteSnap / 16);
+								note.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1), id % 4, 0, 0, strumLines.members[Std.int(id/4)]);
 								notesGroup.add(note);
 								selection = [note];
 								undos.addToUndo(CCreateSelection([note]));
@@ -696,21 +714,38 @@ class Charter extends UIState {
 		}
 		addEventSpr.selectable = !selectionBox.visible;
 
-		if (gridActionType == NONE && mousePos.x < 0 && mousePos.x > -addEventSpr.bWidth) {
-			addEventSpr.incorporeal = false;
-			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0.75, 0.25);
-			var event = getHoveredEvent(mousePos.y);
-			if (event != null) {
-				addEventSpr.updateEdit(event);
+		if (gridActionType == NONE) {
+			if (mousePos.x < 0 && mousePos.x > -addEventSpr.bWidth) {
+				noteHoverer.alpha = lerp(noteHoverer.alpha, 0, 0.25);
+				addEventSpr.incorporeal = false;
+				addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0.75, 0.25);
+				var event = getHoveredEvent(mousePos.y);
+				if (event != null) {
+					addEventSpr.updateEdit(event);
+				} else {
+					addEventSpr.updatePos(mousePos.y);
+				}
 			} else {
-				addEventSpr.updatePos(mousePos.y);
+				if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160) {
+					noteHoverer.alpha = lerp(noteHoverer.alpha, 0.35, 0.25);
+					addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
+					var gridmult = 40 / (noteSnap / 16);
+					if (noteHoverer.id != Math.floor(mousePos.x / 40) % 4) noteHoverer.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1), Math.floor(mousePos.x / 40) % 4, 0, 0, null);
+					else {
+						noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1);
+						noteHoverer.y = noteHoverer.step * 40;
+					}
+					noteHoverer.x = Math.floor(mousePos.x / 40) * 40;
+				} else {
+					addEventSpr.incorporeal = true;
+					addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
+					noteHoverer.alpha = lerp(noteHoverer.alpha, 0, 0.25);
+				}
 			}
-		} else {
-			addEventSpr.incorporeal = true;
-			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
 		}
 	}
-
+	public function snap(a:Float,snapto:Float):Float 
+		return Math.floor(a/snapto) * snapto;
 	public function getHoveredEvent(y:Float) {
 		var eventHovered:CharterEvent = null;
 		eventsGroup.forEach(function(e) {
@@ -947,7 +982,8 @@ class Charter extends UIState {
 		+ '\nBeat: ${curBeat}'
 		+ '\nMeasure: ${curMeasure}'
 		+ '\nBPM: ${Conductor.bpm}'
-		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}';
+		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}'
+		+ '\nBeat Snap: ${noteSnap}';
 
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125)))
 			updateDisplaySprites();
@@ -1245,6 +1281,11 @@ class Charter extends UIState {
 		t.icon = (Options.charterShowBeats = !Options.charterShowBeats) ? 1 : 0;
 		eventsBackdrop.eventBeatSeparator.visible = gridBackdrops.beatsVisible = Options.charterShowBeats;
 	}
+	inline function _note_increasesnap(_)
+		noteSnap = quantArray[cast Math.min(quantArray.indexOf(noteSnap) + 1, quantArray.length - 1)];
+
+	inline function _note_decreasesnap(_)
+		noteSnap = quantArray[cast Math.max(quantArray.indexOf(noteSnap) - 1, 0)];
 
 	inline function _note_addsustain(t)
 		changeNoteSustain(1);

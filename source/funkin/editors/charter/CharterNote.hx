@@ -132,7 +132,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 				Charter.instance.hitsound.replay();
 		}
 
-		alpha = strumLine != null && !strumLine.strumLine.visible ? (__passed ? 0.2 : 0.4) : (__passed ? 0.6 : 1); 
+		if (strumLine != null) alpha = !strumLine.strumLine.visible ? (__passed ? 0.2 : 0.4) : (__passed ? 0.6 : 1); 
 		if(sustainSpr.exists) sustainSpr.alpha = alpha;
 
 		colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;
