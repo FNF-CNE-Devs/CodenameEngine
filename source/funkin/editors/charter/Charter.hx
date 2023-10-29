@@ -404,9 +404,6 @@ class Charter extends UIState {
 		noteTypeWindow = new UIButtonList<CharterNoteTypeButton>(1, 200, 300, 500, "Note Types", FlxPoint.get(296, 30), FlxPoint.get(2, 2));
 		noteTypeWindow.buttons.add(new CharterNoteTypeButton("Default Note", noteTypeWindow, this, null));
 		noteTypeWindow.cameras = [uiCamera];
-		noteTypeWindow.addButton.callback = function() {
-			noteTypeWindow.buttons.add(new CharterNoteTypeButton("New NoteType", noteTypeWindow, this, Paths.getFolderContent("data/notes")));
-		}
 
 		playBackSlider = new UISlider(FlxG.width - 160 - 26 - 20, (23/2) - (12/2), 160, 1, [{start: 0.25, end: 1, size: 0.5}, {start: 1, end: 2, size: 0.5}], true);
 		playBackSlider.onChange = function (v) {
@@ -482,8 +479,11 @@ class Charter extends UIState {
 			if (!chart.noteTypes.contains(haxe.io.Path.withoutExtension(i)) && haxe.io.Path.withoutExtension(i) != "default") chart.noteTypes.push(haxe.io.Path.withoutExtension(i));
 
 		for (i in chart.noteTypes) 
-			noteTypeWindow.buttons.add(new CharterNoteTypeButton(haxe.io.Path.withoutExtension(i), noteTypeWindow, this, Paths.getFolderContent("data/notes")));
+			noteTypeWindow.buttons.add(new CharterNoteTypeButton(haxe.io.Path.withoutExtension(i), noteTypeWindow, this, chart.noteTypes));
 		for(i in noteTypeWindow.buttons.members) i.alpha = i.theType == "Default Note" ? 1 : 0.25;
+		noteTypeWindow.addButton.callback = function() {
+			noteTypeWindow.buttons.add(new CharterNoteTypeButton("New NoteType", noteTypeWindow, this, chart.noteTypes));
+		}
 
 		Conductor.setupSong(PlayState.SONG);
 
@@ -1351,7 +1351,7 @@ class Charter extends UIState {
 		var time = Conductor.getTimeForStep(note.step);
 		if (!PlayState.SONG.noteTypes.contains(note.type) && note.type != "Default Note") PlayState.SONG.noteTypes.push(note.type);
 		return {
-			type: (PlayState.SONG.noteTypes.contains(note.type) ? PlayState.SONG.noteTypes.indexOf(note.type) + 1 : -1),
+			type: (PlayState.SONG.noteTypes.contains(note.type) ? PlayState.SONG.noteTypes.indexOf(note.type) + 1 : 0),
 			time: time,
 			sLen: Conductor.getTimeForStep(note.step + note.susLength) - time,
 			id: note.id

@@ -40,7 +40,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		sustainSpr.makeGraphic(1, 1, -1);
 		members.push(sustainSpr);
 
-		noteTypeText = new flixel.text.FlxText(0, 0, 40, (type == null || type == "Default Note" ? "" : '${PlayState.SONG.noteTypes.indexOf(type)}'), 30);
+		noteTypeText = new flixel.text.FlxText(0, 0, 40, (type == null || type == "Default Note" ? "" : '${PlayState.SONG.noteTypes.indexOf(type) + 1}'), 30);
 		noteTypeText.alignment = "center";
 	}
 
@@ -73,7 +73,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		this.id = id;
 		this.susLength = susLength;
 		this.type = type;
-		noteTypeText.text = (type == null || type == "Default Note" ? "" : '${PlayState.SONG.noteTypes.indexOf(type)}');
+		noteTypeText.text = (type == null || type == "Default Note" ? "" : '${PlayState.SONG.noteTypes.indexOf(type) + 1}');
 		if (strumLine != null) this.strumLine = strumLine;
 		y = step * 40;
 
