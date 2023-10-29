@@ -18,6 +18,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	];
 
 	public var sustainSpr:FlxSprite;
+	public var noteTypeText:flixel.text.FlxText;
 	var __doAnim:Bool = false;
 
 	public var selected:Bool = false;
@@ -38,6 +39,9 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		sustainSpr = new FlxSprite(10, 40);
 		sustainSpr.makeGraphic(1, 1, -1);
 		members.push(sustainSpr);
+
+		noteTypeText = new flixel.text.FlxText(0, 0, 40, (type == null || type == "Default Note" ? "" : '${PlayState.SONG.noteTypes.indexOf(type)}'), 30);
+		noteTypeText.alignment = "center";
 	}
 
 	public override function updateButtonHandler() {
@@ -51,7 +55,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	public var step:Float;
 	public var id:Int;
 	public var susLength:Float;
-	public var type:Int;
+	public var type:String;
 
 	public var strumLine:CharterStrumline;
 	public var strumLineID(get, never):Int;
@@ -64,11 +68,12 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	public function get_fullID():Int
 		return (strumLineID * 4) + id;
 
-	public function updatePos(step:Float, id:Int, susLength:Float = 0, ?type:Int = 0, ?strumLine:CharterStrumline = null) {
+	public function updatePos(step:Float, id:Int, susLength:Float = 0, ?type:String = null, ?strumLine:CharterStrumline = null) {
 		this.step = step;
 		this.id = id;
 		this.susLength = susLength;
 		this.type = type;
+		noteTypeText.text = (type == null || type == "Default Note" ? "" : '${PlayState.SONG.noteTypes.indexOf(type)}');
 		if (strumLine != null) this.strumLine = strumLine;
 		y = step * 40;
 
@@ -123,7 +128,8 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	var __passed:Bool = false;
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-
+		if(noteTypeText.exists)
+			noteTypeText.follow(this, 0, 0);
 		if(sustainSpr.exists)
 			sustainSpr.follow(this, 15, 20);
 
@@ -164,5 +170,6 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 		drawMembers();
 		drawSuper();
+		if(noteTypeText.text != "") noteTypeText.draw();
 	}
 }
