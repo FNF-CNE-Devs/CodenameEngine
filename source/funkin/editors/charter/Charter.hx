@@ -1456,11 +1456,11 @@ class CharterNoteTypeButton extends UIButton {
 			textBox.suggestItems = suggestList;
 			textBox.antialiasing = true;
 			textBox.onChange = function(typer:String) {
-				if (!chart.noteTypes.contains(typer) && chart.noteTypes.contains(theType)) 
-					chart.noteTypes[chart.noteTypes.indexOf(theType)] = typer;
-				else if (chart.noteTypes.contains(typer) && chart.noteTypes.contains(theType))
-					chart.noteTypes.remove(theType);
-				else chart.noteTypes.push(typer);
+				if (!PlayState.SONG.noteTypes.contains(typer) && PlayState.SONG.noteTypes.contains(theType))
+					PlayState.SONG.noteTypes[PlayState.SONG.noteTypes.indexOf(theType)] = typer;
+				else if (PlayState.SONG.noteTypes.contains(typer) && PlayState.SONG.noteTypes.contains(theType))
+					PlayState.SONG.noteTypes.remove(theType);
+				else PlayState.SONG.noteTypes.push(typer);
 				if (state.curNoteType == theType) state.curNoteType = typer;
 				theType = typer;
 			}
