@@ -20,7 +20,7 @@ class SaveWarning {
 			FlxG.state.openSubState(new UIWarningSubstate("Unsaved Changes!", "Your changes will be lost if you don't save them. (Can't be recovered)\n\n\nWould you like to Cancel?", 
 			[{
 				label: closingWindow ? "Exit" : "Exit To Menu",
-				color: 0x742D2D,
+				color: 0xFF0000,
 				onClick: function(_) {
 					if (!closingWindow) {
 						if (selectionClass != null) FlxG.switchState(Type.createInstance(SaveWarning.selectionClass, []));
