@@ -111,6 +111,8 @@ class Note extends FlxSprite
 			this.prevNote = prev;
 		else
 			this.prevNote = strumLine.notes.members.last();
+
+		if (this.prevNote != null) this.prevNote.nextNote = this;
 		this.noteTypeID = noteData.type.getDefault(0);
 		this.isSustainNote = sustain;
 		this.sustainLength = sustainLength;
