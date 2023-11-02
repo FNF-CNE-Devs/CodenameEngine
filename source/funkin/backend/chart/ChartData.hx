@@ -40,6 +40,7 @@ typedef ChartStrumLine = {
 	var ?strumPos:Array<Float>;
 	var ?strumScale:Float;
 	var ?scrollSpeed:Float;
+	var ?vocalsSuffix:String;
 
 	var ?strumLinePos:Float; // Backwards compatability
 }

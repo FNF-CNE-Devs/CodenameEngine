@@ -21,7 +21,7 @@ import funkin.editors.ui.UIState;
 import openfl.net.FileReference;
 
 class Charter extends UIState {
-	static var __song:String;
+	public static var __song:String;
 	static var __diff:String;
 	static var __reload:Bool;
 
@@ -1444,6 +1444,8 @@ typedef SelectionDragChange = {
 class CharterNoteTypeButton extends UIButton {
 	public var theType:String;
 	public var textBox:UIAutoCompleteTextBox;
+	public var deleteButton:UIButton;
+	public var deleteIcon:FlxSprite;
 	public function new(type:String, parent:UIButtonList<CharterNoteTypeButton>, state:Charter, suggestList:Array<String>) {
 		theType = type;
 		super(0,0,"" ,function() {
@@ -1452,7 +1454,7 @@ class CharterNoteTypeButton extends UIButton {
 				i.alpha = i == this ? 1 : 0.25;
 		},296,30);
 		if (suggestList != null && suggestList.length > 0) {
-			members.push(textBox = new UIAutoCompleteTextBox((bWidth - 200) / 2, y + 4, theType, 200, bHeight - 8));
+			members.push(textBox = new UIAutoCompleteTextBox((bWidth - 218) / 2, y + 4, theType, 200, bHeight - 8));
 			textBox.suggestItems = suggestList;
 			textBox.antialiasing = true;
 			textBox.onChange = function(typer:String) {
@@ -1464,13 +1466,29 @@ class CharterNoteTypeButton extends UIButton {
 				if (state.curNoteType == theType) state.curNoteType = typer;
 				theType = typer;
 			}
+
+			deleteButton = new UIButton(textBox.x + 204, bHeight/2 - (28/2), "", function () {
+				parent.remove(this);
+			}, 28, 28);
+			deleteButton.color = 0xFFFF0000;
+			deleteButton.autoAlpha = false;
+			members.push(deleteButton);
+	
+			deleteIcon = new FlxSprite(deleteButton.x + (14/2), deleteButton.y + 5).loadGraphic(Paths.image('editors/character/delete-button'));
+			deleteIcon.antialiasing = false;
+			members.push(deleteIcon);
 		}
 		else field.text = type;
 		autoAlpha = false;
+
 	}
 	override function update(elapsed) {
 		super.update(elapsed);
 		if (textBox != null) textBox.y = y + 4;
+		if (deleteButton != null) {
+			deleteButton.y = y + bHeight / 2 - deleteButton.bHeight / 2;
+			deleteIcon.x = deleteButton.x + (14/2); deleteIcon.y = deleteButton.y + 5;
+		}
 		//x = alpha == 0.25 ? -50 : 10;
 	}
 }

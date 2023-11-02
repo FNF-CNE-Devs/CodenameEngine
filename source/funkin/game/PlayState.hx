@@ -633,16 +633,17 @@ class PlayState extends MusicBeatState
 			var startingPos:FlxPoint = strumLine.strumPos == null ?
 				FlxPoint.get((FlxG.width * strOffset) - ((Note.swagWidth * (strumLine.strumScale == null ? 1 : strumLine.strumScale)) * 2), this.strumLine.y) :
 				FlxPoint.get(strumLine.strumPos[0] == 0 ? ((FlxG.width * strOffset) - ((Note.swagWidth * (strumLine.strumScale == null ? 1 : strumLine.strumScale)) * 2)) : strumLine.strumPos[0], strumLine.strumPos[1]);
-
 			var strLine = new StrumLine(chars,
 				startingPos,
 				strumLine.strumScale == null ? 1 : strumLine.strumScale,
 				strumLine.type == 2 || (!coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode))), 
-				strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls
+				strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls,
+				strumLine.vocalsSuffix
 			);
 			strLine.cameras = [camHUD];
 			strLine.data = strumLine;
 			strLine.visible = (strumLine.visible != false);
+			strLine.vocals.group = FlxG.sound.defaultMusicGroup;
 			strLine.ID = i;
 			strumLines.add(strLine);
 		}
@@ -890,7 +891,15 @@ class PlayState extends MusicBeatState
 
 		vocals.pause();
 		inst.pause();
+		for (strumLine in strumLines.members) {
+			strumLine.vocals.play();
+			strumLine.vocals.pause();
+		}
 		inst.time = vocals.time = (chartingMode && Charter.startHere) ? Charter.startTime : 0;
+		for (strumLine in strumLines.members) {
+			strumLine.vocals.time = vocals.time;
+			strumLine.vocals.play();
+		}
 		vocals.play();
 		inst.play();
 
@@ -903,6 +912,9 @@ class PlayState extends MusicBeatState
 		scripts.call("destroy");
 		for(g in __cachedGraphics)
 			g.useCount--;
+		@:privateAccess
+			for (strumLine in strumLines.members)
+				FlxG.sound.destroySound(strumLine.vocals);
 		super.destroy();
 		scripts = FlxDestroyUtil.destroy(scripts);
 		@:privateAccess {
@@ -973,6 +985,7 @@ class PlayState extends MusicBeatState
 		{
 			if (FlxG.sound.music != null)
 			{
+				for (strumLine in strumLines.members) strumLine.vocals.pause();
 				FlxG.sound.music.pause();
 				vocals.pause();
 			}
@@ -1031,6 +1044,7 @@ class PlayState extends MusicBeatState
 	override public function onFocusLost():Void
 	{
 		if (!paused && FlxG.autoPause) {
+			for (strumLine in strumLines.members) strumLine.vocals.pause();
 			inst.pause();
 			vocals.pause();
 		}
@@ -1043,10 +1057,15 @@ class PlayState extends MusicBeatState
 	function resyncVocals():Void
 	{
 		vocals.pause();
+		for (strumLine in strumLines.members) strumLine.vocals.pause();
 
 		FlxG.sound.music.play();
 		Conductor.songPosition = FlxG.sound.music.time;
 		vocals.time = Conductor.songPosition + Conductor.songOffset;
+		for (strumLine in strumLines.members) {
+			strumLine.vocals.time = vocals.time;
+			strumLine.vocals.play();
+		}
 		vocals.play();
 		scripts.call("onVocalsResync");
 	}
@@ -1139,7 +1158,9 @@ class PlayState extends MusicBeatState
 					startSong();
 			}
 		} else {
-			__vocalOffsetViolation = Math.max(0, __vocalOffsetViolation + (FlxG.sound.music.time != vocals.time ? elapsed : -elapsed / 2));
+			var instTime = FlxG.sound.music.time;
+			var isOffsync = vocals.time != instTime || [for(strumLine in strumLines.members) strumLine.vocals.time != instTime].contains(true);
+			__vocalOffsetViolation = Math.max(0, __vocalOffsetViolation + (isOffsync ? elapsed : -elapsed / 2));
 			if (__vocalOffsetViolation > 25) {
 				resyncVocals();
 				__vocalOffsetViolation = 0;
@@ -1267,6 +1288,7 @@ class PlayState extends MusicBeatState
 		vocals.stop();
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
+		for (strumLine in strumLines.members) strumLine.vocals.stop();
 
 		openSubState(new GameOverSubstate(event.x, event.y, event.deathCharID, event.isPlayer, event.gameOverSong, event.lossSFX, event.retrySFX));
 
@@ -1282,6 +1304,10 @@ class PlayState extends MusicBeatState
 		canPause = false;
 		inst.volume = 0;
 		vocals.volume = 0;
+		for (strumLine in strumLines.members) {
+			strumLine.vocals.volume = 0;
+			strumLine.vocals.pause();
+		}
 		inst.pause();
 		vocals.pause();
 
@@ -1409,7 +1435,10 @@ class PlayState extends MusicBeatState
 
 		if (event.playMissSound) FlxG.sound.play(event.missSound, event.missVolume);
 
-		if (event.muteVocals) vocals.volume = 0;
+		if (event.muteVocals) {
+			vocals.volume = 0;
+			strumLine.vocals.volume = 0;
+		}
 
 		if (event.accuracy != null) {
 			accuracyPressedNotes++;
@@ -1512,7 +1541,10 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (event.unmuteVocals) vocals.volume = 1;
+		if (event.unmuteVocals) {
+			vocals.volume = 1;
+			strumLine.vocals.volume = 1;
+		}
 		if (event.enableCamZooming) camZooming = true;
 		if (event.autoHitLastSustain) {
 			if (note.nextSustain != null && note.nextSustain.nextSustain == null) {

@@ -8,6 +8,7 @@ import funkin.backend.system.Conductor;
 import funkin.backend.chart.ChartData;
 import funkin.backend.system.Controls;
 import flixel.tweens.FlxTween;
+import flixel.sound.FlxSound;
 
 class StrumLine extends FlxTypedGroup<Strum> {
 	/**
@@ -74,6 +75,10 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	 * TODO: Write documention about this being a variable that can help when making multi key
 	 */
 	public var strumAnimPrefix = ["left", "down", "up", "right"];
+	/**
+	 * Vocals sound (Vocals.ogg). Used for individual vocals per strumline.
+	 */
+	public var vocals:FlxSound;
 
 	public var extra:Map<String, Dynamic> = [];
 
@@ -89,7 +94,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	private var startingPos:FlxPoint = FlxPoint.get(0,0);
 	private var strumScale:Float = 1;
 
-	public function new(characters:Array<Character>, startingPos:FlxPoint, strumScale:Float, cpu:Bool = false, opponentSide:Bool = true, ?controls:Controls) {
+	public function new(characters:Array<Character>, startingPos:FlxPoint, strumScale:Float, cpu:Bool = false, opponentSide:Bool = true, ?controls:Controls, ?vocalPrefix:String = "") {
 		super();
 		this.characters = characters;
 		this.startingPos = startingPos;
@@ -98,6 +103,8 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		this.opponentSide = opponentSide;
 		this.controls = controls;
 		this.notes = new NoteGroup();
+		vocals = vocalPrefix != "" ? FlxG.sound.load(Paths.voices(PlayState.SONG.meta.name, PlayState.difficulty, vocalPrefix)) : new FlxSound();
+		vocals.persist = false;
 	}
 
 	public function generate(strumLine:ChartStrumLine, ?startTime:Float) {

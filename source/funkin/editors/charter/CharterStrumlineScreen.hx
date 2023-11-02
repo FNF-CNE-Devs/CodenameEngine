@@ -12,6 +12,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 
 	public var charactersList:UIButtonList<CharacterButton>;
 	public var typeDropdown:UIDropDown;
+	public var vocalsSuffixDropDown:UIDropDown;
 	public var stagePositionDropdown:UIDropDown;
 	public var hudScaleStepper:UINumericStepper;
 	public var hudXStepper:UINumericStepper;
@@ -135,6 +136,25 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		}, 125);
 		add(closeButton);
 		closeButton.color = 0xFFFF0000;
+
+		var suffixlist = ["NONE"];
+		for (i in Paths.getFolderContent('songs/${Charter.__song.toLowerCase()}/song')) 
+		if (i.startsWith("Voices")) {
+			i = haxe.io.Path.withoutExtension(i.substr("Voices".length));
+			if (i == "") continue;
+			for (j in PlayState.SONG.meta.difficulties) {
+				if (i.endsWith('-${j.toLowerCase()}')) {
+					if (suffixlist.contains(i.substring(0, i.length - j.length))) continue;
+					else suffixlist.push(i.substring(0, i.length - j.length));
+				}
+				else if (!suffixlist.contains(i)) suffixlist.push(i);
+			}
+
+		}
+		
+		vocalsSuffixDropDown = new UIDropDown(typeDropdown.x, hudScaleStepper.y + 128, 200, 32, suffixlist, suffixlist.indexOf(strumLine.vocalsSuffix));
+		add(vocalsSuffixDropDown);
+		addLabelOn(vocalsSuffixDropDown, "Vocal Suffix");
 	}
 
 	function saveStrumline() {
@@ -152,7 +172,8 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			visible: strumLine.visible,
 			strumPos: [0, hudYStepper.value],
 			strumLinePos: hudXStepper.value,
-			strumScale: hudScaleStepper.value
+			strumScale: hudScaleStepper.value,
+			vocalsSuffix: vocalsSuffixDropDown.options[vocalsSuffixDropDown.index] != "NONE" ? vocalsSuffixDropDown.options[vocalsSuffixDropDown.index] : ""
 		};
 		if(!usesChartscrollSpeed.checked) newStrumLine.scrollSpeed = scrollSpeedStepper.value;
 		if (onSave != null) onSave(newStrumLine);
