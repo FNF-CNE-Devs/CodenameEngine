@@ -224,7 +224,7 @@ class CharacterEditor extends UIState {
 		FlxG.cameras.add(uiCamera);
 		FlxG.cameras.add(animsCamera);
 
-		character = new Character(0,0,__character);
+		character = new Character(0,0,__character, false, false);
 		character.debugMode = true;
 		character.cameras = [charCamera];
 
@@ -346,6 +346,10 @@ class CharacterEditor extends UIState {
 	}
 
 	function buildCharacter():String {
+		if (character.isPlayer != character.playerOffsets) {
+			character.switchOffset('singLEFT', 'singRIGHT');
+			character.switchOffset('singLEFTmiss', 'singRIGHTmiss');
+		}
 		var charXML:Xml = character.buildXML([
 			for (button in characterAnimsWindow.buttons.members)
 				button.anim

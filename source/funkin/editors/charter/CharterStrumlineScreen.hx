@@ -110,11 +110,11 @@ class CharterStrumlineScreen extends UISubstateWindow {
 
 		var strOffset:Float = strumLine.strumLinePos == null ? (strumLine.type == 1 ? 0.75 : 0.25) : strumLine.strumLinePos;
 
-		var startingPos:FlxPoint = strumLine.strumPos == null ?
-			FlxPoint.get((FlxG.width * strOffset) - ((Note.swagWidth * (strumLine.strumScale == null ? 1 : strumLine.strumScale)) * 2), 50) :
-			FlxPoint.get(strumLine.strumPos[0], strumLine.strumPos[1]);
+		var startingPos:FlxPoint = strumLine.strumLinePos == null ?
+			FlxPoint.get(strOffset, 50) :
+			FlxPoint.get(strOffset, strumLine.strumPos[1]);
 
-		hudXStepper = new UINumericStepper(hudScaleStepper.x + 80 - 32 + 26, hudScaleStepper.y, startingPos.x, 0.001, 2, null, null, 84);
+		hudXStepper = new UINumericStepper(hudScaleStepper.x + 80 - 32 + 26, hudScaleStepper.y, startingPos.x, 0.01, 2, 0, 2, 84);
 		add(hudXStepper);
 		addLabelOn(hudXStepper, "Hud Position (X,Y)");
 
@@ -150,7 +150,8 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			notes: strumLine.notes,
 			position: ["DAD", "BOYFRIEND", "GIRLFRIEND"][stagePositionDropdown.index].toLowerCase(),
 			visible: strumLine.visible,
-			strumPos: [hudXStepper.value, hudYStepper.value],
+			strumPos: [0, hudYStepper.value],
+			strumLinePos: hudXStepper.value,
 			strumScale: hudScaleStepper.value
 		};
 		if(!usesChartscrollSpeed.checked) newStrumLine.scrollSpeed = scrollSpeedStepper.value;

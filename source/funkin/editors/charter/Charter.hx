@@ -474,7 +474,7 @@ class Charter extends UIState {
 			EventsData.reloadEvents();
 			PlayState.loadSong(__song, __diff, false, false);
 		}
-		chart.noteTypes = [for (i in Paths.getFolderContent("data/notes")) haxe.io.Path.withoutExtension(i)];
+		for (i in Paths.getFolderContent("data/notes")) chart.noteTypes.push(haxe.io.Path.withoutExtension(i));
 		for (i in Paths.getFolderContent("images/game/notes")) 
 			if (!chart.noteTypes.contains(haxe.io.Path.withoutExtension(i)) && haxe.io.Path.withoutExtension(i) != "default") chart.noteTypes.push(haxe.io.Path.withoutExtension(i));
 
