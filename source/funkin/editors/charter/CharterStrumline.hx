@@ -6,6 +6,7 @@ import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.game.HealthIcon;
 import funkin.backend.chart.ChartData.ChartStrumLine;
+import flixel.sound.FlxSound;
 
 class CharterStrumline extends UISprite {
 	public var strumLine:ChartStrumLine;
@@ -19,6 +20,8 @@ class CharterStrumline extends UISprite {
 	public var dragging:Bool = false;
 
 	public var curMenu:UIContextMenu = null;
+
+	public var vocals:FlxSound;
 
 	public function new(strumLine:ChartStrumLine) {
 		super();
@@ -49,6 +52,9 @@ class CharterStrumline extends UISprite {
 
 		button = new CharterStrumlineOptions(this);
 		members.push(button);
+
+		vocals = strumLine.vocalsSuffix != "" ? FlxG.sound.load(Paths.voices(PlayState.SONG.meta.name, PlayState.difficulty, strumLine.vocalsSuffix)) : new FlxSound();
+		vocals.group = FlxG.sound.defaultMusicGroup;
 	}
 
 	private var __healthYOffset:Float = 0;
@@ -92,6 +98,10 @@ class CharterStrumline extends UISprite {
 
 		healthIcon.alpha = strumLine.visible ? 1 : 0.4;
 		members.push(healthIcon);
+
+		vocals = null;
+		vocals = strumLine.vocalsSuffix != "" ? FlxG.sound.load(Paths.voices(PlayState.SONG.meta.name, PlayState.difficulty, strumLine.vocalsSuffix)) : new FlxSound();
+		vocals.group = FlxG.sound.defaultMusicGroup;
 	}
 }
 
@@ -143,6 +153,14 @@ class CharterStrumlineOptions extends UITopMenuButton {
 				},
 				color: 0xFFFF0000,
 				icon: 3
+			},
+			null,
+			{
+				label: "Mute Vocals",
+				onSelect: function(_) {
+					strLine.vocals.volume = strLine.vocals.volume > 0 ? 0 : 1;
+				},
+				icon: strLine.vocals.volume > 0 ? 0 : 1
 			}
 		];
 		super.openContextMenu();

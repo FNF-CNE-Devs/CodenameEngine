@@ -408,6 +408,7 @@ class Charter extends UIState {
 		playBackSlider = new UISlider(FlxG.width - 160 - 26 - 20, (23/2) - (12/2), 160, 1, [{start: 0.25, end: 1, size: 0.5}, {start: 1, end: 2, size: 0.5}], true);
 		playBackSlider.onChange = function (v) {
 			FlxG.sound.music.pitch = vocals.pitch = v;
+			for (strumLine in strumLines.members) strumLine.vocals.pitch = v;
 		};
 		uiGroup.add(playBackSlider);
 
@@ -992,6 +993,7 @@ class Charter extends UIState {
 		if (Conductor.songPosition >= songLength - Conductor.songOffset) {
 			FlxG.sound.music.pause();
 			vocals.pause();
+			for (strumLine in strumLines.members) strumLine.vocals.pause();
 		}
 
 		songPosInfo.text = '${CoolUtil.timeToStr(Conductor.songPosition)} / ${CoolUtil.timeToStr(songLength)}'
@@ -1244,10 +1246,15 @@ class Charter extends UIState {
 		if (FlxG.sound.music.playing) {
 			FlxG.sound.music.pause();
 			vocals.pause();
+			for (strumLine in strumLines.members) strumLine.vocals.pause();
 		} else {
 			FlxG.sound.music.play();
 			vocals.play();
 			vocals.time = FlxG.sound.music.time = Conductor.songPosition + Conductor.songOffset * 2;
+			for (strumLine in strumLines.members) {
+				strumLine.vocals.play();
+				strumLine.vocals.time = vocals.time;
+			}
 		}
 	}
 
@@ -1260,6 +1267,7 @@ class Charter extends UIState {
 	}
 	function _playback_mutevoices(t) {
 		vocals.volume = vocals.volume > 0 ? 0 : 1;
+		for (strumLine in strumLines.members) strumLine.vocals.volume = strumLine.vocals.volume > 0 ? 0 : 1;
 		t.icon = 1 - Std.int(Math.ceil(vocals.volume));
 	}
 	function _playback_back(_) {
@@ -1487,7 +1495,7 @@ class CharterNoteTypeButton extends UIButton {
 		if (textBox != null) textBox.y = y + 4;
 		if (deleteButton != null) {
 			deleteButton.y = y + bHeight / 2 - deleteButton.bHeight / 2;
-			deleteIcon.x = deleteButton.x + (14/2); deleteIcon.y = deleteButton.y + 5;
+			deleteIcon.x = deleteButton.x + (13/2); deleteIcon.y = deleteButton.y + 5;
 		}
 		//x = alpha == 0.25 ? -50 : 10;
 	}

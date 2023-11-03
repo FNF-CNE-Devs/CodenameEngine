@@ -152,7 +152,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 
 		}
 		
-		vocalsSuffixDropDown = new UIDropDown(typeDropdown.x, hudScaleStepper.y + 128, 200, 32, suffixlist, suffixlist.indexOf(strumLine.vocalsSuffix));
+		vocalsSuffixDropDown = new UIDropDown(typeDropdown.x, hudScaleStepper.y + 128, 200, 32, suffixlist, strumLine.vocalsSuffix != "" ? suffixlist.indexOf(strumLine.vocalsSuffix) : 0);
 		add(vocalsSuffixDropDown);
 		addLabelOn(vocalsSuffixDropDown, "Vocal Suffix");
 	}
