@@ -164,6 +164,12 @@ class Paths
 	inline static public function getPackerAtlasAlt(key:String)
 		return FlxAtlasFrames.fromSpriteSheetPacker('$key.png', '$key.txt');
 
+	inline static public function getAsepriteAtlas(key:String, ?library:String)
+		return FlxAtlasFrames.fromAseprite(image(key, library), file('images/$key.json', library));
+
+	inline static public function getAsepriteAtlasAlt(key:String)
+		return FlxAtlasFrames.fromAseprite('$key.png', '$key.json');
+
 	inline static public function getAssetsRoot():String
 		return  ModsFolder.currentModFolder != null ? '${ModsFolder.modsPath}${ModsFolder.currentModFolder}' : './assets';
 
@@ -216,6 +222,8 @@ class Paths
 			return Paths.getSparrowAtlasAlt(noExt);
 		} else if (Assets.exists('$noExt.txt')) {
 			return Paths.getPackerAtlasAlt(noExt);
+		} else if (Assets.exists('$noExt.json')) {
+			return Paths.getAsepriteAtlasAlt(noExt);
 		}
 
 		var graph:FlxGraphic = FlxG.bitmap.add(path, Unique, Key);
