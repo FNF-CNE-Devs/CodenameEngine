@@ -123,7 +123,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 							scroll: 1,
 							flip: false
 						});
-					case "character":
+					case "character" | "char":
 						if (!node.has.name) continue;
 						addCharPos(node.att.name, node);
 					case "ratings" | "combo":
@@ -224,8 +224,14 @@ class Stage extends FlxBasic implements IBeatReceiver {
 		return characterPoses[posName] != null ? characterPoses[posName].flipX : def;
 
 	public function applyCharStuff(char:Character, posName:String, id:Float = 0) {
-		if (characterPoses[posName] == null)
+		if (characterPoses[posName] == null) {
+			if (characterPoses[char.curCharacter] != null) {
+				var charPos = characterPoses[char.curCharacter];
+				charPos.prepareCharacter(char, id);
+				state.insert(state.members.indexOf(charPos), char);
+			} 
 			state.add(char);
+		}
 		else {
 			var charPos = characterPoses[posName];
 			charPos.prepareCharacter(char, id);
