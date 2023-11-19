@@ -51,7 +51,7 @@ class UISlider extends UISprite {
         progressbar.origin.x = 0; progressbar.colorTransform.color = 0xFF67009B;
     	members.push(progressbar);
 
-		this.value = valueStepper.value;
+		this.value = value;
 		visualProgress = __barProgress;
 
 		members.push(startText = new UIText(x, y, 0, Std.string(segments[0].start).replace("0.", ".")));
