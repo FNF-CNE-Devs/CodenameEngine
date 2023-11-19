@@ -479,7 +479,7 @@ class Charter extends UIState {
 		add(topMenuSpr);
 		// add the ui group
 		add(uiGroup);
-		add(noteTypeWindow);
+		//add(noteTypeWindow);
 
 		loadSong();
 
