@@ -46,7 +46,7 @@ class Charter extends UIState {
 	public var scrollBar:UIScrollBar;
 	public var songPosInfo:UIText;
 
-	public var qauntButtons:Array<CharterQauntButton> = [];
+	public var quantButtons:Array<CharterQuantButton> = [];
 	public var playBackSlider:UISlider;
 
 	public var topMenuSpr:UITopMenu;
@@ -67,8 +67,8 @@ class Charter extends UIState {
 
 	public var vocals:FlxSound;
 
-	public var qaunt:Int = 16;
-	public var qaunts:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 192]; // different quants
+	public var quant:Int = 16;
+	public var quants:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 192]; // different quants
 
 	public var curNoteType:String = null;
 
@@ -333,10 +333,10 @@ class Charter extends UIState {
 						null
 					];
 
-					for (_qaunt in qaunts) 
+					for (_quant in quants) 
 						base.push({
-							label: '${_qaunt}x Grid Snap',
-							onSelect: (_) -> {setqaunt(_qaunt);} 
+							label: '${_quant}x Grid Snap',
+							onSelect: (_) -> {setquant(_quant);} 
 						});
 					base;
 				}
@@ -447,13 +447,13 @@ class Charter extends UIState {
 		};
 		uiGroup.add(playBackSlider);
 
-		qaunts.reverse();
-		for (qaunt in qaunts) {
-			var button:CharterQauntButton = new CharterQauntButton(0, 0, qaunt);
-			button.onClick = () -> {this.qaunt = button.qaunt;};
-			qauntButtons.push(cast uiGroup.add(button));
+		quants.reverse();
+		for (quant in quants) {
+			var button:CharterQuantButton = new CharterQuantButton(0, 0, quant);
+			button.onClick = () -> {this.quant = button.quant;};
+			quantButtons.push(cast uiGroup.add(button));
 		}
-		qaunts.reverse();
+		quants.reverse();
 
 		strumlineInfoBG = new UISprite();
 		strumlineInfoBG.loadGraphic(Paths.image('editors/charter/strumline-info-bg'));
@@ -694,10 +694,10 @@ class Charter extends UIState {
 							break;
 						}
 						
-					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, qauntStep(dragStartPos.y/40)*40); //credits to burgerballs
+					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, quantStep(dragStartPos.y/40)*40); //credits to burgerballs
 					var verticalChange:Float = 
 						FlxG.keys.pressed.SHIFT ? ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40
-						: CoolUtil.floorInt(qauntStep((mousePos.y - dragStartPos.y) / 40));
+						: CoolUtil.floorInt(quantStep((mousePos.y - dragStartPos.y) / 40));
 					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
 					var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
 					var undoDrags:Array<SelectionDragChange> = [];
@@ -751,7 +751,7 @@ class Charter extends UIState {
 							if (mouseOnGrid && mousePos.y > 0 && mousePos.y < (__endStep)*40) {
 								var note = new CharterNote();
 								note.updatePos(
-									FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : qauntStep(mousePos.y/40), 0, __endStep-1),
+									FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1),
 									id % 4, 0, curNoteType, strumLines.members[Std.int(id/4)]
 								);
 								notesGroup.add(note);
@@ -792,9 +792,9 @@ class Charter extends UIState {
 			if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160 && (mousePos.y > 0 && mousePos.y < (__endStep)*40) && selection.length == 0) {
 				noteHoverer.alpha = lerp(noteHoverer.alpha, 0.35, 0.25);
 				if (noteHoverer.id != Math.floor(mousePos.x / 40) % 4) 
-					noteHoverer.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : qauntStep(mousePos.y/40), 0, __endStep-1), Math.floor(mousePos.x / 40) % 4, 0, null, null);
+					noteHoverer.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1), Math.floor(mousePos.x / 40) % 4, 0, null, null);
 				else {
-					noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : qauntStep(mousePos.y/40), 0, __endStep-1);
+					noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1);
 					noteHoverer.y = noteHoverer.step * 40;
 				}
 				noteHoverer.x = lerp(noteHoverer.x, Math.floor(mousePos.x / 40) * 40, .65);
@@ -803,8 +803,8 @@ class Charter extends UIState {
 		}
 	}
 
-	public function qauntStep(step:Float):Float {
-		var stepMulti:Float = 1/(qaunt/16);
+	public function quantStep(step:Float):Float {
+		var stepMulti:Float = 1/(quant/16);
 		return Math.floor(step/stepMulti) * stepMulti;
 	}
 
@@ -1008,15 +1008,15 @@ class Charter extends UIState {
 				var lastButtonX = playBackButton.x-10;
 
 				var buttonI:Int = 0;
-				for (button in qauntButtons) {
-					button.visible = ((button.qaunt == qaunt) || 
-						(button.qaunt == qaunts[FlxMath.wrap(qaunts.indexOf(qaunt)-1, 0, qaunts.length-1)]) || 
-						(button.qaunt == qaunts[FlxMath.wrap(qaunts.indexOf(qaunt)+1, 0, qaunts.length-1)]));
+				for (button in quantButtons) {
+					button.visible = ((button.quant == quant) || 
+						(button.quant == quants[FlxMath.wrap(quants.indexOf(quant)-1, 0, quants.length-1)]) || 
+						(button.quant == quants[FlxMath.wrap(quants.indexOf(quant)+1, 0, quants.length-1)]));
 					if (!button.visible) continue;
 
 					button.x = lastButtonX -= button.bWidth;
-					button.framesOffset = button.qaunt == qaunt ? 9 : 0;
-					button.alpha = button.qaunt == qaunt ? 1 : (button.hovered ? 0.4 : 0);
+					button.framesOffset = button.quant == quant ? 9 : 0;
+					button.alpha = button.quant == quant ? 1 : (button.hovered ? 0.4 : 0);
 				}
 				snapButton.x = (lastButtonX -= snapButton.bWidth)-10;
 			}
@@ -1371,12 +1371,12 @@ class Charter extends UIState {
 		t.icon = (Options.charterShowBeats = !Options.charterShowBeats) ? 1 : 0;
 		eventsBackdrop.eventBeatSeparator.visible = gridBackdrops.beatsVisible = Options.charterShowBeats;
 	}
-	inline function _snap_increasesnap(_) changeqaunt(1);
-	inline function _snap_decreasesnap(_) changeqaunt(-1);
-	inline function _snap_resetsnap(_) setqaunt(16);
+	inline function _snap_increasesnap(_) changequant(1);
+	inline function _snap_decreasesnap(_) changequant(-1);
+	inline function _snap_resetsnap(_) setquant(16);
 
-	inline function changeqaunt(change:Int) qaunt = qaunts[FlxMath.wrap(qaunts.indexOf(qaunt) + change, 0, qaunts.length-1)];
-	inline function setqaunt(newqaunt:Int) qaunt = newqaunt;
+	inline function changequant(change:Int) quant = quants[FlxMath.wrap(quants.indexOf(quant) + change, 0, quants.length-1)];
+	inline function setquant(newquant:Int) quant = newquant;
 
 	inline function _note_addsustain(t)
 		changeNoteSustain(1);
