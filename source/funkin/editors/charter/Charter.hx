@@ -1063,7 +1063,7 @@ class Charter extends UIState {
 		+ '\nBeat: ${curBeat}'
 		+ '\nMeasure: ${curMeasure}'
 		+ '\nBPM: ${Conductor.bpm}'
-		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}';
+		+ '\nTime Signature: ${Conductor.beatsPerMeasure}/${Conductor.stepsPerBeat}';
 
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125)))
 			updateDisplaySprites();
@@ -1337,11 +1337,11 @@ class Charter extends UIState {
 	}
 	function _playback_back(_) {
 		if (FlxG.sound.music.playing) return;
-		Conductor.songPosition -= (Conductor.beatsPerMesure * __crochet);
+		Conductor.songPosition -= (Conductor.beatsPerMeasure * __crochet);
 	}
 	function _playback_forward(_) {
 		if (FlxG.sound.music.playing) return;
-		Conductor.songPosition += (Conductor.beatsPerMesure * __crochet);
+		Conductor.songPosition += (Conductor.beatsPerMeasure * __crochet);
 	}
 	function _song_start(_) {
 		if (FlxG.sound.music.playing) return;
@@ -1462,7 +1462,7 @@ class Charter extends UIState {
 		buildEvents();
 
 		Conductor.mapBPMChanges(PlayState.SONG);
-		Conductor.changeBPM(PlayState.SONG.meta.bpm, cast PlayState.SONG.meta.beatsPerMesure.getDefault(4), cast PlayState.SONG.meta.stepsPerBeat.getDefault(4));
+		Conductor.changeBPM(PlayState.SONG.meta.bpm, cast PlayState.SONG.meta.beatsPerMeasure.getDefault(4), cast PlayState.SONG.meta.stepsPerBeat.getDefault(4));
 
 		refreshBPMSensitive();
 	}

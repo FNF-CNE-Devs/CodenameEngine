@@ -943,9 +943,9 @@ class PlayState extends MusicBeatState
 			return FlxSort.byValues(FlxSort.DESCENDING, p1.time, p2.time);
 		});
 
-		camZoomingInterval = cast songData.meta.beatsPerMesure.getDefault(4);
+		camZoomingInterval = cast songData.meta.beatsPerMeasure.getDefault(4);
 
-		Conductor.changeBPM(songData.meta.bpm, cast songData.meta.beatsPerMesure.getDefault(4), cast songData.meta.stepsPerBeat.getDefault(4));
+		Conductor.changeBPM(songData.meta.bpm, cast songData.meta.beatsPerMeasure.getDefault(4), cast songData.meta.stepsPerBeat.getDefault(4));
 
 		curSong = songData.meta.name.toLowerCase();
 

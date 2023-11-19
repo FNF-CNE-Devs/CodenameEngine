@@ -41,14 +41,14 @@ class BaseGameParser {
 		result.meta.needsVoices = data.needsVoices.getDefault(true);
 
 		var camFocusedBF:Bool = false;
-		var beatsPerMesure:Float = data.beatsPerMesure.getDefault(4);
+		var beatsPerMeasure:Float = data.beatsPerMeasure.getDefault(4);
 		var curBPM:Float = data.bpm;
 		var curTime:Float = 0;
 		var curCrochet:Float = ((60 / curBPM) * 1000);
 
 		if (data.notes != null) for(section in data.notes) {
 			if (section == null) {
-				curTime += curCrochet * beatsPerMesure;
+				curTime += curCrochet * beatsPerMeasure;
 				continue; // Yoshi Engine charts crash fix
 			}
 
@@ -96,7 +96,7 @@ class BaseGameParser {
 				});
 			}
 
-			curTime += curCrochet * beatsPerMesure;
+			curTime += curCrochet * beatsPerMeasure;
 		}
 	}
 }
@@ -118,7 +118,7 @@ typedef SwagSong =
 
 	// ADDITIONAL STUFF THAT MAY NOT BE PRESENT IN CHART
 	var ?maxHealth:Float;
-	var ?beatsPerMesure:Float;
+	var ?beatsPerMeasure:Float;
 	var ?stepsPerBeat:Float;
 }
 

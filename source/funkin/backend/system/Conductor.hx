@@ -47,7 +47,7 @@ class Conductor
 	/**
 	 * Number of beats per mesure (top number in time signature). Defaults to 4.
 	 */
-	public static var beatsPerMesure:Float = 4;
+	public static var beatsPerMeasure:Float = 4;
 
 	/**
 	 * Number of steps per beat (bottom number in time signature). Defaults to 4.
@@ -120,7 +120,7 @@ class Conductor
 	public static function setupSong(SONG:ChartData) {
 		reset();
 		mapBPMChanges(SONG);
-		changeBPM(SONG.meta.bpm, cast SONG.meta.beatsPerMesure.getDefault(4), cast SONG.meta.stepsPerBeat.getDefault(4));
+		changeBPM(SONG.meta.bpm, cast SONG.meta.beatsPerMeasure.getDefault(4), cast SONG.meta.stepsPerBeat.getDefault(4));
 	}
 	/**
 	 * Maps BPM changes from a song.
@@ -209,7 +209,7 @@ class Conductor
 
 			curStepFloat = __lastChange.stepTime + ((Conductor.songPosition - __lastChange.songTime) / Conductor.stepCrochet);
 			curBeatFloat = curStepFloat / stepsPerBeat;
-			curMeasureFloat = curBeatFloat / beatsPerMesure;
+			curMeasureFloat = curBeatFloat / beatsPerMeasure;
 
 			var oldStep = curStep;
 			var oldBeat = curBeat;
@@ -265,14 +265,14 @@ class Conductor
 		}
 	}
 
-	public static function changeBPM(newBpm:Float, beatsPerMesure:Float = 4, stepsPerBeat:Float = 4)
+	public static function changeBPM(newBpm:Float, beatsPerMeasure:Float = 4, stepsPerBeat:Float = 4)
 	{
 		bpm = newBpm;
 
 		crochet = ((60 / bpm) * 1000);
 		stepCrochet = crochet / stepsPerBeat;
 
-		Conductor.beatsPerMesure = beatsPerMesure;
+		Conductor.beatsPerMeasure = beatsPerMeasure;
 		Conductor.stepsPerBeat = stepsPerBeat;
 
 		onBPMChange.dispatch(bpm);
@@ -307,7 +307,7 @@ class Conductor
 	}
 
 	public static inline function getMeasureLength()
-		return stepsPerBeat * beatsPerMesure;
+		return stepsPerBeat * beatsPerMeasure;
 
 	public static inline function getMeasuresLength() {
 		if (FlxG.sound.music == null) return 0.0;

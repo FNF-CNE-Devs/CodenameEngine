@@ -198,7 +198,7 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 			spr.cameras = this.cameras;
 		}
 
-		sectionSeparator.spacing.y = (10 * Conductor.beatsPerMesure * Conductor.stepsPerBeat) - 1;
+		sectionSeparator.spacing.y = (10 * Conductor.beatsPerMeasure * Conductor.stepsPerBeat) - 1;
 		beatSeparator.spacing.y = (20 * Conductor.stepsPerBeat) - 1;
 
 		topLimit.scale.set(4 * 40, Math.ceil(FlxG.height / cameras[0].zoom));
@@ -281,7 +281,7 @@ class EventBackdrop extends FlxBackdrop {
 	public override function draw() {
 		super.draw();
 
-		eventSecSeparator.spacing.y = (10 * Conductor.beatsPerMesure * Conductor.stepsPerBeat) - 1;
+		eventSecSeparator.spacing.y = (10 * Conductor.beatsPerMeasure * Conductor.stepsPerBeat) - 1;
 		eventBeatSeparator.spacing.y = (20 * Conductor.stepsPerBeat) - 1;
 
 		eventSecSeparator.cameras = cameras;

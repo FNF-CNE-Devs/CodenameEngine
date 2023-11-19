@@ -18,7 +18,7 @@ typedef ChartMetaData = {
 	public var name:String;
 	public var ?bpm:Float;
 	public var ?displayName:String;
-	public var ?beatsPerMesure:Float;
+	public var ?beatsPerMeasure:Float;
 	public var ?stepsPerBeat:Float;
 	public var ?needsVoices:Bool;
 	public var ?icon:String;

@@ -42,7 +42,7 @@ class Chart {
 				bpm: 100
 			};
 		data.setFieldDefault("name", songName);
-		data.setFieldDefault("beatsPerMesure", 4);
+		data.setFieldDefault("beatsPerMeasure", 4);
 		data.setFieldDefault("stepsPerBeat", 4);
 		data.setFieldDefault("needsVoices", true);
 		data.setFieldDefault("icon", "face");

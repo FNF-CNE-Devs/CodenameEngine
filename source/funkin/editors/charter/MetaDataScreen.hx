@@ -12,7 +12,7 @@ class MetaDataScreen extends UISubstateWindow {
 
 	public var songNameTextBox:UITextBox;
 	public var bpmStepper:UINumericStepper;
-	public var beatsPerMesureStepper:UINumericStepper;
+	public var beatsPerMeasureStepper:UINumericStepper;
 	public var stepsPerBeatStepper :UINumericStepper;
 	public var needsVoicesCheckbox:UICheckbox;
 
@@ -53,13 +53,13 @@ class MetaDataScreen extends UISubstateWindow {
 		add(bpmStepper);
 		addLabelOn(bpmStepper, "BPM");
 
-		beatsPerMesureStepper = new UINumericStepper(bpmStepper.x + 60 + 26, bpmStepper.y, metadata.beatsPerMesure, 1, 0, 1, null, 54);
-		add(beatsPerMesureStepper);
-		addLabelOn(beatsPerMesureStepper, "Time Signature");
+		beatsPerMeasureStepper = new UINumericStepper(bpmStepper.x + 60 + 26, bpmStepper.y, metadata.beatsPerMeasure, 1, 0, 1, null, 54);
+		add(beatsPerMeasureStepper);
+		addLabelOn(beatsPerMeasureStepper, "Time Signature");
 
-		add(new UIText(beatsPerMesureStepper.x + 30, beatsPerMesureStepper.y + 3, 0, "/", 22));
+		add(new UIText(beatsPerMeasureStepper.x + 30, beatsPerMeasureStepper.y + 3, 0, "/", 22));
 
-		stepsPerBeatStepper = new UINumericStepper(beatsPerMesureStepper.x + 30 + 24, beatsPerMesureStepper.y, metadata.stepsPerBeat, 1, 0, 1, null, 54);
+		stepsPerBeatStepper = new UINumericStepper(beatsPerMeasureStepper.x + 30 + 24, beatsPerMeasureStepper.y, metadata.stepsPerBeat, 1, 0, 1, null, 54);
 		add(stepsPerBeatStepper);
 
 		needsVoicesCheckbox = new UICheckbox(stepsPerBeatStepper.x + 80 + 26, stepsPerBeatStepper.y, "Voices", metadata.needsVoices);
@@ -135,13 +135,13 @@ class MetaDataScreen extends UISubstateWindow {
 	}
 
 	public function saveMeta() {
-		for (stepper in [bpmStepper, beatsPerMesureStepper, stepsPerBeatStepper])
+		for (stepper in [bpmStepper, beatsPerMeasureStepper, stepsPerBeatStepper])
 			@:privateAccess stepper.__onChange(stepper.label.text);
 
 		PlayState.SONG.meta = {
 			name: songNameTextBox.label.text,
 			bpm: bpmStepper.value,
-			beatsPerMesure: Std.int(beatsPerMesureStepper.value),
+			beatsPerMeasure: Std.int(beatsPerMeasureStepper.value),
 			stepsPerBeat: Std.int(stepsPerBeatStepper.value),
 			needsVoices: needsVoicesCheckbox.checked,
 			displayName: displayNameTextBox.label.text,
