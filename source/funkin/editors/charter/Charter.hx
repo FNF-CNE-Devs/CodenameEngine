@@ -68,7 +68,7 @@ class Charter extends UIState {
 	public var vocals:FlxSound;
 
 	public var qaunt:Int = 16;
-	public var quantArray:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 192]; // different quants
+	public var qaunts:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 192]; // different quants
 
 	public var curNoteType:String = null;
 
@@ -314,18 +314,32 @@ class Charter extends UIState {
 			},
 			{
 				label: "Snap >",
-				childs: [
-					{
-						label: "Increase beat snap",
-						keybind: [X],
-						onSelect: _note_increasesnap
-					},
-					{
-						label: "Decrease beat snap",
-						keybind: [Z],
-						onSelect: _note_decreasesnap
-					}
-				]
+				childs: {
+					var base:Array<funkin.editors.ui.UIContextMenuOption> = [
+						{
+							label: "↑ Grid Snap",
+							keybind: [X],
+							onSelect: _snap_increasesnap
+						},
+						{
+							label: "Reset Grid Snap",
+							onSelect: _snap_resetsnap
+						},
+						{
+							label: "↓ Grid Snap",
+							keybind: [Z],
+							onSelect: _snap_decreasesnap
+						},
+						null
+					];
+
+					for (_qaunt in qaunts) 
+						base.push({
+							label: '${_qaunt}x Grid Snap',
+							onSelect: (_) -> {setqaunt(_qaunt);} 
+						});
+					base;
+				}
 			},
 			{
 				label: "Playback >",
@@ -418,7 +432,7 @@ class Charter extends UIState {
 		};
 		uiGroup.add(scrollBar);
 
-		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0\nBPM: 0\nTime Signature: 4/4\nBeat Snap: 16");
+		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0\nBPM: 0\nTime Signature: 4/4");
 		songPosInfo.alignment = RIGHT; songPosInfo.optimized = true;
 		uiGroup.add(songPosInfo);
 
@@ -433,13 +447,13 @@ class Charter extends UIState {
 		};
 		uiGroup.add(playBackSlider);
 
-		quantArray.reverse();
-		for (qaunt in quantArray) {
+		qaunts.reverse();
+		for (qaunt in qaunts) {
 			var button:CharterQauntButton = new CharterQauntButton(0, 0, qaunt);
 			button.onClick = () -> {this.qaunt = button.qaunt;};
 			qauntButtons.push(cast uiGroup.add(button));
 		}
-		quantArray.reverse();
+		qaunts.reverse();
 
 		strumlineInfoBG = new UISprite();
 		strumlineInfoBG.loadGraphic(Paths.image('editors/charter/strumline-info-bg'));
@@ -992,11 +1006,17 @@ class Charter extends UIState {
 			if (topMenuSpr.members[snapIndex] != null) {
 				var snapButton:UITopMenuButton = cast topMenuSpr.members[snapIndex];
 				var lastButtonX = playBackButton.x-10;
-				
-				for (i=>button in qauntButtons) {
+
+				var buttonI:Int = 0;
+				for (button in qauntButtons) {
+					button.visible = ((button.qaunt == qaunt) || 
+						(button.qaunt == qaunts[FlxMath.wrap(qaunts.indexOf(qaunt)-1, 0, qaunts.length-1)]) || 
+						(button.qaunt == qaunts[FlxMath.wrap(qaunts.indexOf(qaunt)+1, 0, qaunts.length-1)]));
+					if (!button.visible) continue;
+
 					button.x = lastButtonX -= button.bWidth;
 					button.framesOffset = button.qaunt == qaunt ? 9 : 0;
-					button.alpha = button.qaunt == qaunt ? 1 : 0;
+					button.alpha = button.qaunt == qaunt ? 1 : (button.hovered ? 0.4 : 0);
 				}
 				snapButton.x = (lastButtonX -= snapButton.bWidth)-10;
 			}
@@ -1043,8 +1063,7 @@ class Charter extends UIState {
 		+ '\nBeat: ${curBeat}'
 		+ '\nMeasure: ${curMeasure}'
 		+ '\nBPM: ${Conductor.bpm}'
-		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}'
-		+ '\nBeat Snap: ${qaunt}';
+		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}';
 
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125)))
 			updateDisplaySprites();
@@ -1352,11 +1371,12 @@ class Charter extends UIState {
 		t.icon = (Options.charterShowBeats = !Options.charterShowBeats) ? 1 : 0;
 		eventsBackdrop.eventBeatSeparator.visible = gridBackdrops.beatsVisible = Options.charterShowBeats;
 	}
-	inline function _note_increasesnap(_) changeqaunt(1);
+	inline function _snap_increasesnap(_) changeqaunt(1);
+	inline function _snap_decreasesnap(_) changeqaunt(-1);
+	inline function _snap_resetsnap(_) setqaunt(16);
 
-	inline function _note_decreasesnap(_) changeqaunt(-1);
-
-	inline function changeqaunt(change:Int) qaunt = quantArray[FlxMath.wrap(quantArray.indexOf(qaunt) + change, 0, quantArray.length-1)];
+	inline function changeqaunt(change:Int) qaunt = qaunts[FlxMath.wrap(qaunts.indexOf(qaunt) + change, 0, qaunts.length-1)];
+	inline function setqaunt(newqaunt:Int) qaunt = newqaunt;
 
 	inline function _note_addsustain(t)
 		changeNoteSustain(1);

@@ -7,4 +7,8 @@ class CharterQauntButton extends funkin.editors.ui.UITopMenu.UITopButton {
 		super(x, y, Std.string(qaunt));
 		this.qaunt = qaunt;
 	}
+
+	public override function update(elapsed:Float) {
+		super.update(elapsed);
+	}
 }
