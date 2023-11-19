@@ -733,33 +733,28 @@ class Charter extends UIState {
 		addEventSpr.selectable = !selectionBox.visible;
 
 		if (gridActionType == NONE) {
-			if (mousePos.x < 0 && mousePos.x > -addEventSpr.bWidth) {
-				noteHoverer.alpha = lerp(noteHoverer.alpha, 0, 0.25);
+			// Event Spr
+			if (mousePos.x < 0 && mousePos.x > -addEventSpr.bWidth && selection.length == 0) {
 				addEventSpr.incorporeal = false;
 				addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0.75, 0.25);
 				var event = getHoveredEvent(mousePos.y);
-				if (event != null) {
-					addEventSpr.updateEdit(event);
-				} else {
-					addEventSpr.updatePos(mousePos.y);
+				if (event != null) addEventSpr.updateEdit(event);
+				else addEventSpr.updatePos(mousePos.y);
+			} else  addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
+
+			// Note Hoverer
+			if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160 && selection.length == 0) {
+				var gridmult = 40 / (noteSnap / 16);
+				noteHoverer.alpha = lerp(noteHoverer.alpha, 0.35, 0.25);
+				if (noteHoverer.id != Math.floor(mousePos.x / 40) % 4) 
+					noteHoverer.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1), Math.floor(mousePos.x / 40) % 4, 0, null, null);
+				else {
+					noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1);
+					noteHoverer.y = noteHoverer.step * 40;
 				}
-			} else {
-				if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160) {
-					noteHoverer.alpha = lerp(noteHoverer.alpha, 0.35, 0.25);
-					addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
-					var gridmult = 40 / (noteSnap / 16);
-					if (noteHoverer.id != Math.floor(mousePos.x / 40) % 4) noteHoverer.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1), Math.floor(mousePos.x / 40) % 4, 0, null, null);
-					else {
-						noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1);
-						noteHoverer.y = noteHoverer.step * 40;
-					}
-					noteHoverer.x = Math.floor(mousePos.x / 40) * 40;
-				} else {
-					addEventSpr.incorporeal = true;
-					addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
-					noteHoverer.alpha = lerp(noteHoverer.alpha, 0, 0.25);
-				}
-			}
+				noteHoverer.x = Math.floor(mousePos.x / 40) * 40;
+			} else
+				noteHoverer.alpha = lerp(noteHoverer.alpha, 0, 0.25);
 		}
 	}
 	public function snap(a:Float,snapto:Float):Float 
