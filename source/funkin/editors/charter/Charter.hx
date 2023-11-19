@@ -34,18 +34,19 @@ class Charter extends UIState {
 	private static inline function get_instance()
 		return FlxG.state is Charter ? cast FlxG.state : null;
 
-	/**
-	 * CONFIG & UI (might make this customizable later)
-	 */
 	public var charterBG:FunkinSprite;
 	public var uiGroup:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
 	private var gridColor1:FlxColor = 0xFF272727; // white
 	private var gridColor2:FlxColor = 0xFF545454; // gray
 
+	@:noCompletion private var playbackIndex:Int = 6;
+	@:noCompletion private var snapIndex:Int = 5;
 	public var topMenu:Array<UIContextMenuOption>;
 
 	public var scrollBar:UIScrollBar;
 	public var songPosInfo:UIText;
+
+	public var qauntButtons:Array<CharterQauntButton> = [];
 	public var playBackSlider:UISlider;
 
 	public var topMenuSpr:UITopMenu;
@@ -66,7 +67,7 @@ class Charter extends UIState {
 
 	public var vocals:FlxSound;
 
-	public var noteSnap:Int = 16;
+	public var qaunt:Int = 16;
 	public var quantArray:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 192]; // different quants
 
 	public var curNoteType:String = null;
@@ -256,17 +257,6 @@ class Charter extends UIState {
 				label: "Note",
 				childs: [
 					{
-						label: "Increase beat snap",
-						keybind: [Z],
-						onSelect: _note_increasesnap
-					},
-					{
-						label: "Decrease beat snap",
-						keybind: [X],
-						onSelect: _note_decreasesnap
-					},
-					null,
-					{
 						label: "Add sustain length",
 						keybind: [E],
 						onSelect: _note_addsustain
@@ -299,7 +289,22 @@ class Charter extends UIState {
 				]
 			},
 			{
-				label: "Playback",
+				label: "Snap >",
+				childs: [
+					{
+						label: "Increase beat snap",
+						keybind: [X],
+						onSelect: _note_increasesnap
+					},
+					{
+						label: "Decrease beat snap",
+						keybind: [Z],
+						onSelect: _note_decreasesnap
+					}
+				]
+			},
+			{
+				label: "Playback >",
 				childs: [
 					{
 						label: "Play/Pause",
@@ -410,6 +415,14 @@ class Charter extends UIState {
 			for (strumLine in strumLines.members) strumLine.vocals.pitch = v;
 		};
 		uiGroup.add(playBackSlider);
+
+		quantArray.reverse();
+		for (qaunt in quantArray) {
+			var button:CharterQauntButton = new CharterQauntButton(0, 0, qaunt);
+			button.onClick = () -> {this.qaunt = button.qaunt;};
+			qauntButtons.push(cast uiGroup.add(button));
+		}
+		quantArray.reverse();
 
 		strumlineInfoBG = new UISprite();
 		strumlineInfoBG.loadGraphic(Paths.image('editors/charter/strumline-info-bg'));
@@ -649,7 +662,7 @@ class Charter extends UIState {
 							hoverOffset.set(mousePos.x - s.x, mousePos.y - s.y);
 							break;
 						}
-					var gridmult = 40 / (noteSnap / 16);
+					var gridmult = 40 / (qaunt / 16);
 					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(snap(dragStartPos.y, gridmult))); //credits to burgerballs
 					var verticalChange:Float = 
 						FlxG.keys.pressed.SHIFT ? ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40
@@ -706,7 +719,7 @@ class Charter extends UIState {
 						
 							if (mouseOnGrid && mousePos.y > 0 && mousePos.y < (__endStep)*40) {
 								var note = new CharterNote();
-								var gridmult = 40 / (noteSnap / 16);
+								var gridmult = 40 / (qaunt / 16);
 								note.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1), id % 4, 0, curNoteType, strumLines.members[Std.int(id/4)]);
 								notesGroup.add(note);
 								selection = [note];
@@ -744,7 +757,7 @@ class Charter extends UIState {
 
 			// Note Hoverer
 			if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160 && (mousePos.y > 0 && mousePos.y < (__endStep)*40) && selection.length == 0) {
-				var gridmult = 40 / (noteSnap / 16);
+				var gridmult = 40 / (qaunt / 16);
 				noteHoverer.alpha = lerp(noteHoverer.alpha, 0.35, 0.25);
 				if (noteHoverer.id != Math.floor(mousePos.x / 40) % 4) 
 					noteHoverer.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1), Math.floor(mousePos.x / 40) % 4, 0, null, null);
@@ -949,10 +962,22 @@ class Charter extends UIState {
 			gridBackdrops.conductorSprY - (FlxG.height * 0.5)
 		);
 
-		if (topMenuSpr.members[5] != null) {
-			var playBackMenu:UITopMenuButton = cast topMenuSpr.members[5];
-			playBackMenu.x = playBackSlider.x-playBackSlider.startText.width-10-playBackSlider.valueStepper.bWidth-playBackMenu.bWidth-10;
-			playBackMenu.label.offset.x = -1;
+		if (topMenuSpr.members[playbackIndex] != null) {
+			var playBackButton:UITopMenuButton = cast topMenuSpr.members[playbackIndex];
+			playBackButton.x = playBackSlider.x-playBackSlider.startText.width-10-playBackSlider.valueStepper.bWidth-playBackButton.bWidth-10;
+			playBackButton.label.offset.x = -1;
+
+			if (topMenuSpr.members[snapIndex] != null) {
+				var snapButton:UITopMenuButton = cast topMenuSpr.members[snapIndex];
+				var lastButtonX = playBackButton.x-10;
+				
+				for (i=>button in qauntButtons) {
+					button.x = lastButtonX -= button.bWidth;
+					button.framesOffset = button.qaunt == qaunt ? 9 : 0;
+					button.alpha = button.qaunt == qaunt ? 1 : 0;
+				}
+				snapButton.x = (lastButtonX -= snapButton.bWidth)-10;
+			}
 		}
 		
 		super.update(elapsed);
@@ -997,7 +1022,7 @@ class Charter extends UIState {
 		+ '\nMeasure: ${curMeasure}'
 		+ '\nBPM: ${Conductor.bpm}'
 		+ '\nTime Signature: ${Conductor.beatsPerMesure}/${Conductor.stepsPerBeat}'
-		+ '\nBeat Snap: ${noteSnap}';
+		+ '\nBeat Snap: ${qaunt}';
 
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125)))
 			updateDisplaySprites();
@@ -1301,11 +1326,11 @@ class Charter extends UIState {
 		t.icon = (Options.charterShowBeats = !Options.charterShowBeats) ? 1 : 0;
 		eventsBackdrop.eventBeatSeparator.visible = gridBackdrops.beatsVisible = Options.charterShowBeats;
 	}
-	inline function _note_increasesnap(_)
-		noteSnap = quantArray[cast Math.min(quantArray.indexOf(noteSnap) + 1, quantArray.length - 1)];
+	inline function _note_increasesnap(_) changeqaunt(1);
 
-	inline function _note_decreasesnap(_)
-		noteSnap = quantArray[cast Math.max(quantArray.indexOf(noteSnap) - 1, 0)];
+	inline function _note_decreasesnap(_) changeqaunt(-1);
+
+	inline function changeqaunt(change:Int) qaunt = quantArray[FlxMath.wrap(quantArray.indexOf(qaunt) + change, 0, quantArray.length-1)];
 
 	inline function _note_addsustain(t)
 		changeNoteSustain(1);

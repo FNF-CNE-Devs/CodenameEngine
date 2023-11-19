@@ -52,6 +52,7 @@ class UITopMenuButton extends UISliceSprite {
 	}
 
 	var justClosed:Int = 0;
+	var autoAnim:Bool = true;
 
 	public override function update(elapsed:Float) {
 		label.follow(this, 0, Std.int((bHeight - label.height) / 2));
@@ -76,6 +77,7 @@ class UITopMenuButton extends UISliceSprite {
 			}
 		}
 
+		if (!autoAnim) return;
 		alpha = (hovered || opened) ? 1 : 0;
 		framesOffset = opened ? 9 : 0;
 	}
@@ -98,4 +100,19 @@ class UITopMenuButton extends UISliceSprite {
 		var screenPos = getScreenPosition(null, __lastDrawCameras[0] == null ? FlxG.camera : __lastDrawCameras[0]);
 		curMenu = UIState.state.openContextMenu(contextMenu, null, screenPos.x, screenPos.y + bHeight);
 	}
+}
+
+class UITopButton extends UITopMenuButton {
+	public var onClick:Void->Void;
+
+	public function new(x:Float, y:Float, name:String)
+		super(x, y, null, name, null);
+
+	public override function update(elapsed:Float) {
+		justClosed = 0; autoAnim = false;
+		super.update(elapsed);
+	}
+
+	public override function openContextMenu()
+		if (onClick != null) onClick();
 }
