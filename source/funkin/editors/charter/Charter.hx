@@ -780,7 +780,7 @@ class Charter extends UIState {
 
 		if (gridActionType == NONE) {
 			// Event Spr
-			if (mousePos.x < 0 && mousePos.x > -addEventSpr.bWidth && selection.length == 0) {
+			if (mousePos.x < 0 && mousePos.x > -addEventSpr.bWidth) {
 				addEventSpr.incorporeal = false;
 				addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0.75, 0.25);
 				var event = getHoveredEvent(mousePos.y);
@@ -789,11 +789,15 @@ class Charter extends UIState {
 			} else  addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
 
 			// Note Hoverer
-			if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160 && (mousePos.y > 0 && mousePos.y < (__endStep)*40) && selection.length == 0) {
+			if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160 && (mousePos.y > 0 && mousePos.y < (__endStep)*40)) {
 				noteHoverer.alpha = lerp(noteHoverer.alpha, 0.35, 0.25);
-				if (noteHoverer.id != Math.floor(mousePos.x / 40) % 4) 
-					noteHoverer.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1), Math.floor(mousePos.x / 40) % 4, 0, null, null);
-				else {
+				if (noteHoverer.id != Math.floor(mousePos.x / 40) % 4) {
+					@:privateAccess noteHoverer.__doAnim = false; // Un comment to restore this
+					noteHoverer.updatePos(
+						FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1), 
+						Math.floor(mousePos.x / 40) % 4, 0, null, null
+					);
+				} else {
 					noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1);
 					noteHoverer.y = noteHoverer.step * 40;
 				}

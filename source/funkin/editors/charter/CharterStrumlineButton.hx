@@ -16,7 +16,7 @@ class CharterStrumlineButton extends UISprite {
 
 		button = new UISprite();
 		button.loadGraphic(Paths.image(imagePath));
-		button.scale.set(0.75,0.75);
+		button.scale.set(0.85,0.85);
 		button.updateHitbox();
 		button.antialiasing = false;
 		button.cursor = BUTTON;
@@ -30,17 +30,17 @@ class CharterStrumlineButton extends UISprite {
 	var buttonScale:FlxPoint = FlxPoint.get(0,0);
 
 	public override function update(elapsed:Float) {
-		button.follow(this, ((40 * 4) - button.width) / 2, 24);
+		button.follow(this, ((40 * 4) - button.width) / 2, 20);
 		text.follow(this, 0, 84);
 
 		super.update(elapsed);
 
 		UIState.state.updateSpriteRect(button);
 		if(UIState.state.isOverlapping(button, button.__rect)) {
-			buttonScale.set(0.85, 0.85);
+			buttonScale.set(0.95, 0.95);
 			if (FlxG.mouse.justReleased && onClick != null) onClick();
 		}
-		else buttonScale.set(0.75, 0.75);
+		else buttonScale.set(0.85, 0.85);
 
 		button.scale.set(
 			FlxMath.lerp(button.scale.x, buttonScale.x, 1/6),
