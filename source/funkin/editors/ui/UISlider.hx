@@ -26,7 +26,7 @@ class UISlider extends UISprite {
 
 	public var value(default, set):Float = 0;
 	public function set_value(newVal:Float):Float {
-		__barProgress = __calcProgress(newVal); onChange(newVal);
+		__barProgress = __calcProgress(newVal); if (onChange != null) onChange(newVal);
 		return value = newVal;
 	}
 
@@ -51,7 +51,8 @@ class UISlider extends UISprite {
         progressbar.origin.x = 0; progressbar.colorTransform.color = 0xFF67009B;
     	members.push(progressbar);
 
-		__barProgress = visualProgress = __calcProgress(value);
+		this.value = valueStepper.value;
+		visualProgress = __barProgress;
 
 		members.push(startText = new UIText(x, y, 0, Std.string(segments[0].start).replace("0.", ".")));
 		members.push(endText = new UIText(x + (barWidth) + 8, y, 0, Std.string(segments[segments.length-1].end).replace("0.", ".")));
@@ -79,8 +80,8 @@ class UISlider extends UISprite {
 		valueStepper.antialiasing = valueStepper.label.antialiasing = true;
 		valueStepper.onChange = function (text:String) {
 			@:privateAccess valueStepper.__onChange(text);
-			visualProgress = __barProgress = __calcProgress(value = valueStepper.value);
-			if (onChange != null) onChange(value);
+			this.value = valueStepper.value;
+			visualProgress = __barProgress;
 		}
 		members.push(valueStepper);
 	}

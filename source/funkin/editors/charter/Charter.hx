@@ -39,8 +39,8 @@ class Charter extends UIState {
 	private var gridColor1:FlxColor = 0xFF272727; // white
 	private var gridColor2:FlxColor = 0xFF545454; // gray
 
-	@:noCompletion private var playbackIndex:Int = 6;
-	@:noCompletion private var snapIndex:Int = 5;
+	@:noCompletion private var playbackIndex:Int = 7;
+	@:noCompletion private var snapIndex:Int = 6;
 	public var topMenu:Array<UIContextMenuOption>;
 
 	public var scrollBar:UIScrollBar;
@@ -289,6 +289,30 @@ class Charter extends UIState {
 				]
 			},
 			{
+				label: "Song",
+				childs: [
+					{
+						label: "Go back to the start",
+						keybind: [HOME],
+						onSelect: _song_start
+					},
+					{
+						label: "Go to the end",
+						keybind: [END],
+						onSelect: _song_end
+					},
+					null,
+					{
+						label: "Mute instrumental",
+						onSelect: _song_muteinst
+					},
+					{
+						label: "Mute voices",
+						onSelect: _song_mutevoices
+					}
+				]
+			},
+			{
 				label: "Snap >",
 				childs: [
 					{
@@ -313,6 +337,19 @@ class Charter extends UIState {
 					},
 					null,
 					{
+						label: "↑ Speed 25%",
+						onSelect: _playback_speed_raise
+					},
+					{
+						label: "Reset Speed",
+						onSelect: _playback_speed_reset
+					},
+					{
+						label: "↓ Speed 25%",
+						onSelect: _playback_speed_lower
+					},
+					null,
+					{
 						label: "Go back a section",
 						keybind: [A],
 						onSelect: _playback_back
@@ -324,17 +361,6 @@ class Charter extends UIState {
 					},
 					null,
 					{
-						label: "Go back to the start",
-						keybind: [HOME],
-						onSelect: _playback_start
-					},
-					{
-						label: "Go to the end",
-						keybind: [END],
-						onSelect: _playback_end
-					},
-					null,
-					{
 						label: "Metronome",
 						onSelect: _playback_metronome,
 						icon: Options.charterMetronomeEnabled ? 1 : 0
@@ -342,15 +368,6 @@ class Charter extends UIState {
 					{
 						label: "Visual metronome"
 					},
-					null,
-					{
-						label: "Mute instrumental",
-						onSelect: _playback_muteinst
-					},
-					{
-						label: "Mute voices",
-						onSelect: _playback_mutevoices
-					}
 				]
 			}
 		];
@@ -1278,14 +1295,18 @@ class Charter extends UIState {
 		}
 	}
 
+	function _playback_speed_raise(_) playBackSlider.value += .25;
+	function _playback_speed_reset(_) playBackSlider.value = 1;
+	function _playback_speed_lower(_) playBackSlider.value -= .25;
+
 	function _playback_metronome(t) {
 		t.icon = (Options.charterMetronomeEnabled = !Options.charterMetronomeEnabled) ? 1 : 0;
 	}
-	function _playback_muteinst(t) {
+	function _song_muteinst(t) {
 		FlxG.sound.music.volume = FlxG.sound.music.volume > 0 ? 0 : 1;
 		t.icon = 1 - Std.int(Math.ceil(FlxG.sound.music.volume));
 	}
-	function _playback_mutevoices(t) {
+	function _song_mutevoices(t) {
 		vocals.volume = vocals.volume > 0 ? 0 : 1;
 		for (strumLine in strumLines.members) strumLine.vocals.volume = strumLine.vocals.volume > 0 ? 0 : 1;
 		t.icon = 1 - Std.int(Math.ceil(vocals.volume));
@@ -1298,11 +1319,11 @@ class Charter extends UIState {
 		if (FlxG.sound.music.playing) return;
 		Conductor.songPosition += (Conductor.beatsPerMesure * __crochet);
 	}
-	function _playback_start(_) {
+	function _song_start(_) {
 		if (FlxG.sound.music.playing) return;
 		Conductor.songPosition = 0;
 	}
-	function _playback_end(_) {
+	function _song_end(_) {
 		if (FlxG.sound.music.playing) return;
 		Conductor.songPosition = FlxG.sound.music.length;
 	}
