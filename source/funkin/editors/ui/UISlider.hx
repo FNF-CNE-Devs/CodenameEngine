@@ -27,6 +27,7 @@ class UISlider extends UISprite {
 	public var value(default, set):Float = 0;
 	public function set_value(newVal:Float):Float {
 		__barProgress = __calcProgress(newVal); if (onChange != null) onChange(newVal);
+		if (valueStepper != null) valueStepper.value = newVal;
 		return value = newVal;
 	}
 
