@@ -683,7 +683,7 @@ class Charter extends UIState {
 					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, qauntStep(dragStartPos.y/40)*40); //credits to burgerballs
 					var verticalChange:Float = 
 						FlxG.keys.pressed.SHIFT ? ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40
-						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / 40);
+						: CoolUtil.floorInt(qauntStep((mousePos.y - dragStartPos.y) / 40));
 					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
 					var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
 					var undoDrags:Array<SelectionDragChange> = [];
@@ -793,7 +793,6 @@ class Charter extends UIState {
 		var stepMulti:Float = 1/(qaunt/16);
 		return Math.floor(step/stepMulti) * stepMulti;
 	}
-		
 
 	public function getHoveredEvent(y:Float) {
 		var eventHovered:CharterEvent = null;
