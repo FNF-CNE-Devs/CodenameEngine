@@ -380,9 +380,8 @@ class Charter extends UIState {
 		selectionBox.incorporeal = true;
 
 		noteHoverer = new CharterNote();
-		noteHoverer.snappedToStrumline = false;
-		noteHoverer.selectable = false;
-		noteHoverer.autoAlpha = false;
+		noteHoverer.snappedToStrumline = noteHoverer.selectable = noteHoverer.autoAlpha = false;
+		@:privateAccess noteHoverer.__animSpeed = 1.25;
 
 		selectionBox.cameras = notesGroup.cameras = gridBackdrops.cameras = noteHoverer.cameras = [charterCamera];
 
@@ -430,8 +429,9 @@ class Charter extends UIState {
 		strumLines.cameras = [charterCamera];
 
 		addEventSpr = new CharterEventAdd();
-		addEventSpr.alpha = 0;
+		addEventSpr.x -= addEventSpr.bWidth;
 		addEventSpr.cameras = [charterCamera];
+		addEventSpr.alpha = 0;
 
 		// adds grid and notes so that they're ALWAYS behind the UI
 		add(gridBackdrops);
@@ -743,7 +743,7 @@ class Charter extends UIState {
 			} else  addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
 
 			// Note Hoverer
-			if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160 && selection.length == 0) {
+			if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160 && (mousePos.y > 0 && mousePos.y < (__endStep)*40) && selection.length == 0) {
 				var gridmult = 40 / (noteSnap / 16);
 				noteHoverer.alpha = lerp(noteHoverer.alpha, 0.35, 0.25);
 				if (noteHoverer.id != Math.floor(mousePos.x / 40) % 4) 
@@ -752,7 +752,7 @@ class Charter extends UIState {
 					noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1);
 					noteHoverer.y = noteHoverer.step * 40;
 				}
-				noteHoverer.x = Math.floor(mousePos.x / 40) * 40;
+				noteHoverer.x = lerp(noteHoverer.x, Math.floor(mousePos.x / 40) * 40, .65);
 			} else
 				noteHoverer.alpha = lerp(noteHoverer.alpha, 0, 0.25);
 		}

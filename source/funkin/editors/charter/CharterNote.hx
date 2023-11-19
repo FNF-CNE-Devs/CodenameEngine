@@ -20,6 +20,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	public var sustainSpr:FlxSprite;
 	public var noteTypeText:flixel.text.FlxText;
 	var __doAnim:Bool = false;
+	var __animSpeed:Float = 1;
 
 	public var selected:Bool = false;
 	public var draggable:Bool = true;
@@ -104,7 +105,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		if(angleTween != null)
 			angleTween.cancel();
 
-		angleTween = FlxTween.tween(this, {angle: destAngle}, 2/3, {ease: function(t) {
+		angleTween = FlxTween.tween(this, {angle: destAngle}, (2/3)/__animSpeed, {ease: function(t) {
 			return ((Math.sin(t * Math.PI) * 0.35) * 3 * t * Math.sqrt(1 - t)) + t;
 		}});
 	}
