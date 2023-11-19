@@ -34,9 +34,9 @@ class CharterEventAdd extends UISliceSprite {
 		text.alpha = sprAlpha;
 	}
 
-	public function updatePos(y:Float) {
+	public function updatePos(step:Float) {
 		curCharterEvent = null;
-		step = FlxG.keys.pressed.SHIFT ? (y / 40) : Math.floor((y + 20) / 40);
+		this.step = step;
 		this.y = (step * 40) - (bHeight / 2);
 		text.text = "Add event";
 		framesOffset = 0;
