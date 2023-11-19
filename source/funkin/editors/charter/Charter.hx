@@ -679,8 +679,8 @@ class Charter extends UIState {
 							hoverOffset.set(mousePos.x - s.x, mousePos.y - s.y);
 							break;
 						}
-					var gridmult = 40 / (qaunt / 16);
-					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, Std.int(snap(dragStartPos.y, gridmult))); //credits to burgerballs
+						
+					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, qauntStep(dragStartPos.y/40)*40); //credits to burgerballs
 					var verticalChange:Float = 
 						FlxG.keys.pressed.SHIFT ? ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40
 						: CoolUtil.floorInt((mousePos.y - dragStartPos.y) / 40);
@@ -736,8 +736,10 @@ class Charter extends UIState {
 						
 							if (mouseOnGrid && mousePos.y > 0 && mousePos.y < (__endStep)*40) {
 								var note = new CharterNote();
-								var gridmult = 40 / (qaunt / 16);
-								note.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1), id % 4, 0, curNoteType, strumLines.members[Std.int(id/4)]);
+								note.updatePos(
+									FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : qauntStep(mousePos.y/40), 0, __endStep-1),
+									id % 4, 0, curNoteType, strumLines.members[Std.int(id/4)]
+								);
 								notesGroup.add(note);
 								selection = [note];
 								undos.addToUndo(CCreateSelection([note]));
@@ -774,12 +776,11 @@ class Charter extends UIState {
 
 			// Note Hoverer
 			if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160 && (mousePos.y > 0 && mousePos.y < (__endStep)*40) && selection.length == 0) {
-				var gridmult = 40 / (qaunt / 16);
 				noteHoverer.alpha = lerp(noteHoverer.alpha, 0.35, 0.25);
 				if (noteHoverer.id != Math.floor(mousePos.x / 40) % 4) 
-					noteHoverer.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1), Math.floor(mousePos.x / 40) % 4, 0, null, null);
+					noteHoverer.updatePos(FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : qauntStep(mousePos.y/40), 0, __endStep-1), Math.floor(mousePos.x / 40) % 4, 0, null, null);
 				else {
-					noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : snap(mousePos.y, gridmult) / 40, 0, __endStep-1);
+					noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : qauntStep(mousePos.y/40), 0, __endStep-1);
 					noteHoverer.y = noteHoverer.step * 40;
 				}
 				noteHoverer.x = lerp(noteHoverer.x, Math.floor(mousePos.x / 40) * 40, .65);
@@ -787,8 +788,13 @@ class Charter extends UIState {
 				noteHoverer.alpha = lerp(noteHoverer.alpha, 0, 0.25);
 		}
 	}
-	public function snap(a:Float,snapto:Float):Float 
-		return Math.floor(a/snapto) * snapto;
+
+	public function qauntStep(step:Float):Float {
+		var stepMulti:Float = 1/(qaunt/16);
+		return Math.floor(step/stepMulti) * stepMulti;
+	}
+		
+
 	public function getHoveredEvent(y:Float) {
 		var eventHovered:CharterEvent = null;
 		eventsGroup.forEach(function(e) {
