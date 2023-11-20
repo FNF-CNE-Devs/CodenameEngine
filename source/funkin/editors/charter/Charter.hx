@@ -52,7 +52,6 @@ class Charter extends UIState {
 	public var gridBackdrops:CharterBackdropGroup;
 	public var eventsBackdrop:EventBackdrop;
 	public var addEventSpr:CharterEventAdd;
-	public var noteTypeWindow:UIButtonList<CharterNoteTypeButton>;
 
 	public var gridBackdropDummy:CharterBackdropDummy;
 	public var noteHoverer:CharterNote;
@@ -427,10 +426,6 @@ class Charter extends UIState {
 		songPosInfo.alignment = RIGHT; songPosInfo.optimized = true;
 		uiGroup.add(songPosInfo);
 
-		noteTypeWindow = new UIButtonList<CharterNoteTypeButton>(1, 200, 300, 500, "Note Types", FlxPoint.get(296, 30), FlxPoint.get(2, 2));
-		noteTypeWindow.buttons.add(new CharterNoteTypeButton("Default Note", noteTypeWindow, this, null));
-		noteTypeWindow.cameras = [uiCamera];
-
 		playBackSlider = new UISlider(FlxG.width - 160 - 26 - 20, (23/2) - (12/2), 160, 1, [{start: 0.25, end: 1, size: 0.5}, {start: 1, end: 2, size: 0.5}], true);
 		playBackSlider.onChange = function (v) {
 			FlxG.sound.music.pitch = vocals.pitch = v;
@@ -484,7 +479,6 @@ class Charter extends UIState {
 		add(topMenuSpr);
 		// add the ui group
 		add(uiGroup);
-		//add(noteTypeWindow);
 
 		loadSong();
 
@@ -510,17 +504,6 @@ class Charter extends UIState {
 			EventsData.reloadEvents();
 			PlayState.loadSong(__song, __diff, false, false);
 		}
-		for (i in Paths.getFolderContent("data/notes")) chart.noteTypes.push(haxe.io.Path.withoutExtension(i));
-		for (i in Paths.getFolderContent("images/game/notes")) 
-			if (!chart.noteTypes.contains(haxe.io.Path.withoutExtension(i)) && haxe.io.Path.withoutExtension(i) != "default") chart.noteTypes.push(haxe.io.Path.withoutExtension(i));
-
-		for (i in chart.noteTypes) 
-			noteTypeWindow.buttons.add(new CharterNoteTypeButton(haxe.io.Path.withoutExtension(i), noteTypeWindow, this, chart.noteTypes));
-		for(i in noteTypeWindow.buttons.members) i.alpha = i.theType == "Default Note" ? 1 : 0.25;
-		noteTypeWindow.addButton.callback = function() {
-			noteTypeWindow.buttons.add(new CharterNoteTypeButton("New NoteType", noteTypeWindow, this, chart.noteTypes));
-		}
-
 		Conductor.setupSong(PlayState.SONG);
 
 		FlxG.sound.setMusic(FlxG.sound.load(Paths.inst(__song, __diff)));
@@ -544,7 +527,7 @@ class Charter extends UIState {
 			for (note in strL.notes) {
 				var n = new CharterNote();
 				var t = Conductor.getStepForTime(note.time);
-				n.updatePos(t, note.id, Conductor.getStepForTime(note.time + note.sLen) - t, (PlayState.SONG.noteTypes[note.type] != null ? PlayState.SONG.noteTypes[note.type] : "Default Note"), strumLines.members[i]);
+				n.updatePos(t, note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type, strumLines.members[i]);
 				notesGroup.members[notesCreated++] = n;
 			}
 		notesGroup.sortNotes();
@@ -743,7 +726,7 @@ class Charter extends UIState {
 								var note = new CharterNote();
 								note.updatePos(
 									FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1),
-									id % 4, 0, curNoteType, strumLines.members[Std.int(id/4)]
+									id % 4, 0, noteType, strumLines.members[Std.int(id/4)]
 								);
 								notesGroup.add(note);
 								selection = [note];
@@ -899,7 +882,7 @@ class Charter extends UIState {
 			for(note in strL.notes) {
 				var n = new CharterNote();
 				var t = Conductor.getStepForTime(note.time);
-				n.updatePos(t, note.id, Conductor.getStepForTime(note.time + note.sLen) - t, PlayState.SONG.noteTypes[note.type], cStr);
+				n.updatePos(t, note.id, Conductor.getStepForTime(note.time + note.sLen) - t, note.type, cStr);
 				notesGroup.add(n);
 			}
 			createSelection(toBeCreated, false);
@@ -1418,9 +1401,8 @@ class Charter extends UIState {
 
 	public inline function buildNote(note:CharterNote):ChartNote {
 		var time = Conductor.getTimeForStep(note.step);
-		if (!PlayState.SONG.noteTypes.contains(note.type) && note.type != "Default Note") PlayState.SONG.noteTypes.push(note.type);
 		return {
-			type: (PlayState.SONG.noteTypes.contains(note.type) ? PlayState.SONG.noteTypes.indexOf(note.type) + 1 : 0),
+			type: note.type,
 			time: time,
 			sLen: Conductor.getTimeForStep(note.step + note.susLength) - time,
 			id: note.id
@@ -1438,7 +1420,6 @@ class Charter extends UIState {
 			if (PlayState.SONG.strumLines[n.strumLineID] != null) 
 				PlayState.SONG.strumLines[n.strumLineID].notes.push(buildNote(n));
 		}
-		trace(PlayState.SONG.noteTypes);
 		buildEvents();
 	}
 
@@ -1480,7 +1461,7 @@ enum CharterChange {
 }
 
 enum CharterCopyboardObject {
-	CNote(step:Float, id:Int, strumLineID:Int, susLength:Float, type:String);
+	CNote(step:Float, id:Int, strumLineID:Int, susLength:Float, type:Int);
 	CEvent(step:Float, events:Array<ChartEvent>);
 }
 
@@ -1510,57 +1491,6 @@ typedef SelectionDragChange = {
 	}
 }
 
-class CharterNoteTypeButton extends UIButton {
-	public var theType:String;
-	public var textBox:UIAutoCompleteTextBox;
-	public var deleteButton:UIButton;
-	public var deleteIcon:FlxSprite;
-	public function new(type:String, parent:UIButtonList<CharterNoteTypeButton>, state:Charter, suggestList:Array<String>) {
-		theType = type;
-		super(0,0,"" ,function() {
-			state.curNoteType = theType;
-			for(i in parent.buttons.members)
-				i.alpha = i == this ? 1 : 0.25;
-		},296,30);
-		if (suggestList != null && suggestList.length > 0) {
-			members.push(textBox = new UIAutoCompleteTextBox((bWidth - 218) / 2, y + 4, theType, 200, bHeight - 8));
-			textBox.suggestItems = suggestList;
-			textBox.antialiasing = true;
-			textBox.onChange = function(typer:String) {
-				if (!PlayState.SONG.noteTypes.contains(typer) && PlayState.SONG.noteTypes.contains(theType))
-					PlayState.SONG.noteTypes[PlayState.SONG.noteTypes.indexOf(theType)] = typer;
-				else if (PlayState.SONG.noteTypes.contains(typer) && PlayState.SONG.noteTypes.contains(theType))
-					PlayState.SONG.noteTypes.remove(theType);
-				else PlayState.SONG.noteTypes.push(typer);
-				if (state.curNoteType == theType) state.curNoteType = typer;
-				theType = typer;
-			}
-
-			deleteButton = new UIButton(textBox.x + 204, bHeight/2 - (28/2), "", function () {
-				parent.remove(this);
-			}, 28, 28);
-			deleteButton.color = 0xFFFF0000;
-			deleteButton.autoAlpha = false;
-			members.push(deleteButton);
-	
-			deleteIcon = new FlxSprite(deleteButton.x + (14/2), deleteButton.y + 5).loadGraphic(Paths.image('editors/character/delete-button'));
-			deleteIcon.antialiasing = false;
-			members.push(deleteIcon);
-		}
-		else field.text = type;
-		autoAlpha = false;
-
-	}
-	override function update(elapsed) {
-		super.update(elapsed);
-		if (textBox != null) textBox.y = y + 4;
-		if (deleteButton != null) {
-			deleteButton.y = y + bHeight / 2 - deleteButton.bHeight / 2;
-			deleteIcon.x = deleteButton.x + (13/2); deleteIcon.y = deleteButton.y + 5;
-		}
-		//x = alpha == 0.25 ? -50 : 10;
-	}
-}
 interface ICharterSelectable {
 	public var x(default, set):Float;
 	public var y(default, set):Float;
