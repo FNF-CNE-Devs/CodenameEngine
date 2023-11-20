@@ -301,7 +301,7 @@ class Charter extends UIState {
 			{
 				label: "Snap >",
 				childs: {
-					var base:Array<funkin.editors.ui.UIContextMenuOption> = [
+					var base:Array<UIContextMenuOption> = [
 						{
 							label: "↑ Grid Snap",
 							keybind: [X],
@@ -684,7 +684,7 @@ class Charter extends UIState {
 							if (s.step + changePoint.x > __endStep-1) boundedChange.x -= (s.step + changePoint.x) - (__endStep-1);
 
 							if (s is CharterNote) {
-								var note:CharterNote = cast (s, CharterNote);
+								var note:CharterNote = cast s;
 								if (note.fullID + changePoint.y < 0) boundedChange.y += Math.abs(note.fullID + changePoint.y);
 								if (note.fullID + changePoint.y > (strumLines.members.length*4)-1) boundedChange.y -= (note.fullID + changePoint.y) - ((strumLines.members.length*4)-1);
 							}
@@ -801,11 +801,11 @@ class Charter extends UIState {
 		if (selected == null) return selected;
 
 		if (selected is CharterNote) {
-			var note:CharterNote = cast(selected, CharterNote);
+			var note:CharterNote = cast selected;
 			notesGroup.remove(note, true);
 			note.kill();
 		} else if (selected is CharterEvent) {
-			var event:CharterEvent = cast(selected, CharterEvent);
+			var event:CharterEvent = cast selected;
 			eventsGroup.remove(event, true);
 			event.kill();
 		}
@@ -952,7 +952,7 @@ class Charter extends UIState {
 		var i = 0;
 		while(i < selection.length) {
 			if (selection[i] is CharterNote) {
-				var note = cast (selection[i], CharterNote);
+				var note:CharterNote = cast selection[i];
 				if (note.strumLineID == strumLineID)
 					selection.remove(note);
 				else i++;
@@ -1135,7 +1135,7 @@ class Charter extends UIState {
 		clipboard = [
 			for (s in selection)
 				if (s is CharterNote) {
-				var note:CharterNote = cast(s, CharterNote);
+				var note:CharterNote = cast s;
 				CNote(note.step - minStep, note.id, note.strumLineID, note.susLength, note.type);
 			} else if (s is CharterEvent) {
 				var event = cast(s,CharterEvent);
@@ -1379,7 +1379,7 @@ class Charter extends UIState {
 		var undoChanges:Array<NoteSustainChange> = [];
 		for(s in selection)
 			if (s is CharterNote) {
-				var n:CharterNote = cast(s, CharterNote);
+				var n:CharterNote = cast s;
 				var old:Float = n.susLength;
 				n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0));
 				undoChanges.push({before: old, after: n.susLength, note: n});
@@ -1399,7 +1399,7 @@ class Charter extends UIState {
 
 	function buildNoteTypesUI() {
 		var noteTopButton:UITopMenuButton = cast topMenuSpr.members[noteIndex];
-		var newChilds:Array<funkin.editors.ui.UIContextMenuOption> = [
+		var newChilds:Array<UIContextMenuOption> = [
 			{
 				label: "Add sustain length",
 				keybind: [E],
