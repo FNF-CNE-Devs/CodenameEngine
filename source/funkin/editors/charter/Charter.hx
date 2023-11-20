@@ -403,7 +403,7 @@ class Charter extends UIState {
 
 		noteHoverer = new CharterNote();
 		noteHoverer.snappedToStrumline = noteHoverer.selectable = noteHoverer.autoAlpha = false;
-		@:privateAccess noteHoverer.__animSpeed = 1.25;
+		@:privateAccess noteHoverer.__animSpeed = 1.25; noteHoverer.typeText.visible = false;
 
 		selectionBox.cameras = notesGroup.cameras = gridBackdrops.cameras = noteHoverer.cameras = [charterCamera];
 
@@ -501,8 +501,8 @@ class Charter extends UIState {
 			PlayState.loadSong(__song, __diff, false, false);
 		}
 		Conductor.setupSong(PlayState.SONG);
-		noteTypes = PlayState.SONG.noteTypes;
-		//noteTypes = ["Hurt Note", "Bullet Note", "Penis Note", "Boobs Note"];
+		// noteTypes = PlayState.SONG.noteTypes;
+		noteTypes = ["Hurt Note", "Bullet Note", "Penis Note", "Boobs Note"];
 
 		FlxG.sound.setMusic(FlxG.sound.load(Paths.inst(__song, __diff)));
 		vocals = FlxG.sound.load(Paths.voices(__song, __diff));

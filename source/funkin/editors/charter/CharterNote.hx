@@ -18,6 +18,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	];
 
 	public var sustainSpr:FlxSprite;
+	public var typeText:UIText;
 	var __doAnim:Bool = false;
 	var __animSpeed:Float = 1;
 
@@ -33,12 +34,14 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		this.setUnstretchedGraphicSize(40, 40, false);
 
 		cursor = BUTTON;
-
 		moves = false;
 
 		sustainSpr = new FlxSprite(10, 40);
 		sustainSpr.makeGraphic(1, 1, -1);
 		members.push(sustainSpr);
+
+		typeText = new UIText(x, y, 0, Std.string(type));
+		//typeText.borderSize = 1.5;
 	}
 
 	public override function updateButtonHandler() {
@@ -71,6 +74,10 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		this.susLength = susLength;
 		this.type = type;
 		if (strumLine != null) this.strumLine = strumLine;
+
+		typeText.exists = type != 0;
+		typeText.text = Std.string(this.type);
+
 		y = step * 40;
 
 		sustainSpr.scale.set(10, (40 * susLength));
@@ -124,16 +131,20 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	var __passed:Bool = false;
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-		if(sustainSpr.exists)
+		if (sustainSpr.exists)
 			sustainSpr.follow(this, 15, 20);
+		if (typeText.exists)
+			typeText.follow(this, 20 - (typeText.frameWidth/2), 20 - (typeText.frameHeight/2));
 
 		if (__passed != (__passed = step < Conductor.curStepFloat)) {
 			if (__passed && FlxG.sound.music.playing && Charter.instance.hitsoundsEnabled(strumLineID))
 				Charter.instance.hitsound.replay();
 		}
 
-		if (strumLine != null) alpha = !strumLine.strumLine.visible ? (__passed ? 0.2 : 0.4) : (__passed ? 0.6 : 1); 
-		if(sustainSpr.exists) sustainSpr.alpha = alpha;
+		if (strumLine != null) {
+			sustainSpr.alpha = alpha = !strumLine.strumLine.visible ? (__passed ? 0.2 : 0.4) : (__passed ? 0.6 : 1);
+			typeText.alpha = !strumLine.strumLine.visible ? (__passed ? 0.4 : 0.6) : (__passed ? 0.8 : 1); 
+		}
 
 		colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;
 		colorTransform.redOffset = colorTransform.greenOffset = selected ? 96 : 0;
@@ -164,5 +175,6 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 		drawMembers();
 		drawSuper();
+		if(typeText.exists && typeText.visible) typeText.draw();
 	}
 }
