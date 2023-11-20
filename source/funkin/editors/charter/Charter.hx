@@ -271,10 +271,6 @@ class Charter extends UIState {
 					{
 						label: "(0) Default Note",
 						keybind: [ZERO]
-					},
-					{
-						label: "(1) Hurt Note",
-						keybind: [ONE]
 					}
 				]
 			},
@@ -505,6 +501,8 @@ class Charter extends UIState {
 			PlayState.loadSong(__song, __diff, false, false);
 		}
 		Conductor.setupSong(PlayState.SONG);
+		noteTypes = PlayState.SONG.noteTypes;
+		//noteTypes = ["Hurt Note", "Bullet Note", "Penis Note", "Boobs Note"];
 
 		FlxG.sound.setMusic(FlxG.sound.load(Paths.inst(__song, __diff)));
 		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
@@ -550,6 +548,7 @@ class Charter extends UIState {
 		for(e in eventsGroup.members)
 			e.refreshEventIcons();
 
+		buildNoteTypesUI();
 		refreshBPMSensitive();
 	}
 
@@ -770,7 +769,7 @@ class Charter extends UIState {
 				@:privateAccess noteHoverer.__doAnim = false; // Un comment to restore this
 				noteHoverer.updatePos(
 					FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y) / 40) : quantStep((mousePos.y+20)/40), 0, __endStep-1), 
-					Math.floor(mousePos.x / 40) % 4, 0, null, null
+					Math.floor(mousePos.x / 40) % 4, 0, 0, null
 				);
 			} else {
 				noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1);
@@ -1378,16 +1377,71 @@ class Charter extends UIState {
 		if (selection.length <= 0 || change == 0) return;
 
 		var undoChanges:Array<NoteSustainChange> = [];
-		for(s in selection) {
+		for(s in selection)
 			if (s is CharterNote) {
 				var n:CharterNote = cast(s, CharterNote);
 				var old:Float = n.susLength;
 				n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0));
 				undoChanges.push({before: old, after: n.susLength, note: n});
 			}
-		}
 
 		undos.addToUndo(CEditSustains(undoChanges));
+	}
+
+	inline function changeNoteType(newID:Int) {
+		this.noteType = newID; buildNoteTypesUI();
+		for(s in selection) 
+			if (s is CharterNote) {
+				var n:CharterNote = cast s;
+				n.updatePos(n.step, n.id, n.susLength, newID);
+			}
+	} 
+
+	function buildNoteTypesUI() {
+		var noteTopButton:UITopMenuButton = cast topMenuSpr.members[noteIndex];
+		var newChilds:Array<funkin.editors.ui.UIContextMenuOption> = [
+			{
+				label: "Add sustain length",
+				keybind: [E],
+				onSelect: _note_addsustain
+			},
+			{
+				label: "Subtract sustain length",
+				keybind: [Q],
+				onSelect: _note_subtractsustain
+			},
+			null,
+			{
+				label: "Select all",
+				keybind: [CONTROL, A],
+				onSelect: _note_selectall
+			},
+			{
+				label: "Select measure",
+				keybind: [CONTROL, SHIFT, A],
+				onSelect: _note_selectmeasure
+			},
+			null,
+			{
+				label: "(0) Default Note",
+				keybind: [ZERO],
+				onSelect: (_) -> {changeNoteType(0);},
+				icon: this.noteType == 0 ? 1 : 0
+			}
+		];
+
+		var noteKeys:Array<FlxKey> = [ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE];
+		for (i=>type in noteTypes) {
+			var realNoteID:Int = i+1; // Default Note not stored
+			var newChild:UIContextMenuOption = {
+				label: '(${realNoteID}) ${type}',
+				onSelect: (_) -> {changeNoteType(realNoteID);},
+				icon: this.noteType == realNoteID ? 1 : 0
+			};
+			if (realNoteID <= 9) newChild.keybind = [noteKeys[realNoteID]];
+			newChilds.push(newChild);
+		}
+		noteTopButton.contextMenu = newChilds;
 	}
 
 	public function playtestChart(time:Float = 0, opponentMode = false, here = false) {
@@ -1411,7 +1465,7 @@ class Charter extends UIState {
 
 	public function buildChart() {
 		PlayState.SONG.strumLines = [];
-		PlayState.SONG.noteTypes = [];
+		PlayState.SONG.noteTypes = this.noteTypes;
 		for(s in strumLines) {
 			s.strumLine.notes = [];
 			PlayState.SONG.strumLines.push(s.strumLine);
