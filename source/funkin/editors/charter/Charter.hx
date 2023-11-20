@@ -36,12 +36,11 @@ class Charter extends UIState {
 
 	public var charterBG:FunkinSprite;
 	public var uiGroup:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
-	private var gridColor1:FlxColor = 0xFF272727; // white
-	private var gridColor2:FlxColor = 0xFF545454; // gray
 
+	public var topMenu:Array<UIContextMenuOption>;
 	@:noCompletion private var playbackIndex:Int = 7;
 	@:noCompletion private var snapIndex:Int = 6;
-	public var topMenu:Array<UIContextMenuOption>;
+	@:noCompletion private var noteIndex:Int = 4;
 
 	public var scrollBar:UIScrollBar;
 	public var songPosInfo:UIText;
@@ -70,23 +69,15 @@ class Charter extends UIState {
 	public var quant:Int = 16;
 	public var quants:Array<Int> = [4, 8, 12, 16, 20, 24, 32, 48, 64, 192]; // different quants
 
-	public var curNoteType:String = null;
+	public var noteType:Int = 0;
+	public var noteTypes:Array<String> = [];
 
-	/**
-	 * ACTUAL CHART DATA
-	 */
 	public var strumLines:CharterStrumLineGroup = new CharterStrumLineGroup();
 	public var notesGroup:CharterNoteGroup = new CharterNoteGroup();
 	public var eventsGroup:CharterEventGroup = new CharterEventGroup();
 
-	/**
-	 * CAMERAS
-	 */
-	// camera for the chart itself so that it can be unzoomed/zoomed in again
 	public var charterCamera:FlxCamera;
-	// camera for the ui
 	public var uiCamera:FlxCamera;
-	// selection box for the ui
 	public var selectionBox:UISliceSprite;
 
 	public var selection:Selection = new Selection();
