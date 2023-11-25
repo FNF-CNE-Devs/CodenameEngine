@@ -597,6 +597,7 @@ class Charter extends UIState {
 							selection = [cast n];
 						closeCurrentContextMenu();
 						openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
+						mousePos.put();
 					}
 				}
 			});
@@ -749,6 +750,7 @@ class Charter extends UIState {
 					var mousePos = FlxG.mouse.getPositionInCameraView(charterCamera);
 					closeCurrentContextMenu();
 					openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
+					mousePos.put();
 				}
 		}
 		addEventSpr.selectable = !selectionBox.visible;
