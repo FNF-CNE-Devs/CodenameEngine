@@ -592,10 +592,11 @@ class Charter extends UIState {
 							selection = [cast n];
 					}
 					if (FlxG.mouse.justReleasedRight) {
+						var mousePos = FlxG.mouse.getPositionInCameraView(charterCamera);
 						if (!selection.contains(cast n))
 							selection = [cast n];
 						closeCurrentContextMenu();
-						openContextMenu(topMenu[1].childs);
+						openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
 					}
 				}
 			});
@@ -745,8 +746,9 @@ class Charter extends UIState {
 				}
 
 				if (FlxG.mouse.justReleasedRight) {
+					var mousePos = FlxG.mouse.getPositionInCameraView(charterCamera);
 					closeCurrentContextMenu();
-					openContextMenu(topMenu[1].childs);
+					openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
 				}
 		}
 		addEventSpr.selectable = !selectionBox.visible;
