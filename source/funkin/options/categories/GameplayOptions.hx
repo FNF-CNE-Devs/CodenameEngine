@@ -8,7 +8,7 @@ class GameplayOptions extends OptionsScreen {
 		super("Gameplay", 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...');
 		add(new Checkbox(
 			"Downscroll",
-			"If checked, notes will go from up to down instead of down to up, like if they were falling",
+			"If checked, notes will go from up to down instead of down to up, as if they're falling.",
 			"downscroll"));
 		add(new Checkbox(
 			"Ghost Tapping",
@@ -16,7 +16,7 @@ class GameplayOptions extends OptionsScreen {
 			"ghostTapping"));
 		add(new NumOption(
 			"Song Offset",
-			"Changes the offset at which the song should start",
+			"Changes the offset that songs should start with.",
 			-999, // minimum
 			999, // maximum
 			1, // change
@@ -24,11 +24,11 @@ class GameplayOptions extends OptionsScreen {
 			__changeOffset)); // callback
 		add(new Checkbox(
 			"Naughtyness",
-			"If unchecked, will censor Week 7 cutscenes",
+			"If unchecked, will censor the Week 7 cutscenes.",
 			"naughtyness"));
 		add(new Checkbox(
 			"Camera Zoom on Beat",
-			"If unchecked, will disable camera zooming every 4 beats",
+			"If unchecked, will stop the camera from zooming in every 4 beats",
 			"camZoomOnBeat"));
 	}
 	private function __changeOffset(offset) Conductor.songOffset = offset; 

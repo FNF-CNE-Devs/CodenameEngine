@@ -5,7 +5,7 @@ class AppearanceOptions extends OptionsScreen {
 		super("Appearance", "Change Appearance options such as Flashing menus...");
 		add(new NumOption(
 			"Framerate",
-			"Pretty self explanitory isn't it?",
+			"Pretty self explanatory, isn't it?",
 			30, // minimum
 			240, // maximum
 			10, // change
@@ -13,7 +13,7 @@ class AppearanceOptions extends OptionsScreen {
 			__changeFPS)); // callback
 		add(new Checkbox(
 			"Antialiasing",
-			"If unchecked, will disable antialiasing on every sprite. Can boost performances at the cost of sharper, more pixely sprites",
+			"If unchecked, will disable antialiasing on every sprite. Can boost performances at the cost of sharper, more pixely sprites.",
 			"antialiasing"));
 		add(new Checkbox(
 			"Colored Healthbar",
@@ -25,7 +25,7 @@ class AppearanceOptions extends OptionsScreen {
 			"week6PixelPerfect"));
 		add(new Checkbox(
 			"Flashing Menu",
-			"If unchecked, will disable menu flashing when you select an option in the Main Menu, and other flashs will be slower",
+			"If unchecked, will disable menu flashing when you select an option in the Main Menu, and other flashes will be slower.",
 			"flashingMenu"));
 		add(new Checkbox(
 			"Low Memory Mode",
@@ -41,7 +41,7 @@ class AppearanceOptions extends OptionsScreen {
 		#end
 		add(new Checkbox(
 			"Auto Pause",
-			"If checked, switching windows will pause the game",
+			"If checked, switching windows will pause the game.",
 			"autoPause"));
 	}
 	
