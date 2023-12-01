@@ -7,6 +7,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	var __loopSprite:Note;
 	var i:Int = 0;
 	var __currentlyLooping:Bool = false;
+	var __time:Float = -1.0;
 
 	/**
 	 * How many ms it should show a note before it should be hit
@@ -36,12 +37,13 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	public override function update(elapsed:Float) {
 		i = length-1;
 		__loopSprite = null;
+		__time = Conductor.songPosition;
 		while(i >= 0) {
 			__loopSprite = members[i--];
 			if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.active) {
 				continue;
 			}
-			if (__loopSprite.strumTime - Conductor.songPosition > limit)
+			if (__loopSprite.strumTime - __time > limit)
 				break;
 			__loopSprite.update(elapsed);
 		}
@@ -56,11 +58,12 @@ class NoteGroup extends FlxTypedGroup<Note> {
 
 		i = length-1;
 		__loopSprite = null;
+		__time = Conductor.songPosition;
 		while(i >= 0) {
 			__loopSprite = members[i--];
 			if (__loopSprite == null || !__loopSprite.exists || !__loopSprite.visible)
 				continue;
-			if (__loopSprite.strumTime - Conductor.songPosition > limit) break;
+			if (__loopSprite.strumTime - __time > limit) break;
 			__loopSprite.draw();
 		}
 		__currentlyLooping = oldCur;
@@ -71,6 +74,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
 	public override function forEach(noteFunc:Note->Void, recursive:Bool = false) {
 		i = length-1;
 		__loopSprite = null;
+		__time = Conductor.songPosition;
 
 		var oldCur = __currentlyLooping;
 		__currentlyLooping = true;
@@ -79,7 +83,7 @@ class NoteGroup extends FlxTypedGroup<Note> {
 			__loopSprite = members[i--];
 			if (__loopSprite == null || !__loopSprite.exists)
 				continue;
-			if (__loopSprite.strumTime - Conductor.songPosition > limit) break;
+			if (__loopSprite.strumTime - __time > limit) break;
 			noteFunc(__loopSprite);
 		}
 		__currentlyLooping = oldCur;

@@ -29,10 +29,10 @@ import openfl.Vector;
 
 class HudCamera extends FlxCamera {
 	public var downscroll:Bool = false;
-	public override function update(elapsed:Float) {
-		super.update(elapsed);
-		// flipY = downscroll;
-	}
+	//public override function update(elapsed:Float) {
+	//	super.update(elapsed);
+	//	// flipY = downscroll;
+	//}
 
 
 	// public override function drawPixels(?frame:FlxFrame, ?pixels:BitmapData, matrix:FlxMatrix, ?transform:ColorTransform, ?blend:BlendMode, ?smoothing:Bool = false,

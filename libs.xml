@@ -2,7 +2,7 @@
 <libraries>
 	<!-- OpenFL & Lime (Required for Flixel) -->
 	<lib name="openfl" />
-	<lib name="lime" version="8.0.2"/>
+	<lib name="lime" />
 
 	<!-- Flixel -->
 	<git name="flixel" url="https://github.com/FNF-CNE-Devs/flixel" />

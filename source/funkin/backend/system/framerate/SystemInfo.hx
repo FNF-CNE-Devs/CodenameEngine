@@ -116,7 +116,8 @@ class SystemInfo extends FramerateCategory {
 	}
 
 	static function formatSysInfo() {
-		if (osInfo != "Unknown") __formattedSysText = 'System: $osInfo';
+		__formattedSysText = "";
+		if (osInfo != "Unknown") __formattedSysText += 'System: $osInfo';
 		if (cpuName != "Unknown") __formattedSysText += '\nCPU: $cpuName ${openfl.system.Capabilities.cpuArchitecture} ${(openfl.system.Capabilities.supports64BitProcesses ? '64-Bit' : '32-Bit')}';
 		if (gpuName != cpuName || vRAM != "Unknown") {
 			var gpuNameKnown = gpuName != "Unknown" && gpuName != cpuName;

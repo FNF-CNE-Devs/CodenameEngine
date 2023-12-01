@@ -7,15 +7,15 @@ import sys.io.Process;
 import sys.FileSystem;
 
 class Update {
-    public static function main(args:Array<String>) {
+	public static function main(args:Array<String>) {
 		prettyPrint("Preparing installation...");
 
 		// to prevent messing with currently installed libs
-        if (!FileSystem.exists('.haxelib'))
-            FileSystem.createDirectory('.haxelib');
-		
-        var libs:Array<Library> = [];
-        var libsXML:Access = new Access(Xml.parse(File.getContent('./libs.xml')).firstElement());
+		if (!FileSystem.exists('.haxelib'))
+			FileSystem.createDirectory('.haxelib');
+
+		var libs:Array<Library> = [];
+		var libsXML:Access = new Access(Xml.parse(File.getContent('./libs.xml')).firstElement());
 
 		for (libNode in libsXML.elements) {
 			var lib:Library = {
@@ -33,23 +33,23 @@ class Update {
 			libs.push(lib);
 		}
 
-        for(lib in libs) {
-            // install libs
-	    var globalism = lib.global == "true" ? "--global" : "";
-            switch(lib.type) {
-                case "lib":
-                    prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}"...');
-                    Sys.command('haxelib $globalism install ${lib.name} ${lib.version != null ? " " + lib.version : " "}');
-                case "git":
-                    prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}" from git url "${lib.url}"');
-		if (lib.ref != null)
-                    Sys.command('haxelib $globalism git ${lib.name} ${lib.url} ${lib.ref}');
-		else
-                    Sys.command('haxelib $globalism git ${lib.name} ${lib.url}');
-                default:
-                    prettyPrint('Cannot resolve library of type "${lib.type}"');
-            }
-        }
+		for(lib in libs) {
+			// install libs
+		var globalism = lib.global == "true" ? "--global" : "";
+			switch(lib.type) {
+				case "lib":
+					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}"...');
+					Sys.command('haxelib $globalism install ${lib.name} ${lib.version != null ? " " + lib.version : " "}');
+				case "git":
+					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}" from git url "${lib.url}"');
+					if (lib.ref != null)
+						Sys.command('haxelib $globalism git ${lib.name} ${lib.url} ${lib.ref}');
+					else
+						Sys.command('haxelib $globalism git ${lib.name} ${lib.url}');
+				default:
+					prettyPrint('Cannot resolve library of type "${lib.type}"');
+			}
+		}
 
 		var proc = new Process('haxe --version');
 		proc.exitCode(true);
@@ -76,24 +76,24 @@ class Update {
 				}
 			}
 		}
-    }
+	}
 
-    public static function prettyPrint(text:String) {
-        var header = "══════";
-        for(i in 0...(text.length-(text.lastIndexOf("\n")+1)))
-            header += "═";
-        Sys.println("");
-        Sys.println('╔$header╗');
-        Sys.println('║   $text   ║');
-        Sys.println('╚$header╝');
-    }
+	public static function prettyPrint(text:String) {
+		var header = "══════";
+		for(i in 0...(text.length-(text.lastIndexOf("\n")+1)))
+			header += "═";
+		Sys.println("");
+		Sys.println('╔$header╗');
+		Sys.println('║   $text   ║');
+		Sys.println('╚$header╝');
+	}
 }
 
 typedef Library = {
-    var name:String;
-    var type:String;
-    var ?global:String;
-    var ?version:String;
-    var ?ref:String;
-    var ?url:String;
+	var name:String;
+	var type:String;
+	var ?global:String;
+	var ?version:String;
+	var ?ref:String;
+	var ?url:String;
 }
