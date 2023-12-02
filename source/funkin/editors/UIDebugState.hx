@@ -1,6 +1,7 @@
 package funkin.editors;
 
 import funkin.editors.ui.*;
+import flixel.tweens.FlxTween;
 
 class UIDebugState extends UIState {
 	public override function create() {
@@ -99,6 +100,12 @@ class UIDebugState extends UIState {
 			]));
 		}, 130, 48));
 		add(new UITextBox(10, 220, ""));
+
+		var spliceSprite:UISliceSprite = new UISliceSprite(650, 350, 30, 30, "editors/ui/context-bg");
+		add(spliceSprite);
+		FlxTween.num(0, 1, 2, {type: PINGPONG}, function (v:Float) {
+			spliceSprite.bWidth = Std.int(lerp(12, 200, v)); spliceSprite.bHeight = Std.int(lerp(12, 200, v));
+		});
 	}
 
 	public override function update(elapsed:Float) {
