@@ -44,8 +44,8 @@ class FunniIcon extends FlxSprite
 		antialiasing = true;
 	}
 
-	override function drawComplex(camera:FlxCamera):Void {
-		if(!loading) {  // Just to make sure  - Nex_isDumb
+	override function drawComplex(camera:FlxCamera):Void {  // Making the image downlaod only if the player actually sees it on the screeeeen  - Nex_isDumb
+		if(!loading) {
 			loading = true;
 			loadFromGithub();
 		}
