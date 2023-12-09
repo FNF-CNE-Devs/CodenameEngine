@@ -22,7 +22,7 @@ class SortedArrayUtil {
 		var i:Int = 0;
 		var mid:Float;
 		while(iMin <= iMax) {
-			i = Math.floor((iMin + iMax) / 2);
+			i = Math.floor(iMin + (iMax - iMin) / 2);
 			mid = getVal(array[i]);
 			if (mid < val)
 				iMin = i+1
