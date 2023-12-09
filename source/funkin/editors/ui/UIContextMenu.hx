@@ -1,5 +1,7 @@
 package funkin.editors.ui;
 
+import flixel.util.FlxColor;
+import flixel.util.typeLimit.OneOfTwo;
 import flixel.input.keyboard.FlxKey;
 
 class UIContextMenu extends MusicBeatSubstate {
@@ -55,6 +57,9 @@ class UIContextMenu extends MusicBeatSubstate {
 			lastY = spr.y + spr.bHeight;
 			contextMenuOptions.push(spr);
 			add(spr);
+
+			o.button = spr;
+			if (o.onCreate != null) o.onCreate(spr);
 		}
 
 		var maxW = bg.bWidth - 8;
@@ -86,7 +91,8 @@ class UIContextMenu extends MusicBeatSubstate {
 			option.onSelect(option);
 		if (callback != null)
 			callback(this, index, option);
-		close();
+		if (option.closeOnSelect == null ? true : option.closeOnSelect)
+			close();
 	}
 
 	public override function update(elapsed:Float) {
@@ -115,9 +121,12 @@ typedef UIContextMenuOption = {
 	var ?keybind:Array<FlxKey>;
 	var ?keybinds:Array<Array<FlxKey>>;
 	var ?keybindText:String;
-	var ?color:Int;
+	var ?closeOnSelect:Bool;
+	var ?color:FlxColor;
 	var ?icon:Int;
 	var ?onSelect:UIContextMenuOption->Void;
+	var ?button:UIContextMenuOptionSpr;
+	var ?onCreate:UIContextMenuOptionSpr->Void;
 	var ?childs:Array<UIContextMenuOption>;
 }
 
@@ -172,7 +181,9 @@ class UIContextMenuOptionSpr extends UISliceSprite {
 	}
 
 	public override function draw() {
-		alpha = hovered ? 1 : 0;
+		alpha = option.color == null ? (hovered ? 1 : 0) : 1;
+		if (option.color != null) color = hovered ? option.color.getDarkened(.4) : option.color;
+
 		label.follow(this, 20, 2);
 		if (icon != null)
 			icon.follow(this, 0, 0);

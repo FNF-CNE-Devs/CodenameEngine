@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import funkin.editors.ui.UIContextMenu.UIContextMenuOptionSpr;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.editors.charter.CharterStrumline;
 import funkin.editors.charter.CharterBackdropGroup.EventBackdrop;
@@ -266,6 +267,22 @@ class Charter extends UIState {
 						label: "Select measure",
 						keybind: [CONTROL, SHIFT, A],
 						onSelect: _note_selectmeasure
+					},
+					null,
+					{
+						label: "Add Note Type",
+						closeOnSelect: false,
+						onSelect: function (p) {trace(p);}
+					},
+					{
+						label: "Edit Note Type",
+						closeOnSelect: false,
+						onSelect: function (p) {trace(p);}
+					},
+					{
+						label: "Delete Note Type",
+						closeOnSelect: false,
+						onSelect: function (p) {trace(p);}
 					},
 					null,
 					{
@@ -1424,6 +1441,31 @@ class Charter extends UIState {
 				label: "Select measure",
 				keybind: [CONTROL, SHIFT, A],
 				onSelect: _note_selectmeasure
+			},
+			null,
+			{
+				label: "Add Note Type",
+				color: 0xFF1E8020, icon: 2,
+				onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2;},
+				closeOnSelect: false,
+				onSelect: function (_) {
+					var addButton:UIContextMenuOptionSpr = _.button;
+					trace(addButton, addButton.label.text);
+				},
+			},
+			{
+				label: "Edit Note Type",
+				color: 0xFF959829, icon: 4,
+				onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2;},
+				closeOnSelect: false,
+				onSelect: function (p) {trace(p);},
+			},
+			{
+				label: "Delete Note Type",
+				color: 0xFF8F2222, icon: 3,
+				onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2; button.icon.offset.y = -1;},
+				closeOnSelect: false,
+				onSelect: function (p) {trace(p);},
 			},
 			null,
 			{
