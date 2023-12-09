@@ -1,7 +1,7 @@
 package funkin.menus.credits;
 
 import funkin.backend.system.github.GitHub;
-import funkin.options.type.PortraitOption;
+import funkin.options.type.GithubIconOption;
 
 using StringTools;
 
@@ -39,7 +39,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		});
 		//});
 		if(error) return false;
-		
+
 		Options.contributors = idk;
 		trace('List Updated!');
 		return true;
@@ -49,7 +49,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		//if (curSelected > Options.contributors.length - 1) changeSelection(-(curSelected - (Options.contributors.length - 1)));
 		if (curSelected > Options.contributors.length - 1) curSelected = Options.contributors.length - 1;
 		changeSelection(0, true);
-		
+
 		while (members.length > 0) {
 			members[0].destroy();
 			remove(members[0], true);
@@ -58,12 +58,12 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		var totalContributions = 0;
 		for(c in Options.contributors) totalContributions += c.contributions;
 		for(c in Options.contributors) {
-			var opt:PortraitOption = new PortraitOption(
+			var opt:GithubIconOption = new GithubIconOption(
 				c.login,
 				'Total Contributions: ${c.contributions} / ${totalContributions} (${FlxMath.roundDecimal(c.contributions / totalContributions * 100, 2)}%) - Select to open GitHub account',
-				function() CoolUtil.openURL(c.html_url)
+				function() CoolUtil.openURL(c.html_url),
+				(error ? null : c)
 			);
-			if(!error) opt.loadFromGithub(c);
 			add(opt);
 		}
 	}

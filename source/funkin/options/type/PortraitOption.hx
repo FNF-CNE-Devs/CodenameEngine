@@ -26,12 +26,4 @@ class PortraitOption extends TextOption {
 		portrait.updateHitbox();
 		portrait.setPosition(90 - portrait.width, 0);
 	}
-
-	public function loadFromGithub(user:GitHubContributor, size:Int = 96) {
-		//Main.execAsync(function() {
-		var bytes = GitHub.__requestBytesOnGitHubServers('${user.avatar_url}&size=$size');
-		var bmap = BitmapData.fromBytes(bytes);
-		addPortrait(FlxG.bitmap.add(bmap, false, 'GITHUB-USER:${user.login}'), size);
-		//});
-	}
 }
