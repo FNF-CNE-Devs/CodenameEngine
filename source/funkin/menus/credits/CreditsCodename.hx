@@ -6,6 +6,8 @@ import funkin.options.type.GithubIconOption;
 using StringTools;
 
 class CreditsCodename extends funkin.options.OptionsScreen {
+	public var error:Bool = false;
+
 	public override function new()
 	{
 		super("Codename Engine", "All the contributors of the engine! - Press RESET to update the list (One reset per 2 minutes).");
@@ -21,7 +23,6 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		super.update(elapsed);
 	}
 
-	var error:Bool = false;
 	public function checkUpdate():Bool {
 		var curTime:Float = Date.now().getTime();
 		if(Options.lastUpdated != null && curTime < Options.lastUpdated + 120000) return false;  // Fuck you Github rate limits  - Nex_isDumb
@@ -31,8 +32,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		//Main.execAsync(function() {
 		var idk = GitHub.getContributors("FNF-CNE-Devs", "CodenameEngine", function(e) {
 			error = true;
-			var errMsg:String = ~/\d+.\d+.\d+.\d+/.replace(e.message, "[Your IP]");  // Removing sensitive stuff  - Nex_isDumb
-			errMsg = 'Error while trying to download contributors list:\n$errMsg';
+			var errMsg:String = 'Error while trying to download contributors list:\n${CoolUtil.removeIP(e.message)}';
 
 			Logs.traceColored([Logs.logText(errMsg.replace('\n', ' '), RED)], ERROR);
 			funkin.backend.utils.NativeAPI.showMessageBox("Codename Engine Warning", errMsg, MSG_WARNING);
@@ -62,7 +62,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 				c.login,
 				'Total Contributions: ${c.contributions} / ${totalContributions} (${FlxMath.roundDecimal(c.contributions / totalContributions * 100, 2)}%) - Select to open GitHub account',
 				function() CoolUtil.openURL(c.html_url),
-				(error ? null : c)
+				c
 			);
 			add(opt);
 		}
