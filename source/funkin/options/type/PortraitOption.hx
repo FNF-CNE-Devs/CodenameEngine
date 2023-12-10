@@ -9,16 +9,16 @@ import funkin.backend.system.github.GitHub;
 class PortraitOption extends TextOption {
 	public var portrait:FlxSprite = null;
 
-	public function new(name:String, desc:String, callback:Void->Void, ?graphic:FlxGraphic, size:Int = 96) {
+	public function new(name:String, desc:String, callback:Void->Void, ?graphic:FlxGraphic, size:Int = 96, usePortrait:Bool = true) {
 		super(name, desc, callback);
-		if (graphic != null) addPortrait(graphic, size);
+		if (graphic != null) addPortrait(graphic, size, usePortrait);
 	}
 
-	public function addPortrait(graphic:FlxGraphic, size:Int = 96) {
+	public function addPortrait(graphic:FlxGraphic, size:Int = 96, usePortrait:Bool = true) {
 		if (portrait == null) {
 			portrait = new FlxSprite();
 			portrait.antialiasing = true;
-			portrait.shader = new CustomShader('engine/circleProfilePicture');
+			if(usePortrait) portrait.shader = new CustomShader('engine/circleProfilePicture');
 			add(portrait);
 		}
 		portrait.loadGraphic(graphic);

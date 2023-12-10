@@ -9,8 +9,8 @@ import haxe.Http;
 class GitHub {
 	/**
 	 * Gets all the releases from a specific GitHub repository using the GitHub API.
-	 * @param user 
-	 * @param repository 
+	 * @param user The user/group that owns the repository
+	 * @param repository The repository name
 	 * @return Releases
 	 */
 	public static function getReleases(user:String, repository:String, ?onError:Exception->Void):Array<GitHubRelease> {
@@ -29,6 +29,12 @@ class GitHub {
 		return [];
 	}
 
+	/**
+	 * Gets the contributors list from a specific GitHub repository using the GitHub API.
+	 * @param user The user/group that owns the repository
+	 * @param repository The repository name
+	 * @return Contributors List
+	 */
 	public static function getContributors(user:String, repository:String, ?onError:Exception->Void):Array<GitHubContributor> {
 		try {
 			var url = 'https://api.github.com/repos/${user}/${repository}/contributors';
@@ -43,6 +49,27 @@ class GitHub {
 				onError(e);
 		}
 		return [];
+	}
+
+	/**
+	 * Gets a specific GitHub user/group using the GitHub API.
+	 * @param user The user/group to get
+	 * @return User/Group
+	 */
+	public static function getUser(user:String, ?onError:Exception->Void):GitHubUser {
+		try {
+			var url = 'https://api.github.com/users/$user';
+
+			var data = Json.parse(__requestOnGitHubServers(url));
+			if (Reflect.hasField(data, "documentation_url"))
+				throw __parseGitHubException(data);
+			
+			return data;
+		} catch(e) {
+			if (onError != null)
+				onError(e);
+		}
+		return null;
 	}
 
 	/**

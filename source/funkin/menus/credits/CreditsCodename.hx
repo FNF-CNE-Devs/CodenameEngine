@@ -59,10 +59,8 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		for(c in Options.contributors) totalContributions += c.contributions;
 		for(c in Options.contributors) {
 			var opt:GithubIconOption = new GithubIconOption(
-				c.login,
-				'Total Contributions: ${c.contributions} / ${totalContributions} (${FlxMath.roundDecimal(c.contributions / totalContributions * 100, 2)}%) - Select to open GitHub account',
-				function() CoolUtil.openURL(c.html_url),
-				c
+				c,
+				'Total Contributions: ${c.contributions} / ${totalContributions} (${FlxMath.roundDecimal(c.contributions / totalContributions * 100, 2)}%) - Select to open GitHub account'
 			);
 			add(opt);
 		}

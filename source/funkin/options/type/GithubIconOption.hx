@@ -3,14 +3,13 @@ package funkin.options.type;
 import openfl.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import funkin.backend.shaders.CustomShader;
-import funkin.backend.system.github.GitHubContributor;
 import funkin.backend.system.github.GitHub;
 import flixel.util.FlxColor;
 
 class GithubIconOption extends TextOption
 {
-	public var user(default, null):GitHubContributor = null;
-	public var icon:FunniIcon = null;
+	public var user(default, null):Dynamic;  // Can possibly be GitHubUser or GitHubContributor  - Nex_isDumb
+	public var icon:GithubUserIcon = null;
 	public var usePortrait(default, set) = true;
 
 	public function set_usePortrait(value:Bool)
@@ -20,24 +19,22 @@ class GithubIconOption extends TextOption
 		return usePortrait = value;
 	}
 
-	public function new(name:String, desc:String, callback:Void->Void, ?user:GitHubContributor, size:Int = 96, usePortrait:Bool = true) {
-		super(name, desc, callback);
-		if (user != null) {
-			this.user = user;
-			this.icon = new FunniIcon(user, size);
-			this.usePortrait = usePortrait;
-			add(icon);
-		}
+	public function new(user:Dynamic, desc:String, ?callback:Void->Void, ?customName:String, size:Int = 96, usePortrait:Bool = true) {
+		super(customName == null ? user.login : customName, desc, callback == null ? function() CoolUtil.openURL(user.html_url) : callback);
+		this.user = user;
+		this.icon = new GithubUserIcon(user, size);
+		this.usePortrait = usePortrait;
+		add(icon);
 	}
 }
 
-class FunniIcon extends FlxSprite
+class GithubUserIcon extends FlxSprite
 {
 	var loading:Bool = false;
-	var user:GitHubContributor;
+	var user:Dynamic;
 	var size:Int;
 
-	public override function new(user:GitHubContributor, size:Int = 96) {
+	public override function new(user:Dynamic, size:Int = 96) {
 		this.user = user;
 		this.size = size;
 		super();
@@ -45,40 +42,36 @@ class FunniIcon extends FlxSprite
 		antialiasing = true;
 	}
 
+	final mutex = new sys.thread.Mutex();
 	override function drawComplex(camera:FlxCamera):Void {  // Making the image downlaod only if the player actually sees it on the screeeeen  - Nex_isDumb
 		if(!loading) {
 			loading = true;
-			loadFromGithub();
+			Main.execAsync(function() {
+				var key:String = 'GITHUB-USER:${user.login}';
+				var bmap:Dynamic = FlxG.bitmap.get(key);
+
+				if(bmap == null) {
+					try {
+						trace('Downloading avatar: ${user.login}');
+						bmap = BitmapData.fromBytes(GitHub.__requestBytesOnGitHubServers(user.avatar_url + (/*StringTools.endsWith(user.avatar_url, '.png') ? '?' :*/ '&') + 'size=$size'));  // TODO: getting the no api method to work
+
+						mutex.acquire();  // Wanna make sure here too  - Nex_isDumb
+						var leGraphic:FlxGraphic = FlxG.bitmap.add(bmap, false, key);
+						leGraphic.persist = true;
+						updateDaFunni(leGraphic);
+						bmap = null;
+						mutex.release();
+					} catch(e) {
+						Logs.traceColored([Logs.logText('Failed to download github pfp for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR);
+					}
+				} else {
+					mutex.acquire();
+					updateDaFunni(bmap);
+					mutex.release();
+				}
+			});
 		}
 		super.drawComplex(camera);
-	}
-
-	final mutex = new sys.thread.Mutex();
-	private function loadFromGithub() {
-		Main.execAsync(function() {
-			var key:String = 'GITHUB-USER:${user.login}';
-			var bmap:Dynamic = FlxG.bitmap.get(key);
-
-			if(bmap == null) {
-				try {
-					trace('Downlaoding avatar: ${user.login}');
-					var bytes = GitHub.__requestBytesOnGitHubServers('${user.avatar_url}&size=$size');
-					bmap = BitmapData.fromBytes(bytes);
-
-					mutex.acquire();  // Wanna make sure here too  - Nex_isDumb
-					var leGraphic:FlxGraphic = FlxG.bitmap.add(bmap, false, key);
-					leGraphic.persist = true;
-					updateDaFunni(leGraphic);
-					mutex.release();
-				} catch(e) {
-					Logs.traceColored([Logs.logText('Failed to download github pfp for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR);
-				}
-			} else {
-				mutex.acquire();
-				updateDaFunni(bmap);
-				mutex.release();
-			}
-		});
 	}
 
 	public inline function updateDaFunni(graphic:FlxGraphic) {

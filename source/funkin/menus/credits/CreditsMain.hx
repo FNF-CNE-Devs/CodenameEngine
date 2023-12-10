@@ -1,5 +1,6 @@
 package funkin.menus.credits;
 
+import funkin.backend.system.github.GitHub;
 import funkin.options.OptionsScreen;
 import funkin.options.type.*;
 import funkin.options.TreeMenu;
@@ -27,7 +28,7 @@ class CreditsMain extends TreeMenu {
 				} catch(e) {
 					Logs.trace('Error while parsing credits.xml: ${Std.string(e)}', ERROR);
 				}
-				
+
 				if (access != null)
 					for(c in parseCreditsFromXML(access, source))
 						selectables.push(c);
@@ -51,24 +52,53 @@ class CreditsMain extends TreeMenu {
 		var credsMenus:Array<OptionType> = [];
 
 		for(node in xml.elements) {
-			if (!node.has.name) {
-				Logs.trace("A credit node requires a name attribute.", WARNING);
-				continue;
-			}
-			var name = node.getAtt("name");
 			var desc = node.getAtt("desc").getDefault("No Description");
 
-			switch(node.name) {
-				case "credit":
-					credsMenus.push(new PortraitOption(name, desc, function() if(node.has.url) CoolUtil.openURL(node.att.url),
-						node.has.icon && Paths.assetsTree.existsSpecific(Paths.image('credits/${node.att.icon}'), "IMAGE", source) ?
-						FlxG.bitmap.add(Paths.image('credits/${node.att.icon}')) : null, node.has.size ? Std.parseInt(node.att.size) : 96
-					));
+			if (node.name == "github") {
+				if (!node.has.user) {
+					Logs.trace("A github node requires a user attribute.", WARNING);
+					continue;
+				}
 
-				case "menu":
-					credsMenus.push(new TextOption(name + " >", desc, function() {
-						optionsTree.add(new OptionsScreen(name, desc, parseCreditsFromXML(node, source)));
-					}));
+				var username = node.getAtt("user");
+
+				var error:Bool = false;
+				var user:Dynamic = GitHub.getUser(username, function(e){
+					Logs.traceColored([Logs.logText('Failed to download github user json for $username using the api: ${CoolUtil.removeIP(e.message)} - (Retrying with another method)', RED)], ERROR);
+					//error = true;
+				});
+
+				// TODO: getting the no api method to work
+				if(error) user = {  // Kind of forcing but this happens mainly only if there were too many requests to the api  - Nex_isDumb
+					login: username,
+					html_url: 'https://github.com/$username',
+					avatar_url: 'https://github.com/$username.png'
+				};
+
+				credsMenus.push(new GithubIconOption(user, desc, null,
+					node.has.customName ? node.att.customName : null, node.has.size ? Std.parseInt(node.att.size) : 96,
+					node.has.portrait ? node.att.portrait.toLowerCase() == "false" ? false : true : true
+				));
+			} else {
+				if (!node.has.name) {
+					Logs.trace("A credit node requires a name attribute.", WARNING);
+					continue;
+				}
+				var name = node.getAtt("name");
+
+				switch(node.name) {
+					case "credit":
+						credsMenus.push(new PortraitOption(name, desc, function() if(node.has.url) CoolUtil.openURL(node.att.url),
+							node.has.icon && Paths.assetsTree.existsSpecific(Paths.image('credits/${node.att.icon}'), "IMAGE", source) ?
+							FlxG.bitmap.add(Paths.image('credits/${node.att.icon}')) : null, node.has.size ? Std.parseInt(node.att.size) : 96,
+							node.has.portrait ? node.att.portrait.toLowerCase() == "false" ? false : true : true
+						));
+
+					case "menu":
+						credsMenus.push(new TextOption(name + " >", desc, function() {
+							optionsTree.add(new OptionsScreen(name, desc, parseCreditsFromXML(node, source)));
+						}));
+				}
 			}
 		}
 
