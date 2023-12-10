@@ -59,28 +59,32 @@ class FunniIcon extends FlxSprite
 			var key:String = 'GITHUB-USER:${user.login}';
 			var bmap:Dynamic = FlxG.bitmap.get(key);
 
-			if(bmap == null) {  // TODO: get this fucking bitch to work cause once you exit the substate it becomes null or some shit like that and tbh rn idr why, more tests tmr
+			if(bmap == null) {
 				try {
 					trace('Downlaoding avatar: ${user.login}');
 					var bytes = GitHub.__requestBytesOnGitHubServers('${user.avatar_url}&size=$size');
 					bmap = BitmapData.fromBytes(bytes);
 
-					updateDaFunni(FlxG.bitmap.add(bmap, false, key));
+					mutex.acquire();  // Wanna make sure here too  - Nex_isDumb
+					var leGraphic:FlxGraphic = FlxG.bitmap.add(bmap, false, key);
+					leGraphic.persist = true;
+					updateDaFunni(leGraphic);
+					mutex.release();
 				} catch(e) {
 					Logs.traceColored([Logs.logText('Failed to download github pfp for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR);
 				}
 			} else {
+				mutex.acquire();
 				updateDaFunni(bmap);
+				mutex.release();
 			}
 		});
 	}
 
 	public inline function updateDaFunni(graphic:FlxGraphic) {
-		mutex.acquire();  // Wanna make sure here too  - Nex_isDumb
 		loadGraphic(graphic);
 		this.setUnstretchedGraphicSize(size, size, false);
 		updateHitbox();
 		x += 90 - width;
-		mutex.release();
 	}
 }
