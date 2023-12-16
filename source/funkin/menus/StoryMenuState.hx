@@ -75,6 +75,7 @@ class StoryMenuState extends MusicBeatState {
 			arrow.animation.addByPrefix('idle', 'arrow $dir');
 			arrow.animation.addByPrefix('press', 'arrow push $dir', 24, false);
 			arrow.animation.play('idle');
+			arrow.antialiasing = true;
 			add(arrow);
 		}
 		rightArrow.x -= rightArrow.width;
