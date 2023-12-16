@@ -85,28 +85,51 @@ class GitHub {
 	public static function __requestOnGitHubServers(url:String) {
 		var h = new Http(url);
 		h.setHeader("User-Agent", "request");
+
 		var r = null;
+		h.onStatus = function(s) {
+			if(isRedirect(s))
+				r = __requestOnGitHubServers(h.responseHeaders.get("Location"));
+		};
+
 		h.onData = function(d) {
-			r = d;
+			if(r == null) r = d;
 		}
 		h.onError = function(e) {
 			throw e;
 		}
+
 		h.request(false);
 		return r;
 	}
 	public static function __requestBytesOnGitHubServers(url:String) {
 		var h = new Http(url);
 		h.setHeader("User-Agent", "request");
+
 		var r = null;
+		h.onStatus = function(s) {
+			if(isRedirect(s))
+				r = __requestBytesOnGitHubServers(h.responseHeaders.get("Location"));
+		};
+
 		h.onBytes = function(d) {
-			r = d;
+			if(r == null) r = d;
 		}
 		h.onError = function(e) {
 			throw e;
 		}
+
 		h.request(false);
 		return r;
+	}
+	private static function isRedirect(status:Int):Bool {
+        switch (status) {
+			// 301: Moved Permanently, 302: Found (Moved Temporarily), 307: Temporary Redirect, 308: Permanent Redirect  - Nex_isDumb
+            case 301 | 302 | 307 | 308 :
+                trace("Redirected with status code: " + status);
+				return true;
+        }
+		return false;
 	}
 	private static function __parseGitHubException(obj:Dynamic):GitHubException {
 		var msg:String = "(No message)";

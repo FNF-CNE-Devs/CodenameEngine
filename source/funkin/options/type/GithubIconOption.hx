@@ -53,7 +53,7 @@ class GithubUserIcon extends FlxSprite
 				if(bmap == null) {
 					try {
 						trace('Downloading avatar: ${user.login}');
-						bmap = BitmapData.fromBytes(GitHub.__requestBytesOnGitHubServers(user.avatar_url + (/*StringTools.endsWith(user.avatar_url, '.png') ? '?' :*/ '&') + 'size=$size'));  // TODO: getting the no api method to work
+						bmap = BitmapData.fromBytes(GitHub.__requestBytesOnGitHubServers(user.avatar_url + (StringTools.endsWith(user.avatar_url, '.png') ? '?' : '&') + 'size=$size'));
 
 						mutex.acquire();  // Wanna make sure here too  - Nex_isDumb
 						var leGraphic:FlxGraphic = FlxG.bitmap.add(bmap, false, key);

@@ -65,10 +65,9 @@ class CreditsMain extends TreeMenu {
 				var error:Bool = false;
 				var user:Dynamic = GitHub.getUser(username, function(e){
 					Logs.traceColored([Logs.logText('Failed to download github user json for $username using the api: ${CoolUtil.removeIP(e.message)} - (Retrying with another method)', RED)], ERROR);
-					//error = true;
+					error = true;
 				});
 
-				// TODO: getting the no api method to work
 				if(error) user = {  // Kind of forcing but this happens mainly only if there were too many requests to the api  - Nex_isDumb
 					login: username,
 					html_url: 'https://github.com/$username',
