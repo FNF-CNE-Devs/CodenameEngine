@@ -85,7 +85,7 @@ class VideoCutscene extends Cutscene {
 				videoReady = true;
 			});
 		} else {
-			video.play(localPath);
+			(video.load(localPath)) ? video.play() : close();
 		}
 		add(bg);
 		add(subtitle);
@@ -160,13 +160,18 @@ class VideoCutscene extends Cutscene {
 		#if VIDEO_CUTSCENES
 		if (videoReady) {
 			videoReady = false;
-			video.play(localPath);
+			(video.load(localPath)) ? video.play() : {
+				close();
+				if (loadingBackdrop != null)
+					loadingBackdrop.visible = false;
+				return;
+			};
 			if (loadingBackdrop != null)
 				loadingBackdrop.visible = false;
 		}
 		@:privateAccess
 		var time = video.time;
-		while (subtitles.length > 0 && subtitles[0].time < time)
+		while (subtitles.length > 0 && subtitles[0].time < Math.round(haxe.io.FPHelper.i64ToDouble(time.low, time.high)))
 			setSubtitle(subtitles.shift());
 
 		if (loadingBackdrop != null) {
