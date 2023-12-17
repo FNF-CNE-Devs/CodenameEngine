@@ -149,16 +149,31 @@ import haxe.Exception;
 class GitHub {
 	/**
 	 * Gets all the releases from a specific GitHub repository using the GitHub API.
-	 * @param user 
-	 * @param repository 
+	 * @param user The user/group that owns the repository
+	 * @param repository The repository name
 	 * @return Releases
 	 */
 	public static function getReleases(user:String, repository:String, ?onError:Exception->Void):Array<GitHubRelease> {
 		return [];
 	}
 
+	/**
+	 * Gets the contributors list from a specific GitHub repository using the GitHub API.
+	 * @param user The user/group that owns the repository
+	 * @param repository The repository name
+	 * @return Contributors List
+	 */
 	public static function getContributors(user:String, repository:String, ?onError:Exception->Void):Array<GitHubContributor> {
 		return [];
+	}
+
+	/**
+	 * Gets a specific GitHub user/group using the GitHub API.
+	 * @param user The user/group to get
+	 * @return User/Group
+	 */
+	public static function getUser(user:String, ?onError:Exception->Void):GitHubUser {
+		return null;
 	}
 
 	/**
@@ -179,6 +194,15 @@ class GitHub {
 	}
 	private static function __parseGitHubException(obj:Dynamic):GitHubException {
 		return null;
+	}
+	private static function isRedirect(status:Int):Bool {
+        switch (status) {
+			// 301: Moved Permanently, 302: Found (Moved Temporarily), 307: Temporary Redirect, 308: Permanent Redirect  - Nex_isDumb
+            case 301 | 302 | 307 | 308 :
+                trace("Redirected with status code: " + status);
+				return true;
+        }
+		return false;
 	}
 }
 #end
