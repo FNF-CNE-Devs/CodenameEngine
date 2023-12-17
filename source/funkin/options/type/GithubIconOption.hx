@@ -55,22 +55,27 @@ class GithubUserIcon extends FlxSprite
 					var unfLink:Bool = StringTools.endsWith(user.avatar_url, '.png');
 					var planB:Bool = true;
 
-					if(unfLink) try {
-						bmap = BitmapData.fromBytes(GitHub.__requestBytesOnGitHubServers('${user.avatar_url}?size=$size'));
-						planB = false;
-					} catch(e) {
-						Logs.traceColored([Logs.logText('Failed to download github pfp for ${user.login}: ${CoolUtil.removeIP(e.message)} - (Retrying using the api..)', RED)], ERROR);
+					var bytes = null;
+					if(unfLink) {
+						try bytes = GitHub.__requestBytesOnGitHubServers('${user.avatar_url}?size=$size')
+						catch(e) Logs.traceColored([Logs.logText('Failed to download github pfp for ${user.login}: ${CoolUtil.removeIP(e.message)} - (Retrying using the api..)', RED)], ERROR);
+
+						if(bytes != null) {
+							bmap = BitmapData.fromBytes(bytes);
+							planB = false;
+						}
 					}
 
-					if(planB) try {
+					if(planB) {
 						if(unfLink) user = GitHub.getUser(user.login, function(e) Logs.traceColored([Logs.logText('Failed to download github user info for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR));  // Api part  - Nex_isDumb
-						if(user != null) bmap = BitmapData.fromBytes(GitHub.__requestBytesOnGitHubServers('${user.avatar_url}&size=$size'));
-					} catch(e) {
-						Logs.traceColored([Logs.logText('Failed to download github pfp for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR);
+						try bytes = GitHub.__requestBytesOnGitHubServers('${user.avatar_url}&size=$size')
+						catch(e) Logs.traceColored([Logs.logText('Failed to download github pfp for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR);
+
+						if(bytes != null) bmap = BitmapData.fromBytes(bytes);
 					}
 
 					if(bmap != null) try {
-						mutex.acquire();  // Wanna make sure here  - Nex_isDumb
+						mutex.acquire();  // Avoiding critical section  - Nex_isDumb
 						var leGraphic:FlxGraphic = FlxG.bitmap.add(bmap, false, key);
 						leGraphic.persist = true;
 						updateDaFunni(leGraphic);
