@@ -30,9 +30,9 @@ class GithubIconOption extends TextOption
 
 class GithubUserIcon extends FlxSprite
 {
-	var loading:Bool = false;
-	var user:Dynamic;
-	var size:Int;
+	private var loading:Bool = false;
+	private var user:Dynamic;
+	private var size:Int;
 
 	public override function new(user:Dynamic, size:Int = 96) {
 		this.user = user;
@@ -51,18 +51,33 @@ class GithubUserIcon extends FlxSprite
 				var bmap:Dynamic = FlxG.bitmap.get(key);
 
 				if(bmap == null) {
-					try {
-						trace('Downloading avatar: ${user.login}');
-						bmap = BitmapData.fromBytes(GitHub.__requestBytesOnGitHubServers(user.avatar_url + (StringTools.endsWith(user.avatar_url, '.png') ? '?' : '&') + 'size=$size'));
+					trace('Downloading avatar: ${user.login}');
+					var unfLink:Bool = StringTools.endsWith(user.avatar_url, '.png');
+					var planB:Bool = true;
 
-						mutex.acquire();  // Wanna make sure here too  - Nex_isDumb
+					if(unfLink) try {
+						bmap = BitmapData.fromBytes(GitHub.__requestBytesOnGitHubServers('${user.avatar_url}?size=$size'));
+						planB = false;
+					} catch(e) {
+						Logs.traceColored([Logs.logText('Failed to download github pfp for ${user.login}: ${CoolUtil.removeIP(e.message)} - (Retrying using the api..)', RED)], ERROR);
+					}
+
+					if(planB) try {
+						if(unfLink) user = GitHub.getUser(user.login, function(e) Logs.traceColored([Logs.logText('Failed to download github user info for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR));  // Api part  - Nex_isDumb
+						if(user != null) bmap = BitmapData.fromBytes(GitHub.__requestBytesOnGitHubServers('${user.avatar_url}&size=$size'));
+					} catch(e) {
+						Logs.traceColored([Logs.logText('Failed to download github pfp for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR);
+					}
+
+					if(bmap != null) try {
+						mutex.acquire();  // Wanna make sure here  - Nex_isDumb
 						var leGraphic:FlxGraphic = FlxG.bitmap.add(bmap, false, key);
 						leGraphic.persist = true;
 						updateDaFunni(leGraphic);
 						bmap = null;
 						mutex.release();
 					} catch(e) {
-						Logs.traceColored([Logs.logText('Failed to download github pfp for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR);
+						Logs.traceColored([Logs.logText('Failed to update the pfp for ${user.login}: ${e.message}', RED)], ERROR);
 					}
 				} else {
 					mutex.acquire();

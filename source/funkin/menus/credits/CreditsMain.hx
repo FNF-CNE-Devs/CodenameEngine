@@ -61,14 +61,7 @@ class CreditsMain extends TreeMenu {
 				}
 
 				var username = node.getAtt("user");
-
-				var error:Bool = false;
-				var user:Dynamic = GitHub.getUser(username, function(e){
-					Logs.traceColored([Logs.logText('Failed to download github user json for $username using the api: ${CoolUtil.removeIP(e.message)} - (Retrying with another method)', RED)], ERROR);
-					error = true;
-				});
-
-				if(error) user = {  // Kind of forcing but this happens mainly only if there were too many requests to the api  - Nex_isDumb
+				var user = {  // Kind of forcing  - Nex_isDumb
 					login: username,
 					html_url: 'https://github.com/$username',
 					avatar_url: 'https://github.com/$username.png'
