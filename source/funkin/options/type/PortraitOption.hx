@@ -1,10 +1,7 @@
 package funkin.options.type;
 
-import openfl.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import funkin.backend.shaders.CustomShader;
-import funkin.backend.system.github.GitHubContributor;
-import funkin.backend.system.github.GitHub;
 
 class PortraitOption extends TextOption {
 	public var portrait:FlxSprite = null;
