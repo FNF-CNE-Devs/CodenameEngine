@@ -15,7 +15,6 @@ function create() {
 	insert(PlayState.instance.members.indexOf(red) + 1, dad);
 
 	playDadUpdate = true;
-	dad.playAnim("idle", true);
 	dad.animation.finishCallback = (name:String) -> {
 		if(name == "idle") {
 			dad.animation.finishCallback = null;
@@ -29,8 +28,8 @@ function create() {
 				if(red.alpha < 1) swagTimer.reset();
 				else {
 					FlxG.camera.followLerp = 0;
-					FlxTween.tween(camGame.scroll, {x: -366, y: 192}, 1.4, {
-						ease: FlxEase.quartInOut,
+					FlxTween.tween(camGame.scroll, {x: -366, y: 192}, 3, {
+						ease: FlxEase.cubeInOut,
 						onComplete: (_) -> {
 							roses_shouldPlayOnThorns = true;
 							self.close();
@@ -40,6 +39,10 @@ function create() {
 			});
 		}
 	}
+	if(dad.animation.curAnim.name != "idle")
+		dad.playAnim("idle", true);
+	else if(dad.animation.curAnim.finished)
+		dad.animation.finishCallback("idle");
 }
 
 var playDadUpdate = false;
