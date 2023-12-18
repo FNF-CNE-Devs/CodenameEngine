@@ -1,3 +1,5 @@
+static var roses_shouldPlayOnThorns = false;
+
 function create() {
 	if(!playCutscenes) disableScript();
 }
@@ -43,6 +45,7 @@ function onSongEnd(shut) {
 					FlxTween.tween(camGame.scroll, {x: -366, y: 192}, 1.4, {
 						ease: FlxEase.quartInOut,
 						onComplete: (_) -> {
+							roses_shouldPlayOnThorns = true;
 							nextSong();
 						}
 					});

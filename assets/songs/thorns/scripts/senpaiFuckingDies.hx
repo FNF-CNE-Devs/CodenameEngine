@@ -1,7 +1,15 @@
+static var roses_shouldPlayOnThorns = false;
+
 function create() {
-	if(!playCutscenes) disableScript();
 	// Make transition work between school types
 	if(PlayState.smoothTransitionData?.stage == "school") PlayState.smoothTransitionData.stage = curStage;
+
+	// Cutscene stuff
+	if(!roses_shouldPlayOnThorns || !playCutscenes) {
+		disableScript();
+		return;
+	}
+	roses_shouldPlayOnThorns = false;
 }
 
 var senpaiFuckingDied:Bool = false;
