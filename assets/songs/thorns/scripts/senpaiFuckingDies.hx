@@ -1,5 +1,6 @@
 function create() {
 	if(!playCutscenes) disableScript();
+	// Make transition work between school types
 	if(PlayState.smoothTransitionData?.stage == "school") PlayState.smoothTransitionData.stage = curStage;
 }
 
@@ -28,22 +29,40 @@ function postCreate() {
 	senpaiEvil.x += daPixelZoom * 51;
 	add(senpaiEvil);
 
+	var white:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.WHITE);
+	white.updateHitbox();
+	white.scrollFactor.set();
+	white.alpha = 0;
+	add(white);
+
 	new FlxTimer().start(3.2, function(deadTime:FlxTimer)
 	{
-		FlxG.camera.fade(FlxColor.WHITE, 1.6, false);
+		FlxG.camera.fade(FlxColor.WHITE, 1.6, false, function() {
+			remove(senpaiEvil);
+			senpaiEvil.destroy();
+			remove(red);
+			red.destroy();
+
+			white.alpha = 1;
+		});
 	});
 	FlxG.sound.play(Paths.sound('cutscenes/weeb/Senpai_Dies'), 1, false, null, true, function()
 	{
-		remove(senpaiEvil);
-		senpaiEvil.destroy();
-		remove(red);
-		red.destroy();
-		FlxG.camera.fade(FlxColor.WHITE, 0.01, true, function()
-		{
-			camHUD.visible = true;
-			inCutscene = false;
-			senpaiFuckingDied = true;
-			startCountdown();
-		}, true);
+		new FlxTimer().start(0.2, function(swagTimer:FlxTimer) {
+			white.alpha -= 0.15;
+
+			if(white.alpha > 0) swagTimer.reset();
+			else {
+				remove(white);
+				white.destroy();
+
+				camHUD.visible = true;
+				inCutscene = false;
+				senpaiFuckingDied = true;
+				startCountdown();
+			}
+		});
+
+		FlxG.camera.fade(FlxColor.WHITE, 0.0001, true);
 	});
 }

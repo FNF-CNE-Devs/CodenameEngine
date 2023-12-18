@@ -851,6 +851,7 @@ class PlayState extends MusicBeatState
 				sprite.scale.set(event.scale, event.scale);
 				sprite.updateHitbox();
 				sprite.screenCenter();
+				sprite.antialiasing = event.antialiasing;
 				add(sprite);
 				tween = FlxTween.tween(sprite, {y: sprite.y + 100, alpha: 0}, Conductor.crochet / 1000, {
 					ease: FlxEase.cubeInOut,
