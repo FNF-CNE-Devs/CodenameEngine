@@ -12,8 +12,8 @@ function create() {
 	roses_shouldPlayOnThorns = false;
 	camHUD.visible = false;
 
-	var red:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.RED);
-	red.updateHitbox();
+	var red:FlxSprite = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, FlxColor.RED);
+	red.screenCenter();
 	red.scrollFactor.set();
 	add(red);
 
@@ -28,8 +28,8 @@ function create() {
 	senpaiEvil.x += daPixelZoom * 51;
 	add(senpaiEvil);
 
-	var white:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.WHITE);
-	white.updateHitbox();
+	var white:FlxSprite = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, FlxColor.WHITE);
+	white.screenCenter();
 	white.scrollFactor.set();
 	white.alpha = 0;
 	add(white);

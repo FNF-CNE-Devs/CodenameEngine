@@ -4,8 +4,8 @@ __script__.setParent(PlayState.instance);
 
 function create() {
 	var red:FlxSprite;
-	red = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.RED);
-	red.updateHitbox();
+	red = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, FlxColor.RED);
+	red.screenCenter();
 	red.scrollFactor.set();
 	red.alpha = 0;
 	add(red);
