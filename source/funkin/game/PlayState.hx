@@ -443,6 +443,7 @@ class PlayState extends MusicBeatState
 	public var hitWindow:Float = Options.hitWindow; // is calculated in create(), is safeFrames in milliseconds
 
 	@:noCompletion @:dox(hide) private var _startCountdownCalled:Bool = false;
+	@:noCompletion @:dox(hide) private var _endSongCalled:Bool = false;
 
 	@:dox(hide)
 	var __vocalOffsetViolation:Float = 0;
@@ -1268,12 +1269,17 @@ class PlayState extends MusicBeatState
 	 */
 	public function endSong():Void
 	{
-		scripts.call("onSongEnd");
-		canPause = false;
-		inst.volume = 0;
-		vocals.volume = 0;
-		inst.pause();
-		vocals.pause();
+		if (!_endSongCalled) {
+			_endSongCalled = true;
+
+			canPause = false;
+			inst.volume = 0;
+			vocals.volume = 0;
+			inst.pause();
+			vocals.pause();
+
+			if (scripts.event("onSongEnd", new CancellableEvent()).cancelled) return;
+		}
 
 		if (validScore)
 		{
