@@ -1,24 +1,15 @@
 static var roses_shouldPlayOnThorns = false;
+var self = this;
+__script__.setParent(PlayState.instance);
 
 function create() {
-	// Make transition work between school types
-	if(PlayState.smoothTransitionData?.stage == "school") PlayState.smoothTransitionData.stage = curStage;
-
 	// Cutscene stuff
-	if(!roses_shouldPlayOnThorns || !playCutscenes) {
+	if(!roses_shouldPlayOnThorns) {
 		disableScript();
+		self.close();
 		return;
 	}
 	roses_shouldPlayOnThorns = false;
-}
-
-var senpaiFuckingDied:Bool = false;
-function onStartCountdown(bitch) {
-	if(!senpaiFuckingDied) bitch.cancel();
-}
-
-function postCreate() {
-	inCutscene = true;
 	camHUD.visible = false;
 
 	var red:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.RED);
@@ -46,9 +37,9 @@ function postCreate() {
 	new FlxTimer().start(3.2, function(deadTime:FlxTimer)
 	{
 		FlxG.camera.fade(FlxColor.WHITE, 1.6, false, function() {
-			remove(senpaiEvil);
+			remove(senpaiEvil, true);
 			senpaiEvil.destroy();
-			remove(red);
+			remove(red, true);
 			red.destroy();
 
 			white.alpha = 1;
@@ -61,13 +52,11 @@ function postCreate() {
 
 			if(white.alpha > 0) swagTimer.reset();
 			else {
-				remove(white);
+				remove(white, true);
 				white.destroy();
 
 				camHUD.visible = true;
-				inCutscene = false;
-				senpaiFuckingDied = true;
-				startCountdown();
+				self.close();
 			}
 		});
 

@@ -2,5 +2,5 @@
 <week name="RED SNOW" chars="parents-christmas,bf,gf" sprite="week5">
 	<song>Cocoa</song>
 	<song>Eggnog</song>
-	<song>Winter Horrorland</song>
+	<song hide="true">Winter Horrorland</song>
 </week>

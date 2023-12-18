@@ -745,6 +745,10 @@ class PlayState extends MusicBeatState
 
 		updateDiscordPresence();
 
+		// Make icons appear in the correct spot during cutscenes
+		healthBar.update(0);
+		updateIconPositions();
+
 		__updateNote_event = EventManager.get(NoteUpdateEvent);
 
 		scripts.call("postCreate");
@@ -1076,6 +1080,18 @@ class PlayState extends MusicBeatState
 		updateDiscordPresence();
 	}
 
+	function updateIconPositions() {
+		var iconOffset:Int = 26;
+
+		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0)) - iconOffset);
+		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0))) - (iconP2.width - iconOffset);
+
+		health = FlxMath.bound(health, 0, maxHealth);
+
+		iconP1.health = healthBar.percent / 100;
+		iconP2.health = 1 - (healthBar.percent / 100);
+	}
+
 	@:dox(hide)
 	override public function update(elapsed:Float)
 	{
@@ -1121,15 +1137,7 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		var iconOffset:Int = 26;
-
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0)) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0))) - (iconP2.width - iconOffset);
-
-		health = FlxMath.bound(health, 0, maxHealth);
-
-		iconP1.health = healthBar.percent / 100;
-		iconP2.health = 1 - (healthBar.percent / 100);
+		updateIconPositions();
 
 		if (startingSong)
 		{
