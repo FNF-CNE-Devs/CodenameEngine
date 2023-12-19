@@ -1,7 +1,13 @@
+import flixel.addons.util.FlxSimplex;
+
 static var roses_shouldPlayOnThorns = false;
 var self = this;
 __script__.setParent(PlayState.instance);
 
+var scream:FlxSound;
+var senpaiEvil:FlxSprite;
+var dfx = 0;
+var dfy = 0;
 function create() {
 	// Cutscene stuff
 	if(!roses_shouldPlayOnThorns) {
@@ -17,7 +23,7 @@ function create() {
 	red.scrollFactor.set();
 	add(red);
 
-	var senpaiEvil:FlxSprite = new FlxSprite();
+	senpaiEvil = new FlxSprite();
 	senpaiEvil.frames = Paths.getSparrowAtlas('game/cutscenes/weeb/senpaiCrazy');
 	senpaiEvil.animation.addByPrefix('idle', 'Senpai Pre Explosion', 24, false);
 	senpaiEvil.animation.play('idle');
@@ -26,6 +32,8 @@ function create() {
 	senpaiEvil.updateHitbox();
 	senpaiEvil.screenCenter();
 	senpaiEvil.x += daPixelZoom * 51;
+	dfx = senpaiEvil.x;
+	dfy = senpaiEvil.y;
 	add(senpaiEvil);
 
 	var white:FlxSprite = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, FlxColor.WHITE);
@@ -34,7 +42,6 @@ function create() {
 	white.alpha = 0;
 	add(white);
 
-	if(Options.flashingMenu) new FlxTimer().start(2.35, function(ended:FlxTimer) FlxG.camera.shake(0.02, 4.9));
 	new FlxTimer().start(3.2, function(deadTime:FlxTimer)
 	{
 		FlxG.camera.fade(FlxColor.WHITE, 1.6, false, function() {
@@ -46,7 +53,7 @@ function create() {
 			white.alpha = 1;
 		});
 	});
-	FlxG.sound.play(Paths.sound('cutscenes/weeb/Senpai_Dies'), 1, false, null, true, function()
+	scream = FlxG.sound.play(Paths.sound('cutscenes/weeb/Senpai_Dies'), 1, false, null, true, function()
 	{
 		new FlxTimer().start(0.2, function(swagTimer:FlxTimer) {
 			white.alpha -= 0.15;
@@ -63,4 +70,20 @@ function create() {
 
 		FlxG.camera.fade(FlxColor.WHITE, 0.0001, true);
 	});
+}
+
+var sVal = 0;
+var seed = FlxG.random.float(-4000, 4000);
+var sShkv = 50; // shake range
+var sSpeed = 240;
+
+function update(elapsed:Float) {
+	if(scream?.time > 2350) {
+		sVal += sSpeed * elapsed;
+
+		var vx = sShkv * FlxSimplex.simplexOctaves(sVal, seed, 0.07, 0.25, 4);
+		var vy = sShkv * FlxSimplex.simplexOctaves(sVal + 500, seed, 0.07, 0.25, 4);
+
+		senpaiEvil.setPosition(dfx + vx, dfy + vy);
+	}
 }
