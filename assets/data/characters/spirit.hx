@@ -6,7 +6,11 @@ function postCreate() {
 	trail = new FlxTrail(self, null, 4, 24, 0.3, 0.069);
 }
 
+var toAdd:Bool = true;  // Using this just to make sure
 function update(elpased) {
-	// Makes it everytime go behind spirit
-	PlayState.instance.insert(PlayState.instance.members.indexOf(self) - 1, trail);
+	if(toAdd) {
+		toAdd = false;
+		PlayState.instance.insert(PlayState.instance.members.indexOf(self), trail);
+		disableScript();
+	}
 }

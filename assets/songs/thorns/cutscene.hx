@@ -34,6 +34,7 @@ function create() {
 	white.alpha = 0;
 	add(white);
 
+	if(Options.flashingMenu) new FlxTimer().start(2.35, function(ended:FlxTimer) FlxG.camera.shake(0.02, 4.9));
 	new FlxTimer().start(3.2, function(deadTime:FlxTimer)
 	{
 		FlxG.camera.fade(FlxColor.WHITE, 1.6, false, function() {
