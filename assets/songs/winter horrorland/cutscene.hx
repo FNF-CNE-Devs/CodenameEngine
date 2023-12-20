@@ -7,8 +7,6 @@ function create() {
 	FlxG.camera.focusOn(camFollow.getPosition());
 	FlxG.camera.zoom = 1.5;
 
-	this.update(0);
-
 	FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 2.5, {
 		ease: FlxEase.quadInOut, startDelay: 0.8,
 		onComplete: function(twn:FlxTween)

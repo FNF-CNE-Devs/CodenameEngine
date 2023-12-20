@@ -4,7 +4,7 @@ __script__.setParent(PlayState.instance);
 
 function create() {
 	var red:FlxSprite;
-	red = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, FlxColor.RED);
+	red = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, 0xFFff1b31);
 	red.screenCenter();
 	red.scrollFactor.set();
 	red.alpha = 0;

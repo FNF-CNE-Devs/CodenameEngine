@@ -18,7 +18,7 @@ function create() {
 	roses_shouldPlayOnThorns = false;
 	camHUD.visible = false;
 
-	var red:FlxSprite = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, FlxColor.RED);
+	var red:FlxSprite = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, 0xFFff1b31);
 	red.screenCenter();
 	red.scrollFactor.set();
 	add(red);
