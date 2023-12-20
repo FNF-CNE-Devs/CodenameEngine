@@ -1,8 +1,8 @@
 function create() {
-	var aberration:CustomShader = new CustomShader('chromaticAberration');  // Tbh its not even visible in the cutscene so i can just leave it there  - Nex_isDumb
-	aberration.redOff = [0.0009, 0.0009];
-	aberration.greenOff = [0, 0];
-	aberration.blueOff = [-0.0009, -0.0009];
+	var aberration:CustomShader = new CustomShader('chromaticAberration');  // Tbh i love it in the cutscene aswell - Nex_isDumb
+	var intens = Options.week6PixelPerfect ? 0.0003 : 0.005;
+	aberration.redOff = [intens, intens];
+	aberration.blueOff = [-intens, -intens];
 	camGame.addShader(aberration);
 	disableScript();
 }
