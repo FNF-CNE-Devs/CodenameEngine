@@ -27,6 +27,8 @@ function create() {
 				dad.color = FlxColor.fromRGB(c, c, c, 255);
 				if(red.alpha < 1) swagTimer.reset();
 				else {
+					camGame.addShader(aberration);
+					change = true;
 					FlxG.camera.followLerp = 0;
 					FlxTween.tween(camGame.scroll, {x: -366, y: 192}, 3, {
 						ease: FlxEase.cubeInOut,
@@ -49,4 +51,18 @@ var playDadUpdate = false;
 function postUpdate(elapsed) {
 	if(playDadUpdate)
 		dad.update(elapsed);
+}
+
+var change:Bool = false;
+var aberration:CustomShader = new CustomShader('chromaticAberration');
+function update(elapsed:Float) {
+	if(!change) return;
+	if(intens < (Options.week6PixelPerfect ? 0.005 : 0.005)) setGeneralIntensity(intens + 0.00001);
+}
+
+var intens:Float = 0;
+function setGeneralIntensity(val:Float) {
+	intens = val;
+	aberration.redOff = [intens, 0];
+	aberration.blueOff = [-intens, 0];
 }
