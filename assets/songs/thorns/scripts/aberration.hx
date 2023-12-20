@@ -14,7 +14,10 @@ function setGeneralIntensity(val:Float) {
 var canBump:Bool = false;
 function aberrationCoolThing() {
 	canBump = !canBump;
-	if(!canBump) setGeneralIntensity(Options.week6PixelPerfect ? 0.0005 : 0.005);  // Just to make sure if anything goes wrong  - Nex_isDumb
+	if(!canBump) {
+		setGeneralIntensity(Options.week6PixelPerfect ? 0.0005 : 0.005);  // Just to make sure if anything goes wrong  - Nex_isDumb
+		maxCamZoom = 1.35;
+	} else maxCamZoom = 0;
 }
 
 function update(elapsed:Float) {
@@ -22,5 +25,11 @@ function update(elapsed:Float) {
 }
 
 function beatHit(curBeat:Float) {
-	if(canBump && curBeat % 2 != 0) setGeneralIntensity(Options.week6PixelPerfect ? 0.005 : 0.05);
+	if(canBump && curBeat % 2 != 0) {
+		setGeneralIntensity(Options.week6PixelPerfect ? 0.005 : 0.05);
+		if(Options.camZoomOnBeat) {
+			FlxG.camera.zoom += 0.015 * camZoomingStrength;
+			camHUD.zoom += 0.03 * camZoomingStrength;
+		}
+	}
 }
