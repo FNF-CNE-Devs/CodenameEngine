@@ -41,6 +41,7 @@ class BaseGameParser {
 		result.meta.needsVoices = data.needsVoices.getDefault(true);
 
 		var camFocusedBF:Bool = false;
+		var altAnims:Bool = false;
 		var beatsPerMesure:Float = data.beatsPerMesure.getDefault(4);
 		var curBPM:Float = data.bpm;
 		var curTime:Float = 0;
@@ -57,6 +58,15 @@ class BaseGameParser {
 					time: curTime,
 					name: "Camera Movement",
 					params: [camFocusedBF ? 1 : 0]
+				});
+			}
+
+			if (section.altAnim == null) section.altAnim = false;
+			if (altAnims != (altAnims = section.altAnim)) {
+				result.events.push({
+					time: curTime,
+					name: "Alt Animation Toggle",
+					params: [0, altAnims]
 				});
 			}
 
@@ -129,6 +139,6 @@ typedef SwagSection =
 	var mustHitSection:Bool;
 	var bpm:Float;
 	var changeBPM:Bool;
-	var altAnim:Bool;
+	var altAnim:Null<Bool>;
 	@:optional var camTarget:Null<Float>;
 }
