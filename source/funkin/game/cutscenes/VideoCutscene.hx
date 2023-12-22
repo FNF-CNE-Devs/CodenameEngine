@@ -85,7 +85,8 @@ class VideoCutscene extends Cutscene {
 				videoReady = true;
 			});
 		} else {
-			video.play(localPath);
+			video.load(localPath);
+			video.play();
 		}
 		add(bg);
 		add(subtitle);
@@ -160,7 +161,10 @@ class VideoCutscene extends Cutscene {
 		#if VIDEO_CUTSCENES
 		if (videoReady) {
 			videoReady = false;
-			video.play(localPath);
+
+			video.load(localPath);
+			video.play();
+
 			if (loadingBackdrop != null)
 				loadingBackdrop.visible = false;
 		}
