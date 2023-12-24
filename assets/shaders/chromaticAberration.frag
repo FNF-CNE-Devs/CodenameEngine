@@ -1,6 +1,5 @@
 #pragma header
 
-// Making them global so theyre editable  - Nex_isDumb
 uniform vec2 redOff;
 uniform vec2 greenOff;
 uniform vec2 blueOff;
