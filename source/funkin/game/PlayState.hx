@@ -75,7 +75,7 @@ class PlayState extends MusicBeatState
 	 */
 	public static var opponentMode:Bool = false;
 	/**
-	//  * Whenever the song has been started with co-op mode on.
+	 * Whenever the song has been started with co-op mode on.
 	 */
 	public static var coopMode:Bool = false;
 
@@ -89,6 +89,10 @@ class PlayState extends MusicBeatState
 	 */
 	public var strumLines:FlxTypedGroup<StrumLine> = new FlxTypedGroup<StrumLine>();
 
+	/**
+	 * Death counter on current week (or song if from freeplay).
+	 */
+	public static var deathCounter:Int = 0;
 	/**
 	 * Game Over Song. (assets/music/gameOver.ogg)
 	 */
@@ -1270,6 +1274,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
+		deathCounter++;
 		openSubState(new GameOverSubstate(character == null ? 0 : character.x, character == null ? 0 : character.y, deathCharID, character != null ? character.isPlayer : true, gameOverSong, lossSFX, retrySFX));
 	}
 
@@ -1303,6 +1308,7 @@ class PlayState extends MusicBeatState
 			#end
 		}
 
+		deathCounter = 0;
 		startCutscene("end-", endCutscene, nextSong);
 	}
 
