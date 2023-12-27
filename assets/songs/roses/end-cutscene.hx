@@ -28,7 +28,7 @@ function create() {
 				if(red.alpha < 1) swagTimer.reset();
 				else {
 					if (Options.gameplayShaders) {
-						aberration = new CustomShader('chromaticAberration')
+						aberration = new CustomShader('chromaticAberration');
 						camGame.addShader(aberration);
 						change = true;
 					}
