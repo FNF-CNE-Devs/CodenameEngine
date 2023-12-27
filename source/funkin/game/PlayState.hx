@@ -370,7 +370,7 @@ class PlayState extends MusicBeatState
 	 */
 	public var playCutscenes:Bool = isStoryMode;
 	/**
-	 * Whenever the game has already played the cutscene for the current song.
+	 * Whenever the game has already played a specific cutscene for the current song. Check `startCutscene` for more details.
 	 */
 	public static var seenCutscene:Bool = false;
 	/**
@@ -747,7 +747,7 @@ class PlayState extends MusicBeatState
 	}
 
 	@:dox(hide) public override function createPost() {
-		startCutscene("", cutscene);
+		startCutscene("", cutscene, null, true);
 		super.createPost();
 
 		updateDiscordPresence();
@@ -773,10 +773,15 @@ class PlayState extends MusicBeatState
 	 * @param prefix Custom prefix. Using `midsong-` will require you to for example rename your video cutscene to `songs/song/midsong-cutscene.mp4` instead of `songs/song/cutscene.mp4`
 	 * @param cutsceneScriptPath Optional: Custom script path.
 	 * @param callback Callback called after the cutscene ended. If equals to `null`, `startCountdown` will be called.
+	 * @param checkSeen Bool that by default is false, if true and `seenCutscene` is also true, it won't play the cutscene but directly call `callback` (PS: `seenCutscene` becomes true if the cutscene gets played and `checkSeen` was true)
 	 */
-	public function startCutscene(prefix:String = "", ?cutsceneScriptPath:String, ?callback:Void->Void) {
-		if (callback == null)
-			callback = startCountdown;
+	public function startCutscene(prefix:String = "", ?cutsceneScriptPath:String, ?callback:Void->Void, checkSeen:Bool = false) {
+		if (callback == null) callback = startCountdown;
+		if (checkSeen && seenCutscene) {
+			callback();
+			return;
+		}
+
 		if (cutsceneScriptPath == null)
 			cutsceneScriptPath = Paths.script('songs/${SONG.meta.name.toLowerCase()}/${prefix}cutscene');
 
@@ -786,28 +791,25 @@ class PlayState extends MusicBeatState
 			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}cutscene.mp4');
 			var dialogue = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}dialogue.xml');
 			persistentUpdate = true;
+			var toCall:Void->Void = function() {
+				if(checkSeen) seenCutscene = true;
+				callback();
+			}
+
 			if (cutsceneScriptPath != null && Assets.exists(cutsceneScriptPath)) {
-				openSubState(new ScriptedCutscene(cutsceneScriptPath, function() {
-					callback();
-				}));
+				openSubState(new ScriptedCutscene(cutsceneScriptPath, toCall));
 			} else if (Assets.exists(dialogue)) {
 				MusicBeatState.skipTransIn = true;
-				openSubState(new DialogueCutscene(dialogue, function() {
-					callback();
-				}));
+				openSubState(new DialogueCutscene(dialogue, toCall));
 			} else if (Assets.exists(videoCutsceneAlt)) {
 				MusicBeatState.skipTransIn = true;
 				persistentUpdate = false;
-				openSubState(new VideoCutscene(videoCutsceneAlt, function() {
-					callback();
-				}));
+				openSubState(new VideoCutscene(videoCutsceneAlt, toCall));
 				persistentDraw = false;
 			} else if (Assets.exists(videoCutscene)) {
 				MusicBeatState.skipTransIn = true;
 				persistentUpdate = false;
-				openSubState(new VideoCutscene(videoCutscene, function() {
-					callback();
-				}));
+				openSubState(new VideoCutscene(videoCutscene, toCall));
 				persistentDraw = false;
 			} else
 				callback();
@@ -819,7 +821,6 @@ class PlayState extends MusicBeatState
 	{
 		if (!_startCountdownCalled) {
 			_startCountdownCalled = true;
-			if(inCutscene) seenCutscene = true;
 			inCutscene = false;
 
 			if (scripts.event("onStartCountdown", new CancellableEvent()).cancelled) return;
