@@ -157,7 +157,7 @@ class PauseSubState extends MusicBeatSubstate
 			case "Exit to charter":
 				FlxG.switchState(new funkin.editors.charter.Charter(PlayState.SONG.meta.name, PlayState.difficulty, false));
 			case "Exit to menu":
-				PlayState.deathCounter = 0;
+				PlayState.resetSongInfos();
 				CoolUtil.playMenuSong();
 				FlxG.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
 		}
