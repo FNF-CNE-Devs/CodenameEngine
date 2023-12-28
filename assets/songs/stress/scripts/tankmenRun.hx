@@ -30,7 +30,7 @@ function postCreate() {
 
 	var tempTankman:TankmenBG = recycleTankman();
 	tempTankman.strumTime = 10;
-	tempTankman.resetShit(20, 600, true);  // Invisible  - Nex_isDumb
+	tempTankman.resetShit(20, 600, true);  // Invisible
 	tankmanRun.push(tempTankman);
 	grpTankmanRun.add(tempTankman.sprite);
 
@@ -51,7 +51,7 @@ function spawnTankmen() {
 	while(spawnTimes.length > 0 && spawnTimes[spawnTimes.length-1][0] - 1500 < time) {
 		var tankmen = getTankman(spawnTimes.pop());
 
-		trace("Spawning Tankman", tankmen.sprite.offset, tankmen.goingRight);
+		//trace("Spawning Tankman", tankmen.sprite.offset, tankmen.goingRight);
 
 		tankmanRun.push(tankmen);
 		grpTankmanRun.add(tankmen.sprite);

@@ -24,14 +24,14 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 	var error:Bool = false;
 	public function checkUpdate():Bool {
 		var curTime:Float = Date.now().getTime();
-		if(Options.lastUpdated != null && curTime < Options.lastUpdated + 120000) return false;  // Fuck you Github rate limits  - Nex_isDumb
+		if(Options.lastUpdated != null && curTime < Options.lastUpdated + 120000) return false;  // Fuck you Github rate limits
 		Options.lastUpdated = curTime;
 
 		error = false;
 		//Main.execAsync(function() {
 		var idk = GitHub.getContributors("FNF-CNE-Devs", "CodenameEngine", function(e) {
 			error = true;
-			var errMsg:String = ~/\d+.\d+.\d+.\d+/.replace(e.message, "[Your IP]");  // Removing sensitive stuff  - Nex_isDumb
+			var errMsg:String = ~/\d+.\d+.\d+.\d+/.replace(e.message, "[Your IP]");  // Removing sensitive stuff
 			errMsg = 'Error while trying to download contributors list:\n$errMsg';
 
 			Logs.traceColored([Logs.logText(errMsg.replace('\n', ' '), RED)], ERROR);

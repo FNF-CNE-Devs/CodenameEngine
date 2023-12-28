@@ -17,7 +17,7 @@ var canBump:Bool = false;
 function aberrationCoolThing() {
 	canBump = !canBump;
 	if(!canBump) {
-		if(Options.gameplayShaders) setGeneralIntensity(Options.week6PixelPerfect ? 0.0005 : 0.005);  // Just to make sure if anything goes wrong  - Nex_isDumb
+		if(Options.gameplayShaders) setGeneralIntensity(Options.week6PixelPerfect ? 0.0005 : 0.005);  // Just to make sure if anything goes wrong
 		maxCamZoom = 1.35;
 	} else maxCamZoom = 0;
 }
