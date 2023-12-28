@@ -4,7 +4,6 @@ var tankmanRun:Array<TankmenBG> = [];
 var grpTankmanRun:FlxTypedGroup<FlxSprite> = [];
 
 var spawnTimes = []; // [[time, direction]]
-
 var tankmanPool = [];
 
 function recycleTankman() {
@@ -27,15 +26,15 @@ function getTankman(data:Array<Float>) {
 
 function postCreate() {
 	grpTankmanRun = new FlxTypedGroup();
-	add(grpTankmanRun);
+	insert(members.indexOf(gf) - 1, grpTankmanRun);
 
 	var tempTankman:TankmenBG = recycleTankman();
 	tempTankman.strumTime = 10;
-	tempTankman.resetShit(20, 600, true);
+	tempTankman.resetShit(20, 300, true);
 	tankmanRun.push(tempTankman);
 	grpTankmanRun.add(tempTankman.sprite);
 
-	trace(strumLines.members[2].notes.members.length);
+	//trace(strumLines.members[2].notes.members.length);
 
 	for (note in strumLines.members[2].notes.members) {
 		if (FlxG.random.bool(16)) {
@@ -52,7 +51,7 @@ function spawnTankmen() {
 	while(spawnTimes.length > 0 && spawnTimes[spawnTimes.length-1][0] - 1500 < time) {
 		var tankmen = getTankman(spawnTimes.pop());
 
-		trace("Spawning Tankman", tankmen.strumTime, tankmen.goingRight);
+		trace("Spawning Tankman", tankmen.sprite.y, tankmen.goingRight);
 
 		tankmanRun.push(tankmen);
 		grpTankmanRun.add(tankmen.sprite);
@@ -66,7 +65,6 @@ function update(elapsed) {
 	for(i in 0...length) {
 		var reverseIndex = length - i - 1;
 		var tankmen = tankmanRun[reverseIndex];
-		//tankmen.update(tankmen, elapsed);
 		tankmen.update(elapsed);
 	}
 }
@@ -83,15 +81,12 @@ class TankmenBG
 	var self = null;
 	var killed = false;
 
-	//function fuckingnewfuckingnew()
 	var fuckingnewfuckingnew = function()
 	{
 		this.sprite = new FlxSprite();
 		var sprite = this.sprite;
 
-		// makeGraphic(200, 200);
-
-		sprite.frames = Paths.getSparrowAtlas('game/cutscenes/tank/tankmanKilled1');
+		sprite.frames = Paths.getSparrowAtlas('stages/tank/tankmanKilled1');
 		sprite.antialiasing = true;
 		sprite.animation.addByPrefix('run', 'tankman running', 24, true);
 
@@ -117,51 +112,41 @@ class TankmenBG
 		sprite.animation.curAnim.curFrame = FlxG.random.int(0, sprite.animation.curAnim.numFrames - 1);
 
 		killed = false;
-
 		sprite.flipX = goingRight;
 	}
 
 	var update = function(elapsed)
 	{
 		var sprite = this.sprite;
-		sprite.visible = !(sprite.x >= FlxG.width * 1.2 || sprite.x <= FlxG.width * -0.5);
+		sprite.visible = !(sprite.x >= FlxG.width * 1.5 || sprite.x <= FlxG.width * -0.5);
 
 		if (sprite.animation.curAnim.name == 'run')
 		{
 			var endDirection:Float = (FlxG.width * 0.74) + endingOffset;
 
-			if (goingRight)
-			{
+			if (goingRight) {
 				endDirection = (FlxG.width * 0.02) - endingOffset;
-
-
 				sprite.x = (endDirection + (Conductor.songPosition - strumTime) * tankSpeed);
 			}
-			else
-			{
-				sprite.x = (endDirection - (Conductor.songPosition - strumTime) * tankSpeed);
-			}
+			else sprite.x = (endDirection - (Conductor.songPosition - strumTime) * tankSpeed);
 		}
 
 		if (Conductor.songPosition > strumTime)
 		{
-			// kill();
 			sprite.animation.play('shot');
+			sprite.animation.finishCallback = function(_) {
+				killed = true;
+				grpTankmanRun.remove(sprite, true);
+				sprite.kill();
+				tankmanPool.push(self);
+				tankmanRun.remove(self);
+			}
 
 			if (goingRight)
 			{
 				sprite.offset.y = 200;
 				sprite.offset.x = 300;
 			}
-		}
-
-		if (sprite.animation.curAnim.name == 'shot' && sprite.animation.curAnim.curFrame >= sprite.animation.curAnim.frames.length - 1)
-		{
-			killed = true;
-			grpTankmanRun.remove(sprite, true);
-			sprite.kill();
-			tankmanPool.push(self);
-			tankmanRun.remove(self);
 		}
 	}
 }

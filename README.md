@@ -5,7 +5,6 @@
 Known issues in the alpha:
 - Some options are missing
 - Week 6 still have no dialogue
-- Week 7 have no running tankman
 
 Build instructions are below. Press TAB on the main menu to switch mods.
 
