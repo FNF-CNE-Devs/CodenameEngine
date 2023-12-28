@@ -27,14 +27,14 @@ function getTankman(data:Array<Float>) {
 function postCreate() {
 	grpTankmanRun = new FlxTypedGroup();
 	insert(members.indexOf(gf) - 1, grpTankmanRun);
+	if(inCutscene) grpTankmanRun.visible = false;
 
-	var tempTankman:TankmenBG = recycleTankman();
+	/*var tempTankman:TankmenBG = recycleTankman();
 	tempTankman.strumTime = 10;
-	tempTankman.resetShit(20, 600, true);  // Invisible
+	tempTankman.resetShit(20, 600, true);
 	tankmanRun.push(tempTankman);
-	grpTankmanRun.add(tempTankman.sprite);
-
-	//trace(strumLines.members[2].notes.members.length);
+	grpTankmanRun.add(tempTankman.sprite);*/
+	graphicCache.cache(Paths.image('stages/tank/tankmanKilled1'));
 
 	for (note in strumLines.members[2].notes.members) {
 		if (FlxG.random.bool(16)) {
@@ -43,6 +43,10 @@ function postCreate() {
 	}
 
 	//spawnTimes.reverse(); // no need to reverse it since the notes are already reversed
+}
+
+function onStartCountdown() {
+	if(PlayState.instance.seenCutscene) grpTankmanRun.visible = true;
 }
 
 function spawnTankmen() {
