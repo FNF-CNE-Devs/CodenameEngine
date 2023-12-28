@@ -30,7 +30,7 @@ function postCreate() {
 
 	var tempTankman:TankmenBG = recycleTankman();
 	tempTankman.strumTime = 10;
-	tempTankman.resetShit(20, 300, true);
+	tempTankman.resetShit(20, 600, true);  // Invisible  - Nex_isDumb
 	tankmanRun.push(tempTankman);
 	grpTankmanRun.add(tempTankman.sprite);
 
@@ -51,7 +51,7 @@ function spawnTankmen() {
 	while(spawnTimes.length > 0 && spawnTimes[spawnTimes.length-1][0] - 1500 < time) {
 		var tankmen = getTankman(spawnTimes.pop());
 
-		trace("Spawning Tankman", tankmen.sprite.y, tankmen.goingRight);
+		trace("Spawning Tankman", tankmen.sprite.offset, tankmen.goingRight);
 
 		tankmanRun.push(tankmen);
 		grpTankmanRun.add(tankmen.sprite);
@@ -103,6 +103,7 @@ class TankmenBG
 		var sprite = this.sprite;
 		sprite.revive();
 		sprite.setPosition(x, y);
+		sprite.offset.set(0, 0);
 		goingRight = isGoingRight;
 		endingOffset = FlxG.random.float(50, 200);
 		tankSpeed = FlxG.random.float(0.6, 1);
