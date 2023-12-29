@@ -29,16 +29,18 @@ class OptimizedBitmapData extends BitmapData {
 			__isValid = true;
 			readable = true;
 
-			lock();
-			getTexture(FlxG.stage.context3D);
-			getSurface();
+			if(FlxG.stage.context3D != null) {
+				lock();
+				getTexture(FlxG.stage.context3D);
+				getSurface();
 
-			readable = true;
-			this.image = null;
+				readable = true;
+				this.image = null;
 
-			// @:privateAccess
-			// if (FlxG.bitmap.__doNotDelete)
-			// 	MemoryUtil.clearMinor();
+				// @:privateAccess
+				// if (FlxG.bitmap.__doNotDelete)
+				// 	MemoryUtil.clearMinor();
+			}
 		}
 		#end
 	}

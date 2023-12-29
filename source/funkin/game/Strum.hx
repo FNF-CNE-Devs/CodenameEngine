@@ -160,6 +160,6 @@ class Strum extends FlxSprite {
 		centerOrigin();
 	}
 	public function getAnim() {
-		return animation.curAnim == null ? null : animation.curAnim.name;
+		return animation.name;
 	}
 }

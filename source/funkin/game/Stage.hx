@@ -20,6 +20,8 @@ class Stage extends FlxBasic implements IBeatReceiver {
 	public var state:FlxState;
 	public var characterPoses:Map<String, StageCharPos> = [];
 
+	private var spritesParentFolder = "";
+
 	public function getSprite(name:String) {
 		return stageSprites[name];
 	}
@@ -45,7 +47,6 @@ class Stage extends FlxBasic implements IBeatReceiver {
 		}
 
 		if (stageXML != null) {
-			var spritesParentFolder = "";
 			if (PlayState.instance != null) {
 				if (stageXML.has.zoom) {
 					var parsed:Null<Float> = Std.parseFloat(stageXML.att.zoom);
@@ -55,7 +56,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 			}
 			if (stageXML.has.folder) {
 				spritesParentFolder = stageXML.att.folder;
-				if (spritesParentFolder.charAt(spritesParentFolder.length-1) != "/") spritesParentFolder = spritesParentFolder + "/";
+				if (!spritesParentFolder.endsWith("/")) spritesParentFolder += "/";
 			}
 
 			var elems = [];
@@ -246,7 +247,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 				var file:String = Path.withoutDirectory(Path.withoutExtension(path));
 				if (!list.contains(file)) list.push(file);
 			}
-				
+
 		return list;
 	}
 }

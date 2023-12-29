@@ -681,7 +681,7 @@ class PlayState extends MusicBeatState
 			MusicBeatState.skipTransIn = true;
 			camFollow.setPosition(smoothTransitionData.camFollowX, smoothTransitionData.camFollowY);
 		} else {
-			FlxG.camera.focusOn(camFollow.getPosition());
+			FlxG.camera.focusOn(camFollow.getPosition(FlxPoint.weak()));
 		}
 		smoothTransitionData = null;
 
