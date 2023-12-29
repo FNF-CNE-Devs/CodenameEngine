@@ -518,8 +518,8 @@ class Charter extends UIState {
 			PlayState.loadSong(__song, __diff, false, false);
 		}
 		Conductor.setupSong(PlayState.SONG);
-		// noteTypes = PlayState.SONG.noteTypes;
-		noteTypes = ["Hurt Note", "Bullet Note", "Penis Note", "Boobs Note"];
+		noteTypes = PlayState.SONG.noteTypes;
+		// noteTypes = ["Hurt Note", "Bullet Note", "Penis Note", "Boobs Note"];
 
 		FlxG.sound.setMusic(FlxG.sound.load(Paths.inst(__song, __diff)));
 		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
@@ -1450,7 +1450,9 @@ class Charter extends UIState {
 				closeOnSelect: false,
 				onSelect: function (_) {
 					var addButton:UIContextMenuOptionSpr = _.button;
-					trace(addButton, addButton.label.text);
+					addButton.label.text = "";
+					var textBox:UITextBox = new UITextBox(addButton.x + 26, addButton.y+2, "TEST", 200, addButton.bHeight-4);
+					addButton.members.push(textBox);
 				},
 			},
 			{
