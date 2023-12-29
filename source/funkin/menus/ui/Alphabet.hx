@@ -28,8 +28,6 @@ class Alphabet extends FlxSpriteGroup
 	var _finalText:String = "";
 	var _curText:String = "";
 
-	public var widthOfWords:Float = FlxG.width;
-
 	var yMulti:Float = 1;
 
 	// custom shit
@@ -156,7 +154,7 @@ class Alphabet extends FlxSpriteGroup
 		splitWords = _finalText.split("");
 	}
 
-	public var personTalking:String = 'gf';
+	//public var personTalking:String = 'gf';
 
 	public function startTypedText():Void
 	{
@@ -202,9 +200,7 @@ class Alphabet extends FlxSpriteGroup
 			_finalText = text;
 			for(e in members)
 				e.destroy();
-			@:privateAccess
-			group.members = [];
-			_sprites = cast group.members;
+			members.clear();
 			lastSprite = null;
 			addText();
 		}
@@ -243,9 +239,11 @@ class AlphaCharacter extends FlxSprite
 
 	public function createBold(letter:String)
 	{
-		letter = letter.toUpperCase();
-		if (boldAnims[letter] == null) {
+		if(!boldAnims.exists(letter))
+			letter = letter.toUpperCase();
+		if (!boldAnims.exists(letter)) {
 			visible = false;
+			active = false;
 			scale.set();
 			width = 40;
 			return;
@@ -258,8 +256,9 @@ class AlphaCharacter extends FlxSprite
 
 	public function createLetter(letter:String):Void
 	{
-		if (letterAnims[letter] == null) {
+		if (!letterAnims.exists(letter)) {
 			visible = false;
+			active = false;
 			scale.set();
 			width = 40;
 			return;

@@ -42,7 +42,7 @@ class PauseSubState extends MusicBeatSubstate
 	{
 		super.create();
 
-		if (menuItems.contains("Exit to charter") && !PlayState.chartingMode) 
+		if (menuItems.contains("Exit to charter") && !PlayState.chartingMode)
 			menuItems.remove("Exit to charter");
 
 		add(parentDisabler = new FunkinParentDisabler());
@@ -64,9 +64,10 @@ class PauseSubState extends MusicBeatSubstate
 
 		if (__cancelDefault = event.cancelled) return;
 
-		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
+		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, FlxColor.BLACK);
 		bg.updateHitbox();
 		bg.alpha = 0;
+		bg.screenCenter();
 		bg.scrollFactor.set();
 		add(bg);
 

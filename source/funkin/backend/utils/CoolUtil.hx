@@ -50,7 +50,7 @@ class CoolUtil
 	 * Deletes a folder recursively
 	 * @param delete Path to the folder.
 	 */
-	public static function deleteFolder(delete:String) {
+	@:noUsing public static function deleteFolder(delete:String) {
 		#if sys
 		if (!sys.FileSystem.exists(delete)) return;
 		var files:Array<String> = sys.FileSystem.readDirectory(delete);
@@ -156,7 +156,7 @@ class CoolUtil
 	 * @param ratio Ratio
 	 * @return Float Final value
 	 */
-	public static inline function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {
+	@:noUsing public static inline function fpsLerp(v1:Float, v2:Float, ratio:Float):Float {
 		return FlxMath.lerp(v1, v2, getFPSRatio(ratio));
 	}
 	/**
@@ -166,7 +166,7 @@ class CoolUtil
 	 * @param ratio Ratio
 	 * @param fpsSensitive Whenever the ratio should be fps sensitive (adapted when game is running at 120 instead of 60)
 	 */
-	public static inline function lerpColor(color1:FlxColor, color2:FlxColor, ratio:Float, fpsSensitive:Bool = false) {
+	@:noUsing public static inline function lerpColor(color1:FlxColor, color2:FlxColor, ratio:Float, fpsSensitive:Bool = false) {
 		if (!fpsSensitive)
 			ratio = getFPSRatio(ratio);
 		return FlxColor.interpolate(color1, color2, ratio);
@@ -177,7 +177,7 @@ class CoolUtil
 	 * @param ratio Ratio
 	 * @return FPS-Modified Ratio
 	 */
-	public static inline function getFPSRatio(ratio:Float):Float {
+	@:noUsing public static inline function getFPSRatio(ratio:Float):Float {
 		return FlxMath.bound(ratio * 60 * FlxG.elapsed, 0, 1);
 	}
 	/**
@@ -205,10 +205,10 @@ class CoolUtil
 			for(k=>e in array) {
 				if (e is Int || e is Float) {
 					switch(k) {
-						case 0:		r = Std.int(e);
-						case 1:		g = Std.int(e);
-						case 2:		b = Std.int(e);
-						case 3:		a = Std.int(e);
+						case 0:	r = Std.int(e);
+						case 1:	g = Std.int(e);
+						case 2:	b = Std.int(e);
+						case 3:	a = Std.int(e);
 					}
 				}
 			}
@@ -221,7 +221,7 @@ class CoolUtil
 	 * Plays the main menu theme.
 	 * @param fadeIn
 	 */
-	public static function playMenuSong(fadeIn:Bool = false) {
+	@:noUsing public static function playMenuSong(fadeIn:Bool = false) {
 		if (FlxG.sound.music == null || !FlxG.sound.music.playing)
 		{
 			playMusic(Paths.music('freakyMenu'), true, fadeIn ? 0 : 1, true, 102);
@@ -236,7 +236,7 @@ class CoolUtil
 	 * @param name Character name
 	 * @param spriteName (Optional) sprite name.
 	 */
-	public static function preloadCharacter(name:String, ?spriteName:String) {
+	@:noUsing public static function preloadCharacter(name:String, ?spriteName:String) {
 		if (name == null) return;
 		if (spriteName == null)
 			spriteName = name;
@@ -253,7 +253,7 @@ class CoolUtil
 	 * @param Looped Whenever the music loops (true)
 	 * @param Group A group that this music belongs to (default)
 	 */
-	public static function playMusic(path:String, Persist:Bool = false, Volume:Int = 1, Looped:Bool = true, DefaultBPM:Int = 102, ?Group:FlxSoundGroup) {
+	@:noUsing public static function playMusic(path:String, Persist:Bool = false, Volume:Int = 1, Looped:Bool = true, DefaultBPM:Int = 102, ?Group:FlxSoundGroup) {
 		Conductor.reset();
 		FlxG.sound.playMusic(path, Volume, Looped, Group);
 		if (FlxG.sound.music != null) {
@@ -264,20 +264,21 @@ class CoolUtil
 		if (Assets.exists(infoPath)) {
 			var musicInfo = IniUtil.parseAsset(infoPath, [
 				"BPM" => null,
-				"TimeSignature" => "2/2"
+				"TimeSignature" => "4/4"
 			]);
 
 			var timeSignParsed:Array<Null<Float>> = musicInfo["TimeSignature"] == null ? [] : [for(s in musicInfo["TimeSignature"].split("/")) Std.parseFloat(s)];
 			var beatsPerMeasure:Float = 4;
 			var stepsPerBeat:Float = 4;
 
+			// Check later, i dont think timeSignParsed can contain null, only nan
 			if (timeSignParsed.length == 2 && !timeSignParsed.contains(null)) {
 				beatsPerMeasure = timeSignParsed[0] == null || timeSignParsed[0] <= 0 ? 4 : cast timeSignParsed[0];
 				stepsPerBeat = timeSignParsed[1] == null || timeSignParsed[1] <= 0 ? 4 : cast timeSignParsed[1];
 			}
 
-			var parsedBPM:Null<Float> = Std.parseFloat(musicInfo["BPM"]);
-			Conductor.changeBPM(parsedBPM == null ? DefaultBPM : parsedBPM, beatsPerMeasure, stepsPerBeat);
+			var bpm:Null<Float> = Std.parseFloat(musicInfo["BPM"]).getDefault(DefaultBPM);
+			Conductor.changeBPM(bpm, beatsPerMeasure, stepsPerBeat);
 		} else
 			Conductor.changeBPM(DefaultBPM);
 	}
@@ -287,7 +288,7 @@ class CoolUtil
 	 * @param menuSFX Menu SFX to play
 	 * @param volume At which volume it should play
 	 */
-	public static inline function playMenuSFX(menuSFX:CoolSfx = SCROLL, volume:Float = 1) {
+	@:noUsing public static inline function playMenuSFX(menuSFX:CoolSfx = SCROLL, volume:Float = 1) {
 		FlxG.sound.play(Paths.sound(switch(menuSFX) {
 			case CONFIRM:	'menu/confirm';
 			case CANCEL:	'menu/cancel';
@@ -309,7 +310,7 @@ class CoolUtil
 	 * @param path
 	 * @return Array<String>
 	 */
-	public static function coolTextFile(path:String):Array<String>
+	@:noUsing public static function coolTextFile(path:String):Array<String>
 	{
 		var trim:String;
 		return [for(line in Assets.getText(path).split("\n")) if ((trim = line.trim()) != "" && !trim.startsWith("#")) trim];
@@ -321,7 +322,7 @@ class CoolUtil
 	 * @param min Minimal value (0)
 	 * @return Array<Int> Final array
 	 */
-	public static inline function numberArray(max:Int, ?min:Int = 0):Array<Int>
+	@:noUsing public static inline function numberArray(max:Int, ?min:Int = 0):Array<Int>
 	{
 		return [for (i in min...max) i];
 	}
@@ -331,7 +332,7 @@ class CoolUtil
 	 * @param anim1 First animation
 	 * @param anim2 Second animation
 	 */
-	public static function switchAnimFrames(anim1:FlxAnimation, anim2:FlxAnimation) {
+	@:noUsing public static function switchAnimFrames(anim1:FlxAnimation, anim2:FlxAnimation) {
 		if (anim1 == null || anim2 == null) return;
 		var old = anim1.frames;
 		anim1.frames = anim2.frames;
@@ -491,7 +492,7 @@ class CoolUtil
 	/**
 	 * Gets the macro class created by hscript-improved for an abstract / enum
 	 */
-	public static inline function getMacroAbstractClass(className:String) {
+	@:noUsing public static inline function getMacroAbstractClass(className:String) {
 		return Type.resolveClass('${className}_HSC');
 	}
 
@@ -537,7 +538,7 @@ class CoolUtil
 	 * Opens an URL in the browser.
 	 * @param url
 	 */
-	public static inline function openURL(url:String) {
+	@:noUsing public static inline function openURL(url:String) {
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [url, "&"]);
 		#else
@@ -567,7 +568,7 @@ class CoolUtil
 	 * @param p2
 	 * @return return p1 < p2 ? p2 : p1
 	 */
-	public static inline function maxInt(p1:Int, p2:Int)
+	@:noUsing public static inline function maxInt(p1:Int, p2:Int)
 		return p1 < p2 ? p2 : p1;
 
 	/**
@@ -581,7 +582,7 @@ class CoolUtil
 		return r;
 	}
 
-	public static inline function quantize(Value:Float, Quant:Float) {
+	@:noUsing public static inline function quantize(Value:Float, Quant:Float) {
 		return Math.fround(Value * Quant) / Quant;
 	}
 

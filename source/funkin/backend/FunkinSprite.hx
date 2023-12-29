@@ -301,14 +301,14 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 
 	public inline function getAnimOffset(name:String)
 	{
-		if (animOffsets[name] != null)
+		if (animOffsets.exists(name))
 			return animOffsets[name];
 		return FlxPoint.weak(0, 0);
 	}
 
 	public inline function hasAnimation(AnimName:String):Bool @:privateAccess
 		return animateAtlas != null ? (animateAtlas.anim.animsMap.exists(AnimName)
-			|| animateAtlas.anim.symbolDictionary.exists(AnimName)) : animation.getByName(AnimName) != null;
+			|| animateAtlas.anim.symbolDictionary.exists(AnimName)) : animation.exists(AnimName);
 
 	public inline function getAnimName()
 	{
@@ -333,7 +333,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	}
 
 	public inline function getNameList():Array<String> {
-		if (animateAtlas != null) 
+		if (animateAtlas != null)
 			return [for (name in @:privateAccess animateAtlas.anim.animsMap.keys()) name];
 		else
 			return animation.getNameList();
