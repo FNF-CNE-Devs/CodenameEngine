@@ -7,7 +7,9 @@ import flixel.addons.display.FlxBackdrop;
 import sys.io.File;
 #end
 import funkin.backend.FunkinText;
+import haxe.io.FPHelper;
 import haxe.xml.Access;
+import haxe.Int64;
 #if VIDEO_CUTSCENES
 import hxvlc.flixel.FlxVideo;
 #end
@@ -85,7 +87,10 @@ class VideoCutscene extends Cutscene {
 				videoReady = true;
 			});
 		} else {
-			video.play(localPath);
+			if (video.load(localPath))
+				video.play();
+			else
+				close();
 		}
 		add(bg);
 		add(subtitle);
@@ -160,13 +165,26 @@ class VideoCutscene extends Cutscene {
 		#if VIDEO_CUTSCENES
 		if (videoReady) {
 			videoReady = false;
-			video.play(localPath);
+
+			if (video.load(localPath))
+				video.play();
+			else
+			{
+				close();
+
+				if (loadingBackdrop != null)
+					loadingBackdrop.visible = false;
+
+				return;
+			}
+
 			if (loadingBackdrop != null)
 				loadingBackdrop.visible = false;
 		}
 		@:privateAccess
-		var time = video.time;
-		while (subtitles.length > 0 && subtitles[0].time < time)
+		var time:Int64 = video.time;
+
+		while (subtitles.length > 0 && subtitles[0].time < Math.round(FPHelper.i64ToDouble(time.low, time.high)))
 			setSubtitle(subtitles.shift());
 
 		if (loadingBackdrop != null) {
