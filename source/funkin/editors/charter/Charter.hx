@@ -205,10 +205,14 @@ class Charter extends UIState {
 					null,
 					{
 						label: "Edit chart data",
+						color: 0xFF959829, icon: 4,
+						onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2;},
 						onSelect: chart_edit_data
 					},
 					{
 						label: "Edit metadata information",
+						color: 0xFF959829, icon: 4,
+						onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2;},
 						onSelect: chart_edit_metadata
 					}
 				]
@@ -270,19 +274,11 @@ class Charter extends UIState {
 					},
 					null,
 					{
-						label: "Add Note Type",
+						label: "Edit Note Types List",
+						color: 0xFF959829, icon: 4,
+						onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2;},
 						closeOnSelect: false,
-						onSelect: function (p) {trace(p);}
-					},
-					{
-						label: "Edit Note Type",
-						closeOnSelect: false,
-						onSelect: function (p) {trace(p);}
-					},
-					{
-						label: "Delete Note Type",
-						closeOnSelect: false,
-						onSelect: function (p) {trace(p);}
+						onSelect: editNoteTypesList
 					},
 					null,
 					{
@@ -1239,6 +1235,9 @@ class Charter extends UIState {
 			case CEditChartData(oldData, newData):
 				PlayState.SONG.stage = oldData.stage;
 				PlayState.SONG.scrollSpeed = oldData.speed;
+			case CEditNoteTypes(oldArray, newArray):
+				noteTypes = oldArray;
+				changeNoteType();
 		}
 	}
 
@@ -1279,6 +1278,9 @@ class Charter extends UIState {
 			case CEditChartData(oldData, newData):
 				PlayState.SONG.stage = newData.stage;
 				PlayState.SONG.scrollSpeed = newData.speed;
+			case CEditNoteTypes(oldArray, newArray):
+				noteTypes = newArray;
+				changeNoteType();
 		}
 	}
 
@@ -1409,14 +1411,21 @@ class Charter extends UIState {
 		undos.addToUndo(CEditSustains(undoChanges));
 	}
 
-	inline function changeNoteType(newID:Int) {
-		this.noteType = newID; buildNoteTypesUI();
-		for(s in selection) 
+	inline public function changeNoteType(?newID:Int) {
+		if(newID != null) noteType = newID;
+		if(noteType < 0) noteType = 0;
+		else if (noteType > noteTypes.length) noteType = noteTypes.length;
+
+		buildNoteTypesUI();
+		for(s in selection)
 			if (s is CharterNote) {
 				var n:CharterNote = cast s;
 				n.updatePos(n.step, n.id, n.susLength, newID);
 			}
-	} 
+	}
+
+	function editNoteTypesList(_)
+		FlxG.state.openSubState(new EditNoteTypesList());
 
 	function buildNoteTypesUI() {
 		var noteTopButton:UITopMenuButton = cast topMenuSpr.members[noteIndex];
@@ -1444,30 +1453,11 @@ class Charter extends UIState {
 			},
 			null,
 			{
-				label: "Add Note Type",
-				color: 0xFF1E8020, icon: 2,
-				onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2;},
-				closeOnSelect: false,
-				onSelect: function (_) {
-					var addButton:UIContextMenuOptionSpr = _.button;
-					addButton.label.text = "";
-					var textBox:UITextBox = new UITextBox(addButton.x + 26, addButton.y+2, "TEST", 200, addButton.bHeight-4);
-					addButton.members.push(textBox);
-				},
-			},
-			{
-				label: "Edit Note Type",
+				label: "Edit Note Types List",
 				color: 0xFF959829, icon: 4,
 				onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2;},
 				closeOnSelect: false,
-				onSelect: function (p) {trace(p);},
-			},
-			{
-				label: "Delete Note Type",
-				color: 0xFF8F2222, icon: 3,
-				onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2; button.icon.offset.y = -1;},
-				closeOnSelect: false,
-				onSelect: function (p) {trace(p);},
+				onSelect: editNoteTypesList
 			},
 			null,
 			{
@@ -1560,6 +1550,7 @@ enum CharterChange {
 	CEditSustains(notes:Array<NoteSustainChange>);
 	CEditEvent(event:CharterEvent, oldEvents:Array<ChartEvent>, newEvents:Array<ChartEvent>);
 	CEditChartData(oldData:{stage:String, speed:Float}, newData:{stage:String, speed:Float});
+	CEditNoteTypes(oldArray:Array<String>, newArray:Array<String>);
 }
 
 enum CharterCopyboardObject {
