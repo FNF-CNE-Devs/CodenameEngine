@@ -63,7 +63,7 @@ class EditNoteTypesList extends UISubstateWindow {
 		var oldList:Array<String> = Charter.instance.noteTypes;
 		var newList:Array<String> = [for (note in noteTypesList.buttons.members) note.textBox.label.text];
 		Charter.instance.noteTypes = newList;
-		Charter.instance.changeNoteType();
+		Charter.instance.changeNoteType(null, false);
 		Charter.instance.undos.addToUndo(CEditNoteTypes(oldList, newList));
 	}
 }
@@ -93,7 +93,7 @@ class NoteTypeButton extends UIButton {
 		deleteButton.autoAlpha = false;
 		members.push(deleteButton);
 
-		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 8).loadGraphic(Paths.image('editors/character/delete-button'));  // Yeah yeah its for characters, but tbh goes fire here too
+		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 8).loadGraphic(Paths.image('editors/delete-button'));
 		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);
 	}

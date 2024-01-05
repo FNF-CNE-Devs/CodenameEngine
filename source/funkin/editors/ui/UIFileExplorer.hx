@@ -40,7 +40,7 @@ class UIFileExplorer extends UISliceSprite {
 		deleteButton.color = 0xFFFF0000;
 		members.push(deleteButton);
 
-		deleteIcon = new FlxSprite(deleteButton.x + ((58 - 16)/2) - 8, deleteButton.y + ((58 - 16)/2) - 8).loadGraphic(Paths.image('editors/character/delete-button'));
+		deleteIcon = new FlxSprite(deleteButton.x + ((58 - 16)/2) - 8, deleteButton.y + ((58 - 16)/2) - 8).loadGraphic(Paths.image('editors/delete-button'));
 		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);
 

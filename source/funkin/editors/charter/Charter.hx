@@ -1237,7 +1237,9 @@ class Charter extends UIState {
 				PlayState.SONG.scrollSpeed = oldData.speed;
 			case CEditNoteTypes(oldArray, newArray):
 				noteTypes = oldArray;
-				changeNoteType();
+				changeNoteType(null, false);
+			case CEditSpecNotesType(notes, oldTypes, newTypes):
+				for(i=>note in notes) note.updatePos(note.step, note.id, note.susLength, oldTypes[i]);
 		}
 	}
 
@@ -1280,7 +1282,9 @@ class Charter extends UIState {
 				PlayState.SONG.scrollSpeed = newData.speed;
 			case CEditNoteTypes(oldArray, newArray):
 				noteTypes = newArray;
-				changeNoteType();
+				changeNoteType(null, false);
+			case CEditSpecNotesType(notes, oldTypes, newTypes):
+				for(i=>note in notes) note.updatePos(note.step, note.id, note.susLength, newTypes[i]);
 		}
 	}
 
@@ -1411,17 +1415,24 @@ class Charter extends UIState {
 		undos.addToUndo(CEditSustains(undoChanges));
 	}
 
-	inline public function changeNoteType(?newID:Int) {
+	inline public function changeNoteType(?newID:Int, checkSelection:Bool = true) {
 		if(newID != null) noteType = newID;
-		if(noteType < 0) noteType = 0;
-		else if (noteType > noteTypes.length) noteType = noteTypes.length;
-
+		noteType = Std.int(FlxMath.bound(noteType, 0, noteTypes.length));
 		buildNoteTypesUI();
-		for(s in selection)
+
+		var changedNotes:{notes:Array<CharterNote>, oldTypes:Array<Int>, newTypes:Array<Int>} = {notes:[], oldTypes:[], newTypes:[]};
+		for(note in notesGroup) if(note.type < 0 || note.type > noteTypes.length) {
+			changedNotes.notes.push(note); changedNotes.oldTypes.push(note.type); changedNotes.newTypes.push(0);
+			note.updatePos(note.step, note.id, note.susLength, 0);
+		}
+
+		if(checkSelection) for(s in selection)
 			if (s is CharterNote) {
 				var n:CharterNote = cast s;
+				changedNotes.notes.push(n); changedNotes.oldTypes.push(n.type); changedNotes.newTypes.push(newID);
 				n.updatePos(n.step, n.id, n.susLength, newID);
 			}
+		if(changedNotes.notes.length > 0) undos.addToUndo(CEditSpecNotesType(changedNotes.notes, changedNotes.oldTypes, changedNotes.newTypes));
 	}
 
 	function editNoteTypesList(_)
@@ -1551,6 +1562,7 @@ enum CharterChange {
 	CEditEvent(event:CharterEvent, oldEvents:Array<ChartEvent>, newEvents:Array<ChartEvent>);
 	CEditChartData(oldData:{stage:String, speed:Float}, newData:{stage:String, speed:Float});
 	CEditNoteTypes(oldArray:Array<String>, newArray:Array<String>);
+	CEditSpecNotesType(notes:Array<CharterNote>, oldNoteTypes:Array<Int>, newNoteTypes:Array<Int>);
 }
 
 enum CharterCopyboardObject {

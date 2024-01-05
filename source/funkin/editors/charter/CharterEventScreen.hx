@@ -237,7 +237,7 @@ class EventButton extends UIButton {
 		deleteButton.autoAlpha = false;
 		members.push(deleteButton);
 
-		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 4).loadGraphic(Paths.image('editors/character/delete-button'));
+		deleteIcon = new FlxSprite(deleteButton.x + (15/2), deleteButton.y + 4).loadGraphic(Paths.image('editors/delete-button'));
 		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);
 	}
