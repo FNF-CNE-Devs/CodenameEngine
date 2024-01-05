@@ -132,155 +132,245 @@ class Controls extends FlxActionSet
 	public var gamepadsAdded:Array<Int> = [];
 	public var keyboardScheme = KeyboardScheme.None;
 
-	public var UP(get, never):Bool;
+	public var UP(get, set):Bool;
 
 	inline function get_UP()
 		return _up.check();
 
-	public var LEFT(get, never):Bool;
+	inline function set_UP(val)
+		return @:privateAccess _up._checked = val;
+
+	public var LEFT(get, set):Bool;
 
 	inline function get_LEFT()
 		return _left.check();
 
-	public var RIGHT(get, never):Bool;
+	inline function set_LEFT(val)
+		return @:privateAccess _left._checked = val;
+
+	public var RIGHT(get, set):Bool;
 
 	inline function get_RIGHT()
 		return _right.check();
 
-	public var DOWN(get, never):Bool;
+	inline function set_RIGHT(val)
+		return @:privateAccess _right._checked = val;
+
+	public var DOWN(get, set):Bool;
 
 	inline function get_DOWN()
 		return _down.check();
 
-	public var UP_P(get, never):Bool;
+	inline function set_DOWN(val)
+		return @:privateAccess _down._checked = val;
+
+	public var UP_P(get, set):Bool;
 
 	inline function get_UP_P()
 		return _upP.check();
 
-	public var LEFT_P(get, never):Bool;
+	inline function set_UP_P(val)
+		return @:privateAccess _upP._checked = val;
+
+	public var LEFT_P(get, set):Bool;
 
 	inline function get_LEFT_P()
 		return _leftP.check();
 
-	public var RIGHT_P(get, never):Bool;
+	inline function set_LEFT_P(val)
+		return @:privateAccess _leftP._checked = val;
+
+	public var RIGHT_P(get, set):Bool;
 
 	inline function get_RIGHT_P()
 		return _rightP.check();
 
-	public var DOWN_P(get, never):Bool;
+	inline function set_RIGHT_P(val)
+		return @:privateAccess _rightP._checked = val;
+
+	public var DOWN_P(get, set):Bool;
 
 	inline function get_DOWN_P()
 		return _downP.check();
 
-	public var UP_R(get, never):Bool;
+	inline function set_DOWN_P(val)
+		return @:privateAccess _downP._checked = val;
+
+	public var UP_R(get, set):Bool;
 
 	inline function get_UP_R()
 		return _upR.check();
 
-	public var LEFT_R(get, never):Bool;
+	inline function set_UP_R(val)
+		return @:privateAccess _upR._checked = val;
+
+	public var LEFT_R(get, set):Bool;
 
 	inline function get_LEFT_R()
 		return _leftR.check();
 
-	public var RIGHT_R(get, never):Bool;
+	inline function set_LEFT_R(val)
+		return @:privateAccess _leftR._checked = val;
+
+	public var RIGHT_R(get, set):Bool;
 
 	inline function get_RIGHT_R()
 		return _rightR.check();
 
-	public var DOWN_R(get, never):Bool;
+	inline function set_RIGHT_R(val)
+		return @:privateAccess _rightR._checked = val;
+
+	public var DOWN_R(get, set):Bool;
 
 	inline function get_DOWN_R()
 		return _downR.check();
 
-	public var NOTE_UP(get, never):Bool;
+	inline function set_DOWN_R(val)
+		return @:privateAccess _downR._checked = val;
+
+	public var NOTE_UP(get, set):Bool;
 
 	inline function get_NOTE_UP()
 		return _noteUp.check();
 
-	public var NOTE_LEFT(get, never):Bool;
+	inline function set_NOTE_UP(val)
+		return @:privateAccess _noteUp._checked = val;
+
+	public var NOTE_LEFT(get, set):Bool;
 
 	inline function get_NOTE_LEFT()
 		return _noteLeft.check();
 
-	public var NOTE_RIGHT(get, never):Bool;
+	inline function set_NOTE_LEFT(val)
+		return @:privateAccess _noteLeft._checked = val;
+
+	public var NOTE_RIGHT(get, set):Bool;
 
 	inline function get_NOTE_RIGHT()
 		return _noteRight.check();
 
-	public var NOTE_DOWN(get, never):Bool;
+	inline function set_NOTE_RIGHT(val)
+		return @:privateAccess _noteRight._checked = val;
+
+	public var NOTE_DOWN(get, set):Bool;
 
 	inline function get_NOTE_DOWN()
 		return _noteDown.check();
 
-	public var NOTE_UP_P(get, never):Bool;
+	inline function set_NOTE_DOWN(val)
+		return @:privateAccess _noteDown._checked = val;
+
+	public var NOTE_UP_P(get, set):Bool;
 
 	inline function get_NOTE_UP_P()
 		return _noteUpP.check();
 
-	public var NOTE_LEFT_P(get, never):Bool;
+	inline function set_NOTE_UP_P(val)
+		return @:privateAccess _noteUpP._checked = val;
+
+	public var NOTE_LEFT_P(get, set):Bool;
 
 	inline function get_NOTE_LEFT_P()
 		return _noteLeftP.check();
 
-	public var NOTE_RIGHT_P(get, never):Bool;
+	inline function set_NOTE_LEFT_P(val)
+		return @:privateAccess _noteLeftP._checked = val;
+
+	public var NOTE_RIGHT_P(get, set):Bool;
 
 	inline function get_NOTE_RIGHT_P()
 		return _noteRightP.check();
 
-	public var NOTE_DOWN_P(get, never):Bool;
+	inline function set_NOTE_RIGHT_P(val)
+		return @:privateAccess _noteRightP._checked = val;
+
+	public var NOTE_DOWN_P(get, set):Bool;
 
 	inline function get_NOTE_DOWN_P()
 		return _noteDownP.check();
 
-	public var NOTE_UP_R(get, never):Bool;
+	inline function set_NOTE_DOWN_P(val)
+		return @:privateAccess _noteDownP._checked = val;
+
+	public var NOTE_UP_R(get, set):Bool;
 
 	inline function get_NOTE_UP_R()
 		return _noteUpR.check();
 
-	public var NOTE_LEFT_R(get, never):Bool;
+	inline function set_NOTE_UP_R(val)
+		return @:privateAccess _noteUpR._checked = val;
+
+	public var NOTE_LEFT_R(get, set):Bool;
 
 	inline function get_NOTE_LEFT_R()
 		return _noteLeftR.check();
 
-	public var NOTE_RIGHT_R(get, never):Bool;
+	inline function set_NOTE_LEFT_R(val)
+		return @:privateAccess _noteLeftR._checked = val;
+
+	public var NOTE_RIGHT_R(get, set):Bool;
 
 	inline function get_NOTE_RIGHT_R()
 		return _noteRightR.check();
 
-	public var NOTE_DOWN_R(get, never):Bool;
+	inline function set_NOTE_RIGHT_R(val)
+		return @:privateAccess _noteRightR._checked = val;
+
+	public var NOTE_DOWN_R(get, set):Bool;
 
 	inline function get_NOTE_DOWN_R()
 		return _noteDownR.check();
 
-	public var ACCEPT(get, never):Bool;
+	inline function set_NOTE_DOWN_R(val)
+		return @:privateAccess _noteDownR._checked = val;
+
+	public var ACCEPT(get, set):Bool;
 
 	inline function get_ACCEPT()
 		return _accept.check();
 
-	public var BACK(get, never):Bool;
+	inline function set_ACCEPT(val)
+		return @:privateAccess _accept._checked = val;
+
+	public var BACK(get, set):Bool;
 
 	inline function get_BACK()
 		return _back.check();
 
-	public var PAUSE(get, never):Bool;
+	inline function set_BACK(val)
+		return @:privateAccess _back._checked = val;
+
+	public var PAUSE(get, set):Bool;
 
 	inline function get_PAUSE()
 		return _pause.check();
 
-	public var RESET(get, never):Bool;
+	inline function set_PAUSE(val)
+		return @:privateAccess _pause._checked = val;
+
+	public var RESET(get, set):Bool;
 
 	inline function get_RESET()
 		return _reset.check();
 
-	public var CHEAT(get, never):Bool;
+	inline function set_RESET(val)
+		return @:privateAccess _reset._checked = val;
+
+	public var CHEAT(get, set):Bool;
 
 	inline function get_CHEAT()
 		return _cheat.check();
 
-	public var SWITCHMOD(get, never):Bool;
+	inline function set_CHEAT(val)
+		return @:privateAccess _cheat._checked = val;
+
+	public var SWITCHMOD(get, set):Bool;
 
 	inline function get_SWITCHMOD()
 		return _switchMod.check();
+
+	inline function set_SWITCHMOD(val)
+		return @:privateAccess _switchMod._checked = val;
 
 	public function new(name, scheme = None)
 	{
