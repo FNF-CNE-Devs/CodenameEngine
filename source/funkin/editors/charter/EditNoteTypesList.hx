@@ -4,7 +4,7 @@ import flixel.math.FlxPoint;
 import haxe.io.Path;
 
 class EditNoteTypesList extends UISubstateWindow {
-	public static var pathString:String = 'data/noteTypes/';
+	public static var pathString:String = 'data/notes/';
 
 	public var noteTypesList:UIButtonList<NoteTypeButton>;
 	public var saveButton:UIButton;
@@ -51,7 +51,7 @@ class EditNoteTypesList extends UISubstateWindow {
 	public function getNoteTypesList(?mods:Bool = false) {
 		var list:Array<String> = [];
 		for (path in Paths.getFolderContent(pathString, true, mods ? MODS : BOTH)) if(Path.extension(path) == "hx") {
-				var file:String = Path.withoutDirectory(Path.withoutExtension(path));
+				var file:String = Path.withoutDirectory(path);
 				if (!list.contains(file)) list.push(file);
 			}
 
@@ -72,13 +72,14 @@ class NoteTypeButton extends UIButton {
 	public var textBox:UIAutoCompleteTextBox;
 	public var deleteButton:UIButton;
 	public var deleteIcon:FlxSprite;
+	public var list:Array<String>;
 
 	public function new(x:Float, y:Float, name:String, list:Array<String>, parent:UIButtonList<NoteTypeButton>) {
 		super(x, y, '', null, Std.int(parent.buttonSize.x), Std.int(parent.buttonSize.y));
 		autoAlpha = false;
 
 		members.push(textBox = new UIAutoCompleteTextBox(5, bHeight/2 - 40, name, 250));
-		textBox.suggestItems = list;
+		textBox.suggestItems = [for(script in (this.list = list)) Path.withoutExtension(script)];
 		textBox.antialiasing = true;
 
 		field.alignment = LEFT;
@@ -111,7 +112,14 @@ class NoteTypeButton extends UIButton {
 		field.follow(this, textBox.x, textBox.x + textBox.height + 30);
 		if(lastName != textBox.label.text) {
 			lastName = textBox.label.text;
-			field.text = 'Path: ${EditNoteTypesList.pathString}$lastName.hx';
+
+			var toUse:String = 'Path: ${EditNoteTypesList.pathString}$lastName.';
+			for(name in list) if(Path.withoutExtension(name) == lastName) {
+				toUse += Path.extension(name);
+				break;
+			}
+			if(Path.extension(toUse) == "") toUse += '?';
+			field.text = toUse;
 		}
 	}
 }
