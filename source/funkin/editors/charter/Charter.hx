@@ -41,7 +41,7 @@ class Charter extends UIState {
 	public var topMenu:Array<UIContextMenuOption>;
 	@:noCompletion private var playbackIndex:Int = 7;
 	@:noCompletion private var snapIndex:Int = 6;
-	@:noCompletion private var noteIndex:Int = 4;
+	@:noCompletion private var noteIndex:Int = 5;
 
 	public var scrollBar:UIScrollBar;
 	public var songPosInfo:UIText;
@@ -71,6 +71,7 @@ class Charter extends UIState {
 
 	public var noteType:Int = 0;
 	public var noteTypes:Array<String> = [];
+	public var noteTypeText:UIText;
 
 	public var strumLines:CharterStrumLineGroup = new CharterStrumLineGroup();
 	public var notesGroup:CharterNoteGroup = new CharterNoteGroup();
@@ -249,45 +250,6 @@ class Charter extends UIState {
 				]
 			},
 			{
-				label: "Note",
-				childs: [
-					{
-						label: "Add sustain length",
-						keybind: [E],
-						onSelect: _note_addsustain
-					},
-					{
-						label: "Subtract sustain length",
-						keybind: [Q],
-						onSelect: _note_subtractsustain
-					},
-					null,
-					{
-						label: "Select all",
-						keybind: [CONTROL, A],
-						onSelect: _note_selectall
-					},
-					{
-						label: "Select measure",
-						keybind: [CONTROL, SHIFT, A],
-						onSelect: _note_selectmeasure
-					},
-					null,
-					{
-						label: "Edit Note Types List",
-						color: 0xFF959829, icon: 4,
-						onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2;},
-						closeOnSelect: false,
-						onSelect: editNoteTypesList
-					},
-					null,
-					{
-						label: "(0) Default Note",
-						keybind: [ZERO]
-					}
-				]
-			},
-			{
 				label: "Song",
 				childs: [
 					{
@@ -310,6 +272,10 @@ class Charter extends UIState {
 						onSelect: _song_mutevoices
 					}
 				]
+			},
+			{
+				label: "Note >",
+				childs: buildNoteTypesUI()
 			},
 			{
 				label: "Snap >",
@@ -423,6 +389,9 @@ class Charter extends UIState {
 		topMenuSpr = new UITopMenu(topMenu);
 		topMenuSpr.cameras = uiGroup.cameras = [uiCamera];
 
+		noteTypeText = new UIText(0, 0, 0, "(0) Default Note");
+		noteTypeText.cameras = [uiCamera];
+
 		scrollBar = new UIScrollBar(FlxG.width - 20, topMenuSpr.bHeight, 1000, 0, 100);
 		scrollBar.cameras = [uiCamera];
 		scrollBar.onChange = function(v) {
@@ -486,6 +455,7 @@ class Charter extends UIState {
 		add(strumLines);
 		// add the top menu last OUT of the ui group so that it stays on top
 		add(topMenuSpr);
+		add(noteTypeText);
 		// add the ui group
 		add(uiGroup);
 
@@ -1015,6 +985,13 @@ class Charter extends UIState {
 				snapButton.x = (lastButtonX -= snapButton.bWidth)-10;
 			}
 		}
+
+		if (topMenuSpr.members[noteIndex] != null) {
+			var noteTopButton:UITopMenuButton = cast topMenuSpr.members[noteIndex];
+			noteTypeText.x = noteTopButton.x + noteTopButton.bWidth + 6;
+			noteTypeText.y = Std.int((noteTopButton.bHeight - noteTypeText.height) / 2);
+		}
+		noteTypeText.text = '($noteType) ${noteTypes[noteType-1] == null ? "Default Note" : noteTypes[noteType-1]}';
 		
 		super.update(elapsed);
 
@@ -1438,8 +1415,8 @@ class Charter extends UIState {
 	function editNoteTypesList(_)
 		FlxG.state.openSubState(new EditNoteTypesList());
 
-	function buildNoteTypesUI() {
-		var noteTopButton:UITopMenuButton = cast topMenuSpr.members[noteIndex];
+	function buildNoteTypesUI():Array<UIContextMenuOption> {
+		var noteTopButton:UITopMenuButton = topMenuSpr == null ? null : cast topMenuSpr.members[noteIndex];
 		var newChilds:Array<UIContextMenuOption> = [
 			{
 				label: "Add sustain length",
@@ -1464,14 +1441,6 @@ class Charter extends UIState {
 			},
 			null,
 			{
-				label: "Edit Note Types List",
-				color: 0xFF959829, icon: 4,
-				onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2;},
-				closeOnSelect: false,
-				onSelect: editNoteTypesList
-			},
-			null,
-			{
 				label: "(0) Default Note",
 				keybind: [ZERO],
 				onSelect: (_) -> {changeNoteType(0);},
@@ -1490,7 +1459,14 @@ class Charter extends UIState {
 			if (realNoteID <= 9) newChild.keybind = [noteKeys[realNoteID]];
 			newChilds.push(newChild);
 		}
-		noteTopButton.contextMenu = newChilds;
+		newChilds.push({
+			label: "Edit Note Types List",
+			color: 0xFF959829, icon: 4,
+			onCreate: function (button:UIContextMenuOptionSpr) {button.label.offset.x = button.icon.offset.x = -2;},
+			onSelect: editNoteTypesList
+		});
+		if (noteTopButton != null) noteTopButton.contextMenu = newChilds;
+		return newChilds;
 	}
 
 	public function playtestChart(time:Float = 0, opponentMode = false, here = false) {
