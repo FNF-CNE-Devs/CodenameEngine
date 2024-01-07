@@ -746,7 +746,7 @@ class Charter extends UIState {
 			addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0.75, 0.25);
 			var event = getHoveredEvent(mousePos.y);
 			if (event != null) addEventSpr.updateEdit(event);
-			else addEventSpr.updatePos(FlxG.keys.pressed.SHIFT ? ((mousePos.y+20) / 40) : quantStep(mousePos.y/40));
+			else addEventSpr.updatePos(FlxG.keys.pressed.SHIFT ? ((mousePos.y) / 40) : quantStepRounded(mousePos.y/40));
 		} else  addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
 
 		// Note Hoverer
@@ -770,6 +770,11 @@ class Charter extends UIState {
 	public function quantStep(step:Float):Float {
 		var stepMulti:Float = 1/(quant/16);
 		return Math.floor(step/stepMulti) * stepMulti;
+	}
+
+	public function quantStepRounded(step:Float):Float {
+		var stepMulti:Float = 1/(quant/16);
+		return Math.round(step/stepMulti) * stepMulti;
 	}
 
 	public function getHoveredEvent(y:Float) {
