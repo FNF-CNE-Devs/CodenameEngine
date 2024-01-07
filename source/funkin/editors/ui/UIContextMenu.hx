@@ -182,7 +182,7 @@ class UIContextMenuOptionSpr extends UISliceSprite {
 
 	public override function draw() {
 		alpha = option.color == null ? (hovered ? 1 : 0) : 1;
-		if (option.color != null) color = hovered ? option.color.getDarkened(.4) : option.color;
+		if (option.color != null) color = hovered ? option.color.getLightened(.4) : option.color;
 
 		label.follow(this, 20, 2);
 		if (icon != null)
