@@ -27,8 +27,6 @@ class PauseSubState extends MusicBeatSubstate
 
 	var pauseMusic:FlxSound;
 
-	public var pauseScript:Script;
-
 	public var game:PlayState = PlayState.instance; // shortcut
 
 	private var __cancelDefault:Bool = false;
@@ -47,12 +45,10 @@ class PauseSubState extends MusicBeatSubstate
 
 		add(parentDisabler = new FunkinParentDisabler());
 
-		pauseScript = Script.create(Paths.script(script));
-		pauseScript.setParent(this);
-		pauseScript.load();
+		stateScripts.importScript(script);
 
 		var event = EventManager.get(PauseCreationEvent).recycle('breakfast', menuItems);
-		pauseScript.call('create', [event]);
+		stateScripts.call('onCreatePause', [event]);
 
 		menuItems = event.options;
 
@@ -104,8 +100,6 @@ class PauseSubState extends MusicBeatSubstate
 		camera.bgColor = 0;
 		FlxG.cameras.add(camera, false);
 
-		pauseScript.call("postCreate");
-
 		PlayState.instance.updateDiscordPresence();
 	}
 
@@ -115,8 +109,6 @@ class PauseSubState extends MusicBeatSubstate
 
 		if (pauseMusic.volume < 0.5)
 			pauseMusic.volume += 0.01 * elapsed;
-
-		pauseScript.call("update", [elapsed]);
 
 		if (__cancelDefault) return;
 
@@ -134,7 +126,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	public function selectOption() {
 		var event = EventManager.get(NameEvent).recycle(menuItems[curSelected]);
-		pauseScript.call("onSelectOption", [event]);
+		stateScripts.call("onSelectOption", [event]);
 
 		if (event.cancelled) return;
 
@@ -164,8 +156,6 @@ class PauseSubState extends MusicBeatSubstate
 	{
 		if(FlxG.cameras.list.contains(camera))
 			FlxG.cameras.remove(camera, true);
-		pauseScript.call("onDestroy");
-		pauseScript.destroy();
 
 		if (pauseMusic != null)
 			@:privateAccess {
@@ -178,7 +168,7 @@ class PauseSubState extends MusicBeatSubstate
 	function changeSelection(change:Int = 0):Void
 	{
 		var event = EventManager.get(MenuChangeEvent).recycle(curSelected, FlxMath.wrap(curSelected + change, 0, menuItems.length-1), change, change != 0);
-		pauseScript.call("onChangeItem", [event]);
+		stateScripts.call("onChangeItem", [event]);
 		if (event.cancelled) return;
 
 		curSelected = event.value;
