@@ -205,6 +205,10 @@ class PlayState extends MusicBeatState
 	 * Whenever the player can press 7, 8 or 9 to access the debug menus.
 	 */
 	public var canAccessDebugMenus:Bool = true;
+	/**
+	 * Wether or not to show the secret gitaroo pause.
+	 */
+	public var allowGitaroo:Bool = true;
 
 	/**
 	 * Whenever cam zooming is enabled, enables on a note hit if not cancelled.
@@ -1081,7 +1085,7 @@ class PlayState extends MusicBeatState
 		paused = true;
 
 		// 1 / 1000 chance for Gitaroo Man easter egg
-		if (FlxG.random.bool(0.1))
+		if (allowGitaroo && FlxG.random.bool(0.1))
 		{
 			// gitaroo man easter egg
 			FlxG.switchState(new GitarooPause());
