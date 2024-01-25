@@ -5,8 +5,8 @@
 Known issues in the alpha:
 - Some options are missing
 - Week 5 has no monster animation
-- Week 6 still have no dialogue
-- Week 7 have no running tankman
+- Week 6 still has no dialogue
+- Week 7 has no running tankman
 
 Build instructions are below. Press TAB on the main menu to switch mods.
 
@@ -14,7 +14,7 @@ Also, `lime test windows` uses the source assets folder instead of the export on
 
 ## Codename Engine
 
-Codename Engine is a new Friday Night Funkin' Engine aimed for easier modding, along with extensiblity and ease of use.
+Codename Engine is a new Friday Night Funkin' Engine aimed at simplifying modding, along with extensiblity and ease of use.
 
 ### It includes many new features, as seen [here](FEATURES.md)
 
@@ -51,12 +51,10 @@ Latest builds for the engine can be found in the [Actions](https://github.com/Yo
 <img src="https://github.com/YoshiCrafter29/CodenameEngine/blob/main/art/github/windows-installation-details.png?raw=true" />
 </p>
 
-6. Once the installation is done, close Visual Studio Installer.
-7. Download and install [`git-scm`](https://git-scm.com/download/win).
+6. Once you finish downloading those components, download and install [`git-scm`](https://git-scm.com/download/win).
     - Leave all installation options as default.
-8. Open the Codename Engine source folder, click on the address bar and type `cmd` to open a command prompt window.
-9. On the command prompt, run `update.bat`, and wait for the libraries to install.
-10. Once the libraries are installed, run `haxelib run lime test windows` to compile and launch the game (may take a long time)
+7. Run `update.bat` using cmd or double-clicking it, and wait for the libraries to install.
+8. Once the libraries are installed, run `haxelib run lime test windows` to compile and launch the game (may take a long time)
     - ℹ You can run `haxelib run lime setup` to make the lime command global, allowing you to execute `lime test windows` directly.
 </details>
 <details>
