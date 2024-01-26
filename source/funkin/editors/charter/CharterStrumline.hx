@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import flixel.group.FlxSpriteGroup;
 import funkin.backend.chart.EventsData;
 import funkin.game.Character;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
@@ -13,7 +14,7 @@ class CharterStrumline extends UISprite {
 	public var hitsounds:Bool = true;
 
 	public var draggingSprite:UISprite;
-	public var healthIcon:HealthIcon;
+	public var healthIcons:FlxSpriteGroup;
 	public var button:CharterStrumlineOptions;
 
 	public var draggable:Bool = false;
@@ -30,17 +31,23 @@ class CharterStrumline extends UISprite {
 		scrollFactor.set(1, 0);
 		alpha = 0;
 
-		var icon = Character.getIconFromCharName(strumLine.characters != null ? strumLine.characters[0] : null);
-
-		healthIcon = new HealthIcon(icon);
-		healthIcon.scale.set((80 - (draggable ? 21 : 0)) / 150, (80 - (draggable ? 21 : 0)) / 150);
-		healthIcon.updateHitbox();
-		healthIcon.y = draggable ? 29 : 7;
-
 		if(strumLine.visible == null) strumLine.visible = true;
-		healthIcon.alpha = strumLine.visible ? 1 : 0.4;
 
-		members.push(healthIcon);
+		var icons = strumLine.characters != null ? strumLine.characters : [];
+
+		healthIcons = new FlxSpriteGroup(x, y);
+
+		for (icon in icons) {
+			var healthIcon = new HealthIcon(icon);
+			healthIcon.scale.x = healthIcon.scale.y = 0.6 - (icons.length / 20);
+			healthIcon.updateHitbox();
+			healthIcon.x = FlxMath.lerp(0, icons.length * 20, i / (icons.length-1));
+			healthIcon.y = draggable ? 29 : 7;
+			healthIcon.alpha = strumLine.visible ? 1 : 0.4;
+			healthIcons.add(healthIcon);
+		}
+
+		members.push(healthIcons);
 
 		draggingSprite = new UISprite();
 		draggingSprite.loadGraphic(Paths.image("editors/charter/strumline-drag"));
@@ -62,13 +69,8 @@ class CharterStrumline extends UISprite {
 
 	public override function update(elapsed:Float) {
 		if (FlxG.keys.justPressed.K) draggable = !draggable;
-		if (healthIcon != null) {
-			var healthScale:Float = FlxMath.lerp(healthIcon.scale.x, (80 - (draggable ? 21 : 0)) / 150, 1/20);
-			healthIcon.scale.set(healthScale, healthScale);
-			healthIcon.updateHitbox();
 
-			healthIcon.follow(this, ((40 * 4) - healthIcon.width) / 2, 7 + (__healthYOffset = FlxMath.lerp(__healthYOffset, draggable ? 22 : 0, 1/20)));
-		}
+		healthIcons.follow(this, ((40 * 4) - healthIcons.width) / 2, 7 + (__healthYOffset = FlxMath.lerp(__healthYOffset, draggable ? 22 : 0, 1/20)));
 
 		draggingSprite.selectable = draggable;
 		UIState.state.updateSpriteRect(draggingSprite);
@@ -86,18 +88,19 @@ class CharterStrumline extends UISprite {
 	}
 
 	public function updateInfo() {
-		members.remove(healthIcon);
-		healthIcon.destroy();
+		var icons = strumLine.characters != null ? strumLine.characters : [];
 
-		var icon = Character.getIconFromCharName(strumLine.characters != null ? strumLine.characters[0] : null);
+		healthIcons.clear();
 
-		healthIcon = new HealthIcon(icon);
-		healthIcon.scale.set((80 - (draggable ? 21 : 0)) / 150, (80 - (draggable ? 21 : 0)) / 150);
-		healthIcon.updateHitbox();
-		healthIcon.y = draggable ? 29 : 7;
-
-		healthIcon.alpha = strumLine.visible ? 1 : 0.4;
-		members.push(healthIcon);
+		for (i=>icon in icons) {
+			var healthIcon = new HealthIcon(icon);
+			healthIcon.scale.x = healthIcon.scale.y = 0.6 - (icons.length / 20);
+			healthIcon.updateHitbox();
+			healthIcon.x = FlxMath.lerp(0, icons.length * 20, i / (icons.length-1));
+			healthIcon.y = draggable ? 29 : 7;
+			healthIcon.alpha = strumLine.visible ? 1 : 0.4;
+			healthIcons.add(healthIcon);
+		}
 
 		vocals = null;
 		vocals = strumLine.vocalsSuffix.length > 0 ? FlxG.sound.load(Paths.voices(PlayState.SONG.meta.name, PlayState.difficulty, strumLine.vocalsSuffix)) : new FlxSound();
@@ -125,7 +128,6 @@ class CharterStrumlineOptions extends UITopMenuButton {
 				label: "Visible",
 				onSelect: function(_) {
 					strLine.strumLine.visible = !strLine.strumLine.visible;
-					strLine.healthIcon.alpha = strLine.strumLine.visible ? 1 : 0.4;
 				},
 				icon: strLine.strumLine.visible ? 1 : 0
 			},
