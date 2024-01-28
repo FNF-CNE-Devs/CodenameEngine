@@ -15,6 +15,7 @@ class MetaDataScreen extends UISubstateWindow {
 	public var beatsPerMeasureStepper:UINumericStepper;
 	public var stepsPerBeatStepper :UINumericStepper;
 	public var needsVoicesCheckbox:UICheckbox;
+	public var customPropertiesButtonList:UIButtonList<PropertyButton>;
 
 	public var displayNameTextBox:UITextBox;
 	public var iconTextBox:UITextBox;
@@ -31,7 +32,7 @@ class MetaDataScreen extends UISubstateWindow {
 
 	public override function create() {
 		winTitle = "Edit Metadata";
-		winWidth = 748 - 32 + 40;
+		winWidth = 1056;
 		winHeight = 520;
 
 		super.create();
@@ -95,6 +96,18 @@ class MetaDataScreen extends UISubstateWindow {
 		add(difficulitesTextBox);
 		addLabelOn(difficulitesTextBox, "Difficulties");
 
+		customPropertiesButtonList = new UIButtonList<PropertyButton>(needsVoicesCheckbox.x + needsVoicesCheckbox.width + 105, needsVoicesCheckbox.y, 290, 310, '', FlxPoint.get(280, 35), null, 5);
+		customPropertiesButtonList.frames = Paths.getFrames('editors/ui/inputbox');
+		customPropertiesButtonList.cameraSpacing = 0;
+		customPropertiesButtonList.addButton.callback = function() {
+			customPropertiesButtonList.add(new PropertyButton("New Property", "Value Here"));
+		}
+		for (val in Reflect.fields(metadata.customValues))
+			customPropertiesButtonList.add(new PropertyButton(val, Reflect.field(metadata.customValues, val)));
+
+		add(customPropertiesButtonList);
+		addLabelOn(customPropertiesButtonList, "Custom Values (Advanced)");
+
 		for (checkbox in [opponentModeCheckbox, coopAllowedCheckbox])
 			{checkbox.y += 6; checkbox.x += 4;}
 
@@ -138,6 +151,11 @@ class MetaDataScreen extends UISubstateWindow {
 		for (stepper in [bpmStepper, beatsPerMeasureStepper, stepsPerBeatStepper])
 			@:privateAccess stepper.__onChange(stepper.label.text);
 
+		var customVals = {};
+		for (vals in customPropertiesButtonList.buttons.members) {
+			Reflect.setProperty(customVals, vals.propertyText.label.text, vals.valueText.label.text);
+		}
+
 		PlayState.SONG.meta = {
 			name: songNameTextBox.label.text,
 			bpm: bpmStepper.value,
@@ -151,8 +169,26 @@ class MetaDataScreen extends UISubstateWindow {
 			opponentModeAllowed: opponentModeCheckbox.checked,
 			coopAllowed: coopAllowedCheckbox.checked,
 			difficulties: [for (diff in difficulitesTextBox.label.text.split(",")) diff.trim()],
+			customValues: customVals,
 		};
 
 		Charter.instance.updateBPMEvents();
+	}
+}
+
+class PropertyButton extends UIButton {
+	public var propertyText:UITextBox;
+	public var valueText:UITextBox;
+	public function new(property, value) {
+		super(0, 0, '', function () {}, 280, 35);
+		propertyText = new UITextBox(5, 5, property, 125, 25);
+		valueText = new UITextBox(135, 5, value, 125, 25);
+		members.push(propertyText);
+		members.push(valueText);
+	}
+	public override function update(elapsed) {
+		super.update(elapsed);
+		propertyText.follow(this, 5, 5);
+		valueText.follow(this, 135, 5);
 	}
 }
