@@ -657,6 +657,7 @@ class PlayState extends MusicBeatState
 		splashHandler = new SplashHandler();
 		add(splashHandler);
 
+		scripts.set("SONG", SONG);
 		scripts.load();
 		scripts.call("create");
 		#end
