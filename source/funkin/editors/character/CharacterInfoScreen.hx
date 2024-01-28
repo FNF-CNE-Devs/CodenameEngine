@@ -3,6 +3,7 @@ package funkin.editors.character;
 import flixel.math.FlxPoint;
 import haxe.xml.Access;
 import funkin.game.Character;
+import funkin.editors.extra.PropertyButton;
 
 class CharacterInfoScreen extends UISubstateWindow {
 	public var character:Character;
@@ -20,6 +21,7 @@ class CharacterInfoScreen extends UISubstateWindow {
 	public var cameraYStepper:UINumericStepper;
 	public var scaleStepper:UINumericStepper;
 	public var singTimeStepper:UINumericStepper;
+	public var customPropertiesButtonList:UIButtonList<PropertyButton>;
 	public var isPlayerCheckbox:UICheckbox;
 	public var isGFCheckbox:UICheckbox;
 
@@ -36,7 +38,7 @@ class CharacterInfoScreen extends UISubstateWindow {
 
 	public override function create() {
 		winTitle = "Editing Character";
-		winWidth = 714;
+		winWidth = 1014;
 		winHeight = 600;
 
 		super.create();
@@ -70,11 +72,11 @@ class CharacterInfoScreen extends UISubstateWindow {
 		add(flipXCheckbox);
 		addLabelOn(flipXCheckbox, "Flipped");
 
-		iconColorWheel = new UIColorwheel(flipXCheckbox.x + 100, flipXCheckbox.y, character.iconColor);
+		iconColorWheel = new UIColorwheel(gameOverCharTextBox.x + 200 + 20, gameOverCharTextBox.y, character.iconColor);
 		add(iconColorWheel);
 		addLabelOn(iconColorWheel, "Icon Color");
 
-		add(title = new UIText(spriteTextBox.x, spriteTextBox.y + 10 + 46 + 64 + 100, 0, "Character Data", 28));
+		add(title = new UIText(spriteTextBox.x, spriteTextBox.y + 10 + 46 + 84, 0, "Character Data", 28));
 
 		positionXStepper = new UINumericStepper(title.x, title.y + title.height + 36, character.globalOffset.x, 0.001, 2, null, null, 84);
 		add(positionXStepper);
@@ -101,6 +103,17 @@ class CharacterInfoScreen extends UISubstateWindow {
 		singTimeStepper = new UINumericStepper(scaleStepper.x + 74 - 32 + 36, scaleStepper.y, character.holdTime, 0.001, 2, null, null, 74);
 		add(singTimeStepper);
 		addLabelOn(singTimeStepper, "Sing Duration (Steps)");
+
+		customPropertiesButtonList = new UIButtonList<PropertyButton>(singTimeStepper.x + singTimeStepper.width + 200, singTimeStepper.y, 290, 200, '', FlxPoint.get(280, 35), null, 5);
+		customPropertiesButtonList.frames = Paths.getFrames('editors/ui/inputbox');
+		customPropertiesButtonList.cameraSpacing = 0;
+		customPropertiesButtonList.addButton.callback = function() {
+			customPropertiesButtonList.add(new PropertyButton("New Property", "Value Here"));
+		}
+		for (prop=>val in character.extra)
+			customPropertiesButtonList.add(new PropertyButton(prop, val));
+		add(customPropertiesButtonList);
+		addLabelOn(customPropertiesButtonList, "Custom Values (Advanced)");
 
 		isPlayerCheckbox = new UICheckbox(positionXStepper.x, positionXStepper.y + 10 + 32 + 28, "isPlayer", character.playerOffsets);
 		add(isPlayerCheckbox);
@@ -169,6 +182,8 @@ class CharacterInfoScreen extends UISubstateWindow {
 		xml.set("sprite", spriteTextBox.label.text);
 		if (iconColorWheel.colorChanged)
 			xml.set("color", iconColorWheel.curColor.toHexString(false).replace("0x", "#"));
+		for (val in customPropertiesButtonList.buttons.members) 
+			xml.set(val.propertyText.label.text, val.valueText.label.text);
 
 		for (anim in character.animDatas)
 		{

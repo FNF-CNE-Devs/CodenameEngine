@@ -28,7 +28,7 @@ using StringTools;
 @:allow(funkin.game.PlayState)
 class Character extends FunkinSprite implements IBeatReceiver implements IOffsetCompatible
 {
-	public var extra:Map<String, Dynamic> = [];
+	public var extra:Map<String, String> = [];
 
 	private var __stunnedTime:Float = 0;
 	private var __lockAnimThisFrame:Bool = false;
@@ -414,6 +414,13 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		if (xml.x.exists("antialiasing")) antialiasing = (xml.x.get("antialiasing") == "true");
 		if (xml.x.exists("sprite")) sprite = xml.x.get("sprite");
 
+		var tempList = ["isPlayer", "isGF", "x", "y", "gameOverChar", "camx", "camy", "holdTime", "flipX", "icon", "color", "scale", "antialiasing", "sprite"];
+		var atts = [for (i in xml.x.attributes()) i];
+		for (i in atts)
+			if (!tempList.contains(i)) {
+				extra[i] = xml.x.get(i);
+			}
+
 		loadSprite(Paths.image('characters/$sprite'));
 
 		animation.destroyAnimations();
@@ -444,6 +451,10 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		xml.set("scale", Std.string(scale.x));
 		xml.set("antialiasing", antialiasing == true ? "true" : "false");
 		xml.set("sprite", sprite);
+
+		for (prop=>val in extra) {
+			xml.set(prop, Std.string(val));
+		}
 
 		var anims:Array<AnimData> = [];
 		if (animsOrder != null) {
