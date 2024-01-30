@@ -97,11 +97,11 @@ class MetaDataScreen extends UISubstateWindow {
 		add(difficulitesTextBox);
 		addLabelOn(difficulitesTextBox, "Difficulties");
 
-		customPropertiesButtonList = new UIButtonList<PropertyButton>(needsVoicesCheckbox.x + needsVoicesCheckbox.width + 105, needsVoicesCheckbox.y, 290, 310, '', FlxPoint.get(280, 35), null, 5);
+		customPropertiesButtonList = new UIButtonList<PropertyButton>(needsVoicesCheckbox.x + needsVoicesCheckbox.width + 105, songNameTextBox.y, 290, 316, '', FlxPoint.get(280, 35), null, 5);
 		customPropertiesButtonList.frames = Paths.getFrames('editors/ui/inputbox');
 		customPropertiesButtonList.cameraSpacing = 0;
 		customPropertiesButtonList.addButton.callback = function() {
-			customPropertiesButtonList.add(new PropertyButton("New Property", "Value Here"));
+			customPropertiesButtonList.add(new PropertyButton("Property", "Value Here"));
 		}
 		for (val in Reflect.fields(metadata.customValues))
 			customPropertiesButtonList.add(new PropertyButton(val, Reflect.field(metadata.customValues, val)));
