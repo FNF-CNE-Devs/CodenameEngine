@@ -34,6 +34,7 @@ class CharterEventTypeSelection extends UISubstateWindow {
 				close();
 				callback(eventName);
 			}, w);
+			button.autoAlpha = false;
 			button.cameras = [buttonCameras];
 			buttons.push(cast add(button));
 
@@ -60,6 +61,10 @@ class CharterEventTypeSelection extends UISubstateWindow {
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
+
+		for (button in buttons)
+			button.selectable = buttonsBG.hovered;
+
 		buttonCameras.zoom = subCam.zoom;
 
 		buttonCameras.x = -subCam.scroll.x + Std.int(windowSpr.x+10);
