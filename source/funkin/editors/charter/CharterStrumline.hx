@@ -71,7 +71,7 @@ class CharterStrumline extends UISprite {
 	public override function update(elapsed:Float) {
 		if (FlxG.keys.justPressed.K) draggable = !draggable;
 
-		healthIcons.follow(this, ((40 * 4) - healthIcons.width) / 2, 7 + (__healthYOffset = FlxMath.lerp(__healthYOffset, draggable ? 22 : 0, 1/20)));
+		healthIcons.follow(this, ((40 * 4) - healthIcons.width) / 2, 7 + (__healthYOffset = FlxMath.lerp(__healthYOffset, draggable ? 8 : 0, 1/20)));
 
 		draggingSprite.selectable = draggable;
 		UIState.state.updateSpriteRect(draggingSprite);
@@ -98,7 +98,7 @@ class CharterStrumline extends UISprite {
 			healthIcon.scale.x = healthIcon.scale.y = 0.6 - (icons.length / 20);
 			healthIcon.updateHitbox();
 			healthIcon.x = FlxMath.lerp(0, icons.length * 20, (icons.length-1 != 0 ? i / (icons.length-1) : 0));
-			healthIcon.y = draggable ? 29 : 7;
+			healthIcon.y = draggable ? 14 : 7;
 			healthIcon.alpha = strumLine.visible ? 1 : 0.4;
 			healthIcons.add(healthIcon);
 		}
