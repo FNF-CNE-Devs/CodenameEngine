@@ -1180,7 +1180,7 @@ class Charter extends UIState {
 	}
 
 	function _edit_undo(_) {
-		if (strumLines.isDragging || selectionDragging) return;
+		if (strumLines.isDragging || selectionDragging || subState != null) return;
 		
 		selection = [];
 		var undo = undos.undo();
@@ -1226,7 +1226,7 @@ class Charter extends UIState {
 	}
 
 	function _edit_redo(_) {
-		if (strumLines.isDragging || selectionDragging) return;
+		if (strumLines.isDragging || selectionDragging || subState != null) return;
 
 		selection = [];
 		var redo = undos.redo();

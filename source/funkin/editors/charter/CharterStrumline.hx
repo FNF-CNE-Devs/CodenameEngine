@@ -146,15 +146,15 @@ class CharterStrumlineOptions extends UITopMenuButton {
 				onSelect: function (_) {
 					Charter.instance.editStrumline(strLine.strumLine);
 				},
-				color: 0xFFFFFF00,
-				icon: 2
+				color: 0xFF959829,
+				icon: 4
 			},
 			{
 				label: "Delete",
 				onSelect: function (_) {
 					Charter.instance.deleteStrumlineFromData(strLine.strumLine);
 				},
-				color: 0xFFFF0000,
+				color: 0xFF982929,
 				icon: 3
 			},
 			null,
