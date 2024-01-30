@@ -126,19 +126,18 @@ class CharterStrumlineOptions extends UITopMenuButton {
 	public override function openContextMenu() {
 		contextMenu = [
 			{
-				label: "Visible",
-				onSelect: function(_) {
-					strLine.strumLine.visible = !strLine.strumLine.visible;
-				},
-				icon: strLine.strumLine.visible ? 1 : 0
-			},
-			null,
-			{
 				label: "Hitsounds",
 				onSelect: function(_) {
 					strLine.hitsounds = !strLine.hitsounds;
 				},
 				icon: strLine.hitsounds ? 1 : 0
+			},
+			{
+				label: "Mute Vocals",
+				onSelect: function(_) {
+					strLine.vocals.volume = strLine.vocals.volume > 0 ? 0 : 1;
+				},
+				icon: strLine.vocals.volume > 0 ? 0 : 1
 			},
 			null,
 			{
@@ -156,14 +155,6 @@ class CharterStrumlineOptions extends UITopMenuButton {
 				},
 				color: 0xFF982929,
 				icon: 3
-			},
-			null,
-			{
-				label: "Mute Vocals",
-				onSelect: function(_) {
-					strLine.vocals.volume = strLine.vocals.volume > 0 ? 0 : 1;
-				},
-				icon: strLine.vocals.volume > 0 ? 0 : 1
 			}
 		];
 		super.openContextMenu();

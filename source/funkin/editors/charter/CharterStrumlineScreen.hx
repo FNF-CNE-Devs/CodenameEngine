@@ -17,6 +17,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 	public var hudScaleStepper:UINumericStepper;
 	public var hudXStepper:UINumericStepper;
 	public var hudYStepper:UINumericStepper;
+	public var visibleCheckbox:UICheckbox;
 	public var scrollSpeedStepper:UINumericStepper;
 	public var usesChartscrollSpeed:UICheckbox;
 
@@ -47,7 +48,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			};
 
 		winTitle = creatingStrumLine ? 'Creating strumline #$strumLineID' : 'Editing strumline #$strumLineID properties';
-		winWidth = 690; winHeight = 390;
+		winWidth = 690; winHeight = 400;
 
 		FlxG.sound.music.pause();
 		Charter.instance.vocals.pause();
@@ -63,7 +64,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		var charFileList = Character.getList(true);
 		if (charFileList.length == 0) charFileList = Character.getList(false);
 		
-		charactersList = new UIButtonList<CharacterButton>(15, title.y + title.height + 36, 250, 259, "", FlxPoint.get(250, 54), null, 0);
+		charactersList = new UIButtonList<CharacterButton>(15, title.y + title.height + 36, 250, 269, "", FlxPoint.get(250, 54), null, 0);
 		charactersList.addButton.callback = () -> charactersList.add(new CharacterButton(0, 0, "New Char", charFileList, charactersList));
 		charactersList.cameraSpacing = 0;
 		for (i in strumLine.characters)
@@ -124,6 +125,9 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		hudYStepper = new UINumericStepper(hudXStepper.x + 84 - 32 + 26, hudXStepper.y, startingPos.y, 0.001, 2, null, null, 84);
 		add(hudYStepper);
 
+		visibleCheckbox = new UICheckbox(hudYStepper.x + hudYStepper.bWidth + 42, hudYStepper.y + 9, "Visible?", strumLine.visible);
+		add(visibleCheckbox);
+
 		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20 - 125, windowSpr.y + windowSpr.bHeight - 16 - 32, "Save & Close", function() {
 			saveStrumline();
 			close();
@@ -169,7 +173,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			type: typeDropdown.index,
 			notes: strumLine.notes,
 			position: ["DAD", "BOYFRIEND", "GIRLFRIEND"][stagePositionDropdown.index].toLowerCase(),
-			visible: strumLine.visible,
+			visible: visibleCheckbox.checked,
 			strumPos: [0, hudYStepper.value],
 			strumLinePos: hudXStepper.value,
 			strumScale: hudScaleStepper.value,
