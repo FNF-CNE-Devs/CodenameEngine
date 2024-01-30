@@ -21,6 +21,7 @@ class UIButtonList<T:UIButton> extends UIWindow {
 	public var buttonOffset:FlxPoint = FlxPoint.get();
 
 	public var dragging:Bool = false;
+	public var dragCallback:(T,Int,Int)->Void;
 
 	var curMoving:T = null;
 	var curMovingInterval:Float = 0;
@@ -50,13 +51,14 @@ class UIButtonList<T:UIButton> extends UIWindow {
 	}
 
 	public inline function add(button:T) {
+		button.ID = buttons.members.length-1;
 		buttons.add(button);
 		curMovingInterval = 0;
 		nextscrollY += button.bHeight;
 	}
 
-
 	public inline function insert(button:T, position:Int) {
+		button.ID = position;
 		buttons.insert(position, button);
 		nextscrollY += button.bHeight;
 	}
@@ -114,9 +116,15 @@ class UIButtonList<T:UIButton> extends UIWindow {
 
 		buttonCameras.scroll.y = nextscrollY;
 
-		for (button in buttons) {
-			if (button != null) button.selectable = button.shouldPress = (hovered && !dragging);
+		for (i => button in buttons.members) {
+			if (button == null) continue;
+			button.selectable = button.shouldPress = (hovered && !dragging);
 			button.cameras = [buttonCameras];
+			if (button.ID != i) {
+				if (dragCallback != null) dragCallback(cast button, button.ID, i);
+				button.ID = i; // Ok back to normal :D
+			}
+				
 		}
 		addButton.selectable = (hovered && !dragging);
 
