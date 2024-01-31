@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <libraries>
 	<!-- OpenFL & Lime (Required for Flixel) -->
-	<lib name="openfl" />
+	<lib name="openfl" version="9.2.2"/>
 	<lib name="lime" />
 
 	<!-- Flixel -->

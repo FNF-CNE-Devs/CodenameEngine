@@ -70,8 +70,9 @@ class CharterEventTypeSelection extends UISubstateWindow {
 		buttonCameras.x = -subCam.scroll.x + Std.int(windowSpr.x+10);
 		buttonCameras.y = -subCam.scroll.y + Std.int(windowSpr.y+41);
 
-		buttonCameras.scroll.y = FlxMath.bound(buttonCameras.scroll.y - (buttonsBG.hovered ? FlxG.mouse.wheel : 0) * 12, 0,
-			(buttons[buttons.length-1].y + buttons[buttons.length-1].bHeight) - buttonCameras.height);
+		if (buttons.length > 16)
+			buttonCameras.scroll.y = FlxMath.bound(buttonCameras.scroll.y - (buttonsBG.hovered ? FlxG.mouse.wheel : 0) * 12, 0,
+				(buttons[buttons.length-1].y + buttons[buttons.length-1].bHeight) - buttonCameras.height);
 	}
 
 	override function destroy() {
