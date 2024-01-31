@@ -15,8 +15,8 @@ class UIFileExplorer extends UISliceSprite {
 
 	public var uiElement:UISprite;
 
-	public function new(x:Float, y:Float, fileType:String = "txt", ?onFile:Bytes->Void) {
-		super(x, y, 320, 58, 'editors/ui/inputbox');
+	public function new(x:Float, y:Float, ?w:Int, ?h:Int, fileType:String = "txt", ?onFile:Bytes->Void) {
+		super(x, y, (w != null ? w : 320), (h != null ? h : 58), 'editors/ui/inputbox');
 
 		if (onFile != null) this.onFile = onFile;
 
@@ -29,18 +29,18 @@ class UIFileExplorer extends UISliceSprite {
 				if (this.onFile != null) this.onFile(file);
 			});
 			fileDialog.open(fileType);
-		}, 320 - 16, 58 - 16);
+		}, bWidth - 16, bHeight - 16);
 		members.push(uploadButton);
 
-		uploadIcon = new FlxSprite(uploadButton.x + (uploadButton.bWidth / 2) - 8, uploadButton.y + ((58-16)/2) - 8).loadGraphic(Paths.image('editors/ui/upload-button'));
+		uploadIcon = new FlxSprite(uploadButton.x + (uploadButton.bWidth / 2) - 8, uploadButton.y + ((bHeight-16)/2) - 8).loadGraphic(Paths.image('editors/ui/upload-button'));
 		uploadIcon.antialiasing = false;
 		uploadButton.members.push(uploadIcon);
 
-		deleteButton = new UIButton(x + 320 - (58 - 16) - 8, y + 8, "", removeFile, 58 - 16, 58 - 16);
+		deleteButton = new UIButton(x + bWidth - (bHeight - 16) - 8, y + 8, "", removeFile, bHeight - 16, bHeight - 16);
 		deleteButton.color = 0xFFFF0000;
 		members.push(deleteButton);
 
-		deleteIcon = new FlxSprite(deleteButton.x + ((58 - 16)/2) - 8, deleteButton.y + ((58 - 16)/2) - 8).loadGraphic(Paths.image('editors/delete-button'));
+		deleteIcon = new FlxSprite(deleteButton.x + ((bHeight - 16)/2) - 8, deleteButton.y + ((bHeight - 16)/2) - 8).loadGraphic(Paths.image('editors/delete-button'));
 		deleteIcon.antialiasing = false;
 		members.push(deleteIcon);
 
