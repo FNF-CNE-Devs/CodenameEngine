@@ -164,7 +164,7 @@ class StrumLineButton extends UIButton {
 	public var typeDropDown:UIDropDown;
 	public var visibleCheckBoxText:UIText;
 	public var visibleCheckBox:UICheckbox;
-	public var characterList:UIButtonList<CompressedCharacterButton>;
+	public var characterList:UIButtonList<CompactCharacterButton>;
 	public function new(id:Int, char:String, type:Int, visible:Bool) {
 		super(0, 0, '', function () {}, 510, 150);
 		numberText = new UIText(5, 5, 0, 'Strumline #$id');
@@ -194,10 +194,10 @@ class StrumLineButton extends UIButton {
 		typeDropDown = new UIDropDown(typeDropDownText.x, typeDropDownText.y + 24, 165, 32, ["OPPONENT", "PLAYER", "ADDITIONAL"], type);
 		members.push(typeDropDown);
 
-		characterList = new UIButtonList<CompressedCharacterButton>(numberText.x + 265 + 26, numberText.y, 210, 140, "", FlxPoint.get(200, 40), null, 5);
+		characterList = new UIButtonList<CompactCharacterButton>(numberText.x + 265 + 26, numberText.y, 210, 140, "", FlxPoint.get(200, 40), null, 5);
 		characterList.frames = Paths.getFrames('editors/ui/inputbox');
 		characterList.cameraSpacing = 0;
-		characterList.add(new CompressedCharacterButton(char, [], characterList));
+		characterList.add(new CompactCharacterButton(char, [], characterList));
 		members.push(characterList);
 	}
 	public override function update(elapsed) {
@@ -215,13 +215,13 @@ class StrumLineButton extends UIButton {
 	}
 }
 
-class CompressedCharacterButton extends UIButton {
+class CompactCharacterButton extends UIButton {
 	public var charIcon:HealthIcon;
 	public var textBox:UIAutoCompleteTextBox;
 	public var deleteButton:UIButton;
 	public var deleteIcon:FlxSprite;
 
-	public function new(char:String, charsList:Array<String>, parent:UIButtonList<CompressedCharacterButton>) {
+	public function new(char:String, charsList:Array<String>, parent:UIButtonList<CompactCharacterButton>) {
 		super(0, 0, "", null, 200, 40);
 		autoAlpha = false;
 

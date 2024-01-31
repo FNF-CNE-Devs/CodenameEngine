@@ -954,6 +954,7 @@ class Charter extends UIState {
 	#end
 
 	var __crochet:Float;
+	var __autosaveElapsed:Float;
 	public override function update(elapsed:Float) {
 		updateNoteLogic(elapsed);
 
@@ -1046,6 +1047,14 @@ class Charter extends UIState {
 
 		WindowUtils.prefix = undos.unsaved ? "* " : "";
 		SaveWarning.showWarning = undos.unsaved;
+
+		__autosaveElapsed += elapsed;
+		if (__autosaveElapsed > 5) {
+			#if sys
+			saveTo('${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}');
+			#end
+			__autosaveElapsed = 0;
+		}
 	}
 
 	public static var startTime:Float = 0;
