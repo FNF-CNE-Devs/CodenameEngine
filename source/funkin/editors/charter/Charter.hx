@@ -1050,9 +1050,7 @@ class Charter extends UIState {
 
 		__autosaveElapsed += elapsed;
 		if (__autosaveElapsed > 5) {
-			#if sys
-			saveTo('${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}');
-			#end
+			trace("some autosaves");
 			__autosaveElapsed = 0;
 		}
 	}
