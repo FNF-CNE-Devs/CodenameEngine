@@ -1037,7 +1037,7 @@ class PlayState extends MusicBeatState
 	override public function onFocus():Void
 	{
 		if (!paused && FlxG.autoPause) {
-			for (strumLine in strumLines.members) strumLine.vocals.play();
+			for (strumLine in strumLines.members) strumLine.vocals.resume();
 			inst.resume();
 			vocals.resume();
 		}
