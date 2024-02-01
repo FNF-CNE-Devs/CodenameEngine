@@ -514,6 +514,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
 
 		PauseSubState.script = "";
+		GameOverSubstate.script = "";
 		(scripts = new ScriptPack("PlayState")).setParent(this);
 
 		camGame = camera;
