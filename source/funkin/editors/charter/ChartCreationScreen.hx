@@ -122,7 +122,7 @@ class ChartCreationScreen extends UISubstateWindow {
 				characters: [for (charb in strline.charactersList.buttons.members) charb.textBox.label.text],
 				type: strline.typeDropdown.index,
 				notes: [],
-				position: strline.stagePositionDropdown.label.text,
+				position: strline.stagePositionDropdown.label.text.toLowerCase(),
 				visible: strline.visibleCheckbox.checked,
 				strumPos: [0, strline.hudYStepper.value],
 				strumLinePos: strline.hudXStepper.value,

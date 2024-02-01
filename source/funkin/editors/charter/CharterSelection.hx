@@ -160,7 +160,6 @@ class CharterSelection extends EditorTreeMenu {
 
 		// Add to Meta
 		var meta = Json.parse(sys.io.File.getContent('$songFolder/meta.json'));
-		trace(meta);
 		if (meta.difficulties != null && !meta.difficulties.contains(creation.name)) {
 			meta.difficulties.push(creation.name);
 			sys.io.File.saveContent('$songFolder/meta.json', Json.stringify(meta));
