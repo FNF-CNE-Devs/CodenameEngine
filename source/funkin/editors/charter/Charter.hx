@@ -1050,7 +1050,7 @@ class Charter extends UIState {
 
 		__autosaveElapsed += elapsed;
 		if (__autosaveElapsed > 5) {
-			trace("some autosaves");
+			// trace("some autosaves");
 			__autosaveElapsed = 0;
 		}
 	}

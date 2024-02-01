@@ -155,7 +155,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			}
 
 		}
-		
+
 		vocalsSuffixDropDown = new UIDropDown(typeDropdown.x, hudScaleStepper.y + 128, 200, 32, suffixlist, strumLine.vocalsSuffix != "" ? suffixlist.indexOf(strumLine.vocalsSuffix) : 0);
 		add(vocalsSuffixDropDown);
 		addLabelOn(vocalsSuffixDropDown, "Vocal Suffix");
@@ -192,7 +192,6 @@ class CharacterButton extends UIButton {
 
 	public function new(x:Float, y:Float, char:String, charsList:Array<String>, parent:UIButtonList<CharacterButton>) {
 		super(x, y, "", null, 250, 54);
-		autoAlpha = false;
 
 		charIcon = new HealthIcon(Character.getIconFromCharName(char));
 		charIcon.scale.set(0.3, 0.3);
