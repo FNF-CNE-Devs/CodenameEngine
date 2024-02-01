@@ -60,7 +60,45 @@ class ChartCreationScreen extends UISubstateWindow {
 		strumLineList = new UIButtonList<StrumLineButton>(difficultyNameTextBox.x, difficultyNameTextBox.y+difficultyNameTextBox.bHeight+36, 620, (552-179)-16, "", FlxPoint.get(620, 246), null, 6);
 		strumLineList.frames = Paths.getFrames('editors/ui/inputbox');
 		strumLineList.cameraSpacing = 0;
-		strumLineList.add(new StrumLineButton(0, "bf", 1, true));
+		strumLineList.addButton.callback = function() {
+			strumLineList.add(new StrumLineButton(strumLineList.buttons.length, {
+				characters: ["dad"],
+				type: 0,
+				notes: null,
+				position: "DAD",
+				strumPos: [0, 50],
+				strumLinePos: 0.25,
+				scrollSpeed: 1,
+			}, strumLineList));
+		}
+		strumLineList.add(new StrumLineButton(0, {
+			characters: ["dad"],
+			type: 0,
+			notes: null,
+			position: "DAD",
+			strumPos: [0, 50],
+			strumLinePos: 0.25,
+			scrollSpeed: 1,
+		}, strumLineList));
+		strumLineList.add(new StrumLineButton(1, {
+			characters: ["bf"],
+			type: 1,
+			notes: null,
+			position: "BOYFRIEND",
+			strumPos: [0, 50],
+			strumLinePos: 0.75,
+			scrollSpeed: 1,
+		}, strumLineList));
+		strumLineList.add(new StrumLineButton(1, {
+			characters: ["gf"],
+			type: 2,
+			notes: null,
+			position: "GIRLFRIEND",
+			strumPos: [0, 50],
+			strumLinePos: 0.50,
+			scrollSpeed: 1,
+			visible: false,
+		}, strumLineList));
 		add(strumLineList);
 		addLabelOn(strumLineList, "Strumlines");
 
@@ -78,17 +116,18 @@ class ChartCreationScreen extends UISubstateWindow {
 	}
 
 	function createChart() {
-		/*
 		var strlines = [];
 		for (strline in strumLineList.buttons.members) {
 			strlines.push({
-				characters: [for (charb in strline.characterList.buttons.members) charb.textBox.label.text],
-				type: strline.typeDropDown.index,
+				characters: [for (charb in strline.charactersList.buttons.members) charb.textBox.label.text],
+				type: strline.typeDropdown.index,
 				notes: [],
-				position: null,
-				visible: strline.visibleCheckBox.checked,
-				strumPos: [0, strline.positionYStepper.value],
-				strumLinePos: strline.positionXStepper.value,
+				position: strline.stagePositionDropdown.label.text,
+				visible: strline.visibleCheckbox.checked,
+				strumPos: [0, strline.hudYStepper.value],
+				strumLinePos: strline.hudXStepper.value,
+				strumScale: strline.hudScaleStepper.value,
+				scrollSpeed: strline.usesChartscrollSpeed.checked ? strline.scrollSpeedStepper.value : null
 			});
 		}
 		var chartData:ChartData = {
@@ -105,26 +144,10 @@ class ChartCreationScreen extends UISubstateWindow {
 			name: difficultyNameTextBox.label.text,
 			chart: chartData,
 		});
-		*/
 	}
 }
 
 class StrumLineButton extends UIButton {
-	public var strumLineID:Int = -1;
-	public var strumLine:ChartStrumLine = {
-		characters: [
-			"bf"
-		],
-		type: 0,
-		notes: [],
-		position: "dad",
-		visible: true,
-		strumPos: [0,0],
-		strumLinePos: 0,
-		strumScale: 1,
-		vocalsSuffix: ""
-	};
-
 	public var idText:UIText;
 
 	public var charactersList:UIButtonList<CompactCharacterButton>;
@@ -143,7 +166,7 @@ class StrumLineButton extends UIButton {
 	public var labels:Map<UISprite, UIText> = [];
 	public var XYComma:UIText;
 
-	public function new(id:Int, char:String, type:Int, visible:Bool) {
+	public function new(id:Int, strumLine:ChartStrumLine, parent:UIButtonList<StrumLineButton>) {
 		super(0, 0, '', function () {}, 620, 246);
 
 		autoAlpha = false; frames = Paths.getFrames('editors/ui/inputbox');
@@ -157,7 +180,7 @@ class StrumLineButton extends UIButton {
 		charactersList = new UIButtonList<CompactCharacterButton>(16, 8+26, 210, 160, "", FlxPoint.get(200, 40), null, 5);
 		charactersList.frames = Paths.getFrames('editors/ui/inputbox');
 		charactersList.cameraSpacing = 0;
-		charactersList.add(new CompactCharacterButton(char, [], charactersList));
+		charactersList.add(new CompactCharacterButton(strumLine.characters[0], [], charactersList));
 		members.push(charactersList);
 		idText = addLabelOn(charactersList, 'Strumline - #$id');
 
@@ -190,7 +213,7 @@ class StrumLineButton extends UIButton {
 		hudYStepper = new UINumericStepper(hudXStepper.x + 84 - 32 + 26, hudXStepper.y, startingPos.y, 0.001, 2, null, null, 84);
 		members.push(hudYStepper);
 
-		visibleCheckbox = new UICheckbox(hudYStepper.x + hudYStepper.bWidth + 42, hudYStepper.y + 9, "Visible?", strumLine.visible);
+		visibleCheckbox = new UICheckbox(hudYStepper.x + hudYStepper.bWidth + 42, hudYStepper.y + 9, "Visible?", strumLine.visible == null ? true : strumLine.visible);
 		members.push(visibleCheckbox);
 
 		scrollSpeedStepper = new UINumericStepper(typeDropdown.x, typeDropdown.y + 128, strumLine.scrollSpeed, 0.1, 2, 0, 10, 82);
@@ -216,7 +239,7 @@ class StrumLineButton extends UIButton {
 		members.push(usesChartscrollSpeed);
 
 		deleteButton = new UIButton(16, 246-32-11, "", function () {
-			// Shit
+			parent.remove(this);
 		}, 620-32);
 		deleteButton.color = 0xFFFF0000;
 		deleteButton.autoAlpha = false;

@@ -145,29 +145,25 @@ class CharterSelection extends EditorTreeMenu {
 
 		// Paths
 		var songFolder:String = '${Paths.getAssetsRoot()}/songs/${curSong.name}';
-		var chartFile:String = '$songFolder/${creation.name}.json';
-
-		// Make Meta File For Chart
-		if (creation.instBytes != null) {
-			var chartMeta = Json.parse(sys.io.File.getContent('$songFolder/meta.json'));
-			chartMeta.bpm = creation.meta.bpm;
-			chartMeta.beatsPerMeasure = creation.meta.beatsPerMeasure;
-			chartMeta.stepsPerBeat = creation.meta.stepsPerBeat;
-			creation.chart.meta = chartMeta;
-		}
 
 		// Save Files
 		#if sys
 		sys.io.File.saveContent('$songFolder/charts/${creation.name}.json', Json.stringify(creation.chart, "\t"));
-		if (creation.instBytes != null) sys.io.File.saveBytes('$songFolder/song/Inst-${creation.name}.${Paths.SOUND_EXT}', creation.instBytes);
-		if (creation.voicesBytes != null) sys.io.File.saveBytes('$songFolder/song/Voices-${creation.name}.${Paths.SOUND_EXT}', creation.voicesBytes);
 		#end
 
-		//Add to List
+		// Add to List
 		curSong.difficulties.push(creation.name);
 		var option = new TextOption(creation.name, "Press ACCEPT to edit the chart for the selected difficulty", function() {
 			FlxG.switchState(new Charter(curSong.name, creation.name));
 		});
 		main.insert(main.length - 2, option);
+
+		// Add to Meta
+		var meta = Json.parse(sys.io.File.getContent('$songFolder/meta.json'));
+		trace(meta);
+		if (meta.difficulties != null && !meta.difficulties.contains(creation.name)) {
+			meta.difficulties.push(creation.name);
+			sys.io.File.saveContent('$songFolder/meta.json', Json.stringify(meta));
+		}
 	}
 }
