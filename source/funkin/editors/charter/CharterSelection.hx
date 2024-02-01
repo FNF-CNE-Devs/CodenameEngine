@@ -1,10 +1,10 @@
 package funkin.editors.charter;
 
+import funkin.backend.chart.ChartData;
 import funkin.backend.chart.ChartData.ChartMetaData;
 import haxe.Json;
 import funkin.backend.assets.ModsFolder;
 import funkin.editors.charter.SongCreationScreen.SongCreationData;
-import funkin.editors.charter.ChartCreationScreen.ChartCreationData;
 import funkin.options.type.NewOption;
 import funkin.backend.system.framerate.Framerate;
 import flixel.util.FlxColor;
@@ -133,8 +133,8 @@ class CharterSelection extends EditorTreeMenu {
 		main.insert(1, option);
 	}
 
-	public function saveChart(creation:ChartCreationData) {
-		var difficultyAlreadlyExsits:Bool = curSong.difficulties.contains(creation.name);
+	public function saveChart(name:String, data:ChartData) {
+		var difficultyAlreadlyExsits:Bool = curSong.difficulties.contains(name);
 
 		if (difficultyAlreadlyExsits) {
 			openSubState(new UIWarningSubstate("Creating Chart: Error!", "The chart you are trying to create alreadly exists, if you would like to override it delete the chart first!", [
@@ -148,20 +148,20 @@ class CharterSelection extends EditorTreeMenu {
 
 		// Save Files
 		#if sys
-		sys.io.File.saveContent('$songFolder/charts/${creation.name}.json', Json.stringify(creation.chart, "\t"));
+		sys.io.File.saveContent('$songFolder/charts/${name}.json', Json.stringify(data, "\t"));
 		#end
 
 		// Add to List
-		curSong.difficulties.push(creation.name);
-		var option = new TextOption(creation.name, "Press ACCEPT to edit the chart for the selected difficulty", function() {
-			FlxG.switchState(new Charter(curSong.name, creation.name));
+		curSong.difficulties.push(name);
+		var option = new TextOption(name, "Press ACCEPT to edit the chart for the selected difficulty", function() {
+			FlxG.switchState(new Charter(curSong.name, name));
 		});
 		main.insert(main.length - 2, option);
 
 		// Add to Meta
 		var meta = Json.parse(sys.io.File.getContent('$songFolder/meta.json'));
-		if (meta.difficulties != null && !meta.difficulties.contains(creation.name)) {
-			meta.difficulties.push(creation.name);
+		if (meta.difficulties != null && !meta.difficulties.contains(name)) {
+			meta.difficulties.push(name);
 			sys.io.File.saveContent('$songFolder/meta.json', Json.stringify(meta));
 		}
 	}

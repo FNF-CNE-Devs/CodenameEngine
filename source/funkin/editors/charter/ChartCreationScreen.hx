@@ -1,29 +1,24 @@
 package funkin.editors.charter;
 
+import funkin.game.Character;
+import funkin.game.Stage;
 import funkin.game.HealthIcon;
 import funkin.backend.chart.ChartData;
 import haxe.io.Bytes;
 
-typedef ChartCreationData = {
-	var name:String;
-	var chart:ChartData;
-	var ?meta:Dynamic;
-	var ?instBytes:Bytes;
-	var ?voicesBytes:Bytes;
-}
-
 class ChartCreationScreen extends UISubstateWindow {
-	private var onSave:Null<ChartCreationData> -> Void = null;
+	private var onSave:(String, ChartData) -> Void = null;
+	public var charFileList:Array<String> = [];
 
 	public var difficultyNameTextBox:UITextBox;
 	public var scrollSpeedTextBox:UINumericStepper;
-	public var stageTextBox:UITextBox;
+	public var stageTextBox:UIAutoCompleteTextBox;
 	public var strumLineList:UIButtonList<StrumLineButton>;
 
 	public var saveButton:UIButton;
 	public var closeButton:UIButton;
 
-	public function new(?onSave:ChartCreationData->Void) {
+	public function new(?onSave:(String, ChartData)->Void) {
 		super();
 		if (onSave != null) this.onSave = onSave;
 	}
@@ -42,18 +37,31 @@ class ChartCreationScreen extends UISubstateWindow {
 			return text;
 		}
 
+		charFileList = Character.getList(true);
+		if (charFileList.length == 0) charFileList = Character.getList(false);
+
 		var chartTitle:UIText;
 		add(chartTitle = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, "Chart Info", 28));
 
-		difficultyNameTextBox = new UITextBox(chartTitle.x, chartTitle.y + chartTitle.height + 36, "Difficulty Name", 200);
+		difficultyNameTextBox = new UITextBox(chartTitle.x, chartTitle.y + chartTitle.height + 36, "difficulty", 200);
 		add(difficultyNameTextBox);
 		addLabelOn(difficultyNameTextBox, "Difficulty Name");
 
-		stageTextBox = new UITextBox(difficultyNameTextBox.x + 200 + 26, difficultyNameTextBox.y, "Stage", 125);
+		var stageFileList = Stage.getList(true);
+		if (stageFileList.length == 0) stageFileList = Stage.getList(false);
+
+		stageTextBox = new UIAutoCompleteTextBox(difficultyNameTextBox.x + 200 + 26, difficultyNameTextBox.y, "stage", 180);
+		stageTextBox.suggestItems = stageFileList;
 		add(stageTextBox);
 		addLabelOn(stageTextBox, "Stage");
 
-		scrollSpeedTextBox = new UINumericStepper(stageTextBox.x + 125 + 26, difficultyNameTextBox.y, 1.0, 0.1, 2, null, null, 90);
+		scrollSpeedTextBox = new UINumericStepper(stageTextBox.x + 180 + 26, difficultyNameTextBox.y, 1.0, 0.1, 2, null, null, 90);
+		scrollSpeedTextBox.onChange = function (text:String) {
+			@:privateAccess scrollSpeedTextBox.__onChange(text);
+			for (button in strumLineList.buttons.members)
+				if (button.usesChartscrollSpeed.checked)
+					button.scrollSpeedStepper.value = scrollSpeedTextBox.value;
+		}
 		add(scrollSpeedTextBox);
 		addLabelOn(scrollSpeedTextBox, "Scroll Speed");
 
@@ -68,39 +76,21 @@ class ChartCreationScreen extends UISubstateWindow {
 				position: "DAD",
 				strumPos: [0, 50],
 				strumLinePos: 0.25,
-				scrollSpeed: 1,
 			}, strumLineList));
 		}
-		strumLineList.add(new StrumLineButton(0, {
-			characters: ["dad"],
-			type: 0,
-			notes: null,
-			position: "DAD",
-			strumPos: [0, 50],
-			strumLinePos: 0.25,
-			scrollSpeed: 1,
-		}, strumLineList));
-		strumLineList.add(new StrumLineButton(1, {
+		strumLineList.add(new StrumLineButton(strumLineList.buttons.length, {
 			characters: ["bf"],
-			type: 1,
+			type: 0,
 			notes: null,
 			position: "BOYFRIEND",
 			strumPos: [0, 50],
 			strumLinePos: 0.75,
-			scrollSpeed: 1,
-		}, strumLineList));
-		strumLineList.add(new StrumLineButton(1, {
-			characters: ["gf"],
-			type: 2,
-			notes: null,
-			position: "GIRLFRIEND",
-			strumPos: [0, 50],
-			strumLinePos: 0.50,
-			scrollSpeed: 1,
-			visible: false,
 		}, strumLineList));
 		add(strumLineList);
 		addLabelOn(strumLineList, "Strumlines");
+
+		strumLineList.dragCallback = (object:StrumLineButton, oldIndex:Int, newIndex:Int) -> {object.idText.text = 'Strumline - #${newIndex}';};
+		scrollSpeedTextBox.onChange(scrollSpeedTextBox.label.text);
 
 		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20 - 125, windowSpr.y + windowSpr.bHeight - 16 - 32, "Create Chart", function() {
 			createChart();
@@ -116,9 +106,14 @@ class ChartCreationScreen extends UISubstateWindow {
 	}
 
 	function createChart() {
-		var strlines = [];
+		scrollSpeedTextBox.onChange(scrollSpeedTextBox.label.text);
+
+		var strumLines:Array<ChartStrumLine> = [];
 		for (strline in strumLineList.buttons.members) {
-			strlines.push({
+			for (stepper in [strline.hudXStepper, strline.hudYStepper, strline.hudScaleStepper])
+				@:privateAccess stepper.__onChange(stepper.label.text);
+
+			strumLines.push({
 				characters: [for (charb in strline.charactersList.buttons.members) charb.textBox.label.text],
 				type: strline.typeDropdown.index,
 				notes: [],
@@ -130,9 +125,10 @@ class ChartCreationScreen extends UISubstateWindow {
 				scrollSpeed: strline.usesChartscrollSpeed.checked ? strline.scrollSpeedStepper.value : null
 			});
 		}
+
 		var chartData:ChartData = {
 			codenameChart: true,
-			strumLines: strlines,
+			strumLines: strumLines,
 			stage: stageTextBox.label.text,
 			scrollSpeed: scrollSpeedTextBox.value,
 			events: [],
@@ -140,10 +136,7 @@ class ChartCreationScreen extends UISubstateWindow {
 			meta: null
 		}
 
-		if (onSave != null) onSave({
-			name: difficultyNameTextBox.label.text,
-			chart: chartData,
-		});
+		if (onSave != null) onSave(difficultyNameTextBox.label.text, chartData);
 	}
 }
 
@@ -169,6 +162,7 @@ class StrumLineButton extends UIButton {
 	public function new(id:Int, strumLine:ChartStrumLine, parent:UIButtonList<StrumLineButton>) {
 		super(0, 0, '', function () {}, 620, 246);
 
+		var subState:ChartCreationScreen = cast FlxG.state.subState;
 		autoAlpha = false; frames = Paths.getFrames('editors/ui/inputbox');
 
 		function addLabelOn(ui:UISprite, text:String, ?size:Int):UIText {
@@ -180,7 +174,7 @@ class StrumLineButton extends UIButton {
 		charactersList = new UIButtonList<CompactCharacterButton>(16, 8+26, 210, 160, "", FlxPoint.get(200, 40), null, 5);
 		charactersList.frames = Paths.getFrames('editors/ui/inputbox');
 		charactersList.cameraSpacing = 0;
-		charactersList.add(new CompactCharacterButton(strumLine.characters[0], [], charactersList));
+		charactersList.add(new CompactCharacterButton(strumLine.characters[0], subState.charFileList, charactersList));
 		members.push(charactersList);
 		idText = addLabelOn(charactersList, 'Strumline - #$id');
 
@@ -217,24 +211,17 @@ class StrumLineButton extends UIButton {
 		members.push(visibleCheckbox);
 
 		scrollSpeedStepper = new UINumericStepper(typeDropdown.x, typeDropdown.y + 128, strumLine.scrollSpeed, 0.1, 2, 0, 10, 82);
-		if(strumLine.scrollSpeed == null)
-		{
-			scrollSpeedStepper.selectable = false;
-		} else {
-			scrollSpeedStepper.selectable = true;
-		}
+		scrollSpeedStepper.selectable = strumLine.scrollSpeed != null;
 		members.push(scrollSpeedStepper);
 		addLabelOn(scrollSpeedStepper, "Scroll Speed");
 
 		usesChartscrollSpeed = new UICheckbox(scrollSpeedStepper.x + 104, typeDropdown.y + 135, "Uses charts scroll speed?", strumLine.scrollSpeed == null);
 		usesChartscrollSpeed.onChecked = function(b) {
-			if(b)
-			{
-				scrollSpeedStepper.value = PlayState.SONG.scrollSpeed;
+			if(b) {
+				scrollSpeedStepper.value = subState.scrollSpeedTextBox.value;
 				scrollSpeedStepper.selectable = false;
-			} else {
+			} else
 				scrollSpeedStepper.selectable = true;
-			}
 		}
 		members.push(usesChartscrollSpeed);
 
