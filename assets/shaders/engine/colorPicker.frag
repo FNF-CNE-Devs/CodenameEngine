@@ -1,5 +1,7 @@
 #pragma header
 
+// Used in colorwheel
+
 vec3 hsvToRgb(vec3 c) { //hsv.x = hue, hsv.y = saturation, hsv.z = value
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);

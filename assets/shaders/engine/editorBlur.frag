@@ -1,6 +1,8 @@
 #pragma header
 #define PI 3.14159265359
 
+// Used for editors
+
 int steps = 16;
 int stepsInside = 2;
 float strength = 0.0075;

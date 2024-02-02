@@ -1,5 +1,7 @@
 package funkin.editors.charter;
 
+import funkin.backend.shaders.CustomShader;
+import flixel.math.FlxRect;
 import funkin.game.Character;
 import funkin.game.Stage;
 import funkin.game.HealthIcon;
@@ -159,6 +161,8 @@ class StrumLineButton extends UIButton {
 	public var labels:Map<UISprite, UIText> = [];
 	public var XYComma:UIText;
 
+	public var cameraClipShader:CustomShader;
+
 	public function new(id:Int, strumLine:ChartStrumLine, parent:UIButtonList<StrumLineButton>) {
 		super(0, 0, '', function () {}, 620, 246);
 
@@ -177,6 +181,10 @@ class StrumLineButton extends UIButton {
 		charactersList.add(new CompactCharacterButton(strumLine.characters[0], subState.charFileList, charactersList));
 		members.push(charactersList);
 		idText = addLabelOn(charactersList, 'Strumline - #$id');
+
+		cameraClipShader = new CustomShader("engine/cameraClip");
+		cameraClipShader.hset("clipRect", [0, 0, 100, 100]);
+		charactersList.buttonCameras.addShader(cameraClipShader);
 
 		typeDropdown = new UIDropDown(charactersList.x + charactersList.bWidth + 16, 8+26, 200, 32, ["OPPONENT", "PLAYER", "ADDITIONAL"], strumLine.type);
 		members.push(typeDropdown);
@@ -256,6 +264,10 @@ class StrumLineButton extends UIButton {
 		XYComma.follow(hudXStepper, 84 - 32, 9);
 		for (ui => text in labels)
 			text.follow(ui, 0, -24);
+
+		var subState:ChartCreationScreen = cast FlxG.state.subState;
+		var strumLineList:UIButtonList<StrumLineButton> = subState.strumLineList;
+		cameraClipShader.hset("clipRect", [0, (-y-(8+26))+cameras[0].scroll.y, strumLineList.bWidth, strumLineList.bHeight]);
 	}
 }
 

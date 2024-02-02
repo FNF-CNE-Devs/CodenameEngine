@@ -1,3 +1,3 @@
-function update(elapsed)
-    if (FlxG.keys.justPressed.F5)
-        FlxG.resetState();
+//
+function update(elapsed:Float)
+    if (FlxG.keys.justPressed.F5) FlxG.resetState();

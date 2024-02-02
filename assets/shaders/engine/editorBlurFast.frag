@@ -1,5 +1,7 @@
 #pragma header
 
+// Used for editors (faster)
+
 //#define iResolution _camSize
 #define getTexture textureCam
 
