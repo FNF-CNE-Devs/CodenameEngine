@@ -279,32 +279,7 @@ class Charter extends UIState {
 			},
 			{
 				label: "Snap >",
-				childs: {
-					var base:Array<UIContextMenuOption> = [
-						{
-							label: "↑ Grid Snap",
-							keybind: [X],
-							onSelect: _snap_increasesnap
-						},
-						{
-							label: "Reset Grid Snap",
-							onSelect: _snap_resetsnap
-						},
-						{
-							label: "↓ Grid Snap",
-							keybind: [Z],
-							onSelect: _snap_decreasesnap
-						},
-						null
-					];
-
-					for (_quant in quants) 
-						base.push({
-							label: '${_quant}x Grid Snap',
-							onSelect: (_) -> {setquant(_quant);} 
-						});
-					base;
-				}
+				childs: buildSnapsUI()
 			},
 			{
 				label: "Playback >",
@@ -415,7 +390,7 @@ class Charter extends UIState {
 		quants.reverse();
 		for (quant in quants) {
 			var button:CharterQuantButton = new CharterQuantButton(0, 0, quant);
-			button.onClick = () -> {this.quant = button.quant;};
+			button.onClick = () -> {setquant(button.quant);};
 			quantButtons.push(cast uiGroup.add(button));
 		}
 		quants.reverse();
@@ -1370,8 +1345,39 @@ class Charter extends UIState {
 	inline function _snap_decreasesnap(_) changequant(-1);
 	inline function _snap_resetsnap(_) setquant(16);
 
-	inline function changequant(change:Int) quant = quants[FlxMath.wrap(quants.indexOf(quant) + change, 0, quants.length-1)];
-	inline function setquant(newquant:Int) quant = newquant;
+	inline function changequant(change:Int) {quant = quants[FlxMath.wrap(quants.indexOf(quant) + change, 0, quants.length-1)]; buildSnapsUI();};
+	inline function setquant(newquant:Int) {quant = newquant; buildSnapsUI();}
+
+	function buildSnapsUI():Array<UIContextMenuOption> {
+		var snapsTopButton:UITopMenuButton = topMenuSpr == null ? null : cast topMenuSpr.members[snapIndex];
+		var newChilds:Array<UIContextMenuOption> = [
+			{
+				label: "↑ Grid Snap",
+				keybind: [X],
+				onSelect: _snap_increasesnap
+			},
+			{
+				label: "Reset Grid Snap",
+				onSelect: _snap_resetsnap
+			},
+			{
+				label: "↓ Grid Snap",
+				keybind: [Z],
+				onSelect: _snap_decreasesnap
+			},
+			null
+		];
+
+		for (_quant in quants) 
+			newChilds.push({
+				label: '${_quant}x Grid Snap',
+				onSelect: (_) -> {setquant(_quant); buildSnapsUI();},
+				icon: _quant == quant ? 1 : 0
+			});
+
+		if (snapsTopButton != null) snapsTopButton.contextMenu = newChilds;
+		return newChilds;
+	}
 
 	inline function _note_addsustain(t)
 		changeNoteSustain(1);
