@@ -31,14 +31,14 @@ class CharterSelection extends EditorTreeMenu {
 			for(s in freeplayList.songs) new EditorIconOption(s.name, "Press ACCEPT to choose a difficulty to edit.", s.icon, function() {
 				curSong = s;
 				var list:Array<OptionType> = [
-					new NewOption("New Difficulty", "New Difficulty", function() {
-						FlxG.state.openSubState(new ChartCreationScreen(saveChart));
-					})
+					for(d in s.difficulties) if (d != "") 
+						new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
+							FlxG.switchState(new Charter(s.name, d));
+						})
 				];
-				for(d in s.difficulties) if (d != "") 
-					list.push(new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
-						FlxG.switchState(new Charter(s.name, d));
-					}));
+				list.push(new NewOption("New Difficulty", "New Difficulty", function() {
+					FlxG.state.openSubState(new ChartCreationScreen(saveChart));
+				}));
 				optionsTree.add(new OptionsScreen(s.name, "Select a difficulty to continue.", list));
 			}, s.parsedColor.getDefault(0xFFFFFFFF))
 		];
@@ -122,11 +122,9 @@ class CharterSelection extends EditorTreeMenu {
 					})
 			];
 			list.push(new NewOption("New Difficulty", "New Difficulty", function() {
-				openSubState(new UIWarningSubstate("New Difficulty: Feature Not Implemented!", "This feature isnt implemented yet. Please wait for more cne updates to have this functional.\n\n\n- Codename Devs", [
-					{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
-				]));
+				FlxG.state.openSubState(new ChartCreationScreen(saveChart));
 			}));
-			optionsTree.add(new OptionsScreen(creation.meta.name, "Select a difficulty to continue.", list));
+			optionsTree.insert(1, new OptionsScreen(creation.meta.name, "Select a difficulty to continue.", list));
 		}, creation.meta.parsedColor.getDefault(0xFFFFFFFF));
 
 		// Add to List
@@ -157,7 +155,7 @@ class CharterSelection extends EditorTreeMenu {
 		var option = new TextOption(name, "Press ACCEPT to edit the chart for the selected difficulty", function() {
 			FlxG.switchState(new Charter(curSong.name, name));
 		});
-		optionsTree.members[optionsTree.members.length-1].insert(1, option);
+		optionsTree.members[optionsTree.members.length-1].insert(optionsTree.members[optionsTree.members.length-1].length-1, option);
 
 		// Add to Meta
 		var meta = Json.parse(sys.io.File.getContent('$songFolder/meta.json'));
