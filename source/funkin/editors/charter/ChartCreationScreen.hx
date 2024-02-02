@@ -1,5 +1,7 @@
 package funkin.editors.charter;
 
+import flixel.text.FlxText.FlxTextFormat;
+import flixel.text.FlxText.FlxTextFormatMarkerPair;
 import funkin.backend.shaders.CustomShader;
 import flixel.math.FlxRect;
 import funkin.game.Character;
@@ -89,7 +91,9 @@ class ChartCreationScreen extends UISubstateWindow {
 			strumLinePos: 0.75,
 		}, strumLineList));
 		add(strumLineList);
-		addLabelOn(strumLineList, "Strumlines");
+		addLabelOn(strumLineList, "Strumlines").applyMarkup(
+			"Strumlines $* Atleast 1 Strumline Required$",
+			[new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFAD1212), "$")]);
 
 		strumLineList.dragCallback = (object:StrumLineButton, oldIndex:Int, newIndex:Int) -> {object.idText.text = 'Strumline - #${newIndex}';};
 		scrollSpeedTextBox.onChange(scrollSpeedTextBox.label.text);
@@ -107,7 +111,13 @@ class ChartCreationScreen extends UISubstateWindow {
 		closeButton.color = 0xFFFF0000;
 	}
 
-	function createChart() {
+	public override function update(elapsed:Float) {
+		saveButton.selectable = strumLineList.buttons.members.length != 0;
+		saveButton.alpha = saveButton.field.alpha = saveButton.selectable ? 1 : 0.4;
+		super.update(elapsed);
+	}
+
+	public function createChart() {
 		scrollSpeedTextBox.onChange(scrollSpeedTextBox.label.text);
 
 		var strumLines:Array<ChartStrumLine> = [];

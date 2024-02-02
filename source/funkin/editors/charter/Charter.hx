@@ -383,6 +383,7 @@ class Charter extends UIState {
 		noteHoverer = new CharterNote();
 		noteHoverer.snappedToStrumline = noteHoverer.selectable = noteHoverer.autoAlpha = false;
 		@:privateAccess noteHoverer.__animSpeed = 1.25; noteHoverer.typeText.visible = false;
+		noteHoverer.alpha = 0; // FUCK YOU NOTE HOVERER >:(((
 
 		selectionBox.cameras = notesGroup.cameras = gridBackdrops.cameras = noteHoverer.cameras = [charterCamera];
 
