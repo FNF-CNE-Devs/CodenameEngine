@@ -983,6 +983,7 @@ class Charter extends UIState {
 					button.visible = ((button.quant == quant) || 
 						(button.quant == quants[FlxMath.wrap(quants.indexOf(quant)-1, 0, quants.length-1)]) || 
 						(button.quant == quants[FlxMath.wrap(quants.indexOf(quant)+1, 0, quants.length-1)]));
+					button.selectable = button.visible;
 					if (!button.visible) continue;
 
 					button.x = lastButtonX -= button.bWidth;
