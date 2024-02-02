@@ -98,7 +98,7 @@ class ChartCreationScreen extends UISubstateWindow {
 		strumLineList.dragCallback = (object:StrumLineButton, oldIndex:Int, newIndex:Int) -> {object.idText.text = 'Strumline - #${newIndex}';};
 		scrollSpeedTextBox.onChange(scrollSpeedTextBox.label.text);
 
-		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20 - 125, windowSpr.y + windowSpr.bHeight - 16 - 32, "Create Chart", function() {
+		saveButton = new UIButton(windowSpr.x + windowSpr.bWidth - 20 - 125, windowSpr.y + windowSpr.bHeight - 16 - 32, "Save & Close", function() {
 			createChart();
 			close();
 		}, 125);
