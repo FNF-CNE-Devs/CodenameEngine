@@ -1234,7 +1234,9 @@ class PlayState extends MusicBeatState
 		scripts.event("postDraw", e);
 	}
 
-	public function executeEvent(event:ChartEvent) {
+	public var scrollSpeedTween:FlxTween = null;
+
+	public function executeEvent(event:ChartEvent) @:privateAccess {
 		if (event == null) return;
 		if (event.params == null) return;
 
@@ -1248,14 +1250,38 @@ class PlayState extends MusicBeatState
 			case "Camera Movement":
 				if (event.params[0] is Int)
 					curCameraTarget = event.params[0];
+			case "Add Camera Zoom":
+				var camera:FlxCamera = event.params[1] == "camHUD" ? camHUD : camGame;
+				camera.zoom += event.params[0];
+			case "Camera Modulo Change":
+				camZoomingInterval = event.params[0];
+				camZoomingStrength = event.params[1];
+			case "Camera Flash":
+				var camera:FlxCamera = event.params[3] == "camHUD" ? camHUD : camGame;
+
+				if (event.params[0]) // reversed
+					camera.fade(event.params[1], (Conductor.stepCrochet / 1000) * event.params[2], false, () -> {camera._fxFadeAlpha = 0;}, true);
+				else // Not Reversed
+					camera.flash(event.params[1], (Conductor.stepCrochet / 1000) * event.params[2], null, true);
 			case "BPM Change": // automatically handled by conductor
+			case "Scroll Speed Change":
+				if (scrollSpeedTween != null) scrollSpeedTween.cancel();
+
+				if (event.params[0] == false)
+					scrollSpeed = event.params[1];
+				else
+					scrollSpeedTween = FlxTween.tween(this, {scrollSpeed: event.params[1]}, (Conductor.stepCrochet / 1000) * event.params[2], {ease: CoolUtil.flxeaseFromString(event.params[3], event.params[4])});
 			case "Alt Animation Toggle":
 				if (event.params[0] is Int && event.params[1] is Bool) {
 					var strLine = strumLines.members[event.params[0]];
 					if (strLine != null)
 						strLine.altAnim = cast event.params[1];
 				}
-			case "Unknown":
+			case "Play Animation":
+				if (strumLines.members[event.params[0]] != null && strumLines.members[event.params[0]].characters != null)
+					for (char in strumLines.members[event.params[0]].characters)
+						if (char != null) char.playAnim(event.params[1], event.params[2], null);
+			case "Unknown": // nothing
 		}
 	}
 
