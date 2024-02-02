@@ -1425,7 +1425,7 @@ class Charter extends UIState {
 	}
 
 	function editNoteTypesList(_)
-		FlxG.state.openSubState(new EditNoteTypesList());
+		FlxG.state.openSubState(new CharterNoteTypesList());
 
 	function buildNoteTypesUI():Array<UIContextMenuOption> {
 		var noteTopButton:UITopMenuButton = topMenuSpr == null ? null : cast topMenuSpr.members[noteIndex];

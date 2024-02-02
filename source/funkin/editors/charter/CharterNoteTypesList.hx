@@ -3,7 +3,7 @@ package funkin.editors.charter;
 import flixel.math.FlxPoint;
 import haxe.io.Path;
 
-class EditNoteTypesList extends UISubstateWindow {
+class CharterNoteTypesList extends UISubstateWindow {
 	public static var pathString:String = 'data/notes/';
 
 	public var noteTypesList:UIButtonList<NoteTypeButton>;
