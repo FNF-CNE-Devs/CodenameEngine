@@ -19,6 +19,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	public var characterName:String;
 	public var gameOverSong:String;
+	public var gameOverSongBPM:Int;
 	public var lossSFXName:String;
 	public var retrySFX:String;
 	public var player:Bool;
@@ -37,8 +38,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	public var lossSFX:FlxSound;
 
-	public function new(x:Float, y:Float, character:String = "bf-dead", player:Bool = true, gameOverSong:String = "gameOver", lossSFX:String = "gameOverSFX",
-			retrySFX:String = "gameOverEnd")
+	public function new(x:Float, y:Float, character:String = "bf-dead", player:Bool = true, gameOverSong:String = "gameOver", lossSFX:String = "gameOverSFX", retrySFX:String = "gameOverEnd")
 	{
 		super();
 		this.x = x;
@@ -61,7 +61,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		gameoverScript.setParent(this);
 		gameoverScript.load();
 
-		var event = EventManager.get(GameOverCreationEvent).recycle(x, y, characterName, player, gameOverSong, lossSFXName, retrySFX);
+		var event = EventManager.get(GameOverCreationEvent).recycle(x, y, characterName, player, gameOverSong, gameOverSongBPM, lossSFXName, retrySFX);
 		gameoverScript.call('create', [event]);
 
 		x = event.x;
@@ -69,6 +69,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		characterName = event.character;
 		player = event.player;
 		gameOverSong = event.gameOverSong;
+		gameOverSongBPM = event.bpm;
 		lossSFXName = event.lossSFX;
 		retrySFX = event.retrySFX;
 
@@ -86,7 +87,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		FlxG.camera.target = camFollow;
 
 		lossSFX = FlxG.sound.play(Paths.sound(lossSFXName));
-		Conductor.changeBPM(100);
+		Conductor.changeBPM(gameOverSongBPM);
 
 		DiscordUtil.changePresence('Game Over', PlayState.SONG.meta.displayName + " (" + PlayState.difficulty + ")");
 
@@ -119,9 +120,7 @@ class GameOverSubstate extends MusicBeatSubstate
 				FlxG.switchState(new FreeplayState());
 		}
 
-		if (!isEnding
-			&& ((!lossSFX.playing) || (character.getAnimName() == "firstDeath" && character.isAnimFinished()))
-			&& (FlxG.sound.music == null || !FlxG.sound.music.playing))
+		if (!isEnding && ((!lossSFX.playing) || (character.getAnimName() == "firstDeath" && character.isAnimFinished())) && (FlxG.sound.music == null || !FlxG.sound.music.playing))
 		{
 			CoolUtil.playMusic(Paths.music(gameOverSong), false, 1, true, 100);
 			beatHit(0);

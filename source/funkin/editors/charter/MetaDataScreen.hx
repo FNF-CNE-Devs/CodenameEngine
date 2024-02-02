@@ -101,10 +101,10 @@ class MetaDataScreen extends UISubstateWindow {
 		customPropertiesButtonList.frames = Paths.getFrames('editors/ui/inputbox');
 		customPropertiesButtonList.cameraSpacing = 0;
 		customPropertiesButtonList.addButton.callback = function() {
-			customPropertiesButtonList.add(new PropertyButton("Property", "Value Here"));
+			customPropertiesButtonList.add(new PropertyButton("Property", "Value Here", customPropertiesButtonList));
 		}
 		for (val in Reflect.fields(metadata.customValues))
-			customPropertiesButtonList.add(new PropertyButton(val, Reflect.field(metadata.customValues, val)));
+			customPropertiesButtonList.add(new PropertyButton(val, Reflect.field(metadata.customValues, val), customPropertiesButtonList));
 		add(customPropertiesButtonList);
 		addLabelOn(customPropertiesButtonList, "Custom Values (Advanced)");
 

@@ -108,10 +108,10 @@ class CharacterInfoScreen extends UISubstateWindow {
 		customPropertiesButtonList.frames = Paths.getFrames('editors/ui/inputbox');
 		customPropertiesButtonList.cameraSpacing = 0;
 		customPropertiesButtonList.addButton.callback = function() {
-			customPropertiesButtonList.add(new PropertyButton("New Property", "Value Here"));
+			customPropertiesButtonList.add(new PropertyButton("New Property", "Value Here", customPropertiesButtonList));
 		}
 		for (prop=>val in character.extra)
-			customPropertiesButtonList.add(new PropertyButton(prop, val));
+			customPropertiesButtonList.add(new PropertyButton(prop, val, customPropertiesButtonList));
 		add(customPropertiesButtonList);
 		addLabelOn(customPropertiesButtonList, "Custom Values (Advanced)");
 
