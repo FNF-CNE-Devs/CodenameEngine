@@ -551,7 +551,7 @@ class Charter extends UIState {
 							selection = [cast n];
 					}
 					if (FlxG.mouse.justReleasedRight) {
-						var mousePos = FlxG.mouse.getPositionInCameraView(charterCamera);
+						var mousePos = FlxG.mouse.getScreenPosition(uiCamera);
 						if (!selection.contains(cast n))
 							selection = [cast n];
 						closeCurrentContextMenu();
@@ -706,7 +706,7 @@ class Charter extends UIState {
 				}
 
 				if (FlxG.mouse.justReleasedRight) {
-					var mousePos = FlxG.mouse.getPositionInCameraView(charterCamera);
+					var mousePos = FlxG.mouse.getScreenPosition(uiCamera);
 					closeCurrentContextMenu();
 					openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
 					mousePos.put();
