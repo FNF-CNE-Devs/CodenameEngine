@@ -59,6 +59,6 @@ class UIDropDown extends UISliceSprite {
 			}
 		], function(_, i, _) {
 			setOption(i);
-		}, screenPos.x, screenPos.y + bHeight);
+		}, __lastDrawCameras[0].x + screenPos.x, __lastDrawCameras[0].y + screenPos.y + bHeight);
 	}
 }
