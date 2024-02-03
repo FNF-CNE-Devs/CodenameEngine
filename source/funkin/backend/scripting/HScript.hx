@@ -171,8 +171,4 @@ class HScript extends Script {
 	public override function setPublicMap(map:Map<String, Dynamic>) {
 		this.interp.publicVariables = map;
 	}
-
-	public override function onDestroy() {
-		super.onDestroy();
-	}
 }

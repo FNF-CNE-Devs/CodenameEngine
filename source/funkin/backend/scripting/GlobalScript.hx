@@ -87,7 +87,7 @@ class GlobalScript {
 		if (scripts != null) scripts.call(name, args);
 	}
 	public static function onModSwitch(newMod:String) {
-		call("onDestroy");
+		call("destroy");
 		scripts = FlxDestroyUtil.destroy(scripts);
 		scripts = new ScriptPack("GlobalScript");
 		for (i in funkin.backend.assets.ModsFolder.getLoadedMods()) {

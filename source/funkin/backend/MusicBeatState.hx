@@ -240,7 +240,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	public override function destroy() {
 		super.destroy();
 		graphicCache.destroy();
-		call("onDestroy");
+		call("destroy");
 		stateScripts = FlxDestroyUtil.destroy(stateScripts);
 	}
 

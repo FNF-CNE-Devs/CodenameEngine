@@ -228,7 +228,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 
 	public override function destroy() {
 		super.destroy();
-		call("onDestroy");
+		call("destroy");
 		stateScripts = FlxDestroyUtil.destroy(stateScripts);
 	}
 

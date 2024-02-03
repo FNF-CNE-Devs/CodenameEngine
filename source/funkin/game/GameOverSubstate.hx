@@ -183,7 +183,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	override function destroy()
 	{
-		gameoverScript.call("onDestroy");
+		gameoverScript.call("destroy");
 		gameoverScript.destroy();
 
 		super.destroy();

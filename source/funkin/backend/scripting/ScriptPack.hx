@@ -95,7 +95,8 @@ class ScriptPack extends Script {
 		for(e in scripts) e.setParent(parent);
 	}
 
-	public override function onDestroy() {
+	public override function destroy() {
+		super.destroy();
 		for(e in scripts) e.destroy();
 	}
 

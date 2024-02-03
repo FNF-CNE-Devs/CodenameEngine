@@ -305,11 +305,4 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	public function onCreate(path:String) {}
 
 	public function onLoad() {}
-
-	public function onDestroy() {};
-
-	public override function destroy() {
-		super.destroy();
-		onDestroy();
-	}
 }

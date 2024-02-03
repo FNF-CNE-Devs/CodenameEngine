@@ -82,7 +82,7 @@ class MultiThreadedScript implements IFlxDestroyable implements IHScriptCustomBe
 
 	public function destroy() {
 		if (script != null) {
-			script.call("onDestroy");
+			script.call("destroy");
 			script.destroy();
 		}
 
