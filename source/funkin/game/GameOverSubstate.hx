@@ -131,13 +131,19 @@ class GameOverSubstate extends MusicBeatSubstate
 	{
 		super.beatHit(curBeat);
 
-		gameoverScript.call("onBeatHit", [curBeat]);
+		gameoverScript.call("beatHit", [curBeat]);
 
 		if (__cancelDefault)
 			return;
 
 		if (FlxG.sound.music != null && FlxG.sound.music.playing)
 			character.playAnim("deathLoop", true, DANCE);
+	}
+
+	override function stepHit(curStep:Int)
+	{
+		super.stepHit(curStep);
+		gameoverScript.call("stepHit", [curStep]);
 	}
 
 	var isEnding:Bool = false;
