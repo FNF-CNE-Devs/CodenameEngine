@@ -218,7 +218,7 @@ class StrumLineButton extends UIButton {
 
 		hudXStepper = new UINumericStepper(hudScaleStepper.x + 80 - 32 + 26, hudScaleStepper.y, startingPos.x, 0.01, 2, 0, 2, 84);
 		members.push(hudXStepper);
-		addLabelOn(hudXStepper, "Hud Position (X,Y)");
+		addLabelOn(hudXStepper, "Hud Position (X [Ratio 0-1],Y)");
 
 		members.push(XYComma = new UIText(hudXStepper.x + 84 - 32 + 0, hudXStepper.y + 9, 0, ",", 22));
 
