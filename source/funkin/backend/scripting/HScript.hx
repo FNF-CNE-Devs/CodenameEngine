@@ -53,8 +53,7 @@ class HScript extends Script {
 
 	public override function loadFromString(code:String) {
 		try {
-			if (code != null && code.trim() != "")
-				expr = parser.parseString(code, fileName);
+			expr = parser.parseString(code, fileName);
 		} catch(e:Error) {
 			_errorHandler(e);
 		} catch(e) {
