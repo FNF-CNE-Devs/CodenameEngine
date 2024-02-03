@@ -932,14 +932,14 @@ class Charter extends UIState {
 	#end
 
 	var __crochet:Float;
-	// var __autosaveElapsed:Float;
+	var __firstFrame:Bool = true;
 	public override function update(elapsed:Float) {
 		updateNoteLogic(elapsed);
 
-		if (FlxG.sound.music.playing) {
+		if (FlxG.sound.music.playing || __firstFrame) {
 			gridBackdrops.conductorSprY = curStepFloat * 40;
 		} else {
-			gridBackdrops.conductorSprY = lerp(gridBackdrops.conductorSprY, curStepFloat * 40, 1/3);
+			gridBackdrops.conductorSprY = lerp(gridBackdrops.conductorSprY, curStepFloat * 40, __firstFrame ? 1 : 1/3);
 		}
 		charterCamera.scroll.set(
 			((((40*4) * gridBackdrops.strumlinesAmount) - FlxG.width) / 2),
@@ -1022,19 +1022,13 @@ class Charter extends UIState {
 		+ '\nBPM: ${Conductor.bpm}'
 		+ '\nTime Signature: ${Conductor.beatsPerMeasure}/${Conductor.stepsPerBeat}';
 
-		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, 0.125)))
+		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, __firstFrame ? 1 : 0.125)))
 			updateDisplaySprites();
 
 		WindowUtils.prefix = undos.unsaved ? "* " : "";
 		SaveWarning.showWarning = undos.unsaved;
 
-		/*
-		__autosaveElapsed += elapsed;
-		if (__autosaveElapsed > 5) {
-			// trace("some autosaves");
-			__autosaveElapsed = 0;
-		}
-		*/
+		__firstFrame = false;
 	}
 
 	public static var startTime:Float = 0;
