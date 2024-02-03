@@ -6,6 +6,7 @@ import hscript.Expr.ModuleDecl;
 import hscript.Expr.Error;
 import hscript.Parser;
 import openfl.Assets;
+import lime.utils.AssetType;
 import hscript.*;
 
 class HScript extends Script {
@@ -29,7 +30,8 @@ class HScript extends Script {
 
 		interp = new Interp();
 
-		code = Assets.exists(path) ? Assets.getText(path) : null;
+		// We use getAssetSafe to prevent crash from empty file (null which would check root (big crash)) -lunar
+		code = Assets.exists(path) ? Paths.assetsTree.getAssetSafe(path, TEXT) : null;
 		parser = initParser();
 		folderlessPath = Path.directory(path);
 		__importedPaths = [path];
@@ -53,8 +55,7 @@ class HScript extends Script {
 
 	public override function loadFromString(code:String) {
 		try {
-			if (code != null && code.trim() != "")
-				expr = parser.parseString(code, fileName);
+			expr = parser.parseString(code, fileName);
 		} catch(e:Error) {
 			_errorHandler(e);
 		} catch(e) {
