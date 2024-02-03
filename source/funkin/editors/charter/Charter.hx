@@ -23,6 +23,7 @@ import openfl.net.FileReference;
 
 class Charter extends UIState {
 	public static var __song:String;
+	public static var __lastPos:Float;
 	static var __diff:String;
 	static var __reload:Bool;
 
@@ -456,10 +457,11 @@ class Charter extends UIState {
 
 	public function loadSong() {
 		if (__reload) {
-			EventsData.reloadEvents();
+			EventsData.reloadEvents(); __lastPos = 0;
 			PlayState.loadSong(__song, __diff, false, false);
 		}
 		Conductor.setupSong(PlayState.SONG);
+		Conductor.songPosition = __lastPos;
 		noteTypes = PlayState.SONG.noteTypes;
 		// noteTypes = ["Hurt Note", "Bullet Note", "Penis Note", "Boobs Note"];
 
@@ -930,7 +932,7 @@ class Charter extends UIState {
 	#end
 
 	var __crochet:Float;
-	var __autosaveElapsed:Float;
+	// var __autosaveElapsed:Float;
 	public override function update(elapsed:Float) {
 		updateNoteLogic(elapsed);
 
@@ -1011,6 +1013,7 @@ class Charter extends UIState {
 			vocals.pause();
 			for (strumLine in strumLines.members) strumLine.vocals.pause();
 		}
+		__lastPos = Conductor.songPosition;
 
 		songPosInfo.text = '${CoolUtil.timeToStr(Conductor.songPosition)} / ${CoolUtil.timeToStr(songLength)}'
 		+ '\nStep: ${curStep}'
@@ -1025,11 +1028,13 @@ class Charter extends UIState {
 		WindowUtils.prefix = undos.unsaved ? "* " : "";
 		SaveWarning.showWarning = undos.unsaved;
 
+		/*
 		__autosaveElapsed += elapsed;
 		if (__autosaveElapsed > 5) {
 			// trace("some autosaves");
 			__autosaveElapsed = 0;
 		}
+		*/
 	}
 
 	public static var startTime:Float = 0;
