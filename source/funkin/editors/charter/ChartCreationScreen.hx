@@ -72,6 +72,7 @@ class ChartCreationScreen extends UISubstateWindow {
 		strumLineList = new UIButtonList<StrumLineButton>(difficultyNameTextBox.x, difficultyNameTextBox.y+difficultyNameTextBox.bHeight+36, 620, (552-179)-16, "", FlxPoint.get(620, 246), null, 6);
 		strumLineList.frames = Paths.getFrames('editors/ui/inputbox');
 		strumLineList.cameraSpacing = 0;
+
 		strumLineList.addButton.callback = function() {
 			strumLineList.add(new StrumLineButton(strumLineList.buttons.length, {
 				characters: ["dad"],
@@ -82,6 +83,8 @@ class ChartCreationScreen extends UISubstateWindow {
 				strumLinePos: 0.25,
 			}, strumLineList));
 		}
+
+		// DEFAULTS
 		strumLineList.add(new StrumLineButton(0, {
 			characters: ["dad"],
 			type: 0,
@@ -110,6 +113,7 @@ class ChartCreationScreen extends UISubstateWindow {
 			scrollSpeed: 1,
 			visible: false,
 		}, strumLineList));
+
 		add(strumLineList);
 		addLabelOn(strumLineList, "Strumlines").applyMarkup(
 			"Strumlines $* Atleast 1 Strumline Required$",
@@ -208,7 +212,12 @@ class StrumLineButton extends UIButton {
 		charactersList = new UIButtonList<CompactCharacterButton>(16, 8+26, 210, 160, "", FlxPoint.get(200, 40), null, 5);
 		charactersList.frames = Paths.getFrames('editors/ui/inputbox');
 		charactersList.cameraSpacing = 0;
-		charactersList.add(new CompactCharacterButton(strumLine.characters[0], subState.charFileList, charactersList));
+
+		charactersList.addButton.callback = function()
+			charactersList.add(new CompactCharacterButton("New Char", subState.charFileList, charactersList));
+		for (character in strumLine.characters)
+			charactersList.add(new CompactCharacterButton(character, subState.charFileList, charactersList));
+
 		members.push(charactersList);
 		idText = addLabelOn(charactersList, 'Strumline - #$id');
 
