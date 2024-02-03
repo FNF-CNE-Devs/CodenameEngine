@@ -181,9 +181,9 @@ class AssetsLibraryList extends AssetLibrary {
 			finalLib = cast(finalLib, openfl.utils.AssetLibrary).__proxy;
 
 		if (finalLib is IModsAssetLibrary)
-			assetsLibs.push(finalLib);
+			assetsLibs.insert(0, finalLib);
 		else 
-			rootLibs.push(finalLib);
+			rootLibs.insert(0, finalLib);
 		return lib;
 	}
 }
