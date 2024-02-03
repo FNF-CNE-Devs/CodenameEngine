@@ -1244,12 +1244,9 @@ class PlayState extends MusicBeatState
 
 		switch(event.name) {
 			case "HScript Call":
-				if (event.params[0] is String && event.params[1] is String) {
-					scripts.call(event.params[0], event.params[1].split(','));
-				}
+				scripts.call(event.params[0], event.params[1].split(','));
 			case "Camera Movement":
-				if (event.params[0] is Int)
-					curCameraTarget = event.params[0];
+				curCameraTarget = event.params[0];
 			case "Add Camera Zoom":
 				var camera:FlxCamera = event.params[1] == "camHUD" ? camHUD : camGame;
 				camera.zoom += event.params[0];
@@ -1272,10 +1269,15 @@ class PlayState extends MusicBeatState
 				else
 					scrollSpeedTween = FlxTween.tween(this, {scrollSpeed: event.params[1]}, (Conductor.stepCrochet / 1000) * event.params[2], {ease: CoolUtil.flxeaseFromString(event.params[3], event.params[4])});
 			case "Alt Animation Toggle":
-				if (event.params[0] is Int && event.params[1] is Bool) {
-					var strLine = strumLines.members[event.params[0]];
-					if (strLine != null)
-						strLine.altAnim = cast event.params[1];
+				var strLine = strumLines.members[event.params[2]];
+				if (strLine != null) {
+					strLine.altAnim = cast event.params[0];
+
+					if (event.params[1]) // Alt anim Idle
+						for (character in strLine.characters) {
+							if (character == null) continue;
+							character.idleSuffix = event.params[1] ? "-alt" : "";
+						}
 				}
 			case "Play Animation":
 				if (strumLines.members[event.params[0]] != null && strumLines.members[event.params[0]].characters != null)

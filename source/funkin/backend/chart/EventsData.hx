@@ -47,7 +47,7 @@ class EventsData {
 				defValue: "In"
 			}
 		],
-		"Alt Animation Toggle" => [{name: "Strumline", type: TStrumLine, defValue: 0}, {name: "Enable", type: TBool, defValue: true}],
+		"Alt Animation Toggle" => [{name: "Enable On Sing Poses", type: TBool, defValue: true}, {name: "Enable On Idle", type: TBool, defValue: true}, {name: "Strumline", type: TStrumLine, defValue: 0}],
 		"Play Animation" => [{name: "Character", type: TStrumLine, defValue: 0}, {name: "Animation", type: TString, defValue: "animation"}],
 	];
 

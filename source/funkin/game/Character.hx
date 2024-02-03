@@ -62,6 +62,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public var xml:Access;
 
 	public var shadowFrame:CharacterShadowFrame;
+	public var idleSuffix:String = "";
 
 	public inline function getCameraPosition()
 	{
@@ -219,10 +220,10 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 				default:
 					if (isDanceLeftDanceRight)
 					{
-						playAnim((danced = !danced) ? 'danceLeft' : 'danceRight', DANCE);
+						playAnim(((danced = !danced) ? 'danceLeft' : 'danceRight') + idleSuffix, DANCE);
 					}
 					else
-						playAnim('idle', DANCE);
+						playAnim('idle' + idleSuffix, DANCE);
 			}
 		}
 	}
