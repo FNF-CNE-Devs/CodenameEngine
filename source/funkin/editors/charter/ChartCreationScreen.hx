@@ -82,13 +82,33 @@ class ChartCreationScreen extends UISubstateWindow {
 				strumLinePos: 0.25,
 			}, strumLineList));
 		}
-		strumLineList.add(new StrumLineButton(strumLineList.buttons.length, {
-			characters: ["bf"],
+		strumLineList.add(new StrumLineButton(0, {
+			characters: ["dad"],
 			type: 0,
+			notes: null,
+			position: "DAD",
+			strumPos: [0, 50],
+			strumLinePos: 0.25,
+			scrollSpeed: 1,
+		}, strumLineList));
+		strumLineList.add(new StrumLineButton(1, {
+			characters: ["bf"],
+			type: 1,
 			notes: null,
 			position: "BOYFRIEND",
 			strumPos: [0, 50],
 			strumLinePos: 0.75,
+			scrollSpeed: 1,
+		}, strumLineList));
+		strumLineList.add(new StrumLineButton(2, {
+			characters: ["gf"],
+			type: 2,
+			notes: null,
+			position: "GIRLFRIEND",
+			strumPos: [0, 50],
+			strumLinePos: 0.50,
+			scrollSpeed: 1,
+			visible: false,
 		}, strumLineList));
 		add(strumLineList);
 		addLabelOn(strumLineList, "Strumlines").applyMarkup(
