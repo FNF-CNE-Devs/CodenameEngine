@@ -135,8 +135,8 @@ class AssetsLibraryList extends AssetLibrary {
 		super();
 		if (base == null)
 			base = Assets.getLibrary("default");
-		// addLibrary(this.base = base);
-		// __defaultLibraries.push(base);
+		addLibrary(this.base = base);
+		__defaultLibraries.push(base);
 	}
 
 	public function unloadLibraries() {
