@@ -43,7 +43,7 @@ class CharterEventTypeSelection extends UISubstateWindow {
 				time: 0,
 				params: []
 			});
-			icon.setGraphicSize(20, 20); // Std.int(button.bHeight - 12)
+			// icon.setGraphicSize(20, 20); // Std.int(button.bHeight - 12)
 			icon.updateHitbox();
 			icon.cameras = [buttonCameras];
 			icon.x = button.x + 8;
