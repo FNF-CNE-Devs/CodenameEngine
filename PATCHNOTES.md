@@ -15,7 +15,7 @@
 		- New SEXY editor assets by paige and fushi!!!! (and lunar, does 16x16 even count??? 😭)
 		- NEW EVENTS (Camera events, play animation, scroll speed change)
 		- Events window is now scrollable (more events, more room)
-		- Custom Properities in Meta AND Character (Editable in Charter and Character Editor :D)
+		- Custom Properities in Meta AND Character (Editable in Charter and Character Editor :D) (accessible with SONG.meta.customValues.[property] and [character].extras.[property])
 	- SMALLER BUT STILL COOL
 		- Multiple Icons now show up on strumlines with multiple characters in the charter
 		- Note hoverer to show where your note is going to be placed
