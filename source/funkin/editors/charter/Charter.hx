@@ -872,13 +872,11 @@ class Charter extends UIState {
 
 		var i = 0;
 		var toBeDeleted:Selection = [];
-		while(i < notesGroup.members.length) {
-   			var note = notesGroup.members[i];
+		for (note in notesGroup.members)
    			if (note.strumLineID == strumLineID) {
 				undoNotes.push(buildNote(note));
 				toBeDeleted.push(note);
-			} else i++;
-		}
+			}
 		deleteSelection(toBeDeleted, false);
 
 		var strL = strumLines.members[strumLineID].strumLine;
