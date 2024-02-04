@@ -641,10 +641,10 @@ class Charter extends UIState {
 					var undoDrags:Array<SelectionDragChange> = [];
 
 					for (s in selection) {
-						trace(s.step, verticalChange, s.step + verticalChange, quantStep(s.step+verticalChange));
-						trace(verticalChange - ((s.step + verticalChange) - quantStep(s.step+verticalChange)));
 						if (s.draggable) {
-							var changePoint:FlxPoint = FlxPoint.get(verticalChange - ((s.step + verticalChange) - quantStep(s.step+verticalChange)), horizontalChange);
+							var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
+							if (!FlxG.keys.pressed.SHIFT) changePoint.x -= ((s.step + verticalChange) - quantStep(s.step+verticalChange));
+
 							var boundedChange:FlxPoint = changePoint.clone();
 							
 							// Some maths, so cool bro -lunar (i dont know why i quopte my self here)
