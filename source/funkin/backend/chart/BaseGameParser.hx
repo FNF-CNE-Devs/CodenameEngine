@@ -41,6 +41,7 @@ class BaseGameParser {
 		result.meta.needsVoices = data.needsVoices.getDefault(true);
 
 		var camFocusedBF:Bool = false;
+		var altAnims:Bool = false;
 		var beatsPerMeasure:Float = data.beatsPerMeasure.getDefault(4);
 		var curBPM:Float = data.bpm;
 		var curTime:Float = 0;
