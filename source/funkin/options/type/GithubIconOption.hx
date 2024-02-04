@@ -8,7 +8,7 @@ import flixel.util.FlxColor;
 
 class GithubIconOption extends TextOption
 {
-	public var user(default, null):Dynamic;  // Can possibly be GitHubUser or GitHubContributor  - Nex_isDumb
+	public var user(default, null):Dynamic;  // Can possibly be GitHubUser or GitHubContributor
 	public var icon:GithubUserIcon = null;
 	public var usePortrait(default, set) = true;
 
@@ -43,7 +43,7 @@ class GithubUserIcon extends FlxSprite
 	}
 
 	final mutex = new sys.thread.Mutex();
-	override function drawComplex(camera:FlxCamera):Void {  // Making the image downlaod only if the player actually sees it on the screeeeen  - Nex_isDumb
+	override function drawComplex(camera:FlxCamera):Void {  // Making the image downlaod only if the player actually sees it on the screeeeen  - Nex
 		if(!loading) {
 			loading = true;
 			Main.execAsync(function() {
@@ -67,7 +67,7 @@ class GithubUserIcon extends FlxSprite
 					}
 
 					if(planB) {
-						if(unfLink) user = GitHub.getUser(user.login, function(e) Logs.traceColored([Logs.logText('Failed to download github user info for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR));  // Api part  - Nex_isDumb
+						if(unfLink) user = GitHub.getUser(user.login, function(e) Logs.traceColored([Logs.logText('Failed to download github user info for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR));  // Api part - Nex
 						try bytes = GitHub.__requestBytesOnGitHubServers('${user.avatar_url}&size=$size')
 						catch(e) Logs.traceColored([Logs.logText('Failed to download github pfp for ${user.login}: ${CoolUtil.removeIP(e.message)}', RED)], ERROR);
 
@@ -75,7 +75,7 @@ class GithubUserIcon extends FlxSprite
 					}
 
 					if(bmap != null) try {
-						mutex.acquire();  // Avoiding critical section  - Nex_isDumb
+						mutex.acquire();  // Avoiding critical section  - Nex
 						var leGraphic:FlxGraphic = FlxG.bitmap.add(bmap, false, key);
 						leGraphic.persist = true;
 						updateDaFunni(leGraphic);

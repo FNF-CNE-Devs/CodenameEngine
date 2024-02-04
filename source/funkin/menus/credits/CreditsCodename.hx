@@ -32,9 +32,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		//Main.execAsync(function() {
 		var idk = GitHub.getContributors("FNF-CNE-Devs", "CodenameEngine", function(e) {
 			error = true;
-			var errMsg:String = ~/\d+.\d+.\d+.\d+/.replace(e.message, "[Your IP]");  // Removing sensitive stuff
-			errMsg = 'Error while trying to download contributors list:\n$errMsg';
-
+			var errMsg:String = 'Error while trying to download contributors list:\n${CoolUtil.removeIP(e.message)}';
 			Logs.traceColored([Logs.logText(errMsg.replace('\n', ' '), RED)], ERROR);
 			funkin.backend.utils.NativeAPI.showMessageBox("Codename Engine Warning", errMsg, MSG_WARNING);
 		});

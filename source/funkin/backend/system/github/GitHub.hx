@@ -124,7 +124,7 @@ class GitHub {
 	}
 	private static function isRedirect(status:Int):Bool {
         switch (status) {
-			// 301: Moved Permanently, 302: Found (Moved Temporarily), 307: Temporary Redirect, 308: Permanent Redirect  - Nex_isDumb
+			// 301: Moved Permanently, 302: Found (Moved Temporarily), 307: Temporary Redirect, 308: Permanent Redirect  - Nex
             case 301 | 302 | 307 | 308 :
                 trace("Redirected with status code: " + status);
 				return true;
@@ -197,7 +197,7 @@ class GitHub {
 	}
 	private static function isRedirect(status:Int):Bool {
         switch (status) {
-			// 301: Moved Permanently, 302: Found (Moved Temporarily), 307: Temporary Redirect, 308: Permanent Redirect  - Nex_isDumb
+			// 301: Moved Permanently, 302: Found (Moved Temporarily), 307: Temporary Redirect, 308: Permanent Redirect  - Nex
             case 301 | 302 | 307 | 308 :
                 trace("Redirected with status code: " + status);
 				return true;

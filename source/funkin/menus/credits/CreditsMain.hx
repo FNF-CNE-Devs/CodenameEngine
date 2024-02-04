@@ -61,7 +61,7 @@ class CreditsMain extends TreeMenu {
 				}
 
 				var username = node.getAtt("user");
-				var user = {  // Kind of forcing  - Nex_isDumb
+				var user = {  // Kind of forcing
 					login: username,
 					html_url: 'https://github.com/$username',
 					avatar_url: 'https://github.com/$username.png'
