@@ -78,7 +78,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 					case "sprite" | "spr" | "sparrow":
 						if (!node.has.sprite || !node.has.name) continue;
 
-						var spr = XMLUtil.createSpriteFromXML(node, spritesParentFolder, BEAT);
+						var spr = XMLUtil.createSpriteFromXML(node, spritesParentFolder, LOOP);
 
 						if (!node.has.zoomfactor && PlayState.instance != null)
 							spr.initialZoom = PlayState.instance.defaultCamZoom;
@@ -90,8 +90,8 @@ class Stage extends FlxBasic implements IBeatReceiver {
 						if ( !node.has.name || !node.has.width || !node.has.height) continue;
 
 						var spr = new FlxSprite(
-							(node.has.x) ? Std.parseFloat(node.att.x) : 0,
-							(node.has.y) ? Std.parseFloat(node.att.y) : 0
+							(node.has.x) ? Std.parseFloat(node.att.x).getDefault(0) : 0,
+							(node.has.y) ? Std.parseFloat(node.att.y).getDefault(0) : 0
 						);
 
 						(node.name == "solid" ? spr.makeSolid : spr.makeGraphic)(

@@ -61,6 +61,7 @@ class GitarooPause extends MusicBeatState
 			}
 			else
 			{
+				PlayState.resetSongInfos();
 				FlxG.switchState(new MainMenuState());
 			}
 		}

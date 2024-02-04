@@ -60,6 +60,15 @@ class BaseGameParser {
 				});
 			}
 
+			if (section.altAnim == null) section.altAnim = false;
+			if (altAnims != (altAnims = section.altAnim)) {
+				result.events.push({
+					time: curTime,
+					name: "Alt Animation Toggle",
+					params: [0, altAnims]
+				});
+			}
+
 			if (section.sectionNotes != null) for(note in section.sectionNotes) {
 				if (note[1] < 0) continue;
 
@@ -129,6 +138,6 @@ typedef SwagSection =
 	var mustHitSection:Bool;
 	var bpm:Float;
 	var changeBPM:Bool;
-	var altAnim:Bool;
+	var altAnim:Null<Bool>;
 	@:optional var camTarget:Null<Float>;
 }

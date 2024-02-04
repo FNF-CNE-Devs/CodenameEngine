@@ -305,7 +305,9 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		if(data.scrollSpeed != null)
 			babyArrow.scrollSpeed = data.scrollSpeed;
 		
-		var event = PlayState.instance.scripts.event("onStrumCreation", EventManager.get(StrumCreationEvent).recycle(babyArrow, PlayState.instance.strumLines.members.indexOf(this), i, animPrefix));
+		var event = EventManager.get(StrumCreationEvent).recycle(babyArrow, PlayState.instance.strumLines.members.indexOf(this), i, animPrefix);
+		event.__doAnimation = !MusicBeatState.skipTransIn;
+		event = PlayState.instance.scripts.event("onStrumCreation", event);
 
 		if (!event.cancelled) {
 			babyArrow.frames = Paths.getFrames(event.sprite);

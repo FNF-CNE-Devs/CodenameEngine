@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-character>
-<character isPlayer="false" flipX="false" icon="pico" x="-50" y="-120" camx="195" camy="365">
+<character isPlayer="false" flipX="false" icon="pico" x="115" y="-85" camx="195" camy="360">
 	<!-- Left Animations -->
 	<anim name="shoot1" anim="Pico shoot 1" fps="24" loop="false" indices="0,1,2,3" />
 	<anim name="idle1"  anim="Pico shoot 1" fps="24" loop="false" indices="4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24" />

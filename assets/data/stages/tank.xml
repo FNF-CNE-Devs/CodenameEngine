@@ -15,7 +15,7 @@
 	<high-memory>
 		<sprite name="smokeLeft" x="-200" y="-100" sprite="smokeLeft" scroll="0.4" zoomfactor="0.6"/>
 		<sprite name="smokeRight" x="1100" y="-100" sprite="smokeRight" scroll="0.4" zoomfactor="0.6"/>
-		<sprite name="tankWatchtower" x="100" y="50" sprite="tankWatchtower" scroll="0.5" onBeat="true" zoomfactor="0.7"/>
+		<sprite name="tankWatchtower" x="100" y="50" sprite="tankWatchtower" scroll="0.5" type="onbeat" beatInterval="2" zoomfactor="0.7"/>
 	</high-memory>
 	<sprite name="tankRolling" x="300" y="300" sprite="tankRolling" scroll="0.5" zoomfactor="0.8" type="loop"/>
 	<sprite name="tankGround" x="-420" y="-150" sprite="tankGround" scale="1.15" updateHitbox="true" zoomfactor="1.0"/>
@@ -28,11 +28,11 @@
 	<!-- FOREGROUND TANKMANS -->
 	
 	<high-memory>
-		<sprite name="tank0" x="-500" y="650" sprite="tank0" scrollx="1.7" scrolly="1.5" onBeat="true" zoomfactor="1.25"/>
-		<sprite name="tank1" x="-300" y="750" sprite="tank1" scrollx="2" scrolly="0.2" onBeat="true" zoomfactor="1.25"/>
-		<sprite name="tank2" x="450" y="940" sprite="tank2" scroll="1.5" onBeat="true" zoomfactor="1.25"/>
-		<sprite name="tank4" x="1300" y="900" sprite="tank4" scroll="1.5" onBeat="true" zoomfactor="1.25"/>
-		<sprite name="tank5" x="1620" y="700" sprite="tank5" scroll="1.5" onBeat="true" zoomfactor="1.25"/>
-		<sprite name="tank3" x="1300" y="1200" sprite="tank3" scrollx="3.5" scrolly="2.5" onBeat="true" zoomfactor="1.25"/>
+		<sprite name="tank0" x="-500" y="650" sprite="tank0" scrollx="1.7" scrolly="1.5" type="onbeat" beatInterval="2" zoomfactor="1.25"/>
+		<sprite name="tank1" x="-300" y="750" sprite="tank1" scrollx="2" scrolly="0.2" type="onbeat" beatInterval="2" zoomfactor="1.25"/>
+		<sprite name="tank2" x="450" y="940" sprite="tank2" scroll="1.5" type="onbeat" beatInterval="2" zoomfactor="1.25"/>
+		<sprite name="tank4" x="1300" y="900" sprite="tank4" scroll="1.5" type="onbeat" beatInterval="2" zoomfactor="1.25"/>
+		<sprite name="tank5" x="1620" y="700" sprite="tank5" scroll="1.5" type="onbeat" beatInterval="2" zoomfactor="1.25"/>
+		<sprite name="tank3" x="1300" y="1200" sprite="tank3" scrollx="3.5" scrolly="2.5" type="onbeat" beatInterval="2" zoomfactor="1.25"/>
 	</high-memory>
 </stage>

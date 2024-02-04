@@ -19,6 +19,7 @@ var trainCooldown:Int = 0;
 
 function create() {
 	// defaultCamZoom = 0.5;
+	phillyTrain.moves = true;  // Def value false in funkinsprite
 	light.color = colors[curColor];
 	trainSound = FlxG.sound.load(Paths.sound("train_passes"));
 }

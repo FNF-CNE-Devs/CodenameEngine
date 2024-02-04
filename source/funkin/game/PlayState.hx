@@ -90,6 +90,10 @@ class PlayState extends MusicBeatState
 	public var strumLines:FlxTypedGroup<StrumLine> = new FlxTypedGroup<StrumLine>();
 
 	/**
+	 * Death counter on current week (or song if from freeplay).
+	 */
+	public static var deathCounter:Int = 0;
+	/**
 	 * Game Over Song. (assets/music/gameOver.ogg)
 	 */
 	public var gameOverSong:String = "gameOver";
@@ -365,11 +369,14 @@ class PlayState extends MusicBeatState
 	 * Whenever the game is currently in a cutscene or not.
 	 */
 	public var inCutscene:Bool = false;
-
 	/**
 	 * Whenever the game should play the cutscenes. Defaults to whenever the game is currently in Story Mode or not.
 	 */
 	public var playCutscenes:Bool = isStoryMode;
+	/**
+	 * Whenever the game has already played a specific cutscene for the current song. Check `startCutscene` for more details.
+	 */
+	public static var seenCutscene:Bool = false;
 	/**
 	 * Cutscene script path.
 	 */
@@ -447,6 +454,7 @@ class PlayState extends MusicBeatState
 	public var hitWindow:Float = Options.hitWindow; // is calculated in create(), is safeFrames in milliseconds
 
 	@:noCompletion @:dox(hide) private var _startCountdownCalled:Bool = false;
+	@:noCompletion @:dox(hide) private var _endSongCalled:Bool = false;
 
 	@:dox(hide)
 	var __vocalOffsetViolation:Float = 0;
@@ -746,10 +754,14 @@ class PlayState extends MusicBeatState
 	}
 
 	@:dox(hide) public override function createPost() {
-		startCutscene("", cutscene);
+		startCutscene("", cutscene, null, true);
 		super.createPost();
 
 		updateDiscordPresence();
+
+		// Make icons appear in the correct spot during cutscenes
+		healthBar.update(0);
+		updateIconPositions();
 
 		__updateNote_event = EventManager.get(NoteUpdateEvent);
 
@@ -768,10 +780,15 @@ class PlayState extends MusicBeatState
 	 * @param prefix Custom prefix. Using `midsong-` will require you to for example rename your video cutscene to `songs/song/midsong-cutscene.mp4` instead of `songs/song/cutscene.mp4`
 	 * @param cutsceneScriptPath Optional: Custom script path.
 	 * @param callback Callback called after the cutscene ended. If equals to `null`, `startCountdown` will be called.
+	 * @param checkSeen Bool that by default is false, if true and `seenCutscene` is also true, it won't play the cutscene but directly call `callback` (PS: `seenCutscene` becomes true if the cutscene gets played and `checkSeen` was true)
 	 */
-	public function startCutscene(prefix:String = "", ?cutsceneScriptPath:String, ?callback:Void->Void) {
-		if (callback == null)
-			callback = startCountdown;
+	public function startCutscene(prefix:String = "", ?cutsceneScriptPath:String, ?callback:Void->Void, checkSeen:Bool = false) {
+		if (callback == null) callback = startCountdown;
+		if (checkSeen && seenCutscene) {
+			callback();
+			return;
+		}
+
 		if (cutsceneScriptPath == null)
 			cutsceneScriptPath = Paths.script('songs/${SONG.meta.name.toLowerCase()}/${prefix}cutscene');
 
@@ -781,28 +798,25 @@ class PlayState extends MusicBeatState
 			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}cutscene.mp4');
 			var dialogue = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}dialogue.xml');
 			persistentUpdate = true;
+			var toCall:Void->Void = function() {
+				if(checkSeen) seenCutscene = true;
+				callback();
+			}
+
 			if (cutsceneScriptPath != null && Assets.exists(cutsceneScriptPath)) {
-				openSubState(new ScriptedCutscene(cutsceneScriptPath, function() {
-					callback();
-				}));
+				openSubState(new ScriptedCutscene(cutsceneScriptPath, toCall));
 			} else if (Assets.exists(dialogue)) {
 				MusicBeatState.skipTransIn = true;
-				openSubState(new DialogueCutscene(dialogue, function() {
-					callback();
-				}));
+				openSubState(new DialogueCutscene(dialogue, toCall));
 			} else if (Assets.exists(videoCutsceneAlt)) {
 				MusicBeatState.skipTransIn = true;
 				persistentUpdate = false;
-				openSubState(new VideoCutscene(videoCutsceneAlt, function() {
-					callback();
-				}));
+				openSubState(new VideoCutscene(videoCutsceneAlt, toCall));
 				persistentDraw = false;
 			} else if (Assets.exists(videoCutscene)) {
 				MusicBeatState.skipTransIn = true;
 				persistentUpdate = false;
-				openSubState(new VideoCutscene(videoCutscene, function() {
-					callback();
-				}));
+				openSubState(new VideoCutscene(videoCutscene, toCall));
 				persistentDraw = false;
 			} else
 				callback();
@@ -857,6 +871,7 @@ class PlayState extends MusicBeatState
 				sprite.scale.set(event.scale, event.scale);
 				sprite.updateHitbox();
 				sprite.screenCenter();
+				sprite.antialiasing = event.antialiasing;
 				add(sprite);
 				tween = FlxTween.tween(sprite, {y: sprite.y + 100, alpha: 0}, Conductor.crochet / 1000, {
 					ease: FlxEase.cubeInOut,
@@ -929,6 +944,11 @@ class PlayState extends MusicBeatState
 		instance = null;
 
 		Note.__customNoteTypeExists = [];
+	}
+
+	public static function resetSongInfos() {
+		deathCounter = 0;
+		seenCutscene = false;
 	}
 
 	@:dox(hide) private function generateSong(?songData:ChartData):Void
@@ -1100,6 +1120,18 @@ class PlayState extends MusicBeatState
 		updateDiscordPresence();
 	}
 
+	function updateIconPositions() {
+		var iconOffset:Int = 26;
+
+		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0)) - iconOffset);
+		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0))) - (iconP2.width - iconOffset);
+
+		health = FlxMath.bound(health, 0, maxHealth);
+
+		iconP1.health = healthBar.percent / 100;
+		iconP2.health = 1 - (healthBar.percent / 100);
+	}
+
 	@:dox(hide)
 	override public function update(elapsed:Float)
 	{
@@ -1145,15 +1177,7 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		var iconOffset:Int = 26;
-
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0)) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0))) - (iconP2.width - iconOffset);
-
-		health = FlxMath.bound(health, 0, maxHealth);
-
-		iconP1.health = healthBar.percent / 100;
-		iconP2.health = 1 - (healthBar.percent / 100);
+		updateIconPositions();
 
 		if (startingSong)
 		{
@@ -1359,6 +1383,7 @@ class PlayState extends MusicBeatState
 		}
 
 		startCutscene("end-", endCutscene, nextSong);
+		resetSongInfos();
 	}
 
 	private static inline function getSongChanges():Array<HighscoreChange> {

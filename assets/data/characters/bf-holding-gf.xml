@@ -9,5 +9,5 @@
 	<anim name="singLEFTmiss"  anim="BF NOTE LEFT MISS"  fps="24" loop="false" x="12"  y="7"/>
 	<anim name="singRIGHTmiss" anim="BF NOTE RIGHT MISS" fps="24" loop="false" x="-41" y="23"/>
 	<anim name="singDOWNmiss"  anim="BF NOTE DOWN MISS"  fps="24" loop="false" x="-10" y="-10"/>
-	<anim name="bfCatch"       anim="BF catches GF"      fps="24" loop="false" x="0"   y="0"/>
+	<anim name="bfCatch"       anim="BF catches GF"      fps="24" loop="false" x="6"   y="88"/>
 </character>

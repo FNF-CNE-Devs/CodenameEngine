@@ -72,15 +72,17 @@ class PauseSubState extends MusicBeatSubstate
 		add(bg);
 
 		var levelInfo:FlxText = new FlxText(20, 15, 0, PlayState.SONG.meta.displayName, 32);
-		var levelDifficulty:FlxText = new FlxText(20, 15 + 32, 0, PlayState.difficulty.toUpperCase(), 32);
-		var multiplayerText:FlxText = new FlxText(20, 15 + 32 + 32, 0, PlayState.opponentMode ? 'OPPONENT MODE' : (PlayState.coopMode ? 'CO-OP MODE' : ''), 32);
+		var levelDifficulty:FlxText = new FlxText(20, 15, 0, PlayState.difficulty.toUpperCase(), 32);
+		var deathCounter:FlxText = new FlxText(20, 15, 0, "Blue balled: " + PlayState.deathCounter, 32);
+		var multiplayerText:FlxText = new FlxText(20, 15, 0, PlayState.opponentMode ? 'OPPONENT MODE' : (PlayState.coopMode ? 'CO-OP MODE' : ''), 32);
 
-		for(k=>label in [levelInfo, levelDifficulty, multiplayerText]) {
+		for(k=>label in [levelInfo, levelDifficulty, deathCounter, multiplayerText]) {
 			label.scrollFactor.set();
 			label.setFormat(Paths.font('vcr.ttf'), 32);
 			label.updateHitbox();
 			label.alpha = 0;
 			label.x = FlxG.width - (label.width + 20);
+			label.y = 15 + (32 * k);
 			FlxTween.tween(label, {alpha: 1, y: label.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3 * (k+1)});
 			add(label);
 		}
@@ -156,6 +158,7 @@ class PauseSubState extends MusicBeatSubstate
 			case "Exit to charter":
 				FlxG.switchState(new funkin.editors.charter.Charter(PlayState.SONG.meta.name, PlayState.difficulty, false));
 			case "Exit to menu":
+				PlayState.resetSongInfos();
 				CoolUtil.playMenuSong();
 				FlxG.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
 		}

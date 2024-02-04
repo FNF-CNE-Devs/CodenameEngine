@@ -21,7 +21,7 @@ class XMLUtil {
 	 */
 	public static function applyXMLProperty(object:Dynamic, property:Access):ErrorCode {
 		if (!property.has.name || !property.has.type || !property.has.value) {
-			Logs.trace('Failed to apply XML property: XML Element misses name, type, or value attributes.', WARNING);
+			Logs.trace('Failed to apply XML property: XML Element is missing name, type, or value attributes.', WARNING);
 			return MISSING_PROPERTY;
 		}
 
@@ -72,54 +72,86 @@ class XMLUtil {
 
 		spr.loadSprite(Paths.image('$parentFolder${node.getAtt("sprite")}', null, true));
 
-		if (spr.frames != null && spr.frames.frames != null) {
-			spr.animation.add("idle", [for(i in 0...spr.frames.frames.length) i], 24, true);
-			spr.animation.play("idle");
+		spr.spriteAnimType = defaultAnimType;
+		if (node.has.type) {
+			spr.spriteAnimType = XMLAnimType.fromString(node.att.type, spr.spriteAnimType);
 		}
 
-		spr.spriteAnimType = defaultAnimType;
-		if (node.has.type)
-			spr.spriteAnimType = XMLAnimType.fromString(node.att.type, spr.spriteAnimType);
-
-		var x:Null<Float> = node.has.x ? Std.parseFloat(node.att.x) : null;
-		var y:Null<Float> = node.has.y ? Std.parseFloat(node.att.y) : null;
-		if (x != null) spr.x = x;
-		if (y != null) spr.y = y;
+		if(node.has.x) {
+			var x:Null<Float> = Std.parseFloat(node.att.x);
+			if (x.isNotNull()) spr.x = x;
+		}
+		if(node.has.y) {
+			var y:Null<Float> = Std.parseFloat(node.att.y);
+			if (y.isNotNull()) spr.y = y;
+		}
 		if (node.has.scroll) {
 			var scroll:Null<Float> = Std.parseFloat(node.att.scroll);
-			if (scroll != null) spr.scrollFactor.set(scroll, scroll);
+			if (scroll.isNotNull()) spr.scrollFactor.set(scroll, scroll);
 		} else {
 			if (node.has.scrollx) {
 				var scroll:Null<Float> = Std.parseFloat(node.att.scrollx);
-				if (scroll != null) spr.scrollFactor.x = scroll;
+				if (scroll.isNotNull()) spr.scrollFactor.x = scroll;
 			}
 			if (node.has.scrolly) {
 				var scroll:Null<Float> = Std.parseFloat(node.att.scrolly);
-				if (scroll != null) spr.scrollFactor.y = scroll;
+				if (scroll.isNotNull()) spr.scrollFactor.y = scroll;
 			}
 		}
 		if (node.has.skewx) {
 			var skew:Null<Float> = Std.parseFloat(node.att.skewx);
-			if (skew != null) spr.skew.x = skew;
+			if (skew.isNotNull()) spr.skew.x = skew;
 		}
 		if (node.has.skewy) {
 			var skew:Null<Float> = Std.parseFloat(node.att.skewy);
-			if (skew != null) spr.skew.y = skew;
+			if (skew.isNotNull()) spr.skew.y = skew;
 		}
 		if (node.has.antialiasing) spr.antialiasing = node.att.antialiasing == "true";
 		if (node.has.scale) {
 			var scale:Null<Float> = Std.parseFloat(node.att.scale);
-			if (scale != null) spr.scale.set(scale, scale);
+			if (scale.isNotNull()) spr.scale.set(scale, scale);
+		}
+		if (node.has.scalex) {
+			var scale:Null<Float> = Std.parseFloat(node.att.scalex);
+			if (scale.isNotNull()) spr.scale.x = scale;
+		}
+		if (node.has.scaley) {
+			var scale:Null<Float> = Std.parseFloat(node.att.scaley);
+			if (scale.isNotNull()) spr.scale.y = scale;
 		}
 		if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
 
-		spr.zoomFactor = Std.parseFloat(node.getAtt("zoomfactor")).getDefault(spr.zoomFactor);
+		if(node.has.zoomfactor)
+			spr.zoomFactor = Std.parseFloat(node.getAtt("zoomfactor")).getDefault(spr.zoomFactor);
 
 		if (node.has.alpha)
 			spr.alpha = Std.parseFloat(node.getAtt("alpha")).getDefault(spr.alpha);
 
-		for(anim in node.nodes.anim)
-			addXMLAnimation(spr, anim);
+		if (node.has.playOnCountdown)
+			spr.skipNegativeBeats = node.att.playOnCountdown == "true";
+		if (node.has.beatInterval)
+			spr.beatInterval = Std.parseInt(node.att.beatInterval);
+		if (node.has.beatOffset)
+			spr.beatOffset = Std.parseInt(node.att.beatOffset);
+
+		if(node.hasNode.anim) {
+			for(anim in node.nodes.anim)
+				addXMLAnimation(spr, anim);
+		} else {
+			if (spr.frames != null && spr.frames.frames != null) {
+				addAnimToSprite(spr, {
+					name: "idle",
+					anim: null,
+					fps: 24,
+					loop: spr.spriteAnimType == LOOP,
+					animType: spr.spriteAnimType,
+					x: 0,
+					y: 0,
+					indices: [for(i in 0...spr.frames.frames.length) i],
+					forced: (node.has.forced && node.att.forced == "true") || (!node.has.forced && spr.spriteAnimType == BEAT)
+				});
+			}
+		}
 
 		return spr;
 	}
@@ -133,16 +165,18 @@ class XMLUtil {
 			animType: animType,
 			x: 0,
 			y: 0,
-			indices: []
+			indices: [],
+			forced: false,
 		};
 
 		if (anim.has.name) animData.name = anim.att.name;
 		if (anim.has.type) animData.animType = XMLAnimType.fromString(anim.att.type, animData.animType);
 		if (anim.has.anim) animData.anim = anim.att.anim;
-		if (anim.has.fps) animData.fps = Std.parseFloat(anim.att.fps);
-		if (anim.has.x) animData.x = Std.parseFloat(anim.att.x);
-		if (anim.has.y) animData.y = Std.parseFloat(anim.att.y);
+		if (anim.has.fps) animData.fps = Std.parseFloat(anim.att.fps).getDefault(animData.fps);
+		if (anim.has.x) animData.x = Std.parseFloat(anim.att.x).getDefault(animData.x);
+		if (anim.has.y) animData.y = Std.parseFloat(anim.att.y).getDefault(animData.y);
 		if (anim.has.loop) animData.loop = anim.att.loop == "true";
+		if (anim.has.forced) animData.forced = anim.att.forced == "true";
 		if (anim.has.indices) {
 			var indicesSplit = anim.att.indices.split(",");
 			for(indice in indicesSplit) {
@@ -161,24 +195,30 @@ class XMLUtil {
 	 */
 	public static function addXMLAnimation(sprite:FlxSprite, anim:Access, loop:Bool = false):ErrorCode {
 		var animType:XMLAnimType = NONE;
-		if (sprite is FunkinSprite)
+		if (sprite is FunkinSprite) {
 			animType = cast(sprite, FunkinSprite).spriteAnimType;
+		}
 
 		return addAnimToSprite(sprite, extractAnimFromXML(anim, animType, loop));
 	}
 
 	public static function addAnimToSprite(sprite:FlxSprite, animData:AnimData):ErrorCode {
-		if (animData.name != null && animData.anim != null) {
+		if (animData.name != null) {
 			if (animData.fps <= 0 #if web || animData.fps == null #end) animData.fps = 24;
 
 			if (sprite is FunkinSprite && cast(sprite, FunkinSprite).animateAtlas != null) {
 				var animateAnim = cast(sprite, FunkinSprite).animateAtlas.anim;
+				if(animData.anim == null)
+					return MISSING_PROPERTY;
+
 				if (animData.indices.length > 0)
 					animateAnim.addBySymbolIndices(animData.name, animData.anim, animData.indices, animData.fps, animData.loop);
 				else
 					animateAnim.addBySymbol(animData.name, animData.anim, animData.fps, animData.loop);
 			} else {
-				if (animData.indices.length > 0)
+				if (animData.anim == null && animData.indices.length > 0)
+					sprite.animation.add(animData.name, animData.indices, animData.fps, animData.loop);
+				else if (animData.indices.length > 0)
 					sprite.animation.addByIndices(animData.name, animData.anim, animData.indices, "", animData.fps, animData.loop);
 				else
 					sprite.animation.addByPrefix(animData.name, animData.anim, animData.fps, animData.loop);
@@ -191,9 +231,12 @@ class XMLUtil {
 				var xmlSpr = cast(sprite, FunkinSprite);
 				switch(animData.animType) {
 					case BEAT:
-						xmlSpr.beatAnims.push(animData.name);
+						xmlSpr.beatAnims.push({
+							name: animData.name,
+							forced: animData.forced.getDefault(false)
+						});
 					case LOOP:
-						xmlSpr.animation.play(animData.name);
+						xmlSpr.animation.play(animData.name, animData.forced.getDefault(false));
 					default:
 						// nothing
 				}
@@ -219,6 +262,12 @@ typedef AnimData = {
 	var y:Float;
 	var indices:Array<Int>;
 	var animType:XMLAnimType;
+	var ?forced:Bool;
+}
+
+typedef BeatAnim = {
+	var name:String;
+	var forced:Bool;
 }
 
 interface IXMLEvents {

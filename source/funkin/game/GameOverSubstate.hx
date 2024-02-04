@@ -110,6 +110,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (controls.BACK)
 		{
+			PlayState.resetSongInfos();
 			if (FlxG.sound.music != null)
 				FlxG.sound.music.stop();
 			FlxG.sound.music = null;
