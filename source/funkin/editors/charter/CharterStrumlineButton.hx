@@ -54,7 +54,7 @@ class CharterStrumlineButton extends UISprite {
 		shakeTimer -= elapsed;
 		if (shakeTimer > 0)
 			for (spr in [button, text])
-				{spr.x += FlxG.random.float(0, 3); spr.y += FlxG.random.float(0, 3);}
+				{spr.x += FlxG.random.float(0, 3) * FlxG.random.sign(); spr.y += FlxG.random.float(0, 3) * FlxG.random.sign();}
 
 		super.update(elapsed);
 
