@@ -692,7 +692,7 @@ class Charter extends UIState {
 							if (mouseOnGrid && mousePos.y > 0 && mousePos.y < (__endStep)*40) {
 								var note = new CharterNote();
 								note.updatePos(
-									FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStepRounded(mousePos.y/40), 0, __endStep-1),
+									FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1),
 									id % 4, 0, noteType, strumLines.members[Std.int(id/4)]
 								);
 								notesGroup.add(note);
