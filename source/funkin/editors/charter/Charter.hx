@@ -101,6 +101,8 @@ class Charter extends UIState {
 
 		WindowUtils.endfix = " (Chart Editor)";
 		SaveWarning.selectionClass = CharterSelection;
+		SaveWarning.saveFunc = () -> {_file_save(null);};
+		
 		topMenu = [
 			{
 				label: "File",
