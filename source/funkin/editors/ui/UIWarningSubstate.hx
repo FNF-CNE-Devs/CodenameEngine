@@ -65,10 +65,13 @@ class UIWarningSubstate extends MusicBeatSubstate {
 		add(titleSpr = new UIText(spr.x + 25, spr.y, spr.bWidth - 50, title, 15, -1));
 		titleSpr.y = spr.y + ((30 - titleSpr.height) / 2);
 
-		var sprIcon:FlxSprite = new FlxSprite(spr.x + 26, spr.y + 28 + 26).loadGraphic(Paths.image('editors/warnings/${isError ? "error" : "warning"}'));
+		var sprIcon:FlxSprite = new FlxSprite(spr.x + 18, spr.y + 28 + 26).loadGraphic(Paths.image('editors/warnings/${isError ? "error" : "warning"}'));
+		sprIcon.scale.set(1.4, 1.4);
+		sprIcon.updateHitbox();
+		sprIcon.antialiasing = true;
 		add(sprIcon);
 
-		add(messageSpr = new UIText(sprIcon.x + 100 + 16, sprIcon.y + 12, spr.bWidth - 100 - (26 * 2), message));
+		add(messageSpr = new UIText(sprIcon.x + 70 + 16 + 20, sprIcon.y + 16, spr.bWidth - 100 - (26 * 2), message));
 
 		var xPos = (FlxG.width - (30 + (170 * buttons.length))) / 2;
 		for(k=>b in buttons) {
