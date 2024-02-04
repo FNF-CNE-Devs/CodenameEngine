@@ -74,7 +74,6 @@
 	- BY DEFAULT when in Story Mode, the arrows tween in happens only if there was a transition
 	- onBeatHit renamed to beatHit in gameover substate (stepHit added)
 	- Alt Animation Events can now control both poses and idle (may need to be readded in pre existing charts)
-	- Autocomplete textboxes added 
 	- Some other shit idk ill add it whenever someone tells me backward compat is broke 💔
 </details>
 
