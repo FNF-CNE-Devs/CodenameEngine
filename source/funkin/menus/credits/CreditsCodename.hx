@@ -1,11 +1,13 @@
 package funkin.menus.credits;
 
 import funkin.backend.system.github.GitHub;
-import funkin.options.type.PortraitOption;
+import funkin.options.type.GithubIconOption;
 
 using StringTools;
 
 class CreditsCodename extends funkin.options.OptionsScreen {
+	public var error:Bool = false;
+
 	public override function new()
 	{
 		super("Codename Engine", "All the contributors of the engine! - Press RESET to update the list (One reset per 2 minutes).");
@@ -21,7 +23,6 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		super.update(elapsed);
 	}
 
-	var error:Bool = false;
 	public function checkUpdate():Bool {
 		var curTime:Float = Date.now().getTime();
 		if(Options.lastUpdated != null && curTime < Options.lastUpdated + 120000) return false;  // Fuck you Github rate limits
@@ -39,7 +40,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		});
 		//});
 		if(error) return false;
-		
+
 		Options.contributors = idk;
 		trace('List Updated!');
 		return true;
@@ -49,7 +50,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		//if (curSelected > Options.contributors.length - 1) changeSelection(-(curSelected - (Options.contributors.length - 1)));
 		if (curSelected > Options.contributors.length - 1) curSelected = Options.contributors.length - 1;
 		changeSelection(0, true);
-		
+
 		while (members.length > 0) {
 			members[0].destroy();
 			remove(members[0], true);
@@ -58,12 +59,10 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		var totalContributions = 0;
 		for(c in Options.contributors) totalContributions += c.contributions;
 		for(c in Options.contributors) {
-			var opt:PortraitOption = new PortraitOption(
-				c.login,
-				'Total Contributions: ${c.contributions} / ${totalContributions} (${FlxMath.roundDecimal(c.contributions / totalContributions * 100, 2)}%) - Select to open GitHub account',
-				function() CoolUtil.openURL(c.html_url)
+			var opt:GithubIconOption = new GithubIconOption(
+				c,
+				'Total Contributions: ${c.contributions} / ${totalContributions} (${FlxMath.roundDecimal(c.contributions / totalContributions * 100, 2)}%) - Select to open GitHub account'
 			);
-			if(!error) opt.loadFromGithub(c);
 			add(opt);
 		}
 	}

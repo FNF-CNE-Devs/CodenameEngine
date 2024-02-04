@@ -9,8 +9,8 @@ import haxe.Http;
 class GitHub {
 	/**
 	 * Gets all the releases from a specific GitHub repository using the GitHub API.
-	 * @param user 
-	 * @param repository 
+	 * @param user The user/group that owns the repository
+	 * @param repository The repository name
 	 * @return Releases
 	 */
 	public static function getReleases(user:String, repository:String, ?onError:Exception->Void):Array<GitHubRelease> {
@@ -29,6 +29,12 @@ class GitHub {
 		return [];
 	}
 
+	/**
+	 * Gets the contributors list from a specific GitHub repository using the GitHub API.
+	 * @param user The user/group that owns the repository
+	 * @param repository The repository name
+	 * @return Contributors List
+	 */
 	public static function getContributors(user:String, repository:String, ?onError:Exception->Void):Array<GitHubContributor> {
 		try {
 			var url = 'https://api.github.com/repos/${user}/${repository}/contributors';
@@ -46,6 +52,27 @@ class GitHub {
 	}
 
 	/**
+	 * Gets a specific GitHub user/group using the GitHub API.
+	 * @param user The user/group to get
+	 * @return User/Group
+	 */
+	public static function getUser(user:String, ?onError:Exception->Void):GitHubUser {
+		try {
+			var url = 'https://api.github.com/users/$user';
+
+			var data = Json.parse(__requestOnGitHubServers(url));
+			if (Reflect.hasField(data, "documentation_url"))
+				throw __parseGitHubException(data);
+			
+			return data;
+		} catch(e) {
+			if (onError != null)
+				onError(e);
+		}
+		return null;
+	}
+
+	/**
 	 * Filters all releases gotten by `getReleases`
 	 * @param releases Releases
 	 * @param keepPrereleases Whenever to keep Pre-Releases.
@@ -58,28 +85,51 @@ class GitHub {
 	public static function __requestOnGitHubServers(url:String) {
 		var h = new Http(url);
 		h.setHeader("User-Agent", "request");
+
 		var r = null;
+		h.onStatus = function(s) {
+			if(isRedirect(s))
+				r = __requestOnGitHubServers(h.responseHeaders.get("Location"));
+		};
+
 		h.onData = function(d) {
-			r = d;
+			if(r == null) r = d;
 		}
 		h.onError = function(e) {
 			throw e;
 		}
+
 		h.request(false);
 		return r;
 	}
 	public static function __requestBytesOnGitHubServers(url:String) {
 		var h = new Http(url);
 		h.setHeader("User-Agent", "request");
+
 		var r = null;
+		h.onStatus = function(s) {
+			if(isRedirect(s))
+				r = __requestBytesOnGitHubServers(h.responseHeaders.get("Location"));
+		};
+
 		h.onBytes = function(d) {
-			r = d;
+			if(r == null) r = d;
 		}
 		h.onError = function(e) {
 			throw e;
 		}
+
 		h.request(false);
 		return r;
+	}
+	private static function isRedirect(status:Int):Bool {
+        switch (status) {
+			// 301: Moved Permanently, 302: Found (Moved Temporarily), 307: Temporary Redirect, 308: Permanent Redirect  - Nex_isDumb
+            case 301 | 302 | 307 | 308 :
+                trace("Redirected with status code: " + status);
+				return true;
+        }
+		return false;
 	}
 	private static function __parseGitHubException(obj:Dynamic):GitHubException {
 		var msg:String = "(No message)";
@@ -99,16 +149,31 @@ import haxe.Exception;
 class GitHub {
 	/**
 	 * Gets all the releases from a specific GitHub repository using the GitHub API.
-	 * @param user 
-	 * @param repository 
+	 * @param user The user/group that owns the repository
+	 * @param repository The repository name
 	 * @return Releases
 	 */
 	public static function getReleases(user:String, repository:String, ?onError:Exception->Void):Array<GitHubRelease> {
 		return [];
 	}
 
+	/**
+	 * Gets the contributors list from a specific GitHub repository using the GitHub API.
+	 * @param user The user/group that owns the repository
+	 * @param repository The repository name
+	 * @return Contributors List
+	 */
 	public static function getContributors(user:String, repository:String, ?onError:Exception->Void):Array<GitHubContributor> {
 		return [];
+	}
+
+	/**
+	 * Gets a specific GitHub user/group using the GitHub API.
+	 * @param user The user/group to get
+	 * @return User/Group
+	 */
+	public static function getUser(user:String, ?onError:Exception->Void):GitHubUser {
+		return null;
 	}
 
 	/**
@@ -129,6 +194,15 @@ class GitHub {
 	}
 	private static function __parseGitHubException(obj:Dynamic):GitHubException {
 		return null;
+	}
+	private static function isRedirect(status:Int):Bool {
+        switch (status) {
+			// 301: Moved Permanently, 302: Found (Moved Temporarily), 307: Temporary Redirect, 308: Permanent Redirect  - Nex_isDumb
+            case 301 | 302 | 307 | 308 :
+                trace("Redirected with status code: " + status);
+				return true;
+        }
+		return false;
 	}
 }
 #end
