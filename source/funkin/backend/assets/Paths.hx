@@ -36,8 +36,8 @@ class Paths
 	public static inline function getPath(file:String, ?library:String)
 		return library != null ? '$library:assets/$library/$file' : 'assets/$file';
 
-	public static inline function video(key:String)
-		return getPath('videos/$key.mp4');
+	public static inline function video(key:String, ?ext:String = "mp4")
+		return getPath('videos/$key.$ext');
 
 	public static inline function ndll(key:String)
 		return getPath('ndlls/$key.ndll');
@@ -90,15 +90,15 @@ class Paths
 		return OpenFlAssets.exists(diff) ? diff : getPath('songs/${song.toLowerCase()}/song/Inst$prefix.$SOUND_EXT', null);
 	}
 
-	static public function image(key:String, ?library:String, checkForAtlas:Bool = false)
+	static public function image(key:String, ?library:String, checkForAtlas:Bool = false, ?ext:String = "png")
 	{
 		if (checkForAtlas) {
-			var atlasPath = getPath('images/$key/spritemap.png', library);
-			var multiplePath = getPath('images/$key/1.png', library);
+			var atlasPath = getPath('images/$key/spritemap.$ext', library);
+			var multiplePath = getPath('images/$key/1.$ext', library);
 			if (atlasPath != null && OpenFlAssets.exists(atlasPath)) return atlasPath.substr(0, atlasPath.length - 14);
 			if (multiplePath != null && OpenFlAssets.exists(multiplePath)) return multiplePath.substr(0, multiplePath.length - 6);
 		}
-		return getPath('images/$key.png', library);
+		return getPath('images/$key.$ext', library);
 	}
 	
 	inline static public function script(key:String, ?library:String, isAssetsPath:Bool = false) {
