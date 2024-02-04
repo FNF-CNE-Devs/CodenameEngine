@@ -643,7 +643,7 @@ class Charter extends UIState {
 					for (s in selection) {
 						if (s.draggable) {
 							var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
-							if (!FlxG.keys.pressed.SHIFT) changePoint.x -= ((s.step + verticalChange) - quantStep(s.step+verticalChange));
+							if (!FlxG.keys.pressed.SHIFT) changePoint.x -= ((s.step + verticalChange) - quantStepRounded(s.step+verticalChange));
 
 							var boundedChange:FlxPoint = changePoint.clone();
 							
