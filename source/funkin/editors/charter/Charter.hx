@@ -635,16 +635,16 @@ class Charter extends UIState {
 							break;
 						}
 						
-					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, quantStep(dragStartPos.y/40)*40); //credits to burgerballs
-					var verticalChange:Float = 
-						FlxG.keys.pressed.SHIFT ? ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40
-						: CoolUtil.floorInt(quantStep((mousePos.y - dragStartPos.y) / 40));
+					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, dragStartPos.y); //credits to burgerballs
+					var verticalChange:Float = ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40;
 					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
-					var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
 					var undoDrags:Array<SelectionDragChange> = [];
 
 					for (s in selection) {
+						trace(s.step, verticalChange, s.step + verticalChange, quantStep(s.step+verticalChange));
+						trace(verticalChange - ((s.step + verticalChange) - quantStep(s.step+verticalChange)));
 						if (s.draggable) {
+							var changePoint:FlxPoint = FlxPoint.get(verticalChange - ((s.step + verticalChange) - quantStep(s.step+verticalChange)), horizontalChange);
 							var boundedChange:FlxPoint = changePoint.clone();
 							
 							// Some maths, so cool bro -lunar (i dont know why i quopte my self here)
@@ -657,16 +657,16 @@ class Charter extends UIState {
 								if (note.fullID + changePoint.y > (strumLines.members.length*4)-1) boundedChange.y -= (note.fullID + changePoint.y) - ((strumLines.members.length*4)-1);
 							}
 
-							s.handleDrag(changePoint);
+							s.handleDrag(boundedChange);
 							undoDrags.push({selectable:s, change: boundedChange});
+							changePoint.put();
 						}
 
 						if (s is CharterNote) cast(s, CharterNote).snappedToStrumline = true;
 						if (s is UISprite) cast(s, UISprite).cursor = BUTTON;
 					}
-					if (!(changePoint.x == 0 && changePoint.y == 0)) undos.addToUndo(CSelectionDrag(undoDrags));
+					if (!(verticalChange == 0 && horizontalChange == 0)) undos.addToUndo(CSelectionDrag(undoDrags));
 
-					changePoint.put();
 					hoverOffset.put();
 					gridActionType = NONE;
 

@@ -23,7 +23,7 @@ class CharterStrumlineButton extends UISprite {
 		button.animation.play("0", true);
 		button.scale.set(0.85,0.85);
 		button.updateHitbox();
-		button.antialiasing = false;
+		button.antialiasing = true;
 		button.cursor = BUTTON;
 		members.push(button);
 
@@ -93,7 +93,7 @@ class CharterStrumlineButton extends UISprite {
 			.then(FlxTween.tween(this, {buttonYOffset: 0}, .1 + FlxG.random.float(.1, .3), {ease: FlxEase.circIn}));
 
 		if (scaleTween != null) scaleTween.cancel(); buttonScaleOffset.set(0,0);
-		scaleTween = FlxTween.tween(buttonScaleOffset, {x: .015, y: .02}, .12, {ease: FlxEase.circOut})
+		scaleTween = FlxTween.tween(buttonScaleOffset, {x: .015 * (extra ? 3 : 1), y: .02 * (extra ? 3 : 1)}, .12, {ease: FlxEase.circOut})
 			.then(FlxTween.tween(buttonScaleOffset, {x: 0, y: 0}, .1 + FlxG.random.float(.1, .3), {ease: FlxEase.circIn}));
 
 		if (!extra) return; 
