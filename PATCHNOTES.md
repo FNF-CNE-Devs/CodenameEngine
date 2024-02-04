@@ -59,23 +59,23 @@
 		- Maps iterator for (key=>value in map)
 		- FIXED CRASH ON EMPTY SCRIPTS!!!!!
 - BUG FIXES
-	-Fix events to be more stable
-	-Fix for onBeat sprites type with also customizable beat intervals and offset (and decide if also skipping negative beats so for example before the song starts)
-	-Fix for pressing F5 in editor breaking it
-	-Fix when getting GitHub data and a redirect happens
-	-Fix for healthbar incorrectly colored in opponent mode
-	-Lots and lots of grammar and wording fixes (so true bro -lunar)
-	-Lots and lots of other optimizations made
-	-Video cutscenes are ALOT more stable (thanks majigsaw :D)
-	-3D now works (so cool i love away3d in 2024)
+	- Fix events to be more stable
+	- Fix for onBeat sprites type with also customizable beat intervals and offset (and decide if also skipping negative beats so for example before the song starts)
+	- Fix for pressing F5 in editor breaking it
+	- Fix when getting GitHub data and a redirect happens
+	- Fix for healthbar incorrectly colored in opponent mode
+	- Lots and lots of grammar and wording fixes (so true bro -lunar)
+	- Lots and lots of other optimizations made
+	- Video cutscenes are ALOT more stable (thanks majigsaw :D)
+	- 3D now works (so cool i love away3d in 2024)
 - CHANGES
-	-onDestroy has been renamed to destroy in all instances
-	-Strumline Pos X in editors is now a ratio (0.25 for bf, 0.75 for dad)
-	-BY DEFAULT when in Story Mode, the arrows tween in happens only if there was a transition
-	-onBeatHit renamed to beatHit in gameover substate (stepHit added)
-	-Alt Animation Events can now control both poses and idle (may need to be readded in pre existing charts)
-	-Autocomplete textboxes added 
-	-Some other shit idk ill add it whenever someone tells me backward compat is broke 💔
+	- onDestroy has been renamed to destroy in all instances
+	- Strumline Pos X in editors is now a ratio (0.25 for bf, 0.75 for dad)
+	- BY DEFAULT when in Story Mode, the arrows tween in happens only if there was a transition
+	- onBeatHit renamed to beatHit in gameover substate (stepHit added)
+	- Alt Animation Events can now control both poses and idle (may need to be readded in pre existing charts)
+	- Autocomplete textboxes added 
+	- Some other shit idk ill add it whenever someone tells me backward compat is broke 💔
 </details>
 
 thanks so much for the support and always being there cne community, it really does mean alot to us < 3
