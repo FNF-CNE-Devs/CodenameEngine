@@ -66,7 +66,7 @@ class BaseGameParser {
 				result.events.push({
 					time: curTime,
 					name: "Alt Animation Toggle",
-					params: [0, altAnims]
+					params: [altAnims, false, 0]
 				});
 			}
 
