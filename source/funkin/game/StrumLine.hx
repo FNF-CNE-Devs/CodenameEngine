@@ -185,15 +185,16 @@ class StrumLine extends FlxTypedGroup<Strum> {
 				daNote.tooLate = true;
 		}
 
-		if (cpu && PlayState.instance.__updateNote_event.__autoCPUHit && !daNote.wasGoodHit && daNote.strumTime < songPosition) PlayState.instance.goodNoteHit(this, daNote);
+		if (cpu && PlayState.instance.__updateNote_event.__autoCPUHit && !daNote.avoid&& !daNote.wasGoodHit && daNote.strumTime < songPosition) PlayState.instance.goodNoteHit(this, daNote);
 
 		if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.sustainLength) < songPosition) {
 			deleteNote(daNote);
 			return;
 		}
 
-		if (daNote.tooLate && !cpu) {
-			PlayState.instance.noteMiss(this, daNote);
+		if (daNote.tooLate) {
+			if (!cpu) PlayState.instance.noteMiss(this, daNote);
+			else deleteNote(daNote);
 			return;
 		}
 
