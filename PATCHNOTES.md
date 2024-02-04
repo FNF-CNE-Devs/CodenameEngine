@@ -12,7 +12,7 @@
 		- Snaps for notes/events in the charter
 		- Multiple Vocals Support (per strumline)
 		- Playback speed in the charter
-		- New SEXY editor assets by paige and fushi!!!! (and lunar, does 16x16 even count??? 😭)
+		- New SEXY editor assets by paige and nex!!!! (and lunar, does 16x16 even count??? 😭)
 		- NEW EVENTS (Camera events, play animation, scroll speed change)
 		- Events window is now scrollable (more events, more room)
 		- Custom Properities in Meta AND Character (Editable in Charter and Character Editor :D) (accessible with SONG.meta.customValues.[property] and [character].extras.[property])
@@ -40,13 +40,13 @@
 		- Moddable Game Over Events!!
 		- Reworked Lagless Credits Codename Engine's Contributors Menu
 		- New Credit Method for GitHub accounts (also lagless) in Mod Credits (First gets the data normally, if fails uses the ratelimited api)
-		- MANY OG GAME WEEK STUFF!! (still wip and softcoded!)
+		- MANY OG GAME WEEK STUFF!! (still wip and softcoded and also many reworks by nex!)
 		- Senpai Cutscene got reworked! (https://github.com/FNF-CNE-Devs/CodenameEngine/assets/87421482/3b3f32fc-78d1-40fa-8398-776554cab1d6)
 		- Thorns got reworked with a cool chromatic aberration effect! (https://github.com/FNF-CNE-Devs/CodenameEngine/assets/87421482/73d9f7c5-1c9c-407e-baf0-e8e2c381ecbb)
 		- Winter Horrorland got reworked with a bloody vignette effect! (https://github.com/FNF-CNE-Devs/CodenameEngine/assets/87421482/1e10c3e2-32dc-4de2-b31a-d9d577d516da - https://github.com/FNF-CNE-Devs/CodenameEngine/assets/87421482/cad852c3-1ee2-409e-a70e-b3571ab5cf7b)
 	- SMALLER BUT STILL COOL
 		- Ability to set Controls.hx variables (Being able to block inputs or even trigger them (needs to be in an if statement))
-		- You can now easily check if a cutscene was played (And make it auto play or not; Check startCutscene() code for more details in PlayState)
+		- You can now easily check if a cutscene was played (by default is disabled and makes it auto play or not; Check startCutscene() code for more details in PlayState)
 		- onScriptCreated event in global.hx
 		- Addons priority (Being able to set addons to load before or after a mod)
 		- Added Script.fromString to add scripts without making pesky new files!!
