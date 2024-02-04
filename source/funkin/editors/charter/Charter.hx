@@ -401,12 +401,17 @@ class Charter extends UIState {
 		strumlineInfoBG.y = 23;
 		strumlineInfoBG.scrollFactor.set();
 
-		strumlineAddButton = new CharterStrumlineButton("editors/charter/add-strumline", "Create New");
+		strumlineAddButton = new CharterStrumlineButton("editors/new", "Create New");
 		strumlineAddButton.onClick = createStrumWithUI;
+		strumlineAddButton.animationOnClick = false;
+		strumlineAddButton.textColorLerp = 0.5;
 
 		strumlineLockButton = new CharterStrumlineButton("editors/charter/lock-strumline", "Lock/Unlock");
 		strumlineLockButton.onClick = function () {
-			if (strumLines != null) strumLines.draggable = !strumLines.draggable;
+			if (strumLines != null) {
+				strumLines.draggable = !strumLines.draggable;
+				strumlineLockButton.textTweenColor.color = strumLines.draggable ? 0xFF5C95CA : 0xFFE16565;
+			}
 		};
 
 		strumlineAddButton.cameras = strumlineLockButton.cameras = [charterCamera];
@@ -899,7 +904,12 @@ class Charter extends UIState {
 
 	public function createStrumWithUI() {
 		FlxG.state.openSubState(new CharterStrumlineScreen(strumLines.members.length, null, (_) -> {
-			if (_ != null) createStrumline(strumLines.members.length, _);
+			if (_ != null) {
+				createStrumline(strumLines.members.length, _);
+
+				strumlineAddButton.textTweenColor.color = 0xFF00FF00;
+				strumlineAddButton.pressAnimation(true);
+			}
 		}));
 	}
 
@@ -1024,6 +1034,9 @@ class Charter extends UIState {
 
 		if (charterCamera.zoom != (charterCamera.zoom = lerp(charterCamera.zoom, __camZoom, __firstFrame ? 1 : 0.125)))
 			updateDisplaySprites();
+
+		if (strumLines != null)
+			strumlineLockButton.button.animation.play(strumLines.draggable ? "1" : "0", true);
 
 		WindowUtils.prefix = undos.unsaved ? "* " : "";
 		SaveWarning.showWarning = undos.unsaved;
