@@ -25,4 +25,3 @@ class OptionType extends FlxSpriteGroup {
 		alpha = (selected ? 1 : 0.6);
 	}
 }
-	

@@ -135,7 +135,7 @@ class CoolUtil
 
 	/**
 	 * Returns a string representation of a size, following this format: `1.02 GB`, `134.00 MB`
-	 * @param size Size to convert ot string
+	 * @param size Size to convert to string
 	 * @return String Result string representation
 	 */
 	public static function getSizeString(size:Float):String {
@@ -147,6 +147,15 @@ class CoolUtil
 			rSize /= 1024;
 		}
 		return '${Std.int(rSize) + "." + addZeros(Std.string(Std.int((rSize % 1) * 100)), 2)}${labels[label]}';
+	}
+
+	/**
+	 * Replaces in a string any kind of IP with `[Your IP]` making the string safer to trace.
+	 * @param msg String to check and edit
+	 * @return String Result without any kind of IP
+	 */
+	public static inline function removeIP(msg:String):String {
+		return ~/\d+.\d+.\d+.\d+/.replace(msg, "[Your IP]");  // For now its just IPs but who knows in the future..  - Nex_isDumb
 	}
 
 	/**
