@@ -54,11 +54,3 @@ function focusOn(char) {
 	game.camFollow.setPosition(camPos.x, camPos.y);
 	camPos.put();
 }
-
-function update(elapsed:Float) {
-	lipSync(tankTalk);
-}
-
-function lipSync(sound:FlxSound) {
-	tankman.animateAtlas.anim.curFrame = Std.int(tankman.animateAtlas.anim.length / (sound.length-1) * sound.time);
-}

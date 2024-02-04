@@ -4,9 +4,7 @@
 ### Mods created with alpha versions of Codename may not be compatible with the release version
 Known issues in the alpha:
 - Some options are missing
-- Week 5 has no monster animation
-- Week 6 still has no dialogue
-- Week 7 has no running tankman
+- Week 6 still have no dialogue
 
 Build instructions are below. Press TAB on the main menu to switch mods.
 

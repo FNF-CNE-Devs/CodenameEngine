@@ -1,5 +1,6 @@
 package funkin.backend;
 
+import funkin.backend.utils.XMLUtil.BeatAnim;
 import funkin.backend.utils.XMLUtil.AnimData;
 import funkin.backend.utils.XMLUtil.IXMLEvents;
 import flixel.system.FlxAssets.FlxGraphicAsset;
@@ -34,12 +35,16 @@ abstract XMLAnimType(Int)
 class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements IOffsetCompatible implements IXMLEvents
 {
 	public var spriteAnimType:XMLAnimType = NONE;
-	public var beatAnims:Array<String> = [];
+	public var beatAnims:Array<BeatAnim> = [];
 	public var name:String;
 	public var zoomFactor:Float = 1;
 	public var initialZoom:Float = 1;
 	public var debugMode:Bool = false;
 	public var animDatas:Map<String, AnimData> = [];
+
+	public var beatInterval:Int = 1;
+	public var beatOffset:Int = 0;
+	public var skipNegativeBeats:Bool = false;
 
 	public var animateAtlas:FlxAnimate;
 	@:noCompletion public var atlasPlayingAnim:String;
@@ -108,13 +113,16 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 			moves = true;
 	}
 
+	private var countedBeat = 0;
 	public function beatHit(curBeat:Int)
 	{
-		if (beatAnims.length > 0)
+		if (beatAnims.length > 0 && (curBeat + beatOffset) % beatInterval == 0)
 		{
-			var anim = beatAnims[FlxMath.wrap(curBeat, 0, beatAnims.length - 1)];
-			if (anim != null && anim != "null" && anim != "none")
-				playAnim(anim);
+			if(skipNegativeBeats && curBeat < 0) return;
+			// TODO: find a solution without countedBeat
+			var anim = beatAnims[FlxMath.wrap(countedBeat++, 0, beatAnims.length - 1)];
+			if (anim.name != null && anim.name != "null" && anim.name != "none")
+				playAnim(anim.name, anim.forced);
 		}
 	}
 

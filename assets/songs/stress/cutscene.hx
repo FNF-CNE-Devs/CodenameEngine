@@ -3,7 +3,7 @@ import funkin.system.FunkinSprite;
 import funkin.options.Options;
 
 var tankman, pico:FunkinSprite;
-var gf:Character;
+var bf, gf:Character;
 var stressCutscene:FlxSound;
 var step:Int = 0;
 
@@ -13,10 +13,15 @@ function create() {
 	game.persistentUpdate = true;
 
 	game.gf.visible = false;
-	gf = new Character(game.gf.x, game.gf.y, "gf-tankmen");
+	gf = new Character(game.gf.x + game.gf.globalOffset.x - 115, game.gf.y + game.gf.globalOffset.y + 85, "gf-tankmen");
 	gf.scrollFactor.set(0.95, 0.95);
 	gf.playAnim("dance-cutscene");
-	game.insert(game.members.indexOf(game.gf), gf);
+	game.insert(game.members.indexOf(game.gf) + 1, gf);
+
+	game.boyfriend.visible = false;
+	bf = new Character(game.boyfriend.x + game.boyfriend.globalOffset.x, game.boyfriend.y + game.boyfriend.globalOffset.y - 350, "boyfriend", true);
+	bf.scrollFactor.set(0.95, 0.95);
+	game.insert(game.members.indexOf(game.boyfriend) + 1, bf);
 
 	stressCutscene = FlxG.sound.load(Paths.sound(Options.naughtyness ? 'cutscenes/tank/stress' : 'cutscenes/tank/stress-censor'));
 
@@ -46,14 +51,13 @@ function create() {
 	pico.scrollFactor.set(0.95, 0.95);
 	pico.playAnim("idle");
 	pico.visible = false;
-	game.insert(game.members.indexOf(game.gf), pico);
+	game.insert(game.members.indexOf(game.gf) + 1, pico);
 
-	game.insert(game.members.indexOf(game.dad), tankman);
-
+	game.insert(game.members.indexOf(game.dad) + 1, tankman);
 	game.dad.visible = false;
-
 	focusOn(game.dad);
 }
+
 function update(elapsed) {
 	if (FlxG.keys.justPressed.F5)
 		FlxG.resetState();
@@ -78,6 +82,14 @@ function update(elapsed) {
 				FlxG.camera.zoom = 0.8;
 				step = 2;
 				pico.playAnim('saves', true);
+				game.remove(bf);
+				bf.destroy();
+				game.boyfriend.visible = true;
+				game.boyfriend.playAnim('bfCatch');
+				game.boyfriend.animation.finishCallback = function(anim:String) {
+					game.boyfriend.dance();
+					game.boyfriend.animation.finishCallback = null;
+				};
 			}
 		case 2:
 			if (stressCutscene.time > 19600) {
@@ -93,8 +105,22 @@ function update(elapsed) {
 			}
 		case 4:
 			lipSync(tankman, 19500, stressCutscene.length);
-			if (pico.isAnimFinished() && pico.getAnimName() == "saves")
-				pico.playAnim("idle");
+			pico.animation.finishCallback = pico.playAnim("idle");
+
+			if(stressCutscene.time > 31500) {
+				focusOn(game.boyfriend, true);
+				FlxG.camera.zoom = game.defaultCamZoom * 1.4;
+				FlxTween.tween(FlxG.camera, {zoom: FlxG.camera.zoom + 0.1}, 0.5, {ease: FlxEase.elasticOut});
+				game.boyfriend.playAnim('singUPmiss');
+				game.boyfriend.animation.finishCallback = function(anim:String)
+				{
+					FlxG.camera.zoom /= 1.4;
+					focusOn(game.dad, true);
+					game.boyfriend.dance();
+					game.boyfriend.animation.finishCallback = null;
+				};
+				step = 5;
+			}
 	}
 }
 
@@ -102,8 +128,9 @@ function lipSync(char:FunkinSprite, begin:Float, end:Float) {
 	char.animateAtlas.anim.curFrame = Std.int(FlxMath.remapToRange(stressCutscene.time, begin, end, 0, char.animateAtlas.anim.length-1));
 }
 
-function focusOn(char) {
+function focusOn(char, snap:Bool = false) {
 	var camPos = char.getCameraPosition();
 	game.camFollow.setPosition(camPos.x, camPos.y);
+	if(snap) FlxG.camera.snapToTarget();
 	camPos.put();
 }

@@ -27,6 +27,7 @@ class Options
 	public static var antialiasing:Bool = true;
 	public static var volume:Float = 1;
 	public static var week6PixelPerfect:Bool = true;
+	public static var gameplayShaders:Bool = true;
 	public static var colorHealthBar:Bool = true;
 	public static var lowMemoryMode:Bool = false;
 	public static var betaUpdates:Bool = false;
@@ -54,7 +55,9 @@ class Options
 	public static var contributors:Array<funkin.backend.system.github.GitHubContributor> = [];
 	public static var lastUpdated:Null<Float>;
 
-	// CHARTER
+	/**
+	 * CHARTER
+	 */
 	public static var charterMetronomeEnabled:Bool = false;
 	public static var charterShowSections:Bool = true;
 	public static var charterShowBeats:Bool = true;

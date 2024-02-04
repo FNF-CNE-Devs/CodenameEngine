@@ -28,6 +28,16 @@ class CoolUtil
 	public static function getLastExceptionStack():String {
 		return CallStack.toString(CallStack.exceptionStack());
 	}
+
+	/*
+	 * Returns `v` if not null
+	 * @param v The value
+	 * @return A bool value
+	 */
+	public static inline function isNotNull(v:Null<Dynamic>):Bool {
+		return v != null && !isNaN(v);
+	}
+
 	/*
 	 * Returns `v` if not null, `defaultValue` otherwise.
 	 * @param v The value

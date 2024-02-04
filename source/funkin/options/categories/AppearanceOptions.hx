@@ -24,6 +24,10 @@ class AppearanceOptions extends OptionsScreen {
 			"If checked, Week 6 will have a pixel perfect effect to it enabled, aligning every pixel on the screen.",
 			"week6PixelPerfect"));
 		add(new Checkbox(
+			"Gameplay Shaders",
+			"If unchecked, gameplay shaders (visual effects like Thorns's Chromatic Aberration) wont be loaded; this may be helpful on weak devices.",
+			"gameplayShaders"));
+		add(new Checkbox(
 			"Flashing Menu",
 			"If unchecked, will disable menu flashing when you select an option in the Main Menu, and other flashs will be slower",
 			"flashingMenu"));
