@@ -1,5 +1,6 @@
 package funkin.backend.system.github;
 
+// Also used by Organizations for members!
 typedef GitHubContributor = {
 	var login:String;
 	var id:Int;
