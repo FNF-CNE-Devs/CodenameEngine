@@ -80,7 +80,7 @@ class CharterEventScreen extends UISubstateWindow {
 					chartEvent.events = [for (i in eventsList.buttons.members) i.event];
 					chartEvent.refreshEventIcons();
 
-					Charter.instance.undos.addToUndo(CEditEvent(chartEvent, oldEvents, [for (event in events) Reflect.copy(event)]));
+					Charter.undos.addToUndo(CEditEvent(chartEvent, oldEvents, [for (event in events) Reflect.copy(event)]));
 				}
 			}
 

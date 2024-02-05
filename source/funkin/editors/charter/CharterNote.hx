@@ -27,7 +27,8 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 	public function new() {
 		super();
-		antialiasing = true;
+		
+		antialiasing = true; ID = -1;
 		loadGraphic(Paths.image('editors/charter/note'), true, 157, 154);
 		animation.add("note", [for(i in 0...frames.frames.length) i], 0, true);
 		animation.play("note");
@@ -58,9 +59,9 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	public var type:Int;
 
 	public var strumLine:CharterStrumline;
-	public var strumLineID(get, never):Int;
+	public var strumLineID(get, default):Int = -1;
 	public function get_strumLineID():Int
-		return strumLine == null ? -1 : Charter.instance.strumLines.members.indexOf(strumLine);
+		return strumLineID = (strumLine == null ? strumLineID : Charter.instance.strumLines.members.indexOf(strumLine));
 
 	public var snappedToStrumline:Bool = true;
 

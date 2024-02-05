@@ -57,15 +57,14 @@ class CharterNoteTypesList extends UISubstateWindow {
 		return list;
 	}
 
-	public function saveList()
-	{
+	public function saveList() {
 		var oldList:Array<String> = Charter.instance.noteTypes;
 		var newList:Array<String> = [for (note in noteTypesList.buttons.members) note.textBox.label.text];
 
 		Charter.instance.noteTypes = newList;
 		Charter.instance.changeNoteType(null, false);
 
-		Charter.instance.undos.addToUndo(CEditNoteTypes(oldList, newList));
+		Charter.undos.addToUndo(CEditNoteTypes(oldList, newList));
 	}
 }
 

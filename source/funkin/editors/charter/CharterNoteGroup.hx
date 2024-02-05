@@ -29,10 +29,10 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 
 		for(i in begin...end) {
 			__loopSprite = members[i];
-			if (!Charter.instance.selection.contains(__loopSprite))
+			if (!Charter.selection.contains(__loopSprite))
 				noteFunc(__loopSprite);
 		}
-		for(c in Charter.instance.selection.copy())
+		for(c in Charter.selection.copy())
 			if (c is CharterNote) noteFunc(cast (c, CharterNote));
 
 		__currentlyLooping = oldCur;
@@ -43,8 +43,10 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 		return v;
 	}
 
-	public override function remove(v:CharterNote, force:Bool = true):CharterNote
+	public override function remove(v:CharterNote, force:Bool = true):CharterNote {
+		v.ID = -1;
 		return super.remove(v, true);
+	}
 
 	private static function getVar(n:CharterNote)
 		return n.step;
@@ -56,29 +58,35 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 
 	public override function draw() {}
 
-	public override function update(elapsed:Float) {
-		@:privateAccess var oldDefaultCameras = FlxCamera._defaultCameras;
-		@:privateAccess if (cameras != null) FlxCamera._defaultCameras = cameras;
+	public override function update(elapsed:Float) @:privateAccess {
+		var oldDefaultCameras = FlxCamera._defaultCameras;
+		if (cameras != null) FlxCamera._defaultCameras = cameras;
 
-		if (length != __lastSort && autoSort)
+		if (autoSort && members.length != __lastSort)
 			sortNotes();
 		
 		forEach((n) -> {
-			if(n.exists && n.active)
+			if(n.exists && n.active) {
+				n.cameras = n.__lastDrawCameras = cameras;
 				n.update(elapsed);
+			}
 		});
 
-		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
+		FlxCamera._defaultCameras = oldDefaultCameras;
 	}
 
 	public function sortNotes() {
-		__lastSort = length;
+		__lastSort = members.length;
 		this.sort(function(i, n1, n2) {
 			if (n1.step == n2.step)
 				return FlxSort.byValues(FlxSort.ASCENDING, n1.fullID, n2.fullID);
 			return FlxSort.byValues(FlxSort.ASCENDING, n1.step, n2.step);
 		});
+		updateNoteIDs();
 	}
+
+	public inline function updateNoteIDs()
+		for (i => n in members) n.ID = i;
 
 	public inline function preallocate(len:Int) {
 		members = cast new haxe.ds.Vector<CharterNote>(len);

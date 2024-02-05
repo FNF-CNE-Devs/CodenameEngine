@@ -39,7 +39,7 @@ class SaveWarning {
 					}
 				},
 				{
-					label: closingWindow ? "Save & Exit Game" : "Save&Exit To Menu",
+					label: closingWindow ? "Save & Exit Game" : "Save & Exit To Menu",
 					color: 0x969533,
 					onClick: function(_) {
 						if (saveFunc != null) saveFunc();

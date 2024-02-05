@@ -73,7 +73,7 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 		if (addToUndo) {
 			var oldID = __pastStrumlines.indexOf(draggingObj);
 			var newID = members.indexOf(draggingObj);
-			if (newID != oldID) Charter.instance.undos.addToUndo(COrderStrumLine(newID, oldID, newID));
+			if (newID != oldID) Charter.undos.addToUndo(COrderStrumLine(newID, oldID, newID));
 		}
 
 		draggingObj = null;

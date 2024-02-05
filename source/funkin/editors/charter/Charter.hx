@@ -23,7 +23,6 @@ import openfl.net.FileReference;
 
 class Charter extends UIState {
 	public static var __song:String;
-	public static var __lastPos:Float;
 	static var __diff:String;
 	static var __reload:Bool;
 
@@ -82,10 +81,12 @@ class Charter extends UIState {
 	public var uiCamera:FlxCamera;
 	public var selectionBox:UISliceSprite;
 
-	public var selection:Selection = new Selection();
-	public var undos:UndoList<CharterChange> = new UndoList<CharterChange>();
+	public static var selection:Selection;
 
-	public var clipboard:Array<CharterCopyboardObject> = [];
+	public static var playtestInfo:PlaytestInfo;
+	public static var undos:UndoList<CharterChange>;
+
+	public static var clipboard:Array<CharterCopyboardObject> = [];
 
 	public function new(song:String, diff:String, reload:Bool = true) {
 		super();
@@ -454,6 +455,8 @@ class Charter extends UIState {
 	}
 
 	override function destroy() {
+		__updatePlaytestInfo();
+
 		if(Framerate.isLoaded) {
 			Framerate.fpsCounter.alpha = 1;
 			Framerate.memoryCounter.alpha = 1;
@@ -464,13 +467,12 @@ class Charter extends UIState {
 
 	public function loadSong() {
 		if (__reload) {
-			EventsData.reloadEvents(); __lastPos = 0;
+			EventsData.reloadEvents();
 			PlayState.loadSong(__song, __diff, false, false);
+			__resetStatics();
 		}
 		Conductor.setupSong(PlayState.SONG);
-		Conductor.songPosition = __lastPos;
 		noteTypes = PlayState.SONG.noteTypes;
-		// noteTypes = ["Hurt Note", "Bullet Note", "Penis Note", "Boobs Note"];
 
 		FlxG.sound.setMusic(FlxG.sound.load(Paths.inst(__song, __diff)));
 		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
@@ -500,6 +502,7 @@ class Charter extends UIState {
 		notesGroup.autoSort = true;
 
 		// create events
+		eventsGroup.autoSort = false;
 		var __last:CharterEvent = null;
 		var __lastTime:Float = Math.NaN;
 		for(e in PlayState.SONG.events) {
@@ -513,11 +516,20 @@ class Charter extends UIState {
 			}
 		}
 
+		eventsGroup.sortEvents();
+		eventsGroup.autoSort = true;
+
 		for(e in eventsGroup.members)
 			e.refreshEventIcons();
 
+
 		buildNoteTypesUI();
 		refreshBPMSensitive();
+
+		// Cool shit :DD 
+		__relinkSelection();
+		__relinkUndos();
+		__applyPlaytestInfo();
 	}
 
 	public var __endStep:Float = 0;
@@ -667,7 +679,10 @@ class Charter extends UIState {
 						if (s is CharterNote) cast(s, CharterNote).snappedToStrumline = true;
 						if (s is UISprite) cast(s, UISprite).cursor = BUTTON;
 					}
-					if (!(verticalChange == 0 && horizontalChange == 0)) undos.addToUndo(CSelectionDrag(undoDrags));
+					if (!(verticalChange == 0 && horizontalChange == 0)) {
+						notesGroup.sortNotes(); eventsGroup.sortEvents();
+						undos.addToUndo(CSelectionDrag(undoDrags));
+					}
 
 					hoverOffset.put();
 					gridActionType = NONE;
@@ -779,11 +794,13 @@ class Charter extends UIState {
 
 		if (selected is CharterNote) {
 			var note:CharterNote = cast selected;
-			notesGroup.remove(note, true);
+			note.strumLineID = strumLines.members.indexOf(note.strumLine);
+			note.strumLine = null; // For static undos :D
+			notesGroup.remove(note);
 			note.kill();
 		} else if (selected is CharterEvent) {
 			var event:CharterEvent = cast selected;
-			eventsGroup.remove(event, true);
+			eventsGroup.remove(event);
 			event.kill();
 		}
 
@@ -798,11 +815,12 @@ class Charter extends UIState {
 
 		notesGroup.autoSort = false;
 		selection.loop(function (n:CharterNote) {
-			notesGroup.add(n);
+			n.strumLine = strumLines.members[n.strumLineID];
 			n.revive();
+			notesGroup.add(n);
 		}, function (e:CharterEvent) {
-			eventsGroup.add(e);
 			e.revive();
+			eventsGroup.add(e);
 			e.refreshEventIcons();
 		}, false);
 		notesGroup.sortNotes();
@@ -1023,7 +1041,6 @@ class Charter extends UIState {
 			vocals.pause();
 			for (strumLine in strumLines.members) strumLine.vocals.pause();
 		}
-		__lastPos = Conductor.songPosition;
 
 		songPosInfo.text = '${CoolUtil.timeToStr(Conductor.songPosition)} / ${CoolUtil.timeToStr(songLength)}'
 		+ '\nStep: ${curStep}'
@@ -1077,7 +1094,7 @@ class Charter extends UIState {
 	#if REGION
 	function _file_exit(_) {
 		if (undos.unsaved) SaveWarning.triggerWarning();
-		else FlxG.switchState(new CharterSelection());
+		else {undos = null; FlxG.switchState(new CharterSelection());}
 	}
 
 	function _file_save(_) {
@@ -1180,6 +1197,7 @@ class Charter extends UIState {
 		
 		selection = [];
 		var undo = undos.undo();
+		trace(undo);
 		switch(undo) {
 			case null: // do nothing
 			case CDeleteStrumLine(strumLineID, strumLine):
@@ -1201,7 +1219,7 @@ class Charter extends UIState {
 				for (s in selectionDrags)
 					if (s.selectable.draggable) s.selectable.handleDrag(s.change * -1);
 					
-				this.selection = [for (s in selectionDrags) s.selectable];
+				selection = [for (s in selectionDrags) s.selectable];
 			case CEditSustains(changes):
 				for(n in changes)
 					n.note.updatePos(n.note.step, n.note.id, n.before, n.note.type);
@@ -1527,6 +1545,7 @@ class Charter extends UIState {
 			s.strumLine.notes = [];
 			PlayState.SONG.strumLines.push(s.strumLine);
 		}
+		notesGroup.sortNotes();
 		for(n in notesGroup.members) {
 			if (PlayState.SONG.strumLines[n.strumLineID] != null) 
 				PlayState.SONG.strumLines[n.strumLineID].notes.push(buildNote(n));
@@ -1556,6 +1575,101 @@ class Charter extends UIState {
 
 	public inline function hitsoundsEnabled(id:Int)
 		return strumLines.members[id] != null && strumLines.members[id].hitsounds;
+
+	// UH OH!!! DANGER ZONE APPOARCHING !!!! LUNARS SHITTY CODE !!!! -lunar
+
+	@:noCompletion public function __fixSingleSelection(selectable:ICharterSelectable):ICharterSelectable {
+		if (selectable is CharterNote)
+			return selectable.ID == -1 ? cast(selectable, CharterNote) : notesGroup.members[selectable.ID];
+		else if (selectable is CharterEvent)
+			return selectable.ID == -1 ? cast(selectable, CharterEvent) : eventsGroup.members[selectable.ID];
+		return null;
+	}
+
+	@:noCompletion public function __fixSelection(selection:Selection) @:privateAccess {
+		var newSelection:Selection = new Selection();
+		for (i => selectable in selection)
+			newSelection[i] = __fixSingleSelection(selectable);
+		return newSelection;
+	}
+
+	@:noCompletion public inline function __relinkSelection()
+		selection = __fixSelection(selection);
+
+	@:noCompletion public inline function __relinkUndos() {
+		for (list => changeList in [undos.undoList, undos.redoList]) {
+			var newChanges:Array<CharterChange> = [];
+			for (i => change in changeList) {
+				switch (change) {
+					case CCreateSelection(selection):
+						newChanges[i] = CCreateSelection(__fixSelection(selection));
+					case CDeleteSelection(selection):
+					 	newChanges[i] = CDeleteSelection(__fixSelection(selection));
+					case CSelectionDrag(selectionDrags):
+						newChanges[i] = CSelectionDrag([
+							for (selectionDrag in selectionDrags)
+								{
+									selectable: __fixSingleSelection(selectionDrag.selectable), 
+									change: selectionDrag.change
+								}
+						]);
+					case CEditSustains(noteChanges):
+						newChanges[i] = CEditSustains([
+							for (noteChange in noteChanges)
+								{
+									note: cast(__fixSingleSelection(noteChange.note), CharterNote),
+									before: noteChange.before,
+									after: noteChange.after
+								}
+						]);
+					case CEditEvent(event, oldEvents, newEvents):
+						newChanges[i] = CEditEvent(cast(__fixSingleSelection(event), CharterEvent), oldEvents, newEvents);
+					case CEditSpecNotesType(notesChanged, oldNoteTypes, newNoteTypes):
+						newChanges[i] = CEditSpecNotesType([
+							for (noteChanged in notesChanged)
+								cast(__fixSingleSelection(noteChanged), CharterNote)
+						], oldNoteTypes, newNoteTypes);
+					default: newChanges[i] = change;
+				}
+			}
+
+			if (list == 0) undos.undoList = newChanges;
+			else undos.redoList = newChanges;
+		}
+	}
+
+	@:noCompletion public function __resetStatics() {
+		selection = new Selection();
+		undos = new UndoList<CharterChange>();
+		clipboard = []; playtestInfo = null;
+	}
+
+	@:noCompletion public function __updatePlaytestInfo() {
+		playtestInfo = {
+			songPosition: Conductor.songPosition,
+			playbackSpeed: playBackSlider.value,
+			quantSelected: quant,
+			noteTypeSelected: noteType, 
+			strumlinesDraggable: strumLines.draggable,
+			hitSounds: [for (strumLine in strumLines.members) strumLine.hitsounds],
+			mutedVocals: [for (strumLine in strumLines.members) !(strumLine.vocals.volume > 0)],
+		}
+	}
+
+	@:noCompletion public function __applyPlaytestInfo() {
+		if (playtestInfo == null) return;
+
+		Conductor.songPosition = playtestInfo.songPosition;
+		playBackSlider.value = playtestInfo.playbackSpeed;
+		quant = playtestInfo.quantSelected;
+		noteType = playtestInfo.noteTypeSelected;
+		strumLines.draggable = playtestInfo.strumlinesDraggable;
+
+		for (i => strumLine in strumLines.members)
+			strumLine.hitsounds = playtestInfo.hitSounds[i];
+		for (i => strumLine in strumLines.members)
+			strumLine.vocals.volume = playtestInfo.mutedVocals[i] ? 0 : 1;
+	}
 }
 
 enum CharterChange {
@@ -1607,6 +1721,7 @@ typedef SelectionDragChange = {
 interface ICharterSelectable {
 	public var x(default, set):Float;
 	public var y(default, set):Float;
+	public var ID:Int;
 	public var step:Float;
 
 	public var selected:Bool;
@@ -1622,4 +1737,14 @@ enum abstract CharterGridActionType(Int) {
 	var BOX = 1;
 	var DRAG = 2;
 	var INVALID_DRAG = 3;
+}
+
+typedef PlaytestInfo = {
+	var songPosition:Float;
+	var playbackSpeed:Float;
+	var quantSelected:Int;
+	var noteTypeSelected:Int;
+	var strumlinesDraggable:Bool;
+	var hitSounds:Array<Bool>;
+	var mutedVocals:Array<Bool>;
 }
