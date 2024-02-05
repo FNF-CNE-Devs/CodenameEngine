@@ -20,11 +20,12 @@ class CreditsMain extends TreeMenu {
 		add(bg);
 
 		var selectables:Array<OptionType> = [];
+		var xmlPath = Paths.xml('config/credits');
 		for(source in [funkin.backend.assets.AssetsLibraryList.AssetSource.SOURCE, funkin.backend.assets.AssetsLibraryList.AssetSource.MODS]) {
-			if (Paths.assetsTree.existsSpecific(Paths.xml('config/credits'), "TEXT", source)) {
+			if (Paths.assetsTree.existsSpecific(xmlPath, "TEXT", source)) {
 				var access:Access = null;
 				try {
-					access = new Access(Xml.parse(Paths.assetsTree.getSpecificAsset(Paths.xml('config/credits'), "TEXT", source)));
+					access = new Access(Xml.parse(Paths.assetsTree.getSpecificAsset(xmlPath, "TEXT", source)));
 				} catch(e) {
 					Logs.trace('Error while parsing credits.xml: ${Std.string(e)}', ERROR);
 				}

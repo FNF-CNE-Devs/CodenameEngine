@@ -100,15 +100,11 @@ class AssetsLibraryList extends AssetLibrary {
 
 	public function getSpecificAsset(id:String, type:String, source:AssetSource = BOTH, ?avoidRoot:Bool = false):Dynamic {
 		try {
-			var fileFromAssets:Bool = id.startsWith("assets/");
-
-			if (!fileFromAssets) {
+			if (!id.startsWith("assets/")) {
 				var ass = getSpecificAsset('assets/$id', type, source);
 				if (ass != null)
 					return ass;
-			}
-
-			if (fileFromAssets) {
+			} else {
 				for (lib in assetsLibs) {
 					if (shouldSkipLib(libraries.indexOf(lib), source)) continue;
 
@@ -116,7 +112,9 @@ class AssetsLibraryList extends AssetLibrary {
 					if (asset != null)
 						return asset;
 				}
-			} else if (!avoidRoot) {
+			}
+
+			if (!avoidRoot) {
 				for (lib in rootLibs) {
 					if (shouldSkipLib(libraries.indexOf(lib), source)) continue;
 
@@ -182,7 +180,7 @@ class AssetsLibraryList extends AssetLibrary {
 
 		if (finalLib is IModsAssetLibrary)
 			assetsLibs.insert(0, finalLib);
-		else 
+		else
 			rootLibs.insert(0, finalLib);
 		return lib;
 	}
