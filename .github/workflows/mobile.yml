@@ -23,18 +23,8 @@ jobs:
       - name: Install Libraries
         run: |
           haxelib setup ~/haxelib
-          haxelib --quiet install hxcpp 4.3.2
-          haxelib git lime https://github.com/mcagabe19-stuff/lime
-          haxelib --quiet install openfl 9.2.2
-          haxelib git flixel https://github.com/FNF-CNE-Devs/flixel
-          haxelib git flixel-addons https://github.com/FNF-CNE-Devs/flixel-addons
-          haxelib git hscript-improved https://www.github.com/FNF-CNE-Devs/hscript-improved
-          haxelib git flxanimate https://github.com/FNF-CNE-Devs/flxanimate
-          haxelib --quiet --never install hxvlc
-          haxelib --quiet install away3d
-          haxelib --quiet install format
-          haxelib --quiet install markdown
-          haxelib --quiet --never install extension-androidtools
+          haxelib --quiet install hmm
+          haxelib run hmm --quiet install
       - name: Configure Android
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
@@ -67,17 +57,8 @@ jobs:
       - name: Install Libraries
         run: |
           haxelib setup ~/haxelib
-          haxelib --quiet install hxcpp 4.3.2
-          haxelib git lime https://github.com/mcagabe19-stuff/lime
-          haxelib --quiet install openfl 9.2.2
-          haxelib git flixel https://github.com/FNF-CNE-Devs/flixel
-          haxelib git flixel-addons https://github.com/FNF-CNE-Devs/flixel-addons
-          haxelib git hscript-improved https://www.github.com/FNF-CNE-Devs/hscript-improved
-          haxelib git flxanimate https://github.com/FNF-CNE-Devs/flxanimate
-          haxelib --quiet --never install hxvlc
-          haxelib --quiet install away3d
-          haxelib --quiet install format
-          haxelib --quiet install markdown
+          haxelib --quiet install hmm
+          haxelib run hmm --quiet install
       - name: Compile
         run: haxelib run lime build ios -final
       - name: Make Ipa
