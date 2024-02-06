@@ -19,4 +19,7 @@
 	<!-- <lib name="dox" /> -->
 	<lib name="format" />
 	<lib name="markdown" />
+
+	<!-- Android -->
+	<lib name="extension-androidtools" />
 </libraries>
