@@ -3,6 +3,7 @@ import funkin.backend.scripting.events.NoteHitEvent;
 
 public var pixelNotesForBF = true;
 public var pixelNotesForDad = true;
+public var pixelSplashes = true;
 public var enablePixelUI = true;
 public var enablePixelGameOver = true;
 public var enableCameraHacks = Options.week6PixelPerfect;
@@ -32,6 +33,12 @@ function onNoteCreation(event) {
 	}
 	note.scale.set(daPixelZoom, daPixelZoom);
 	note.updateHitbox();
+}
+
+function onPostNoteCreation(event) {  
+    var splashes = event.note;
+	if (pixelSplashes)
+		splashes.splash = "pixel-default";
 }
 
 function onStrumCreation(event) {
