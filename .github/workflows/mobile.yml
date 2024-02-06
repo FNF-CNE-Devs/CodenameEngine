@@ -24,7 +24,7 @@ jobs:
         run: |
           haxelib setup ~/haxelib
           haxelib --quiet install hxcpp 4.3.2
-          haxelib --quiet install lime 8.0.2
+          haxelib git lime https://github.com/mcagabe19-stuff/lime
           haxelib --quiet install openfl 9.2.2
           haxelib git flixel https://github.com/FNF-CNE-Devs/flixel
           haxelib git flixel-addons https://github.com/FNF-CNE-Devs/flixel-addons
@@ -68,7 +68,7 @@ jobs:
         run: |
           haxelib setup ~/haxelib
           haxelib --quiet install hxcpp 4.3.2
-          haxelib --quiet install lime 8.0.2
+          haxelib git lime https://github.com/mcagabe19-stuff/lime
           haxelib --quiet install openfl 9.2.2
           haxelib git flixel https://github.com/FNF-CNE-Devs/flixel
           haxelib git flixel-addons https://github.com/FNF-CNE-Devs/flixel-addons
