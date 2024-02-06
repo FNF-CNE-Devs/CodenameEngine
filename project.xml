@@ -98,7 +98,7 @@
 
 	<!-- Comment this out to disable multiple windows for editors !-->
 	<define name="ALLOW_MULTITASKING" />
-	<define name="openfl_dpi_aware" unless="mobile"/>
+	<define name="openfl_dpi_aware" />
 
 	<!-- Comment this out to disable updates !-->
 	<!-- <define name="UPDATE_CHECKING" unless="web || hl || neko"/> -->
