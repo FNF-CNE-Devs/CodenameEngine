@@ -217,7 +217,6 @@
 	</section>
 
 	<section if="ios">
-		<certificate path="" password="" alias="" alias-password="" team-id=""/>
 		<define name='objc' />
 		<ios linker-flags='-ObjC' />
 	</section>
