@@ -1,0 +1,68 @@
+
+name: Android Build
+on:
+  push:
+jobs:
+  build:
+    name: Android Build
+    permissions: write-all
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Pulling the source
+        uses: actions/checkout@v2
+      - name: Setting up Haxe
+        uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.2.5
+      - name: Restore existing build cache for faster compilation
+        uses: actions/cache@v3
+        with:
+          # not caching the bin folder to prevent asset duplication and stuff like that
+          key: cache-build-android
+          path: |
+            .haxelib/
+            export/release/android/haxe/
+            export/release/android/obj/
+          restore-keys: |
+            cache-build-android
+      - name: Installing/Updating libraries
+        run: |
+          haxe -cp commandline -D analyzer-optimize --run Main setup
+      - name: Building the game
+        run: |
+          haxelib run lime build android
+      - name: Uploading artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Codename Engine
+          path: export/release/android/bin/app/build/outputs/apk/release/*.apk
+      - name: Clearing already existing cache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              if (cache.key == "cache-build-linux") {
+                console.log('Clearing ' + cache.key + '...')
+                await github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+                console.log("Cache cleared.")
+              }
+            }
+      - name: Uploading new cache
+        uses: actions/cache@v3
+        with:
+          # caching again since for some reason it doesnt work with the first post cache shit
+          key: cache-build-android
+          path: |
+            .haxelib/
+            export/release/android/haxe/
+            export/release/android/obj/
+          restore-keys: |
+            cache-build-android
