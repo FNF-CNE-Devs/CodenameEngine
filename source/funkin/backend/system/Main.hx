@@ -25,6 +25,9 @@ import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import lime.app.Application;
 import funkin.backend.system.modules.*;
+#if android
+import haxe.io.Path;
+#end
 
 #if ALLOW_MULTITHREADING
 import sys.thread.Thread;
