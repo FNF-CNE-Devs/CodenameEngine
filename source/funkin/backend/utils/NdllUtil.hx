@@ -22,6 +22,8 @@ class NdllUtil {
 		#if linux   public static final os:String = "linux"; #end
 		#if macos   public static final os:String = "mac"; #end
 		#if android public static final os:String = "android"; #end
+		#if ios public static final os:String = "ios"; #end
+		#if iphonesim public static final os:String = "iphonesim"; #end
 	#end
 
 	/**
