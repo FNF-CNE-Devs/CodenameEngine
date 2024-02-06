@@ -6,10 +6,6 @@ Known issues in the alpha:
 - Some options are missing
 - Week 6 still have no dialogue
 
-Build instructions are below. Press TAB on the main menu to switch mods.
-
-Also, `lime test` uses the source assets folder instead of the export one for easier development.
-
 ## Codename Engine
 
 Codename Engine is a new Friday Night Funkin' Engine aimed at simplifying modding, along with extensiblity and ease of use.
