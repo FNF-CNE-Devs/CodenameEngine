@@ -1,42 +1,41 @@
-
-name: Android Build
-on:
-  push:
+name: Mobile
+on: workflow_dispatch
 jobs:
-  build:
-    name: Android Build
-    permissions: write-all
-    runs-on: ubuntu-20.04
+  Android:
+    runs-on: ubuntu-latest
     steps:
-      - name: Pulling the source
-        uses: actions/checkout@v2
-      - name: Setting up Haxe
-        uses: krdlab/setup-haxe@v1
-        with:
-          haxe-version: 4.2.5
-      - name: Restore existing build cache for faster compilation
-        uses: actions/cache@v3
-        with:
-          # not caching the bin folder to prevent asset duplication and stuff like that
-          key: cache-build-android
-          path: |
-            .haxelib/
-            export/release/android/haxe/
-            export/release/android/obj/
-          restore-keys: |
-            cache-build-android
-      - name: Setuping Android Native Development Kit
+      - name: Checkout
+        uses: actions/checkout@main
+      - name: Setup Android NDK
         uses: nttld/setup-ndk@main
         id: setup-ndk
         with:
           ndk-version: r21e
-      - name: Setuping Java Development Kit
+      - name: Setup Java JDK
         uses: actions/setup-java@main
         with:
           distribution: 'temurin'
           java-version: '11'
-      # yeah weird - Lily
-      - name: Configuring Android
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+      - name: Install Libraries
+        run: |
+          haxelib setup ~/haxelib
+          haxelib --quiet install hxcpp 4.3.2
+          haxelib --quiet install lime 8.0.2
+          haxelib --quiet install openfl 9.2.2
+          haxelib git flixel https://github.com/FNF-CNE-Devs/flixel
+          haxelib git flixel-addons https://github.com/FNF-CNE-Devs/flixel-addons
+          haxelib git hscript-improved https://www.github.com/FNF-CNE-Devs/hscript-improved
+          haxelib git flxanimate https://github.com/FNF-CNE-Devs/flxanimate
+          haxelib --quiet --never install hxvlc
+          haxelib --quiet install away3d
+          haxelib --quiet install format
+          haxelib --quiet install markdown
+          haxelib --quiet --never install extension-androidtools
+      - name: Configure Android
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
           haxelib run lime config ANDROID_NDK_ROOT $ANDROID_NDK_HOME
@@ -44,44 +43,53 @@ jobs:
           haxelib run lime config ANDROID_SETUP true
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-      - name: Installing/Updating libraries
-        run: |
-          haxe -cp commandline -D analyzer-optimize --run Main setup
-      - name: Building the game
-        run: |
-          haxelib run lime build android
-      - name: Uploading artifact
-        uses: actions/upload-artifact@v2
+      - name: Compile
+        run: haxelib run lime build android -final
+        env:
+          cert_pass: nullfunni
+          cert_alias_pass: nullfunni
+      - name: Upload Artifact
+        if: ${{ success() }}
+        uses: actions/upload-artifact@main
         with:
-          name: Codename Engine
+          name: androidBuild
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
-      - name: Clearing already existing cache
-        uses: actions/github-script@v6
+          if-no-files-found: error
+  iOS:
+    runs-on: macos-13
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
         with:
-          script: |
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-build-linux") {
-                console.log('Clearing ' + cache.key + '...')
-                await github.rest.actions.deleteActionsCacheById({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  cache_id: cache.id,
-                })
-                console.log("Cache cleared.")
-              }
-            }
-      - name: Uploading new cache
-        uses: actions/cache@v3
+          haxe-version: latest
+      - name: Install Libraries
+        run: |
+          haxelib setup ~/haxelib
+          haxelib --quiet install hxcpp 4.3.2
+          haxelib --quiet install lime 8.0.2
+          haxelib --quiet install openfl 9.2.2
+          haxelib git flixel https://github.com/FNF-CNE-Devs/flixel
+          haxelib git flixel-addons https://github.com/FNF-CNE-Devs/flixel-addons
+          haxelib git hscript-improved https://www.github.com/FNF-CNE-Devs/hscript-improved
+          haxelib git flxanimate https://github.com/FNF-CNE-Devs/flxanimate
+          haxelib --quiet --never install hxvlc
+          haxelib --quiet install away3d
+          haxelib --quiet install format
+          haxelib --quiet install markdown
+      - name: Compile
+        run: haxelib run lime build ios -final
+      - name: Make Ipa
+        run: |
+          cd export/release/ios/build/Release-iphoneos
+          mkdir Payload
+          mv *.app Payload
+          zip -r CodenameEngine.ipa Payload
+      - name: Upload Artifact
+        if: ${{ success() }}
+        uses: actions/upload-artifact@main
         with:
-          # caching again since for some reason it doesnt work with the first post cache shit
-          key: cache-build-android
-          path: |
-            .haxelib/
-            export/release/android/haxe/
-            export/release/android/obj/
-          restore-keys: |
-            cache-build-android
+          name: iOSBuild
+          path: export/release/ios/build/Release-iphoneos/*.ipa
+          if-no-files-found: error
