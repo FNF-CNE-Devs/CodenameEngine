@@ -38,7 +38,7 @@
 	<window if="mac" allow-high-dpi="true" />
 
 	<!--Mobile-specific-->
-	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
+	<window if="mobile" orientation="landscape" fullscreen="true" resizable="false" allow-shaders="true" require-shaders="true" allow-high-dpi="true" />
 
 	<!--Switch-specific-->
 	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
@@ -98,7 +98,7 @@
 
 	<!-- Comment this out to disable multiple windows for editors !-->
 	<define name="ALLOW_MULTITASKING" />
-	<define name="openfl_dpi_aware" />
+	<define name="openfl_dpi_aware" unless="mobile"/>
 
 	<!-- Comment this out to disable updates !-->
 	<!-- <define name="UPDATE_CHECKING" unless="web || hl || neko"/> -->
@@ -184,6 +184,8 @@
 	<haxelib name="discord-rpc" if="DISCORD_RPC"/>
 	<haxelib name="markdown" />
 
+	<haxelib name="extension-androidtools" if="android" />
+
 	<haxedef name="no-deprecation-warnings"/>
 
 	<!-- _________________________________ Additional stuff _______________________________ -->
@@ -203,4 +205,19 @@
 	<haxedef name="HXCPP_DEBUG_LINK" if="release" />
 
 	<haxedef name="hscriptPos" /> <!-- for logging -->
+
+	<!-- _________________________________ Mobile stuff _______________________________ -->
+
+	<section if="android">
+		<!-- Do whatever you want I'm tired uninstall and install everytime -->
+		<certificate path="key.keystore" password="nullfunni" alias="null" alias-password="nullfunni" unless="debug" />
+
+		<!--Target SDK-->
+		<!--<android target-sdk-version="29" if="EXTERNAL || MEDIA"/>-->
+	</section>
+
+	<section if="ios">
+		<define name='objc' />
+		<ios linker-flags='-ObjC' />
+	</section>
 </project>
