@@ -14,6 +14,10 @@ import openfl.utils.Assets as OpenflAssets;
 import lime.utils.Log as LimeLogger;
 import openfl.events.UncaughtErrorEvent;
 import openfl.Lib;
+#if sys
+import sys.io.File;
+import sys.FileSystem;
+#end
 
 using StringTools;
 
