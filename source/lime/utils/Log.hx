@@ -30,7 +30,11 @@ class Log
 		{
 			var message = '[${info.className}] $message';
 
+			#if mobile
+			lime.app.Application.current.window.alert(message, "Codename Engine Crash Handler");
+			#else
 			FunkinLogs.trace(message, ERROR, RED);
+			#end
 		}
 	}
 
