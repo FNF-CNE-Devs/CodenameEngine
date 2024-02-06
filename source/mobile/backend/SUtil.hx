@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.Permissions;
 import lime.app.Application;
 #end
+import funkin.backend.utils.NativeAPI;
 import haxe.io.Path;
 import haxe.CallStack;
 import lime.system.System as LimeSystem;
@@ -81,7 +82,7 @@ class SUtil
 				FileSystem.createDirectory('saves');
 
 			File.saveContent('saves/' + fileName + fileExtension, fileData);
-			showPopUp(fileName + " file has been saved", "Success!");
+			NativeAPI.showMessageBox("Success!", fileName + " file has been saved", null);
 		}
 		catch (e:Dynamic)
 		{
