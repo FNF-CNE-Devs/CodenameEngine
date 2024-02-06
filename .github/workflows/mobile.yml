@@ -24,7 +24,7 @@ jobs:
         run: |
           haxelib setup ~/haxelib
           haxelib --quiet install hmm
-          haxelib run hmm --quiet install
+          haxelib run hmm install --quiet
       - name: Configure Android
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
@@ -58,7 +58,7 @@ jobs:
         run: |
           haxelib setup ~/haxelib
           haxelib --quiet install hmm
-          haxelib run hmm --quiet install
+          haxelib run hmm install --quiet
       - name: Compile
         run: haxelib run lime build ios -final
       - name: Make Ipa
