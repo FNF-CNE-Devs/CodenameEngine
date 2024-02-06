@@ -115,7 +115,7 @@ class GameOverSubstate extends MusicBeatSubstate
 				PlayState.instance.saveWarn(false);
 			else {
 				PlayState.resetSongInfos();
-				Charter.instance.__clearStatics();
+				if (Charter.instance != null) Charter.instance.__clearStatics();
 
 				if (FlxG.sound.music != null)
 					FlxG.sound.music.stop();
