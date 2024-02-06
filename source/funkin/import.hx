@@ -10,6 +10,8 @@ import funkin.options.Options;
 import funkin.game.PlayState;
 import funkin.backend.scripting.EventManager;
 
+import mobile.backend.SUtil;
+
 import openfl.utils.Assets;
 
 import flixel.FlxSprite;
