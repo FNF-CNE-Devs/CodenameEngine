@@ -1094,7 +1094,7 @@ class Charter extends UIState {
 	#if REGION
 	function _file_exit(_) {
 		if (undos.unsaved) SaveWarning.triggerWarning();
-		else {undos = null; FlxG.switchState(new CharterSelection());}
+		else {undos = null; FlxG.switchState(new CharterSelection()); PlayState.resetSongInfos(); Charter.instance.__clearStatics();}
 	}
 
 	function _file_save(_) {
@@ -1197,7 +1197,6 @@ class Charter extends UIState {
 		
 		selection = [];
 		var undo = undos.undo();
-		trace(undo);
 		switch(undo) {
 			case null: // do nothing
 			case CDeleteStrumLine(strumLineID, strumLine):
@@ -1642,6 +1641,10 @@ class Charter extends UIState {
 		selection = new Selection();
 		undos = new UndoList<CharterChange>();
 		clipboard = []; playtestInfo = null;
+	}
+
+	@:noCompletion public function __clearStatics() {
+		selection = null; undos = null; clipboard = null; playtestInfo = null;
 	}
 
 	@:noCompletion public function __updatePlaytestInfo() {

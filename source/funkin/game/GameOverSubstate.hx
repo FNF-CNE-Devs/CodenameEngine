@@ -1,5 +1,6 @@
 package funkin.game;
 
+import funkin.editors.charter.Charter;
 import funkin.backend.scripting.events.GameOverCreationEvent;
 import funkin.backend.scripting.events.CancellableEvent;
 import funkin.backend.scripting.Script;
@@ -110,15 +111,22 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (controls.BACK)
 		{
-			PlayState.resetSongInfos();
-			if (FlxG.sound.music != null)
-				FlxG.sound.music.stop();
-			FlxG.sound.music = null;
+			if (PlayState.chartingMode && Charter.undos.unsaved)
+				PlayState.instance.saveWarn(false);
+			else {
+				PlayState.resetSongInfos();
+				Charter.instance.__clearStatics();
 
-			if (PlayState.isStoryMode)
-				FlxG.switchState(new StoryMenuState());
-			else
-				FlxG.switchState(new FreeplayState());
+				if (FlxG.sound.music != null)
+					FlxG.sound.music.stop();
+				FlxG.sound.music = null;
+
+				if (PlayState.isStoryMode)
+					FlxG.switchState(new StoryMenuState());
+				else
+					FlxG.switchState(new FreeplayState());
+			}
+
 		}
 
 		if (!isEnding && ((!lossSFX.playing) || (character.getAnimName() == "firstDeath" && character.isAnimFinished())) && (FlxG.sound.music == null || !FlxG.sound.music.playing))

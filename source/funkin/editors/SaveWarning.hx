@@ -16,7 +16,10 @@ class SaveWarning {
 		}
 	}
 
+	public static var warningFunc:Bool->Void = null;
 	public static function triggerWarning(?closingWindow:Bool = false) {
+		if (warningFunc != null) warningFunc(closingWindow);
+
 		if (FlxG.state != null && FlxG.state is UIState) {
 			FlxG.state.openSubState(new UIWarningSubstate("Unsaved Changes!", "Your changes will be lost if you don't save them. (Can't be recovered)\n\n\nWould you like to Cancel?", 
 			[
@@ -60,5 +63,6 @@ class SaveWarning {
 		SaveWarning.showWarning = false;
 		SaveWarning.selectionClass = null;
 		SaveWarning.saveFunc = null;
+		SaveWarning.warningFunc = null;
 	}
 }

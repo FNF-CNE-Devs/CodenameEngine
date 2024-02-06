@@ -1,5 +1,9 @@
 package funkin.game;
 
+import funkin.editors.charter.CharterSelection;
+import flixel.FlxState;
+import funkin.editors.EditorTreeMenu;
+import funkin.editors.SaveWarning;
 import funkin.backend.chart.EventsData;
 import funkin.backend.system.RotatingSpriteGroup;
 import funkin.editors.charter.Charter;
@@ -751,6 +755,19 @@ class PlayState extends MusicBeatState
 		for(s in introSounds)
 			if (s != null)
 				FlxG.sound.load(Paths.sound(s));
+
+		if (chartingMode) {
+			WindowUtils.endfix = " (Chart Playtesting)";
+			WindowUtils.prefix = Charter.undos.unsaved ? "* " : "";
+
+			SaveWarning.showWarning = Charter.undos.unsaved;
+			SaveWarning.selectionClass = CharterSelection;
+			SaveWarning.warningFunc = saveWarn;
+			SaveWarning.saveFunc = () ->  {
+				@:privateAccess Chart.save('${Paths.getAssetsRoot()}/songs/${Charter.__song.toLowerCase()}', 
+					PlayState.SONG, Charter.__diff.toLowerCase(), {saveMetaInChart: false});
+			}
+		}
 	}
 
 	@:dox(hide) public override function createPost() {
@@ -941,6 +958,10 @@ class PlayState extends MusicBeatState
 			FlxG.sound.destroySound(inst);
 			FlxG.sound.destroySound(vocals);
 		}
+
+		WindowUtils.resetTitle();
+		SaveWarning.reset();
+
 		instance = null;
 
 		Note.__customNoteTypeExists = [];
@@ -1118,6 +1139,50 @@ class PlayState extends MusicBeatState
 		}
 
 		updateDiscordPresence();
+	}
+
+	public function saveWarn(closingWindow:Bool = true) {
+		persistentUpdate = false;
+		paused = true;
+
+		var state:FlxState = FlxG.state;
+		if (FlxG.state.subState != null)
+			state = FlxG.state.subState;
+
+		state.openSubState(new PlaytestingWarningSubstate(closingWindow, [
+			{
+				label: closingWindow ? "Exit Game" : "Exit To Menu",
+				color: 0xFF0000,
+				onClick: function(_) {
+					if (!closingWindow) {
+						if (SaveWarning.selectionClass != null) FlxG.switchState(Type.createInstance(SaveWarning.selectionClass, []));
+					} else {
+						WindowUtils.preventClosing = false; WindowUtils.resetClosing();
+						Sys.exit(0);
+					}
+				}
+			},
+			{
+				label: closingWindow ? "Save & Exit Game" : "Save & Exit To Menu",
+				color: 0xFFFF00,
+				onClick: function(_) {
+					if (SaveWarning.saveFunc != null) SaveWarning.saveFunc();
+					if (!closingWindow) {
+						if (SaveWarning.selectionClass != null) FlxG.switchState(Type.createInstance(SaveWarning.selectionClass, []));
+					} else {
+						WindowUtils.preventClosing = false; WindowUtils.resetClosing();
+						Sys.exit(0);
+					}
+				}
+			},
+			{
+				label: "Cancel",
+				color: 0xFFFFFF,
+				onClick: function (_) {
+					if (closingWindow) WindowUtils.resetClosing();
+				}
+			}
+		]));
 	}
 
 	function updateIconPositions() {

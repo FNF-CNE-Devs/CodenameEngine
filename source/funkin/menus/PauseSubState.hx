@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import funkin.editors.charter.Charter;
 import funkin.backend.scripting.events.MenuChangeEvent;
 import funkin.options.OptionsMenu;
 import funkin.backend.scripting.events.PauseCreationEvent;
@@ -158,9 +159,16 @@ class PauseSubState extends MusicBeatSubstate
 			case "Exit to charter":
 				FlxG.switchState(new funkin.editors.charter.Charter(PlayState.SONG.meta.name, PlayState.difficulty, false));
 			case "Exit to menu":
-				PlayState.resetSongInfos();
-				CoolUtil.playMenuSong();
-				FlxG.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
+				if (PlayState.chartingMode && Charter.undos.unsaved)
+					PlayState.instance.saveWarn(false);
+				else {
+					PlayState.resetSongInfos();
+					Charter.instance.__clearStatics();
+					
+					CoolUtil.playMenuSong();
+					FlxG.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
+				}
+
 		}
 	}
 	override function destroy()

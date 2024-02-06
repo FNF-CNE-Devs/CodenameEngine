@@ -1,5 +1,6 @@
 package funkin.menus;
 
+import funkin.editors.charter.Charter;
 import flixel.graphics.frames.FlxAtlasFrames;
 
 class GitarooPause extends MusicBeatState
@@ -55,14 +56,20 @@ class GitarooPause extends MusicBeatState
 
 		if (controls.ACCEPT)
 		{
-			if (replaySelect)
-			{
-				FlxG.switchState(new PlayState());
-			}
-			else
-			{
-				PlayState.resetSongInfos();
-				FlxG.switchState(new MainMenuState());
+			if (PlayState.chartingMode && Charter.undos.unsaved)
+				PlayState.instance.saveWarn(false);
+			else {
+				if (replaySelect)
+				{
+					FlxG.switchState(new PlayState());
+				}
+				else
+				{
+					PlayState.resetSongInfos();
+					Charter.instance.__clearStatics();
+
+					FlxG.switchState(new MainMenuState());
+				}
 			}
 		}
 
