@@ -1,6 +1,10 @@
 <!DOCTYPE codename-engine-splashes>
 <!--Pixel Splashes by APurples!!-->
+<<<<<<< HEAD
 <splashes sprite="stages/school/ui/pixel-splashes" alpha="0.6" antialiasing="false" scale="3.5">
+=======
+<splashes sprite="stages/school/ui/pixel-splashes" alpha="0.6" antialiasing="false" scale="3.5"> 
+>>>>>>> 04b4ab85 (tyy!!)
 	<strum id="0"> <!-- LEFT -->
 		<anim name="splashleft1" anim="splash purple 1" fps="24" x="-1" y="-2" />
 		<anim name="splashleft2" anim="splash purple 2" fps="24" x="-1" y="-2" />
