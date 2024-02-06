@@ -36,14 +36,14 @@
     },
     {
       "name": "flixel",
-      "type": "haxelib",
+      "type": "git",
       "dir": null,
       "ref": "dev",
       "url": "https://github.com/FNF-CNE-Devs/flixel"
     },
     {
       "name": "flixel-addons",
-      "type": "haxelib",
+      "type": "git",
       "dir": null,
       "ref": "dev",
       "url": "https://github.com/FNF-CNE-Devs/flixel-addons"
