@@ -63,7 +63,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
-          haxe-version: latest
+          haxe-version: 4.2.5
       - name: Install Libraries
         run: |
           haxelib setup ~/haxelib
