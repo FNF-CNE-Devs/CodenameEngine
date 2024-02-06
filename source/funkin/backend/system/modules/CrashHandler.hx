@@ -62,7 +62,11 @@ class CrashHandler {
 	#if (cpp || hl)
 	private static function onError(message:Dynamic):Void
 	{
+		#if mobile
+		NativeAPI.showMessageBox("Codename Engine Crash Handler", '$message', MSG_ERROR);
+		#else
 		throw Std.string(message);
+		#end
 	}
 	#end
 }
