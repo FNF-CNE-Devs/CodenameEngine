@@ -82,7 +82,7 @@ class SUtil
 				FileSystem.createDirectory('saves');
 
 			File.saveContent('saves/' + fileName + fileExtension, fileData);
-			NativeAPI.showMessageBox("Success!", fileName + " file has been saved", null);
+			NativeAPI.showMessageBox("Success!", fileName + " file has been saved", MSG_INFORMATION);
 		}
 		catch (e:Dynamic)
 		{
