@@ -1,4 +1,4 @@
-# Friday Night Funkin' - Codename Engine (WIP)
+# Friday Night Funkin' - Codename Engine Mobile (WIP)
 
 ## PLEASE NOTE - THIS IS STILL IN A BETA STATE
 ### Mods created with beta versions of Codename may not be compatible with the release version
@@ -8,7 +8,7 @@ Known issues in the alpha:
 
 Build instructions are below. Press TAB on the main menu to switch mods.
 
-Also, `lime test windows` uses the source assets folder instead of the export one for easier development.
+Also, `lime test` uses the source assets folder instead of the export one for easier development.
 
 ## Codename Engine
 
