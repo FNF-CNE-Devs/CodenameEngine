@@ -10,10 +10,6 @@ Known issues in the alpha:
 
 Codename Engine is a new Friday Night Funkin' Engine aimed at simplifying modding, along with extensiblity and ease of use.
 
-### It includes many new features, as seen [here](FEATURES.md)
-
-### Wanna see the new features added in the most recent update? Click [here](PATCHNOTES.md)
-
 <details>
   <summary><h2>Credits</h2></summary>
 

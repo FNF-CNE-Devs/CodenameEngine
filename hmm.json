@@ -1,0 +1,85 @@
+{
+  "dependencies": [
+    {
+      "name": "lime",
+      "type": "git",
+      "dir": null,
+      "ref": "main",
+      "url": "https://github.com/mcagabe19-stuff/lime"
+    },
+    {
+      "name": "hscript-improved",
+      "type": "git",
+      "dir": null,
+      "ref": "custom-classes",
+      "url": "https://www.github.com/FNF-CNE-Devs/hscript-improved"
+    },
+    {
+      "name": "openfl",
+      "type": "haxelib",
+      "version": "9.0.2"
+    },
+    {
+      "name": "away3d",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "format",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "markdown",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "flixel",
+      "type": "haxelib",
+      "dir": null,
+      "ref": "dev",
+      "url": "https://github.com/FNF-CNE-Devs/flixel"
+    },
+    {
+      "name": "flixel-addons",
+      "type": "haxelib",
+      "dir": null,
+      "ref": "dev",
+      "url": "https://github.com/FNF-CNE-Devs/flixel-addons"
+    },
+    {
+      "name": "hxcpp",
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://github.com/mcagabe19-stuff/hxcpp"
+    },
+    {
+      "name": "hxvlc",
+      "type": "git",
+      "dir": null,
+      "ref": "main",
+      "url": "https://github.com/MAJigsaw77/hxvlc"
+    },
+    {
+      "name": "hxdiscord_rpc",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "extension-androidtools",
+      "type": "git",
+      "dir": null,
+      "ref": "main",
+      "url": "https://github.com/MAJigsaw77/extension-androidtools.git"
+    },
+    {
+      "name": "flxanimate",
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://github.com/FNF-CNE-Devs/flxanimate"
+    }
+  ]
+}
