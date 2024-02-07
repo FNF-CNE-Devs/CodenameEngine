@@ -181,7 +181,7 @@
 	<haxelib name="flxanimate" />
 
 	<haxelib name="hscript-improved" />
-	<haxelib name="discord-rpc" if="DISCORD_RPC"/>
+	<haxelib name="hxdiscord_rpc" if="DISCORD_RPC"/>
 	<haxelib name="markdown" />
 
 	<haxelib name="extension-androidtools" if="android" />
