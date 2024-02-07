@@ -4,9 +4,9 @@
 	<checkbox id="checkboxExample" name="Checkbox example" />
 	<number id="numberExample" name="Number example" min="0" max="10" change="1"/>
 	<choice id="choiceExample" name="Choice Example">
-		<value name="Disabled" value="disabled" />
-		<value name="This Only" value="thisonly" />
-		<value name="All" value="all" />
+		<value name="Disabled" />
+		<value name="This Only" />
+		<value name="All" />
 	</choice>
 
 	<menu name="Submenu Example" desc="Submenu test">
