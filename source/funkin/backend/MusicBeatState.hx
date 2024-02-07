@@ -149,13 +149,13 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 
 		switch (MobileControls.mode)
 		{
-			case 'Pad-Right' | 'Pad-Left' | 'Pad-Custom':
+			case 0 | 1 | 2:
 				controls.setVirtualPadNOTES(mobileControls.virtualPad, RIGHT_FULL, NONE);
-			case 'Pad-Duo':
-				controls.setVirtualPadNOTES(mobileControls.virtualPad, BOTH_FULL, NONE);
-			case 'Hitbox':
+			case 3:
+				controls.setVirtualPadNOTES(mobileControls.virtualPad, BOTH, NONE);
+			case 4:
 				controls.setHitBox(mobileControls.hitbox);
-			case 'Keyboard': // do nothing
+			case 5: // do nothing
 		}
 
 		trackedInputsMobileControls = controls.trackedInputsNOTES;

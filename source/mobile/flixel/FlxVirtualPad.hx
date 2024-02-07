@@ -1,19 +1,16 @@
 package mobile.flixel;
 
-import sys.FileSystem;
-import flixel.graphics.tile.FlxGraphicsShader;
-import funkin.backend.assets.Paths;
 import flixel.FlxG;
-import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.graphics.frames.FlxTileFrames;
+import sys.FileSystem;
 import flixel.math.FlxPoint;
-import flixel.util.FlxDestroyUtil;
-import openfl.display.BitmapData;
-import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
-import flixel.graphics.FlxGraphic;
-import openfl.display.BitmapData;
 import mobile.flixel.FlxButton;
+import openfl.display.BitmapData;
+import flixel.util.FlxDestroyUtil;
+import flixel.graphics.FlxGraphic;
+import funkin.backend.assets.Paths;
+import mobile.objects.FlxButtonGroup;
+import flixel.graphics.frames.FlxTileFrames;
+import flixel.graphics.frames.FlxAtlasFrames;
 
 enum FlxDPadMode
 {
@@ -22,7 +19,7 @@ enum FlxDPadMode
 	UP_LEFT_RIGHT;
 	LEFT_FULL;
 	RIGHT_FULL;
-	BOTH_FULL;
+	BOTH;
 	NONE;
 }
 
@@ -48,7 +45,7 @@ enum FlxActionMode
  * @author Ka Wing Chin
  * @author Mihai Alexandru (M.A. Jigsaw)
  */
-class FlxVirtualPad extends FlxTypedSpriteGroup<FlxButton>
+class FlxVirtualPad extends FlxButtonGroup
 {
 	public var buttonLeft:FlxButton = new FlxButton(0, 0);
 	public var buttonUp:FlxButton = new FlxButton(0, 0);
@@ -103,7 +100,7 @@ class FlxVirtualPad extends FlxTypedSpriteGroup<FlxButton>
 				add(buttonLeft = createButton(FlxG.width - 384, FlxG.height - 309, 'left', 0xFF00FF));
 				add(buttonRight = createButton(FlxG.width - 132, FlxG.height - 309, 'right', 0xFF0000));
 				add(buttonDown = createButton(FlxG.width - 258, FlxG.height - 201, 'down', 0x00FFFF));
-			case BOTH_FULL:
+			case BOTH:
 				add(buttonUp = createButton(105, FlxG.height - 345, 'up', 0x00FF00));
 				add(buttonLeft = createButton(0, FlxG.height - 243, 'left', 0xFF00FF));
 				add(buttonRight = createButton(207, FlxG.height - 243, 'right', 0xFF0000));

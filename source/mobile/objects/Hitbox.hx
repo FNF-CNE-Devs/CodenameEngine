@@ -1,13 +1,12 @@
 package mobile.objects;
 
 import flixel.FlxG;
-import openfl.display.Shape;
-import openfl.display.BitmapData;
-import flixel.util.FlxColor;
-import flixel.util.FlxDestroyUtil;
 import flixel.tweens.*;
-import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
+import flixel.util.FlxColor;
+import openfl.display.Shape;
 import mobile.flixel.FlxButton;
+import openfl.display.BitmapData;
+import flixel.util.FlxDestroyUtil;
 
 /**
  * A zone with 4 hint's (A hitbox).
@@ -16,7 +15,7 @@ import mobile.flixel.FlxButton;
  * @author: Mihai Alexandru
  * @modification's author: Karim Akra & Lily (mcagabe19)
  */
-class Hitbox extends FlxTypedSpriteGroup<FlxButton>
+class Hitbox extends FlxButtonGroup
 {
 	//final offsetFir:Int = (ClientPrefs.data.hitbox2 ? Std.int(FlxG.height / 4) * 3 : 0);
 	//final offsetSec:Int = (ClientPrefs.data.hitbox2 ? 0 : Std.int(FlxG.height / 4));

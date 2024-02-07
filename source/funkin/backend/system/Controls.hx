@@ -479,7 +479,7 @@ class Controls extends FlxActionSet
 				inline forEachBound(Control.DOWN, (action, state) -> addButtonUI(action, vpad.buttonDown, state));
 				inline forEachBound(Control.LEFT, (action, state) -> addButtonUI(action, vpad.buttonLeft, state));
 				inline forEachBound(Control.RIGHT, (action, state) -> addButtonUI(action, vpad.buttonRight, state));
-			case BOTH_FULL:
+			case BOTH:
 				inline forEachBound(Control.UP, (action, state) -> addButtonUI(action, vpad.buttonUp, state));
 				inline forEachBound(Control.DOWN, (action, state) -> addButtonUI(action, vpad.buttonDown, state));
 				inline forEachBound(Control.LEFT, (action, state) -> addButtonUI(action, vpad.buttonLeft, state));
@@ -528,7 +528,7 @@ class Controls extends FlxActionSet
 				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown, state));
 				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
 				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
-			case BOTH_FULL:
+			case BOTH:
 				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp, state));
 				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown, state));
 				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));

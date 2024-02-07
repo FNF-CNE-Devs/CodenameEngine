@@ -12,8 +12,8 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
 import funkin.backend.scripting.events.*;
-
 import funkin.options.OptionsMenu;
+import mobile.substates.MobileControlSelectSubState;
 
 using StringTools;
 
@@ -83,7 +83,7 @@ class MainMenuState extends MusicBeatState
 
 		changeItem();
 
-		addVirtualPad(UP_DOWN, A_B_E);
+		addVirtualPad(UP_DOWN, A_B_C);
 	}
 
 	var selectedSomethin:Bool = false;
@@ -120,6 +120,9 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.BACK)
 				FlxG.switchState(new TitleState());
+
+			if(virtualPad.buttonC.justPressed || FlxG.keys.justPressed.C)
+				openSubState(new MobileControlSelectSubState());
 
 			#if MOD_SUPPORT
 			// make it customisable
