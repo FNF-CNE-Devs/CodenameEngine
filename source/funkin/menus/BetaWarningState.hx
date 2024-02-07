@@ -41,7 +41,7 @@ class BetaWarningState extends MusicBeatState {
 			if (touch.justPressed && transitioning) {
 				FlxG.camera.stopFX(); FlxG.camera.visible = false;
 				goToTitle();
-			} elseif (touch.justPressed && !transitioning) {
+			} else if (touch.justPressed && !transitioning) {
 				transitioning = true;
 				CoolUtil.playMenuSFX(CONFIRM);
 				FlxG.camera.flash(FlxColor.WHITE, 1, function() {
