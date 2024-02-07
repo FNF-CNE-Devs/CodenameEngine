@@ -82,6 +82,8 @@ class MainMenuState extends MusicBeatState
 		add(versionShit);
 
 		changeItem();
+
+		addVirtualPad(UP_DOWN, A_B_E);
 	}
 
 	var selectedSomethin:Bool = false;
