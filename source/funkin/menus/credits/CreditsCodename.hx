@@ -37,7 +37,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 
 		error = false;
 		//Main.execAsync(function() {
-		var idk = GitHub.getContributors(author, "CodenameEngine", function(e) {
+		var idk = GitHub.getContributors(author, "CodenameEngine-Mobile", function(e) {
 			error = true;
 			var errMsg:String = 'Error while trying to download contributors list:\n${CoolUtil.removeIP(e.message)}';
 			Logs.traceColored([Logs.logText(errMsg.replace('\n', ' '), RED)], ERROR);
