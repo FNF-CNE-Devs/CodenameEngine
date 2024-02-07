@@ -126,12 +126,17 @@ class OptionsMenu extends TreeMenu {
 						Logs.trace("A choice option requires an \"id\" for option saving.", WARNING);
 						continue;
 					}
+					
 					var optionOptions:Array<Dynamic> = [];
+					var optionDisplayOptions:Array<String> = [];
+
 					for(choice in node.elements) {
 						optionOptions.push(choice.att.name);
+						optionDisplayOptions.push(choice.innerData.trim());
 					}
+					
 					if(optionOptions.length > 0)
-						options.push(new ArrayOption(name, desc, optionOptions, node.att.id, null, FlxG.save.data));
+						options.push(new ArrayOption(name, desc, optionOptions, optionDisplayOptions, node.att.id, null, FlxG.save.data));
 					
 				case "menu":
 					options.push(new TextOption(name + " >", desc, function() {

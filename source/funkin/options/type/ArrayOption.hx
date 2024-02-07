@@ -9,6 +9,7 @@ class ArrayOption extends OptionType {
 	private var __selectiontext:Alphabet;
 
 	public var options:Array<Dynamic>;
+	public var displayOptions:Array<String>;
 
 	public var currentSelection:Int;
 
@@ -20,9 +21,10 @@ class ArrayOption extends OptionType {
 	private function get_text() {return __text.text;}
 	private function set_text(v:String) {return __text.text = v;}
 
-	public function new(text:String, desc:String, options:Array<Dynamic>, optionName:String, ?selectCallback:String->Void = null, ?parent:Dynamic) {
+	public function new(text:String, desc:String, options:Array<Dynamic>, displayOptions:Array<String>, optionName:String, ?selectCallback:String->Void = null, ?parent:Dynamic) {
 		super(desc);
 		this.selectCallback = selectCallback;
+		this.displayOptions = displayOptions;
 		this.options = options;
 		if (parent == null)
 			parent = Options;
@@ -65,7 +67,7 @@ class ArrayOption extends OptionType {
 		else
 			currentOptionString += "  ";
 
-		currentOptionString +=  options[currentSelection];
+		currentOptionString += displayOptions[currentSelection];
 
 		if(!(currentSelection >= options.length - 1))
 			currentOptionString += " >";
