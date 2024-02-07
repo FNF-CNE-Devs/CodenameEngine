@@ -30,7 +30,13 @@ class ArrayOption extends OptionType {
 		this.parent = parent;
 
 		if(Reflect.field(parent, optionName) != null)
-			this.currentSelection = options.indexOf(Reflect.field(parent, optionName));
+		{
+			if(options.indexOf(Reflect.field(parent, optionName)) != -1)
+				this.currentSelection = options.indexOf(Reflect.field(parent, optionName));
+			else
+				this.currentSelection = 0;
+		}
+			
 		
 		this.optionName = optionName;
 		

@@ -130,7 +130,8 @@ class OptionsMenu extends TreeMenu {
 					for(choice in node.elements) {
 						optionOptions.push(choice.att.name);
 					}
-					options.push(new ArrayOption(name, desc, optionOptions, node.att.id, null, FlxG.save.data));
+					if(optionOptions.length > 0)
+						options.push(new ArrayOption(name, desc, optionOptions, node.att.id, null, FlxG.save.data));
 					
 				case "menu":
 					options.push(new TextOption(name + " >", desc, function() {
