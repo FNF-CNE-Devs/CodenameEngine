@@ -49,9 +49,9 @@ class CrashHandler {
 			stackLabel += "\r\n";
 		}
 
-		e.preventDefault();
+		/*e.preventDefault();
 		e.stopPropagation();
-		e.stopImmediatePropagation();
+		e.stopImmediatePropagation();*/
 
 		NativeAPI.showMessageBox("Codename Engine Crash Handler", 'Uncaught Error:$m\n\n$stackLabel', MSG_ERROR);
 		#if sys

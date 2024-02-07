@@ -197,6 +197,10 @@
 
 	<haxeflag name="--macro" value="exclude('funkin.backend.system.updating')" unless="UPDATE_CHECKING"/>
 
+	<!-- Fix flash package issues -->
+	<haxeflag name="--macro" value="allowPackage('flash')" />
+	<haxeflag name="--macro" value="include('my.pack')" />
+
 	<!-- Fix compiling issues -->
 	<setenv name="HAXEPATH" value="./"/>
 
