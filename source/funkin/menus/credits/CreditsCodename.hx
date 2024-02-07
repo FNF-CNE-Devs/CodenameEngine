@@ -8,7 +8,7 @@ using StringTools;
 
 class CreditsCodename extends funkin.options.OptionsScreen {
 	public var error:Bool = false;
-	public var author:String = "FNF-CNE-Devs";
+	public var author:String = "MobilePorting";
 
 	public override function new()
 	{
