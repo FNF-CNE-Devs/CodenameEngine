@@ -23,7 +23,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Change Controls', 'Change Options', 'Exit to menu', "Exit to charter"];
+	var menuItems:Array<String> = ['Resume', 'Restart Song', /*'Chart Editor', */'Change Controls', 'Change Options', 'Exit to menu', "Exit to charter"];
 	var curSelected:Int = 0;
 
 	var pauseMusic:FlxSound;
@@ -110,6 +110,8 @@ class PauseSubState extends MusicBeatSubstate
 		pauseScript.call("postCreate");
 
 		PlayState.instance.updateDiscordPresence();
+
+		addVirtualPad(UP_DOWN, A_B);
 	}
 
 	override function update(elapsed:Float)
@@ -154,6 +156,7 @@ class PauseSubState extends MusicBeatSubstate
 			case "Change Controls":
 				persistentDraw = false;
 				openSubState(new KeybindsOptions());
+			// case "Chart Editor":
 			case "Change Options":
 				FlxG.switchState(new OptionsMenu());
 			case "Exit to charter":

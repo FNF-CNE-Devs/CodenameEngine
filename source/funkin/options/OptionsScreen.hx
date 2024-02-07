@@ -20,6 +20,8 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		this.name = name;
 		this.desc = desc;
 		if (options != null) for(o in options) add(o);
+
+		addVirtualPad(LEFT_FULL, A_B)
 	}
 
 	public override function update(elapsed:Float) {
