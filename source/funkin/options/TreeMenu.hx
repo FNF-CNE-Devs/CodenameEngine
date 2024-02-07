@@ -9,6 +9,7 @@ import funkin.options.type.TextOption;
 import flixel.util.typeLimit.OneOfTwo;
 import funkin.options.type.OptionType;
 import funkin.options.categories.*;
+import mobile.flixel.FlxVirtualPad;
 
 class TreeMenu extends UIState {
 	public var main:OptionsScreen;
@@ -16,7 +17,6 @@ class TreeMenu extends UIState {
 	public var pathLabel:FunkinText;
 	public var pathDesc:FunkinText;
 	public var pathBG:FlxSprite;
-
 	public var lastState:Class<FlxState> = Type.getClass(FlxG.state);
 
 	public function new() {
@@ -111,6 +111,8 @@ typedef OptionCategory = {
 	var desc:String;
 	var state:OneOfTwo<OptionsScreen, Class<OptionsScreen>>;
 	var ?substate:OneOfTwo<MusicBeatSubstate, Class<MusicBeatSubstate>>;
+	@:optional var DPadMode:FlxDPadMode;
+	@:optional var ActionMode:FlxActionMode;
 }
 
 typedef OptionTypeDef = {

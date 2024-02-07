@@ -16,22 +16,30 @@ class OptionsMenu extends TreeMenu {
 			name: 'Controls',
 			desc: 'Change Controls for Player 1 and Player 2!',
 			state: null,
-			substate: funkin.options.keybinds.KeybindsOptions
+			substate: funkin.options.keybinds.KeybindsOptions,
+			DPadMode: NONE,
+			ActionMode: NONE
 		},
 		{
 			name: 'Gameplay >',
 			desc: 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...',
-			state: GameplayOptions
+			state: GameplayOptions,
+			DPadMode: LEFT_FULL,
+			ActionMode: A_B
 		},
 		{
 			name: 'Appearance >',
 			desc: 'Change Appearance options such as Flashing menus...',
-			state: AppearanceOptions
+			state: AppearanceOptions,
+			DPadMode: LEFT_FULL,
+			ActionMode: A_B
 		},
 		{
 			name: 'Miscellaneous >',
 			desc: 'Use this menu to reset save data or engine settings.',
-			state: MiscOptions
+			state: MiscOptions,
+			DPadMode: NONE,
+			ActionMode: A_B
 		}
 	];
 
@@ -66,9 +74,12 @@ class OptionsMenu extends TreeMenu {
 				} else {
 					optionsTree.add(Type.createInstance(o.state, []));
 				}
+				removeVirtualPad();
+				addVirtualPad(o.DPadMode, o.ActionMode);
+				addVirtualPadCamera();
 			}
 		})]);
-		
+		// this is mods settings ig... I HAVE NO FUCKING IDEA HOW TO ADD VPAD INTO IT HELP
 		var xmlPath = Paths.xml("config/options");
 		for(source in [funkin.backend.assets.AssetsLibraryList.AssetSource.SOURCE, funkin.backend.assets.AssetsLibraryList.AssetSource.MODS]) {
 			if (Paths.assetsTree.existsSpecific(xmlPath, "TEXT", source)) {
@@ -84,13 +95,19 @@ class OptionsMenu extends TreeMenu {
 						main.add(o);
 			}
 		}
-		
+		addVirtualPad(UP_DOWN, A_B);
 	}
 
 	public override function exit() {
 		Options.save();
 		Options.applySettings();
 		super.exit();
+	}
+
+	override public function onMenuClose(m:OptionsScreen){
+		removeVirtualPad();
+		addVirtualPad(UP_DOWN, A_B);
+		super.onMenuClose(m);
 	}
 
 	/**
