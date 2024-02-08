@@ -142,7 +142,7 @@
 	<haxedef name="USE_ADAPTED_ASSETS" unless="web" />
 
 	<!-- Comment this out to disable support for custom ndlls. !-->
-	<haxedef name="NDLLS_SUPPORTED" unless="web" />
+	<haxedef name="NDLLS_SUPPORTED" unless="web || iphonesim" />
 
 	<!-- Comment this out to disable support for custom extended classes (data/classes). !-->
 	<define name="SOFTCODED_CLASSES" />
