@@ -642,22 +642,16 @@ class Charter extends UIState {
 					});
 					currentCursor = HAND;
 				} else {
-					var hoverOffset:FlxPoint = FlxPoint.get();
-					for (s in selection)
-						if (s.hovered) {
-							hoverOffset.set(mousePos.x - s.x, mousePos.y - s.y);
-							break;
-						}
-						
-					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, dragStartPos.y); //credits to burgerballs
-					var verticalChange:Float = ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40;
+					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, dragStartPos.y);
+					var verticalChange:Float = (mousePos.y - dragStartPos.y) / 40;
 					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
 					var undoDrags:Array<SelectionDragChange> = [];
 
 					for (s in selection) {
 						if (s.draggable) {
 							var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
-							if (!FlxG.keys.pressed.SHIFT) changePoint.x -= ((s.step + verticalChange) - quantStepRounded(s.step+verticalChange));
+							if (!FlxG.keys.pressed.SHIFT) 
+								changePoint.x -= ((s.step + verticalChange) - quantStepRounded(s.step+verticalChange, verticalChange > 0 ? 0.35 : 0.65));
 
 							var boundedChange:FlxPoint = changePoint.clone();
 							
@@ -684,12 +678,9 @@ class Charter extends UIState {
 						undos.addToUndo(CSelectionDrag(undoDrags));
 					}
 
-					hoverOffset.put();
 					gridActionType = NONE;
-
 					currentCursor = ARROW;
 				}
-
 			case NONE:
 				if (FlxG.mouse.justPressed)
 					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos); 
@@ -772,10 +763,13 @@ class Charter extends UIState {
 		return Math.floor(step/stepMulti) * stepMulti;
 	}
 
-	public function quantStepRounded(step:Float):Float {
+	public function quantStepRounded(step:Float, ?roundRatio:Float = 0.5):Float {
 		var stepMulti:Float = 1/(quant/16);
-		return Math.round(step/stepMulti) * stepMulti;
+		return ratioRound(step/stepMulti, roundRatio) * stepMulti;
 	}
+
+	public function ratioRound(val:Float, ratio:Float):Int
+		return Math.floor(val) + ((Math.abs(val % 1) > ratio ? 1 : 0) * (val > 0 ? 1 : -1));
 
 	public function getHoveredEvent(y:Float) {
 		var eventHovered:CharterEvent = null;
