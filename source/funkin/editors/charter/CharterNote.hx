@@ -78,6 +78,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 		typeText.exists = type != 0;
 		typeText.text = Std.string(this.type);
+		typeText.follow(this, 20 - (typeText.frameWidth/2), 20 - (typeText.frameHeight/2));
 
 		y = step * 40;
 
@@ -85,6 +86,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		sustainSpr.updateHitbox();
 		sustainSpr.exists = susLength != 0;
 		sustainSpr.alpha = alpha;
+		sustainSpr.follow(this, 15, 20);
 
 		if (angleTween != null) angleTween.cancel();
 

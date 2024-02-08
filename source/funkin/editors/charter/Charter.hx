@@ -1397,11 +1397,10 @@ class Charter extends UIState {
 			if (note.step > Conductor.curMeasure*Conductor.getMeasureLength() && note.step < (Conductor.curMeasure+1)*Conductor.getMeasureLength()) note
 		];
 	}
-
 	#end
 
 	function changeNoteSustain(change:Float) {
-		if (selection.length <= 0 || change == 0) return;
+		if (selection.length <= 0 || change == 0 || gridActionType != NONE) return;
 
 		var undoChanges:Array<NoteSustainChange> = [];
 		for(s in selection)
