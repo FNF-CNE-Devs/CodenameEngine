@@ -101,6 +101,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	public var virtualPad:FlxVirtualPad;
 	public var camControls:FlxCamera;
 	public var camVPad:FlxCamera;
+	public static var instance:MusicBeatSubstate;
 
 	var trackedInputsMobileControls:Array<FlxActionInput> = [];
 	var trackedInputsVirtualPad:Array<FlxActionInput> = [];
@@ -203,6 +204,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 
 	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
 		super();
+		instance = this;
 		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
 		this.scriptName = scriptName;
 	}

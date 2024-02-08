@@ -36,6 +36,7 @@ import sys.thread.Thread;
 import sys.io.File;
 #end
 import funkin.backend.assets.ModsFolder;
+import lime.system.System as LimeSystem;
 
 class Main extends Sprite
 {
@@ -78,7 +79,7 @@ class Main extends Sprite
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
 		#if !html5
-		addChild(framerateSprite = new funkin.backend.system.framerate.Framerate());
+		FlxG.game.addChild(framerateSprite = new funkin.backend.system.framerate.Framerate());
 		framerateSprite.scaleX = framerateSprite.scaleY = stage.window.scale;
 		SystemInfo.init();
 		#end
@@ -175,6 +176,9 @@ class Main extends Sprite
 		#end
 
 		initTransition();
+		#if mobile
+		LimeSystem.allowScreenTimeout = Options.screenTimeOut;
+		#end
 	}
 
 	public static function refreshAssets() {

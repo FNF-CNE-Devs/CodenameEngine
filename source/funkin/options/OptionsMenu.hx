@@ -35,6 +35,13 @@ class OptionsMenu extends TreeMenu {
 			ActionMode: A_B
 		},
 		{
+			name: 'Mobile Options >',
+			desc: 'Change Options Related To Mobile & Mobile Controls',
+			state: MobileOptions,
+			DPadMode: LEFT_FULL,
+			ActionMode: A_B
+		},
+		{
 			name: 'Miscellaneous >',
 			desc: 'Use this menu to reset save data or engine settings.',
 			state: MiscOptions,

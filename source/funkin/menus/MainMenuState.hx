@@ -83,7 +83,7 @@ class MainMenuState extends MusicBeatState
 
 		changeItem();
 
-		addVirtualPad(UP_DOWN, A_B_C);
+		addVirtualPad(UP_DOWN, A_B_E);
 	}
 
 	var selectedSomethin:Bool = false;
@@ -121,12 +121,9 @@ class MainMenuState extends MusicBeatState
 			if (controls.BACK)
 				FlxG.switchState(new TitleState());
 
-			if(virtualPad.buttonC.justPressed || FlxG.keys.justPressed.C)
-				openSubState(new MobileControlSelectSubState());
-
 			#if MOD_SUPPORT
 			// make it customisable
-			if (controls.SWITCHMOD) {
+			if (controls.SWITCHMOD || virtualPad.buttonE.justPressed) {
 				openSubState(new ModSwitchMenu());
 				persistentUpdate = false;
 				persistentDraw = true;

@@ -37,10 +37,13 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 	var reset:UIButton;
 	var tweenieShit:Float = 0;
 	var keyboardText:FlxText;
+	var closeCallBack:Void->Void;
 
-	public function new()
+	public function new(?closeCallBack:Void->Void)
 	{
 		super();
+
+		this.closeCallBack = closeCallBack;
 
 		bg = new FlxBackdrop(FlxGridOverlay.createGrid(80, 80, 160, 160, true,
 			FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255)),
@@ -108,6 +111,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 			if (options[curOption] == 'Pad-Custom')
 				MobileControls.setCustomMode(control.virtualPad);
 			FlxG.sound.play(Paths.sound('cancelMenu'));
+			if(closeCallBack != null) closeCallBack();
 			close();
 		});
 		exit.color = FlxColor.LIME;

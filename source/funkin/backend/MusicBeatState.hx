@@ -115,6 +115,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	public var virtualPad:FlxVirtualPad;
 	public var camControls:FlxCamera;
 	public var camVPad:FlxCamera;
+	public static var instance:MusicBeatState;
 
 	var trackedInputsMobileControls:Array<FlxActionInput> = [];
 	var trackedInputsVirtualPad:Array<FlxActionInput> = [];
@@ -166,7 +167,6 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		FlxG.cameras.add(camControls, DefaultDrawTarget);
 
 		mobileControls.cameras = [camControls];
-		mobileControls.visible = false;
 		add(mobileControls);
 	}
 
@@ -218,6 +218,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 
 	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
 		super();
+		instance = this;
 		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
 		this.scriptName = scriptName;
 	}

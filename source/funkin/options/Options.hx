@@ -35,9 +35,14 @@ class Options
 	public static var hitWindow:Float = 250;
 	public static var songOffset:Float = 0;
 	public static var framerate:Int = 60;
-	public static var gpuOnlyBitmaps:Bool = #if (mac || web) false #else true #end; // causes issues on mac and web
+	public static var gpuOnlyBitmaps:Bool = #if (mac || web || mobile) false #else true #end; // causes issues on mac and web
 
 	public static var lastLoadedMod:String = null;
+
+	// mobile options
+	public static var screenTimeOut:Bool = false;
+	public static var hideHitbox:Bool = false;
+	public static var controlsAlpha:Float = 0.6;
 
 	/**
 	 * EDITORS SETTINGS

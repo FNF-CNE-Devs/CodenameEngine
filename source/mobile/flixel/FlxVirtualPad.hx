@@ -3,6 +3,7 @@ package mobile.flixel;
 import flixel.FlxG;
 import sys.FileSystem;
 import flixel.math.FlxPoint;
+import funkin.options.Options;
 import mobile.flixel.FlxButton;
 import openfl.display.BitmapData;
 import flixel.util.FlxDestroyUtil;
@@ -162,6 +163,10 @@ class FlxVirtualPad extends FlxButtonGroup
 		}
 
 		scrollFactor.set();
+		var guh = Options.controlsAlpha;
+		if (guh >= 0.9)
+			guh = guh - 0.07;
+		alpha = Options.controlsAlpha;
 	}
 
 	/**
@@ -213,7 +218,6 @@ class FlxVirtualPad extends FlxButtonGroup
 		button.immovable = true;
 		button.scrollFactor.set();
 		button.color = Color;
-		button.alpha = 0.5;
 		#if FLX_DEBUG
 		button.ignoreDrawDebug = true;
 		#end

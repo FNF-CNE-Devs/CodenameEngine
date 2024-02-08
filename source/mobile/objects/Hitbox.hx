@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.tweens.*;
 import flixel.util.FlxColor;
 import openfl.display.Shape;
+import funkin.options.Options;
 import mobile.flixel.FlxButton;
 import openfl.display.BitmapData;
 import flixel.util.FlxDestroyUtil;
@@ -59,6 +60,10 @@ class Hitbox extends FlxButtonGroup
 		}
 		*/
 		scrollFactor.set();
+		var guh = Options.controlsAlpha;
+		if (guh >= 0.9)
+			guh = guh - 0.07;
+		alpha = Options.controlsAlpha;
 	}
 
 	/**
@@ -88,6 +93,7 @@ class Hitbox extends FlxButtonGroup
 		hint.moves = false;
 		hint.scrollFactor.set();
 		hint.alpha = 0.00001;
+		hint.visible = Options.hideHitbox;
 		//hint.antialiasing = ClientPrefs.data.antialiasing;
 		//if (!ClientPrefs.data.hideHitboxHints)
 		//{
@@ -96,7 +102,7 @@ class Hitbox extends FlxButtonGroup
 				if (hintTween != null)
 					hintTween.cancel();
 
-				hintTween = FlxTween.tween(hint, {alpha: 0.6}, 0.6 / 100, {
+				hintTween = FlxTween.tween(hint, {alpha: 1}, 1 / 100, {
 					ease: FlxEase.circInOut,
 					onComplete: function(twn:FlxTween)
 					{
@@ -109,7 +115,7 @@ class Hitbox extends FlxButtonGroup
 				if (hintTween != null)
 					hintTween.cancel();
 
-				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, 0.6 / 10, {
+				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, 1 / 10, {
 					ease: FlxEase.circInOut,
 					onComplete: function(twn:FlxTween)
 					{
@@ -122,7 +128,7 @@ class Hitbox extends FlxButtonGroup
 				if (hintTween != null)
 					hintTween.cancel();
 
-				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, 0.6 / 10, {
+				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, 1 / 10, {
 					ease: FlxEase.circInOut,
 					onComplete: function(twn:FlxTween)
 					{
@@ -139,9 +145,6 @@ class Hitbox extends FlxButtonGroup
 
 	function createHintGraphic(Width:Int, Height:Int):BitmapData
 	{
-		var guh = 0.6;
-		if (guh >= 0.9)
-			guh = 0.6 - 0.07;
 		var shape:Shape = new Shape();
 		shape.graphics.beginFill(0xFFFFFF);
 		shape.graphics.lineStyle(3, 0xFFFFFF, 1);
@@ -149,7 +152,7 @@ class Hitbox extends FlxButtonGroup
 		shape.graphics.lineStyle(0, 0, 0);
 		shape.graphics.drawRect(3, 3, Width - 6, Height - 6);
 		shape.graphics.endFill();
-		shape.graphics.beginGradientFill(RADIAL, [0xFFFFFF, FlxColor.TRANSPARENT], [guh, 0], [0, 255], null, null, null, 0.5);
+		shape.graphics.beginGradientFill(RADIAL, [0xFFFFFF, FlxColor.TRANSPARENT], [1, 0], [0, 255], null, null, null, 0.5);
 		shape.graphics.drawRect(3, 3, Width - 6, Height - 6);
 		shape.graphics.endFill();
 		var bitmap:BitmapData = new BitmapData(Width, Height, true, 0);
