@@ -164,7 +164,7 @@ class PauseSubState extends MusicBeatSubstate
 				var daSubstate:Dynamic = new #if mobile mobile.substates.MobileControlSelectSubState(() -> {
 					FlxG.state.persistentUpdate = true;
 					camVPad.visible = true;
-					new FlxTimer().start(0.2, () -> canOpen = true);
+					new FlxTimer().start(0.2, (tmr:FlxTimer) -> canOpen = true);
 				}, () -> {
 					FlxG.state.persistentUpdate = false;
 					camVPad.visible = false;
