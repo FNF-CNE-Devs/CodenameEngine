@@ -12,7 +12,7 @@ import funkin.backend.assets.Paths;
 import mobile.objects.FlxButtonGroup;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.graphics.frames.FlxAtlasFrames;
-
+import openfl.utils.Assets;
 enum FlxDPadMode
 {
 	UP_DOWN;
@@ -200,11 +200,13 @@ class FlxVirtualPad extends FlxButtonGroup
 	private function createButton(X:Float, Y:Float, Graphic:String, Color:Int = 0xFFFFFF):FlxButton
 	{
 		var graphic:FlxGraphic;
-
-		if(FileSystem.exists(Paths.image('mobile/virtualpad/$Graphic')))
-			graphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(Paths.image('mobile/virtualpad/$Graphic')));
+		var path:String = Paths.image('mobile/virtualpad/$Graphic');
+		if(FileSystem.exists(path))
+			graphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path));
+		else if(Assets.exists(path))
+			graphic = FlxGraphic.fromBitmapData(Assets.getBitmapData(path));
 		else
-			graphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(Paths.image('mobile/virtualpad/default')));
+			graphic = FlxGraphic.fromBitmapData(Assets.getBitmapData(Paths.image('mobile/virtualpad/default')));
 
 		var button:FlxButton = new FlxButton(X, Y);
 		try {
