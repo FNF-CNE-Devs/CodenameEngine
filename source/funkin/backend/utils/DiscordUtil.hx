@@ -16,7 +16,7 @@ class DiscordUtil {
 	public static var discordThread:#if DISCORD_RPC Thread #else Dynamic #end = null;
 	public static var ready:Bool = false;
 	public static var data:DiscordJson = null;
-	private static var presence:DiscordRichPresence = DiscordRichPresence.create();
+	private static var presence:#if DISCORD_RPC DiscordRichPresence = DiscordRichPresence.create() #else Dynamic = null #end;
 
 	public static function init() {
 		#if DISCORD_RPC
