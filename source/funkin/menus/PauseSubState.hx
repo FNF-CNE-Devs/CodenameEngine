@@ -16,6 +16,7 @@ import flixel.util.FlxColor;
 import funkin.options.keybinds.KeybindsOptions;
 import funkin.menus.StoryMenuState;
 import funkin.backend.utils.FunkinParentDisabler;
+import flixel.util.FLxTimer;
 
 class PauseSubState extends MusicBeatSubstate
 {
@@ -163,7 +164,7 @@ class PauseSubState extends MusicBeatSubstate
 				var daSubstate:Dynamic = new #if mobile mobile.substates.MobileControlSelectSubState(() -> {
 					FlxG.state.persistentUpdate = true;
 					camVPad.visible = true;
-					new FlxTimer().start(0.2, () -> canOpen = true);
+					new FLxTimer().start(0.2, () -> canOpen = true);
 				}, () -> {
 					FlxG.state.persistentUpdate = false;
 					camVPad.visible = false;
