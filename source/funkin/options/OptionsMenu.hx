@@ -131,8 +131,8 @@ class OptionsMenu extends TreeMenu {
 					var optionDisplayOptions:Array<String> = [];
 
 					for(choice in node.elements) {
-						optionOptions.push(choice.att.name);
-						optionDisplayOptions.push(choice.innerData.trim());
+						optionOptions.push(choice.att.value);
+						optionDisplayOptions.push(choice.att.name);
 					}
 					
 					if(optionOptions.length > 0)
