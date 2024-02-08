@@ -359,10 +359,7 @@ class Charter extends UIState {
 		selectionBox.scrollFactor.set(1, 1);
 		selectionBox.incorporeal = true;
 
-		noteHoverer = new CharterNote();
-		noteHoverer.snappedToStrumline = noteHoverer.selectable = noteHoverer.autoAlpha = false;
-		@:privateAccess noteHoverer.__animSpeed = 1.25; noteHoverer.typeText.visible = false;
-		noteHoverer.alpha = 0; // FUCK YOU NOTE HOVERER >:(((
+		noteHoverer = new CharterNoteHoverer();
 
 		selectionBox.cameras = notesGroup.cameras = gridBackdrops.cameras = noteHoverer.cameras = [charterCamera];
 
@@ -739,23 +736,6 @@ class Charter extends UIState {
 			if (event != null) addEventSpr.updateEdit(event);
 			else addEventSpr.updatePos(FlxG.keys.pressed.SHIFT ? ((mousePos.y) / 40) : quantStepRounded(mousePos.y/40));
 		} else  addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
-
-		// Note Hoverer
-		if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160 && gridActionType == NONE && inBoundsY) {
-			noteHoverer.alpha = lerp(noteHoverer.alpha, 0.35, 0.25);
-			if (noteHoverer.id != Math.floor(mousePos.x / 40) % 4) {
-				@:privateAccess noteHoverer.__doAnim = false; // Un comment to restore this
-				noteHoverer.updatePos(
-					FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y) / 40) : quantStep((mousePos.y+20)/40), 0, __endStep-1), 
-					Math.floor(mousePos.x / 40) % 4, 0, 0, null
-				);
-			} else {
-				noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1);
-				noteHoverer.y = noteHoverer.step * 40;
-			}
-			noteHoverer.x = lerp(noteHoverer.x, Math.floor(mousePos.x / 40) * 40, .65);
-		} else
-			noteHoverer.alpha = lerp(noteHoverer.alpha, 0, 0.25);
 	}
 
 	public function quantStep(step:Float):Float {
