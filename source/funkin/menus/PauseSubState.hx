@@ -23,7 +23,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	var menuItems:Array<String> = ['Resume', 'Restart Song', /*'Chart Editor', */'Change Controls', 'Change Options', 'Exit to menu', "Exit to charter"];
+	var menuItems:Array<String> = ['Resume', 'Restart Song', 'Change Controls', 'Change Options', 'Exit to menu', "Exit to charter"];
 	var curSelected:Int = 0;
 
 	var pauseMusic:FlxSound;
@@ -39,12 +39,16 @@ class PauseSubState extends MusicBeatSubstate
 	}
 
 	var parentDisabler:FunkinParentDisabler;
+	var canOpen:Bool = true;
+
 	override function create()
 	{
 		super.create();
 
+		#if !mobile
 		if (menuItems.contains("Exit to charter") && !PlayState.chartingMode)
 			menuItems.remove("Exit to charter");
+		#end
 
 		add(parentDisabler = new FunkinParentDisabler());
 
@@ -112,6 +116,7 @@ class PauseSubState extends MusicBeatSubstate
 		PlayState.instance.updateDiscordPresence();
 
 		addVirtualPad(UP_DOWN, A_B);
+		addVirtualPadCamera();
 	}
 
 	override function update(elapsed:Float)
@@ -155,7 +160,17 @@ class PauseSubState extends MusicBeatSubstate
 				FlxG.resetState();
 			case "Change Controls":
 				persistentDraw = false;
-				openSubState(new KeybindsOptions());
+				var daSubstate:Dynamic = new #if mobile mobile.substates.MobileControlSelectSubState(() -> {
+					FlxG.state.persistentUpdate = true;
+					camVPad.visible = true;
+					new FlxTimer().start(0.2, () -> canOpen = true);
+				}, () -> {
+					FlxG.state.persistentUpdate = false;
+					camVPad.visible = false;
+					canOpen = false;
+				}) #else KeybindsOptions() #end;
+				if(canOpen)
+					openSubState(daSubstate);
 			// case "Chart Editor":
 			case "Change Options":
 				FlxG.switchState(new OptionsMenu());

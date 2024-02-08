@@ -39,11 +39,12 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 	var keyboardText:FlxText;
 	var closeCallBack:Void->Void;
 
-	public function new(?closeCallBack:Void->Void)
+	public function new(?closeCallBack:Void->Void, ?openCallBack:Void->Void)
 	{
 		super();
 
 		this.closeCallBack = closeCallBack;
+		if(openCallBack != null) openCallBack();
 
 		bg = new FlxBackdrop(FlxGridOverlay.createGrid(80, 80, 160, 160, true,
 			FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255)),
