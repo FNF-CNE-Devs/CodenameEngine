@@ -21,7 +21,7 @@ class MobileOptions extends OptionsScreen {
 			"Change how transparent the mobile controls should be",
 			0.0, // minimum
 			1.0, // maximum
-			0.05, // change
+			0.1, // change
 			"controlsAlpha", // save name or smth
 			changeControlsAlpha)); // callback
 		add(new Checkbox(

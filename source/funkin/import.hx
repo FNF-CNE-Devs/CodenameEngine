@@ -27,6 +27,7 @@ import funkin.menus.ui.Alphabet;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 
-using StringTools;
 using funkin.backend.utils.CoolUtil;
+import mobile.objects.MobileControls;
+using StringTools;
 #end

@@ -1,6 +1,7 @@
 package funkin.options;
 
 import funkin.options.type.OptionType;
+import mobile.objects.MobileControls;
 
 class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 	public static var optionHeight:Float = 120;
@@ -26,8 +27,8 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		super.update(elapsed);
 
 		var controls = PlayerSettings.solo.controls;
-
-		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0) - FlxG.mouse.wheel);
+		var wheel = MobileControls.mobileC ? 0 : FlxG.mouse.wheel;
+		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0) - wheel);
 		x = id * FlxG.width;
 		for(k=>option in members) {
 			if(option == null) continue;
@@ -45,14 +46,14 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 
 		if (members.length > 0) {
 			members[curSelected].selected = true;
-			if (controls.ACCEPT || FlxG.mouse.justReleased)
+			if (controls.ACCEPT || (FlxG.mouse.justReleased && !MobileControls.mobileC))
 				members[curSelected].onSelect();
 			if (controls.LEFT_P)
 				members[curSelected].onChangeSelection(-1);
 			if (controls.RIGHT_P)
 				members[curSelected].onChangeSelection(1);
 		}
-		if (controls.BACK || FlxG.mouse.justReleasedRight)
+		if (controls.BACK || (FlxG.mouse.justReleasedRight && !MobileControls.mobileC))
 			close();
 	}
 

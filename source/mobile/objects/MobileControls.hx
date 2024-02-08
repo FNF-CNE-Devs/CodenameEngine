@@ -6,6 +6,7 @@ import mobile.flixel.FlxButton;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import mobile.flixel.FlxVirtualPad;
 import flixel.util.FlxDestroyUtil;
+import funkin.options.Options;
 
 class MobileControls extends FlxTypedSpriteGroup<FlxButtonGroup>
 {
@@ -16,6 +17,7 @@ class MobileControls extends FlxTypedSpriteGroup<FlxButtonGroup>
 
 	public static var mode(get, set):Int;
 	public static var forcedControl:Null<Int>;
+	public static var mobileC(get, never):Bool;
 
 	public function new(?forceType:Int)
 	{
@@ -140,6 +142,9 @@ class MobileControls extends FlxTypedSpriteGroup<FlxButtonGroup>
 
 		return FlxG.save.data.mobileControlsMode;
 	}
+
+	@:noCompletion
+	private static function get_mobileC():Bool return Options.controlsAlpha >= 0.1;
 	/*
 	public function updateButtonsColors() {
 		// Dynamic Controls Color
