@@ -16,6 +16,10 @@ class UIText extends FunkinText {
 			this.borderSize = 1;
 		}
 		this.active = false;
+		this.antialiasing = false;
+
+		// this.textField.antiAliasType = ADVANCED;
+		// this.textField.sharpness = 400;
 	}
 
 	public override function applyBorderStyle() {
