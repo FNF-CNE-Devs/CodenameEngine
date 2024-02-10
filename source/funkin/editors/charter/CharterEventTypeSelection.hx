@@ -10,6 +10,9 @@ class CharterEventTypeSelection extends UISubstateWindow {
 	var buttonsBG:UISliceSprite;
 	var buttonCameras:FlxCamera;
 
+	var upIndicator:UIText;
+	var downIndicator:UIText;
+
 	public function new(callback:String->Void) {
 		super();
 		this.callback = callback;
@@ -57,10 +60,23 @@ class CharterEventTypeSelection extends UISubstateWindow {
 			close();
 		}, w));
 
+		upIndicator = new UIText(0, 0, 0, "↑", 18);
+		upIndicator.cameras = [buttonCameras];
+		upIndicator.scrollFactor.set();
+		upIndicator.borderSize = 2;
+		add(upIndicator);
+
+		downIndicator = new UIText(0, 0, 0, "↓", 18);
+		downIndicator.cameras = [buttonCameras];
+		downIndicator.scrollFactor.set();
+		downIndicator.borderSize = 2;
+		add(downIndicator);
 	}
 
+	var sinner:Float = 0;
 	override function update(elapsed:Float) {
 		super.update(elapsed);
+		sinner += elapsed;
 
 		for (button in buttons)
 			button.selectable = buttonsBG.hovered;
@@ -73,6 +89,12 @@ class CharterEventTypeSelection extends UISubstateWindow {
 		if (buttons.length > 16)
 			buttonCameras.scroll.y = FlxMath.bound(buttonCameras.scroll.y - (buttonsBG.hovered ? FlxG.mouse.wheel : 0) * 12, 0,
 				(buttons[buttons.length-1].y + buttons[buttons.length-1].bHeight) - buttonCameras.height);
+
+		upIndicator.setPosition((buttonsBG.bWidth/2) - (upIndicator.fieldWidth/2), 22 + (FlxMath.fastSin(sinner*2) * 4));
+		downIndicator.setPosition((buttonsBG.bWidth/2) - (downIndicator.fieldWidth/2), (buttonsBG.bHeight-downIndicator.height-22) - (FlxMath.fastSin(sinner*2) * 4));
+
+		upIndicator.alpha = CoolUtil.fpsLerp(upIndicator.alpha, (buttons[0].y + buttonCameras.scroll.y > buttons[0].bHeight) ? 1 : 0, 1/3);
+		downIndicator.alpha = CoolUtil.fpsLerp(downIndicator.alpha, (buttonCameras.scroll.y+buttonCameras.height > buttons[buttons.length-1].y) ? 0 : 1, 1/3);
 	}
 
 	override function destroy() {
