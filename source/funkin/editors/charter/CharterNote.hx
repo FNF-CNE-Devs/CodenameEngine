@@ -81,7 +81,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 		y = step * 40;
 
-		sustainSpr.scale.set(10, (40 * susLength));
+		sustainSpr.scale.set(10, (40 * susLength) + (height/2));
 		sustainSpr.updateHitbox();
 		sustainSpr.exists = susLength != 0;
 		sustainSpr.alpha = alpha;

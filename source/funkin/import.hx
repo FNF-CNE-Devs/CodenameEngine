@@ -1,4 +1,5 @@
 #if !macro
+import funkin.backend.system.Main;
 import funkin.backend.assets.Paths;
 import funkin.backend.MusicBeatState;
 import funkin.backend.MusicBeatSubstate;
