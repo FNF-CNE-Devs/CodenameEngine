@@ -19,7 +19,7 @@ class BitmapUtil {
 			for(x in 0...bmap.width) {
 				color = bmap.getPixel32(x, y);
 				fixedColor = 0xFF000000 + (color % 0x1000000);
-				if (colorMap[fixedColor] == null)
+				if (!colorMap.exists(fixedColor))
 					colorMap[fixedColor] = 0;
 				colorMap[fixedColor] += color.alphaFloat;
 			}
@@ -50,7 +50,7 @@ class BitmapUtil {
 			for(x in 0...bmap.width) {
 				color = bmap.getPixel32(x, y);
 				fixedColor = 0xFF000000 + (color % 0x1000000);
-				if (colorMap[fixedColor] == null)
+				if (!colorMap.exists(fixedColor))
 					colorMap[fixedColor] = 0;
 				colorMap[fixedColor] += color.alphaFloat * 0.33 + (0.67 * (color.saturation * (2 * (color.lightness > 0.5 ? 0.5 - (color.lightness) : color.lightness))));
 			}
