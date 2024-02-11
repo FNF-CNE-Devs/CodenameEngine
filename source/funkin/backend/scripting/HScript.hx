@@ -11,7 +11,7 @@ class HScript extends Script {
 	public var parser:Parser;
 	public var expr:Expr;
 	public var code:String = null;
-	public var folderlessPath:String;
+	//public var folderlessPath:String;
 	var __importedPaths:Array<String>;
 
 	public static function initParser() {
@@ -27,11 +27,11 @@ class HScript extends Script {
 		interp = new Interp();
 
 		try {
-			if(Assets.exists(path)) code = Assets.getText(path);
+			if(Assets.exists(rawPath)) code = Assets.getText(rawPath);
 		} catch(e) Logs.trace('Error while reading $path: ${Std.string(e)}', ERROR);
 
 		parser = initParser();
-		folderlessPath = Path.directory(path);
+		//folderlessPath = Path.directory(path);
 		__importedPaths = [path];
 
 		interp.errorHandler = _errorHandler;
@@ -92,6 +92,7 @@ class HScript extends Script {
 
 	private function _errorHandler(error:Error) {
 
+		// This should be ${error.file} later
 		var fn = '$fileName:${error.line}: ';
 		var err = error.toString();
 		if (err.startsWith(fn)) err = err.substr(fn.length);

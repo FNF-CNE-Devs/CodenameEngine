@@ -129,6 +129,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 */
 	public var path:String = null;
 
+	private var rawPath:String = null;
+
 	private var didLoad:Bool = false;
 
 	/**
@@ -176,6 +178,9 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 */
 	public function new(path:String) {
 		super();
+
+		rawPath = path;
+		path = Paths.getFilenameFromLibFile(path);
 
 		fileName = Path.withoutDirectory(path);
 		this.path = path;
