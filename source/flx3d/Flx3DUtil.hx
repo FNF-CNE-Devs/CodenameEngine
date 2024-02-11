@@ -13,6 +13,7 @@ import flixel.FlxG;
  * Help from Ne_Eo
  * @see https://twitter.com/Ne_Eo_Twitch
  */
+@:access(away3d.core.managers.Stage3DManager)
 class Flx3DUtil
 {
 	#if THREE_D_SUPPORT
@@ -26,17 +27,24 @@ class Flx3DUtil
 	}
 
 	/**
+	 * Returns the total amount of 3D stages that are in use
+	 * @return Int
+	 */
+	public static inline function getUsed3D():Int
+	{
+		return Stage3DManager._numStageProxies;
+	}
+
+	/**
 	 * Returns if a Stage3D is available
 	 * @return Bool
 	 */
 	public static inline function is3DAvailable():Bool
 	{
-		@:privateAccess {
-			if (Stage3DManager._stageProxies == null)
-				return true;
+		if (Stage3DManager._stageProxies == null)
+			return true;
 
-			return Stage3DManager._numStageProxies < Stage3DManager._stageProxies.length;
-		}
+		return Stage3DManager._numStageProxies < Stage3DManager._stageProxies.length;
 	}
 
 	/**
