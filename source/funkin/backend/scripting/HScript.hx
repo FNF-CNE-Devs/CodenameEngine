@@ -1,20 +1,16 @@
 package funkin.backend.scripting;
 
 import haxe.io.Path;
-import hscript.Expr.ClassDecl;
-import hscript.Expr.ModuleDecl;
 import hscript.Expr.Error;
 import hscript.Parser;
 import openfl.Assets;
-import lime.utils.AssetType;
 import hscript.*;
 
 class HScript extends Script {
 	public var interp:Interp;
 	public var parser:Parser;
 	public var expr:Expr;
-	public var decls:Array<ModuleDecl> = null;
-	public var code:String;
+	public var code:String = null;
 	public var folderlessPath:String;
 	var __importedPaths:Array<String>;
 
@@ -30,8 +26,10 @@ class HScript extends Script {
 
 		interp = new Interp();
 
-		// We use getAssetSafe to prevent crash from empty file (null which would check root (big crash)) -lunar
-		code = Assets.exists(path) ? Paths.assetsTree.getAssetSafe(path, TEXT) : null;
+		try {
+			if(Assets.exists(path)) code = Assets.getText(path);
+		} catch(e) Logs.trace('Error while reading $path: ${Std.string(e)}', ERROR);
+
 		parser = initParser();
 		folderlessPath = Path.directory(path);
 		__importedPaths = [path];
@@ -48,14 +46,13 @@ class HScript extends Script {
 		}));
 
 		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "hscript"]);
-
-		if (code != null && code.trim() != "")
-			loadFromString(code);
+		loadFromString(code);
 	}
 
 	public override function loadFromString(code:String) {
 		try {
-			expr = parser.parseString(code, fileName);
+			if (code != null && code.trim() != "")
+				expr = parser.parseString(code, fileName);
 		} catch(e:Error) {
 			_errorHandler(e);
 		} catch(e) {
