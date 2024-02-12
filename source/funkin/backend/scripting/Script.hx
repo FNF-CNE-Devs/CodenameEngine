@@ -125,6 +125,11 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	public var fileName:String;
 
 	/**
+	 * Script Extension
+	 */
+	public var extension:String;
+
+	/**
 	 * Path to the script.
 	 */
 	public var path:String = null;
@@ -132,6 +137,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	private var rawPath:String = null;
 
 	private var didLoad:Bool = false;
+
+	public var remappedNames:Map<String, String> = [];
 
 	/**
 	 * Creates a script from the specified asset path. The language is automatically determined.
@@ -183,6 +190,7 @@ class Script extends FlxBasic implements IFlxDestroyable {
 		path = Paths.getFilenameFromLibFile(path);
 
 		fileName = Path.withoutDirectory(path);
+		extension = Path.extension(path);
 		this.path = path;
 		onCreate(path);
 		for(k=>e in getDefaultVariables(this)) {
@@ -228,6 +236,9 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 * Traces something as this script.
 	 */
 	public function trace(v:Dynamic) {
+		var fileName = this.fileName;
+		if(remappedNames.exists(fileName))
+			fileName = remappedNames.get(fileName);
 		Logs.traceColored([
 			Logs.logText('${fileName}: ', GREEN),
 			Logs.logText(Std.string(v))
@@ -285,6 +296,9 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 * @param additionalInfo Additional information you could provide.
 	 */
 	public function error(text:String, ?additionalInfo:Dynamic):Void {
+		var fileName = this.fileName;
+		if(remappedNames.exists(fileName))
+			fileName = remappedNames.get(fileName);
 		Logs.traceColored([
 			Logs.logText(fileName, RED),
 			Logs.logText(text)

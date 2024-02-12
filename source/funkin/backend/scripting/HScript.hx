@@ -91,8 +91,9 @@ class HScript extends Script {
 	}
 
 	private function _errorHandler(error:Error) {
-
-		// This should be ${error.file} later
+		var fileName = error.origin;
+		if(remappedNames.exists(fileName))
+			fileName = remappedNames.get(fileName);
 		var fn = '$fileName:${error.line}: ';
 		var err = error.toString();
 		if (err.startsWith(fn)) err = err.substr(fn.length);
