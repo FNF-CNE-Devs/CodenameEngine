@@ -618,7 +618,7 @@ class CoolUtil
 		frontEnd.music = music;
 	}
 
-	public static inline function flxeaseFromString(mainEase:String, suffix:String)
+	@:noUsing public static inline function flxeaseFromString(mainEase:String, suffix:String)
 		return Reflect.field(FlxEase, mainEase + (mainEase == "linear" ? "" : suffix));
 }
 

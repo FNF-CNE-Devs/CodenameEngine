@@ -302,6 +302,23 @@ class Paths
 		return content;
 		*/
 	}
+
+	// Used in Script.hx
+	@:noCompletion public static function getFilenameFromLibFile(path:String) {
+		var file = new haxe.io.Path(path);
+		if(file.file.startsWith("LIB_")) {
+			return file.dir + "." + file.ext;
+		}
+		return path;
+	}
+
+	@:noCompletion public static function getLibFromLibFile(path:String) {
+		var file = new haxe.io.Path(path);
+		if(file.file.startsWith("LIB_")) {
+			return file.file.substr(4);
+		}
+		return "";
+	}
 }
 
 class ScriptPathInfo {
