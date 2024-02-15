@@ -598,6 +598,8 @@ class Charter extends UIState {
 	var dragStartPos:FlxPoint = new FlxPoint();
 	var selectionDragging:Bool = false;
 
+	var showContextMenu:Bool = false;
+
 	public function updateNoteLogic(elapsed:Float) {
 		for (group in [notesGroup, eventsGroup]) {
 			cast(group, FlxTypedGroup<Dynamic>).forEach(function(n) {
@@ -727,7 +729,7 @@ class Charter extends UIState {
 					currentCursor = ARROW;
 				}
 			case NONE:
-				if (FlxG.mouse.justPressed)
+				if (FlxG.mouse.justPressed || FlxG.mouse.justPressedRight)
 					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos); 
 
 				if (gridBackdropDummy.hovered) {
@@ -765,11 +767,19 @@ class Charter extends UIState {
 					}
 				}
 
+				if (FlxG.mouse.pressedRight) {
+					if (mousePos.y - dragStartPos.y > 20)
+						showContextMenu = true;
+					if (showContextMenu) changeNoteSustain(FlxG.mouse.deltaScreenY / 40);
+				}
 				if (FlxG.mouse.justReleasedRight) {
-					var mousePos = FlxG.mouse.getScreenPosition(uiCamera);
-					closeCurrentContextMenu();
-					openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
-					mousePos.put();
+					if (!showContextMenu) {
+						var mousePos = FlxG.mouse.getScreenPosition(uiCamera);
+						closeCurrentContextMenu();
+						openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
+						mousePos.put();
+					}
+					else showContextMenu = false;
 				}
 		}
 		addEventSpr.selectable = !selectionBox.visible;
