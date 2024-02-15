@@ -768,9 +768,19 @@ class Charter extends UIState {
 				}
 
 				if (FlxG.mouse.pressedRight) {
-					if (mousePos.y - dragStartPos.y > 20)
+					if (Math.abs(mousePos.y - dragStartPos.y) > 20)
 						showContextMenu = true;
-					if (showContextMenu) changeNoteSustain(FlxG.mouse.deltaScreenY / 40);
+					if (showContextMenu) {
+						var undoChanges:Array<NoteSustainChange> = [];
+						for(s in selection)
+							if (s is CharterNote) {
+								var n:CharterNote = cast s;
+								var old:Float = n.susLength;
+								n.updatePos(n.step, n.id, Math.max((mousePos.y - dragStartPos.y) / 40, 0));
+								undoChanges.push({before: old, after: n.susLength, note: n});
+							}
+						undos.addToUndo(CEditSustains(undoChanges));
+					}
 				}
 				if (FlxG.mouse.justReleasedRight) {
 					if (!showContextMenu) {
