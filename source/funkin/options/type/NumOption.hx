@@ -36,19 +36,15 @@ class NumOption extends OptionType {
 			this.currentSelection = Reflect.field(parent, optionName);
 		this.changeVal = changeVal;
 		this.optionName = optionName;
-		
+
 		add(__text = new Alphabet(100, 20, text, true));
 		add(__number = new Alphabet(__text.width + 120, -30, ': $currentSelection', false));
 	}
 
-	public override function draw() {
-		super.draw();
-	}
-
 	public override function onChangeSelection(change:Float):Void
 	{
-		if(currentSelection <= min && change == -1 || currentSelection >= max && change == 1 ) return;
-		currentSelection += change*changeVal;
+		if(currentSelection <= min && change == -1 || currentSelection >= max && change == 1) return;
+		currentSelection = FlxMath.roundDecimal(currentSelection + (change * changeVal), FlxMath.getDecimals(changeVal));
 		__number.text = ': $currentSelection';
 
 		Reflect.setField(parent, optionName, currentSelection);
