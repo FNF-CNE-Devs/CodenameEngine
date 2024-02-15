@@ -49,6 +49,7 @@ class NumOption extends OptionType {
 	{
 		if(currentSelection <= min && change == -1 || currentSelection >= max && change == 1 ) return;
 		currentSelection += change*changeVal;
+		currentSelection = FlxMath.roundDecimal(currentSelection, FlxMath.getDecimals(changeVal));
 		__number.text = ': $currentSelection';
 
 		Reflect.setField(parent, optionName, currentSelection);
