@@ -71,6 +71,13 @@ class NoteGroup extends FlxTypedGroup<Note> {
 		@:privateAccess FlxCamera._defaultCameras = oldDefaultCameras;
 	}
 
+	/**
+	 * Gets the correct order of notes
+	 **/
+	public function get(id:Int) {
+		return members[length - 1 - id];
+	}
+
 	public override function forEach(noteFunc:Note->Void, recursive:Bool = false) {
 		i = length-1;
 		__loopSprite = null;
