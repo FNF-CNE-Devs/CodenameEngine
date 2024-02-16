@@ -51,7 +51,6 @@ typedef ChartNote = {
 	var id:Int; // strum id of the note
 	var type:Int; // type (int) of the note
 	var sLen:Float; // sustain length of the note (ms)
-	var ?extra:Map<String, Dynamic>;
 }
 
 typedef ChartEvent = {
