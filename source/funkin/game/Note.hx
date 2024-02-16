@@ -117,6 +117,7 @@ class Note extends FlxSprite
 		this.isSustainNote = sustain;
 		this.sustainLength = sustainLength;
 		this.strumLine = strumLine;
+		this.extra = noteData.extra;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
