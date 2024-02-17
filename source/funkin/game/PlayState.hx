@@ -1069,8 +1069,6 @@ class PlayState extends MusicBeatState
 	public inline function getIconRPC():String
 		return SONG.meta.icon;
 
-	var __songPlaying:Bool = false;
-	var __wasAutoPause:Bool = false;
 	@:dox(hide)
 	override public function onFocus():Void
 	{
@@ -1185,8 +1183,10 @@ class PlayState extends MusicBeatState
 	function updateIconPositions() {
 		var iconOffset:Int = 26;
 
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0)) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0))) - (iconP2.width - iconOffset);
+		var center:Float = healthBar.x + healthBar.width * FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0);
+
+		iconP1.x = center - iconOffset;
+		iconP2.x = center - (iconP2.width - iconOffset);
 
 		health = FlxMath.bound(health, 0, maxHealth);
 
