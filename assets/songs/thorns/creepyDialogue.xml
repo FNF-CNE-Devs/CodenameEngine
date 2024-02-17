@@ -1,0 +1,22 @@
+<!DOCTYPE codename-engine-dialogue>
+<dialogue box="senpai">
+	<!-- All characters -->
+	<char name="dad" char="dad" position="left" />
+
+	<!-- Lines -->
+	<line char="dad">
+		Direct contact with real humans, after being trapped in here for so long...
+	</line>
+	<line char="dad">
+		and HER of all people.
+	</line>
+	<line char="dad">
+		I'll make her father pay for what he's done to me and all the others,,,,
+	</line>
+	<line char="dad">
+		I'll beat you and make you take my place.
+	</line>
+	<line char="dad">
+		You don't mind your bodies being borrowed right? It's only fair...
+	</line>
+</dialogue>

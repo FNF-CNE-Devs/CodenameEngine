@@ -801,7 +801,7 @@ class PlayState extends MusicBeatState
 	 */
 	public function startCutscene(prefix:String = "", ?cutsceneScriptPath:String, ?callback:Void->Void, checkSeen:Bool = false) {
 		if (callback == null) callback = startCountdown;
-		if (checkSeen && seenCutscene) {
+		if ((checkSeen && seenCutscene) || !playCutscenes) {
 			callback();
 			return;
 		}
@@ -809,34 +809,31 @@ class PlayState extends MusicBeatState
 		if (cutsceneScriptPath == null)
 			cutsceneScriptPath = Paths.script('songs/${SONG.meta.name.toLowerCase()}/${prefix}cutscene');
 
-		if (playCutscenes) {
-			inCutscene = true;
-			var videoCutscene = Paths.video('${PlayState.SONG.meta.name.toLowerCase()}-${prefix}cutscene');
-			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}cutscene.mp4');
-			var dialogue = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}dialogue.xml');
-			persistentUpdate = true;
-			var toCall:Void->Void = function() {
-				if(checkSeen) seenCutscene = true;
-				callback();
-			}
+		inCutscene = true;
+		var videoCutscene = Paths.video('${PlayState.SONG.meta.name.toLowerCase()}-${prefix}cutscene');
+		var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}cutscene.mp4');
+		var dialogue = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}dialogue.xml');
+		persistentUpdate = true;
+		var toCall:Void->Void = function() {
+			if(checkSeen) seenCutscene = true;
+			callback();
+		}
 
-			if (cutsceneScriptPath != null && Assets.exists(cutsceneScriptPath)) {
-				openSubState(new ScriptedCutscene(cutsceneScriptPath, toCall));
-			} else if (Assets.exists(dialogue)) {
-				MusicBeatState.skipTransIn = true;
-				openSubState(new DialogueCutscene(dialogue, toCall));
-			} else if (Assets.exists(videoCutsceneAlt)) {
-				MusicBeatState.skipTransIn = true;
-				persistentUpdate = false;
-				openSubState(new VideoCutscene(videoCutsceneAlt, toCall));
-				persistentDraw = false;
-			} else if (Assets.exists(videoCutscene)) {
-				MusicBeatState.skipTransIn = true;
-				persistentUpdate = false;
-				openSubState(new VideoCutscene(videoCutscene, toCall));
-				persistentDraw = false;
-			} else
-				callback();
+		if (cutsceneScriptPath != null && Assets.exists(cutsceneScriptPath)) {
+			openSubState(new ScriptedCutscene(cutsceneScriptPath, toCall));
+		} else if (Assets.exists(dialogue)) {
+			MusicBeatState.skipTransIn = true;
+			openSubState(new DialogueCutscene(dialogue, toCall));
+		} else if (Assets.exists(videoCutsceneAlt)) {
+			MusicBeatState.skipTransIn = true;
+			persistentUpdate = false;
+			openSubState(new VideoCutscene(videoCutsceneAlt, toCall));
+			persistentDraw = false;
+		} else if (Assets.exists(videoCutscene)) {
+			MusicBeatState.skipTransIn = true;
+			persistentUpdate = false;
+			openSubState(new VideoCutscene(videoCutscene, toCall));
+			persistentDraw = false;
 		} else
 			callback();
 	}

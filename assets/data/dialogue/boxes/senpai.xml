@@ -1,9 +1,9 @@
 <!DOCTYPE codename-engine-dialogue-box>
-<dialoguebox y="75">
+<dialoguebox sprite="pixel/dialogueBox" antialiasing="false" graphicSizex="1344" x="20" y="-215" textSound="pixel/pixelText" nextSound="pixel/clickText">
 	<!--
 		Node containing all text settings
 	 -->
-	<text font="vcr.ttf" x="107" y="206" width="1053" color="#000000" size="40"/>
+	<text x="242" y="218" width="768" color="#3f2021" size="32" antialiasing="false" borderSize="2" borderStyle="shadow" borderColor="#D89494" />
 
 	<!--
 		All positions for characters
@@ -16,9 +16,6 @@
 		All animations for the dialogue box
 		For example, if you wanna add an "angry" animation, add an animation named "angry" (box idle), and "angry-open" (not needed, for box apparition)
 	 -->
-	<anim name="normal" anim="speech bubble normal" fps="24" loop="true" x="-30"/>
-	<anim name="normal-open" anim="Speech Bubble Normal Open" fps="24" />
-
-	<anim name="angry" anim="AHH speech bubble" fps="24" loop="true" y="60"/>
-	<anim name="angry-open" anim="speech bubble loud open" fps="24"  y="60"/>
+	<anim name="normal" anim="Text Box Appear instance 10004" fps="24" loop="true"/>
+	<anim name="normal-open" anim="Text Box Appear instance 10" fps="24" />
 </dialoguebox>

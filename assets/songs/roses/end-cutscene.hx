@@ -1,4 +1,3 @@
-static var roses_shouldPlayOnThorns = false;
 var self = this;
 __script__.setParent(PlayState.instance);
 
@@ -36,10 +35,7 @@ function create() {
 					FlxG.camera.followLerp = 0;
 					FlxTween.tween(camGame.scroll, {x: -366, y: 192}, 3, {
 						ease: FlxEase.cubeInOut,
-						onComplete: (_) -> {
-							roses_shouldPlayOnThorns = true;
-							self.close();
-						}
+						onComplete: (_) -> {self.close();}
 					});
 				}
 			});
