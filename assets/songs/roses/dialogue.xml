@@ -1,14 +1,14 @@
 <!DOCTYPE codename-engine-dialogue>
 <dialogue box="senpai">
 	<!-- All characters -->
-	<char name="dad" char="dad" position="left" />
+	<char name="senpai" char="senpai" position="left" />
 	<char name="boyfriend" char="boyfriend" position="right" />
 
 	<!-- Lines -->
-	<line char="dad">
+	<line char="senpai">
 		Not bad for an ugly worm.
 	</line>
-	<line char="dad">
+	<line char="senpai">
 		But this time I'll rip your nuts off right after your girlfriend finishes gargling mine.
 	</line>
 	<line char="boyfriend">

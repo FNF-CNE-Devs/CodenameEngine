@@ -1,10 +1,9 @@
 package funkin.backend.utils;
 
-import flixel.animation.FlxAnimation;
 import funkin.backend.FunkinSprite;
 import funkin.backend.system.ErrorCode;
 import funkin.backend.FunkinSprite.XMLAnimType;
-import funkin.backend.system.interfaces.IBeatReceiver;
+import flixel.util.FlxColor;
 import haxe.xml.Access;
 import funkin.backend.system.interfaces.IOffsetCompatible;
 
@@ -138,11 +137,14 @@ class XMLUtil {
 		}
 		if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
 
-		if(node.has.zoomfactor)
+		if (node.has.zoomfactor)
 			spr.zoomFactor = Std.parseFloat(node.getAtt("zoomfactor")).getDefault(spr.zoomFactor);
 
 		if (node.has.alpha)
 			spr.alpha = Std.parseFloat(node.getAtt("alpha")).getDefault(spr.alpha);
+
+		if(node.has.color)
+			spr.color = FlxColor.fromString(node.getAtt("color")).getDefault(0xFFFFFFFF);
 
 		if (node.has.playOnCountdown)
 			spr.skipNegativeBeats = node.att.playOnCountdown == "true";

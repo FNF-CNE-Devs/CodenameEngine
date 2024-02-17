@@ -6,23 +6,30 @@ import haxe.xml.Access;
 class DialogueCharacter extends FunkinSprite {
 	public var charData:Access;
 	public var curTween:FlxTween;
-	public var curTweenContext:DialogueCharTweenContext = NONE;
+	public var curAnimContext:DialogueCharAnimContext = NONE;
 	public var positionName:String;
+	public var finishCallback:String->Void = null;
 
 	public function new(name:String, position:String) {
 		super();
 		this.positionName = position;
 		try {
 			charData = new Access(Xml.parse(Assets.getText(Paths.xml('dialogue/characters/$name'))).firstElement());
-			loadSprite(Paths.image('dialogue/characters/${charData.getAtt('sprite').getDefault(name)}'));
-			antialiasing = charData.getAtt('antialiasing').getDefault('true') == 'true';
-			scale.scale(charData.has.scale ? Std.parseFloat(charData.att.scale).getDefault(1) : 1);
-			updateHitbox();
-			offset.set(
-				charData.has.x ? Std.parseFloat(charData.att.x).getDefault(0) : 0,
-				(charData.has.y ? Std.parseFloat(charData.att.y).getDefault(0) : 0) + this.height);
-			for(anim in charData.nodes.anim)
-				XMLUtil.addXMLAnimation(this, anim, true);
+			if(!charData.has.sprite) charData.x.set("sprite", name);
+			if(!charData.has.updateHitbox) charData.x.set("updateHitbox", "true");
+			XMLUtil.loadSpriteFromXML(this, charData, "dialogue/characters/", LOOP);
+
+			animation.finishCallback = (name:String) -> {
+				switch(name)
+				{
+					case 'show': hasAnimation('normal') ? playAnim('normal', true) : animation.stop();
+					case 'hide': alpha = 0;
+				}
+				if(finishCallback != null) finishCallback(name);
+			}
+
+			offset.set(x, y + height);
+			x = 0; y = 0;
 		} catch(e) {
 			Logs.trace('Failed to load dialogue character $name: ${e.toString()}', ERROR);
 		}
@@ -30,29 +37,33 @@ class DialogueCharacter extends FunkinSprite {
 	}
 
 	public function show(x:Float, y:Float) {
-		if (curTweenContext != (curTweenContext = POPIN)) {
-			setPosition(x, y + 100);
-			if (curTween != null)
-				curTween.cancel();
+		if (curAnimContext == (curAnimContext = POPIN)) return;
 
+		if (hasAnimation('show')) {
+			playAnim('show', true);
+			setPosition(x, y);
+		} else {
+			setPosition(x, y + 100);
+			if(curTween != null) curTween.cancel();
+			playAnim('normal', true);
 			alpha = 0;
-			visible = true;
-	
 			curTween = FlxTween.tween(this, {alpha: 1, y: y}, 0.2, {ease: FlxEase.quintOut});
 		}
+		visible = true;
 	}
 
 	public function hide() {
-		if (curTweenContext != (curTweenContext = POPOUT)) {
-			if (curTween != null)
-				curTween.cancel();
-	
+		if (curAnimContext == (curAnimContext = POPOUT)) return;
+
+		if(hasAnimation('hide')) playAnim('hide', true);
+		else {
+			if(curTween != null) curTween.cancel();
 			curTween = FlxTween.tween(this, {alpha: 0, y: y + 100}, 0.2, {ease: FlxEase.quintIn});
 		}
 	}
 }
 
-enum abstract DialogueCharTweenContext(Int) {
+enum abstract DialogueCharAnimContext(Int) {
 	var NONE = -1;
 	var POPIN = 0;
 	var POPOUT = 1;
