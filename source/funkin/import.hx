@@ -30,4 +30,6 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 
 using funkin.backend.utils.CoolUtil;
+
+using StringTools;
 #end
