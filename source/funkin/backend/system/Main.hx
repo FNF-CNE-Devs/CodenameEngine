@@ -80,7 +80,9 @@ class Main extends Sprite
 
 		#if !html5
 		FlxG.game.addChild(framerateSprite = new funkin.backend.system.framerate.Framerate());
-		framerateSprite.scaleX = framerateSprite.scaleY = stage.window.scale;
+		//framerateSprite.scaleX = framerateSprite.scaleY = stage.window.scale;
+		framerateSprite.setScale();
+		FlxG.stage.window.onResize.add((w:Int, h:Int) -> framerateSprite.setScale(Math.min(w / FlxG.width, h / FlxG.height)));
 		SystemInfo.init();
 		#end
 	}

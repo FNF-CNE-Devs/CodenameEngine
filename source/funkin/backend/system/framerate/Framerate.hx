@@ -9,6 +9,7 @@ import openfl.display.Sprite;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.ui.Keyboard;
+import flixel.util.FlxTimer;
 
 class Framerate extends Sprite {
 	public static var instance:Framerate;
@@ -42,6 +43,11 @@ class Framerate extends Sprite {
 			__bitmap = new BitmapData(1, 1, 0xFF000000);
 		return __bitmap;
 	}
+
+	#if android
+	public var presses:Int = 0;
+	public var resetTimer:FlxTimer = new FlxTimer();
+	#end
 
 	public function new() {
 		super();
@@ -102,6 +108,20 @@ class Framerate extends Sprite {
 		alpha = CoolUtil.fpsLerp(alpha, debugMode > 0 ? 1 : 0, 0.5);
 		debugAlpha = CoolUtil.fpsLerp(debugAlpha, debugMode > 1 ? 1 : 0, 0.5);
 
+		#if android
+		// thank me later :3
+		if(FlxG.android.justPressed.BACK){
+			++presses;
+			resetTimer.cancel();
+			if(presses >= 3){
+				debugMode = (debugMode + 1) % 3;
+				presses = 0;
+				return;
+			}
+			resetTimer.start(0.3, (tmr:FlxTimer) -> presses = 0);
+		}
+		#end
+
 		if (alpha < 0.05) return;
 		super.__enterFrame(t);
 		bgSprite.alpha = debugAlpha * 0.5;
@@ -124,5 +144,11 @@ class Framerate extends Sprite {
 			c.y = y;
 			y = c.y + c.height + 4;
 		}
+	}
+
+	public inline function setScale(?scale:Float){
+		if(scale == null)
+			scale = Math.min(FlxG.stage.window.width / FlxG.width, FlxG.stage.window.height / FlxG.height);
+		scaleX = scaleY = #if mobile (scale > 1 ? scale : 1) #else (scale < 1 ? scale : 1) #end;
 	}
 }
