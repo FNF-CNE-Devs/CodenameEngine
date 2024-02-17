@@ -76,9 +76,9 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nAlpha: Commit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[TAB] Open Mods menu\n');
-		versionShit.scrollFactor.set();
+		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nCommit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[TAB] Open Mods menu\n');
 		versionShit.y -= versionShit.height;
+		versionShit.scrollFactor.set();
 		add(versionShit);
 
 		changeItem();
@@ -167,20 +167,10 @@ class MainMenuState extends MusicBeatState
 			if (event.cancelled) return;
 			switch (daChoice)
 			{
-				case 'story mode':
-					FlxG.switchState(new StoryMenuState());
-					trace("Story Menu Selected");
-
-				case 'freeplay':
-					FlxG.switchState(new FreeplayState());
-					trace("Freeplay Menu Selected");
-
-				case 'donate':
-					FlxG.switchState(new CreditsMain());
-					trace("Credits Menu Selected");
-
-				case 'options':
-					FlxG.switchState(new OptionsMenu());
+				case 'story mode': FlxG.switchState(new StoryMenuState());
+				case 'freeplay': FlxG.switchState(new FreeplayState());
+				case 'donate': FlxG.switchState(new CreditsMain());
+				case 'options': FlxG.switchState(new OptionsMenu());
 			}
 		});
 	}

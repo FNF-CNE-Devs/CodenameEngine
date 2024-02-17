@@ -1,4 +1,5 @@
 #if !macro
+import funkin.backend.system.Main;
 import funkin.backend.assets.Paths;
 import funkin.backend.MusicBeatState;
 import funkin.backend.MusicBeatSubstate;
@@ -11,6 +12,7 @@ import funkin.game.PlayState;
 import funkin.backend.scripting.EventManager;
 
 import mobile.backend.SUtil;
+import mobile.objects.MobileControls;
 
 import openfl.utils.Assets;
 
@@ -28,6 +30,6 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 
 using funkin.backend.utils.CoolUtil;
-import mobile.objects.MobileControls;
+
 using StringTools;
 #end

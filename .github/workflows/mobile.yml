@@ -6,27 +6,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
-      - name: Restore Existing Build Cache
-        uses: actions/cache@main
-        with:
-          key: cache-build-android
-          path: |
-            .haxelib/
-            ~/.gradle/
-            export/release/linux/haxe/
-            export/release/linux/obj/
-          restore-keys: |
-            cache-build-android
-      - name: Setup Android NDK
-        uses: nttld/setup-ndk@main
-        id: setup-ndk
-        with:
-          ndk-version: r21e
       - name: Setup Java JDK
         uses: actions/setup-java@main
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
@@ -42,43 +26,8 @@ jobs:
           haxelib run lime config ANDROID_NDK_ROOT $ANDROID_NDK_HOME
           haxelib run lime config JAVA_HOME $JAVA_HOME
           haxelib run lime config ANDROID_SETUP true
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       - name: Compile
         run: haxelib run lime build android -final
-        env:
-          cert_pass: nullfunni
-          cert_alias_pass: nullfunni
-      - name: Clear Existing Cache
-        uses: actions/github-script@main
-        with:
-          script: |
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-build-android") {
-                console.log('Clearing ' + cache.key + '...')
-                await github.rest.actions.deleteActionsCacheById({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  cache_id: cache.id,
-                })
-                console.log("Cache cleared.")
-              }
-            }
-      - name: Upload New Cache
-        uses: actions/cache@main
-        with:
-          key: cache-build-android
-          path: |
-            .haxelib/
-            ~/.gradle/
-            export/release/linux/haxe/
-            export/release/linux/obj/
-          restore-keys: |
-            cache-build-android
       - name: Upload Artifact
         if: ${{ success() }}
         uses: actions/upload-artifact@main

@@ -40,6 +40,10 @@ import lime.system.System as LimeSystem;
 
 class Main extends Sprite
 {
+	// make this empty once you guys are done with the project.
+	// good luck /gen <3 @crowplexus
+	public static final releaseCycle:String = "Beta";
+
 	public static var instance:Main;
 
 	public static var modToLoad:String = null;
