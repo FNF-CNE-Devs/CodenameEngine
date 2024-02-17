@@ -291,12 +291,19 @@ class FreeplayState extends MusicBeatState
 	public function select() {
 		updateCoopModes();
 
-		if (songs[curSelected].difficulties.length <= 0) return;
+		trace('selected');
+
+		if (songs[curSelected].difficulties.length <= 0){
+			trace('selected but interrupted by first return');
+			return;
+		}
 
 		var event = event("onSelect", EventManager.get(FreeplaySongSelectEvent).recycle(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty], __opponentMode, __coopMode));
 
-		if (event.cancelled) return;
-
+		if (event.cancelled){
+			trace('selected but interrupted by second return');
+			return;
+		}
 		Options.freeplayLastSong = songs[curSelected].name;
 		Options.freeplayLastDifficulty = songs[curSelected].difficulties[curDifficulty];
 
