@@ -1,6 +1,5 @@
 import flixel.addons.util.FlxSimplex;
 
-static var roses_shouldPlayOnThorns = false;
 var self = this;
 __script__.setParent(PlayState.instance);
 
@@ -9,13 +8,6 @@ var senpaiEvil:FlxSprite;
 var dfx = 0;
 var dfy = 0;
 function create() {
-	// Cutscene stuff
-	if(!roses_shouldPlayOnThorns) {
-		disableScript();
-		self.close();
-		return;
-	}
-	roses_shouldPlayOnThorns = false;
 	camHUD.visible = false;
 
 	var red:FlxSprite = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, 0xFFff1b31);
@@ -64,7 +56,7 @@ function create() {
 				white.destroy();
 
 				camHUD.visible = true;
-				self.close();
+				self.startDialogue("songs/" + PlayState.instance.SONG.meta.name.toLowerCase() + "/creepyDialogue.xml", self.close);
 			}
 		});
 

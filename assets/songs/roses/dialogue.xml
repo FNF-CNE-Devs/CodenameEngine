@@ -1,0 +1,17 @@
+<!DOCTYPE codename-engine-dialogue>
+<dialogue box="senpai">
+	<!-- All characters -->
+	<char name="senpai" char="senpai" position="left" />
+	<char name="pixelBf" char="pixelBf" position="right" />
+
+	<!-- Lines -->
+	<line char="senpai">
+		Not bad for an ugly worm.
+	</line>
+	<line char="senpai">
+		But this time I'll rip your nuts off right after your girlfriend finishes gargling mine.
+	</line>
+	<line char="pixelBf">
+		Bop beep be be skdoo bep
+	</line>
+</dialogue>

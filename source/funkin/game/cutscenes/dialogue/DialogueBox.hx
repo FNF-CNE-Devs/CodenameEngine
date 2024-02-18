@@ -8,6 +8,7 @@ import haxe.xml.Access;
 class DialogueBox extends FunkinSprite {
 	public var dialogueBoxData:Access;
 	public var positions:Map<String, CharPosDef> = [];
+	public var everPlayedAny:Bool = false;
 
 	public var textTypeSFX:String = Paths.sound('dialogue/text');
 	public var nextSFX:String = Paths.sound('dialogue/next');
@@ -18,12 +19,22 @@ class DialogueBox extends FunkinSprite {
 		super();
 		try {
 			dialogueBoxData = new Access(Xml.parse(Assets.getText(Paths.xml('dialogue/boxes/$name'))).firstElement());
+			if(!dialogueBoxData.has.sprite) dialogueBoxData.x.set("sprite", name);
+			XMLUtil.loadSpriteFromXML(this, dialogueBoxData, "dialogue/boxes/", NONE);
+			visible = false;
 
-			loadSprite(Paths.image('dialogue/boxes/${dialogueBoxData.getAtt('sprite').getDefault(name)}'));
+			var preX:Float = x;
+			screenCenter(X); x += preX;
+			y += FlxG.height - height;
 
-			for(anim in dialogueBoxData.nodes.anim) {
-				if (!anim.has.name) continue;
-				XMLUtil.addXMLAnimation(this, anim);
+			if(dialogueBoxData.has.textSound) textTypeSFX = Paths.sound(dialogueBoxData.att.textSound);
+			if(dialogueBoxData.has.nextSound) nextSFX = Paths.sound(dialogueBoxData.att.nextSound);
+
+			animation.finishCallback = (name:String) -> {
+				if(name.endsWith("-open") || name.endsWith("-firstOpen")) {
+					playAnim(name.substr(0, name.length - 5));
+					setText(__nextText, __speed);
+				}
 			}
 
 			for(pos in dialogueBoxData.nodes.charpos) {
@@ -34,16 +45,6 @@ class DialogueBox extends FunkinSprite {
 					flipBubble: pos.getAtt('flipBubble') == "true"
 				};
 			}
-
-			if (dialogueBoxData.has.textSound) textTypeSFX = Paths.sound(dialogueBoxData.att.textSound);
-			if (dialogueBoxData.has.nextSound) nextSFX = Paths.sound(dialogueBoxData.att.nextSound);
-
-			antialiasing = dialogueBoxData.getAtt("antialiasing").getDefault("true") == "true";
-			screenCenter(X);
-			y = FlxG.height - height;
-			if (dialogueBoxData.has.x) x += Std.parseFloat(dialogueBoxData.att.x).getDefault(0);
-			if (dialogueBoxData.has.y) y += Std.parseFloat(dialogueBoxData.att.y).getDefault(0);
-			visible = false;
 
 			var textNode = dialogueBoxData.node.text;
 			if (textNode == null)
@@ -57,6 +58,16 @@ class DialogueBox extends FunkinSprite {
 			text.font = Paths.font('${textNode.getAtt("font").getDefault("vcr.ttf")}');
 			text.antialiasing = textNode.getAtt("antialiasing").getDefault("false") == "true";
 			text.sounds = [FlxG.sound.load(textTypeSFX)];
+			if(textNode.has.borderStyle) {
+				text.borderStyle = switch(textNode.att.borderStyle.trim().toLowerCase()) {
+					case "none": NONE;
+					case "shadow": SHADOW;
+					case "outline_fast": OUTLINE_FAST;
+					default: OUTLINE;
+				}
+				text.borderSize = Std.parseFloat(textNode.getAtt("borderSize")).getDefault(1);
+				text.borderColor = textNode.getAtt("borderColor").getColorFromDynamic().getDefault(0xFFFFFFFF);
+			}
 		} catch(e) {
 			active = false;
 			Logs.trace('Couldn\'t load dialogue box "$name": ${e.toString()}', ERROR);
@@ -80,29 +91,19 @@ class DialogueBox extends FunkinSprite {
 		this.__speed = speed;
 		this.text.resetText(text);
 		FlxG.sound.play(nextSFX);
-		if (hasAnimation('$bubble-open'))
-			playAnim('$bubble-open', true);
+		if(hasAnimation('$bubble-open')) playAnim('$bubble-open', true);
+		else if(hasAnimation('$bubble-firstOpen') && !everPlayedAny) playAnim('$bubble-firstOpen', true);
 		else {
 			playAnim(bubble);
 			setText(__nextText, __speed);
 		}
 		visible = true;
+		everPlayedAny = true;
 	}
 
 	public function setText(text:String, speed:Float = 0.02) {
 		this.text.delay = speed;
 		this.text.start(speed, true);
-	}
-
-	public override function update(elapsed:Float) {
-		super.update(elapsed);
-		if (isAnimFinished()) {
-			var animName = getAnimName();
-			if (animName.endsWith("-open")) {
-				playAnim(animName.substr(0, animName.length - 5));
-				setText(__nextText, __speed);
-			}
-		}
 	}
 
 	public override function destroy() {
