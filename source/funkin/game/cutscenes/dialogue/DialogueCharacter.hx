@@ -39,9 +39,11 @@ class DialogueCharacter extends FunkinSprite {
 	public function show(x:Float, y:Float) {
 		if (curAnimContext == (curAnimContext = POPIN)) return;
 
+		visible = true;
 		if (hasAnimation('show')) {
 			playAnim('show', true);
 			setPosition(x, y);
+			alpha = 1;
 		} else {
 			setPosition(x, y + 100);
 			if(curTween != null) curTween.cancel();
@@ -49,7 +51,6 @@ class DialogueCharacter extends FunkinSprite {
 			alpha = 0;
 			curTween = FlxTween.tween(this, {alpha: 1, y: y}, 0.2, {ease: FlxEase.quintOut});
 		}
-		visible = true;
 	}
 
 	public function hide() {

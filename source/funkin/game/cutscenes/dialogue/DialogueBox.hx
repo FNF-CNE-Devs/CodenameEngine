@@ -8,6 +8,7 @@ import haxe.xml.Access;
 class DialogueBox extends FunkinSprite {
 	public var dialogueBoxData:Access;
 	public var positions:Map<String, CharPosDef> = [];
+	public var everPlayedAny:Bool = false;
 
 	public var textTypeSFX:String = Paths.sound('dialogue/text');
 	public var nextSFX:String = Paths.sound('dialogue/next');
@@ -29,6 +30,13 @@ class DialogueBox extends FunkinSprite {
 			if(dialogueBoxData.has.textSound) textTypeSFX = Paths.sound(dialogueBoxData.att.textSound);
 			if(dialogueBoxData.has.nextSound) nextSFX = Paths.sound(dialogueBoxData.att.nextSound);
 
+			animation.finishCallback = (name:String) -> {
+				if(name.endsWith("-open") || name.endsWith("-firstOpen")) {
+					playAnim(name.substr(0, name.length - 5));
+					setText(__nextText, __speed);
+				}
+			}
+
 			for(pos in dialogueBoxData.nodes.charpos) {
 				if (!pos.has.name) continue;
 				positions[pos.att.name] = {
@@ -48,7 +56,6 @@ class DialogueBox extends FunkinSprite {
 			text.color = textNode.getAtt("color").getColorFromDynamic().getDefault(0xFF000000);
 			text.size = Std.parseInt(textNode.att.size).getDefault(20);
 			text.font = Paths.font('${textNode.getAtt("font").getDefault("vcr.ttf")}');
-			text.delay = Std.parseFloat(textNode.getAtt("delay")).getDefault(0.05);
 			text.antialiasing = textNode.getAtt("antialiasing").getDefault("false") == "true";
 			text.sounds = [FlxG.sound.load(textTypeSFX)];
 			if(textNode.has.borderStyle) {
@@ -84,29 +91,19 @@ class DialogueBox extends FunkinSprite {
 		this.__speed = speed;
 		this.text.resetText(text);
 		FlxG.sound.play(nextSFX);
-		if (hasAnimation('$bubble-open'))
-			playAnim('$bubble-open', true);
+		if(hasAnimation('$bubble-open')) playAnim('$bubble-open', true);
+		else if(hasAnimation('$bubble-firstOpen') && !everPlayedAny) playAnim('$bubble-firstOpen', true);
 		else {
 			playAnim(bubble);
 			setText(__nextText, __speed);
 		}
 		visible = true;
+		everPlayedAny = true;
 	}
 
 	public function setText(text:String, speed:Float = 0.02) {
 		this.text.delay = speed;
 		this.text.start(speed, true);
-	}
-
-	public override function update(elapsed:Float) {
-		super.update(elapsed);
-		if (isAnimFinished()) {
-			var animName = getAnimName();
-			if (animName.endsWith("-open")) {
-				playAnim(animName.substr(0, animName.length - 5));
-				setText(__nextText, __speed);
-			}
-		}
 	}
 
 	public override function destroy() {

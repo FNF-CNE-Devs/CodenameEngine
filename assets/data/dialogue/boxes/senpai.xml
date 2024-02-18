@@ -16,6 +16,6 @@
 		All animations for the dialogue box
 		For example, if you wanna add an "angry" animation, add an animation named "angry" (box idle), and "angry-open" (not needed, for box apparition)
 	-->
-	<anim name="normal" anim="Text Box Appear instance 10004" fps="24" loop="true"/>
-	<anim name="normal-open" anim="Text Box Appear instance 10" fps="24" />
+	<anim name="normal" anim="Text Box Appear instance 10004" fps="24" loop="true" />
+	<anim name="normal-firstOpen" anim="Text Box Appear instance 10" fps="24" />
 </dialoguebox>
