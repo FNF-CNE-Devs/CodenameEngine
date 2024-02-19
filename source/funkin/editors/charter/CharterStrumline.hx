@@ -38,7 +38,7 @@ class CharterStrumline extends UISprite {
 		healthIcons = new FlxSpriteGroup(x, y);
 
 		for (i=>icon in icons) {
-			var healthIcon = new HealthIcon(icon);
+			var healthIcon = new HealthIcon(Character.getIconFromCharName(icon));
 			healthIcon.scale.x = healthIcon.scale.y = 0.6 - (icons.length / 20);
 			healthIcon.updateHitbox();
 			healthIcon.x = FlxMath.lerp(0, icons.length * 20, (icons.length-1 != 0 ? i / (icons.length-1) : 0));
@@ -93,7 +93,7 @@ class CharterStrumline extends UISprite {
 		healthIcons.clear();
 
 		for (i=>icon in icons) {
-			var healthIcon = new HealthIcon(icon);
+			var healthIcon = new HealthIcon(Character.getIconFromCharName(icon));
 			healthIcon.scale.x = healthIcon.scale.y = 0.6 - (icons.length / 20);
 			healthIcon.updateHitbox();
 			healthIcon.x = FlxMath.lerp(0, icons.length * 20, (icons.length-1 != 0 ? i / (icons.length-1) : 0));
