@@ -1,5 +1,6 @@
 package funkin.game.cutscenes.dialogue;
 
+import flixel.sound.FlxSound;
 import flixel.addons.text.FlxTypeText;
 import flixel.text.FlxText;
 import flixel.math.FlxPoint;
@@ -10,13 +11,15 @@ class DialogueBox extends FunkinSprite {
 	public var positions:Map<String, CharPosDef> = [];
 	public var everPlayedAny:Bool = false;
 
-	public var textTypeSFX:String = Paths.sound('dialogue/text');
 	public var nextSFX:String = Paths.sound('dialogue/next');
 
+	public var defaultTextTypeSFX:Array<FlxSound>;
 	public var text:FlxTypeText;
 
 	public function new(name:String) {
 		super();
+		var textTypeSFX:String = Paths.sound('dialogue/text');
+
 		try {
 			dialogueBoxData = new Access(Xml.parse(Assets.getText(Paths.xml('dialogue/boxes/$name'))).firstElement());
 			if(!dialogueBoxData.has.sprite) dialogueBoxData.x.set("sprite", name);
@@ -31,9 +34,10 @@ class DialogueBox extends FunkinSprite {
 			if(dialogueBoxData.has.nextSound) nextSFX = Paths.sound(dialogueBoxData.att.nextSound);
 
 			animation.finishCallback = (name:String) -> {
-				if(name.endsWith("-open") || name.endsWith("-firstOpen")) {
-					playAnim(name.substr(0, name.length - 5));
-					setText(__nextText, __speed);
+				var finalPt:String;
+				if(name.endsWith(finalPt = "-open") || name.endsWith(finalPt = "-firstOpen")) {
+					playAnim(name.substr(0, name.length - finalPt.length));
+					setText(__nextText, __speed, __customTypeSFX);
 				}
 			}
 
@@ -57,7 +61,6 @@ class DialogueBox extends FunkinSprite {
 			text.size = Std.parseInt(textNode.att.size).getDefault(20);
 			text.font = Paths.font('${textNode.getAtt("font").getDefault("vcr.ttf")}');
 			text.antialiasing = textNode.getAtt("antialiasing").getDefault("false") == "true";
-			text.sounds = [FlxG.sound.load(textTypeSFX)];
 			if(textNode.has.borderStyle) {
 				text.borderStyle = switch(textNode.att.borderStyle.trim().toLowerCase()) {
 					case "none": NONE;
@@ -72,8 +75,8 @@ class DialogueBox extends FunkinSprite {
 			active = false;
 			Logs.trace('Couldn\'t load dialogue box "$name": ${e.toString()}', ERROR);
 		}
+		defaultTextTypeSFX = [FlxG.sound.load(textTypeSFX)];
 		FlxG.sound.cache(nextSFX);
-		FlxG.sound.cache(textTypeSFX);
 	}
 
 	public function popupChar(char:DialogueCharacter) {
@@ -86,22 +89,25 @@ class DialogueBox extends FunkinSprite {
 
 	private var __nextText:String;
 	private var __speed:Float;
-	public function playBubbleAnim(bubble:String, text:String, speed:Float = 0.05) {
+	private var __customTypeSFX:Array<FlxSound>;
+	public function playBubbleAnim(bubble:String, text:String, speed:Float = 0.05, ?customSFX:FlxSound, ?customTypeSFX:Array<FlxSound>, ?playNext:Bool) {
 		this.__nextText = text;
 		this.__speed = speed;
+		this.__customTypeSFX = customTypeSFX;
 		this.text.resetText(text);
-		FlxG.sound.play(nextSFX);
+		if(playNext || (playNext == null && everPlayedAny)) customSFX != null ? customSFX.play() : FlxG.sound.play(nextSFX);
 		if(hasAnimation('$bubble-open')) playAnim('$bubble-open', true);
 		else if(hasAnimation('$bubble-firstOpen') && !everPlayedAny) playAnim('$bubble-firstOpen', true);
 		else {
 			playAnim(bubble);
-			setText(__nextText, __speed);
+			setText(__nextText, __speed, __customTypeSFX);
 		}
 		visible = true;
 		everPlayedAny = true;
 	}
 
-	public function setText(text:String, speed:Float = 0.02) {
+	public function setText(text:String, speed:Float = 0.02, ?customTypeSFX:Array<FlxSound>) {
+		this.text.sounds = customTypeSFX != null ? customTypeSFX : defaultTextTypeSFX;
 		this.text.delay = speed;
 		this.text.start(speed, true);
 	}

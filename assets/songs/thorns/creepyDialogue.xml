@@ -4,7 +4,7 @@
 	<char name="senpai" char="senpai" position="left" />
 
 	<!-- Lines -->
-	<line char="senpai">
+	<line char="senpai" changeMusic="pixel/LunchboxScary">
 		Direct contact with real humans, after being trapped in here for so long...
 	</line>
 	<line char="senpai">
