@@ -7,16 +7,13 @@ import openfl.events.ErrorEvent;
 import lime.utils.Log as LimeLogger;
 import openfl.events.UncaughtErrorEvent;
 import lime.system.System as LimeSystem;
+#if sys
+import sys.FileSystem;
+import sys.io.File;
+#end
 
-/**
- * A uncaught error handler.
- * @author: Sqirra-RNG, YoshiCrafter29, Mihai Alexandru (M.A. Jigsaw) and Lily Ross (mcagabe19)
- */
 class CrashHandler
 {
-	/**
-	 * Init of the Crash Handler.
-	 */
 	public static function init():Void
 	{
 		openfl.Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onError);
@@ -50,7 +47,7 @@ class CrashHandler
 				case Module(m):
 					log.push('Module [$m]');
 				case FilePos(s, file, line, column):
-					log.push('$file [line $line column $column]');
+					log.push('$file [line $line]');
 				case Method(classname, method):
 					log.push('$classname [method $method]');
 				case LocalFunction(name):
@@ -97,7 +94,7 @@ class CrashHandler
 				case Module(m):
 					log.push('Module [$m]');
 				case FilePos(s, file, line, column):
-					log.push('$file [line $line column $column]');
+					log.push('$file [line $line]');
 				case Method(classname, method):
 					log.push('$classname [method $method]');
 				case LocalFunction(name):
