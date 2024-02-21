@@ -1,6 +1,7 @@
 package lime.utils;
 
 import haxe.PosInfos;
+import haxe.Exception;
 import funkin.backend.system.Logs as FunkinLogs;
 #if js
 import flixel.FlxG;
@@ -8,6 +9,9 @@ import flixel.FlxG;
 import sys.io.File;
 import sys.FileSystem;
 #end
+	
+using StringTools;
+
 
 #if !lime_debug
 @:fileXml('tags="haxe,release"')
