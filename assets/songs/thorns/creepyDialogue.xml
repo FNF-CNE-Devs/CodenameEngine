@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-dialogue>
-<dialogue box="senpai">
+<dialogue box="spirit-creepy-box">
 	<!-- All characters -->
 	<char name="senpai" char="senpai" position="left" />
 

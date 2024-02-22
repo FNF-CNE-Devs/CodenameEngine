@@ -1,5 +1,7 @@
 package funkin.game.cutscenes;
 
+import funkin.backend.scripting.events.CancellableEvent;
+import funkin.backend.scripting.Script;
 import flixel.sound.FlxSound;
 import funkin.game.cutscenes.dialogue.*;
 import haxe.xml.Access;
@@ -20,6 +22,9 @@ class DialogueCutscene extends Cutscene {
 	public var dialogueCamera:FlxCamera;
 	public var curMusic:FlxSound = null;
 
+	public static var cutscene:DialogueCutscene;
+	//public var dialogueScript:Script;
+
 	public function new(dialoguePath:String, callback:Void->Void) {
 		super(callback);
 		this.dialoguePath = dialoguePath;
@@ -29,6 +34,7 @@ class DialogueCutscene extends Cutscene {
 	}
 
 	public override function create() {
+		cutscene = this;
 		super.create();
 
 		try {
@@ -39,7 +45,10 @@ class DialogueCutscene extends Cutscene {
 				if (!char.has.name) continue;
 				if (charMap.exists(char.att.name))
 					Logs.trace('2 dialogue characters share the same name (${char.att.name}, ${char.att.name}). The old character has been replaced.');
-				add(charMap[char.att.name] = new DialogueCharacter(char.att.name, char.getAtt('position').getDefault('default')));
+
+				var leChar:DialogueCharacter = new DialogueCharacter(char.att.name, char.getAtt('position').getDefault('default'));
+				if(char.has.defaultAnim) leChar.defaultAnim = char.getAtt('defaultAnim');
+				add(charMap[char.att.name] = leChar);
 			}
 
 			var useDef:Bool = false;
@@ -53,6 +62,7 @@ class DialogueCutscene extends Cutscene {
 					char: node.getAtt('char').getDefault('boyfriend'),
 					bubble: node.getAtt('bubble').getDefault('normal'),
 					callback: node.getAtt('callback'),
+					changeDefAnim: node.getAtt('changeDefAnim'),
 					speed: node.has.speed ? Std.parseFloat(node.att.speed).getDefault(0.05) : 0.05,
 					changeMusic: node.has.changeMusic ? FlxG.sound.load(Paths.music(node.getAtt('changeMusic')), 0.8, true) : null,
 					playSound: node.has.playSound ? FlxG.sound.load(Paths.sound(node.getAtt('playSound'))) : null,
@@ -98,8 +108,13 @@ class DialogueCutscene extends Cutscene {
 			if (k != curLine.char)
 				c.hide();
 
-		if (charMap[curLine.char] != null)
-			dialogueBox.popupChar(charMap[curLine.char]);
+		var char = charMap[curLine.char];
+		if (char != null) {
+			var force:Bool;
+			if(force = (curLine.changeDefAnim != null)) char.defaultAnim = curLine.changeDefAnim;
+			dialogueBox.popupChar(char, force);
+		}
+
 		dialogueBox.playBubbleAnim(curLine.bubble, curLine.text, curLine.speed, curLine.nextSound, curLine.textSound != null ? [curLine.textSound] : null);
 
 		if(curLine.playSound != null) curLine.playSound.play();
@@ -114,6 +129,7 @@ class DialogueCutscene extends Cutscene {
 	public override function destroy() {
 		if(curMusic != null) curMusic.destroy();
 		super.destroy();
+		cutscene = null;
 		FlxG.cameras.remove(dialogueCamera);
 	}
 }
@@ -128,4 +144,5 @@ typedef DialogueLine = {
 	var playSound:FlxSound;
 	var nextSound:FlxSound;
 	var textSound:FlxSound;
+	var changeDefAnim:String;
 }

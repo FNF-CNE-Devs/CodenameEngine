@@ -1,5 +1,9 @@
 package funkin.game.cutscenes.dialogue;
 
+import funkin.backend.scripting.events.*;
+import funkin.backend.scripting.events.PlayAnimEvent.PlayAnimContext;
+import funkin.backend.scripting.events.CancellableEvent;
+import funkin.backend.scripting.Script;
 import flixel.sound.FlxSound;
 import flixel.addons.text.FlxTypeText;
 import flixel.text.FlxText;
@@ -10,20 +14,43 @@ class DialogueBox extends FunkinSprite {
 	public var dialogueBoxData:Access;
 	public var positions:Map<String, CharPosDef> = [];
 	public var everPlayedAny:Bool = false;
+	public var finishAnimCallback:String->Void = null;
 
 	public var nextSFX:String = Paths.sound('dialogue/next');
-
 	public var defaultTextTypeSFX:Array<FlxSound>;
 	public var text:FlxTypeText;
 
+	public var defPath:String = 'dialogue/boxes/';
+	public var dialogueBoxScript:Script;
+	public var cutscene:DialogueCutscene = DialogueCutscene.cutscene;
+
 	public function new(name:String) {
 		super();
-		var textTypeSFX:String = Paths.sound('dialogue/text');
+		var textTypeSFX:String = Paths.sound('dialogue/text');  // Default if xml doesnt have it  - Nex
+
+		dialogueBoxScript = Script.create(Paths.script('data/' + defPath + name));
+		dialogueBoxScript.setParent(this);
+		dialogueBoxScript.load();
+
+		var event = EventManager.get(DialogueBoxCreationEvent).recycle(name, textTypeSFX);
+		dialogueBoxScript.call('create', [event]);
+		if(event.cancelled)
+			return;
+		name = event.name;
+		textTypeSFX = event.textTypeSFX;
 
 		try {
-			dialogueBoxData = new Access(Xml.parse(Assets.getText(Paths.xml('dialogue/boxes/$name'))).firstElement());
+			dialogueBoxData = new Access(Xml.parse(Assets.getText(Paths.xml(defPath + name))).firstElement());
+			var event = EventManager.get(DialogueBoxStructureEvent).recycle(name, textTypeSFX, dialogueBoxData);
+			dialogueBoxScript.call('structureLoaded', [event]);
+			if(event.cancelled)
+				return;
+			name = event.name;
+			textTypeSFX = event.textTypeSFX;
+			dialogueBoxData = event.dialogueBoxData;
+
 			if(!dialogueBoxData.has.sprite) dialogueBoxData.x.set("sprite", name);
-			XMLUtil.loadSpriteFromXML(this, dialogueBoxData, "dialogue/boxes/", NONE);
+			XMLUtil.loadSpriteFromXML(this, dialogueBoxData, defPath, NONE);
 			visible = false;
 
 			var preX:Float = x;
@@ -34,6 +61,8 @@ class DialogueBox extends FunkinSprite {
 			if(dialogueBoxData.has.nextSound) nextSFX = Paths.sound(dialogueBoxData.att.nextSound);
 
 			animation.finishCallback = (name:String) -> {
+				if(finishAnimCallback != null) finishAnimCallback(name);
+
 				var finalPt:String;
 				if(name.endsWith(finalPt = "-open") || name.endsWith(finalPt = "-firstOpen")) {
 					playAnim(name.substr(0, name.length - finalPt.length));
@@ -77,42 +106,79 @@ class DialogueBox extends FunkinSprite {
 		}
 		defaultTextTypeSFX = [FlxG.sound.load(textTypeSFX)];
 		FlxG.sound.cache(nextSFX);
+		dialogueBoxScript.call("postCreate");
 	}
 
-	public function popupChar(char:DialogueCharacter) {
-		if (!active) return;
-		var pos = positions[char.positionName];
+	public override function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0) {
+		var event = EventManager.get(PlayAnimEvent).recycle(AnimName, Force, Reversed, Frame, Context);
+		dialogueBoxScript.call("onPlayAnim", [event]);
+		if (event.cancelled)
+			return;
+
+		super.playAnim(event.animName, event.force, event.context, event.reverse, event.startingFrame);
+	}
+
+	public override function beatHit(curBeat:Int) {
+		super.beatHit(curBeat);
+		dialogueBoxScript.call("beatHit", [curBeat]);
+	}
+
+	public override function update(elapsed:Float) {
+		super.update(elapsed);
+		dialogueBoxScript.call("update", [elapsed]);
+	}
+
+	public function popupChar(char:DialogueCharacter, force:Bool = false) {
+		var event = EventManager.get(DialogueBoxCharPopupEvent).recycle(char);
+		dialogueBoxScript.call("popupChar", [event]);
+		if (event.cancelled || event.char == null || !active) return;
+		var pos = positions[event.char.positionName];
 		if (pos == null) return;
 
-		char.show((FlxG.width / 2) + pos.x, FlxG.height - pos.y);
+		event.char.show((FlxG.width / 2) + pos.x, FlxG.height - pos.y, null, force);
 	}
 
 	private var __nextText:String;
 	private var __speed:Float;
 	private var __customTypeSFX:Array<FlxSound>;
 	public function playBubbleAnim(bubble:String, text:String, speed:Float = 0.05, ?customSFX:FlxSound, ?customTypeSFX:Array<FlxSound>, ?playNext:Bool) {
-		this.__nextText = text;
-		this.__speed = speed;
-		this.__customTypeSFX = customTypeSFX;
-		this.text.resetText(text);
-		if(playNext || (playNext == null && everPlayedAny)) customSFX != null ? customSFX.play() : FlxG.sound.play(nextSFX);
-		if(hasAnimation('$bubble-open')) playAnim('$bubble-open', true);
-		else if(hasAnimation('$bubble-firstOpen') && !everPlayedAny) playAnim('$bubble-firstOpen', true);
+		var event = EventManager.get(DialogueBoxPlayBubbleEvent).recycle(bubble, text, speed, customSFX, customTypeSFX, playNext);
+		dialogueBoxScript.call("playBubbleAnim", [event]);
+		if (event.cancelled)
+			return;
+
+		this.__nextText = event.text;
+		this.__speed = event.speed;
+		this.__customTypeSFX = event.customTypeSFX;
+		this.text.resetText('');
+		if(event.playNext || (event.playNext == null && everPlayedAny)) event.customSFX != null ? event.customSFX.play() : FlxG.sound.play(nextSFX);
+		if(hasAnimation('${event.bubble}-open')) playAnim('${event.bubble}-open', true);
+		else if(hasAnimation('${event.bubble}-firstOpen') && !everPlayedAny) playAnim('${event.bubble}-firstOpen', true);
 		else {
-			playAnim(bubble);
+			playAnim(event.bubble);
 			setText(__nextText, __speed, __customTypeSFX);
 		}
 		visible = true;
 		everPlayedAny = true;
+		dialogueBoxScript.call("postPlayBubbleAnim", [event]);
 	}
 
-	public function setText(text:String, speed:Float = 0.02, ?customTypeSFX:Array<FlxSound>) {
-		this.text.sounds = customTypeSFX != null ? customTypeSFX : defaultTextTypeSFX;
-		this.text.delay = speed;
-		this.text.start(speed, true);
+	public function setText(text:String, speed:Float = 0.05, ?customTypeSFX:Array<FlxSound>) {
+		var event = EventManager.get(DialogueBoxSetTextEvent).recycle(text, speed, customTypeSFX);
+		dialogueBoxScript.call("setText", [event]);
+		if (event.cancelled)
+			return;
+
+		this.text.resetText(event.text);
+		this.text.sounds = event.customTypeSFX != null ? event.customTypeSFX : defaultTextTypeSFX;
+		this.text.delay = event.speed;
+		this.text.start(event.speed, true);
 	}
 
 	public override function destroy() {
+		dialogueBoxScript.call("destroy");
+		dialogueBoxScript.destroy();
+
 		super.destroy();
 		positions = null;
 	}

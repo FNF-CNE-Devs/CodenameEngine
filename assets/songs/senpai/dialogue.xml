@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-dialogue>
-<dialogue box="senpai">
+<dialogue box="hating-simulator">
 	<!-- All characters -->
 	<char name="senpai" char="senpai" position="left" />
 	<char name="pixelBf" char="pixelBf" position="right" />
