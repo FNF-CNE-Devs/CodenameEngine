@@ -1,7 +1,17 @@
 package lime.utils;
 
 import haxe.PosInfos;
+import haxe.Exception;
 import funkin.backend.system.Logs as FunkinLogs;
+#if js
+import flixel.FlxG;
+#elseif sys
+import sys.io.File;
+import sys.FileSystem;
+#end
+	
+using StringTools;
+
 
 #if !lime_debug
 @:fileXml('tags="haxe,release"')
@@ -30,10 +40,30 @@ class Log
 		{
 			var message = '[${info.className}] $message';
 
-			#if mobile
-			lime.app.Application.current.window.alert(message, "Codename Engine Crash Handler");
+			#if sys
+			try
+			{
+				if (!FileSystem.exists('crash'))
+					FileSystem.createDirectory('crash');
+				
+				File.saveContent('crash/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '.txt', message);
+			} catch (e:Exception)
+				FunkinLogs.trace('Couldn\'t save error message. (${e.message})', WARNING, YELLOW);
+			#end
+
+			#if (mobile || windows)
+			lime.app.Application.current.window.alert(message, "Error!");
 			#else
 			FunkinLogs.trace(message, ERROR, RED);
+			#end
+
+			#if js
+			if (FlxG.sound.music != null)
+				FlxG.sound.music.stop();
+			
+			js.Browser.window.location.reload(true);
+			#else
+			lime.system.System.exit(1);
 			#end
 		}
 	}
