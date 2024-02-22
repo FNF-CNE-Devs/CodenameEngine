@@ -153,10 +153,9 @@ class CharterStrumlineScreen extends UISubstateWindow {
 				}
 				else if (!suffixlist.contains(i)) suffixlist.push(i);
 			}
-
 		}
 
-		vocalsSuffixDropDown = new UIDropDown(typeDropdown.x, hudScaleStepper.y + 128, 200, 32, suffixlist, strumLine.vocalsSuffix != "" ? suffixlist.indexOf(strumLine.vocalsSuffix) : 0);
+		vocalsSuffixDropDown = new UIDropDown(typeDropdown.x, hudScaleStepper.y + 128, 200, 32, suffixlist, strumLine.vocalsSuffix != null && strumLine.vocalsSuffix != "" ? suffixlist.indexOf(strumLine.vocalsSuffix) : 0);
 		add(vocalsSuffixDropDown);
 		addLabelOn(vocalsSuffixDropDown, "Vocal Suffix");
 	}

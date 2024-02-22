@@ -532,6 +532,7 @@ class Charter extends UIState {
 		__relinkSelection();
 		__relinkUndos();
 		__applyPlaytestInfo();
+		
 		/*
 		var analyzer:AudioAnalyzer = new AudioAnalyzer(FlxG.sound.music);
 		var waveFormDetail:Int = 40; // min 1, max 40
