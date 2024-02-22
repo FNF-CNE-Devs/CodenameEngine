@@ -191,7 +191,7 @@ class FreeplayState extends MusicBeatState
 	/**
 	 * Whenever the autoplayed song gets async loaded.
 	 */
-	public var disableAsyncLoading:Bool = #if desktop false #else true #end;
+	public var disableAsyncLoading:Bool = #if (desktop || mobile) false #else true #end;
 	/**
 	 * Time elapsed since last autoplay. If this time exceeds `timeUntilAutoplay`, the currently selected song will play.
 	 */
