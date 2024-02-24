@@ -16,7 +16,8 @@ class DialogueCutscene extends Cutscene {
 	public var charMap:Map<String, DialogueCharacter> = [];
 
 	public var dialogueLines:Array<DialogueLine> = [];
-	public var curLine:DialogueLine = null;
+	public var curLine(default, set):DialogueLine = null;
+	public var lastLine:DialogueLine = null;
 	public var dialogueBox:DialogueBox;
 
 	public var dialogueCamera:FlxCamera;
@@ -24,6 +25,11 @@ class DialogueCutscene extends Cutscene {
 
 	public static var cutscene:DialogueCutscene;
 	//public var dialogueScript:Script;
+
+	public function set_curLine(val:DialogueLine) {
+		lastLine = curLine;
+		return curLine = val;
+	}
 
 	public function new(dialoguePath:String, callback:Void->Void) {
 		super(callback);
@@ -85,22 +91,30 @@ class DialogueCutscene extends Cutscene {
 			add(dialogueBox);
 			add(dialogueBox.text);
 
-			next();
+			next(true);
 		} catch(e) {
-			Logs.trace('Error while loading dialogue at ${dialoguePath}', ERROR);
+			Logs.trace('Error while loading dialogue at ${dialoguePath}: ${e.toString()}', ERROR);
 			close();
 		}
 	}
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-		if (controls.ACCEPT)
-			next();
+		if(controls.ACCEPT) next();
 	}
 
-	public function next() {
+	public var canProceed:Bool = true;
+	public function next(playFirst:Bool = false) {
+		if(!canProceed) return;
+
 		if ((curLine = dialogueLines.shift()) == null) {
-			close();
+			if(lastLine != null && dialogueBox.hasAnimation(lastLine.bubble + "-close")) {
+				dialogueBox.playBubbleAnim(lastLine.bubble, "-close");
+				dialogueBox.animation.finishCallback = (_) -> close();
+			} else {
+				FlxG.sound.play(dialogueBox.nextSFX);
+				close();
+			}
 			return;
 		}
 
@@ -115,7 +129,8 @@ class DialogueCutscene extends Cutscene {
 			dialogueBox.popupChar(char, force);
 		}
 
-		dialogueBox.playBubbleAnim(curLine.bubble, curLine.text, curLine.speed, curLine.nextSound, curLine.textSound != null ? [curLine.textSound] : null);
+		var finalSuffix:String = playFirst && dialogueBox.hasAnimation(curLine.bubble + "-firstOpen") ? "-firstOpen" : dialogueBox.hasAnimation(curLine.bubble + "-open") ? "-open" : "";
+		dialogueBox.playBubbleAnim(curLine.bubble, finalSuffix, curLine.text, curLine.speed, curLine.nextSound, curLine.textSound != null ? [curLine.textSound] : null, finalSuffix == "-firstOpen" || finalSuffix == "-open", !playFirst);
 
 		if(curLine.playSound != null) curLine.playSound.play();
 		if(curLine.changeMusic != null) {
@@ -126,8 +141,18 @@ class DialogueCutscene extends Cutscene {
 		}
 	}
 
+	public override function close() {
+		var event = new CancellableEvent();
+		for(c in charMap) c.dialogueCharScript.call("close", [event]);
+		dialogueBox.dialogueBoxScript.call("close", [event]);
+		if(event.cancelled)
+			return;
+
+		super.close();
+	}
+
 	public override function destroy() {
-		if(curMusic != null) curMusic.destroy();
+		if(curMusic != null && !curMusic.persist) curMusic.destroy();
 		super.destroy();
 		cutscene = null;
 		FlxG.cameras.remove(dialogueCamera);

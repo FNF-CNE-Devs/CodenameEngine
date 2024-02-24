@@ -6,6 +6,8 @@ final class DialogueBoxPlayBubbleEvent extends CancellableEvent
 {
 	public var bubble:String;
 
+	public var suffix:String;
+
 	public var text:String;
 
 	public var speed:Float;
@@ -14,5 +16,7 @@ final class DialogueBoxPlayBubbleEvent extends CancellableEvent
 
 	public var customTypeSFX:Array<FlxSound>;
 
-	public var playNext:Null<Bool>;
+	public var setTextAfter:Bool;
+
+	public var allowDefault:Bool;
 }

@@ -27,21 +27,16 @@ class DialogueCharacter extends FunkinSprite {
 		dialogueCharScript.setParent(this);
 		dialogueCharScript.load();
 
-		var event = EventManager.get(DialogueCharCreationEvent).recycle(name, position);
+		var event = EventManager.get(DialogueCharStructureEvent).recycle(name, position, null);
 		dialogueCharScript.call('create', [event]);  // Its not really create() since its inside new() but, nah, it makes no difference at least here  - Nex
-		if(event.cancelled)
-			return;  // No idea the pyscho that would do this but hey, it can happen  - Nex
-		name = event.name;
-		position = event.position;
+		if(event.cancelled) return;
 
 		try {
-			charData = new Access(Xml.parse(Assets.getText(Paths.xml(defPath + name))).firstElement());
-			var event = EventManager.get(DialogueCharStructureEvent).recycle(name, position, charData);
+			event.charData = charData = new Access(Xml.parse(Assets.getText(Paths.xml(defPath + event.name))).firstElement());
 			dialogueCharScript.call('structureLoaded', [event]);
-			if(event.cancelled)
-				return;
+			if(event.cancelled) return;
 			name = event.name;
-			this.positionName = event.position;
+			positionName = event.position;
 			charData = event.charData;
 
 			if(!charData.has.sprite) charData.x.set("sprite", name);
@@ -69,8 +64,7 @@ class DialogueCharacter extends FunkinSprite {
 	public override function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0) {
 		var event = EventManager.get(PlayAnimEvent).recycle(AnimName, Force, Reversed, Frame, Context);
 		dialogueCharScript.call("playAnim", [event]);
-		if (event.cancelled)
-			return;
+		if(event.cancelled) return;
 
 		super.playAnim(event.animName, event.force, event.context, event.reverse, event.startingFrame);
 	}
