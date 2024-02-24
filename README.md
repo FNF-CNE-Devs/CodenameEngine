@@ -75,7 +75,7 @@ In the future (when the engine won't be a WIP anymore) we're gonna also publish 
 <details>
   <summary><h2>What can you do or not do</h2></summary>
 
-  You can:
+  ### You can:
   - Download and play the engine with its mods and modpacks
   - Mod and fork the engine (without using it for illicit purposes)
   - Contribute to the engine (for example through *Pull Requests*, *Issues*, etc)
@@ -83,12 +83,12 @@ In the future (when the engine won't be a WIP anymore) we're gonna also publish 
   - Release excutable mods that use Codename Engine as source (Specifing that uses Codename Engine by for example the same way written above this)
   - Release modpacks
 
-  You can't:
+  ### You can't:
   - Create a *side/new/etc* engine (or mod that doesn't use Codename Engine) using Codename Engine's code
   - Steal code from Codename Engine for another different project that is not Codename Engine related (Codename Engine mods excluded) without properly crediting
   - Release Codename Engine on other platforms (Mods that use Codename Engine as source are fine, if it's specified even better)
 
-  ### If you need more info or feel like asking to do something which is not listed here, ask us directly on our discord (linked in the wiki)!
+  #### *If you need more info or feel like asking to do something which is not listed here, ask us directly on our discord (linked in the wiki)!*
 </details>
 
 <details>
