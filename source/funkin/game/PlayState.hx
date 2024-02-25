@@ -563,19 +563,22 @@ class PlayState extends MusicBeatState
 		comboGroup.maxSize = 25;
 		#end
 
-		// SCRIPTS & STAGE INITIALISATION
+		// CAMERA, SCRIPTS & STAGE INITIALISATION
 		#if REGION
+		camFollow = new FlxObject(0, 0, 2, 2);
+		add(camFollow);
+
 		if (SONG.stage == null || SONG.stage.trim() == "") SONG.stage = "stage";
 		add(stage = new Stage(SONG.stage));
 
-		// var camPos:FlxPoint = new FlxPoint(dadMidpoint.x, dadMidpoint.y);
-		// dadMidpoint.put();
-		var camPos:FlxPoint = new FlxPoint(0, 0);
+		FlxG.camera.follow(camFollow, LOCKON, 0.04);
+		FlxG.camera.zoom = defaultCamZoom;
+		// camHUD.zoom = defaultHudZoom;
 
 		if (!chartingMode || Options.charterEnablePlaytestScripts) {
 			switch(SONG.meta.name) {
 				// case "":
-					// ADD YOUR HARDCODED SCRIPTSa HERE!
+					// ADD YOUR HARDCODED SCRIPTS HERE!
 				default:
 					var scriptsFolders:Array<String> = ['songs/${SONG.meta.name.toLowerCase()}/scripts', 'data/charts/', 'songs/'];
 
@@ -675,7 +678,7 @@ class PlayState extends MusicBeatState
 		scripts.call("create");
 		#end
 
-		// CAMERA & HUD INITIALISATION
+		// HUD INITIALISATION & CAMERA FINALISATION
 		#if REGION
 		var event = EventManager.get(AmountEvent).recycle(4);
 		if (!scripts.event("onPreGenerateStrums", event).cancelled) {
@@ -686,13 +689,7 @@ class PlayState extends MusicBeatState
 		for(str in strumLines)
 			str.generate(str.data, (chartingMode && Charter.startHere) ? Charter.startTime : null);
 
-		camFollow = new FlxObject(0, 0, 2, 2);
-		camFollow.setPosition(camPos.x, camPos.y);
-		add(camFollow);
-
-		FlxG.camera.follow(camFollow, LOCKON, 0.04);
-		FlxG.camera.zoom = defaultCamZoom;
-		// camHUD.zoom = defaultHudZoom;
+		// Its after all of that code for scripts stuff  - Nex
 		if (smoothTransitionData != null && smoothTransitionData.stage == curStage) {
 			FlxG.camera.scroll.set(smoothTransitionData.camX, smoothTransitionData.camY);
 			FlxG.camera.zoom = smoothTransitionData.camZoom;
