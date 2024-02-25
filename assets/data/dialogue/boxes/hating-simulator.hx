@@ -49,9 +49,11 @@ function close(event) {
 
 var time:Float = 0;
 function update(elapsed:Float) {
-	hand.x = 1060 + Math.sin((time += elapsed) * Math.PI * 2) * 12;
-	hand.x -= hand.x % hand.scale.x;
-	hand.y -= hand.y % hand.scale.y;
+	if(hand.visible = dialogueEnded) {
+		hand.x = 1060 + Math.sin((time += elapsed) * Math.PI * 2) * 12;
+		hand.x -= hand.x % hand.scale.x;
+		hand.y -= hand.y % hand.scale.y;
+	}
 }
 
 function postPlayBubbleAnim() {

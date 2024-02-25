@@ -28,12 +28,6 @@ function create() {
 	dfy = senpaiEvil.y;
 	add(senpaiEvil);
 
-	var white:FlxSprite = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, FlxColor.WHITE);
-	white.screenCenter();
-	white.scrollFactor.set();
-	white.alpha = 0;
-	add(white);
-
 	new FlxTimer().start(3.2, function(deadTime:FlxTimer)
 	{
 		FlxG.camera.fade(FlxColor.WHITE, 1.6, false, function() {
@@ -42,25 +36,20 @@ function create() {
 			remove(red, true);
 			red.destroy();
 
-			white.alpha = 1;
+			FlxG.camera._fxFadeAlpha = 1;
 		});
 	});
 	scream = FlxG.sound.play(Paths.sound('cutscenes/weeb/Senpai_Dies'), 1, false, null, true, function()
 	{
 		new FlxTimer().start(0.2, function(swagTimer:FlxTimer) {
-			white.alpha -= 0.15;
+			FlxG.camera._fxFadeAlpha -= 0.15;
 
-			if(white.alpha > 0) swagTimer.reset();
+			if(FlxG.camera._fxFadeAlpha > 0) swagTimer.reset();
 			else {
-				remove(white, true);
-				white.destroy();
-
 				camHUD.visible = true;
 				self.startDialogue("songs/" + PlayState.instance.SONG.meta.name.toLowerCase() + "/creepyDialogue.xml", self.close);
 			}
 		});
-
-		FlxG.camera.fade(FlxColor.WHITE, 0.0001, true);
 	});
 }
 

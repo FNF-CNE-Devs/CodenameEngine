@@ -13,6 +13,7 @@ import haxe.xml.Access;
 class DialogueBox extends FunkinSprite {
 	public var dialogueBoxData:Access;
 	public var positions:Map<String, CharPosDef> = [];
+	public var dialogueEnded:Bool = false;  // Using text._typing is also fair but it doesnt check for eventual opening anims!  - Nex
 
 	public var nextSFX:String = Paths.sound('dialogue/next');
 	public var defaultTextTypeSFX:Array<FlxSound>;
@@ -127,8 +128,12 @@ class DialogueBox extends FunkinSprite {
 
 		if(event.customSFX != null) event.customSFX.play();
 		else if(event.allowDefault) FlxG.sound.play(nextSFX);
-		var idk:Void->Void = () -> if(text != null && text.trim().length > 0) setText(event.text, event.speed, event.customTypeSFX);
+		var idk:Void->Void = () -> {
+			if(text != null && text.trim().length > 0) setText(event.text, event.speed, event.customTypeSFX);
+			else dialogueEnded = true;
+		}
 
+		dialogueEnded = false;
 		this.text.resetText('');
 		var anim:String = event.bubble + event.suffix;
 		if(hasAnimation(anim)) playAnim(anim, true);
@@ -152,6 +157,7 @@ class DialogueBox extends FunkinSprite {
 		this.text.sounds = event.customTypeSFX != null ? event.customTypeSFX : defaultTextTypeSFX;
 		this.text.delay = event.speed;
 		this.text.start(event.speed, true);
+		this.text.completeCallback = () -> dialogueEnded = true;
 	}
 
 	public override function destroy() {

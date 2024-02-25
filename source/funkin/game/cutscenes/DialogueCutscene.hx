@@ -63,6 +63,7 @@ class DialogueCutscene extends Cutscene {
 
 			// Add lines
 			for(node in dialogueData.nodes.line) {
+				var volume:Null<Float> = 0.8;
 				var line:DialogueLine = {
 					text: XMLUtil.fixXMLText(node.innerHTML),
 					char: node.getAtt('char').getDefault('boyfriend'),
@@ -70,7 +71,8 @@ class DialogueCutscene extends Cutscene {
 					callback: node.getAtt('callback'),
 					changeDefAnim: node.getAtt('changeDefAnim'),
 					speed: node.has.speed ? Std.parseFloat(node.att.speed).getDefault(0.05) : 0.05,
-					changeMusic: node.has.changeMusic ? FlxG.sound.load(Paths.music(node.getAtt('changeMusic')), 0.8, true) : null,
+					musicVolume: node.has.musicVolume ? (volume = Std.parseFloat(node.att.speed).getDefault(0.8)) : null,
+					changeMusic: node.has.changeMusic ? FlxG.sound.load(Paths.music(node.getAtt('changeMusic')), volume, true) : null,
 					playSound: node.has.playSound ? FlxG.sound.load(Paths.sound(node.getAtt('playSound'))) : null,
 					nextSound: node.has.nextSound ? FlxG.sound.load(Paths.music(node.getAtt('nextSound'))) : null,
 					textSound: null
@@ -100,7 +102,11 @@ class DialogueCutscene extends Cutscene {
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-		if(controls.ACCEPT) next();
+		if(controls.ACCEPT) {
+			@:privateAccess
+			if(dialogueBox.dialogueEnded) next();
+			else dialogueBox.text.skip();
+		}
 	}
 
 	public var canProceed:Bool = true;
@@ -138,7 +144,7 @@ class DialogueCutscene extends Cutscene {
 			curMusic = curLine.changeMusic;
 			curMusic.play();
 			curMusic.fadeIn(1, 0, curMusic.volume);
-		}
+		} else if(curLine.musicVolume != null && curMusic != null) curMusic.volume = curLine.musicVolume;
 	}
 
 	public override function close() {
@@ -165,6 +171,7 @@ typedef DialogueLine = {
 	var bubble:String;
 	var callback:String;
 	var speed:Float;
+	var musicVolume:Null<Float>;
 	var changeMusic:FlxSound;
 	var playSound:FlxSound;
 	var nextSound:FlxSound;
