@@ -1,10 +1,12 @@
 package funkin.game.cutscenes;
 
-import funkin.backend.scripting.events.CancellableEvent;
+import funkin.backend.utils.FunkinParentDisabler;
+import funkin.backend.scripting.events.*;
 import funkin.backend.scripting.Script;
 import flixel.sound.FlxSound;
 import funkin.game.cutscenes.dialogue.*;
 import haxe.xml.Access;
+import haxe.io.Path;
 
 /**
  * Substate made for dialogue cutscenes. To use it in a scripted cutscene, call `startDialogue`.
@@ -24,7 +26,7 @@ class DialogueCutscene extends Cutscene {
 	public var curMusic:FlxSound = null;
 
 	public static var cutscene:DialogueCutscene;
-	//public var dialogueScript:Script;
+	public var dialogueScript:Script;
 
 	public function set_curLine(val:DialogueLine) {
 		lastLine = curLine;
@@ -37,14 +39,23 @@ class DialogueCutscene extends Cutscene {
 		camera = dialogueCamera = new FlxCamera();
 		dialogueCamera.bgColor = 0;
 		FlxG.cameras.add(dialogueCamera, false);
+
+		dialogueScript = Script.create(Paths.script(Path.withoutExtension(dialoguePath), null, dialoguePath.startsWith('assets')));
+		dialogueScript.setParent(cutscene = this);
+		dialogueScript.load();
 	}
 
+	var parentDisabler:FunkinParentDisabler;
 	public override function create() {
-		cutscene = this;
 		super.create();
 
+		add(parentDisabler = new FunkinParentDisabler());
 		try {
-			dialogueData = new Access(Xml.parse(Assets.getText(dialoguePath)).firstElement());
+			var event = EventManager.get(DialogueStructureEvent).recycle(dialogueData);
+			event.dialogueData = new Access(Xml.parse(Assets.getText(dialoguePath)).firstElement());
+			dialogueScript.call('structureLoaded', [event]);
+			if(event.cancelled) return;
+			dialogueData = event.dialogueData;
 
 			// Add characters
 			for(char in dialogueData.nodes.char) {
@@ -98,10 +109,18 @@ class DialogueCutscene extends Cutscene {
 			Logs.trace('Error while loading dialogue at ${dialoguePath}: ${e.toString()}', ERROR);
 			close();
 		}
+		dialogueScript.call("postCreate");
+	}
+
+	public override function beatHit(curBeat:Int) {
+		super.beatHit(curBeat);
+		dialogueScript.call("beatHit", [curBeat]);
 	}
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
+		dialogueScript.call("update", [elapsed]);
+
 		if(controls.ACCEPT) {
 			@:privateAccess
 			if(dialogueBox.dialogueEnded) next();
@@ -109,8 +128,13 @@ class DialogueCutscene extends Cutscene {
 		}
 	}
 
+	/**
+	 * Use this to cancel `next`!
+	 */
 	public var canProceed:Bool = true;
+
 	public function next(playFirst:Bool = false) {
+		dialogueScript.call("next", [playFirst]);
 		if(!canProceed) return;
 
 		if ((curLine = dialogueLines.shift()) == null) {
@@ -145,20 +169,25 @@ class DialogueCutscene extends Cutscene {
 			curMusic.play();
 			curMusic.fadeIn(1, 0, curMusic.volume);
 		} else if(curLine.musicVolume != null && curMusic != null) curMusic.volume = curLine.musicVolume;
+
+		dialogueScript.call("postNext", [playFirst]);
 	}
 
 	public override function close() {
 		var event = new CancellableEvent();
 		for(c in charMap) c.dialogueCharScript.call("close", [event]);
 		dialogueBox.dialogueBoxScript.call("close", [event]);
-		if(event.cancelled)
-			return;
+		dialogueScript.call("close", [event]);
+		if(event.cancelled) return;
 
 		super.close();
 	}
 
 	public override function destroy() {
 		if(curMusic != null && !curMusic.persist) curMusic.destroy();
+		dialogueScript.call("destroy");
+		dialogueScript.destroy();
+
 		super.destroy();
 		cutscene = null;
 		FlxG.cameras.remove(dialogueCamera);

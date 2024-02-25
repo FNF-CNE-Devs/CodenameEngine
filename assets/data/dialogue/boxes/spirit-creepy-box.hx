@@ -1,4 +1,3 @@
-// TO FINISH!!!  - Nex
 import flixel.tweens.FlxTweenType;
 
 var aberration:CustomShader = null;
@@ -8,17 +7,37 @@ function postCreate() {
 	spirit.setGraphicSize(Std.int(spirit.width * 6));
 	if(Options.gameplayShaders) {
 		spirit.shader = aberration = new CustomShader('chromaticAberration');
-		FlxTween.num(-0.003, 0.003, 3, {ease: FlxEase.sineInOut, type: FlxTweenType.PINGPONG}, function(num) { aberration.redOff = [0, -num]; aberration.blueOff = [0, num]; });
+		FlxTween.num(-0.003, 0.003, 3, {ease: FlxEase.sineInOut, type: FlxTweenType.PINGPONG}, function(num) { if(aberration == null) return; aberration.redOff = [0, -num]; aberration.blueOff = [0, num]; });
 	}
-	//spirit.alpha = 0;
 	cutscene.add(spirit);
+
+	FlxG.camera._fxFadeAlpha = 0;
+	cutscene.dialogueCamera.bgColor = FlxColor.fromRGBFloat(1, 1, 1, 0.3);
+}
+
+var finished:Bool = false;
+function close(event) {
+	if(finished) return;
+	else event.cancelled = true;
+	cutscene.canProceed = false;
+
+	cutscene.curMusic?.fadeOut(1, 0);
+	for(c in cutscene.charMap) c.visible = false;
+
+	spirit.destroy();
+	spirit.shader = aberration = null;
+	new FlxTimer().start(0.4, function(swagTimer:FlxTimer) {
+		cutscene.dialogueCamera.alpha -= 0.15;
+
+		if(cutscene.dialogueCamera.alpha > 0) swagTimer.reset();
+		else {
+			finished = true;
+			cutscene.close();
+		}
+	});
 }
 
 function popupChar(event) {
 	if(!active || event.char.positionName != "left") return;
 	event.char.color = FlxColor.BLACK;
-	var pos = positions["left"];
-	if (pos == null) return;  // It shouldnt but whatever  - Nex
-
-	//spirit.setPosition((FlxG.width / 2) + pos.x - event.char.offset.x, FlxG.height - pos.y - event.char.offset.y);
 }

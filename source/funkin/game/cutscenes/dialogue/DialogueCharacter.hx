@@ -32,7 +32,7 @@ class DialogueCharacter extends FunkinSprite {
 		if(event.cancelled) return;
 
 		try {
-			event.charData = charData = new Access(Xml.parse(Assets.getText(Paths.xml(defPath + event.name))).firstElement());
+			event.charData = new Access(Xml.parse(Assets.getText(Paths.xml(defPath + event.name))).firstElement());
 			dialogueCharScript.call('structureLoaded', [event]);
 			if(event.cancelled) return;
 			name = event.name;

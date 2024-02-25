@@ -726,7 +726,7 @@ class PlayState extends MusicBeatState
 
 		scoreTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Score:0", 16);
 		missesTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Misses:0", 16);
-		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Acc:-% (N/A)", 16);
+		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy:-% (N/A)", 16);
 		accuracyTxt.addFormat(accFormat, 0, 1);
 
 		for(text in [scoreTxt, missesTxt, accuracyTxt]) {
@@ -736,6 +736,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.alignment = RIGHT;
 		missesTxt.alignment = CENTER;
 		accuracyTxt.alignment = LEFT;
+		updateRatingStuff();
 
 		for(e in [healthBar, healthBarBG, iconP1, iconP2, scoreTxt, missesTxt, accuracyTxt])
 			e.cameras = [camHUD];
@@ -1191,17 +1192,7 @@ class PlayState extends MusicBeatState
 		iconP2.health = 1 - (healthBar.percent / 100);
 	}
 
-	@:dox(hide)
-	override public function update(elapsed:Float)
-	{
-		scripts.call("update", [elapsed]);
-
-		if (inCutscene) {
-			super.update(elapsed);
-			scripts.call("postUpdate", [elapsed]);
-			return;
-		}
-
+	function updateRatingStuff() {
 		scoreTxt.text = 'Score:$songScore';
 		missesTxt.text = '${comboBreaks ? "Combo Breaks" : "Misses"}:$misses';
 
@@ -1215,6 +1206,20 @@ class PlayState extends MusicBeatState
 			accuracyTxt._formatRanges[0].range.start = accuracyTxt.text.length - curRating.rating.length;
 			accuracyTxt._formatRanges[0].range.end = accuracyTxt.text.length;
 		}
+	}
+
+	@:dox(hide)
+	override public function update(elapsed:Float)
+	{
+		scripts.call("update", [elapsed]);
+
+		if (inCutscene) {
+			super.update(elapsed);
+			scripts.call("postUpdate", [elapsed]);
+			return;
+		}
+
+		updateRatingStuff();
 
 		if (controls.PAUSE && startedCountdown && canPause)
 			pauseGame();

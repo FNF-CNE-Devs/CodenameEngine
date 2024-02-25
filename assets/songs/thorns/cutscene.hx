@@ -41,10 +41,10 @@ function create() {
 	});
 	scream = FlxG.sound.play(Paths.sound('cutscenes/weeb/Senpai_Dies'), 1, false, null, true, function()
 	{
-		new FlxTimer().start(0.2, function(swagTimer:FlxTimer) {
+		new FlxTimer().start(0.4, function(swagTimer:FlxTimer) {
 			FlxG.camera._fxFadeAlpha -= 0.15;
 
-			if(FlxG.camera._fxFadeAlpha > 0) swagTimer.reset();
+			if(FlxG.camera._fxFadeAlpha > 0.3) swagTimer.reset();
 			else {
 				camHUD.visible = true;
 				self.startDialogue("songs/" + PlayState.instance.SONG.meta.name.toLowerCase() + "/creepyDialogue.xml", self.close);

@@ -1,3 +1,4 @@
+var loopedTimah:FlxTimer;  // Hey! a man has fallen into the river in lego city! and if youre asking why this is here, you shall disappear!  - Nex
 var bgFade:FlxSprite;
 var hand:FlxSprite;
 
@@ -8,7 +9,7 @@ function postCreate() {
 	bgFade.alpha = 0;
 	cutscene.insert(0, bgFade);
 
-	new FlxTimer().start(0.83, function(tmr:FlxTimer)
+	loopedTimah = new FlxTimer().start(0.83, function(tmr:FlxTimer)
 	{
 		bgFade.alpha += (1 / 5) * 0.7;
 		if (bgFade.alpha > 0.7)
@@ -26,14 +27,11 @@ function close(event) {
 	else event.cancelled = true;
 	cutscene.canProceed = false;
 
-	if(cutscene.curMusic != null) {
-		cutscene.curMusic.persist = true;
-		cutscene.curMusic.fadeOut(2.2, 0);
-		cutscene.curMusic.fadeTween.onComplete = (_) -> cutscene.curMusic.destroy();
-	}
-
+	cutscene.curMusic?.fadeOut(1, 0);
 	for(c in cutscene.charMap) c.visible = false;
-	new FlxTimer().start(0.2, function(tmr:FlxTimer)
+
+	loopedTimah.cancel();
+	loopedTimah = new FlxTimer().start(0.2, function(tmr:FlxTimer)
 	{
 		if (tmr.elapsedLoops <= 5) {
 			cutscene.dialogueBox.alpha -= 1 / 5;

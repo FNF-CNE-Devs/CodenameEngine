@@ -36,7 +36,7 @@ class DialogueBox extends FunkinSprite {
 		if(event.cancelled) return;  // No idea the pyscho that would do this but hey, it can happen  - Nex
 
 		try {
-			event.dialogueBoxData = dialogueBoxData = new Access(Xml.parse(Assets.getText(Paths.xml(defPath + event.name))).firstElement());
+			event.dialogueBoxData = new Access(Xml.parse(Assets.getText(Paths.xml(defPath + event.name))).firstElement());
 			dialogueBoxScript.call('structureLoaded', [event]);
 			if(event.cancelled) return;
 			name = event.name;
