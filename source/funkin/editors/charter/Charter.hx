@@ -529,48 +529,10 @@ class Charter extends UIState {
 		buildNoteTypesUI();
 		refreshBPMSensitive();
 
+		// Undo Stuffs :D
 		__relinkSelection();
 		__relinkUndos();
 		__applyPlaytestInfo();
-		
-		/*
-		var analyzer:AudioAnalyzer = new AudioAnalyzer(FlxG.sound.music);
-		var waveFormDetail:Int = 40; // min 1, max 40
-
-		var beatHeight:Float = Conductor.stepsPerBeat*40;
-		var measureHeight:Float = beatHeight*Conductor.beatsPerMeasure;
-		for (measure in 0...Std.int(Conductor.getMeasuresLength())) {
-			for (beat in 0...Std.int(Conductor.beatsPerMeasure)) {
-				var startTime:Float = Conductor.getTimeForStep((measure*Conductor.getMeasureLength()) + (beat*Conductor.stepsPerBeat));
-				var endTime:Float = Conductor.getTimeForStep((measure*Conductor.getMeasureLength()) + ((beat+1)*Conductor.stepsPerBeat));
-
-				var anlyzedData:Array<Float> = [
-					for (i in 0...Std.int(Conductor.stepsPerBeat*waveFormDetail))
-						analyzer.analyze(
-							startTime + ((endTime-startTime)*(i/Std.int(Conductor.stepsPerBeat*waveFormDetail))),
-							startTime + ((endTime-startTime)*((i+1)/Std.int(Conductor.stepsPerBeat*waveFormDetail)))
-						)
-				];
-
-				var sprite:FlxSprite = new FlxSprite(0, (measureHeight*measure) + (beatHeight*beat)).makeGraphic(
-					160, Std.int(Conductor.stepsPerBeat*40), 0, true
-				);
-				sprite.cameras = [charterCamera];
-				add(sprite);
-
-				sprite.pixels.lock();
-				for (i=>segement in anlyzedData) {
-					var w:Float = (160)*segement;
-					var x:Float = ((40*4) / 2) - (w / 2);
-					var h:Float = beatHeight/anlyzedData.length;
-					var y:Float = (beatHeight/Std.int(Conductor.stepsPerBeat*waveFormDetail))*i;
-
-					sprite.pixels.fillRect(new Rectangle(x, y, w, h), 0xFFFFFFFF);
-				}
-				sprite.pixels.unlock();
-			}
-		}
-		*/
 	}
 
 	public var __endStep:Float = 0;
@@ -611,12 +573,8 @@ class Charter extends UIState {
 							selection.push(cast n);
 						else if (FlxG.keys.pressed.SHIFT)
 							selection.remove(cast n);
-						else {
-							if (n is CharterNote)
-								deleteSingleSelection(n);
-							else
-								selection = [cast n];
-						}
+						else
+							selection = [cast n];
 					}
 
 					if (FlxG.mouse.justReleasedRight) {
