@@ -47,7 +47,7 @@ function create() {
 			if(FlxG.camera._fxFadeAlpha > 0.3) swagTimer.reset();
 			else {
 				camHUD.visible = true;
-				self.startDialogue("songs/" + PlayState.instance.SONG.meta.name.toLowerCase() + "/creepyDialogue.xml", self.close);
+				self.startDialogue("assets/songs/" + PlayState.instance.SONG.meta.name.toLowerCase() + "/creepyDialogue.xml", self.close);
 			}
 		});
 	});

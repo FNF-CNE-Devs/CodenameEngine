@@ -5,9 +5,13 @@ import funkin.backend.system.ErrorCode;
 import funkin.backend.FunkinSprite.XMLAnimType;
 import flixel.util.FlxColor;
 import haxe.xml.Access;
+import flixel.util.typeLimit.OneOfTwo;
 import funkin.backend.system.interfaces.IOffsetCompatible;
 
 using StringTools;
+
+typedef TextFormat = { text:String, format:Dynamic }
+
 /**
  * Class made to make XML parsing easier.
  */
@@ -278,6 +282,51 @@ class XMLUtil {
 	public static inline function fixXMLText(text:String) {
 		var v:String;
 		return [for(l in text.split("\n")) if ((v = l.trim()) != "") v].join("\n");
+	}
+
+	/**
+	 * WARNING: will edit directly the node!
+	 */
+	public static function fixSpacingInNode(node:Access):Access {
+		var arr = [for(x in node.x) x];
+		for(i => n in arr) {
+			if(n.nodeType == PCData) {
+				if(i == 0) n.nodeValue = n.nodeValue.ltrim();
+				if(i == arr.length - 1) n.nodeValue = n.nodeValue.rtrim();
+				if(n.nodeValue.contains("\n")) {
+					var a = n.nodeValue.split("\n");
+					n.nodeValue = [for(i => x in a) i == 0 ? x.rtrim() : i == arr.length - 1 ? x.ltrim() : x.trim()].join("\n");
+				}
+			}
+		}
+		return node;
+	}
+
+	public static function getTextFormats(_node:OneOfTwo<Xml, Access>, currentFormat:Dynamic = null, parsedSegments:Array<TextFormat> = null):Array<TextFormat> {
+		var node:Xml = cast _node;
+		if (currentFormat == null)
+			currentFormat = {};
+		if (parsedSegments == null)
+			parsedSegments = [];
+
+		for (child in node) {
+			switch (child.nodeType) {
+				case Element:
+					if (child.nodeName == "format") {
+						var format:Dynamic = Reflect.copy(currentFormat);
+						@:privateAccess for (key => name in child.attributeMap) {
+							Reflect.setField(format, key, name);
+						}
+						getTextFormats(child, format, parsedSegments);
+					}
+				case PCData:
+					parsedSegments.push({ text: child.nodeValue, format: Reflect.copy(currentFormat) });
+				default:
+					// Ignore other node types
+			}
+		}
+
+		return parsedSegments;
 	}
 }
 

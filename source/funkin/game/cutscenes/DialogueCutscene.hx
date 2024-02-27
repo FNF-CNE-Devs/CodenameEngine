@@ -1,7 +1,9 @@
 package funkin.game.cutscenes;
 
 import funkin.backend.utils.FunkinParentDisabler;
-import funkin.backend.scripting.events.*;
+import funkin.backend.scripting.events.dialogue.*;
+import funkin.backend.scripting.events.CancellableEvent;
+import funkin.backend.scripting.events.DynamicEvent;
 import funkin.backend.scripting.Script;
 import flixel.sound.FlxSound;
 import funkin.game.cutscenes.dialogue.*;
@@ -49,7 +51,7 @@ class DialogueCutscene extends Cutscene {
 	public override function create() {
 		super.create();
 
-		add(parentDisabler = new FunkinParentDisabler());
+		add(parentDisabler = new FunkinParentDisabler());  // MESS WITH THIS IN SCRIPTS TO RESUME PLAYSTATE'S TWEENS!!  - Nex
 		try {
 			var event = EventManager.get(DialogueStructureEvent).recycle(dialogueData);
 			event.dialogueData = new Access(Xml.parse(Assets.getText(dialoguePath)).firstElement());
@@ -64,7 +66,7 @@ class DialogueCutscene extends Cutscene {
 					Logs.trace('2 dialogue characters share the same name (${char.att.name}, ${char.att.name}). The old character has been replaced.');
 
 				var leChar:DialogueCharacter = new DialogueCharacter(char.att.name, char.getAtt('position').getDefault('default'));
-				if(char.has.defaultAnim) leChar.defaultAnim = char.getAtt('defaultAnim');
+				if(char.has.defaultAnim) leChar.defaultAnim = char.att.defaultAnim;
 				add(charMap[char.att.name] = leChar);
 			}
 
@@ -74,26 +76,28 @@ class DialogueCutscene extends Cutscene {
 
 			// Add lines
 			for(node in dialogueData.nodes.line) {
+				var formats = XMLUtil.getTextFormats(XMLUtil.fixSpacingInNode(node));
 				var volume:Null<Float> = 0.8;
 				var line:DialogueLine = {
-					text: XMLUtil.fixXMLText(node.innerHTML),
+					text: [for(x in formats) x.text].join(""),
+					format: formats,
 					char: node.getAtt('char').getDefault('boyfriend'),
 					bubble: node.getAtt('bubble').getDefault('normal'),
 					callback: node.getAtt('callback'),
 					changeDefAnim: node.getAtt('changeDefAnim'),
-					speed: node.has.speed ? Std.parseFloat(node.att.speed).getDefault(0.05) : 0.05,
+					speed: Std.parseFloat(node.getAtt("speed")).getDefault(0.05),
 					musicVolume: node.has.musicVolume ? (volume = Std.parseFloat(node.att.speed).getDefault(0.8)) : null,
-					changeMusic: node.has.changeMusic ? FlxG.sound.load(Paths.music(node.getAtt('changeMusic')), volume, true) : null,
-					playSound: node.has.playSound ? FlxG.sound.load(Paths.sound(node.getAtt('playSound'))) : null,
-					nextSound: node.has.nextSound ? FlxG.sound.load(Paths.music(node.getAtt('nextSound'))) : null,
+					changeMusic: node.has.changeMusic ? FlxG.sound.load(Paths.music(node.att.changeMusic), volume, true) : null,
+					playSound: node.has.playSound ? FlxG.sound.load(Paths.sound(node.att.playSound)) : null,
+					nextSound: node.has.nextSound ? FlxG.sound.load(Paths.music(node.att.nextSound)) : null,
 					textSound: null
 				};
 
-				if(node.has.textSound) line.textSound = FlxG.sound.load(Paths.sound(node.getAtt('textSound')));
+				if(node.has.textSound) line.textSound = FlxG.sound.load(Paths.sound(node.att.textSound));
 				else if(!useDef) {
 					var char:DialogueCharacter = charMap[line.char];
 					if(char != null && char.charData != null && char.charData.has.textSound)
-						line.textSound = FlxG.sound.load(Paths.sound(char.charData.getAtt("textSound")));
+						line.textSound = FlxG.sound.load(Paths.sound(char.charData.att.textSound));
 				}
 
 				dialogueLines.push(line);
@@ -107,6 +111,7 @@ class DialogueCutscene extends Cutscene {
 			next(true);
 		} catch(e) {
 			Logs.trace('Error while loading dialogue at ${dialoguePath}: ${e.toString()}', ERROR);
+			trace(CoolUtil.getLastExceptionStack());
 			close();
 		}
 		dialogueScript.call("postCreate");
@@ -122,7 +127,6 @@ class DialogueCutscene extends Cutscene {
 		dialogueScript.call("update", [elapsed]);
 
 		if(controls.ACCEPT) {
-			@:privateAccess
 			if(dialogueBox.dialogueEnded) next();
 			else dialogueBox.text.skip();
 		}
@@ -134,8 +138,9 @@ class DialogueCutscene extends Cutscene {
 	public var canProceed:Bool = true;
 
 	public function next(playFirst:Bool = false) {
+		var event = EventManager.get(DynamicEvent).recycle(playFirst);
 		dialogueScript.call("next", [playFirst]);
-		if(!canProceed) return;
+		if(event.cancelled || !canProceed) return;
 
 		if ((curLine = dialogueLines.shift()) == null) {
 			if(lastLine != null && dialogueBox.hasAnimation(lastLine.bubble + "-close")) {
@@ -148,7 +153,10 @@ class DialogueCutscene extends Cutscene {
 			return;
 		}
 
-		for(k=>c in charMap)
+		if (curLine.callback != null)
+			dialogueScript.call(curLine.callback, [playFirst]);
+
+		for (k=>c in charMap)
 			if (k != curLine.char)
 				c.hide();
 
@@ -160,7 +168,7 @@ class DialogueCutscene extends Cutscene {
 		}
 
 		var finalSuffix:String = playFirst && dialogueBox.hasAnimation(curLine.bubble + "-firstOpen") ? "-firstOpen" : dialogueBox.hasAnimation(curLine.bubble + "-open") ? "-open" : "";
-		dialogueBox.playBubbleAnim(curLine.bubble, finalSuffix, curLine.text, curLine.speed, curLine.nextSound, curLine.textSound != null ? [curLine.textSound] : null, finalSuffix == "-firstOpen" || finalSuffix == "-open", !playFirst);
+		dialogueBox.playBubbleAnim(curLine.bubble, finalSuffix, curLine.text, curLine.format, curLine.speed, curLine.nextSound, curLine.textSound != null ? [curLine.textSound] : null, finalSuffix == "-firstOpen" || finalSuffix == "-open", !playFirst);
 
 		if(curLine.playSound != null) curLine.playSound.play();
 		if(curLine.changeMusic != null) {
@@ -196,6 +204,7 @@ class DialogueCutscene extends Cutscene {
 
 typedef DialogueLine = {
 	var text:String;
+	var format:Array<XMLUtil.TextFormat>;
 	var char:String;
 	var bubble:String;
 	var callback:String;
