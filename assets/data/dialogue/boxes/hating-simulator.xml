@@ -3,7 +3,7 @@
 	<!--
 		Node containing all text settings
 	-->
-	<text font="pixel.otf" x="239" y="218" width="768" color="#3f2021" size="32" antialiasing="false" borderSize="2" borderStyle="shadow" borderColor="#D89494" />
+	<text font="pixel.otf" x="239" y="218" width="768" color="#3f2021" size="32" antialiasing="false" borderSize="1" borderStyle="shadow" borderColor="#D89494" shadowOffsetX="2" shadowOffsetY="2"/>
 
 	<!--
 		All positions for characters

@@ -1,4 +1,4 @@
-package funkin.backend.scripting.events;
+package funkin.backend.scripting.events.dialogue;
 
 import haxe.xml.Access;
 

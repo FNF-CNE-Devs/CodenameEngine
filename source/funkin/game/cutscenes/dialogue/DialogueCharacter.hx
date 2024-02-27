@@ -1,7 +1,7 @@
 package funkin.game.cutscenes.dialogue;
 
-import funkin.backend.scripting.events.*;
-import funkin.backend.scripting.events.PlayAnimEvent.PlayAnimContext;
+import funkin.backend.scripting.events.PlayAnimEvent;
+import funkin.backend.scripting.events.dialogue.*;
 import funkin.backend.scripting.events.CancellableEvent;
 import funkin.backend.scripting.Script;
 import flixel.tweens.FlxTween;

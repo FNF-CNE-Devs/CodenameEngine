@@ -1,5 +1,6 @@
-package funkin.backend.scripting.events;
+package funkin.backend.scripting.events.dialogue;
 
+import funkin.backend.utils.XMLUtil.TextFormat;
 import flixel.sound.FlxSound;
 
 final class DialogueBoxPlayBubbleEvent extends CancellableEvent
@@ -9,6 +10,8 @@ final class DialogueBoxPlayBubbleEvent extends CancellableEvent
 	public var suffix:String;
 
 	public var text:String;
+
+	public var format:Array<TextFormat>;
 
 	public var speed:Float;
 

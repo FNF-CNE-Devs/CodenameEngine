@@ -1,13 +1,14 @@
 package funkin.game.cutscenes.dialogue;
 
-import funkin.backend.scripting.events.*;
+import funkin.backend.scripting.events.dialogue.*;
+import funkin.backend.scripting.events.PlayAnimEvent;
 import funkin.backend.scripting.events.PlayAnimEvent.PlayAnimContext;
 import funkin.backend.scripting.events.CancellableEvent;
 import funkin.backend.scripting.Script;
 import flixel.sound.FlxSound;
 import flixel.addons.text.FlxTypeText;
-import flixel.text.FlxText;
 import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
 import haxe.xml.Access;
 
 class DialogueBox extends FunkinSprite {
@@ -72,7 +73,7 @@ class DialogueBox extends FunkinSprite {
 				textNode.has.width ? Std.parseInt(textNode.att.width).getDefault(FlxG.width) : FlxG.width, "");
 			text.color = textNode.getAtt("color").getColorFromDynamic().getDefault(0xFF000000);
 			text.size = Std.parseInt(textNode.att.size).getDefault(20);
-			text.font = Paths.font('${textNode.getAtt("font").getDefault("vcr.ttf")}');
+			text.font = Paths.font(textNode.getAtt("font").getDefault("vcr.ttf"));
 			text.antialiasing = textNode.getAtt("antialiasing").getDefault("false") == "true";
 			if(textNode.has.borderStyle) {
 				text.borderStyle = switch(textNode.att.borderStyle.trim().toLowerCase()) {
@@ -81,6 +82,9 @@ class DialogueBox extends FunkinSprite {
 					case "outline_fast": OUTLINE_FAST;
 					default: OUTLINE;
 				}
+				text.borderQuality = Std.parseFloat(textNode.getAtt("borderQuality")).getDefault(1);
+				text.shadowOffset.x = Std.parseFloat(textNode.getAtt("shadowOffsetX")).getDefault(1);
+				text.shadowOffset.y = Std.parseFloat(textNode.getAtt("shadowOffsetY")).getDefault(1);
 				text.borderSize = Std.parseFloat(textNode.getAtt("borderSize")).getDefault(1);
 				text.borderColor = textNode.getAtt("borderColor").getColorFromDynamic().getDefault(0xFFFFFFFF);
 			}
@@ -112,29 +116,31 @@ class DialogueBox extends FunkinSprite {
 	}
 
 	public function popupChar(char:DialogueCharacter, force:Bool = false) {
-		var event = EventManager.get(DialogueBoxCharPopupEvent).recycle(char);
+		var event = EventManager.get(DialogueBoxCharPopupEvent).recycle(char, force);
 		dialogueBoxScript.call("popupChar", [event]);
 		if (event.cancelled || event.char == null || !active) return;
 		var pos = positions[event.char.positionName];
 		if (pos == null) return;
 
-		event.char.show((FlxG.width / 2) + pos.x, FlxG.height - pos.y, null, force);
+		event.char.show((FlxG.width / 2) + pos.x, FlxG.height - pos.y, null, event.force);
+		flipX = pos.flipBubble;
+		dialogueBoxScript.call("postPopupChar", [event]);
 	}
 
-	public function playBubbleAnim(bubble:String, suffix:String = '', text:String = '', speed:Float = 0.05, ?customSFX:FlxSound, ?customTypeSFX:Array<FlxSound>, setTextAfter:Bool = false, allowDefault:Bool = true) {
-		var event = EventManager.get(DialogueBoxPlayBubbleEvent).recycle(bubble, suffix, text, speed, customSFX, customTypeSFX, setTextAfter, allowDefault);
+	public function playBubbleAnim(bubble:String, suffix:String = '', text:String = '', ?format:Array<XMLUtil.TextFormat>, speed:Float = 0.05, ?customSFX:FlxSound, ?customTypeSFX:Array<FlxSound>, setTextAfter:Bool = false, allowDefault:Bool = true) {
+		var event = EventManager.get(DialogueBoxPlayBubbleEvent).recycle(bubble, suffix, text, format, speed, customSFX, customTypeSFX, setTextAfter, allowDefault);
 		dialogueBoxScript.call("playBubbleAnim", [event]);
 		if(event.cancelled) return;
 
 		if(event.customSFX != null) event.customSFX.play();
 		else if(event.allowDefault) FlxG.sound.play(nextSFX);
 		var idk:Void->Void = () -> {
-			if(text != null && text.trim().length > 0) setText(event.text, event.speed, event.customTypeSFX);
+			if(text != null && text.trim().length > 0) startText(event.text, event.format, event.speed, event.customTypeSFX);
 			else dialogueEnded = true;
 		}
 
 		dialogueEnded = false;
-		this.text.resetText('');
+		resetText();
 		var anim:String = event.bubble + event.suffix;
 		if(hasAnimation(anim)) playAnim(anim, true);
 		if(!event.setTextAfter) idk();
@@ -148,16 +154,30 @@ class DialogueBox extends FunkinSprite {
 		dialogueBoxScript.call("postPlayBubbleAnim", [event]);
 	}
 
-	public function setText(text:String, speed:Float = 0.05, ?customTypeSFX:Array<FlxSound>) {
-		var event = EventManager.get(DialogueBoxSetTextEvent).recycle(text, speed, customTypeSFX);
-		dialogueBoxScript.call("setText", [event]);
+	public function resetText(text:String = '', ?formats:Array<XMLUtil.TextFormat>, ?event:DialogueBoxSetTextEvent) {
+		if(event == null) event = EventManager.get(DialogueBoxSetTextEvent).recycle(text, formats, null, null);
+		dialogueBoxScript.call("resetText", [event]);
 		if(event.cancelled) return;
 
+		this.text.clearFormats();
+		if(formats != null)
+			this.text.autoSetFormat(formats);
+
 		this.text.resetText(event.text);
+		dialogueBoxScript.call("postResetText");
+	}
+
+	public function startText(text:String = '', ?format:Array<XMLUtil.TextFormat>, speed:Float = 0.05, ?customTypeSFX:Array<FlxSound>) {
+		var event = EventManager.get(DialogueBoxSetTextEvent).recycle(text, format, speed, customTypeSFX);
+		dialogueBoxScript.call("startText", [event]);
+		if(event.cancelled) return;
+
+		resetText(event.text, event.format, event);
 		this.text.sounds = event.customTypeSFX != null ? event.customTypeSFX : defaultTextTypeSFX;
 		this.text.delay = event.speed;
 		this.text.start(event.speed, true);
 		this.text.completeCallback = () -> dialogueEnded = true;
+		dialogueBoxScript.call("postStartText");
 	}
 
 	public override function destroy() {
