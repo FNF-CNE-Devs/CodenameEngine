@@ -18,6 +18,24 @@ class Chart {
 	 */
 	public inline static var defaultColor:FlxColor = 0xFF9271FD;
 
+	public static function loadEventsJson(songName:String, difficulty:String = "normal") {
+		var eventsPath = Paths.file('songs/${songName.toLowerCase()}/events.json');
+		var eventsDiffPath = Paths.file('songs/${songName.toLowerCase()}/events-${difficulty.toLowerCase()}.json');
+	
+		var data:Array<ChartEvent> = null;
+		for(path in [eventsDiffPath, eventsPath]) {
+			if (Assets.exists(path)) {
+				try {
+					data = Json.parse(Assets.getText(path)).events;
+				} catch(e) {
+					Logs.trace('Failed to load song event data for ${songName} ($path): ${Std.string(e)}', ERROR);
+				}
+				if (data != null) break;
+			}
+		}
+		return data;
+	}
+
 	public static function loadChartMeta(songName:String, difficulty:String = "normal", fromMods:Bool = true) {
 		var metaPath = Paths.file('songs/${songName.toLowerCase()}/meta.json');
 		var metaDiffPath = Paths.file('songs/${songName.toLowerCase()}/meta-${difficulty.toLowerCase()}.json');
@@ -145,6 +163,16 @@ class Chart {
 			}
 			base.meta = loadedMeta;
 		}
+
+		/**
+		 * events.json + events-diff.json LOADING
+		 */
+		#if REGION
+		var extraEvents:Array<ChartEvent> = loadEventsJson(songName, difficulty);
+		if (extraEvents != null)
+			base.events = base.events.concat(extraEvents);
+		#end
+
 		return base;
 	}
 

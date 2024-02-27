@@ -137,6 +137,11 @@ class Charter extends UIState {
 						keybind: [CONTROL, ALT ,SHIFT, S],
 						onSelect: _file_meta_saveas,
 					},
+					{
+						label: "Save Events",
+						keybind: [CONTROL, TAB, S],
+						onSelect: _file_events_save,
+					},
 					null,
 					{
 						label: "Exit",
@@ -1129,6 +1134,14 @@ class Charter extends UIState {
 		openSubState(new SaveSubstate(Json.stringify(PlayState.SONG.meta == null ? {} : PlayState.SONG.meta, null, "\t"), { // always pretty print meta
 			defaultSaveFile: 'meta.json'
 		}));
+	}
+
+	function _file_events_save(_) {
+		#if sys
+		openSubState(new SaveSubstate(Json.stringify({events: PlayState.SONG.events}), {
+			defaultSaveFile: 'events-${__diff.toLowerCase()}.json'
+		}));
+		#end
 	}
 
 	#if sys
