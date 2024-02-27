@@ -128,6 +128,27 @@ class Charter extends UIState {
 					},
 					null,
 					{
+						label: "Save Without Events",
+						keybind: [CONTROL, ALT, TAB, S],
+						onSelect: _file_save_no_events,
+					},
+					{
+						label: "Save Without Events As...",
+						keybind: [CONTROL, SHIFT, ALT, TAB, S],
+						onSelect: _file_saveas_no_events,
+					},
+					{
+						label: "Save Events Separately",
+						keybind: [CONTROL, TAB, S],
+						onSelect: _file_events_save,
+					},
+					{
+						label: "Save Events Separately As...",
+						keybind: [CONTROL, SHIFT, TAB, S],
+						onSelect: _file_events_saveas,
+					},
+					null,
+					{
 						label: "Save Meta",
 						keybind: [CONTROL, ALT, S],
 						onSelect: _file_meta_save,
@@ -136,11 +157,6 @@ class Charter extends UIState {
 						label: "Save Meta As...",
 						keybind: [CONTROL, ALT ,SHIFT, S],
 						onSelect: _file_meta_saveas,
-					},
-					{
-						label: "Save Events",
-						keybind: [CONTROL, TAB, S],
-						onSelect: _file_events_save,
 					},
 					null,
 					{
@@ -1121,6 +1137,22 @@ class Charter extends UIState {
 		undos.save();
 	}
 
+	function _file_save_no_events(_) {
+		#if sys
+		saveTo('${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}', true);
+		undos.save();
+		return;
+		#end
+		_file_saveas(_);
+	}
+
+	function _file_saveas_no_events(_) {
+		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false, false)), {
+			defaultSaveFile: '${__diff.toLowerCase()}.json'
+		}));
+		undos.save();
+	}
+
 	function _file_meta_save(_) {
 		#if sys
 		sys.io.File.saveContent(
@@ -1140,16 +1172,27 @@ class Charter extends UIState {
 
 	function _file_events_save(_) {
 		#if sys
-		openSubState(new SaveSubstate(Json.stringify({events: PlayState.SONG.events}), {
-			defaultSaveFile: 'events-${__diff.toLowerCase()}.json'
+		sys.io.File.saveContent(
+			'${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}/events.json',
+			Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events})
+		);
+		return;
+		#end
+		_file_events_saveas(_);
+	}
+
+	function _file_events_saveas(_) {
+		#if sys
+		openSubState(new SaveSubstate(Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events}), {
+			defaultSaveFile: 'events.json'
 		}));
 		#end
 	}
 
 	#if sys
-	function saveTo(path:String) {
+	function saveTo(path:String, separateEvents:Bool = false) {
 		buildChart();
-		Chart.save(path, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false});
+		Chart.save(path, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false, saveEventsInChart: !separateEvents});
 	}
 	#end
 
