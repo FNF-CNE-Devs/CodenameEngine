@@ -581,8 +581,6 @@ class Charter extends UIState {
 	var dragStartPos:FlxPoint = new FlxPoint();
 	var selectionDragging:Bool = false;
 
-	var showContextMenu:Bool = false;
-
 	public function updateNoteLogic(elapsed:Float) {
 		for (group in [notesGroup, eventsGroup]) {
 			cast(group, FlxTypedGroup<Dynamic>).forEach(function(n) {
@@ -711,7 +709,7 @@ class Charter extends UIState {
 					currentCursor = ARROW;
 				}
 			case NONE:
-				if (FlxG.mouse.justPressed || FlxG.mouse.justPressedRight)
+				if (FlxG.mouse.justPressed)
 					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos); 
 
 				if (gridBackdropDummy.hovered) {
@@ -749,29 +747,11 @@ class Charter extends UIState {
 					}
 				}
 
-				if (FlxG.mouse.pressedRight) {
-					if (Math.abs(mousePos.y - dragStartPos.y) > 20)
-						showContextMenu = true;
-					if (showContextMenu) {
-						var undoChanges:Array<NoteSustainChange> = [];
-						for(s in selection)
-							if (s is CharterNote) {
-								var n:CharterNote = cast s;
-								var old:Float = n.susLength;
-								n.updatePos(n.step, n.id, Math.max((mousePos.y - dragStartPos.y) / 40, 0));
-								undoChanges.push({before: old, after: n.susLength, note: n});
-							}
-						undos.addToUndo(CEditSustains(undoChanges));
-					}
-				}
 				if (FlxG.mouse.justReleasedRight) {
-					if (!showContextMenu) {
-						var mousePos = FlxG.mouse.getScreenPosition(uiCamera);
-						closeCurrentContextMenu();
-						openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
-						mousePos.put();
-					}
-					else showContextMenu = false;
+					var mousePos = FlxG.mouse.getScreenPosition(uiCamera);
+					closeCurrentContextMenu();
+					openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
+					mousePos.put();
 				}
 		}
 		addEventSpr.selectable = !selectionBox.visible;
