@@ -7,8 +7,8 @@
 	<char name="niko" char="niko" position="middle" />
 
 	<!-- Lines -->
-	<line char="dad" stay="true">
-		yo its me your enemy! how are you
+	<line char="dad">
+		yo its me your <format color="#FF0000">enemy!</format> how are you
 	</line>
 	<line char="boyfriend">
 		shut up u stupid bitch
@@ -58,5 +58,11 @@
 	</line>
 	<line char="boyfriend">
 		ok now stfu and lets rap its getting annoying
+	</line>
+	<line char="girlfriend">
+		Wanna <format font="pixel.otf" size="10">have <format color="#33ff33">sex</format> later</format> cutie
+	</line>
+	<line char="boyfriend">
+		bro <format color="#FF0000">what</format>
 	</line>
 </dialogue>

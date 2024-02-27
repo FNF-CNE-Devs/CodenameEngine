@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-stage>
-<stage zoom="0.9" name="stage" folder="stages/default/">
+<stage zoom="0.9" name="stage" folder="stages/default/" startCamPosY="600" startCamPosX="1000">
 	<sprite name="bg"               x="-600" y="-200"   sprite="stageback"       scroll="0.9" />
 	<sprite name="stageFront"       x="-600" y="600"    sprite="stagefront"      scroll="0.9" />
 	<girlfriend />

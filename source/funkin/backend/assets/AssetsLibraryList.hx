@@ -6,9 +6,6 @@ import lime.utils.AssetLibrary;
 class AssetsLibraryList extends AssetLibrary {
 	public var libraries:Array<AssetLibrary> = [];
 
-	public var rootLibs:Array<AssetLibrary> = [];
-	public var assetsLibs:Array<AssetLibrary> = [];
-
 	@:allow(funkin.backend.system.Main)
 	@:allow(funkin.backend.system.MainState)
 	private var __defaultLibraries:Array<AssetLibrary> = [];
@@ -19,7 +16,6 @@ class AssetsLibraryList extends AssetLibrary {
 		libraries.remove(lib);
 		return lib;
 	}
-	
 	public function existsSpecific(id:String, type:String, source:AssetSource = BOTH) {
 		if (!id.startsWith("assets/") && exists('assets/$id', type))
 			return true;
@@ -98,29 +94,23 @@ class AssetsLibraryList extends AssetLibrary {
 		return content;
 	}
 
-	public function getSpecificAsset(id:String, type:String, source:AssetSource = BOTH, ?avoidRoot:Bool = false):Dynamic {
+	public function getSpecificAsset(id:String, type:String, source:AssetSource = BOTH):Dynamic {
 		try {
 			if (!id.startsWith("assets/")) {
 				var ass = getSpecificAsset('assets/$id', type, source);
-				if (ass != null)
+				if (ass != null) {
 					return ass;
-			} else {
-				for (lib in assetsLibs) {
-					if (shouldSkipLib(libraries.indexOf(lib), source)) continue;
-
-					var asset = lib.getAsset(id, type);
-					if (asset != null)
-						return asset;
 				}
 			}
+			for(k=>e in libraries) {
+				if (shouldSkipLib(k, source)) continue;
 
-			if (!avoidRoot) {
-				for (lib in rootLibs) {
-					if (shouldSkipLib(libraries.indexOf(lib), source)) continue;
-
-					var asset = lib.getAsset(id, type);
-					if (asset != null)
+				@:privateAccess
+				if (e.exists(id, e.types.get(id))) {
+					var asset = e.getAsset(id, type);
+					if (asset != null) {
 						return asset;
+					}
 				}
 			}
 			return null;
@@ -139,9 +129,6 @@ class AssetsLibraryList extends AssetLibrary {
 	}
 	public override inline function getAsset(id:String, type:String):Dynamic
 		return getSpecificAsset(id, type, BOTH);
-
-	public inline function getAssetSafe(id:String, type:String):Dynamic
-		return getSpecificAsset(id, type, BOTH, true);
 
 	public override function isLocal(id:String, type:String) {
 		return true;
@@ -171,17 +158,8 @@ class AssetsLibraryList extends AssetLibrary {
 			addLibrary(d);
 	}
 
-	public function addLibrary(lib:AssetLibrary) @:privateAccess {
+	public function addLibrary(lib:AssetLibrary) {
 		libraries.insert(0, lib);
-
-		var finalLib:AssetLibrary = lib;
-		if (finalLib is openfl.utils.AssetLibrary)
-			finalLib = cast(finalLib, openfl.utils.AssetLibrary).__proxy;
-
-		if (finalLib is IModsAssetLibrary)
-			assetsLibs.insert(0, finalLib);
-		else
-			rootLibs.insert(0, finalLib);
 		return lib;
 	}
 }

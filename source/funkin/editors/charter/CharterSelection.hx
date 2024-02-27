@@ -115,6 +115,7 @@ class CharterSelection extends EditorTreeMenu {
 		#end
 
 		var option = new EditorIconOption(creation.meta.name, "Press ACCEPT to choose a difficulty to edit.", creation.meta.icon, function() {
+			curSong = creation.meta;
 			var list:Array<OptionType> = [
 				for(d in creation.meta.difficulties)
 					if (d != "") new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {

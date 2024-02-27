@@ -1,14 +1,17 @@
 package funkin.backend.utils;
 
-import flixel.animation.FlxAnimation;
 import funkin.backend.FunkinSprite;
 import funkin.backend.system.ErrorCode;
 import funkin.backend.FunkinSprite.XMLAnimType;
-import funkin.backend.system.interfaces.IBeatReceiver;
+import flixel.util.FlxColor;
 import haxe.xml.Access;
+import flixel.util.typeLimit.OneOfTwo;
 import funkin.backend.system.interfaces.IOffsetCompatible;
 
 using StringTools;
+
+typedef TextFormat = { text:String, format:Dynamic }
+
 /**
  * Class made to make XML parsing easier.
  */
@@ -61,16 +64,14 @@ class XMLUtil {
 	}
 
 	/**
-	 * Creates a new sprite based on a XML node.
+	 * Overrides a sprite based on a XML node.
 	 */
-	public static function createSpriteFromXML(node:Access, parentFolder:String = "", defaultAnimType:XMLAnimType = BEAT, ?cl:Class<FunkinSprite>):FunkinSprite {
+	public static function loadSpriteFromXML(spr:FunkinSprite, node:Access, parentFolder:String = "", defaultAnimType:XMLAnimType = BEAT):FunkinSprite {
 		if (parentFolder == null) parentFolder = "";
 
-		var spr:FunkinSprite = cl != null ? Type.createInstance(cl, []) : new FunkinSprite();
 		spr.name = node.getAtt("name");
 		spr.antialiasing = true;
-
-		spr.loadSprite(Paths.image('$parentFolder${node.getAtt("sprite")}', null, true));
+		spr.loadSprite(Paths.image('$parentFolder${node.getAtt("sprite").getDefault(spr.name)}', null, true));
 
 		spr.spriteAnimType = defaultAnimType;
 		if (node.has.type) {
@@ -88,15 +89,14 @@ class XMLUtil {
 		if (node.has.scroll) {
 			var scroll:Null<Float> = Std.parseFloat(node.att.scroll);
 			if (scroll.isNotNull()) spr.scrollFactor.set(scroll, scroll);
-		} else {
-			if (node.has.scrollx) {
-				var scroll:Null<Float> = Std.parseFloat(node.att.scrollx);
-				if (scroll.isNotNull()) spr.scrollFactor.x = scroll;
-			}
-			if (node.has.scrolly) {
-				var scroll:Null<Float> = Std.parseFloat(node.att.scrolly);
-				if (scroll.isNotNull()) spr.scrollFactor.y = scroll;
-			}
+		}
+		if (node.has.scrollx) {
+			var scroll:Null<Float> = Std.parseFloat(node.att.scrollx);
+			if (scroll.isNotNull()) spr.scrollFactor.x = scroll;
+		}
+		if (node.has.scrolly) {
+			var scroll:Null<Float> = Std.parseFloat(node.att.scrolly);
+			if (scroll.isNotNull()) spr.scrollFactor.y = scroll;
 		}
 		if (node.has.skewx) {
 			var skew:Null<Float> = Std.parseFloat(node.att.skewx);
@@ -107,6 +107,14 @@ class XMLUtil {
 			if (skew.isNotNull()) spr.skew.y = skew;
 		}
 		if (node.has.antialiasing) spr.antialiasing = node.att.antialiasing == "true";
+		if (node.has.width) {
+			var width:Null<Float> = Std.parseFloat(node.att.width);
+			if (width.isNotNull()) spr.width = width;
+		}
+		if (node.has.height) {
+			var height:Null<Float> = Std.parseFloat(node.att.height);
+			if (height.isNotNull()) spr.height = height;
+		}
 		if (node.has.scale) {
 			var scale:Null<Float> = Std.parseFloat(node.att.scale);
 			if (scale.isNotNull()) spr.scale.set(scale, scale);
@@ -119,13 +127,28 @@ class XMLUtil {
 			var scale:Null<Float> = Std.parseFloat(node.att.scaley);
 			if (scale.isNotNull()) spr.scale.y = scale;
 		}
+		if (node.has.graphicSize) {
+			var graphicSize:Null<Int> = Std.parseInt(node.att.graphicSize);
+			if (graphicSize.isNotNull()) spr.setGraphicSize(graphicSize, graphicSize);
+		}
+		if (node.has.graphicSizex) {
+			var graphicSizex:Null<Int> = Std.parseInt(node.att.graphicSizex);
+			if (graphicSizex.isNotNull()) spr.setGraphicSize(graphicSizex);
+		}
+		if (node.has.graphicSizey) {
+			var graphicSizey:Null<Int> = Std.parseInt(node.att.graphicSizey);
+			if (graphicSizey.isNotNull()) spr.setGraphicSize(0, graphicSizey);
+		}
 		if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
 
-		if(node.has.zoomfactor)
+		if (node.has.zoomfactor)
 			spr.zoomFactor = Std.parseFloat(node.getAtt("zoomfactor")).getDefault(spr.zoomFactor);
 
 		if (node.has.alpha)
 			spr.alpha = Std.parseFloat(node.getAtt("alpha")).getDefault(spr.alpha);
+
+		if(node.has.color)
+			spr.color = FlxColor.fromString(node.getAtt("color")).getDefault(0xFFFFFFFF);
 
 		if (node.has.playOnCountdown)
 			spr.skipNegativeBeats = node.att.playOnCountdown == "true";
@@ -155,6 +178,15 @@ class XMLUtil {
 
 		return spr;
 	}
+
+	/**
+     * Creates a new sprite based on a XML node.
+     */
+	public static inline function createSpriteFromXML(node:Access, parentFolder:String = "", defaultAnimType:XMLAnimType = BEAT, ?cl:Class<FunkinSprite>, ?args:Array<Dynamic>):FunkinSprite {
+    	if(cl == null) cl = FunkinSprite;
+        if(args == null) args = [];
+        return loadSpriteFromXML(Type.createInstance(cl, args), node, parentFolder, defaultAnimType);
+    }
 
 	public static function extractAnimFromXML(anim:Access, animType:XMLAnimType = NONE, loop:Bool = false):AnimData {
 		var animData:AnimData = {
@@ -250,6 +282,51 @@ class XMLUtil {
 	public static inline function fixXMLText(text:String) {
 		var v:String;
 		return [for(l in text.split("\n")) if ((v = l.trim()) != "") v].join("\n");
+	}
+
+	/**
+	 * WARNING: will edit directly the node!
+	 */
+	public static function fixSpacingInNode(node:Access):Access {
+		var arr = [for(x in node.x) x];
+		for(i => n in arr) {
+			if(n.nodeType == PCData) {
+				if(i == 0) n.nodeValue = n.nodeValue.ltrim();
+				if(i == arr.length - 1) n.nodeValue = n.nodeValue.rtrim();
+				if(n.nodeValue.contains("\n")) {
+					var a = n.nodeValue.split("\n");
+					n.nodeValue = [for(i => x in a) i == 0 ? x.rtrim() : i == arr.length - 1 ? x.ltrim() : x.trim()].join("\n");
+				}
+			}
+		}
+		return node;
+	}
+
+	public static function getTextFormats(_node:OneOfTwo<Xml, Access>, currentFormat:Dynamic = null, parsedSegments:Array<TextFormat> = null):Array<TextFormat> {
+		var node:Xml = cast _node;
+		if (currentFormat == null)
+			currentFormat = {};
+		if (parsedSegments == null)
+			parsedSegments = [];
+
+		for (child in node) {
+			switch (child.nodeType) {
+				case Element:
+					if (child.nodeName == "format") {
+						var format:Dynamic = Reflect.copy(currentFormat);
+						@:privateAccess for (key => name in child.attributeMap) {
+							Reflect.setField(format, key, name);
+						}
+						getTextFormats(child, format, parsedSegments);
+					}
+				case PCData:
+					parsedSegments.push({ text: child.nodeValue, format: Reflect.copy(currentFormat) });
+				default:
+					// Ignore other node types
+			}
+		}
+
+		return parsedSegments;
 	}
 }
 

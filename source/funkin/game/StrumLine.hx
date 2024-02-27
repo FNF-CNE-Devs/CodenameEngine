@@ -163,31 +163,33 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	}
 
 	public inline function updateNotes() {
+		__updateNote_songPos = Conductor.songPosition;
+		if(__updateNote_event == null) __updateNote_event = PlayState.instance.__updateNote_event;
 		notes.forEach(updateNote);
 	}
 
 	var __updateNote_strum:Strum;
+	var __updateNote_songPos:Float;
+	var __updateNote_event:NoteUpdateEvent;
 	public function updateNote(daNote:Note) {
 		__updateNote_strum = members[daNote.noteData];
 		if (__updateNote_strum == null) return;
 
-		PlayState.instance.__updateNote_event.recycle(daNote, FlxG.elapsed, __updateNote_strum);
-		onNoteUpdate.dispatch(PlayState.instance.__updateNote_event);
-		if (PlayState.instance.__updateNote_event.cancelled) return;
+		__updateNote_event.recycle(daNote, FlxG.elapsed, __updateNote_strum);
+		onNoteUpdate.dispatch(__updateNote_event);
+		if (__updateNote_event.cancelled) return;
 
-		var songPosition = Conductor.songPosition;
+		if (__updateNote_event.__updateHitWindow) {
+			daNote.canBeHit = (daNote.strumTime > __updateNote_songPos - (PlayState.instance.hitWindow * daNote.latePressWindow)
+				&& daNote.strumTime < __updateNote_songPos + (PlayState.instance.hitWindow * daNote.earlyPressWindow));
 
-		if (PlayState.instance.__updateNote_event.__updateHitWindow) {
-			daNote.canBeHit = (daNote.strumTime > songPosition - (PlayState.instance.hitWindow * daNote.latePressWindow)
-				&& daNote.strumTime < songPosition + (PlayState.instance.hitWindow * daNote.earlyPressWindow));
-
-			if (daNote.strumTime < songPosition - PlayState.instance.hitWindow && !daNote.wasGoodHit)
+			if (daNote.strumTime < __updateNote_songPos - PlayState.instance.hitWindow && !daNote.wasGoodHit)
 				daNote.tooLate = true;
 		}
 
-		if (cpu && PlayState.instance.__updateNote_event.__autoCPUHit && !daNote.avoid&& !daNote.wasGoodHit && daNote.strumTime < songPosition) PlayState.instance.goodNoteHit(this, daNote);
+		if (cpu && __updateNote_event.__autoCPUHit && !daNote.avoid && !daNote.wasGoodHit && daNote.strumTime < __updateNote_songPos) PlayState.instance.goodNoteHit(this, daNote);
 
-		if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.sustainLength) < songPosition) {
+		if (daNote.wasGoodHit && daNote.isSustainNote && daNote.strumTime + (daNote.sustainLength) < __updateNote_songPos) {
 			deleteNote(daNote);
 			return;
 		}
@@ -199,11 +201,11 @@ class StrumLine extends FlxTypedGroup<Strum> {
 		}
 
 
-		if (PlayState.instance.__updateNote_event.strum == null) return;
+		if (__updateNote_event.strum == null) return;
 
-		if (PlayState.instance.__updateNote_event.__reposNote) PlayState.instance.__updateNote_event.strum.updateNotePosition(daNote);
+		if (__updateNote_event.__reposNote) __updateNote_event.strum.updateNotePosition(daNote);
 		if (daNote.isSustainNote)
-			daNote.updateSustain(PlayState.instance.__updateNote_event.strum);
+			daNote.updateSustain(__updateNote_event.strum);
 	}
 
 	var __funcsToExec:Array<Note->Void> = [];
@@ -302,10 +304,10 @@ class StrumLine extends FlxTypedGroup<Strum> {
 			animPrefix = strumAnimPrefix[i % strumAnimPrefix.length];
 		var babyArrow:Strum = new Strum(startingPos.x + ((Note.swagWidth * strumScale) * i), startingPos.y);
 		babyArrow.ID = i;
-		
+
 		if(data.scrollSpeed != null)
 			babyArrow.scrollSpeed = data.scrollSpeed;
-		
+
 		var event = EventManager.get(StrumCreationEvent).recycle(babyArrow, PlayState.instance.strumLines.members.indexOf(this), i, animPrefix);
 		event.__doAnimation = !MusicBeatState.skipTransIn;
 		event = PlayState.instance.scripts.event("onStrumCreation", event);

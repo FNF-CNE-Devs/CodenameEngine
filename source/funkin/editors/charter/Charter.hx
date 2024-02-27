@@ -1,5 +1,7 @@
 package funkin.editors.charter;
 
+import openfl.geom.Rectangle;
+import flixel.util.FlxSpriteUtil;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOptionSpr;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.editors.charter.CharterStrumline;
@@ -20,6 +22,8 @@ import flixel.addons.display.FlxBackdrop;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UIState;
 import openfl.net.FileReference;
+
+using flixel.util.FlxColor;
 
 class Charter extends UIState {
 	public static var __song:String;
@@ -121,6 +125,27 @@ class Charter extends UIState {
 						label: "Save As...",
 						keybind: [CONTROL, SHIFT, S],
 						onSelect: _file_saveas,
+					},
+					null,
+					{
+						label: "Save Without Events",
+						keybind: [CONTROL, ALT, TAB, S],
+						onSelect: _file_save_no_events,
+					},
+					{
+						label: "Save Without Events As...",
+						keybind: [CONTROL, SHIFT, ALT, TAB, S],
+						onSelect: _file_saveas_no_events,
+					},
+					{
+						label: "Save Events Separately",
+						keybind: [CONTROL, TAB, S],
+						onSelect: _file_events_save,
+					},
+					{
+						label: "Save Events Separately As...",
+						keybind: [CONTROL, SHIFT, TAB, S],
+						onSelect: _file_events_saveas,
 					},
 					null,
 					{
@@ -338,6 +363,8 @@ class Charter extends UIState {
 		uiCamera.bgColor = 0;
 		FlxG.cameras.add(uiCamera);
 
+		for (camera in FlxG.cameras.list) camera.antialiasing = false;
+
 		charterBG = new FunkinSprite(0, 0, Paths.image('menus/menuDesat'));
 		charterBG.color = 0xFF181818;
 		charterBG.cameras = [charterCamera];
@@ -359,10 +386,7 @@ class Charter extends UIState {
 		selectionBox.scrollFactor.set(1, 1);
 		selectionBox.incorporeal = true;
 
-		noteHoverer = new CharterNote();
-		noteHoverer.snappedToStrumline = noteHoverer.selectable = noteHoverer.autoAlpha = false;
-		@:privateAccess noteHoverer.__animSpeed = 1.25; noteHoverer.typeText.visible = false;
-		noteHoverer.alpha = 0; // FUCK YOU NOTE HOVERER >:(((
+		noteHoverer = new CharterNoteHoverer();
 
 		selectionBox.cameras = notesGroup.cameras = gridBackdrops.cameras = noteHoverer.cameras = [charterCamera];
 
@@ -381,7 +405,7 @@ class Charter extends UIState {
 		uiGroup.add(scrollBar);
 
 		songPosInfo = new UIText(FlxG.width - 30 - 400, scrollBar.y + 10, 400, "00:00\nBeat: 0\nStep: 0\nMeasure: 0\nBPM: 0\nTime Signature: 4/4");
-		songPosInfo.alignment = RIGHT; songPosInfo.optimized = true;
+		songPosInfo.alignment = RIGHT;
 		uiGroup.add(songPosInfo);
 
 		playBackSlider = new UISlider(FlxG.width - 160 - 26 - 20, (23/2) - (12/2), 160, 1, [{start: 0.25, end: 1, size: 0.5}, {start: 1, end: 2, size: 0.5}], true);
@@ -529,8 +553,7 @@ class Charter extends UIState {
 		buildNoteTypesUI();
 		refreshBPMSensitive();
 
-		// Cool shit :DD 
-		__relinkSelection();
+		// Undo Stuffs :D
 		__relinkUndos();
 		__applyPlaytestInfo();
 	}
@@ -574,6 +597,7 @@ class Charter extends UIState {
 						else
 							selection = [cast n];
 					}
+
 					if (FlxG.mouse.justReleasedRight) {
 						var mousePos = FlxG.mouse.getScreenPosition(uiCamera);
 						if (!selection.contains(cast n))
@@ -585,7 +609,8 @@ class Charter extends UIState {
 				}
 			});
 		}
-		for(n in selection) n.selected = true;
+		selection = __fixSelection(selection);
+		for(s in selection) s.selected = true;
 
 		/**
 		 * NOTE DRAG HANDLING
@@ -621,6 +646,8 @@ class Charter extends UIState {
 									if (n.handleSelection(selectionBox))
 										selection.push(n);
 						}
+
+						selection = __fixSelection(selection);
 						gridActionType = NONE;
 					}
 				}
@@ -645,22 +672,16 @@ class Charter extends UIState {
 					});
 					currentCursor = HAND;
 				} else {
-					var hoverOffset:FlxPoint = FlxPoint.get();
-					for (s in selection)
-						if (s.hovered) {
-							hoverOffset.set(mousePos.x - s.x, mousePos.y - s.y);
-							break;
-						}
-						
-					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, dragStartPos.y); //credits to burgerballs
-					var verticalChange:Float = ((mousePos.y - hoverOffset.y) - dragStartPos.y) / 40;
+					dragStartPos.set(Std.int(dragStartPos.x / 40) * 40, dragStartPos.y);
+					var verticalChange:Float = (mousePos.y - dragStartPos.y) / 40;
 					var horizontalChange:Int = CoolUtil.floorInt((mousePos.x - dragStartPos.x) / 40);
 					var undoDrags:Array<SelectionDragChange> = [];
 
 					for (s in selection) {
 						if (s.draggable) {
 							var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
-							if (!FlxG.keys.pressed.SHIFT) changePoint.x -= ((s.step + verticalChange) - quantStepRounded(s.step+verticalChange));
+							if (!FlxG.keys.pressed.SHIFT) 
+								changePoint.x -= ((s.step + verticalChange) - quantStepRounded(s.step+verticalChange, verticalChange > 0 ? 0.35 : 0.65));
 
 							var boundedChange:FlxPoint = changePoint.clone();
 							
@@ -687,12 +708,9 @@ class Charter extends UIState {
 						undos.addToUndo(CSelectionDrag(undoDrags));
 					}
 
-					hoverOffset.put();
 					gridActionType = NONE;
-
 					currentCursor = ARROW;
 				}
-
 			case NONE:
 				if (FlxG.mouse.justPressed)
 					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos); 
@@ -751,23 +769,6 @@ class Charter extends UIState {
 			if (event != null) addEventSpr.updateEdit(event);
 			else addEventSpr.updatePos(FlxG.keys.pressed.SHIFT ? ((mousePos.y) / 40) : quantStepRounded(mousePos.y/40));
 		} else  addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
-
-		// Note Hoverer
-		if (mousePos.x > 0 && mousePos.x < gridBackdrops.strumlinesAmount * 160 && gridActionType == NONE && inBoundsY) {
-			noteHoverer.alpha = lerp(noteHoverer.alpha, 0.35, 0.25);
-			if (noteHoverer.id != Math.floor(mousePos.x / 40) % 4) {
-				@:privateAccess noteHoverer.__doAnim = false; // Un comment to restore this
-				noteHoverer.updatePos(
-					FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y) / 40) : quantStep((mousePos.y+20)/40), 0, __endStep-1), 
-					Math.floor(mousePos.x / 40) % 4, 0, 0, null
-				);
-			} else {
-				noteHoverer.step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1);
-				noteHoverer.y = noteHoverer.step * 40;
-			}
-			noteHoverer.x = lerp(noteHoverer.x, Math.floor(mousePos.x / 40) * 40, .65);
-		} else
-			noteHoverer.alpha = lerp(noteHoverer.alpha, 0, 0.25);
 	}
 
 	public function quantStep(step:Float):Float {
@@ -775,10 +776,13 @@ class Charter extends UIState {
 		return Math.floor(step/stepMulti) * stepMulti;
 	}
 
-	public function quantStepRounded(step:Float):Float {
+	public function quantStepRounded(step:Float, ?roundRatio:Float = 0.5):Float {
 		var stepMulti:Float = 1/(quant/16);
-		return Math.round(step/stepMulti) * stepMulti;
+		return ratioRound(step/stepMulti, roundRatio) * stepMulti;
 	}
+
+	public function ratioRound(val:Float, ratio:Float):Int
+		return Math.floor(val) + ((Math.abs(val % 1) > ratio ? 1 : 0) * (val > 0 ? 1 : -1));
 
 	public function getHoveredEvent(y:Float) {
 		var eventHovered:CharterEvent = null;
@@ -1116,6 +1120,22 @@ class Charter extends UIState {
 		undos.save();
 	}
 
+	function _file_save_no_events(_) {
+		#if sys
+		saveTo('${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}', true);
+		undos.save();
+		return;
+		#end
+		_file_saveas(_);
+	}
+
+	function _file_saveas_no_events(_) {
+		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false, false)), {
+			defaultSaveFile: '${__diff.toLowerCase()}.json'
+		}));
+		undos.save();
+	}
+
 	function _file_meta_save(_) {
 		#if sys
 		sys.io.File.saveContent(
@@ -1133,10 +1153,29 @@ class Charter extends UIState {
 		}));
 	}
 
+	function _file_events_save(_) {
+		#if sys
+		sys.io.File.saveContent(
+			'${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}/events.json',
+			Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events})
+		);
+		return;
+		#end
+		_file_events_saveas(_);
+	}
+
+	function _file_events_saveas(_) {
+		#if sys
+		openSubState(new SaveSubstate(Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events}), {
+			defaultSaveFile: 'events.json'
+		}));
+		#end
+	}
+
 	#if sys
-	function saveTo(path:String) {
+	function saveTo(path:String, separateEvents:Bool = false) {
 		buildChart();
-		Chart.save(path, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false});
+		Chart.save(path, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false, saveEventsInChart: !separateEvents});
 	}
 	#end
 
@@ -1426,11 +1465,10 @@ class Charter extends UIState {
 			if (note.step > Conductor.curMeasure*Conductor.getMeasureLength() && note.step < (Conductor.curMeasure+1)*Conductor.getMeasureLength()) note
 		];
 	}
-
 	#end
 
 	function changeNoteSustain(change:Float) {
-		if (selection.length <= 0 || change == 0) return;
+		if (selection.length <= 0 || change == 0 || gridActionType != NONE) return;
 
 		var undoChanges:Array<NoteSustainChange> = [];
 		for(s in selection)
@@ -1578,9 +1616,15 @@ class Charter extends UIState {
 	public inline function hitsoundsEnabled(id:Int)
 		return strumLines.members[id] != null && strumLines.members[id].hitsounds;
 
+	public inline function __fixSelection(selection:Selection):Selection {
+		var newSelection:Selection = new Selection();
+		for (s in selection) if (newSelection.indexOf(s) == -1) newSelection.push(s);
+		return newSelection.filter((s:ICharterSelectable) -> {return s != null;});
+	}
+
 	// UH OH!!! DANGER ZONE APPOARCHING !!!! LUNARS SHITTY CODE !!!! -lunar
 
-	@:noCompletion public function __fixSingleSelection(selectable:ICharterSelectable):ICharterSelectable {
+	@:noCompletion public function __relinkSingleSelection(selectable:ICharterSelectable):ICharterSelectable {
 		if (selectable is CharterNote)
 			return selectable.ID == -1 ? cast(selectable, CharterNote) : notesGroup.members[selectable.ID];
 		else if (selectable is CharterEvent)
@@ -1588,30 +1632,29 @@ class Charter extends UIState {
 		return null;
 	}
 
-	@:noCompletion public function __fixSelection(selection:Selection) @:privateAccess {
+	@:noCompletion public function __relinkSelection(selection:Selection) @:privateAccess {
 		var newSelection:Selection = new Selection();
 		for (i => selectable in selection)
-			newSelection[i] = __fixSingleSelection(selectable);
+			newSelection[i] = __relinkSingleSelection(selectable);
 		return newSelection;
 	}
 
-	@:noCompletion public inline function __relinkSelection()
-		selection = __fixSelection(selection);
-
 	@:noCompletion public inline function __relinkUndos() {
+		selection = __relinkSelection(selection);
+
 		for (list => changeList in [undos.undoList, undos.redoList]) {
 			var newChanges:Array<CharterChange> = [];
 			for (i => change in changeList) {
 				switch (change) {
 					case CCreateSelection(selection):
-						newChanges[i] = CCreateSelection(__fixSelection(selection));
+						newChanges[i] = CCreateSelection(__relinkSelection(selection));
 					case CDeleteSelection(selection):
-					 	newChanges[i] = CDeleteSelection(__fixSelection(selection));
+					 	newChanges[i] = CDeleteSelection(__relinkSelection(selection));
 					case CSelectionDrag(selectionDrags):
 						newChanges[i] = CSelectionDrag([
 							for (selectionDrag in selectionDrags)
 								{
-									selectable: __fixSingleSelection(selectionDrag.selectable), 
+									selectable: __relinkSingleSelection(selectionDrag.selectable), 
 									change: selectionDrag.change
 								}
 						]);
@@ -1619,17 +1662,17 @@ class Charter extends UIState {
 						newChanges[i] = CEditSustains([
 							for (noteChange in noteChanges)
 								{
-									note: cast(__fixSingleSelection(noteChange.note), CharterNote),
+									note: cast(__relinkSingleSelection(noteChange.note), CharterNote),
 									before: noteChange.before,
 									after: noteChange.after
 								}
 						]);
 					case CEditEvent(event, oldEvents, newEvents):
-						newChanges[i] = CEditEvent(cast(__fixSingleSelection(event), CharterEvent), oldEvents, newEvents);
+						newChanges[i] = CEditEvent(cast(__relinkSingleSelection(event), CharterEvent), oldEvents, newEvents);
 					case CEditSpecNotesType(notesChanged, oldNoteTypes, newNoteTypes):
 						newChanges[i] = CEditSpecNotesType([
 							for (noteChanged in notesChanged)
-								cast(__fixSingleSelection(noteChanged), CharterNote)
+								cast(__relinkSingleSelection(noteChanged), CharterNote)
 						], oldNoteTypes, newNoteTypes);
 					default: newChanges[i] = change;
 				}

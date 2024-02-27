@@ -1,5 +1,8 @@
 package funkin.backend.utils;
 
+import flixel.text.FlxText;
+import openfl.text.TextFormatAlign;
+import funkin.backend.utils.XMLUtil.TextFormat;
 import flixel.tweens.FlxTween;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.sound.FlxSound;
@@ -458,6 +461,47 @@ class CoolUtil
 	}
 
 	/**
+	 * Sets automatically all the compatible formats to a text.
+	 *
+	 * WARNING: These are dependant from the font, so if the font doesn't support for example the `bold` format it won't work!
+	 * @param text Text to set the format for
+	 * @param formats Array of the formats (to get the formats from a node, you can use `XMLUtil.getTextFormats(node)`)
+	 */
+	public static function autoSetFormat(text:FlxText, formats:Array<TextFormat>) {
+		var i = 0;
+		@:privateAccess
+		for(format in formats) {
+			var fmtt = format.format;
+			var start = i;
+			var end = i + format.text.length;
+			i = end;
+			if(Reflect.fields(fmtt).length == 0) continue;
+			var fmt = new FlxTextFormat();
+
+			fmt.format.color = Reflect.hasField(fmtt, "color") ? FlxColor.fromString(fmtt.color) : text.color;
+			fmt.format.font = Reflect.hasField(fmtt, "font") ? Paths.font(fmtt.font) : text.font;
+			fmt.format.size = Reflect.hasField(fmtt, "size") ? Std.parseInt(fmtt.size) : text.size;
+			fmt.format.italic = Reflect.hasField(fmtt, "italic") ? fmtt.italic == "true" : text.italic;
+			fmt.format.bold = Reflect.hasField(fmtt, "bold") ? fmtt.bold == "true" : text.bold;
+			fmt.borderColor = Reflect.hasField(fmtt, "borderColor") ? FlxColor.fromString(fmtt.borderColor) : text.borderColor;
+			fmt.format.align = Reflect.hasField(fmtt, "align") ? TextFormatAlign.fromString(fmtt.align) : FlxTextAlign.toOpenFL(text.alignment);
+
+			if(Reflect.hasField(fmtt, "leading")) fmt.format.leading = Std.parseInt(fmtt.leading);
+			if(Reflect.hasField(fmtt, "kerning")) fmt.format.kerning = fmtt.kerning == "true";
+			if(Reflect.hasField(fmtt, "blockIndent")) fmt.format.blockIndent = Std.parseInt(fmtt.blockIndent);
+			if(Reflect.hasField(fmtt, "bullet")) fmt.format.bullet = fmtt.bullet == "true";
+			if(Reflect.hasField(fmtt, "indent")) fmt.format.indent = Std.parseInt(fmtt.indent);
+			if(Reflect.hasField(fmtt, "leftMargin")) fmt.format.leftMargin = Std.parseInt(fmtt.leftMargin);
+			if(Reflect.hasField(fmtt, "letterSpacing")) fmt.format.letterSpacing = Std.parseFloat(fmtt.letterSpacing);
+			if(Reflect.hasField(fmtt, "rightMargin")) fmt.format.rightMargin = Std.parseInt(fmtt.rightMargin);
+			if(Reflect.hasField(fmtt, "tabStops")) fmt.format.tabStops = [for(x in cast(fmtt.tabStops, String).split(",")) Std.parseInt(x)];
+			if(Reflect.hasField(fmtt, "underline")) fmt.format.underline = fmtt.underline == "true";
+			text.addFormat(fmt, start, end);
+		}
+		return text;
+	}
+
+	/**
 	 * Loads an animated graphic, and automatically animates it.
 	 * @param spr Sprite to load the graphic for
 	 * @param path Path to the graphic
@@ -618,7 +662,7 @@ class CoolUtil
 		frontEnd.music = music;
 	}
 
-	public static inline function flxeaseFromString(mainEase:String, suffix:String)
+	@:noUsing public static inline function flxeaseFromString(mainEase:String, suffix:String)
 		return Reflect.field(FlxEase, mainEase + (mainEase == "linear" ? "" : suffix));
 }
 

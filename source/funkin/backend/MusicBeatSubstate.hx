@@ -220,7 +220,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 					var path = Paths.script('data/states/${scriptName}/LIB_$i');
 					var script = Script.create(path);
 					if (script is DummyScript) continue;
-					script.fileName = '$i:$scriptName';
+					script.remappedNames.set(script.fileName, '$i:${script.fileName}');
 					stateScripts.add(script);
 					script.load();
 				}
