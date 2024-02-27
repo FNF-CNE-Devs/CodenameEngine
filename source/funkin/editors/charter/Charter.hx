@@ -530,7 +530,6 @@ class Charter extends UIState {
 		refreshBPMSensitive();
 
 		// Undo Stuffs :D
-		__relinkSelection();
 		__relinkUndos();
 		__applyPlaytestInfo();
 	}
@@ -588,7 +587,8 @@ class Charter extends UIState {
 				}
 			});
 		}
-		for(n in selection) n.selected = true;
+		selection = __fixSelection(selection);
+		for(s in selection) s.selected = true;
 
 		/**
 		 * NOTE DRAG HANDLING
@@ -624,6 +624,8 @@ class Charter extends UIState {
 									if (n.handleSelection(selectionBox))
 										selection.push(n);
 						}
+
+						selection = __fixSelection(selection);
 						gridActionType = NONE;
 					}
 				}
@@ -1575,9 +1577,15 @@ class Charter extends UIState {
 	public inline function hitsoundsEnabled(id:Int)
 		return strumLines.members[id] != null && strumLines.members[id].hitsounds;
 
+	public inline function __fixSelection(selection:Selection):Selection {
+		var newSelection:Selection = new Selection();
+		for (s in selection) if (newSelection.indexOf(s) == -1) newSelection.push(s);
+		return newSelection.filter((s:ICharterSelectable) -> {return s != null;});
+	}
+
 	// UH OH!!! DANGER ZONE APPOARCHING !!!! LUNARS SHITTY CODE !!!! -lunar
 
-	@:noCompletion public function __fixSingleSelection(selectable:ICharterSelectable):ICharterSelectable {
+	@:noCompletion public function __relinkSingleSelection(selectable:ICharterSelectable):ICharterSelectable {
 		if (selectable is CharterNote)
 			return selectable.ID == -1 ? cast(selectable, CharterNote) : notesGroup.members[selectable.ID];
 		else if (selectable is CharterEvent)
@@ -1585,30 +1593,29 @@ class Charter extends UIState {
 		return null;
 	}
 
-	@:noCompletion public function __fixSelection(selection:Selection) @:privateAccess {
+	@:noCompletion public function __relinkSelection(selection:Selection) @:privateAccess {
 		var newSelection:Selection = new Selection();
 		for (i => selectable in selection)
-			newSelection[i] = __fixSingleSelection(selectable);
+			newSelection[i] = __relinkSingleSelection(selectable);
 		return newSelection;
 	}
 
-	@:noCompletion public inline function __relinkSelection()
-		selection = __fixSelection(selection);
-
 	@:noCompletion public inline function __relinkUndos() {
+		selection = __relinkSelection(selection);
+
 		for (list => changeList in [undos.undoList, undos.redoList]) {
 			var newChanges:Array<CharterChange> = [];
 			for (i => change in changeList) {
 				switch (change) {
 					case CCreateSelection(selection):
-						newChanges[i] = CCreateSelection(__fixSelection(selection));
+						newChanges[i] = CCreateSelection(__relinkSelection(selection));
 					case CDeleteSelection(selection):
-					 	newChanges[i] = CDeleteSelection(__fixSelection(selection));
+					 	newChanges[i] = CDeleteSelection(__relinkSelection(selection));
 					case CSelectionDrag(selectionDrags):
 						newChanges[i] = CSelectionDrag([
 							for (selectionDrag in selectionDrags)
 								{
-									selectable: __fixSingleSelection(selectionDrag.selectable), 
+									selectable: __relinkSingleSelection(selectionDrag.selectable), 
 									change: selectionDrag.change
 								}
 						]);
@@ -1616,17 +1623,17 @@ class Charter extends UIState {
 						newChanges[i] = CEditSustains([
 							for (noteChange in noteChanges)
 								{
-									note: cast(__fixSingleSelection(noteChange.note), CharterNote),
+									note: cast(__relinkSingleSelection(noteChange.note), CharterNote),
 									before: noteChange.before,
 									after: noteChange.after
 								}
 						]);
 					case CEditEvent(event, oldEvents, newEvents):
-						newChanges[i] = CEditEvent(cast(__fixSingleSelection(event), CharterEvent), oldEvents, newEvents);
+						newChanges[i] = CEditEvent(cast(__relinkSingleSelection(event), CharterEvent), oldEvents, newEvents);
 					case CEditSpecNotesType(notesChanged, oldNoteTypes, newNoteTypes):
 						newChanges[i] = CEditSpecNotesType([
 							for (noteChanged in notesChanged)
-								cast(__fixSingleSelection(noteChanged), CharterNote)
+								cast(__relinkSingleSelection(noteChanged), CharterNote)
 						], oldNoteTypes, newNoteTypes);
 					default: newChanges[i] = change;
 				}
