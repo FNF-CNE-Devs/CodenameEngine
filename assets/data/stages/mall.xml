@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-stage>
-<stage zoom="0.8" name="mall" folder="stages/mall/">
+<stage zoom="0.8" name="mall" folder="stages/mall/" startCamPosY="450" startCamPosX="500">
 	<sprite name="bg" x="-1000" y="-500" sprite="bgWalls" scroll="0.2"/>
 	
 	<high-memory>

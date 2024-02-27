@@ -1,0 +1,4 @@
+<!DOCTYPE codename-engine-dialogue-character>
+<character sprite="pixel/boyfriend" x="570" y="-599" graphicSizex="1334" antialiasing="false" textSound="pixel/pixelText">
+	<anim name="normal-show" anim="Boyfriend portrait enter instance 10" fps="24" />
+</character>

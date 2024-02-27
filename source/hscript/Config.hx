@@ -11,7 +11,7 @@ class Config {
 	// Runs support for abstract support in these
 	public static final ALLOWED_ABSTRACT_AND_ENUM = [
 		"flixel",
-		"openfl.display.BlendMode",
+		"openfl",
 
 		"haxe.xml",
 		"haxe.CallStack",

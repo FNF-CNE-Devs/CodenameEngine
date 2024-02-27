@@ -20,7 +20,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	public var characterName:String;
 	public var gameOverSong:String;
-	public var gameOverSongBPM:Int;
+	public var gameOverSongBPM:Float;
 	public var lossSFXName:String;
 	public var retrySFX:String;
 	public var player:Bool;

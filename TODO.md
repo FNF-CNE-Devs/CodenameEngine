@@ -41,7 +41,7 @@
 - [ ] New Switch Mod menu
 - [x] Port shader camera stuff over to new flixel fork
 - [ ] Add note offset
-- [ ] Dialogue
+- [x] Dialogue
 - [ ] Finish Base Game port
 - [x] Add credits
 - [ ] Verbose mode (`--verbose`)

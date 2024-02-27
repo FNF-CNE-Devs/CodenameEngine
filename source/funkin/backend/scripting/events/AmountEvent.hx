@@ -7,7 +7,7 @@ final class AmountEvent extends CancellableEvent {
 	public var amount:Int;
 
 	/**
-	 * Shows wether or not psych users complained about this class
+	 * Shows whether or not psych users complained about this class
 	 */
 	public var psychUsersComplained:Bool = true;
 }

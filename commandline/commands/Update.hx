@@ -34,18 +34,14 @@ class Update {
 		}
 
 		for(lib in libs) {
-			// install libs
-		var globalism = lib.global == "true" ? "--global" : "";
+			var globalism:Null<String> = lib.global == "true" ? "--global" : null;
 			switch(lib.type) {
 				case "lib":
 					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}"...');
-					Sys.command('haxelib $globalism install ${lib.name} ${lib.version != null ? " " + lib.version : " "}');
+					Sys.command('haxelib install ${lib.name} ${lib.version != null ? " " + lib.version : " "}${globalism != null ? ' $globalism' : ''} --always');
 				case "git":
 					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}" from git url "${lib.url}"');
-					if (lib.ref != null)
-						Sys.command('haxelib $globalism git ${lib.name} ${lib.url} ${lib.ref}');
-					else
-						Sys.command('haxelib $globalism git ${lib.name} ${lib.url}');
+					Sys.command('haxelib git ${lib.name} ${lib.url}${lib.ref != null ? ' ${lib.ref}' : ''}${globalism != null ? ' $globalism' : ''} --always');
 				default:
 					prettyPrint('Cannot resolve library of type "${lib.type}"');
 			}
