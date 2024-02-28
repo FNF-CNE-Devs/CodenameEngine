@@ -520,7 +520,7 @@ class PlayState extends MusicBeatState
 	@:dox(hide) override public function create()
 	{
 		Note.__customNoteTypeExists = [];
-		// SCRIPTING & DATA INITIALISATION
+		// SCRIPTING & DATA INITIALIZATION
 		#if REGION
 		instance = this;
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
@@ -557,23 +557,19 @@ class PlayState extends MusicBeatState
 		detailsPausedText = "Paused - " + detailsText;
 		#end
 
-		// CHARACTER INITIALISATION
+		// CHARACTER INITIALIZATION
 		#if REGION
 		comboGroup = new RotatingSpriteGroup(FlxG.width * 0.55, (FlxG.height * 0.5) - 60);
 		comboGroup.maxSize = 25;
 		#end
 
-		// CAMERA, SCRIPTS & STAGE INITIALISATION
+		// CAMERA FOLLOW, SCRIPTS & STAGE INITIALIZATION
 		#if REGION
 		camFollow = new FlxObject(0, 0, 2, 2);
 		add(camFollow);
 
 		if (SONG.stage == null || SONG.stage.trim() == "") SONG.stage = "stage";
 		add(stage = new Stage(SONG.stage));
-
-		FlxG.camera.follow(camFollow, LOCKON, 0.04);
-		FlxG.camera.zoom = defaultCamZoom;
-		// camHUD.zoom = defaultHudZoom;
 
 		if (!chartingMode || Options.charterEnablePlaytestScripts) {
 			switch(SONG.meta.name) {
@@ -616,7 +612,7 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-		// STRUMS & NOTES INITIALISATION
+		// STRUMS & NOTES INITIALIZATION
 		#if REGION
 		strumLine = new FlxObject(0, 50, FlxG.width, 10);
 		strumLine.scrollFactor.set();
@@ -678,7 +674,7 @@ class PlayState extends MusicBeatState
 		scripts.call("create");
 		#end
 
-		// HUD INITIALISATION & CAMERA FINALISATION
+		// HUD INITIALIZATION & CAMERA INITIALIZATION
 		#if REGION
 		var event = EventManager.get(AmountEvent).recycle(4);
 		if (!scripts.event("onPreGenerateStrums", event).cancelled) {
@@ -689,7 +685,10 @@ class PlayState extends MusicBeatState
 		for(str in strumLines)
 			str.generate(str.data, (chartingMode && Charter.startHere) ? Charter.startTime : null);
 
-		// Its after all of that code for scripts stuff  - Nex
+		FlxG.camera.follow(camFollow, LOCKON, 0.04);
+		FlxG.camera.zoom = defaultCamZoom;
+		// camHUD.zoom = defaultHudZoom;
+
 		if (smoothTransitionData != null && smoothTransitionData.stage == curStage) {
 			FlxG.camera.scroll.set(smoothTransitionData.camX, smoothTransitionData.camY);
 			FlxG.camera.zoom = smoothTransitionData.camZoom;
