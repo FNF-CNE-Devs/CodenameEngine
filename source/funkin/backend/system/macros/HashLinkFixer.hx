@@ -30,11 +30,11 @@ class HashLinkFixer {
 
 	public static function init() {
 		#if !display
-		#if HL
-		for(apply in applyOn) {
-			compile(apply);
+		if(Context.defined("hl")) {
+			for(apply in applyOn) {
+				compile(apply);
+			}
 		}
-		#end
 		#end
 	}
 

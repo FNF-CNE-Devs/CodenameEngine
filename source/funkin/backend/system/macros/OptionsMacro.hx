@@ -1,6 +1,9 @@
 package funkin.backend.system.macros;
 
 #if macro
+import haxe.macro.Context;
+import haxe.macro.Expr;
+
 using StringTools;
 
 

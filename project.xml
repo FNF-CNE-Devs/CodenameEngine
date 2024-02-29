@@ -103,10 +103,6 @@
 	<!-- Comment this out to disable updates !-->
 	<!-- <define name="UPDATE_CHECKING" unless="web || hl || neko"/> -->
 
-	<!-- Fixes thing with macros -->
-	<define name="HL" if="hl"/>
-	<define name="SYS" if="cpp || hl || neko"/>
-
 	<!-- Comment this out to disable Discord RPC !-->
 	<section if="cpp">
 		<define name="DISCORD_RPC" if="desktop"/>
@@ -143,9 +139,6 @@
 
 	<!-- Comment this out to disable support for custom ndlls. !-->
 	<haxedef name="NDLLS_SUPPORTED" unless="web || iphonesim" />
-
-	<!-- Comment this out to disable support for custom extended classes (data/classes). !-->
-	<define name="SOFTCODED_CLASSES" />
 
 	<!-- Comment this out to disable support for Away3D Flixel Intergration (reduces compile times)-->
 	<define name="THREE_D_SUPPORT" />
@@ -190,10 +183,10 @@
 
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
-		<haxeflag name="--macro" value="funkin.backend.system.macros.ScriptsMacro.addAdditionalClasses()" />
+		<haxeflag name="--macro" value="funkin.backend.system.macros.Macros.addAdditionalClasses()" />
 	</section>
 
-	<haxeflag name="--macro" value="exclude('funkin.backend.system.updating')" unless="UPDATE_CHECKING"/>
+	<haxeflag name="--macro" value="funkin.backend.system.macros.Macros.initMacros()" />
 
 	<!-- Fix compiling issues -->
 	<setenv name="HAXEPATH" value="./"/>
