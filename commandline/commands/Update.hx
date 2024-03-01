@@ -75,13 +75,35 @@ class Update {
 	}
 
 	public static function prettyPrint(text:String) {
+		var lines = text.split("\n");
+		var length = -1;
+		for(line in lines)
+			if(line.length > length)
+				length = line.length;
 		var header = "══════";
-		for(i in 0...(text.length-(text.lastIndexOf("\n")+1)))
+		for(i in 0...length)
 			header += "═";
 		Sys.println("");
 		Sys.println('╔$header╗');
-		Sys.println('║   $text   ║');
+		for(line in lines) {
+			Sys.println('║   ${centerText(line, length)}   ║');
+		}
 		Sys.println('╚$header╝');
+	}
+
+
+	public static function centerText(text:String, width:Int):String {
+		var centerOffset = (width - text.length) / 2;
+		var left = repeat(' ', Math.floor(centerOffset));
+		var right = repeat(' ', Math.ceil(centerOffset));
+		return left + text + right;
+	}
+
+	public static inline function repeat(ch:String, amt:Int) {
+		var str = "";
+		for(i in 0...amt)
+			str += ch;
+		return str;
 	}
 }
 
