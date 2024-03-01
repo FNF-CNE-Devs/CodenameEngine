@@ -9,6 +9,8 @@ import flixel.util.FlxColor;
 
 class CharterNote extends UISprite implements ICharterSelectable {
 	var angleTween:FlxTween;
+	var __doAnim:Bool = false;
+	var __animSpeed:Float = 1;
 
 	private static var colors:Array<FlxColor> = [
 		0xFFC24B99,
@@ -17,10 +19,12 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		0xFFF9393F
 	];
 
-	public var sustainSpr:FlxSprite;
+	public var sustainSpr:UISprite;
+	public var sustainHtibox:UISprite;
+	public var tempSusLength:Float = 0;
+	public var sustainDraggable:Bool = false;
+
 	public var typeText:UIText;
-	var __doAnim:Bool = false;
-	var __animSpeed:Float = 1;
 
 	public var selected:Bool = false;
 	public var draggable:Bool = true;
@@ -34,15 +38,22 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		animation.play("note");
 		this.setUnstretchedGraphicSize(40, 40, false);
 
-		cursor = BUTTON;
-		moves = false;
-
-		sustainSpr = new FlxSprite(10, 40);
-		sustainSpr.makeGraphic(1, 1, -1);
+		sustainSpr = new UISprite(10, 20);
+		sustainSpr.makeSolid(1, 1, -1);
+		sustainSpr.scale.set(10, 0);
 		members.push(sustainSpr);
 
+		sustainHtibox = new UISprite(20, 40);
+		sustainHtibox.makeSolid(1, 1, -1);
+		sustainHtibox.scale.set(20, 20);
+		sustainHtibox.updateHitbox();
+		members.push(sustainHtibox);
+		sustainHtibox.alpha = 0;
+
 		typeText = new UIText(x, y, 0, Std.string(type));
-		//typeText.borderSize = 1.5;
+
+		cursor = sustainSpr.cursor = sustainHtibox.cursor = BUTTON;
+		moves = false;
 	}
 
 	public override function updateButtonHandler() {
@@ -82,11 +93,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 		y = step * 40;
 
-		sustainSpr.scale.set(10, (40 * susLength) + (height/2));
-		sustainSpr.updateHitbox();
-		sustainSpr.exists = susLength != 0;
-		sustainSpr.alpha = alpha;
-		sustainSpr.follow(this, 15, 20);
+		sustainHtibox.exists = susLength == 0;
 
 		if (angleTween != null) angleTween.cancel();
 
@@ -134,8 +141,24 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	var __passed:Bool = false;
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-		if (sustainSpr.exists)
-			sustainSpr.follow(this, 15, 20);
+
+		sustainDraggable = false;
+		if (sustainHtibox.exists) {
+			sustainHtibox.follow(this, 10, height-10);
+
+			UIState.state.updateSpriteRect(sustainHtibox);
+			sustainDraggable = UIState.state.isOverlapping(sustainHtibox, @:privateAccess sustainHtibox.__rect);
+		}
+
+		sustainSpr.scale.set(10, CoolUtil.fpsLerp(sustainSpr.scale.y, (40 * (susLength+tempSusLength)) + ((susLength+tempSusLength) != 0 ? (height/2) : 0), 1/2));
+		sustainSpr.updateHitbox();
+		sustainSpr.follow(this, 15, 20);
+
+		if (!hovered && !sustainDraggable && susLength != 0) {
+			UIState.state.updateSpriteRect(sustainSpr);
+			sustainDraggable = UIState.state.isOverlapping(sustainSpr, @:privateAccess sustainSpr.__rect);
+		}
+
 		if (typeText.exists)
 			typeText.follow(this, 20 - (typeText.frameWidth/2), 20 - (typeText.frameHeight/2));
 
