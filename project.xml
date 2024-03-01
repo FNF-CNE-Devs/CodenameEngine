@@ -96,8 +96,6 @@
 
 	<!-- _________________________________ Engine Settings _______________________________ -->
 
-	<!-- Comment this out to disable multiple windows for editors !-->
-	<define name="ALLOW_MULTITASKING" />
 	<define name="openfl_dpi_aware" />
 
 	<!-- Comment this out to disable updates !-->

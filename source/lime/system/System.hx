@@ -824,7 +824,7 @@ class System
 	}
 }
 
-@:enum private abstract SystemDirectory(Int) from Int to Int from UInt to UInt
+enum abstract SystemDirectory(Int) from Int to Int from UInt to UInt
 {
 	var APPLICATION = 0;
 	var APPLICATION_STORAGE = 1;

@@ -194,12 +194,9 @@ class PauseSubState extends MusicBeatSubstate
 
 		curSelected = event.value;
 
-		var bullShit:Int = 0;
-
-		for (item in grpMenuShit.members)
+		for (i=>item in grpMenuShit.members)
 		{
-			item.targetY = bullShit - curSelected;
-			bullShit++;
+			item.targetY = i - curSelected;
 
 			if (item.targetY == 0)
 				item.alpha = 1;
