@@ -533,7 +533,7 @@ class System
 	@:noCompletion private static function __registerEntryPoint(projectName:String, entryPoint:Function):Void
 	{
 		// executes first!!
-		#if sys
+		#if (sys && !macro)
 		funkin.backend.utils.NativeAPI.registerAsDPICompatible();
 		funkin.backend.system.CommandLineHandler.parseCommandLine(Sys.args());
 		#end

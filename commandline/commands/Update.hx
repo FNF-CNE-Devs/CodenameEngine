@@ -64,8 +64,7 @@ class Update {
 					break;
 				} else if (curHaxeVer[i] > requiredHaxeVer[i]) {
 					prettyPrint("!! WARNING !!"
-					+ "\nHaxeFlixel has incompability issues with the latest version of Haxe, 4.3.0 and above, due to macros."
-					+ "\nProceeding will cause compilation issues related to macros (ex: cannot access flash package in macro)");
+					+ "\nUsing Haxe 4.3.0 and above is currently not recommended due to lack of testing.");
 					Sys.println('');
 					Sys.println('We recommend downgrading back to 4.2.5.');
 					break;
