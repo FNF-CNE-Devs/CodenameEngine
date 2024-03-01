@@ -20,7 +20,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	];
 
 	public var sustainSpr:UISprite;
-	public var sustainHtibox:UISprite;
+	public var sustainHitbox:UISprite;
 	public var tempSusLength:Float = 0;
 	public var sustainDraggable:Bool = false;
 
@@ -43,16 +43,16 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		sustainSpr.scale.set(10, 0);
 		members.push(sustainSpr);
 
-		sustainHtibox = new UISprite(20, 40);
-		sustainHtibox.makeSolid(1, 1, -1);
-		sustainHtibox.scale.set(20, 20);
-		sustainHtibox.updateHitbox();
-		members.push(sustainHtibox);
-		sustainHtibox.alpha = 0;
+		sustainHitbox = new UISprite(20, 40);
+		sustainHitbox.makeSolid(1, 1, -1);
+		sustainHitbox.scale.set(20, 20);
+		sustainHitbox.updateHitbox();
+		members.push(sustainHitbox);
+		sustainHitbox.alpha = 0;
 
 		typeText = new UIText(x, y, 0, Std.string(type));
 
-		cursor = sustainSpr.cursor = sustainHtibox.cursor = BUTTON;
+		cursor = sustainSpr.cursor = sustainHitbox.cursor = BUTTON;
 		moves = false;
 	}
 
@@ -93,7 +93,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 		y = step * 40;
 
-		sustainHtibox.exists = susLength == 0;
+		sustainHitbox.exists = susLength == 0;
 
 		if (angleTween != null) angleTween.cancel();
 
@@ -143,11 +143,11 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		super.update(elapsed);
 
 		sustainDraggable = false;
-		if (sustainHtibox.exists) {
-			sustainHtibox.follow(this, 10, height-10);
+		if (sustainHitbox.exists) {
+			sustainHitbox.follow(this, 10, height-10);
 
-			UIState.state.updateSpriteRect(sustainHtibox);
-			sustainDraggable = UIState.state.isOverlapping(sustainHtibox, @:privateAccess sustainHtibox.__rect);
+			UIState.state.updateSpriteRect(sustainHitbox);
+			sustainDraggable = UIState.state.isOverlapping(sustainHitbox, @:privateAccess sustainHitbox.__rect);
 		}
 
 		sustainSpr.scale.set(10, CoolUtil.fpsLerp(sustainSpr.scale.y, (40 * (susLength+tempSusLength)) + ((susLength+tempSusLength) != 0 ? (height/2) : 0), 1/2));
