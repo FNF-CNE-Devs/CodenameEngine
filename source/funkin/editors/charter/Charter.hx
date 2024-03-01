@@ -768,6 +768,8 @@ class Charter extends UIState {
 					currentCursor = BUTTON;
 					selection.loop(function (n:CharterNote) {
 						n.tempSusLength = Math.max((mousePos.y-dragStartPos.y) / 40, -n.susLength);
+						if (!FlxG.keys.pressed.SHIFT) n.tempSusLength = quantStep(n.tempSusLength);
+						@:privateAccess n.__susInstaLerp = true;
 					});
 				} else {
 					var undoChanges:Array<NoteSustainChange> = [];
@@ -777,6 +779,7 @@ class Charter extends UIState {
 						n.susLength += n.tempSusLength;
 						n.tempSusLength = 0;
 
+						@:privateAccess n.__susInstaLerp = false;
 						n.updatePos(n.step, n.id, n.susLength, n.type);
 						undoChanges.push({before: oldSusLen, after: n.susLength, note: n});
 					});

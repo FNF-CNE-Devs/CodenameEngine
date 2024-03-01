@@ -11,6 +11,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	var angleTween:FlxTween;
 	var __doAnim:Bool = false;
 	var __animSpeed:Float = 1;
+	var __susInstaLerp:Bool = false;
 
 	private static var colors:Array<FlxColor> = [
 		0xFFC24B99,
@@ -150,7 +151,8 @@ class CharterNote extends UISprite implements ICharterSelectable {
 			sustainDraggable = UIState.state.isOverlapping(sustainHitbox, @:privateAccess sustainHitbox.__rect);
 		}
 
-		sustainSpr.scale.set(10, CoolUtil.fpsLerp(sustainSpr.scale.y, (40 * (susLength+tempSusLength)) + ((susLength+tempSusLength) != 0 ? (height/2) : 0), 1/2));
+		var sprLength:Float = (40 * (susLength+tempSusLength)) + ((susLength+tempSusLength) != 0 ? (height/2) : 0);
+		sustainSpr.scale.set(10, __susInstaLerp ? sprLength : CoolUtil.fpsLerp(sustainSpr.scale.y, sprLength, 1/2));
 		sustainSpr.updateHitbox();
 		sustainSpr.follow(this, 15, 20);
 
