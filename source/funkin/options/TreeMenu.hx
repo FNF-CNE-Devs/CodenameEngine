@@ -17,9 +17,10 @@ class TreeMenu extends UIState {
 	public var pathDesc:FunkinText;
 	public var pathBG:FlxSprite;
 
-	public var lastState:Class<FlxState> = Type.getClass(FlxG.state);
+	public static var lastState:Class<FlxState> = null;  // Static for fixing the softlock bugs when resetting the state  - Nex
 
 	public function new() {
+		if(lastState == null) lastState = Type.getClass(FlxG.state);
 		super();
 	}
 
@@ -88,6 +89,7 @@ class TreeMenu extends UIState {
 
 	public function exit() {
 		FlxG.switchState((lastState != null) ? Type.createInstance(lastState, []) : new MainMenuState());
+		lastState = null;
 	}
 
 	public function onMenuClose(m:OptionsScreen) {
