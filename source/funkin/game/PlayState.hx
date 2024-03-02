@@ -1386,12 +1386,13 @@ class PlayState extends MusicBeatState
 	 * @param retrySFX SFX played whenever the player retries. Defaults to `retrySFX` (`gameOverEnd`)
 	 */
 	public function gameOver(?character:Character, ?deathCharID:String, ?gameOverSong:String, ?lossSFX:String, ?retrySFX:String) {
+		var charToUse:Character = character.getDefault(opponentMode ? dad : boyfriend);  // Imma still make it check null later just in case dad or bf are also null for some weird scripts  - Nex
 		var event:GameOverEvent = scripts.event("onGameOver", EventManager.get(GameOverEvent).recycle(
-			character == null ? 0 : character.x,
-			character == null ? 0 : character.y,
-			character.getDefault(opponentMode ? dad : boyfriend),
-			deathCharID.getDefault(character != null ? character.gameOverCharacter : "bf-dead"),
-			character != null ? character.isPlayer : true,
+			charToUse == null ? 0 : charToUse.x,
+			charToUse == null ? 0 : charToUse.y,
+			charToUse,
+			deathCharID.getDefault(charToUse != null ? charToUse.gameOverCharacter : "bf-dead"),
+			charToUse != null ? charToUse.isPlayer : true,
 			gameOverSong.getDefault(this.gameOverSong),
 			lossSFX.getDefault(this.lossSFX),
 			retrySFX.getDefault(this.retrySFX)
