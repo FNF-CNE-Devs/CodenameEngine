@@ -499,7 +499,10 @@ class Charter extends UIState {
 		noteTypes = PlayState.SONG.noteTypes;
 
 		FlxG.sound.setMusic(FlxG.sound.load(Paths.inst(__song, __diff)));
-		vocals = FlxG.sound.load(Paths.voices(__song, __diff));
+		if (PlayState.SONG.meta.needsVoices != false) // null or true
+			vocals = FlxG.sound.load(Paths.voices(__song, __diff));
+		else
+			vocals = new FlxSound();
 		vocals.group = FlxG.sound.defaultMusicGroup;
 
 		gridBackdrops.createGrids(PlayState.SONG.strumLines.length);
