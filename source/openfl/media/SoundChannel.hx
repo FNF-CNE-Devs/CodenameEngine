@@ -63,7 +63,11 @@ import lime.media.AudioSource;
 	@:noCompletion private var __isValid:Bool;
 	@:noCompletion private var __soundTransform:SoundTransform;
 	#if lime
+		#if (openfl < "9.3.2")
 	@:noCompletion private var __source:AudioSource;
+		#else
+	@:noCompletion private var __audioSource:AudioSource;
+		#end
 	#end
 
 	#if openfljs
@@ -101,11 +105,19 @@ import lime.media.AudioSource;
 		#if lime
 		if (source != null)
 		{
+			#if (openfl < "9.3.2")
 			__source = source;
 			__source.onComplete.add(source_onComplete);
 			__isValid = true;
 
 			__source.play();
+			#else
+			__audioSource = source;
+			__audioSource.onComplete.add(source_onComplete);
+			__isValid = true;
+
+			__audioSource.play();
+			#end
 		}
 		#end
 
@@ -122,7 +134,11 @@ import lime.media.AudioSource;
 		if (!__isValid) return;
 
 		#if lime
+			#if (openfl < "9.3.2")
 		__source.stop();
+			#else
+		__audioSource.stop();
+			#end
 		#end
 		__dispose();
 	}
@@ -132,9 +148,15 @@ import lime.media.AudioSource;
 		if (!__isValid) return;
 
 		#if lime
+			#if (openfl < "9.3.2")
 		__source.onComplete.remove(source_onComplete);
 		__source.dispose();
 		__source = null;
+			#else
+		__audioSource.onComplete.remove(source_onComplete);
+		__audioSource.dispose();
+		__audioSource = null;
+			#end
 		#end
 		__isValid = false;
 	}
@@ -150,7 +172,11 @@ import lime.media.AudioSource;
 		if (!__isValid) return 0;
 
 		#if lime
+			#if (openfl < "9.3.2")
 		return __source.currentTime + __source.offset;
+			#else
+		return __audioSource.currentTime + __audioSource.offset;
+			#end
 		#else
 		return 0;
 		#end
@@ -161,7 +187,11 @@ import lime.media.AudioSource;
 		if (!__isValid) return 0;
 
 		#if lime
+			#if (openfl < "9.3.2")
 		__source.currentTime = value - __source.offset;
+			#else
+		__audioSource.currentTime = value - __audioSource.offset;
+			#end
 		#end
 		return value;
 	}
@@ -171,7 +201,11 @@ import lime.media.AudioSource;
 		if (!__isValid) return 1;
 
 		#if lime
+			#if (openfl < "9.3.2")
 		return __source.pitch;
+			#else
+		return __audioSource.pitch;
+			#end
 		#else
 		return 1;
 		#end
@@ -182,7 +216,11 @@ import lime.media.AudioSource;
 		if (!__isValid) return 1;
 
 		#if lime
+			#if (openfl < "9.3.2")
 		__source.pitch = value;
+			#else
+		__audioSource.pitch = value;
+			#end
 		#end
 		return value;
 	}
@@ -209,13 +247,21 @@ import lime.media.AudioSource;
 			if (__isValid)
 			{
 				#if lime
+					#if (openfl < "9.3.2")
 				__source.gain = volume;
 
 				var position = __source.position;
 				position.x = pan;
 				position.z = -1 * Math.sqrt(1 - Math.pow(pan, 2));
 				__source.position = position;
+					#else
+				__audioSource.gain = volume;
 
+				var position = __audioSource.position;
+				position.x = pan;
+				position.z = -1 * Math.sqrt(1 - Math.pow(pan, 2));
+				__audioSource.position = position;
+					#end
 				return value;
 				#end
 			}
