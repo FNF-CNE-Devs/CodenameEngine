@@ -64,6 +64,7 @@ import lime.media.AudioSource;
 	@:noCompletion private var __soundTransform:SoundTransform;
 	#if lime
 	@:noCompletion private var __source:AudioSource;
+	@:noCompletion private var __audioSource(get, set):AudioSource;
 	#end
 
 	#if openfljs
@@ -231,6 +232,14 @@ import lime.media.AudioSource;
 
 		__dispose();
 		dispatchEvent(new Event(Event.SOUND_COMPLETE));
+	}
+
+	function set___audioSource(value:AudioSource):AudioSource {
+		return __source = value;
+	}
+
+	function get___audioSource():AudioSource {
+		return __source;
 	}
 }
 #else
