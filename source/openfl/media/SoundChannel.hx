@@ -63,7 +63,11 @@ import lime.media.AudioSource;
 	@:noCompletion private var __isValid:Bool;
 	@:noCompletion private var __soundTransform:SoundTransform;
 	#if lime
+	#if (openfl < "9.3.2")
 	@:noCompletion private var __source:AudioSource;
+	#else
+	@:noCompletion private var __audioSource:AudioSource;
+	#end
 	#end
 
 	#if openfljs
@@ -101,11 +105,11 @@ import lime.media.AudioSource;
 		#if lime
 		if (source != null)
 		{
-			__source = source;
-			__source.onComplete.add(source_onComplete);
+			setAudioSource(source);
+			getAudioSource().onComplete.add(source_onComplete);
 			__isValid = true;
 
-			__source.play();
+			getAudioSource().play();
 		}
 		#end
 
@@ -122,7 +126,7 @@ import lime.media.AudioSource;
 		if (!__isValid) return;
 
 		#if lime
-		__source.stop();
+		getAudioSource().stop();
 		#end
 		__dispose();
 	}
@@ -132,9 +136,9 @@ import lime.media.AudioSource;
 		if (!__isValid) return;
 
 		#if lime
-		__source.onComplete.remove(source_onComplete);
-		__source.dispose();
-		__source = null;
+		getAudioSource().onComplete.remove(source_onComplete);
+		getAudioSource().dispose();
+		setAudioSource(null);
 		#end
 		__isValid = false;
 	}
@@ -150,7 +154,7 @@ import lime.media.AudioSource;
 		if (!__isValid) return 0;
 
 		#if lime
-		return __source.currentTime + __source.offset;
+		return getAudioSource().currentTime + getAudioSource().offset;
 		#else
 		return 0;
 		#end
@@ -161,7 +165,7 @@ import lime.media.AudioSource;
 		if (!__isValid) return 0;
 
 		#if lime
-		__source.currentTime = value - __source.offset;
+		getAudioSource().currentTime = value - getAudioSource().offset;
 		#end
 		return value;
 	}
@@ -171,7 +175,7 @@ import lime.media.AudioSource;
 		if (!__isValid) return 1;
 
 		#if lime
-		return __source.pitch;
+		return getAudioSource().pitch;
 		#else
 		return 1;
 		#end
@@ -182,7 +186,7 @@ import lime.media.AudioSource;
 		if (!__isValid) return 1;
 
 		#if lime
-		__source.pitch = value;
+		getAudioSource().pitch = value;
 		#end
 		return value;
 	}
@@ -209,12 +213,12 @@ import lime.media.AudioSource;
 			if (__isValid)
 			{
 				#if lime
-				__source.gain = volume;
+				getAudioSource().gain = volume;
 
-				var position = __source.position;
+				var position = getAudioSource().position;
 				position.x = pan;
 				position.z = -1 * Math.sqrt(1 - Math.pow(pan, 2));
-				__source.position = position;
+				getAudioSource().position = position;
 
 				return value;
 				#end
@@ -231,6 +235,25 @@ import lime.media.AudioSource;
 
 		__dispose();
 		dispatchEvent(new Event(Event.SOUND_COMPLETE));
+	}
+
+	// Version-independent audioSource getter & setter (in order to be flexible in future OpenFL versions)
+	@:noCompletion private function getAudioSource():AudioSource
+	{
+		#if (openfl < "9.3.2")
+		return __source;
+		#else
+		return __audioSource;
+		#end
+	}
+
+	@:noCompletion private function setAudioSource(src:AudioSource):Void
+	{
+		#if (openfl < "9.3.2")
+		__source = src;
+		#else
+		__audioSource = src;
+		#end
 	}
 }
 #else
