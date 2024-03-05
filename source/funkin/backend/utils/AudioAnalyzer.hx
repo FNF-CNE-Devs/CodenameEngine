@@ -15,9 +15,9 @@ class AudioAnalyzer {
 
 		__peakByte = Math.pow(2, buffer.bitsPerSample-1)-1;
 
-        __timeMulti = 1 / (1 / buffer.sampleRate);
-        __timeMulti *= buffer.bitsPerSample;
-        __timeMulti -= __timeMulti % buffer.bitsPerSample;
+		__timeMulti = 1 / (1 / buffer.sampleRate);
+		__timeMulti *= buffer.bitsPerSample;
+		__timeMulti -= __timeMulti % buffer.bitsPerSample;
 	}
 
 	public function analyze(startPos:Float, endPos:Float):Float {
@@ -25,16 +25,16 @@ class AudioAnalyzer {
 		var bytesEndPos:Int = Math.floor(endPos * __timeMulti / 4000 / buffer.bitsPerSample) * buffer.bitsPerSample;
 
 		bytesStartPos -= bytesStartPos % buffer.bitsPerSample;
-        bytesEndPos -= bytesEndPos % buffer.bitsPerSample;
+		bytesEndPos -= bytesEndPos % buffer.bitsPerSample;
 
 		var maxByte:Int = 0;
 		for(i in 0...Math.floor((bytesEndPos - bytesStartPos) / buffer.bitsPerSample)) {
-			var byte:Int = buffer.data.buffer.get(bytesStartPos + (i * buffer.bitsPerSample)) 
+			var byte:Int = buffer.data.buffer.get(bytesStartPos + (i * buffer.bitsPerSample))
 			| (buffer.data.buffer.get(bytesStartPos + (i * buffer.bitsPerSample) + 1) << 8);
 			if (byte > 256 * 128) byte -= 256 * 256;
 			if (maxByte < byte) maxByte = byte;
 		}
-		
-        return maxByte/__peakByte;
+
+		return maxByte/__peakByte;
 	}
 }

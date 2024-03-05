@@ -1,7 +1,5 @@
 package funkin.editors.charter;
 
-import openfl.geom.Rectangle;
-import flixel.util.FlxSpriteUtil;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOptionSpr;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.editors.charter.CharterStrumline;
@@ -10,20 +8,14 @@ import funkin.backend.system.framerate.Framerate;
 import haxe.Json;
 import flixel.input.keyboard.FlxKey;
 import flixel.sound.FlxSound;
-import flixel.util.FlxSort;
 import flixel.math.FlxPoint;
 import funkin.editors.charter.CharterBackdropGroup.CharterBackdropDummy;
 import funkin.backend.system.Conductor;
 import funkin.backend.chart.*;
 import funkin.backend.chart.ChartData;
-import openfl.display.BitmapData;
-import flixel.util.FlxColor;
 import flixel.addons.display.FlxBackdrop;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UIState;
-import openfl.net.FileReference;
-
-using flixel.util.FlxColor;
 
 class Charter extends UIState {
 	public static var __song:String;

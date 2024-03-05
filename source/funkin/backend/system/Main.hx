@@ -15,7 +15,6 @@ import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import lime.app.Application;
 import funkin.backend.system.modules.*;
 
 #if ALLOW_MULTITHREADING

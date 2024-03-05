@@ -1,9 +1,5 @@
 package funkin.options.keybinds;
 
-import flixel.effects.FlxFlicker;
-import funkin.backend.system.Controls;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
 
 class ChangeKeybindSubState extends MusicBeatSubstate {
@@ -27,7 +23,7 @@ class ChangeKeybindSubState extends MusicBeatSubstate {
 		if (cast(key, Int) <= 0) return;
 
 		if (key == ESCAPE && !FlxG.keys.pressed.SHIFT) {
-			close();	
+			close();
 			cancelCallback();
 			return;
 		}

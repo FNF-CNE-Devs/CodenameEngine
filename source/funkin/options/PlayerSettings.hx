@@ -29,9 +29,6 @@ class  PlayerSettings
 	public var controls:Controls;
 	#end
 
-	// public var avatar:Player;
-	// public var camera(get, never):PlayCamera;
-
 	function new(id, scheme)
 	{
 		this.id = id;
@@ -42,7 +39,7 @@ class  PlayerSettings
 	{
 		controls.setKeyboardScheme(scheme);
 	}
-	
+
 	static public function init():Void
 	{
 		if (solo == null)
