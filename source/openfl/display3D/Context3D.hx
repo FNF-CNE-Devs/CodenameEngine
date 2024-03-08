@@ -27,6 +27,7 @@ import openfl.utils._internal.UInt8Array;
 import openfl.utils.AGALMiniAssembler;
 import openfl.utils.ByteArray;
 #if lime
+import lime.graphics.opengl.GL;
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
 import lime.graphics.RenderContext;
@@ -271,7 +272,7 @@ import lime.math.Vector2;
 	@:noCompletion private var __enableErrorChecking:Bool;
 	@:noCompletion private var __fragmentConstants:Float32Array;
 	@:noCompletion private var __frontBufferTexture:RectangleTexture;
-	@:noCompletion private var __positionScale:Float32Array;
+	@:noCompletion private var __positionScale:Float32Array; // TODO: Better approach?
 	@:noCompletion private var __present:Bool;
 	@:noCompletion private var __programs:Map<String, Program3D>;
 	@:noCompletion private var __quadIndexBuffer:IndexBuffer3D;
@@ -1446,7 +1447,7 @@ import lime.math.Vector2;
 			var isVertex = (programType == VERTEX);
 			var dest = isVertex ? __vertexConstants : __fragmentConstants;
 
-			var floatData = Float32Array.fromBytes(data, 0, data.length);
+			var floatData = Float32Array.fromBytes(data, 0);
 			var outOffset = firstRegister * 4;
 			var inOffset = Std.int(byteArrayOffset / 4);
 
