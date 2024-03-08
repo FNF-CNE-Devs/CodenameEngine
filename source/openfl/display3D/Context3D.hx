@@ -291,7 +291,11 @@ import lime.math.Vector2;
 		__stage3D = stage3D;
 
 		__context = stage.window.context;
+		#if (js && html5 && dom)
+		gl = GL.context;
+		#else
 		gl = __context.webgl;
+		#end
 
 		if (__contextState == null) __contextState = new Context3DState();
 		__state = new Context3DState();
@@ -575,6 +579,14 @@ import lime.math.Vector2;
 	public function configureBackBuffer(width:Int, height:Int, antiAlias:Int, enableDepthAndStencil:Bool = true, wantsBestResolution:Bool = false,
 			wantsBestResolutionOnBrowserZoom:Bool = false):Void
 	{
+		#if !openfl_dpi_aware
+		if (wantsBestResolution)
+		{
+			width = Std.int(width * __stage.window.scale);
+			height = Std.int(height * __stage.window.scale);
+		}
+		#end
+
 		if (__stage3D == null)
 		{
 			backBufferWidth = width;
@@ -600,7 +612,16 @@ import lime.math.Vector2;
 					__stage3D.__vertexBuffer = createVertexBuffer(4, 5);
 				}
 
-				var vertexData = new Vector<Float>([width, height, 0, 1, 1, 0, height, 0, 0, 1, width, 0, 0, 1, 0, 0, 0, 0, 0, 0.0]);
+				#if openfl_dpi_aware
+				var scaledWidth = width;
+				var scaledHeight = height;
+				#else
+				var scaledWidth = wantsBestResolution ? width : Std.int(width * __stage.window.scale);
+				var scaledHeight = wantsBestResolution ? height : Std.int(height * __stage.window.scale);
+				#end
+				var vertexData = new Vector<Float>([
+					scaledWidth, scaledHeight, 0, 1, 1, 0, scaledHeight, 0, 0, 1, scaledWidth, 0, 0, 1, 0, 0, 0, 0, 0, 0.0
+				]);
 
 				__stage3D.__vertexBuffer.uploadFromVector(vertexData, 0, 20);
 
@@ -1000,6 +1021,8 @@ import lime.math.Vector2;
 	**/
 	public function dispose(recreate:Bool = true):Void
 	{
+		// TODO: Dispose all related buffers
+
 		gl = null;
 		__dispose();
 	}
@@ -1172,12 +1195,14 @@ import lime.math.Vector2;
 		#if !openfl_disable_display_render
 		if (__state.renderToTexture == null)
 		{
+			// TODO: Make sure state is correct for this?
 			if (__stage.context3D == this && !__stage.__renderer.__cleared)
 			{
 				__stage.__renderer.__clear();
 			}
 			else if (!__cleared)
 			{
+				// TODO: Throw error if error reporting is enabled?
 				clear(0, 0, 0, 0, 1, 0, Context3DClearMask.COLOR);
 			}
 		}
@@ -1223,7 +1248,7 @@ import lime.math.Vector2;
 			if (!__cleared)
 			{
 				// Make sure texture is initialized
-				// BASE-TODO: Throw error if error reporting is enabled?
+				// TODO: Throw error if error reporting is enabled?
 				clear(0, 0, 0, 0, 1, 0, Context3DClearMask.COLOR);
 			}
 
@@ -1284,7 +1309,7 @@ import lime.math.Vector2;
 		__state.blendSourceAlphaFactor = sourceAlphaFactor;
 		__state.blendDestinationAlphaFactor = destinationAlphaFactor;
 
-		// BASE-TODO: Better way to handle this?
+		// TODO: Better way to handle this?
 		__setGLBlendEquation(gl.FUNC_ADD);
 	}
 
@@ -1363,7 +1388,7 @@ import lime.math.Vector2;
 	public function setProgram(program:Program3D):Void
 	{
 		__state.program = program;
-		__state.shader = null; // BASE-TODO: Merge this logic
+		__state.shader = null; // TODO: Merge this logic
 
 		if (program != null)
 		{
@@ -1407,11 +1432,11 @@ import lime.math.Vector2;
 
 		if (__state.program != null && __state.program.__format == GLSL)
 		{
-			// BASE-TODO
+			// TODO
 		}
 		else
 		{
-			// BASE-TODO: Cleanup?
+			// TODO: Cleanup?
 
 			if (numRegisters == -1)
 			{
@@ -1465,7 +1490,7 @@ import lime.math.Vector2;
 		{
 			__flushGLProgram();
 
-			// BASE-TODO: Cache value, prevent need to copy
+			// TODO: Cache value, prevent need to copy
 			var data = new Float32Array(16);
 			for (i in 0...16)
 			{
@@ -1867,6 +1892,8 @@ import lime.math.Vector2;
 	**/
 	public function setVertexBufferAt(index:Int, buffer:VertexBuffer3D, bufferOffset:Int = 0, format:Context3DVertexBufferFormat = FLOAT_4):Void
 	{
+		if (index < 0) return;
+
 		if (buffer == null)
 		{
 			gl.disableVertexAttribArray(index);
@@ -1930,7 +1957,7 @@ import lime.math.Vector2;
 
 	@:noCompletion private function __bindGLTexture2D(texture:GLTexture):Void
 	{
-		// BASE-TODO: Need to consider activeTexture ID
+		// TODO: Need to consider activeTexture ID
 
 		// if (#if openfl_disable_context_cache true #else __contextState.__currentGLTexture2D != texture #end) {
 
@@ -1942,7 +1969,7 @@ import lime.math.Vector2;
 
 	@:noCompletion private function __bindGLTextureCubeMap(texture:GLTexture):Void
 	{
-		// BASE-TODO: Need to consider activeTexture ID
+		// TODO: Need to consider activeTexture ID
 
 		// if (#if openfl_disable_context_cache true #else __contextState.__currentGLTextureCubeMap != texture #end) {
 
@@ -1981,14 +2008,14 @@ import lime.math.Vector2;
 		#if !openfl_disable_display_render
 		if (__state.renderToTexture == null)
 		{
-			// BASE-TODO: Make sure state is correct for this?
+			// TODO: Make sure state is correct for this?
 			if (__stage.context3D == this && !__stage.__renderer.__cleared)
 			{
 				__stage.__renderer.__clear();
 			}
 			else if (!__cleared)
 			{
-				// BASE-TODO: Throw error if error reporting is enabled?
+				// TODO: Throw error if error reporting is enabled?
 				clear(0, 0, 0, 0, 1, 0, Context3DClearMask.COLOR);
 			}
 		}
@@ -2184,7 +2211,7 @@ import lime.math.Vector2;
 
 		if (#if openfl_disable_context_cache true #else __contextState.shader != shader #end)
 		{
-			// BASE-TODO: Merge this logic
+			// TODO: Merge this logic
 
 			if (__contextState.shader != null)
 			{
@@ -2240,11 +2267,20 @@ import lime.math.Vector2;
 			var scissorY = Std.int(__state.scissorRectangle.y);
 			var scissorWidth = Std.int(__state.scissorRectangle.width);
 			var scissorHeight = Std.int(__state.scissorRectangle.height);
+			#if !openfl_dpi_aware
+			if (__backBufferWantsBestResolution)
+			{
+				scissorX = Std.int(__state.scissorRectangle.x * __stage.window.scale);
+				scissorY = Std.int(__state.scissorRectangle.y * __stage.window.scale);
+				scissorWidth = Std.int(__state.scissorRectangle.width * __stage.window.scale);
+				scissorHeight = Std.int(__state.scissorRectangle.height * __stage.window.scale);
+			}
+			#end
 
 			if (__state.renderToTexture == null && __stage3D == null)
 			{
 				var contextHeight = Std.int(__stage.window.height * __stage.window.scale);
-				scissorY = contextHeight - Std.int(__state.scissorRectangle.height) - scissorY;
+				scissorY = contextHeight - scissorHeight - scissorY;
 			}
 
 			if (#if openfl_disable_context_cache true #else __contextState.scissorRectangle.x != scissorX
@@ -2312,7 +2348,7 @@ import lime.math.Vector2;
 			{
 				// if (#if openfl_disable_context_cache true #else texture != __contextState.textures[i] #end) {
 
-				// BASE-TODO: Cleaner approach?
+				// TODO: Cleaner approach?
 				if (texture.__textureTarget == gl.TEXTURE_2D)
 				{
 					__bindGLTexture2D(texture.__getTexture());
@@ -2323,7 +2359,7 @@ import lime.math.Vector2;
 				}
 
 				#if (desktop && !html5)
-				// BASE-TODO: Cache?
+				// TODO: Cache?
 				gl.enable(gl.TEXTURE_2D);
 				#end
 
@@ -2357,7 +2393,7 @@ import lime.math.Vector2;
 					gl.uniform1i(__state.program.__agalAlphaSamplerEnabled[sampler].location, 1);
 
 					#if (desktop && !html5)
-					// BASE-TODO: Cache?
+					// TODO: Cache?
 					gl.enable(gl.TEXTURE_2D);
 					#end
 				}
@@ -2377,15 +2413,24 @@ import lime.math.Vector2;
 
 	@:noCompletion private function __flushGLViewport():Void
 	{
-		// BASE-TODO: Cache
+		// TODO: Cache
 
 		if (__state.renderToTexture == null)
 		{
 			if (__stage.context3D == this)
 			{
+				var scaledBackBufferWidth = backBufferWidth;
+				var scaledBackBufferHeight = backBufferHeight;
+				#if !openfl_dpi_aware
+				if (__stage3D == null && !__backBufferWantsBestResolution)
+				{
+					scaledBackBufferWidth = Std.int(backBufferWidth * __stage.window.scale);
+					scaledBackBufferHeight = Std.int(backBufferHeight * __stage.window.scale);
+				}
+				#end
 				var x = __stage3D == null ? 0 : Std.int(__stage3D.x);
-				var y = Std.int((__stage.window.height * __stage.window.scale) - backBufferHeight - (__stage3D == null ? 0 : __stage3D.y));
-				gl.viewport(x, y, backBufferWidth, backBufferHeight);
+				var y = Std.int((__stage.window.height * __stage.window.scale) - scaledBackBufferHeight - (__stage3D == null ? 0 : __stage3D.y));
+				gl.viewport(x, y, scaledBackBufferWidth, scaledBackBufferHeight);
 			}
 			else
 			{
@@ -2396,7 +2441,7 @@ import lime.math.Vector2;
 		{
 			var width = 0, height = 0;
 
-			// BASE-TODO: Avoid use of Std.is
+			// TODO: Avoid use of Std.is
 			if ((__state.renderToTexture is Texture))
 			{
 				var texture2D:Texture = cast __state.renderToTexture;
@@ -2460,7 +2505,7 @@ import lime.math.Vector2;
 			case GREATER: gl.GREATER;
 			case GREATER_EQUAL: gl.GEQUAL;
 			case LESS: gl.LESS;
-			case LESS_EQUAL: gl.LEQUAL; // BASE-TODO : wrong value
+			case LESS_EQUAL: gl.LEQUAL; // TODO : wrong value
 			case NEVER: gl.NEVER;
 			case NOT_EQUAL: gl.NOTEQUAL;
 			default: gl.EQUAL;
@@ -2655,7 +2700,7 @@ import lime.math.Vector2;
 	{
 		if (__glMemoryCurrentAvailable != -1)
 		{
-			// BASE-TODO: Return amount used by this application only
+			// TODO: Return amount used by this application only
 			var current = gl.getParameter(__glMemoryCurrentAvailable);
 			var total = gl.getParameter(__glMemoryTotalAvailable);
 
