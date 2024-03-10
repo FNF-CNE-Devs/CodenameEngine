@@ -541,7 +541,6 @@ class Charter extends UIState {
 		for(e in eventsGroup.members)
 			e.refreshEventIcons();
 
-
 		buildNoteTypesUI();
 		refreshBPMSensitive();
 
@@ -1503,7 +1502,7 @@ class Charter extends UIState {
 			if (s is CharterNote) {
 				var n:CharterNote = cast s;
 				var old:Float = n.susLength;
-				n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0));
+				n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0), n.type);
 				undoChanges.push({before: old, after: n.susLength, note: n});
 			}
 
