@@ -21,7 +21,6 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	];
 
 	public var sustainSpr:UISprite;
-	public var sustainHitbox:UISprite;
 	public var tempSusLength:Float = 0;
 	public var sustainDraggable:Bool = false;
 
@@ -44,16 +43,9 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		sustainSpr.scale.set(10, 0);
 		members.push(sustainSpr);
 
-		sustainHitbox = new UISprite(20, 40);
-		sustainHitbox.makeSolid(1, 1, -1);
-		sustainHitbox.scale.set(20, 20);
-		sustainHitbox.updateHitbox();
-		members.push(sustainHitbox);
-		sustainHitbox.alpha = 0;
-
 		typeText = new UIText(x, y, 0, Std.string(type));
 
-		cursor = sustainSpr.cursor = sustainHitbox.cursor = BUTTON;
+		cursor = sustainSpr.cursor = BUTTON;
 		moves = false;
 	}
 
@@ -93,8 +85,6 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		typeText.follow(this, 20 - (typeText.frameWidth/2), 20 - (typeText.frameHeight/2));
 
 		y = step * 40;
-
-		sustainHitbox.exists = susLength == 0;
 
 		if (angleTween != null) angleTween.cancel();
 
@@ -143,20 +133,13 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		sustainDraggable = false;
-		if (sustainHitbox.exists) {
-			sustainHitbox.follow(this, 10, height-10);
-
-			UIState.state.updateSpriteRect(sustainHitbox);
-			sustainDraggable = UIState.state.isOverlapping(sustainHitbox, @:privateAccess sustainHitbox.__rect);
-		}
-
 		var sprLength:Float = (40 * (susLength+tempSusLength)) + ((susLength+tempSusLength) != 0 ? (height/2) : 0);
 		sustainSpr.scale.set(10, __susInstaLerp ? sprLength : CoolUtil.fpsLerp(sustainSpr.scale.y, sprLength, 1/2));
 		sustainSpr.updateHitbox();
 		sustainSpr.follow(this, 15, 20);
 
-		if (!hovered && !sustainDraggable && susLength != 0) {
+		sustainDraggable = false;
+		if (!hovered && susLength != 0) {
 			UIState.state.updateSpriteRect(sustainSpr);
 			sustainDraggable = UIState.state.isOverlapping(sustainSpr, @:privateAccess sustainSpr.__rect);
 		}

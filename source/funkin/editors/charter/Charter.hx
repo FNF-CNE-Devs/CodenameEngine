@@ -590,11 +590,7 @@ class Charter extends UIState {
 				if (gridActionType == NONE) {
 					if (s is CharterNote) {
 						var n:CharterNote = cast s;
-
-						if (n.sustainDraggable) { // So it feels smoother :D -lunar
-							if (FlxG.mouse.justPressed && !selection.contains(s)) select(cast s);
-						} else if (FlxG.mouse.justReleased && s.hovered) select(cast s);
-
+						if ((n.hovered || n.sustainDraggable) && FlxG.mouse.justReleased) select(cast s);
 					} else if (FlxG.mouse.justReleased && s.hovered) select(cast s);
 				}
 			});
@@ -762,9 +758,12 @@ class Charter extends UIState {
 				if (selectionDragging) {
 					currentCursor = BUTTON;
 					selection.loop(function (n:CharterNote) {
-						n.tempSusLength = Math.max((mousePos.y-dragStartPos.y) / 40, -n.susLength);
-						if (!FlxG.keys.pressed.SHIFT) n.tempSusLength = quantStep(n.tempSusLength);
-						@:privateAccess n.__susInstaLerp = true;
+						var change:Float = Math.max((mousePos.y-(FlxG.keys.pressed.SHIFT ? dragStartPos.y : quantStep(dragStartPos.y))) / 40, -n.susLength);
+						n.tempSusLength = change;
+
+						if (!FlxG.keys.pressed.SHIFT) 
+							n.tempSusLength -= (n.susLength + change) - quantStepRounded(n.susLength + change, change > 0 ? 0.35 : 0.65);
+						@:privateAccess n.__susInstaLerp = FlxG.keys.pressed.SHIFT;
 					});
 				} else {
 					var undoChanges:Array<NoteSustainChange> = [];

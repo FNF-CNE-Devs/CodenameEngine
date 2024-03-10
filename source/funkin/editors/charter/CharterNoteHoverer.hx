@@ -7,7 +7,7 @@ class CharterNoteHoverer extends CharterNote {
 		super();
 
 		snappedToStrumline = selectable = autoAlpha = false; visible = sustainSpr.visible = false;
-		@:privateAccess __animSpeed = 1.25; typeText.visible = false; alpha = 0.4; sustainHitbox.exists = false;
+		@:privateAccess __animSpeed = 1.25; typeText.visible = false; alpha = 0.4;
 	}
 
 	@:noCompletion var __mousePos:FlxPoint = FlxPoint.get();
