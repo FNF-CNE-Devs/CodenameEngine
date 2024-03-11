@@ -1,7 +1,9 @@
 package lime.utils;
 
 import haxe.PosInfos;
+#if !macro
 import funkin.backend.system.Logs as FunkinLogs;
+#end
 
 #if !lime_debug
 @:fileXml('tags="haxe,release"')
@@ -30,14 +32,23 @@ class Log
 		{
 			var message = '[${info.className}] $message';
 
+			#if !macro
 			FunkinLogs.trace(message, ERROR, RED);
+			#else
+			trace(message);
+			#end
 		}
 	}
 
 	public static function info(message:Dynamic, ?info:PosInfos):Void
 	{
-		if (level >= LogLevel.INFO)
+		if (level >= LogLevel.INFO) {
+			#if !macro
 			FunkinLogs.trace('[${info.className}] $message', INFO, RED);
+			#else
+			trace('[${info.className}] $message');
+			#end
+		}
 	}
 
 	public static inline function print(message:Dynamic):Void
@@ -68,15 +79,24 @@ class Log
 
 	public static function verbose(message:Dynamic, ?info:PosInfos):Void
 	{
-		if (level >= LogLevel.VERBOSE)
+		if (level >= LogLevel.VERBOSE) {
+			#if !macro
 			FunkinLogs.trace('[${info.className}] $message', VERBOSE);
+			#else
+			trace('[${info.className}] $message');
+			#end
+		}
 	}
 
 	public static function warn(message:Dynamic, ?info:PosInfos):Void
 	{
 		if (level >= LogLevel.WARN)
 		{
+			#if !macro
 			FunkinLogs.trace('[${info.className}] $message', WARNING, YELLOW);
+			#else
+			trace('[${info.className}] $message');
+			#end
 		}
 	}
 

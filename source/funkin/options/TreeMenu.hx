@@ -5,10 +5,8 @@ import flixel.FlxState;
 import funkin.backend.FunkinText;
 import flixel.tweens.FlxTween;
 import funkin.menus.MainMenuState;
-import funkin.options.type.TextOption;
 import flixel.util.typeLimit.OneOfTwo;
 import funkin.options.type.OptionType;
-import funkin.options.categories.*;
 
 class TreeMenu extends UIState {
 	public var main:OptionsScreen;

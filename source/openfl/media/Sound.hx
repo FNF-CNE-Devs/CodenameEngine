@@ -636,10 +636,12 @@ class Sound extends EventDispatcher
 			return null;
 		}
 
+		#if !macro
 		if (changeID < funkin.backend.system.Main.changeID) {
 			changeID = funkin.backend.system.Main.changeID;
 			regen();
 		}
+		#end
 
 		if (sndTransform == null)
 		{

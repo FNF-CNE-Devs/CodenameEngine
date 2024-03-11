@@ -1,7 +1,7 @@
 package funkin.backend.utils.native;
 
-import funkin.backend.utils.NativeAPI.MessageBoxIcon;
 #if windows
+import funkin.backend.utils.NativeAPI.MessageBoxIcon;
 @:buildXml('
 <target id="haxe">
 	<lib name="dwmapi.lib" if="windows" />
@@ -12,7 +12,7 @@ import funkin.backend.utils.NativeAPI.MessageBoxIcon;
 </target>
 ')
 
-// majority is taken from microsofts doc 
+// majority is taken from microsofts doc
 @:cppFileCode('
 #include "mmdeviceapi.h"
 #include "combaseapi.h"
@@ -36,7 +36,7 @@ static long lastDefId = 0;
 class AudioFixClient : public IMMNotificationClient {
 	LONG _cRef;
 	IMMDeviceEnumerator *_pEnumerator;
-	
+
 	public:
 	AudioFixClient() :
 		_cRef(1),
@@ -153,9 +153,9 @@ class Windows {
 	public static function allocConsole() {
 	}
 
-	
+
 	@:functionCode('
-		HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE); 
+		HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 		SetConsoleTextAttribute(console, color);
 	')
 	public static function setConsoleColors(color:Int) {
@@ -175,7 +175,7 @@ class Windows {
 		MessageBox(GetActiveWindow(), message, caption, icon | MB_SETFOREGROUND);
 	')
 	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
-		
+
 	}
 
 	@:functionCode('

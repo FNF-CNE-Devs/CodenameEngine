@@ -1,17 +1,14 @@
 package funkin.menus;
 
 import funkin.backend.chart.Chart;
-import funkin.backend.chart.ChartData;
+import funkin.backend.chart.ChartData.ChartMetaData;
 import haxe.io.Path;
 import openfl.text.TextField;
-import flixel.FlxState;
-import flixel.addons.display.FlxGridOverlay;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
 import funkin.game.HealthIcon;
 import funkin.savedata.FunkinSave;
-import haxe.Json;
 import funkin.backend.scripting.events.*;
 
 using StringTools;
@@ -411,17 +408,14 @@ class FreeplayState extends MusicBeatState
 		var event = event("onUpdateOptionsAlpha", EventManager.get(FreeplayAlphaUpdateEvent).recycle(0.6, 0.45, 1, 1, 0.25));
 		if (event.cancelled) return;
 
-		var bullShit:Int = 0;
-
 		for (i in 0...iconArray.length)
 			iconArray[i].alpha = lerp(iconArray[i].alpha, #if PRELOAD_ALL songInstPlaying ? event.idlePlayingAlpha : #end event.idleAlpha, event.lerp);
 
 		iconArray[curSelected].alpha = #if PRELOAD_ALL songInstPlaying ? event.selectedPlayingAlpha : #end event.selectedAlpha;
 
-		for (item in grpSongs.members)
+		for (i=>item in grpSongs.members)
 		{
-			item.targetY = bullShit - curSelected;
-			bullShit++;
+			item.targetY = i - curSelected;
 
 			item.alpha = lerp(item.alpha, #if PRELOAD_ALL songInstPlaying ? event.idlePlayingAlpha : #end event.idleAlpha, event.lerp);
 

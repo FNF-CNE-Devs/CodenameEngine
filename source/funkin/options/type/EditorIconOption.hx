@@ -1,6 +1,5 @@
 package funkin.options.type;
 
-import funkin.game.HealthIcon;
 import flixel.util.FlxColor;
 
 class EditorIconOption extends IconOption {

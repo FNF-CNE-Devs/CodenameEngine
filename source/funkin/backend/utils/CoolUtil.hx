@@ -1,7 +1,6 @@
 package funkin.backend.utils;
 
 import flixel.text.FlxText;
-import openfl.text.TextFormatAlign;
 import funkin.backend.utils.XMLUtil.TextFormat;
 import flixel.tweens.FlxTween;
 import flixel.system.frontEnds.SoundFrontEnd;
@@ -9,7 +8,6 @@ import flixel.sound.FlxSound;
 import funkin.backend.system.Conductor;
 import flixel.sound.FlxSoundGroup;
 import haxe.Json;
-import funkin.menus.StoryMenuState.WeekData;
 import haxe.io.Path;
 import haxe.xml.Access;
 import flixel.input.keyboard.FlxKey;
@@ -17,10 +15,7 @@ import lime.utils.Assets;
 import flixel.animation.FlxAnimation;
 import flixel.util.FlxColor;
 import flixel.util.FlxAxes;
-import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.frames.FlxFramesCollection;
 import openfl.geom.ColorTransform;
-import funkin.backend.chart.Chart;
 import haxe.CallStack;
 
 using StringTools;

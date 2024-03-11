@@ -1,7 +1,8 @@
 package funkin.backend.system.macros;
 
 #if macro
-import haxe.macro.Expr.ExprDef;
+import haxe.macro.Context;
+import haxe.macro.Expr;
 #end
 
 class Utils {

@@ -2,7 +2,6 @@ package funkin.game;
 
 import funkin.editors.charter.CharterSelection;
 import flixel.FlxState;
-import funkin.editors.EditorTreeMenu;
 import funkin.editors.SaveWarning;
 import funkin.backend.chart.EventsData;
 import funkin.backend.system.RotatingSpriteGroup;
@@ -15,11 +14,9 @@ import funkin.game.SplashHandler;
 import funkin.backend.scripting.DummyScript;
 import funkin.menus.StoryMenuState.WeekData;
 import funkin.backend.FunkinText;
-import flixel.group.FlxSpriteGroup;
 import funkin.backend.scripting.Script;
 import funkin.backend.scripting.ScriptPack;
 import flixel.FlxSubState;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.math.FlxPoint;
 import flixel.sound.FlxSound;
 import flixel.text.FlxText;
@@ -762,7 +759,7 @@ class PlayState extends MusicBeatState
 			SaveWarning.warningFunc = saveWarn;
 			SaveWarning.saveFunc = () ->  {
 				@:privateAccess Chart.save('${Paths.getAssetsRoot()}/songs/${Charter.__song.toLowerCase()}', 
-					PlayState.SONG, Charter.__diff.toLowerCase(), {saveMetaInChart: false});
+					PlayState.SONG, Charter.__diff.toLowerCase(), {saveMetaInChart: false, saveEventsInChart: true});
 			}
 		}
 	}

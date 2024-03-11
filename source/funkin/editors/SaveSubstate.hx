@@ -5,9 +5,6 @@ import sys.io.File;
 #end
 import haxe.io.Path;
 import lime.ui.FileDialog;
-import openfl.net.FileReference;
-import openfl.events.Event;
-import openfl.events.IOErrorEvent;
 
 class SaveSubstate extends MusicBeatSubstate {
 	public var saveOptions:Map<String, Bool>;

@@ -1,6 +1,8 @@
 package funkin.editors.charter;
 
 class CharterNoteHoverer extends CharterNote {
+	public var showHoverer:Bool = false;
+
 	public function new() {
 		super();
 
@@ -15,7 +17,7 @@ class CharterNoteHoverer extends CharterNote {
 		switch (Charter.instance.gridActionType) {
 			case NONE:
 				var inBoundsY:Bool = (__mousePos.y > 0 && __mousePos.y < (Charter.instance.__endStep)*40);
-				if (__mousePos.x > 0 && __mousePos.x < Charter.instance.gridBackdrops.strumlinesAmount * 160 && inBoundsY) {
+				if ((__mousePos.x > 0 && __mousePos.x < Charter.instance.gridBackdrops.strumlinesAmount * 160 && inBoundsY) && showHoverer) {
 					step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((__mousePos.y-20) / 40) : Charter.instance.quantStep(__mousePos.y/40), 0, Charter.instance.__endStep-1);
 					id = Math.floor(__mousePos.x / 40); y = step * 40; x = id * 40; visible = true; sustainSpr.visible = typeText.visible = false;
 					angle = switch(animation.curAnim.curFrame = (id % 4)) {
@@ -27,7 +29,7 @@ class CharterNoteHoverer extends CharterNote {
 					};
 				} else
 					visible = false;
-			case DRAG:
+			case NOTE_DRAG:
 				visible = sustainSpr.visible = typeText.visible = true; __doAnim = false;
 			default:
 				visible = sustainSpr.visible = typeText.visible = false; __doAnim = false;
@@ -38,8 +40,8 @@ class CharterNoteHoverer extends CharterNote {
 		switch (Charter.instance.gridActionType) {
 			case NONE:
 				super.draw();
-			case DRAG:
-				if (Charter.instance.gridActionType == DRAG) {
+			case NOTE_DRAG:
+				if (Charter.instance.gridActionType == NOTE_DRAG) {
 					var verticalChange:Float = (__mousePos.y - Charter.instance.dragStartPos.y) / 40;
 					var horizontalChange:Int = CoolUtil.floorInt((__mousePos.x - (Std.int(Charter.instance.dragStartPos.x / 40) * 40)) / 40);
 		

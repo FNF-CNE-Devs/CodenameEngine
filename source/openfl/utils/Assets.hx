@@ -1,8 +1,10 @@
 package openfl.utils;
 
+#if !macro
 import funkin.backend.system.Main;
 import funkin.options.Options;
 import funkin.backend.system.OptimizedBitmapData;
+#end
 import openfl.utils._internal.Log;
 import openfl.display.BitmapData;
 import openfl.display.MovieClip;
@@ -113,10 +115,10 @@ class Assets
 			var bitmapData = image.src;
 			#else
 			var bitmapData:BitmapData = null;
-			if (pushToGPU && !Main.forceGPUOnlyBitmapsOff && Options.gpuOnlyBitmaps) {
+			#if !macro if (pushToGPU && !Main.forceGPUOnlyBitmapsOff && Options.gpuOnlyBitmaps) {
 				bitmapData = new OptimizedBitmapData(0, 0, true, 0);
 				bitmapData.__fromImage(image);
-			} else {
+			} else #end {
 				bitmapData = BitmapData.fromImage(image);
 			}
 			#end
@@ -497,10 +499,10 @@ class Assets
 				var bitmapData = image.src;
 				#else
 				var bitmapData:BitmapData = null;
-				if (!Main.forceGPUOnlyBitmapsOff && Options.gpuOnlyBitmaps) {
+				#if !macro if (!Main.forceGPUOnlyBitmapsOff && Options.gpuOnlyBitmaps) {
 					bitmapData = new OptimizedBitmapData(0, 0, true, 0);
 					bitmapData.__fromImage(image);
-				} else {
+				} else #end {
 					bitmapData = BitmapData.fromImage(image);
 				}
 				#end

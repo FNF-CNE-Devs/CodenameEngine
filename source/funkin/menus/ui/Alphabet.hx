@@ -4,7 +4,6 @@ import openfl.utils.AssetLibrary;
 import haxe.xml.Access;
 import funkin.backend.assets.LimeLibrarySymbol;
 import funkin.backend.assets.IModsAssetLibrary;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxTimer;
 import flixel.util.FlxColor;

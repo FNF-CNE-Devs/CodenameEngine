@@ -6,7 +6,6 @@ import funkin.backend.scripting.Script;
 import funkin.backend.scripting.ScriptPack;
 import funkin.backend.scripting.DummyScript;
 import funkin.backend.system.interfaces.IBeatReceiver;
-import funkin.backend.system.Conductor.BPMChangeEvent;
 import funkin.backend.system.Conductor;
 import funkin.backend.system.Controls;
 import funkin.options.PlayerSettings;

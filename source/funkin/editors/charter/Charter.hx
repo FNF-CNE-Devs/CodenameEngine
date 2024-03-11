@@ -1,7 +1,5 @@
 package funkin.editors.charter;
 
-import openfl.geom.Rectangle;
-import flixel.util.FlxSpriteUtil;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOptionSpr;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.editors.charter.CharterStrumline;
@@ -10,20 +8,14 @@ import funkin.backend.system.framerate.Framerate;
 import haxe.Json;
 import flixel.input.keyboard.FlxKey;
 import flixel.sound.FlxSound;
-import flixel.util.FlxSort;
 import flixel.math.FlxPoint;
 import funkin.editors.charter.CharterBackdropGroup.CharterBackdropDummy;
 import funkin.backend.system.Conductor;
 import funkin.backend.chart.*;
 import funkin.backend.chart.ChartData;
-import openfl.display.BitmapData;
-import flixel.util.FlxColor;
 import flixel.addons.display.FlxBackdrop;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UIState;
-import openfl.net.FileReference;
-
-using flixel.util.FlxColor;
 
 class Charter extends UIState {
 	public static var __song:String;
@@ -59,7 +51,7 @@ class Charter extends UIState {
 	public var addEventSpr:CharterEventAdd;
 
 	public var gridBackdropDummy:CharterBackdropDummy;
-	public var noteHoverer:CharterNote;
+	public var noteHoverer:CharterNoteHoverer;
 
 	public var strumlineInfoBG:FlxSprite;
 	public var strumlineAddButton:CharterStrumlineButton;
@@ -549,7 +541,6 @@ class Charter extends UIState {
 		for(e in eventsGroup.members)
 			e.refreshEventIcons();
 
-
 		buildNoteTypesUI();
 		refreshBPMSensitive();
 
@@ -580,47 +571,45 @@ class Charter extends UIState {
 	 * NOTE AND CHARTER GRID LOGIC HERE
 	 */
 	#if REGION
-	var gridActionType:CharterGridActionType = NONE;
-	var dragStartPos:FlxPoint = new FlxPoint();
-	var selectionDragging:Bool = false;
+	public var gridActionType:CharterGridActionType = NONE;
+	public var dragStartPos:FlxPoint = new FlxPoint();
+	public var mousePos:FlxPoint = new FlxPoint();
+	public var selectionDragging:Bool = false;
 
-	public function updateNoteLogic(elapsed:Float) {
+	public function updateSelectionLogic() {
+		function select(s:ICharterSelectable) {
+			if (FlxG.keys.pressed.CONTROL) selection.push(s);
+			else if (FlxG.keys.pressed.SHIFT) selection.remove(s);
+			else selection = [s];
+		}
+
 		for (group in [notesGroup, eventsGroup]) {
-			cast(group, FlxTypedGroup<Dynamic>).forEach(function(n) {
-				n.selected = false;
-				if (n.hovered && gridActionType == NONE) {
-					if (FlxG.mouse.justReleased) {
-						if (FlxG.keys.pressed.CONTROL)
-							selection.push(cast n);
-						else if (FlxG.keys.pressed.SHIFT)
-							selection.remove(cast n);
-						else
-							selection = [cast n];
-					}
-
-					if (FlxG.mouse.justReleasedRight) {
-						var mousePos = FlxG.mouse.getScreenPosition(uiCamera);
-						if (!selection.contains(cast n))
-							selection = [cast n];
-						closeCurrentContextMenu();
-						openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
-						mousePos.put();
-					}
+			cast(group, FlxTypedGroup<Dynamic>).forEach(function(s) {
+				s.selected = false;
+				if (gridActionType == NONE) {
+					if (s is CharterNote) {
+						var n:CharterNote = cast s;
+						if ((n.hovered || n.sustainDraggable) && FlxG.mouse.justReleased) select(cast s);
+					} else if (FlxG.mouse.justReleased && s.hovered) select(cast s);
 				}
 			});
 		}
 		selection = __fixSelection(selection);
 		for(s in selection) s.selected = true;
+	}
+
+	public function updateNoteLogic(elapsed:Float) {
+		updateSelectionLogic();
 
 		/**
 		 * NOTE DRAG HANDLING
 		 */
-		var mousePos = FlxG.mouse.getWorldPosition(charterCamera);
+		mousePos = FlxG.mouse.getWorldPosition(charterCamera);
 		if (!gridBackdropDummy.hoveredByChild && !FlxG.mouse.pressed)
 			gridActionType = NONE;
 		selectionBox.visible = false;
 		switch(gridActionType) {
-			case BOX:
+			case BOX_SELECTION:
 				if (gridBackdropDummy.hoveredByChild) {
 					selectionBox.visible = true;
 					if (FlxG.mouse.pressed) {
@@ -655,7 +644,7 @@ class Charter extends UIState {
 				// do nothing, locked
 				if (!FlxG.mouse.pressed)
 					gridActionType = NONE;
-			case DRAG:
+			case NOTE_DRAG:
 				selectionDragging = FlxG.mouse.pressed;
 				if (selectionDragging) {
 					gridBackdrops.draggingObj = null;
@@ -718,7 +707,7 @@ class Charter extends UIState {
 				if (gridBackdropDummy.hovered) {
 					// AUTO DETECT
 					if (FlxG.mouse.pressed && (Math.abs(mousePos.x - dragStartPos.x) > 20 || Math.abs(mousePos.y - dragStartPos.y) > 20))
-						gridActionType = BOX;
+						gridActionType = BOX_SELECTION;
 
 					var id = Math.floor(mousePos.x / 40);
 					var mouseOnGrid = id >= 0 && id < 4 * gridBackdrops.strumlinesAmount && mousePos.y >= 0;
@@ -739,14 +728,21 @@ class Charter extends UIState {
 							}
 					}
 				} else if (gridBackdropDummy.hoveredByChild) {
-					if (FlxG.mouse.pressed && (Math.abs(mousePos.x - dragStartPos.x) > 5 || Math.abs(mousePos.y - dragStartPos.y) > 5)) {
+					if (FlxG.mouse.pressed) {
 						var noteHovered:Bool = false;
-						for(n in selection) 
-							if (n.hovered) {
-								noteHovered = true;
-								break;
-							}
-						gridActionType = noteHovered ? DRAG : INVALID_DRAG;
+						for(n in selection) if (n.hovered) {noteHovered = true; break;}
+
+						var noteSusDrag:Bool = false;
+						for(s in selection) {
+							if (!(s is CharterNote)) continue;
+							var n:CharterNote = cast s;
+							if (n.sustainDraggable) {noteSusDrag = true; break;}
+						}
+
+						if ((Math.abs(mousePos.x - dragStartPos.x) > (noteSusDrag ? 1 : 5) || Math.abs(mousePos.y - dragStartPos.y) > (noteSusDrag ? 1 : 5))) {
+							if (noteHovered) gridActionType = noteHovered ? NOTE_DRAG : INVALID_DRAG;
+							if (noteSusDrag) gridActionType = SUSTAIN_DRAG;
+						}
 					}
 				}
 
@@ -755,6 +751,35 @@ class Charter extends UIState {
 					closeCurrentContextMenu();
 					openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
 					mousePos.put();
+				}
+			case SUSTAIN_DRAG:
+				selectionDragging = FlxG.mouse.pressed;
+				if (selectionDragging) {
+					currentCursor = BUTTON;
+					selection.loop(function (n:CharterNote) {
+						var change:Float = Math.max((mousePos.y-(FlxG.keys.pressed.SHIFT ? dragStartPos.y : quantStep(dragStartPos.y))) / 40, -n.susLength);
+						n.tempSusLength = change;
+
+						if (!FlxG.keys.pressed.SHIFT) 
+							n.tempSusLength -= (n.susLength + change) - quantStepRounded(n.susLength + change, change > 0 ? 0.35 : 0.65);
+						@:privateAccess n.__susInstaLerp = FlxG.keys.pressed.SHIFT;
+					});
+				} else {
+					var undoChanges:Array<NoteSustainChange> = [];
+					selection.loop(function (n:CharterNote) {
+						var oldSusLen:Float = n.susLength;
+
+						n.susLength += n.tempSusLength;
+						n.tempSusLength = 0;
+
+						@:privateAccess n.__susInstaLerp = false;
+						n.updatePos(n.step, n.id, n.susLength, n.type);
+						undoChanges.push({before: oldSusLen, after: n.susLength, note: n});
+					});
+					undos.addToUndo(CEditSustains(undoChanges));
+					
+					gridActionType = NONE;
+					currentCursor = ARROW;
 				}
 		}
 		addEventSpr.selectable = !selectionBox.visible;
@@ -769,6 +794,8 @@ class Charter extends UIState {
 			if (event != null) addEventSpr.updateEdit(event);
 			else addEventSpr.updatePos(FlxG.keys.pressed.SHIFT ? ((mousePos.y) / 40) : quantStepRounded(mousePos.y/40));
 		} else  addEventSpr.sprAlpha = lerp(addEventSpr.sprAlpha, 0, 0.25);
+
+		noteHoverer.showHoverer = Charter.instance.gridBackdropDummy.hovered;
 	}
 
 	public function quantStep(step:Float):Float {
@@ -1475,7 +1502,7 @@ class Charter extends UIState {
 			if (s is CharterNote) {
 				var n:CharterNote = cast s;
 				var old:Float = n.susLength;
-				n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0));
+				n.updatePos(n.step, n.id, Math.max(n.susLength + change, 0), n.type);
 				undoChanges.push({before: old, after: n.susLength, note: n});
 			}
 
@@ -1783,9 +1810,10 @@ interface ICharterSelectable {
 
 enum abstract CharterGridActionType(Int) {
 	var NONE = 0;
-	var BOX = 1;
-	var DRAG = 2;
+	var BOX_SELECTION = 1;
+	var NOTE_DRAG = 2;
 	var INVALID_DRAG = 3;
+	var SUSTAIN_DRAG = 4;
 }
 
 typedef PlaytestInfo = {

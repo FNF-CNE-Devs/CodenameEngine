@@ -2,7 +2,6 @@ package funkin.options.type;
 
 import flixel.math.FlxPoint;
 
-@:allow()
 class Checkbox extends TextOption {
 
 	public var checkbox:FlxSprite;

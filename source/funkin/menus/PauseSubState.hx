@@ -6,9 +6,6 @@ import funkin.options.OptionsMenu;
 import funkin.backend.scripting.events.PauseCreationEvent;
 import funkin.backend.scripting.events.NameEvent;
 import funkin.backend.scripting.Script;
-import flixel.FlxSubState;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.input.keyboard.FlxKey;
 import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
@@ -194,12 +191,9 @@ class PauseSubState extends MusicBeatSubstate
 
 		curSelected = event.value;
 
-		var bullShit:Int = 0;
-
-		for (item in grpMenuShit.members)
+		for (i=>item in grpMenuShit.members)
 		{
-			item.targetY = bullShit - curSelected;
-			bullShit++;
+			item.targetY = i - curSelected;
 
 			if (item.targetY == 0)
 				item.alpha = 1;

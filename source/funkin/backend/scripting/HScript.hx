@@ -45,7 +45,9 @@ class HScript extends Script {
 			this.trace(v);
 		}));
 
+		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.call("onScriptCreated", [this, "hscript"]);
+		#end
 		loadFromString(code);
 	}
 
