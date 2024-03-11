@@ -6,7 +6,6 @@ import haxe.macro.Expr;
 
 using StringTools;
 
-
 /**
  * Macro used in the options class to add getters for the SOLO keybinds.
  */
