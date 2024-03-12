@@ -5,7 +5,6 @@ import haxe.io.Path;
 import funkin.backend.scripting.events.*;
 import flixel.util.FlxTimer;
 import flixel.math.FlxPoint;
-import flixel.graphics.frames.FlxFramesCollection;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import funkin.backend.FunkinText;
@@ -37,7 +36,7 @@ class StoryMenuState extends MusicBeatState {
 	public var weekSprites:FlxTypedGroup<MenuItem>;
 	public var characterSprites:FlxTypedGroup<MenuCharacterSprite>;
 
-	public var charFrames:Map<String, FlxFramesCollection> = [];
+	//public var charFrames:Map<String, FlxFramesCollection> = [];
 
 	public override function create() {
 		super.create();

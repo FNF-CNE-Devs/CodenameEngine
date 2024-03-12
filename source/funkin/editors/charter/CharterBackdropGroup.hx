@@ -1,6 +1,5 @@
 package funkin.editors.charter;
 
-import flixel.util.FlxPool;
 import flixel.graphics.FlxGraphic;
 import funkin.backend.system.Conductor;
 import openfl.geom.Rectangle;

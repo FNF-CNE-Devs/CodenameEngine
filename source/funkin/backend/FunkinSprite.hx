@@ -13,8 +13,7 @@ import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
 import funkin.backend.system.interfaces.IBeatReceiver;
 
-@:enum
-abstract XMLAnimType(Int)
+enum abstract XMLAnimType(Int)
 {
 	var NONE = 0;
 	var BEAT = 1;

@@ -1,6 +1,5 @@
 package funkin.menus;
 
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.FlxColor;
 import flixel.text.FlxText;
 import funkin.backend.FunkinText;

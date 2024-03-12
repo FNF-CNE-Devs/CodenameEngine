@@ -1,7 +1,5 @@
 package funkin.options.type;
 
-import flixel.effects.FlxFlicker;
-
 class ArrayOption extends OptionType {
 	public var selectCallback:String->Void;
 
@@ -31,17 +29,12 @@ class ArrayOption extends OptionType {
 
 		this.parent = parent;
 
-		if(Reflect.field(parent, optionName) != null)
-		{
-			if(options.indexOf(Reflect.field(parent, optionName)) != -1)
-				this.currentSelection = options.indexOf(Reflect.field(parent, optionName));
-			else
-				this.currentSelection = 0;
-		}
-			
-		
+		var fieldValue = Reflect.field(parent, optionName);
+		if(fieldValue != null)
+			this.currentSelection = Std.int(Math.max(0, options.indexOf(fieldValue)));
+
 		this.optionName = optionName;
-		
+
 		add(__text = new Alphabet(100, 20, text, true));
 		add(__selectiontext = new Alphabet(__text.width + 120, -30, formatTextOption(), false));
 	}
@@ -52,7 +45,7 @@ class ArrayOption extends OptionType {
 
 	public override function onChangeSelection(change:Float):Void
 	{
-		if(currentSelection <= 0 && change == -1 || currentSelection >= options.length - 1 && change == 1 ) return;
+		if(currentSelection <= 0 && change == -1 || currentSelection >= options.length - 1 && change == 1) return;
 		currentSelection += Math.round(change);
 		__selectiontext.text = formatTextOption();
 		Reflect.setField(parent, optionName, options[currentSelection]);

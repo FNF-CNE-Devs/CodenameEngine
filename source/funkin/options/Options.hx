@@ -1,6 +1,5 @@
 package funkin.options;
 
-import funkin.backend.system.Controls;
 import openfl.Lib;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;

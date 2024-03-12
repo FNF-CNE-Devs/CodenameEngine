@@ -2,7 +2,6 @@ package funkin.game;
 
 import funkin.editors.charter.CharterSelection;
 import flixel.FlxState;
-import funkin.editors.EditorTreeMenu;
 import funkin.editors.SaveWarning;
 import funkin.backend.chart.EventsData;
 import funkin.backend.system.RotatingSpriteGroup;
@@ -15,11 +14,9 @@ import funkin.game.SplashHandler;
 import funkin.backend.scripting.DummyScript;
 import funkin.menus.StoryMenuState.WeekData;
 import funkin.backend.FunkinText;
-import flixel.group.FlxSpriteGroup;
 import funkin.backend.scripting.Script;
 import funkin.backend.scripting.ScriptPack;
 import flixel.FlxSubState;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.math.FlxPoint;
 import flixel.sound.FlxSound;
 import flixel.text.FlxText;
@@ -762,7 +759,7 @@ class PlayState extends MusicBeatState
 			SaveWarning.warningFunc = saveWarn;
 			SaveWarning.saveFunc = () ->  {
 				@:privateAccess Chart.save('${Paths.getAssetsRoot()}/songs/${Charter.__song.toLowerCase()}', 
-					PlayState.SONG, Charter.__diff.toLowerCase(), {saveMetaInChart: false});
+					PlayState.SONG, Charter.__diff.toLowerCase(), {saveMetaInChart: false, saveEventsInChart: true});
 			}
 		}
 	}
@@ -1386,12 +1383,13 @@ class PlayState extends MusicBeatState
 	 * @param retrySFX SFX played whenever the player retries. Defaults to `retrySFX` (`gameOverEnd`)
 	 */
 	public function gameOver(?character:Character, ?deathCharID:String, ?gameOverSong:String, ?lossSFX:String, ?retrySFX:String) {
+		var charToUse:Character = character.getDefault(opponentMode ? dad : boyfriend);  // Imma still make it check null later just in case dad or bf are also null for some weird scripts  - Nex
 		var event:GameOverEvent = scripts.event("onGameOver", EventManager.get(GameOverEvent).recycle(
-			character == null ? 0 : character.x,
-			character == null ? 0 : character.y,
-			character.getDefault(opponentMode ? dad : boyfriend),
-			deathCharID.getDefault(character != null ? character.gameOverCharacter : "bf-dead"),
-			character != null ? character.isPlayer : true,
+			charToUse == null ? 0 : charToUse.x,
+			charToUse == null ? 0 : charToUse.y,
+			charToUse,
+			deathCharID.getDefault(charToUse != null ? charToUse.gameOverCharacter : "bf-dead"),
+			charToUse != null ? charToUse.isPlayer : true,
 			gameOverSong.getDefault(this.gameOverSong),
 			lossSFX.getDefault(this.lossSFX),
 			retrySFX.getDefault(this.retrySFX)

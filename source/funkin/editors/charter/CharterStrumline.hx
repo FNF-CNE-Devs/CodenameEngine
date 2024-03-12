@@ -1,9 +1,7 @@
 package funkin.editors.charter;
 
 import flixel.group.FlxSpriteGroup;
-import funkin.backend.chart.EventsData;
 import funkin.game.Character;
-import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.game.HealthIcon;
 import funkin.backend.chart.ChartData.ChartStrumLine;

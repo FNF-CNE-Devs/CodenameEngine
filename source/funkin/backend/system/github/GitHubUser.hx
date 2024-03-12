@@ -125,8 +125,7 @@ typedef GitHubUser = {
 	var updated_at:String;
 }
 
-@:enum
-abstract GitHubUserType(String) {
+enum abstract GitHubUserType(String) {
 	var USER = "User";
 	var ORGANIZATION = "Organization";
 }

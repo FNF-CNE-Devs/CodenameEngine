@@ -3,7 +3,6 @@ package funkin.editors.ui;
 import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import flixel.ui.FlxBar;
-import openfl.geom.Rectangle;
 import flixel.sound.FlxSound;
 import haxe.io.Bytes;
 import lime.media.AudioBuffer;

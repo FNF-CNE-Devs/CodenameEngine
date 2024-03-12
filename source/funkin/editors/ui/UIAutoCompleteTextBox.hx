@@ -1,10 +1,7 @@
 package funkin.editors.ui;
 
-import flixel.math.FlxPoint;
 import lime.ui.KeyModifier;
 import lime.ui.KeyCode;
-import openfl.desktop.Clipboard;
-import openfl.geom.Rectangle;
 
 class UIAutoCompleteTextBox extends UITextBox {
 	public var suggestionText:UIText;

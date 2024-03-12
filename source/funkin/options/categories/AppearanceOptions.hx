@@ -48,9 +48,8 @@ class AppearanceOptions extends OptionsScreen {
 			"If checked, switching windows will pause the game.",
 			"autoPause"));
 	}
-	
-	private function __changeFPS(change:Float)
-	{
+
+	private function __changeFPS(change:Float) {
 		// if statement cause of the flixel warning
 		if(FlxG.updateFramerate < Std.int(change))
 			FlxG.drawFramerate = FlxG.updateFramerate = Std.int(change);
