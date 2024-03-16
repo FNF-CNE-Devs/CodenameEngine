@@ -148,9 +148,10 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		script.call("postCreate");
 	}
 
-	public function fixChar(switchAnims:Bool = false)
+	public function fixChar(switchAnims:Bool = false, autoInterval:Bool = false)
 	{
-		isDanceLeftDanceRight = (hasAnimation("danceLeft") && hasAnimation("danceRight"));
+		if (isDanceLeftDanceRight = (hasAnimation("danceLeft") && hasAnimation("danceRight")) && autoInterval)
+			beatInterval = 1;
 
 		// alternative to xor operator
 		// for people who dont believe it, heres the truth table
@@ -399,7 +400,10 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		if (xml.x.exists("antialiasing")) antialiasing = (xml.x.get("antialiasing") == "true");
 		if (xml.x.exists("sprite")) sprite = xml.x.get("sprite");
 
-		var tempList = ["isPlayer", "isGF", "x", "y", "gameOverChar", "camx", "camy", "holdTime", "flipX", "icon", "color", "scale", "antialiasing", "sprite"];
+		var hasInterval:Bool = xml.x.exists("interval");
+		if (hasInterval) beatInterval = Std.parseInt(xml.x.get("interval"));
+
+		var tempList = ["isPlayer", "isGF", "x", "y", "gameOverChar", "camx", "camy", "holdTime", "flipX", "icon", "color", "scale", "antialiasing", "sprite", "interval"];
 		var atts = [for (i in xml.x.attributes()) i];
 		for (i in atts)
 			if (!tempList.contains(i)) {
@@ -415,7 +419,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			XMLUtil.addXMLAnimation(this, anim);
 		}
 
-		fixChar(true);
+		fixChar(true, !hasInterval);
 		dance();
 	}
 
