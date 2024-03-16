@@ -189,6 +189,10 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			if (__stunnedTime > 5 / 60)
 				stunned = false;
 		}
+
+		if (!__lockAnimThisFrame && (lastAnimContext == SING || lastAnimContext == MISS))
+			tryDance();
+
 		__lockAnimThisFrame = false;
 	}
 
@@ -199,24 +203,23 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	 */
 	public function dance()
 	{
-		if (!debugMode)
-		{
-			var event = EventManager.get(DanceEvent).recycle(danced);
-			script.call("onDance", [event]);
-			if (event.cancelled)
-				return;
+		if(debugMode) return;
 
-			switch (curCharacter)
-			{
-				// hardcode custom dance animations here
-				default:
-					if (isDanceLeftDanceRight)
-					{
-						playAnim(((danced = !danced) ? 'danceLeft' : 'danceRight') + idleSuffix, DANCE);
-					}
-					else
-						playAnim('idle' + idleSuffix, DANCE);
-			}
+		var event = EventManager.get(DanceEvent).recycle(danced);
+		script.call("onDance", [event]);
+		if (event.cancelled)
+			return;
+
+		switch (curCharacter)
+		{
+			// hardcode custom dance animations here
+			default:
+				if (isDanceLeftDanceRight)
+				{
+					playAnim(((danced = !danced) ? 'danceLeft' : 'danceRight') + idleSuffix, DANCE);
+				}
+				else
+					playAnim('idle' + idleSuffix, DANCE);
 		}
 	}
 
