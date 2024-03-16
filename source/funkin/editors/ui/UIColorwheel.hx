@@ -108,7 +108,7 @@ class UIColorwheel extends UISliceSprite {
 		colorPickerSelector.curColor = color = curColor = FlxColor.fromHSB(hue, saturation, brightness); colorSliderSelector.curColor = FlxColor.fromHSB(hue, 1, 1);
 
 		updateColorPickerSelector(); updateColorSliderPickerSelector();
-		colorHexTextBox.label.text = curColorString = curColor.toHexString(false).replace("0x", "#");
+		colorHexTextBox.label.text = curColorString = curColor.toWebString();
 		for (numStepper in rgbNumSteppers) {
 			numStepper.label.text = Std.string(switch (numStepper.ID) {
 				default: curColor.red;

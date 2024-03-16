@@ -181,7 +181,7 @@ class CharacterInfoScreen extends UISubstateWindow {
 		xml.set("antialiasing", antialiasingCheckbox.checked ? "true" : "false");
 		xml.set("sprite", spriteTextBox.label.text);
 		if (iconColorWheel.colorChanged)
-			xml.set("color", iconColorWheel.curColor.toHexString(false).replace("0x", "#"));
+			xml.set("color", iconColorWheel.curColor.toWebString());
 		for (val in customPropertiesButtonList.buttons.members)
 			xml.set(val.propertyText.label.text, val.valueText.label.text);
 

@@ -1,6 +1,5 @@
 package funkin.game;
 
-import haxe.xml.Printer;
 import flixel.util.FlxColor;
 import funkin.backend.FunkinSprite;
 import flixel.graphics.frames.FlxFrame;
@@ -8,8 +7,6 @@ import flixel.math.FlxPoint;
 import funkin.backend.system.interfaces.IBeatReceiver;
 import funkin.backend.system.interfaces.IOffsetCompatible;
 import funkin.backend.utils.XMLUtil;
-import flixel.animation.FlxBaseAnimation;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxRect;
 import haxe.xml.Access;
 import haxe.Exception;
@@ -34,12 +31,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	private var __lockAnimThisFrame:Bool = false;
 
 	public var stunned(default, set):Bool = false;
-
-	private function set_stunned(b:Bool)
-	{
-		__stunnedTime = 0;
-		return stunned = b;
-	}
 
 	public var isPlayer:Bool = false;
 	public var isGF:Bool = false;
@@ -80,10 +71,10 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	{
 		var anims = ["singLEFT", "singDOWN", "singUP", "singRIGHT"];
 
-		var event = EventManager.get(DirectionAnimEvent).recycle('${anims[direction]}$suffix', direction, suffix, Context, Reversed, Frame, Force);
+		var event = EventManager.get(DirectionAnimEvent).recycle(anims[direction] + suffix, direction, suffix, Context, Reversed, Frame, Force);
 		script.call("onPlaySingAnim", [event]);
 		if (!event.cancelled)
-			playAnim(event.animName, event.force, Context, event.reversed, event.frame);
+			playAnim(event.animName, event.force, event.context, event.reversed, event.frame);
 	}
 
 	public function new(x:Float, y:Float, ?character:String = "bf", isPlayer:Bool = false, switchAnims:Bool = true)
@@ -250,17 +241,10 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	 */
 	public var danceOnBeat:Bool = true;
 
-	/**
-	 * Interval at which the character will dance (higher number = slower dance)
-	 */
-	public var danceInterval:Int = 1;
-
 	public override function beatHit(curBeat:Int) {
 		script.call("beatHit", [curBeat]);
-		if (danceInterval < 1)
-			danceInterval = 1;
 
-		if (danceOnBeat && curBeat % danceInterval == 0 && !__lockAnimThisFrame)
+		if (danceOnBeat && (curBeat + beatOffset) % beatInterval == 0 && !__lockAnimThisFrame)
 		{
 			tryDance();
 		}
@@ -448,7 +432,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		xml.set("flipX", Std.string(flipX));
 		xml.set("icon", getIcon());
 		if (iconColor != null)
-			xml.set("color", iconColor.toHexString(false).replace("0x", "#"));
+			xml.set("color", iconColor.toWebString());
 		xml.set("scale", Std.string(scale.x));
 		xml.set("antialiasing", antialiasing == true ? "true" : "false");
 		xml.set("sprite", sprite);
@@ -474,6 +458,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			var offset:FlxPoint = getAnimOffset(anim.name);
 			animXml.set("x", Std.string(offset.x));
 			animXml.set("y", Std.string(offset.y));
+			offset.putWeak();
 			if (anim.indices.length > 0)
 				animXml.set("indices", anim.indices.join(","));
 			xml.addChild(animXml);
@@ -489,6 +474,25 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public function getAnimOrder() {
 		return [for(a in xml.nodes.anim) if(a.has.name) a.att.name];
 	}
+
+	// Getters / Setters
+
+	@:noCompletion private function set_stunned(b:Bool)
+	{
+		__stunnedTime = 0;
+		return stunned = b;
+	}
+
+	// Backwards Compat
+
+	/**
+	 * Interval at which the character will dance (higher number = slower dance)
+	 */
+	@:noCompletion public var danceInterval(get, set):Int;
+	@:noCompletion private function set_danceInterval(v:Int)
+		return beatInterval = v;
+	@:noCompletion private function get_danceInterval()
+		return beatInterval;
 
 	// Statics
 

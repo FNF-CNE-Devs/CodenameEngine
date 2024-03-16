@@ -42,9 +42,9 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public var animDatas:Map<String, AnimData> = [];
 
 	/**
-	 * ODD interval -> asycned; EVEN interval -> synced
+	 * ODD interval -> asynced; EVEN interval -> synced
 	 */
-	public var beatInterval:Int = 2;
+	public var beatInterval(default, set):Int = 2;
 	public var beatOffset:Int = 0;
 	public var skipNegativeBeats:Bool = false;
 
@@ -361,4 +361,13 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		return animateAtlas != null ? (animateAtlas.anim.finished) : (animation.curAnim != null ? animation.curAnim.finished : true);
 	}
 	#end
+
+	// Getter / Setters
+
+	@:noCompletion private function set_beatInterval(v:Int) {
+		if (v < 1)
+			v = 1;
+
+		return beatInterval = v;
+	}
 }
