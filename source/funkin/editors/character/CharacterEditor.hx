@@ -52,7 +52,7 @@ class CharacterEditor extends UIState {
 		WindowUtils.endfix = " (Character Editor)";
 		SaveWarning.selectionClass = CharacterSelection;
 		SaveWarning.saveFunc = () -> {_file_save(null);};
-		
+
 		topMenu = [
 			{
 				label: "File",

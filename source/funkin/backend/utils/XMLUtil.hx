@@ -180,13 +180,13 @@ class XMLUtil {
 	}
 
 	/**
-     * Creates a new sprite based on a XML node.
-     */
+	 * Creates a new sprite based on a XML node.
+	 */
 	public static inline function createSpriteFromXML(node:Access, parentFolder:String = "", defaultAnimType:XMLAnimType = BEAT, ?cl:Class<FunkinSprite>, ?args:Array<Dynamic>):FunkinSprite {
-    	if(cl == null) cl = FunkinSprite;
-        if(args == null) args = [];
-        return loadSpriteFromXML(Type.createInstance(cl, args), node, parentFolder, defaultAnimType);
-    }
+		if(cl == null) cl = FunkinSprite;
+		if(args == null) args = [];
+		return loadSpriteFromXML(Type.createInstance(cl, args), node, parentFolder, defaultAnimType);
+	}
 
 	public static function extractAnimFromXML(anim:Access, animType:XMLAnimType = NONE, loop:Bool = false):AnimData {
 		var animData:AnimData = {

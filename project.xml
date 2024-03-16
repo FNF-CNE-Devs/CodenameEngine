@@ -7,7 +7,7 @@
 		package="com.yoshman29.codenameengine"
 		version="0.1.0" company="Yoshman29" />
 
-	<!-- 
+	<!--
 		CHANGE THE SAVE PATH & NAME FOR YOUR MOD HERE!
 	-->
 	<app save-path="YoshiCrafter29/CodenameEngine" save-name="save-default" mod-saves="true" />

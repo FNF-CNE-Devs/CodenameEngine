@@ -99,7 +99,7 @@ class Charter extends UIState {
 		WindowUtils.endfix = " (Chart Editor)";
 		SaveWarning.selectionClass = CharterSelection;
 		SaveWarning.saveFunc = () -> {_file_save(null);};
-		
+
 		topMenu = [
 			{
 				label: "File",
@@ -501,7 +501,7 @@ class Charter extends UIState {
 
 		for(strL in PlayState.SONG.strumLines)
 			createStrumline(strumLines.members.length, strL, false, false);
-		
+
 		// create notes
 		notesGroup.autoSort = false;
 		var noteCount:Int = 0;
@@ -669,11 +669,11 @@ class Charter extends UIState {
 					for (s in selection) {
 						if (s.draggable) {
 							var changePoint:FlxPoint = FlxPoint.get(verticalChange, horizontalChange);
-							if (!FlxG.keys.pressed.SHIFT) 
+							if (!FlxG.keys.pressed.SHIFT)
 								changePoint.x -= ((s.step + verticalChange) - quantStepRounded(s.step+verticalChange, verticalChange > 0 ? 0.35 : 0.65));
 
 							var boundedChange:FlxPoint = changePoint.clone();
-							
+
 							// Some maths, so cool bro -lunar (i dont know why i quopte my self here)
 							if (s.step + changePoint.x < 0) boundedChange.x += Math.abs(s.step + changePoint.x);
 							if (s.step + changePoint.x > __endStep-1) boundedChange.x -= (s.step + changePoint.x) - (__endStep-1);
@@ -702,7 +702,7 @@ class Charter extends UIState {
 				}
 			case NONE:
 				if (FlxG.mouse.justPressed)
-					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos); 
+					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
 
 				if (gridBackdropDummy.hovered) {
 					// AUTO DETECT
@@ -711,11 +711,11 @@ class Charter extends UIState {
 
 					var id = Math.floor(mousePos.x / 40);
 					var mouseOnGrid = id >= 0 && id < 4 * gridBackdrops.strumlinesAmount && mousePos.y >= 0;
-	
+
 					if (FlxG.mouse.justReleased) {
 							for (n in selection) n.selected = false;
 							selection = [];
-						
+
 							if (mouseOnGrid && mousePos.y > 0 && mousePos.y < (__endStep)*40) {
 								var note = new CharterNote();
 								note.updatePos(
@@ -760,7 +760,7 @@ class Charter extends UIState {
 						var change:Float = Math.max((mousePos.y-(FlxG.keys.pressed.SHIFT ? dragStartPos.y : quantStep(dragStartPos.y))) / 40, -n.susLength);
 						n.tempSusLength = change;
 
-						if (!FlxG.keys.pressed.SHIFT) 
+						if (!FlxG.keys.pressed.SHIFT)
 							n.tempSusLength -= (n.susLength + change) - quantStepRounded(n.susLength + change, change > 0 ? 0.35 : 0.65);
 						@:privateAccess n.__susInstaLerp = FlxG.keys.pressed.SHIFT;
 					});
@@ -777,7 +777,7 @@ class Charter extends UIState {
 						undoChanges.push({before: oldSusLen, after: n.susLength, note: n});
 					});
 					undos.addToUndo(CEditSustains(undoChanges));
-					
+
 					gridActionType = NONE;
 					currentCursor = ARROW;
 				}
@@ -785,7 +785,7 @@ class Charter extends UIState {
 		addEventSpr.selectable = !selectionBox.visible;
 
 		var inBoundsY:Bool = (mousePos.y > 0 && mousePos.y < (__endStep)*40);
-		
+
 		// Event Spr
 		if (mousePos.x < 0 && mousePos.x > -addEventSpr.bWidth && gridActionType == NONE && inBoundsY) {
 			addEventSpr.incorporeal = false;
@@ -927,7 +927,7 @@ class Charter extends UIState {
 		var i = 0;
 		var toBeDeleted:Selection = [];
 		for (note in notesGroup.members)
-   			if (note.strumLineID == strumLineID) {
+			if (note.strumLineID == strumLineID) {
 				undoNotes.push(buildNote(note));
 				toBeDeleted.push(note);
 			}
@@ -1019,8 +1019,8 @@ class Charter extends UIState {
 
 				var buttonI:Int = 0;
 				for (button in quantButtons) {
-					button.visible = ((button.quant == quant) || 
-						(button.quant == quants[FlxMath.wrap(quants.indexOf(quant)-1, 0, quants.length-1)]) || 
+					button.visible = ((button.quant == quant) ||
+						(button.quant == quants[FlxMath.wrap(quants.indexOf(quant)-1, 0, quants.length-1)]) ||
 						(button.quant == quants[FlxMath.wrap(quants.indexOf(quant)+1, 0, quants.length-1)]));
 					button.selectable = button.visible;
 					if (!button.visible) continue;
@@ -1039,7 +1039,7 @@ class Charter extends UIState {
 			noteTypeText.y = Std.int((noteTopButton.bHeight - noteTypeText.height) / 2);
 		}
 		noteTypeText.text = '($noteType) ${noteTypes[noteType-1] == null ? "Default Note" : noteTypes[noteType-1]}';
-		
+
 		super.update(elapsed);
 
 		scrollBar.size = (FlxG.height / 40 / charterCamera.zoom);
@@ -1245,7 +1245,7 @@ class Charter extends UIState {
 		}
 		selection = sObjects;
 		_edit_copy(_); // to fix stupid bugs
-		
+
 		undos.addToUndo(CCreateSelection(sObjects.copy()));
 	}
 
@@ -1263,7 +1263,7 @@ class Charter extends UIState {
 
 	function _edit_undo(_) {
 		if (strumLines.isDragging || selectionDragging || subState != null) return;
-		
+
 		selection = [];
 		var undo = undos.undo();
 		switch(undo) {
@@ -1286,7 +1286,7 @@ class Charter extends UIState {
 			case CSelectionDrag(selectionDrags):
 				for (s in selectionDrags)
 					if (s.selectable.draggable) s.selectable.handleDrag(s.change * -1);
-					
+
 				selection = [for (s in selectionDrags) s.selectable];
 			case CEditSustains(changes):
 				for(n in changes)
@@ -1466,7 +1466,7 @@ class Charter extends UIState {
 			null
 		];
 
-		for (_quant in quants) 
+		for (_quant in quants)
 			newChilds.push({
 				label: '${_quant}x Grid Snap',
 				onSelect: (_) -> {setquant(_quant); buildSnapsUI();},
@@ -1485,7 +1485,7 @@ class Charter extends UIState {
 
 	function _note_selectall(_) {
 		selection = [for (note in notesGroup.members) note];
-	} 
+	}
 
 	function _note_selectmeasure(_) {
 		selection = [for (note in notesGroup.members)
@@ -1614,7 +1614,7 @@ class Charter extends UIState {
 		}
 		notesGroup.sortNotes();
 		for(n in notesGroup.members) {
-			if (PlayState.SONG.strumLines[n.strumLineID] != null) 
+			if (PlayState.SONG.strumLines[n.strumLineID] != null)
 				PlayState.SONG.strumLines[n.strumLineID].notes.push(buildNote(n));
 		}
 		buildEvents();
@@ -1681,7 +1681,7 @@ class Charter extends UIState {
 						newChanges[i] = CSelectionDrag([
 							for (selectionDrag in selectionDrags)
 								{
-									selectable: __relinkSingleSelection(selectionDrag.selectable), 
+									selectable: __relinkSingleSelection(selectionDrag.selectable),
 									change: selectionDrag.change
 								}
 						]);
@@ -1725,7 +1725,7 @@ class Charter extends UIState {
 			songPosition: Conductor.songPosition,
 			playbackSpeed: playBackSlider.value,
 			quantSelected: quant,
-			noteTypeSelected: noteType, 
+			noteTypeSelected: noteType,
 			strumlinesDraggable: strumLines.draggable,
 			hitSounds: [for (strumLine in strumLines.members) strumLine.hitsounds],
 			mutedVocals: [for (strumLine in strumLines.members) !(strumLine.vocals.volume > 0)],

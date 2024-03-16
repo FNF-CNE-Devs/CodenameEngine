@@ -91,7 +91,7 @@ class UIColorwheel extends UISliceSprite {
 	}
 
 	inline function updateColorPickerSelector()
-        colorPickerSelector.selector.setPosition(colorPicker.x + (colorPicker.width *saturation) - 8, colorPicker.y + (colorPicker.height + (colorPicker.height * -brightness))- 8);
+		colorPickerSelector.selector.setPosition(colorPicker.x + (colorPicker.width *saturation) - 8, colorPicker.y + (colorPicker.height + (colorPicker.height * -brightness))- 8);
 
 	inline function updateColorPickerMouse(mousePos:FlxPoint) {
 		saturation = mousePos.x/colorPicker.width; brightness = 1 + -(mousePos.y/colorPicker.height);

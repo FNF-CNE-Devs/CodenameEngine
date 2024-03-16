@@ -119,7 +119,7 @@ class FreeplayState extends MusicBeatState
 		DiscordUtil.changePresence("In the Menus", null);
 
 		super.create();
-		
+
 		// LOAD CHARACTERS
 
 		bg = new FlxSprite(0, 0).loadAnimatedGraphic(Paths.image('menus/menuDesat'));

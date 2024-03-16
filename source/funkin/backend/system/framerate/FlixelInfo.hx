@@ -13,7 +13,7 @@ class FlixelInfo extends FramerateCategory {
 			var c:Int = 0;
 			for(_ in FlxG.bitmap._cache.keys())
 				c++;
-			
+
 			_text = 'State: ${Type.getClassName(Type.getClass(FlxG.state))}';
 			_text += '\nObject Count: ${FlxG.state.members.length}';
 			_text += '\nCamera Count: ${FlxG.cameras.list.length}';
@@ -27,7 +27,7 @@ class FlixelInfo extends FramerateCategory {
 			_text += '\nPoint Count: ${points._count}';
 			#end
 		}
-		
+
 		this.text.text = _text;
 		super.__enterFrame(t);
 	}

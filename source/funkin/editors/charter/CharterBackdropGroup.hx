@@ -46,7 +46,7 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 	public override function update(elapsed:Float) {
 		for (grid in members)
 			grid.active = grid.visible = false;
-		
+
 		super.update(elapsed);
 
 		for (i => strumLine in strumLineGroup.members) {
@@ -74,7 +74,6 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 			grid.active = grid.visible = true;
 			grid.updateSprites();
 		}
-		
 	}
 
 	public var draggingObj:CharterBackdrop = null;
@@ -135,7 +134,7 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 		beatSeparator = new FlxBackdrop(null, Y, 0, 0);
 		beatSeparator.y = -1;
 		beatSeparator.visible = Options.charterShowBeats;
-		
+
 		for(sep in [sectionSeparator, beatSeparator]) {
 			sep.makeSolid(1, 1, -1);
 			sep.alpha = 0.5;

@@ -41,7 +41,7 @@ class MainState extends FlxState {
 				else if (addon.startsWith("[HIGH]")) _highPriorityAddons.insert(0, addon);
 				else _noPriorityAddons.insert(0, addon);
 			}
-			for (addon in _lowPriorityAddons) 
+			for (addon in _lowPriorityAddons)
 				Paths.assetsTree.addLibrary(ModsFolder.loadModLib('${ModsFolder.addonsPath}$addon', StringTools.ltrim(addon.substr("[LOW]".length))));
 		}
 		if (ModsFolder.currentModFolder != null)

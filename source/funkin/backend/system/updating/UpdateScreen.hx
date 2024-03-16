@@ -59,7 +59,7 @@ class UpdateScreen extends MusicBeatState {
 		overSound = FlxG.sound.load(Paths.sound('gameOverEnd'));
 
 		updater.execute();
-		
+
 		FlxG.camera.addShader(rainbowShader = new CustomShader("engine/updaterShader"));
 	}
 
@@ -104,7 +104,7 @@ class UpdateScreen extends MusicBeatState {
 			// update is done, play bf's anim
 			FlxG.sound.music.stop();
 			overSound.play();
-			
+
 			remove(generalProgress);
 			remove(partProgress);
 			generalProgress = FlxDestroyUtil.destroy(generalProgress);

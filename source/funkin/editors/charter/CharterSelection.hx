@@ -29,7 +29,7 @@ class CharterSelection extends EditorTreeMenu {
 			for(s in freeplayList.songs) new EditorIconOption(s.name, "Press ACCEPT to choose a difficulty to edit.", s.icon, function() {
 				curSong = s;
 				var list:Array<OptionType> = [
-					for(d in s.difficulties) if (d != "") 
+					for(d in s.difficulties) if (d != "")
 						new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
 							FlxG.switchState(new Charter(s.name, d));
 						})
