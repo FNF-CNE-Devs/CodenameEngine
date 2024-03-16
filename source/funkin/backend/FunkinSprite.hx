@@ -41,7 +41,10 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public var debugMode:Bool = false;
 	public var animDatas:Map<String, AnimData> = [];
 
-	public var beatInterval:Int = 1;
+	/**
+	 * ODD interval -> asycned; EVEN interval -> synced
+	 */
+	public var beatInterval:Int = 2;
 	public var beatOffset:Int = 0;
 	public var skipNegativeBeats:Bool = false;
 
