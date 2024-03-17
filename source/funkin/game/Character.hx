@@ -190,7 +190,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 				stunned = false;
 		}
 
-		if (!__lockAnimThisFrame && (lastAnimContext == SING || lastAnimContext == MISS))
+		if (!__lockAnimThisFrame && lastAnimContext != DANCE)
 			tryDance();
 
 		__lockAnimThisFrame = false;
