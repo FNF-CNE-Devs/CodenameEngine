@@ -68,7 +68,7 @@ class MainState extends FlxState {
 
 		#if sys
 		sys.FileSystem.createDirectory('./.temp/');
-		#if windows Sys.command("attrib +h .temp"); #end
+		#if windows new funkin.backend.utils.native.HiddenProcess("attrib +h .temp"); #end
 		#end
 	}
 }
