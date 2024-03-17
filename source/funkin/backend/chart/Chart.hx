@@ -24,6 +24,7 @@ class Chart {
 		if (Assets.exists(path)) {
 			try {
 				data = Json.parse(Assets.getText(path)).events;
+				Logs.trace('Parsed metadata for $songName ($path)');
 			} catch(e) {
 				Logs.trace('Failed to load song event data for ${songName} ($path): ${Std.string(e)}', ERROR);
 			}
@@ -83,7 +84,7 @@ class Chart {
 				}
 			}
 		}
-
+		trace(data);
 		return data;
 	}
 
