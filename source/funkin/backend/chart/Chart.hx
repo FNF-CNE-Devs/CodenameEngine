@@ -24,7 +24,6 @@ class Chart {
 		if (Assets.exists(path)) {
 			try {
 				data = Json.parse(Assets.getText(path)).events;
-				Logs.trace('Parsed metadata for $songName ($path)');
 			} catch(e) {
 				Logs.trace('Failed to load song event data for ${songName} ($path): ${Std.string(e)}', ERROR);
 			}
@@ -43,6 +42,10 @@ class Chart {
 				fromMods = Paths.assetsTree.existsSpecific(path, "TEXT", MODS);
 				try {
 					data = Json.parse(Assets.getText(path));
+					if(path == metaPath)
+						Logs.trace('Parsed default metadata for $songName ($path)');
+					else
+						Logs.trace('Parsed $difficulty metadata for $songName ($path)');
 				} catch(e) {
 					Logs.trace('Failed to load song metadata for ${songName} ($path): ${Std.string(e)}', ERROR);
 				}
