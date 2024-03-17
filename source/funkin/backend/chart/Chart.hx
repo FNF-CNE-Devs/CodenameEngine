@@ -46,7 +46,7 @@ class Chart {
 					Logs.trace('Failed to load song metadata for ${songName} ($path): ${Std.string(e)}', ERROR);
 				}
 				if (data != null) break;
-			}
+			} else Logs.trace('Failed to load song metadata for ${songName} ($path): (file dosen\'t exist)', ERROR);
 		}
 
 		if (data == null)
