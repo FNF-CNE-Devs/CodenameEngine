@@ -2,6 +2,7 @@ package funkin.backend.utils;
 
 import flixel.text.FlxText;
 import funkin.backend.utils.XMLUtil.TextFormat;
+import flixel.util.typeLimit.OneOfTwo;
 import flixel.tweens.FlxTween;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.sound.FlxSound;
@@ -9,6 +10,7 @@ import funkin.backend.system.Conductor;
 import flixel.sound.FlxSoundGroup;
 import haxe.Json;
 import haxe.io.Path;
+import haxe.io.Bytes;
 import haxe.xml.Access;
 import flixel.input.keyboard.FlxKey;
 import lime.utils.Assets;
@@ -78,14 +80,17 @@ class CoolUtil
 	}
 
 	/**
-	 * Safe saves a file (even adding missing folder) and shows a warning box instead of making the program crash
+	 * Safe saves a file (even adding eventual missing folders) and shows a warning box instead of making the program crash
 	 * @param path Path to save the file at.
-	 * @param data Content of the file to save.
+	 * @param content Content of the file to save (as String or Bytes).
 	 */
-	@:noUsing public static function safeSaveFile(path:String, content:String, showErrorBox:Bool = true) {
+	@:noUsing public static function safeSaveFile(path:String, content:OneOfTwo<String, Bytes>, showErrorBox:Bool = true) {
 		#if sys
-		try sys.io.File.saveContent(addMissingFolders(path), content)
-		catch(e) {
+		try {
+			addMissingFolders(Path.directory(path));
+			if(content is Bytes) sys.io.File.saveBytes(path, content);
+			else sys.io.File.saveContent(path, content);
+		} catch(e) {
 			var errMsg:String = 'Error while trying to save the file: ${Std.string(e).replace('\n', ' ')}';
 			Logs.traceColored([Logs.logText(errMsg, RED)], ERROR);
 			if(showErrorBox) funkin.backend.utils.NativeAPI.showMessageBox("Codename Engine Warning", errMsg, MSG_WARNING);
