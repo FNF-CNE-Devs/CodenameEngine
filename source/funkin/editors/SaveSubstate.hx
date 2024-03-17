@@ -1,8 +1,5 @@
 package funkin.editors;
 
-#if desktop
-import sys.io.File;
-#end
 import haxe.io.Path;
 import lime.ui.FileDialog;
 
@@ -30,13 +27,9 @@ class SaveSubstate extends MusicBeatSubstate {
 		super.create();
 
 		var fileDialog = new FileDialog();
-		fileDialog.onCancel.add(function() {
-			close();
-		});
+		fileDialog.onCancel.add(function() close());
 		fileDialog.onSelect.add(function(str) {
-			#if desktop
-			File.saveContent(str, data);
-			#end
+			CoolUtil.safeSaveFile(str, data);
 			close();
 		});
 		fileDialog.browse(SAVE, options.saveExt.getDefault(Path.extension(options.defaultSaveFile)), options.defaultSaveFile);
@@ -45,11 +38,6 @@ class SaveSubstate extends MusicBeatSubstate {
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 		parent.persistentUpdate = false;
-	}
-
-	private function onError(_) {
-		// TODO: error handling
-		close();
 	}
 }
 

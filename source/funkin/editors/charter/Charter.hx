@@ -1165,13 +1165,13 @@ class Charter extends UIState {
 
 	function _file_meta_save(_) {
 		#if sys
-		sys.io.File.saveContent(
+		CoolUtil.safeSaveFile(
 			'${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}/meta.json',
 			Json.stringify(PlayState.SONG.meta == null ? {} : PlayState.SONG.meta, null, "\t")
 		);
-		return;
-		#end
+		#else
 		_file_meta_saveas(_);
+		#end
 	}
 
 	function _file_meta_saveas(_) {
@@ -1182,13 +1182,13 @@ class Charter extends UIState {
 
 	function _file_events_save(_) {
 		#if sys
-		sys.io.File.saveContent(
+		CoolUtil.safeSaveFile(
 			'${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}/events.json',
 			Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events})
 		);
-		return;
-		#end
+		#else
 		_file_events_saveas(_);
+		#end
 	}
 
 	function _file_events_saveas(_) {

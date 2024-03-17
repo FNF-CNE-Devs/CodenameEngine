@@ -78,6 +78,22 @@ class CoolUtil
 	}
 
 	/**
+	 * Safe saves a file and shows a warning box instead of making the program crash
+	 * @param path Path to save the file at.
+	 * @param data Content of the file to save.
+	 */
+	@:noUsing public static function safeSaveFile(path:String, content:String, showErrorBox:Bool = true) {
+		#if sys
+		try sys.io.File.saveContent(path, content)
+		catch(e) {
+			var errMsg:String = 'Error while trying to save the file: ${Std.string(e).replace('\n', ' ')}';
+			Logs.traceColored([Logs.logText(errMsg, RED)], ERROR);
+			if(showErrorBox) funkin.backend.utils.NativeAPI.showMessageBox("Codename Engine Warning", errMsg, MSG_WARNING);
+		}
+		#end
+	}
+
+	/**
 	 * Shortcut to parse a JSON string
 	 * @param str Path to the JSON string
 	 * @return Parsed JSON
