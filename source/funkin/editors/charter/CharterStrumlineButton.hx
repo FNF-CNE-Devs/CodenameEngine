@@ -62,7 +62,7 @@ class CharterStrumlineButton extends UISprite {
 		if(UIState.state.isOverlapping(button, button.__rect)) {
 			buttonScale.set(0.95, 0.95);
 			if (FlxG.mouse.justReleased && onClick != null) {
-				onClick(); 
+				onClick();
 				if (animationOnClick) pressAnimation();
 			}
 		}
@@ -96,7 +96,7 @@ class CharterStrumlineButton extends UISprite {
 		scaleTween = FlxTween.tween(buttonScaleOffset, {x: .015 * (extra ? 3 : 1), y: .02 * (extra ? 3 : 1)}, .12, {ease: FlxEase.circOut})
 			.then(FlxTween.tween(buttonScaleOffset, {x: 0, y: 0}, .1 + FlxG.random.float(.1, .3), {ease: FlxEase.circIn}));
 
-		if (!extra) return; 
+		if (!extra) return;
 
 		if (angleTween != null) angleTween.cancel(); button.angle = 0;
 		angleTween = FlxTween.tween(button, {angle: 360}, .5, {ease: FlxEase.circInOut});
