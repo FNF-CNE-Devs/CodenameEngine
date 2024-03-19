@@ -101,9 +101,7 @@ class MainMenuState extends MusicBeatState
 				if (FlxG.keys.justPressed.SEVEN)
 					FlxG.switchState(new funkin.desktop.DesktopMain());
 				if (FlxG.keys.justPressed.EIGHT) {
-					#if sys
-					sys.io.File.saveContent("chart.json", Json.stringify(funkin.backend.chart.Chart.parse("dadbattle", "hard")));
-					#end
+					CoolUtil.safeSaveFile("chart.json", Json.stringify(funkin.backend.chart.Chart.parse("dadbattle", "hard")));
 				}
 				*/
 			}
@@ -118,7 +116,6 @@ class MainMenuState extends MusicBeatState
 				FlxG.switchState(new TitleState());
 
 			#if MOD_SUPPORT
-			// make it customisable
 			if (controls.SWITCHMOD) {
 				openSubState(new ModSwitchMenu());
 				persistentUpdate = false;

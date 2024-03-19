@@ -179,12 +179,12 @@ class GitHub {
 		return r;
 	}
 	private static function isRedirect(status:Int):Bool {
-        switch (status) {
+		switch (status) {
 			// 301: Moved Permanently, 302: Found (Moved Temporarily), 307: Temporary Redirect, 308: Permanent Redirect  - Nex
-            case 301 | 302 | 307 | 308 :
-                trace("Redirected with status code: " + status);
+			case 301 | 302 | 307 | 308 :
+				trace("Redirected with status code: " + status);
 				return true;
-        }
+		}
 		return false;
 	}
 	private static function __parseGitHubException(obj:Dynamic):GitHubException {

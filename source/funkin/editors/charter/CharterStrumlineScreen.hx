@@ -63,7 +63,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 
 		var charFileList = Character.getList(true);
 		if (charFileList.length == 0) charFileList = Character.getList(false);
-		
+
 		charactersList = new UIButtonList<CharacterButton>(15, title.y + title.height + 36, 250, 269, "", FlxPoint.get(250, 54), null, 0);
 		charactersList.addButton.callback = () -> charactersList.add(new CharacterButton(0, 0, "New Char", charFileList, charactersList));
 		charactersList.cameraSpacing = 0;
@@ -142,7 +142,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		closeButton.color = 0xFFFF0000;
 
 		var suffixlist = ["NONE"];
-		for (i in Paths.getFolderContent('songs/${Charter.__song.toLowerCase()}/song')) 
+		for (i in Paths.getFolderContent('songs/${Charter.__song.toLowerCase()}/song'))
 		if (i.startsWith("Voices")) {
 			i = haxe.io.Path.withoutExtension(i.substr("Voices".length));
 			if (i == "") continue;

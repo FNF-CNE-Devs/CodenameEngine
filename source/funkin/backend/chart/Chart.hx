@@ -206,11 +206,11 @@ class Chart {
 		var chartPath = '${songFolderPath}/charts/${difficulty.trim()}.json';
 		var metaPath = '${songFolderPath}/meta.json';
 
-		File.saveContent(chartPath, Json.stringify(filteredChart, null, saveSettings.prettyPrint == true ? "\t" : null));
+		CoolUtil.safeSaveFile(chartPath, Json.stringify(filteredChart, null, saveSettings.prettyPrint == true ? "\t" : null));
 
 		// idk how null reacts to it so better be sure
 		if (saveSettings.overrideExistingMeta == true || !FileSystem.exists(metaPath))
-			File.saveContent(metaPath, Json.stringify(meta, null, saveSettings.prettyPrint == true ? "\t" : null));
+			CoolUtil.safeSaveFile(metaPath, Json.stringify(meta, null, saveSettings.prettyPrint == true ? "\t" : null));
 		#end
 		return filteredChart;
 	}

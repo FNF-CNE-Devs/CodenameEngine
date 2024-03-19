@@ -55,7 +55,7 @@ class UISliceSprite extends UISprite {
 				frame = topleft;
 				setPosition(x, y);
 				__setSize(
-					topleft.frame.width * Math.min(bWidth/(topleft.frame.width*2), 1), 
+					topleft.frame.width * Math.min(bWidth/(topleft.frame.width*2), 1),
 					topleft.frame.height * Math.min(bHeight/(topleft.frame.height*2), 1)
 				);
 				super.drawSuper();
@@ -72,7 +72,7 @@ class UISliceSprite extends UISprite {
 				setPosition(x + bWidth - (topright.frame.width * Math.min(bWidth/(topright.frame.width*2), 1)), y);
 				frame = topright;
 				__setSize(
-					topright.frame.width * Math.min(bWidth/(topright.frame.width*2), 1), 
+					topright.frame.width * Math.min(bWidth/(topright.frame.width*2), 1),
 					topright.frame.height * Math.min(bHeight/(topright.frame.height*2), 1)
 				);
 				super.drawSuper();
@@ -110,7 +110,7 @@ class UISliceSprite extends UISprite {
 				frame = bottomleft;
 				setPosition(x, y + bHeight - (bottomleft.frame.height * Math.min(bHeight/(bottomleft.frame.height*2), 1)));
 				__setSize(
-					bottomleft.frame.width * Math.min(bWidth/(bottomleft.frame.width*2), 1), 
+					bottomleft.frame.width * Math.min(bWidth/(bottomleft.frame.width*2), 1),
 					bottomleft.frame.height * Math.min(bHeight/(bottomleft.frame.height*2), 1)
 				);
 				super.drawSuper();
@@ -126,11 +126,11 @@ class UISliceSprite extends UISprite {
 				// BOTTOM RIGHT
 				frame = bottomright;
 				setPosition(
-					x + bWidth - (bottomright.frame.width * Math.min(bWidth/(bottomright.frame.width*2), 1)), 
+					x + bWidth - (bottomright.frame.width * Math.min(bWidth/(bottomright.frame.width*2), 1)),
 					y + bHeight - (bottomright.frame.height * Math.min(bHeight/(bottomright.frame.height*2), 1))
 				);
 				__setSize(
-					bottomright.frame.width * Math.min(bWidth/(bottomright.frame.width*2), 1), 
+					bottomright.frame.width * Math.min(bWidth/(bottomright.frame.width*2), 1),
 					bottomright.frame.height * Math.min(bHeight/(bottomright.frame.height*2), 1)
 				);
 				super.drawSuper();

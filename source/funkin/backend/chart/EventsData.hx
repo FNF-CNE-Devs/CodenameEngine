@@ -13,7 +13,7 @@ class EventsData {
 	public static var defaultEventsList:Array<String> = ["HScript Call", "Camera Movement", "Add Camera Zoom", "Camera Modulo Change", "Camera Flash", "BPM Change", "Scroll Speed Change", "Alt Animation Toggle", "Play Animation"];
 	public static var defaultEventsParams:Map<String, Array<EventParamInfo>> = [
 		"HScript Call" => [
-			{name: "Function Name", type: TString, defValue: "myFunc"}, 
+			{name: "Function Name", type: TString, defValue: "myFunc"},
 			{name: "Function Parameters (String split with commas)", type: TString, defValue: ""}
 		],
 		"Camera Movement" => [{name: "Camera Target", type: TStrumLine, defValue: 0}],

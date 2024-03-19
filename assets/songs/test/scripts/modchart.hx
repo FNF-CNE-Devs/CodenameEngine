@@ -21,7 +21,7 @@ function postUpdate(elapsed) {
 		}
 	}
 
-	
+
 	// for(s in strumLines) {
 	// 	for(i in 0...4) {
 	// 		var n = s.members[i];
@@ -29,7 +29,7 @@ function postUpdate(elapsed) {
 	// 		n.angle = 180;
 	// 	}
 	// }
-    
-    // if (curSection != null)
-    //     defaultCamZoom = curSection.mustHitSection ? 0.9 : 0.5;
+
+	// if (curSection != null)
+	//     defaultCamZoom = curSection.mustHitSection ? 0.9 : 0.5;
 }

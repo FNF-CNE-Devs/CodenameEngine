@@ -34,7 +34,7 @@ class TitleState extends MusicBeatState
 		MusicBeatState.skipTransIn = true;
 
 		startIntro();
-		
+
 		super.create();
 	}
 

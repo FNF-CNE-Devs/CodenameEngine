@@ -51,10 +51,11 @@ class ModsFolder {
 	 */
 	private static var __firstTime:Bool = true;
 	/**
-	 * Initialises `mods` folder by adding callbacks and such.
+	 * Initialises `mods` folder.
 	 */
 	public static function init() {
-
+		if(!getModsList().contains(Options.lastLoadedMod))
+			Options.lastLoadedMod = null;
 	}
 
 	/**
@@ -89,6 +90,24 @@ class ModsFolder {
 		#end
 	}
 
+	public static function getModsList():Array<String> {
+		var mods:Array<String> = [];
+		#if MOD_SUPPORT
+		for(modFolder in FileSystem.readDirectory(modsPath)) {
+			if (FileSystem.isDirectory('${modsPath}${modFolder}')) {
+				mods.push(modFolder);
+			} else {
+				var ext = Path.extension(modFolder).toLowerCase();
+				switch(ext) {
+					case 'zip':
+						// is a zip mod!!
+						mods.push(Path.withoutExtension(modFolder));
+				}
+			}
+		}
+		#end
+		return mods;
+	}
 	public static function getLoadedMods():Array<String> {
 		var libs = [];
 		for (i in Paths.assetsTree.libraries) {

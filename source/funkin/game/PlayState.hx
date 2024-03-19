@@ -649,7 +649,7 @@ class PlayState extends MusicBeatState
 			var strLine = new StrumLine(chars,
 				startingPos,
 				strumLine.strumScale == null ? 1 : strumLine.strumScale,
-				strumLine.type == 2 || (!coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode))), 
+				strumLine.type == 2 || (!coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode))),
 				strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls,
 				strumLine.vocalsSuffix
 			);
@@ -758,7 +758,7 @@ class PlayState extends MusicBeatState
 			SaveWarning.selectionClass = CharterSelection;
 			SaveWarning.warningFunc = saveWarn;
 			SaveWarning.saveFunc = () ->  {
-				@:privateAccess Chart.save('${Paths.getAssetsRoot()}/songs/${Charter.__song.toLowerCase()}', 
+				@:privateAccess Chart.save('${Paths.getAssetsRoot()}/songs/${Charter.__song.toLowerCase()}',
 					PlayState.SONG, Charter.__diff.toLowerCase(), {saveMetaInChart: false, saveEventsInChart: true});
 			}
 		}
@@ -1846,10 +1846,10 @@ class PlayState extends MusicBeatState
 	private inline function get_playerStrums():StrumLine
 		return strumLines.members[1];
 	private inline function get_gfSpeed():Int
-		return (strumLines.members[2] != null && strumLines.members[2].characters[0] != null) ? strumLines.members[2].characters[0].danceInterval : 1;
+		return (strumLines.members[2] != null && strumLines.members[2].characters[0] != null) ? strumLines.members[2].characters[0].beatInterval : 1;
 	private inline function set_gfSpeed(v:Int):Int {
 		if (strumLines.members[2] != null && strumLines.members[2].characters[0] != null)
-			strumLines.members[2].characters[0].danceInterval = v;
+			strumLines.members[2].characters[0].beatInterval = v;
 		return v;
 	}
 

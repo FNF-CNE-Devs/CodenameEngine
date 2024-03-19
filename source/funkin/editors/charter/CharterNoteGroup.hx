@@ -64,7 +64,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 
 		if (autoSort && members.length != __lastSort)
 			sortNotes();
-		
+
 		forEach((n) -> {
 			if(n.exists && n.active) {
 				n.cameras = n.__lastDrawCameras = cameras;

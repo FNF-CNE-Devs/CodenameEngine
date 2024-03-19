@@ -52,7 +52,7 @@ class CharacterEditor extends UIState {
 		WindowUtils.endfix = " (Character Editor)";
 		SaveWarning.selectionClass = CharacterSelection;
 		SaveWarning.saveFunc = () -> {_file_save(null);};
-		
+
 		topMenu = [
 			{
 				label: "File",
@@ -328,14 +328,14 @@ class CharacterEditor extends UIState {
 
 	function _file_save(_) {
 		#if sys
-		sys.io.File.saveContent(
+		CoolUtil.safeSaveFile(
 			'${Paths.getAssetsRoot()}/data/characters/${character.curCharacter}.xml',
 			buildCharacter()
 		);
 		undos.save();
-		return;
-		#end
+		#else
 		_file_saveas(_);
+		#end
 	}
 
 	function _file_saveas(_) {

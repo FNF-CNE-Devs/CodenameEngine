@@ -1,9 +1,7 @@
 package funkin.backend.system.macros;
 
 #if macro
-import sys.io.Process;
 import haxe.macro.Context;
-import haxe.macro.Compiler;
 import haxe.macro.Expr;
 #end
 

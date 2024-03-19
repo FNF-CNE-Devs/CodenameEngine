@@ -53,10 +53,7 @@ class OptionsTree extends FlxTypedGroup<OptionsScreen> {
 	}
 
 	public function clearLastMenu() {
-		if (lastMenu != null) {
-			lastMenu.destroy();
-			lastMenu = null;
-		}
+		lastMenu = FlxDestroyUtil.destroy(lastMenu);
 	}
 
 	public override function destroy() {
