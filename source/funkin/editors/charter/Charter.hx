@@ -558,7 +558,7 @@ class Charter extends UIState {
 		var pixelsNeeded:Int = Math.floor(pixelsToAnalyze/3);
 		if ((pixelsToAnalyze/3) % 1 > 0) pixelsNeeded += 1;
 
-		var WRAP_WIDTH:Int = 300; // just to test if it works - lunar
+		var WRAP_WIDTH:Int = 4000; // just to test if it works - lunar
 
 		var waveData:BitmapData = new BitmapData(WRAP_WIDTH, 1+Math.floor(pixelsNeeded/WRAP_WIDTH), true, 0xFF000000);
 
@@ -566,7 +566,7 @@ class Charter extends UIState {
 			for (x in 0...waveData.width) {
 				var amplitudes:Array<Float> = [0., 0., 0.];
 				for (color in 0...3) {
-					var gridY:Float = (y * (WRAP_WIDTH * 3)) + (x * 3) + color;
+					var gridY:Float = (y * (waveData.width * 3)) + (x * 3) + color;
 
 					var startTime:Float = Conductor.getTimeForStep(gridY/40);
 					if (startTime > FlxG.sound.music.length)
@@ -1093,11 +1093,6 @@ class Charter extends UIState {
 		noteTypeText.text = '($noteType) ${noteTypes[noteType-1] == null ? "Default Note" : noteTypes[noteType-1]}';
 
 		super.update(elapsed);
-
-		if (FlxG.keys.justPressed.X)
-			wshader.data.MODE.value = [false];
-		if (FlxG.keys.justPressed.Y)
-			wshader.data.MODE.value = [true];
 
 		scrollBar.size = (FlxG.height / 40 / charterCamera.zoom);
 		scrollBar.start = Conductor.curStepFloat - (scrollBar.size / 2);
