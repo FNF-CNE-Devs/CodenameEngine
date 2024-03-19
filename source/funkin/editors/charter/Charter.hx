@@ -16,6 +16,9 @@ import funkin.backend.chart.ChartData;
 import flixel.addons.display.FlxBackdrop;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.editors.ui.UIState;
+import flixel.util.FlxColor;
+import openfl.display.BitmapData;
+import funkin.backend.shaders.CustomShader;
 
 class Charter extends UIState {
 	public static var __song:String;
@@ -547,7 +550,56 @@ class Charter extends UIState {
 		// Undo Stuffs :D
 		__relinkUndos();
 		__applyPlaytestInfo();
+
+		var analyzer:AudioAnalyzer = new AudioAnalyzer(FlxG.sound.music);
+
+		var pixelsToAnalyze:Float = __endStep*40;
+
+		var pixelsNeeded:Int = Math.floor(pixelsToAnalyze/3);
+		if ((pixelsToAnalyze/3) % 1 > 0) pixelsNeeded += 1;
+
+		var WRAP_WIDTH:Int = 300; // just to test if it works - lunar
+
+		var waveData:BitmapData = new BitmapData(WRAP_WIDTH, 1+Math.floor(pixelsNeeded/WRAP_WIDTH), true, 0xFF000000);
+
+		for (y in 0...waveData.height)
+			for (x in 0...waveData.width) {
+				var amplitudes:Array<Float> = [0., 0., 0.];
+				for (color in 0...3) {
+					var gridY:Float = (y * (WRAP_WIDTH * 3)) + (x * 3) + color;
+
+					var startTime:Float = Conductor.getTimeForStep(gridY/40);
+					if (startTime > FlxG.sound.music.length)
+						if (color == 0) break; else continue;
+
+					var endTime:Float = Conductor.getTimeForStep((gridY+1)/40);
+					if (endTime > FlxG.sound.music.length)
+						if (color == 0) break; else continue;
+
+					var amplitude:Float = analyzer.analyze(startTime, endTime);
+					amplitudes[color] = amplitude;
+				}
+				waveData.setPixel(x, y, FlxColor.fromRGBFloat(amplitudes[0], amplitudes[1], amplitudes[2]));
+			}
+
+		var sprite:FlxSprite = new FlxSprite().loadGraphic(waveData);
+		sprite.cameras = [charterCamera];
+		add(sprite);
+
+		var testWaveform:FlxSprite = new FlxSprite().makeSolid(160, 16*Std.int(40 * Conductor.getMeasureLength()), 0xFF000000);
+		testWaveform.cameras = [charterCamera];
+		add(testWaveform);
+
+		wshader = new CustomShader("engine/editorWaveforms");
+		wshader.data.waveformSize.value = [waveData.width, waveData.height];
+		wshader.data.waveformTexture.input = waveData;
+
+		wshader.data.textureRes.value = [testWaveform.width, testWaveform.height];
+
+		testWaveform.shader = wshader;
 	}
+
+	var wshader:CustomShader;
 
 	public var __endStep:Float = 0;
 	public function refreshBPMSensitive() {
@@ -1041,6 +1093,11 @@ class Charter extends UIState {
 		noteTypeText.text = '($noteType) ${noteTypes[noteType-1] == null ? "Default Note" : noteTypes[noteType-1]}';
 		
 		super.update(elapsed);
+
+		if (FlxG.keys.justPressed.X)
+			wshader.data.MODE.value = [false];
+		if (FlxG.keys.justPressed.Y)
+			wshader.data.MODE.value = [true];
 
 		scrollBar.size = (FlxG.height / 40 / charterCamera.zoom);
 		scrollBar.start = Conductor.curStepFloat - (scrollBar.size / 2);
