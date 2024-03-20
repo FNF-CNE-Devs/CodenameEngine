@@ -5,7 +5,6 @@
 
 uniform vec2 textureRes;
 uniform float pixelOffset;
-uniform float waveAlpha;
 
 uniform sampler2D waveformTexture;
 uniform ivec2 waveformSize;
