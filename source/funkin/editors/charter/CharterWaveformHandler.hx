@@ -34,10 +34,8 @@ class CharterWaveformHandler extends FlxBasic {
 		var pixelsNeeded:Int = Math.floor(ampsNeeded/3);
 		if ((ampsNeeded/3) % 1 > 0) pixelsNeeded += 1;
 
-		var WRAP:Int = 500; // should be ampSqrt
-
 		var waveData:BitmapData = new BitmapData(
-			WRAP, 1+Math.floor(pixelsNeeded/WRAP), true, 0xFF000000
+			ampSqrt, 1+Math.floor(pixelsNeeded/ampSqrt), true, 0xFF000000
 		);
 
 		for (y in 0...waveData.height)

@@ -551,12 +551,14 @@ class Charter extends UIState {
 		__relinkUndos();
 		__applyPlaytestInfo();
 
-		/*
 		var charterWaveHandler:CharterWaveformHandler = new CharterWaveformHandler();
-		var waveShader:CustomShader = charterWaveHandler.generateShader("Inst.ogg", FlxG.sound.music);
+		charterWaveHandler.ampsNeeded = __endStep*40;
 
+		var waveShader:CustomShader = charterWaveHandler.generateShader("Voices.ogg", vocals);
 		for (grid in gridBackdrops) grid.waveformSprite.shader = waveShader;
-		*/
+
+		var dataDisplay:FlxSprite = new FlxSprite().loadGraphic(charterWaveHandler.waveDatas.get("Voices.ogg"));
+		dataDisplay.cameras = [charterCamera]; dataDisplay.x = -dataDisplay.width; add(dataDisplay);
 	}
 
 	public var __endStep:Float = 0;
