@@ -10,7 +10,7 @@ class CharterWaveformHandler extends FlxBasic {
 	public var ampsNeeded:Float = 0;
 	public var ampSqrt(get, never):Int;
 	public function get_ampSqrt():Int {
-		var sqrt:Float = Math.sqrt(ampsNeeded);
+		var sqrt:Float = Math.sqrt(Math.floor(ampsNeeded/3));
 		var ampRet:Int = Math.floor(sqrt);
 		if (sqrt % 1 > 0) ampRet += 1;
 		return ampRet;
