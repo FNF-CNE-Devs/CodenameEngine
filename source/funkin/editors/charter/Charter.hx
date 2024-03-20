@@ -558,7 +558,7 @@ class Charter extends UIState {
 		var pixelsNeeded:Int = Math.floor(pixelsToAnalyze/3);
 		if ((pixelsToAnalyze/3) % 1 > 0) pixelsNeeded += 1;
 
-		var WRAP_WIDTH:Int = 4000; // just to test if it works - lunar
+		var WRAP_WIDTH:Int = 500; // just to test if it works - lunar
 
 		var waveData:BitmapData = new BitmapData(WRAP_WIDTH, 1+Math.floor(pixelsNeeded/WRAP_WIDTH), true, 0xFF000000);
 
@@ -588,17 +588,24 @@ class Charter extends UIState {
 
 		var testWaveform:FlxSprite = new FlxSprite().makeSolid(160, 16*Std.int(40 * Conductor.getMeasureLength()), 0xFF000000);
 		testWaveform.cameras = [charterCamera];
-		add(testWaveform);
+		// add(testWaveform);
 
 		wshader = new CustomShader("engine/editorWaveforms");
+		// wshader.data.textureRes.value = [testWaveform.width, testWaveform.height];
 		wshader.data.waveformSize.value = [waveData.width, waveData.height];
 		wshader.data.waveformTexture.input = waveData;
+		wshader.data.pixelOffset.value = [0];
 
-		wshader.data.textureRes.value = [testWaveform.width, testWaveform.height];
-
-		testWaveform.shader = wshader;
+		testSpriteCool = new FlxSprite().makeSolid(1, 1, 0xFFFF0000);
+		testSpriteCool.scale.set(160, FlxG.height);
+		testSpriteCool.cameras = [charterCamera];
+		testSpriteCool.updateHitbox(); 
+		testSpriteCool.setPosition(0,0);
+		testSpriteCool.shader = wshader;
+		add(testSpriteCool);
 	}
 
+	var testSpriteCool:FlxSprite;
 	var wshader:CustomShader;
 
 	public var __endStep:Float = 0;
@@ -1059,6 +1066,21 @@ class Charter extends UIState {
 			((((40*4) * gridBackdrops.strumlinesAmount) - FlxG.width) / 2),
 			gridBackdrops.conductorSprY - (FlxG.height * 0.5)
 		);
+
+		testSpriteCool.scale.set(160, FlxG.height * (1/charterCamera.zoom));
+		testSpriteCool.updateHitbox();
+
+		testSpriteCool.y = (charterCamera.scroll.y+FlxG.height/2)-(testSpriteCool.height/2);
+
+		if (testSpriteCool.y < 0) {testSpriteCool.scale.y += testSpriteCool.y; testSpriteCool.y = 0;}
+		if (testSpriteCool.y + testSpriteCool.height > __endStep*40) {
+			testSpriteCool.scale.y -= (testSpriteCool.y + testSpriteCool.height)-(__endStep*40);
+			testSpriteCool.y = (__endStep*40) - testSpriteCool.scale.y;
+		}
+		testSpriteCool.updateHitbox();
+
+		wshader.data.textureRes.value = [testSpriteCool.width, testSpriteCool.height];
+		wshader.data.pixelOffset.value = [Math.max(gridBackdrops.conductorSprY - ((FlxG.height * (1/charterCamera.zoom)) * 0.5), 0)];
 
 		if (topMenuSpr.members[playbackIndex] != null) {
 			var playBackButton:UITopMenuButton = cast topMenuSpr.members[playbackIndex];
