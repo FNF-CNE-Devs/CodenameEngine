@@ -3,6 +3,9 @@
 
 // Used in charter by waveforms -lunar
 
+const vec3 gradient1 = vec3(114./255., 81./255., 135./255);
+const vec3 gradient2 = vec3(144./255., 80./255., 186./255);
+
 uniform vec2 textureRes;
 uniform float pixelOffset;
 
@@ -10,32 +13,24 @@ uniform sampler2D waveformTexture;
 uniform ivec2 waveformSize;
 
 float getAmplitude(vec2 pixel) {
-	float amplitudeRet = 0.; // look in charter for more how it works -lunar
-
 	float pixelID = floor((pixel.y+pixelOffset)/3.);
 	
-	vec2 wavePixel = vec2(mod(pixelID, waveformSize.x), floor(pixelID/waveformSize.x));
+	// TODO: INVESTIGATE THE 1.+ AND WHY IT WORKS (SRSLY I GOT NO CLUE) -lunar
+	vec2 wavePixel = vec2(int(pixelID)%waveformSize.x, 1.+floor(pixelID/waveformSize.x));
 	vec4 waveData = texture2D(waveformTexture, wavePixel / waveformSize);
 
-	switch (int(round(mod(wavePixel.x, 3.)))) {
-		case 0: amplitudeRet = waveData.r; break;
-		case 1: amplitudeRet = waveData.g; break;
-		case 2: amplitudeRet = waveData.b; break;
+	switch (int(wavePixel.x)%3) {
+		case 0: return waveData.r; break;
+		case 1: return waveData.g; break;
+		case 2: return waveData.b; break;
 	}
-	return amplitudeRet;
+	return 0.;
 }
 
 bool inWaveForm(vec2 pixel, float width) {
 	float widthdiv2 = width/2.;
 	return pixel.x > widthdiv2 && pixel.x < textureRes.x-widthdiv2;
 }
-
-float getAmplitudePixel(vec2 pixel, vec2 offset) {
-	return getAmplitude(pixel + offset);
-}
-
-const vec3 gradient1 = vec3(114./255., 81./255., 135./255);
-const vec3 gradient2 = vec3(144./255., 80./255., 186./255);
 
 void main()
 {
