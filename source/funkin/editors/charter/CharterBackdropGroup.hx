@@ -64,6 +64,8 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 			grid.sectionSeparator.visible = sectionsVisible;
 			grid.beatSeparator.visible = beatsVisible;
 
+			grid.waveformSprite.shader = strumLine.waveformShader;
+
 			grid.notesGroup.clear();
 			notesGroup.forEach((n) -> {
 				var onStr:Bool = (n.snappedToStrumline ? n.strumLineID : Std.int(FlxMath.bound((n.x+n.width)/(40*4), 0, strumLineGroup.members.length-1))) == i;

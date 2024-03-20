@@ -22,6 +22,8 @@ class CharterWaveformHandler extends FlxBasic {
 	public var sounds:Map<String, FlxSound> = [];
 	public var analyzers:Map<String, AudioAnalyzer> = [];
 
+	public var waveformList:Array<String> = [];
+
 	public function new() {super(); exists = false;}
 
 	public function generateData(name:String, sound:FlxSound):BitmapData {
@@ -75,14 +77,19 @@ class CharterWaveformHandler extends FlxBasic {
 		return waveShader;
 	}
 
-	public override function destroy() {
+	public function clearWaveforms() {
 		for (data in waveDatas) data.dispose();
 		for (shader in waveShaders) shader = null;
 		for (analyzer in analyzers) analyzer = null;
 
 		waveDatas.clear(); waveShaders.clear();
 		analyzers.clear(); sounds.clear();
+		
+		waveformList = [];
+	}
 
+	public override function destroy() {
+		clearWaveforms();
 		super.destroy();
 	}
 }

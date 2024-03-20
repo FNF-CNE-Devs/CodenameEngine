@@ -86,6 +86,7 @@ class Charter extends UIState {
 	public static var undos:UndoList<CharterChange>;
 
 	public static var clipboard:Array<CharterCopyboardObject> = [];
+	public static var waveformHandler:CharterWaveformHandler;
 
 	public function new(song:String, diff:String, reload:Bool = true) {
 		super();
@@ -551,13 +552,7 @@ class Charter extends UIState {
 		__relinkUndos();
 		__applyPlaytestInfo();
 
-		var charterWaveHandler:CharterWaveformHandler = new CharterWaveformHandler();
-		charterWaveHandler.ampsNeeded = __endStep*40;
-
-		var waveShader:CustomShader = charterWaveHandler.generateShader("Voices.ogg", vocals);
-		for (grid in gridBackdrops) grid.waveformSprite.shader = waveShader;
-
-		var dataDisplay:FlxSprite = new FlxSprite().loadGraphic(charterWaveHandler.waveDatas.get("Voices.ogg"));
+		var dataDisplay:FlxSprite = new FlxSprite().loadGraphic(waveformHandler.waveDatas.get("Voices.ogg"));
 		dataDisplay.cameras = [charterCamera]; dataDisplay.x = -dataDisplay.width; add(dataDisplay);
 	}
 
@@ -569,6 +564,30 @@ class Charter extends UIState {
 
 		gridBackdrops.bottomLimitY = __endStep * 40;
 		eventsBackdrop.bottomSeparator.y = gridBackdrops.bottomLimitY-2;
+
+		regenerateWaveforms();
+	}
+
+	public function regenerateWaveforms() {
+		if (waveformHandler == null ? true : waveformHandler.ampsNeeded != __endStep*40) {
+			trace("REGEN WAVES");
+
+			waveformHandler.clearWaveforms();
+			waveformHandler.ampsNeeded = __endStep * 40;
+
+			var wavesToGenerate:Array<{name:String, sound:FlxSound}> = [
+				{name: "Inst.ogg", sound: FlxG.sound.music},
+				{name: "Voices.ogg", sound: vocals}
+			];
+
+			for (data in wavesToGenerate) {
+				waveformHandler.generateShader(data.name, data.sound);
+				waveformHandler.waveformList.push(data.name);
+			}
+
+			for (strumLine in strumLines) // Update grids
+				strumLine.selectedWaveform = strumLine.selectedWaveform;
+		}
 	}
 
 	public override function beatHit(curBeat:Int) {
@@ -1726,10 +1745,12 @@ class Charter extends UIState {
 		selection = new Selection();
 		undos = new UndoList<CharterChange>();
 		clipboard = []; playtestInfo = null;
+		waveformHandler = new CharterWaveformHandler();
 	}
 
 	@:noCompletion public function __clearStatics() {
-		selection = null; undos = null; clipboard = null; playtestInfo = null;
+		selection = null; undos = null; clipboard = null; playtestInfo = null; 
+		waveformHandler.destroy(); Charter.waveformHandler = null;
 	}
 
 	@:noCompletion public function __updatePlaytestInfo() {
