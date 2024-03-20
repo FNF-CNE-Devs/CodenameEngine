@@ -551,62 +551,13 @@ class Charter extends UIState {
 		__relinkUndos();
 		__applyPlaytestInfo();
 
-		var analyzer:AudioAnalyzer = new AudioAnalyzer(FlxG.sound.music);
+		/*
+		var charterWaveHandler:CharterWaveformHandler = new CharterWaveformHandler();
+		var waveShader:CustomShader = charterWaveHandler.generateShader("Inst.ogg", FlxG.sound.music);
 
-		var pixelsToAnalyze:Float = __endStep*40;
-
-		var pixelsNeeded:Int = Math.floor(pixelsToAnalyze/3);
-		if ((pixelsToAnalyze/3) % 1 > 0) pixelsNeeded += 1;
-
-		var WRAP_WIDTH:Int = 500; // just to test if it works - lunar
-
-		var waveData:BitmapData = new BitmapData(WRAP_WIDTH, 1+Math.floor(pixelsNeeded/WRAP_WIDTH), true, 0xFF000000);
-
-		for (y in 0...waveData.height)
-			for (x in 0...waveData.width) {
-				var amplitudes:Array<Float> = [0., 0., 0.];
-				for (color in 0...3) {
-					var gridY:Float = (y * (waveData.width * 3)) + (x * 3) + color;
-
-					var startTime:Float = Conductor.getTimeForStep(gridY/40);
-					if (startTime > FlxG.sound.music.length)
-						if (color == 0) break; else continue;
-
-					var endTime:Float = Conductor.getTimeForStep((gridY+1)/40);
-					if (endTime > FlxG.sound.music.length)
-						if (color == 0) break; else continue;
-
-					var amplitude:Float = analyzer.analyze(startTime, endTime);
-					amplitudes[color] = amplitude;
-				}
-				waveData.setPixel(x, y, FlxColor.fromRGBFloat(amplitudes[0], amplitudes[1], amplitudes[2]));
-			}
-
-		var sprite:FlxSprite = new FlxSprite().loadGraphic(waveData);
-		sprite.cameras = [charterCamera];
-		add(sprite);
-
-		var testWaveform:FlxSprite = new FlxSprite().makeSolid(160, 16*Std.int(40 * Conductor.getMeasureLength()), 0xFF000000);
-		testWaveform.cameras = [charterCamera];
-		// add(testWaveform);
-
-		wshader = new CustomShader("engine/editorWaveforms");
-		// wshader.data.textureRes.value = [testWaveform.width, testWaveform.height];
-		wshader.data.waveformSize.value = [waveData.width, waveData.height];
-		wshader.data.waveformTexture.input = waveData;
-		wshader.data.pixelOffset.value = [0];
-
-		testSpriteCool = new FlxSprite().makeSolid(1, 1, 0xFFFF0000);
-		testSpriteCool.scale.set(160, FlxG.height);
-		testSpriteCool.cameras = [charterCamera];
-		testSpriteCool.updateHitbox(); 
-		testSpriteCool.setPosition(0,0);
-		testSpriteCool.shader = wshader;
-		add(testSpriteCool);
+		for (grid in gridBackdrops) grid.waveformSprite.shader = waveShader;
+		*/
 	}
-
-	var testSpriteCool:FlxSprite;
-	var wshader:CustomShader;
 
 	public var __endStep:Float = 0;
 	public function refreshBPMSensitive() {
@@ -614,7 +565,7 @@ class Charter extends UIState {
 		var length = FlxG.sound.music.getDefault(vocals).length;
 		scrollBar.length = __endStep = Conductor.getStepForTime(length);
 
-		gridBackdrops.bottomLimitY = Conductor.getStepForTime(length) * 40;
+		gridBackdrops.bottomLimitY = __endStep * 40;
 		eventsBackdrop.bottomSeparator.y = gridBackdrops.bottomLimitY-2;
 	}
 
@@ -1066,21 +1017,6 @@ class Charter extends UIState {
 			((((40*4) * gridBackdrops.strumlinesAmount) - FlxG.width) / 2),
 			gridBackdrops.conductorSprY - (FlxG.height * 0.5)
 		);
-
-		testSpriteCool.scale.set(160, FlxG.height * (1/charterCamera.zoom));
-		testSpriteCool.updateHitbox();
-
-		testSpriteCool.y = (charterCamera.scroll.y+FlxG.height/2)-(testSpriteCool.height/2);
-
-		if (testSpriteCool.y < 0) {testSpriteCool.scale.y += testSpriteCool.y; testSpriteCool.y = 0;}
-		if (testSpriteCool.y + testSpriteCool.height > __endStep*40) {
-			testSpriteCool.scale.y -= (testSpriteCool.y + testSpriteCool.height)-(__endStep*40);
-			testSpriteCool.y = (__endStep*40) - testSpriteCool.scale.y;
-		}
-		testSpriteCool.updateHitbox();
-
-		wshader.data.textureRes.value = [testSpriteCool.width, testSpriteCool.height];
-		wshader.data.pixelOffset.value = [Math.max(gridBackdrops.conductorSprY - ((FlxG.height * (1/charterCamera.zoom)) * 0.5), 0)];
 
 		if (topMenuSpr.members[playbackIndex] != null) {
 			var playBackButton:UITopMenuButton = cast topMenuSpr.members[playbackIndex];

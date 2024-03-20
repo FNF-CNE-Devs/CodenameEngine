@@ -114,6 +114,8 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 	public var bottomLimit:FlxSprite;
 	public var bottomSeparator:FlxSprite;
 
+	public var waveformSprite:FlxSprite;
+
 	public var conductorFollowerSpr:FlxSprite;
 	public var beatSeparator:FlxBackdrop;
 	public var sectionSeparator:FlxBackdrop;
@@ -126,6 +128,11 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 
 		gridBackDrop = new FlxBackdrop(gridGraphic, Y, 0, 0);
 		add(gridBackDrop);
+
+		waveformSprite = new FlxSprite().makeSolid(1, 1, 0xFF000000);
+		waveformSprite.scale.set(160, 1);
+		waveformSprite.updateHitbox(); 
+		add(waveformSprite);
 
 		sectionSeparator = new FlxBackdrop(null, Y, 0, 0);
 		sectionSeparator.y = -2;
@@ -191,8 +198,9 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 			alpha = strumLine.strumLine.visible ? 0.9 : 0.4;
 		} else alpha = 0.9;
 
-		for (spr in [gridBackDrop, sectionSeparator, beatSeparator, topLimit, bottomLimit, topSeparator, bottomSeparator, conductorFollowerSpr]) {
-			spr.x = x; spr.alpha = alpha;
+		for (spr in [gridBackDrop, sectionSeparator, beatSeparator, topLimit, bottomLimit, 
+				topSeparator, bottomSeparator, conductorFollowerSpr, waveformSprite]) {
+			spr.x = x; if (spr != waveformSprite) spr.alpha = alpha;
 			spr.cameras = this.cameras;
 		}
 
@@ -205,6 +213,24 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 
 		bottomLimit.scale.set(4 * 40, Math.ceil(FlxG.height / cameras[0].zoom));
 		bottomLimit.updateHitbox();
+
+		waveformSprite.visible = waveformSprite.shader != null;
+		if (waveformSprite.shader == null) return;
+
+		waveformSprite.scale.set(160, FlxG.height * (1/cameras[0].zoom));
+		waveformSprite.updateHitbox();
+
+		waveformSprite.y = (cameras[0].scroll.y+FlxG.height/2)-(waveformSprite.height/2);
+
+		if (waveformSprite.y < 0) {waveformSprite.scale.y += waveformSprite.y; waveformSprite.y = 0;}
+		if (waveformSprite.y + waveformSprite.height > bottomLimit.y) {
+			waveformSprite.scale.y -= (waveformSprite.y + waveformSprite.height)-(bottomLimit.y);
+			waveformSprite.y = (bottomLimit.y) - waveformSprite.scale.y;
+		}
+		waveformSprite.updateHitbox();
+
+		waveformSprite.shader.data.pixelOffset.value = [Math.max(conductorFollowerSpr.y - ((FlxG.height * (1/cameras[0].zoom)) * 0.5), 0)];
+		waveformSprite.shader.data.textureRes.value = [waveformSprite.width, waveformSprite.height];
 	}
 }
 

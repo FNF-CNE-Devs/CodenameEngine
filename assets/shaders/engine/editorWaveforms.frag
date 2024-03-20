@@ -5,6 +5,7 @@
 
 uniform vec2 textureRes;
 uniform float pixelOffset;
+uniform float waveAlpha;
 
 uniform sampler2D waveformTexture;
 uniform ivec2 waveformSize;
@@ -58,6 +59,6 @@ void main()
 
 			gradientColor = mix(gradientColor, gradientColor * vec3(1.8), map(hightlightAmount, 0., 1., .4, 1.));
 		}
-		gl_FragColor = vec4(vec3(gradientColor * mix(0.5, .8, amplitude)), 1.);
+		gl_FragColor = vec4(vec3(gradientColor * mix(0.5, .8, amplitude))*openfl_Alphav, openfl_Alphav);
 	}
 }
