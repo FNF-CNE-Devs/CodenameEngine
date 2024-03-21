@@ -565,28 +565,50 @@ class Charter extends UIState {
 		gridBackdrops.bottomLimitY = __endStep * 40;
 		eventsBackdrop.bottomSeparator.y = gridBackdrops.bottomLimitY-2;
 
-		regenerateWaveforms();
+		updateWaveforms();
 	}
 
-	public function regenerateWaveforms() {
-		if (waveformHandler == null ? true : waveformHandler.ampsNeeded != __endStep*40) {
-			trace("REGEN WAVES");
+	public function updateWaveforms() {
+		var wavesToGenerate:Array<{name:String, sound:FlxSound}> = [
+			{name: "Inst.ogg", sound: FlxG.sound.music},
+		];
+		if (vocals != null) wavesToGenerate.push({name: "Voices.ogg", sound: vocals});
 
+		for (strumLine in strumLines)
+			if (strumLine.vocals != null && strumLine.strumLine.vocalsSuffix != null && strumLine.strumLine.vocalsSuffix != "")
+				wavesToGenerate.push({
+					name: 'Voices${strumLine.strumLine.vocalsSuffix}.ogg', 
+					sound: strumLine.vocals
+				});
+
+		var oldWaveformList:Array<String> = waveformHandler.waveformList;
+		var newWaveformList:Array<String> = [for (data in wavesToGenerate) data.name];
+
+		if (waveformHandler == null ? true : waveformHandler.ampsNeeded != __endStep*40) {
 			waveformHandler.clearWaveforms();
 			waveformHandler.ampsNeeded = __endStep * 40;
-
-			var wavesToGenerate:Array<{name:String, sound:FlxSound}> = [
-				{name: "Inst.ogg", sound: FlxG.sound.music},
-				{name: "Voices.ogg", sound: vocals}
-			];
 
 			for (data in wavesToGenerate) {
 				waveformHandler.generateShader(data.name, data.sound);
 				waveformHandler.waveformList.push(data.name);
 			}
+		} else if (waveformHandler != null && waveformHandler.waveformList.length != newWaveformList.length) {
+			for (name in oldWaveformList)
+				if (!newWaveformList.contains(name))
+					waveformHandler.clearWaveform(name);
 
-			for (strumLine in strumLines) // Update grids
-				strumLine.selectedWaveform = strumLine.selectedWaveform;
+			for (data in wavesToGenerate)
+				if (!oldWaveformList.contains(data.name))
+					waveformHandler.generateShader(data.name, data.sound);
+
+			waveformHandler.waveformList = newWaveformList;
+		}
+
+		for (strumLine in strumLines) {
+			if (strumLine.selectedWaveform == -1) continue;
+
+			var oldName:String = oldWaveformList[strumLine.selectedWaveform];
+			strumLine.selectedWaveform = waveformHandler.waveformList.indexOf(oldName);
 		}
 	}
 
@@ -1008,6 +1030,8 @@ class Charter extends UIState {
 			strumLines.members[strID].updateInfo();
 
 			undos.addToUndo(CEditStrumLine(strID, oldData, _));
+
+			if (oldData.vocalsSuffix != _.vocalsSuffix) updateWaveforms();
 		}));
 	}
 

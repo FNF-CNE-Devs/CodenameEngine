@@ -77,6 +77,20 @@ class CharterWaveformHandler extends FlxBasic {
 		return waveShader;
 	}
 
+	public function clearWaveform(name:String) {
+		waveDatas.get(name).dispose();
+		waveDatas.remove(name);
+
+		waveShaders.set(name, null);
+		waveShaders.remove(name);
+
+		analyzers.set(name, null);
+		analyzers.remove(name);
+
+		sounds.remove(name);
+		waveformList.remove(name);
+	}
+
 	public function clearWaveforms() {
 		for (data in waveDatas) data.dispose();
 		for (shader in waveShaders) shader = null;
@@ -84,7 +98,7 @@ class CharterWaveformHandler extends FlxBasic {
 
 		waveDatas.clear(); waveShaders.clear();
 		analyzers.clear(); sounds.clear();
-		
+
 		waveformList = [];
 	}
 
