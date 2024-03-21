@@ -1,7 +1,6 @@
 #pragma header
-#extension GL_EXT_gpu_shader4 : enable
 
-// Used in charter by waveforms -lunar
+// Used in charter by waveforms
 
 const vec3 gradient1 = vec3(114./255., 81./255., 135./255);
 const vec3 gradient2 = vec3(144./255., 80./255., 186./255);
@@ -23,10 +22,10 @@ float getAmplitude(vec2 pixel) {
 	float pixelID = floor((pixel.y+pixelOffset)/3.);
 	
 	// TODO: INVESTIGATE THE 1.+ AND WHY IT WORKS (SRSLY I GOT NO CLUE) -lunar
-	vec2 wavePixel = vec2(int(pixelID)%waveformSize.x, 1.+floor(pixelID/waveformSize.x));
+	vec2 wavePixel = vec2(mod(pixelID,waveformSize.x), 1.+floor(pixelID/waveformSize.x));
 	vec4 waveData = texture2D(waveformTexture, wavePixel / waveformSize);
 
-	switch (int(wavePixel.x)%3) {
+	switch (int(mod(wavePixel.x, 3.))) {
 		case 0: return waveData.r; break;
 		case 1: return waveData.g; break;
 		case 2: return waveData.b; break;
@@ -42,10 +41,9 @@ bool inWaveForm(vec2 pixel, float width) {
 void highDetailWaveform(vec2 pixel, float amplitude, float ampwidth) {
 	if (inWaveForm(pixel, ampwidth)) {
 		vec3 gradientColor = mix(gradient1, gradient2, openfl_TextureCoordv.x);
-		gradientColor *= pixel.y+pixelOffset>playerPosition ? .7 : 1.;
+		gradientColor *= pixel.y+pixelOffset>playerPosition ? .7 : 1.; 
 
-		float ampwidthHighlightCool = (1.-(amplitude)) * textureRes.x;
-		float remapCoord = (ampwidthHighlightCool/textureRes.x)/2.;
+		float remapCoord = (amplitude/textureRes.x)/2.;
 
 		float mappedCoord = map(openfl_TextureCoordv.x, remapCoord, 1.-remapCoord, 0., 1.);
 		float hightlightAmount = 1.-(abs(mappedCoord-0.5)*2.);
@@ -63,6 +61,15 @@ void highDetailWaveform(vec2 pixel, float amplitude, float ampwidth) {
 		}
 		
 		gl_FragColor = vec4(vec3(gradientColor * mix(0.5, .8, amplitude))*openfl_Alphav, openfl_Alphav);
+
+		/*
+		const float shineSize = 20.;
+
+		if (pixel.y+pixelOffset<playerPosition && (pixel.y+pixelOffset+shineSize)>playerPosition) {
+			float shineness = abs(1.-(playerPosition-(pixel.y+pixelOffset))/shineSize);
+			gl_FragColor.rgb = mix(gl_FragColor.rgb , vec3(209./255., 10./255., 196./255.), map(shineness, 0., 1., 0., .4));
+		}
+		*/
 
 		float lastAmplitude = getAmplitude(pixel - vec2(0., -1.));
 		float lastAmpwidth = (1.-lastAmplitude) * textureRes.x;
