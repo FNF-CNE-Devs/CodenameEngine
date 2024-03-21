@@ -1,5 +1,9 @@
 package funkin.editors.charter;
 
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
+import flixel.graphics.FlxGraphic;
+import flixel.addons.display.FlxTiledSprite;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOptionSpr;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.editors.charter.CharterStrumline;
@@ -55,6 +59,7 @@ class Charter extends UIState {
 
 	public var gridBackdropDummy:CharterBackdropDummy;
 	public var noteHoverer:CharterNoteHoverer;
+	public var noteDeleteAnims:CharterDeleteAnim;
 
 	public var strumlineInfoBG:FlxSprite;
 	public var strumlineAddButton:CharterStrumlineButton;
@@ -389,8 +394,10 @@ class Charter extends UIState {
 		selectionBox.incorporeal = true;
 
 		noteHoverer = new CharterNoteHoverer();
+		noteDeleteAnims = new CharterDeleteAnim();
 
-		selectionBox.cameras = notesGroup.cameras = gridBackdrops.cameras = noteHoverer.cameras = [charterCamera];
+		selectionBox.cameras = notesGroup.cameras = gridBackdrops.cameras = 
+		noteHoverer.cameras = noteDeleteAnims.cameras = [charterCamera];
 
 		topMenuSpr = new UITopMenu(topMenu);
 		topMenuSpr.cameras = uiGroup.cameras = [uiCamera];
@@ -458,6 +465,7 @@ class Charter extends UIState {
 		add(addEventSpr);
 		add(eventsGroup);
 		add(noteHoverer);
+		add(noteDeleteAnims);
 		add(notesGroup);
 		add(selectionBox);
 		add(strumlineInfoBG);
@@ -560,6 +568,26 @@ class Charter extends UIState {
 
 		// var dataDisplay:FlxSprite = new FlxSprite().loadGraphic(waveformHandler.waveDatas.get("Voices.ogg"));
 		// dataDisplay.cameras = [charterCamera]; dataDisplay.x = -dataDisplay.width; add(dataDisplay);
+
+		// ! back into the vault you! -lunar
+		/*
+		var graphic:FlxGraphic = FlxG.bitmap.add(Paths.image('editors/charter/sustain'));
+		var realAnims:Array<FlxGraphic> = [
+			for (x in 0...2)
+				for (y in 0...2) {
+					var bitmapData:BitmapData = new BitmapData(Std.int(graphic.width/2), Std.int(graphic.height/2), true, 0x00000000);
+					bitmapData.copyPixels(
+						graphic.bitmap, new Rectangle(x*(graphic.width/2), y*(graphic.height/2), graphic.width, graphic.height), new Point(0,0)
+					);
+					FlxG.bitmap.add(bitmapData, true);
+				}
+		];
+
+		trace(realAnims);
+
+		var testSprite = new FlxTiledSprite(realAnims[0], 10, 100, false, true);
+		testSprite.cameras =  [charterCamera]; add(testSprite);
+		*/
 	}
 
 	public var __endStep:Float = 0;
@@ -657,6 +685,7 @@ class Charter extends UIState {
 		for(s in selection) s.selected = true;
 	}
 
+	var deletedNotes:Selection = new Selection();
 	public function updateNoteLogic(elapsed:Float) {
 		updateSelectionLogic();
 
@@ -762,7 +791,11 @@ class Charter extends UIState {
 			case NONE:
 				if (FlxG.mouse.justPressed)
 					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
-
+				else if (FlxG.mouse.justPressedRight) {
+					closeCurrentContextMenu(); 
+					gridActionType = DELTE_SELECTION;
+				}
+					
 				if (gridBackdropDummy.hovered) {
 					// AUTO DETECT
 					if (FlxG.mouse.pressed && (Math.abs(mousePos.x - dragStartPos.x) > 20 || Math.abs(mousePos.y - dragStartPos.y) > 20))
@@ -839,6 +872,30 @@ class Charter extends UIState {
 
 					gridActionType = NONE;
 					currentCursor = ARROW;
+				}
+			case DELTE_SELECTION:
+				notesGroup.forEach(function(n) {
+					if (n.hovered || n.sustainDraggable) {
+						deletedNotes.push(n);
+						deleteSingleSelection(n, false);
+
+						if (selection.contains(n)) selection.remove(n);
+						noteDeleteAnims.deleteNotes.push({
+							note: n, time: noteDeleteAnims.deleteTime
+						});
+					}
+				});
+
+				if (FlxG.mouse.justReleasedRight) {
+					if (deletedNotes.length > 0)
+						undos.addToUndo(CDeleteSelection(deletedNotes.copy()));
+					else {
+						var mousePos = FlxG.mouse.getScreenPosition(uiCamera);
+						closeCurrentContextMenu();
+						openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
+						mousePos.put();
+					}
+					gridActionType = NONE; deletedNotes = [];
 				}
 		}
 		addEventSpr.selectable = !selectionBox.visible;
@@ -1319,7 +1376,10 @@ class Charter extends UIState {
 
 	function _edit_delete(_) {
 		if (selection == null || selection.length == 0) return;
-		selection = deleteSelection(selection);
+		selection.loop((n:CharterNote) -> {
+			noteDeleteAnims.deleteNotes.push({note: n, time: noteDeleteAnims.deleteTime});
+		});
+		selection = deleteSelection(selection, true);
 	}
 
 	function _edit_undo(_) {
@@ -1885,6 +1945,7 @@ enum abstract CharterGridActionType(Int) {
 	var NOTE_DRAG = 2;
 	var INVALID_DRAG = 3;
 	var SUSTAIN_DRAG = 4;
+	var DELTE_SELECTION = 5;
 }
 
 typedef PlaytestInfo = {
