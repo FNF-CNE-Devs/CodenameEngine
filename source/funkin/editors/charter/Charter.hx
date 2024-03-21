@@ -432,7 +432,7 @@ class Charter extends UIState {
 		}
 		quants.reverse();
 
-		strumlineInfoBG = new UISprite();
+		strumlineInfoBG = new FlxSprite();
 		strumlineInfoBG.loadGraphic(Paths.image('editors/charter/strumline-info-bg'));
 		strumlineInfoBG.y = 23;
 		strumlineInfoBG.scrollFactor.set();
