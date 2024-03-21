@@ -565,29 +565,6 @@ class Charter extends UIState {
 		// Undo Stuffs :D
 		__relinkUndos();
 		__applyPlaytestInfo();
-
-		// var dataDisplay:FlxSprite = new FlxSprite().loadGraphic(waveformHandler.waveDatas.get("Voices.ogg"));
-		// dataDisplay.cameras = [charterCamera]; dataDisplay.x = -dataDisplay.width; add(dataDisplay);
-
-		// ! back into the vault you! -lunar
-		/*
-		var graphic:FlxGraphic = FlxG.bitmap.add(Paths.image('editors/charter/sustain'));
-		var realAnims:Array<FlxGraphic> = [
-			for (x in 0...2)
-				for (y in 0...2) {
-					var bitmapData:BitmapData = new BitmapData(Std.int(graphic.width/2), Std.int(graphic.height/2), true, 0x00000000);
-					bitmapData.copyPixels(
-						graphic.bitmap, new Rectangle(x*(graphic.width/2), y*(graphic.height/2), graphic.width, graphic.height), new Point(0,0)
-					);
-					FlxG.bitmap.add(bitmapData, true);
-				}
-		];
-
-		trace(realAnims);
-
-		var testSprite = new FlxTiledSprite(realAnims[0], 10, 100, false, true);
-		testSprite.cameras =  [charterCamera]; add(testSprite);
-		*/
 	}
 
 	public var __endStep:Float = 0;
