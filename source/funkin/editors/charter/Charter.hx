@@ -1465,7 +1465,7 @@ class Charter extends UIState {
 	function chart_edit_data(_)
 		FlxG.state.openSubState(new ChartDataScreen(PlayState.SONG));
 	function chart_edit_metadata(_)
-		FlxG.state.openSubState(new MetaDataScreen(PlayState.SONG.meta));
+		FlxG.state.openSubState(new CharterMetaDataScreen(PlayState.SONG.meta));
 
 	function _playback_play(_) {
 		if (Conductor.songPosition >= FlxG.sound.music.getDefault(vocals).length - Conductor.songOffset) return;
