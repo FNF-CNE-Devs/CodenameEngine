@@ -62,15 +62,6 @@ void highDetailWaveform(vec2 pixel, float amplitude, float ampwidth) {
 		
 		gl_FragColor = vec4(vec3(gradientColor * mix(0.5, .8, amplitude))*openfl_Alphav, openfl_Alphav);
 
-		/*
-		const float shineSize = 20.;
-
-		if (pixel.y+pixelOffset<playerPosition && (pixel.y+pixelOffset+shineSize)>playerPosition) {
-			float shineness = abs(1.-(playerPosition-(pixel.y+pixelOffset))/shineSize);
-			gl_FragColor.rgb = mix(gl_FragColor.rgb , vec3(209./255., 10./255., 196./255.), map(shineness, 0., 1., 0., .4));
-		}
-		*/
-
 		float lastAmplitude = getAmplitude(pixel - vec2(0., -1.));
 		float lastAmpwidth = (1.-lastAmplitude) * textureRes.x;
 
@@ -91,7 +82,7 @@ void highDetailWaveform(vec2 pixel, float amplitude, float ampwidth) {
 void lowDetailWaveform(vec2 pixel, float amplitude, float ampwidth) {
 	if (inWaveForm(pixel, ampwidth)) {
 		vec3 color = lowdetailcol;
-		color *= pixel.y+pixelOffset>playerPosition ? .6 : 1.;
+		color *= pixel.y+pixelOffset>playerPosition ? .7 : 1.;
 
 		gl_FragColor = vec4(color, 1.);
 	}
