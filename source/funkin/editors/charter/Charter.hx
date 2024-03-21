@@ -1797,6 +1797,7 @@ class Charter extends UIState {
 			strumlinesDraggable: strumLines.draggable,
 			hitSounds: [for (strumLine in strumLines.members) strumLine.hitsounds],
 			mutedVocals: [for (strumLine in strumLines.members) !(strumLine.vocals.volume > 0)],
+			waveforms: [for (strumLine in strumLines.members) strumLine.selectedWaveform]
 		}
 	}
 
@@ -1813,6 +1814,8 @@ class Charter extends UIState {
 			strumLine.hitsounds = playtestInfo.hitSounds[i];
 		for (i => strumLine in strumLines.members)
 			strumLine.vocals.volume = playtestInfo.mutedVocals[i] ? 0 : 1;
+		for (i => strumLine in strumLines.members)
+			strumLine.selectedWaveform = playtestInfo.waveforms[i];
 	}
 }
 
@@ -1892,4 +1895,5 @@ typedef PlaytestInfo = {
 	var strumlinesDraggable:Bool;
 	var hitSounds:Array<Bool>;
 	var mutedVocals:Array<Bool>;
+	var waveforms:Array<Int>;
 }
