@@ -72,6 +72,7 @@ class CharterWaveformHandler extends FlxBasic {
 		waveShader.data.waveformTexture.input = waveData;
 		waveShader.data.textureRes.value = [0, 0];
 		waveShader.data.pixelOffset.value = [0];
+		waveShader.data.lowDetail.value = [Options.charterLowDetailWaveforms];
 
 		waveShaders.set(name, waveShader);
 		return waveShader;

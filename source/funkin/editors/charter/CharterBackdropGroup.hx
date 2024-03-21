@@ -233,6 +233,7 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 
 		waveformSprite.shader.data.pixelOffset.value = [Math.max(conductorFollowerSpr.y - ((FlxG.height * (1/cameras[0].zoom)) * 0.5), 0)];
 		waveformSprite.shader.data.textureRes.value = [waveformSprite.width, waveformSprite.height];
+		waveformSprite.shader.data.playerPosition.value = [conductorFollowerSpr.y];
 	}
 }
 

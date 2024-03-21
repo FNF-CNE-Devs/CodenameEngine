@@ -62,6 +62,7 @@ class Options
 	public static var charterShowSections:Bool = true;
 	public static var charterShowBeats:Bool = true;
 	public static var charterEnablePlaytestScripts:Bool = true;
+	public static var charterLowDetailWaveforms:Bool = false;
 
 	/**
 	 * PLAYER 1 CONTROLS

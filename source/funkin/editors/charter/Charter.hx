@@ -271,6 +271,12 @@ class Charter extends UIState {
 						label: 'Show Beats Separator',
 						onSelect: _view_showeventBeatSeparator,
 						icon: Options.charterShowBeats ? 1 : 0
+					},
+					null,
+					{
+						label: 'Low Detail Waveforms',
+						onSelect: _view_switchWaveformDetail,
+						icon: Options.charterLowDetailWaveforms ? 1 : 0
 					}
 				]
 			},
@@ -552,8 +558,8 @@ class Charter extends UIState {
 		__relinkUndos();
 		__applyPlaytestInfo();
 
-		var dataDisplay:FlxSprite = new FlxSprite().loadGraphic(waveformHandler.waveDatas.get("Voices.ogg"));
-		dataDisplay.cameras = [charterCamera]; dataDisplay.x = -dataDisplay.width; add(dataDisplay);
+		// var dataDisplay:FlxSprite = new FlxSprite().loadGraphic(waveformHandler.waveDatas.get("Voices.ogg"));
+		// dataDisplay.cameras = [charterCamera]; dataDisplay.x = -dataDisplay.width; add(dataDisplay);
 	}
 
 	public var __endStep:Float = 0;
@@ -1494,6 +1500,11 @@ class Charter extends UIState {
 		t.icon = (Options.charterShowBeats = !Options.charterShowBeats) ? 1 : 0;
 		eventsBackdrop.eventBeatSeparator.visible = gridBackdrops.beatsVisible = Options.charterShowBeats;
 	}
+	function _view_switchWaveformDetail(t) {
+		t.icon = (Options.charterLowDetailWaveforms = !Options.charterLowDetailWaveforms) ? 1 : 0;
+		for (shader in waveformHandler.waveShaders) shader.data.lowDetail.value = [Options.charterLowDetailWaveforms];
+	}
+	
 	inline function _snap_increasesnap(_) changequant(1);
 	inline function _snap_decreasesnap(_) changequant(-1);
 	inline function _snap_resetsnap(_) setquant(16);

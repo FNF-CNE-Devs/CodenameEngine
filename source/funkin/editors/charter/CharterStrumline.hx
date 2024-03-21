@@ -179,7 +179,7 @@ class CharterStrumlineOptions extends UITopMenuButton {
 			contextMenu.insert(1+i, {
 				label: name,
 				onSelect: function(_) {strLine.selectedWaveform = i;},
-				icon: strLine.selectedWaveform == i ? 1 : 0
+				icon: strLine.selectedWaveform == i ? 6 : 5
 			});
 
 		contextMenu.insert(1+Charter.waveformHandler.waveformList.length, null);
