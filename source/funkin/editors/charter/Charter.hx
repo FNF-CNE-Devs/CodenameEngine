@@ -670,28 +670,31 @@ class Charter extends UIState {
 	public static var autoSaveTimer:Float = 0;
 	var __autoSaveLocation:String = null;
 	public function updateAutoSaving(elapsed:Float) {
-		if (Options.charterAutoSaves) {
-			autoSaveTimer -= elapsed;
-			if (autoSaveTimer < Options.charterAutoSaveWarningTime && !autoSaveNotif.showedAnimation) {
-				if (Options.charterAutoSavesSeperateFolder)
-					__autoSaveLocation = DateTools.format(Date.now(), "%Y-%m-%d_%H-%M");
+		if (!Options.charterAutoSaves) return;
+		autoSaveTimer -= elapsed;
 
-				autoSaveNotif.startAutoSave(autoSaveTimer, 
-					!Options.charterAutoSavesSeperateFolder ? 'Saved chart at ${__diff.toLowerCase()}.json!' : 
-					'Saved chart at $__autoSaveLocation.json!'
-				);
-			}
+		if (autoSaveTimer < Options.charterAutoSaveWarningTime && !autoSaveNotif.cancelled && !autoSaveNotif.showedAnimation) {
+			if (Options.charterAutoSavesSeperateFolder)
+				__autoSaveLocation = DateTools.format(Date.now(), "%Y-%m-%d_%H-%M");
+			autoSaveNotif.startAutoSave(autoSaveTimer, 
+				!Options.charterAutoSavesSeperateFolder ? 'Saved chart at ${__diff.toLowerCase()}.json!' : 
+				'Saved chart at $__autoSaveLocation.json!'
+			);
+		}
 
-			if (autoSaveTimer <= 0) {
-				autoSaveTimer = Options.charterAutoSaveTime; buildChart();
+		if (autoSaveTimer <= 0) {
+			autoSaveTimer = Options.charterAutoSaveTime;
+			if (!autoSaveNotif.cancelled) {
+				buildChart(); 
 				var songPath:String = '${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}';
-
+	
 				if (Options.charterAutoSavesSeperateFolder)
 					Chart.save(songPath, PlayState.SONG, __autoSaveLocation, {saveMetaInChart: false, folder: "autosaves"});
 				else 
 					Chart.save(songPath, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false});
 				undos.save();
 			}
+			autoSaveNotif.cancelled = false;
 		}
 	}
 
