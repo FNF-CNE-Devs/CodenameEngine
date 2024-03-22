@@ -84,6 +84,7 @@ class Charter extends UIState {
 	public var charterCamera:FlxCamera;
 	public var uiCamera:FlxCamera;
 	public var selectionBox:UISliceSprite;
+	public var autoSaveNotif:CharterAutoSaveUI;
 
 	public static var selection:Selection;
 
@@ -437,6 +438,9 @@ class Charter extends UIState {
 		strumlineInfoBG.y = 23;
 		strumlineInfoBG.scrollFactor.set();
 
+		autoSaveNotif = new CharterAutoSaveUI(20, strumlineInfoBG.y + strumlineInfoBG.height + 20);
+		uiGroup.add(autoSaveNotif);
+
 		strumlineAddButton = new CharterStrumlineButton("editors/new", "Create New");
 		strumlineAddButton.onClick = createStrumWithUI;
 		strumlineAddButton.animationOnClick = false;
@@ -661,6 +665,34 @@ class Charter extends UIState {
 		}
 		selection = __fixSelection(selection);
 		for(s in selection) s.selected = true;
+	}
+
+	public static var autoSaveTimer:Float = 0;
+	var __autoSaveLocation:String = null;
+	public function updateAutoSaving(elapsed:Float) {
+		if (Options.charterAutoSaves) {
+			autoSaveTimer -= elapsed;
+			if (autoSaveTimer < Options.charterAutoSaveWarningTime && !autoSaveNotif.showedAnimation) {
+				if (Options.charterAutoSavesSeperateFolder)
+					__autoSaveLocation = DateTools.format(Date.now(), "%Y-%m-%d_%H-%M");
+
+				autoSaveNotif.startAutoSave(autoSaveTimer, 
+					!Options.charterAutoSavesSeperateFolder ? 'Saved chart at ${__diff.toLowerCase()}.json!' : 
+					'Saved chart at $__autoSaveLocation.json!'
+				);
+			}
+
+			if (autoSaveTimer <= 0) {
+				autoSaveTimer = Options.charterAutoSaveTime; buildChart();
+				var songPath:String = '${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}';
+
+				if (Options.charterAutoSavesSeperateFolder)
+					Chart.save(songPath, PlayState.SONG, __autoSaveLocation, {saveMetaInChart: false, folder: "autosaves"});
+				else 
+					Chart.save(songPath, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false});
+				undos.save();
+			}
+		}
 	}
 
 	var deletedNotes:Selection = new Selection();
@@ -1093,6 +1125,7 @@ class Charter extends UIState {
 	var __firstFrame:Bool = true;
 	public override function update(elapsed:Float) {
 		updateNoteLogic(elapsed);
+		updateAutoSaving(elapsed);
 
 		if (FlxG.sound.music.playing || __firstFrame) {
 			gridBackdrops.conductorSprY = curStepFloat * 40;
@@ -1819,11 +1852,12 @@ class Charter extends UIState {
 		undos = new UndoList<CharterChange>();
 		clipboard = []; playtestInfo = null;
 		waveformHandler = new CharterWaveformHandler();
+		autoSaveTimer = Options.charterAutoSaveTime;
 	}
 
 	@:noCompletion public function __clearStatics() {
 		selection = null; undos = null; clipboard = null; playtestInfo = null; 
-		waveformHandler.destroy(); Charter.waveformHandler = null;
+		waveformHandler.destroy(); Charter.waveformHandler = null; autoSaveTimer = 0;
 	}
 
 	@:noCompletion public function __updatePlaytestInfo() {
