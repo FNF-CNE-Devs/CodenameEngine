@@ -577,8 +577,10 @@ class Charter extends UIState {
 		buildNoteTypesUI();
 		refreshBPMSensitive();
 
-		// Undo Stuffs :D
-		__relinkUndos();
+		// Just for now until i add event stacking -lunar
+		try {__relinkUndos();}
+		catch (e) {Logs.trace('Failed to relink undos: ${Std.string(e)}', ERROR);}
+		
 		__applyPlaytestInfo();
 	}
 
