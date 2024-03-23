@@ -19,6 +19,7 @@ class DiscordUtil
 	public static var currentID(default, set):String = null;
 	public static var discordThread:#if DISCORD_RPC Thread #else Dynamic #end = null;
 	public static var ready:Bool = false;
+	private static var stopThread:Bool = false;
 
 	public static var user:#if DISCORD_RPC DUser #else Dynamic #end = null;
 	public static var lastPresence:#if DISCORD_RPC DPresence #else Dynamic #end = null;
@@ -33,7 +34,7 @@ class DiscordUtil
 		{
 			while (true)
 			{
-				while (ready)
+				while (!stopThread)
 				{
 					#if DISCORD_DISABLE_IO_THREAD
 					Discord.UpdateConnection();
@@ -61,6 +62,10 @@ class DiscordUtil
 				config = Json.parse(Assets.getText(jsonPath))
 			catch (e)
 				Logs.trace('Couldn\'t load Discord RPC configuration: ${e.toString()}', ERROR);
+		}
+		else
+		{
+			config = {};
 		}
 
 		config.logoKey = config.logoKey.getDefault("icon");
@@ -135,26 +140,6 @@ class DiscordUtil
 
 		var dp:DiscordRichPresence = DiscordRichPresence.create();
 		// TODO: make this use a reflection-like macro
-		// strings
-		/*if(data.state != null) dp.state = fixString(data.state);
-			if(data.details != null) dp.details = fixString(data.details);
-			if(data.largeImageKey != null) dp.largeImageKey = fixString(data.largeImageKey);
-			if(data.largeImageText != null) dp.largeImageText = fixString(data.largeImageText);
-			if(data.smallImageKey != null) dp.smallImageKey = fixString(data.smallImageKey);
-			if(data.smallImageText != null) dp.smallImageText = fixString(data.smallImageText);
-			if(data.partyId != null) dp.partyId = fixString(data.partyId);
-			if(data.matchSecret != null) dp.matchSecret = fixString(data.matchSecret);
-			if(data.joinSecret != null) dp.joinSecret = fixString(data.joinSecret);
-			if(data.spectateSecret != null) dp.spectateSecret = fixString(data.spectateSecret);
-
-			// other
-			if(data.startTimestamp != null) dp.startTimestamp = data.startTimestamp;
-			if(data.endTimestamp != null) dp.endTimestamp = data.endTimestamp;
-			if(data.partySize != null) dp.partySize = data.partySize;
-			if(data.partyMax != null) dp.partyMax = data.partyMax;
-			if(data.partyPrivacy != null) dp.partyPrivacy = data.partyPrivacy;
-			if(data.instance != null) dp.instance = data.instance; */
-
 		Utils.safeSetWrapper(dp.state, data.state, fixString);
 		Utils.safeSetWrapper(dp.details, data.details, fixString);
 		Utils.safeSet(dp.startTimestamp, data.startTimestamp);
@@ -189,6 +174,7 @@ class DiscordUtil
 		handlers.disconnected = cpp.Function.fromStaticFunction(onDisconnected);
 		handlers.errored = cpp.Function.fromStaticFunction(onError);
 		Discord.Initialize(id, cpp.RawPointer.addressOf(handlers), 1, null);
+		stopThread = false;
 		#end
 
 		return currentID = id;
@@ -197,6 +183,7 @@ class DiscordUtil
 	public static function shutdown()
 	{
 		ready = false;
+		stopThread = true;
 		#if DISCORD_RPC
 		Discord.Shutdown();
 		#end
@@ -211,19 +198,34 @@ class DiscordUtil
 		user = new DUser();
 		user.init(requestPtr);
 
-		Logs.trace('(Discord) Connected to User (${user.tag})');
+		Logs.traceColored([
+			Logs.logText("[Discord] ", BLUE),
+			Logs.logText("Connected to User ("),
+			Logs.logText(user.tag, GRAY),
+			Logs.logText(")")
+		], INFO);
 
 		ready = true;
 	}
 
 	private static function onDisconnected(errorCode:Int, message:cpp.ConstCharStar):Void
 	{
-		Sys.println('Discord: Disconnected ($errorCode: ${cast (message, String)})');
+		Logs.traceColored([
+			Logs.logText("[Discord] ", BLUE),
+			Logs.logText("Disconnected ("),
+			Logs.logText('$errorCode: ${cast (message, String)}', RED),
+			Logs.logText(")")
+		], INFO);
 	}
 
 	private static function onError(errorCode:Int, message:cpp.ConstCharStar):Void
 	{
-		Sys.println('Discord: Error ($errorCode: ${cast (message, String)})');
+		Logs.traceColored([
+			Logs.logText("[Discord] ", BLUE),
+			Logs.logText("Error ("),
+			Logs.logText('$errorCode: ${cast (message, String)}', RED),
+			Logs.logText(")")
+		], ERROR);
 	}
 	#end
 }
@@ -263,7 +265,10 @@ final class DUser
 	**/
 	public var avatar:String;
 
-	public function new() {}
+	public function new()
+	{
+	}
+
 	public function init(userData:cpp.Star<DiscordUser>)
 	{
 		userId = userData.userId;
