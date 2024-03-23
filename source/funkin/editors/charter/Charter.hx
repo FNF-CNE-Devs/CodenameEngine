@@ -165,6 +165,15 @@ class Charter extends UIState {
 					},
 					null,
 					{
+						label: "Export As FNF Legacy...",
+						onSelect: _file_saveas_fnflegacy,
+					},
+					{
+						label: "Export As Psych Engine...",
+						onSelect: _file_saveas_psych,
+					},
+					null,
+					{
 						label: "Exit",
 						onSelect: _file_exit
 					}
@@ -1322,6 +1331,13 @@ class Charter extends UIState {
 			defaultSaveFile: 'meta.json'
 		}));
 	}
+
+	function _file_saveas_fnflegacy(_) {
+		openSubState(new SaveSubstate(Json.stringify(FNFLegacyParser.encode(PlayState.SONG), Options.editorPrettyPrint ? "\t" : null), {
+			defaultSaveFile: '${__song.toLowerCase().replace(" ", "-")}${__diff.toLowerCase() == "normal" ? "" : '-${__diff.toLowerCase()}'}.json',
+		}));
+	}
+	function _file_saveas_psych(_) {}
 
 	function _file_events_save(_) {
 		#if sys
