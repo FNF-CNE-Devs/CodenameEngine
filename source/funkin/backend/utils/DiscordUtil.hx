@@ -28,7 +28,7 @@ class DiscordUtil
 	public static var events:#if DISCORD_RPC DEvents #else Dynamic #end = null;
 	public static var config:#if DISCORD_RPC DiscordJson #else Dynamic #end = null;
 
-	public static var scripts:ScriptPack;
+	public static var script:Script;
 
 	public static function init()
 	{
@@ -83,35 +83,25 @@ class DiscordUtil
 
 	public static function event<T:CancellableEvent>(name:String, event:T):T
 	{
-		if (scripts != null)
-			scripts.event(name, event);
+		if (script != null)
+			script.call(name, [event]);
 		return event;
 	}
 
 	public static function call(name:String, ?args:Array<Dynamic>)
 	{
-		if (scripts != null)
-			scripts.call(name, args);
+		if (script != null)
+			script.call(name, args);
 	}
 
 	public static function loadScript()
 	{
-		if(scripts != null) {
+		if(script != null) {
 			call("destroy");
-			scripts = FlxDestroyUtil.destroy(scripts);
+			script = FlxDestroyUtil.destroy(script);
 		}
-		scripts = new ScriptPack("DiscordScript");
-		for (i in funkin.backend.assets.ModsFolder.getLoadedMods())
-		{
-			var path = Paths.script('data/discord/LIB_$i');
-			var script = Script.create(path);
-			if (script is DummyScript)
-				continue;
-
-			script.remappedNames.set(script.fileName, '$i:${script.fileName}');
-			scripts.add(script);
-			script.load();
-		}
+		script = Script.create(Paths.script('data/discord'));
+		script.load();
 	}
 
 	public static function changePresence(details:String, state:String, ?smallImageKey:String)
@@ -236,7 +226,7 @@ class DiscordUtil
 		#end
 
 		call("destroy");
-		scripts = FlxDestroyUtil.destroy(scripts);
+		script = FlxDestroyUtil.destroy(script);
 	}
 
 	// HANDLERS

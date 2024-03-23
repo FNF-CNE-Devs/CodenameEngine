@@ -95,7 +95,8 @@ class GlobalScript {
 		for (i in funkin.backend.assets.ModsFolder.getLoadedMods()) {
 			var path = Paths.script('data/global/LIB_$i');
 			var script = Script.create(path);
-			if (script is DummyScript) continue;
+			if (script is DummyScript)
+				continue;
 			script.remappedNames.set(script.fileName, '$i:${script.fileName}');
 			scripts.add(script);
 			script.load();
