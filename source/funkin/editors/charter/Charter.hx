@@ -700,9 +700,9 @@ class Charter extends UIState {
 				var songPath:String = '${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}';
 	
 				if (Options.charterAutoSavesSeperateFolder)
-					Chart.save(songPath, PlayState.SONG, __autoSaveLocation, {saveMetaInChart: false, folder: "autosaves"});
+					Chart.save(songPath, PlayState.SONG, __autoSaveLocation, {saveMetaInChart: false, folder: "autosaves", prettyPrint: Options.editorPrettyPrint});
 				else 
-					Chart.save(songPath, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false});
+					Chart.save(songPath, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false, prettyPrint: Options.editorPrettyPrint});
 				undos.save();
 			}
 			autoSaveNotif.cancelled = false;
@@ -1345,7 +1345,7 @@ class Charter extends UIState {
 	#if sys
 	function saveTo(path:String, separateEvents:Bool = false) {
 		buildChart();
-		Chart.save(path, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false, saveEventsInChart: !separateEvents});
+		Chart.save(path, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false, saveEventsInChart: !separateEvents, prettyPrint: Options.editorPrettyPrint});
 	}
 	#end
 

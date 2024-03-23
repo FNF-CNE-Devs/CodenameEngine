@@ -36,9 +36,13 @@ class DebugOptionsScreen extends OptionsScreen {
 			}));
 		#end
 		add(new Checkbox(
-			"Enable Editor SFXs",
+			"Editor SFXs",
 			"If checked, will play sound effects when working on editors (ex: will play sfxs when checking checkboxes...)",
 			"editorSFX"));
+		add(new Checkbox(
+			"Pretty Print",
+			"If checked, the saved files from the editor will be formatted to be easily viewable (does not apply to xmls...)",
+			"editorPrettyPrint"));
 		add(new Checkbox(
 			"Intensive Blur",
 			"If checked, will use more intensive blur that may be laggier but look better.",
