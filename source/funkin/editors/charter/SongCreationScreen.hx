@@ -3,7 +3,7 @@ package funkin.editors.charter;
 import flixel.text.FlxText.FlxTextFormat;
 import flixel.text.FlxText.FlxTextFormatMarkerPair;
 import flixel.group.FlxGroup;
-import funkin.backend.chart.ChartData;
+import funkin.backend.chart.ChartData.ChartMetaData;
 import haxe.io.Bytes;
 
 typedef SongCreationData = {

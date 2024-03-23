@@ -15,7 +15,7 @@ class ModdableAssetsFolder extends ModsFolderLibrary {
 		return super.exists(id, type);
 	}
 
-	public override function getAsset(id:String, type:String) {
+	public override function getAsset(id:String, type:String):Dynamic {
 		if (!id.startsWith("assets/")) {
 			var possibleReplacement = getAsset('assets/$id', type);
 			if (possibleReplacement != null)

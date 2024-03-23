@@ -18,6 +18,19 @@ class Chart {
 	 */
 	public inline static var defaultColor:FlxColor = 0xFF9271FD;
 
+	public static function loadEventsJson(songName:String) {
+		var path = Paths.file('songs/${songName.toLowerCase()}/events.json');
+		var data:Array<ChartEvent> = null;
+		if (Assets.exists(path)) {
+			try {
+				data = Json.parse(Assets.getText(path)).events;
+			} catch(e) {
+				Logs.trace('Failed to load song event data for ${songName} ($path): ${Std.string(e)}', ERROR);
+			}
+		}
+		return data;
+	}
+
 	public static function loadChartMeta(songName:String, difficulty:String = "normal", fromMods:Bool = true) {
 		var metaPath = Paths.file('songs/${songName.toLowerCase()}/meta.json');
 		var metaDiffPath = Paths.file('songs/${songName.toLowerCase()}/meta-${difficulty.toLowerCase()}.json');
@@ -117,6 +130,7 @@ class Chart {
 					3 => "Alt Animation Toggle",
 				];
 
+				if (data.events == null) data.events = [];
 				for (event in cast(data.events, Array<Dynamic>)) {
 					if (Reflect.hasField(event, "type")) {
 						if(event.type != null)
@@ -145,6 +159,16 @@ class Chart {
 			}
 			base.meta = loadedMeta;
 		}
+
+		/**
+		 * events.json LOADING
+		 */
+		#if REGION
+		var extraEvents:Array<ChartEvent> = loadEventsJson(songName);
+		if (extraEvents != null)
+			base.events = base.events.concat(extraEvents);
+		#end
+
 		return base;
 	}
 
@@ -172,7 +196,7 @@ class Chart {
 	public static function save(songFolderPath:String, chart:ChartData, difficulty:String = "normal", ?saveSettings:ChartSaveSettings):ChartData {
 		if (saveSettings == null) saveSettings = {};
 
-		var filteredChart = filterChartForSaving(chart, saveSettings.saveMetaInChart);
+		var filteredChart = filterChartForSaving(chart, saveSettings.saveMetaInChart, saveSettings.saveEventsInChart);
 		var meta = filteredChart.meta;
 
 		#if sys
@@ -191,15 +215,16 @@ class Chart {
 		return filteredChart;
 	}
 
-	public static function filterChartForSaving(chart:ChartData, ?saveMetaInChart:Null<Bool>):ChartData {
+	public static function filterChartForSaving(chart:ChartData, ?saveMetaInChart:Null<Bool>, ?saveEventsInChart:Null<Bool>):ChartData {
 		var data = Reflect.copy(chart); // make a copy of the chart to leave the OG intact
 		if (saveMetaInChart != true) {
 			data.meta = null;
 		} else {
 			data.meta = Reflect.copy(chart.meta); // also make a copy of the metadata to leave the OG intact.
-			if (data.meta != null) data.meta.parsedColor = null;
+			if(data.meta != null && Reflect.hasField(data.meta, "parsedColor")) Reflect.deleteField(data.meta, "parsedColor");
 		}
 
+		data.events = saveEventsInChart != true ? null : Reflect.copy(chart.events);  // same here once again
 		data.fromMods = null;
 
 		var sortedData:Dynamic = {};
@@ -215,5 +240,6 @@ class Chart {
 typedef ChartSaveSettings = {
 	var ?overrideExistingMeta:Bool;
 	var ?saveMetaInChart:Bool;
+	var ?saveEventsInChart:Bool;
 	var ?prettyPrint:Bool;
 }

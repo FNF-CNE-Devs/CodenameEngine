@@ -1,6 +1,5 @@
 package funkin.editors.charter;
 
-import funkin.backend.chart.ChartData.ChartStrumLine;
 import funkin.backend.chart.EventsData;
 import flixel.util.FlxSort;
 

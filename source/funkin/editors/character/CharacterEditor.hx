@@ -5,9 +5,7 @@ import haxe.xml.Printer;
 import haxe.xml.Access;
 import funkin.backend.utils.XMLUtil.AnimData;
 import flixel.math.FlxPoint;
-import flixel.animation.FlxAnimation;
 import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
-import flixel.input.keyboard.FlxKey;
 import funkin.game.Character;
 
 class CharacterEditor extends UIState {

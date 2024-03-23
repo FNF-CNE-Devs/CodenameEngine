@@ -1,6 +1,9 @@
 package funkin.backend.system.macros;
 
 #if macro
+import haxe.macro.Context;
+import haxe.macro.Expr;
+
 /**
  * Macro that automatically generates flush and load functions.
  */
@@ -13,7 +16,6 @@ class FunkinSaveMacro {
 	 * @return Array<Field>
 	 */
 	public static function build(saveFieldName:String = "save", saveFuncName:String = "flush", loadFuncName:String = "load"):Array<Field> {
-
 		var fields:Array<Field> = Context.getBuildFields();
 
 		var fieldNames:Array<String> = [];

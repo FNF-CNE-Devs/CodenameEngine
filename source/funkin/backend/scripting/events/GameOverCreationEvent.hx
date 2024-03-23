@@ -16,7 +16,7 @@ final class GameOverCreationEvent extends CancellableEvent
 
 	public var gameOverSong:String;
 
-	public var bpm:Int;
+	public var bpm:Float;
 
 	public var lossSFX:String;
 

@@ -533,7 +533,7 @@ class System
 	@:noCompletion private static function __registerEntryPoint(projectName:String, entryPoint:Function):Void
 	{
 		// executes first!!
-		#if sys
+		#if (sys && !macro)
 		funkin.backend.utils.NativeAPI.registerAsDPICompatible();
 		funkin.backend.system.CommandLineHandler.parseCommandLine(Sys.args());
 		#end
@@ -824,7 +824,7 @@ class System
 	}
 }
 
-@:enum private abstract SystemDirectory(Int) from Int to Int from UInt to UInt
+enum abstract SystemDirectory(Int) from Int to Int from UInt to UInt
 {
 	var APPLICATION = 0;
 	var APPLICATION_STORAGE = 1;

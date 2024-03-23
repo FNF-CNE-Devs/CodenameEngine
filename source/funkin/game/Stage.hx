@@ -3,7 +3,6 @@ package funkin.game;
 import funkin.backend.scripting.events.StageXMLEvent;
 import funkin.backend.scripting.events.StageNodeEvent;
 import flixel.math.FlxPoint;
-import funkin.backend.MusicBeatGroup;
 import flixel.FlxState;
 import haxe.xml.Access;
 import funkin.backend.system.interfaces.IBeatReceiver;
@@ -48,10 +47,10 @@ class Stage extends FlxBasic implements IBeatReceiver {
 
 		if (stageXML != null) {
 			if (PlayState.instance != null) {
-				if (stageXML.has.zoom) {
-					var parsed:Null<Float> = Std.parseFloat(stageXML.att.zoom);
-					if (parsed != null && PlayState.instance != null) PlayState.instance.defaultCamZoom = parsed;
-				}
+				var parsed:Null<Float>;
+				if(stageXML.has.startCamPosX && (parsed = Std.parseFloat(stageXML.att.startCamPosX)) != null) PlayState.instance.camFollow.x = parsed;
+				if(stageXML.has.startCamPosY && (parsed = Std.parseFloat(stageXML.att.startCamPosY)) != null) PlayState.instance.camFollow.y = parsed;
+				if(stageXML.has.zoom && (parsed = Std.parseFloat(stageXML.att.zoom)) != null) PlayState.instance.defaultCamZoom = parsed;
 				PlayState.instance.curStage = stageXML.has.name ? stageXML.att.name : stage;
 			}
 			if (stageXML.has.folder) {

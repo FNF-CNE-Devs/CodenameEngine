@@ -1,10 +1,7 @@
 package funkin.editors.ui;
 
 import flixel.FlxCamera;
-import flixel.group.FlxGroup;
-import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
-import funkin.game.Character;
 import flixel.util.FlxSort;
 import flixel.math.FlxMath;
 

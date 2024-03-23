@@ -1,11 +1,8 @@
 package funkin.game;
 
-import funkin.backend.chart.Chart;
 import funkin.backend.chart.ChartData;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.util.FlxColor;
-import flixel.math.FlxRect;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRect;
 import funkin.backend.system.Conductor;
 import funkin.backend.scripting.events.*;
 
@@ -117,6 +114,11 @@ class Note extends FlxSprite
 		this.isSustainNote = sustain;
 		this.sustainLength = sustainLength;
 		this.strumLine = strumLine;
+		for(field in Reflect.fields(noteData)) {
+			if(!["time", "id", "type", "sLen"].contains(field)) {
+				this.extra.set(field, Reflect.field(noteData, field));
+			}
+		}
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?

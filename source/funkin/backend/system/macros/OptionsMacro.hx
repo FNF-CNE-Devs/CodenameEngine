@@ -1,8 +1,10 @@
 package funkin.backend.system.macros;
 
 #if macro
-using StringTools;
+import haxe.macro.Context;
+import haxe.macro.Expr;
 
+using StringTools;
 
 /**
  * Macro used in the options class to add getters for the SOLO keybinds.

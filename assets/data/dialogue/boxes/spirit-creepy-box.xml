@@ -1,0 +1,20 @@
+<!DOCTYPE codename-engine-dialogue-box>
+<dialoguebox sprite="pixel/dialogueBox-evil" antialiasing="false" graphicSizex="1344" y="107" textSound="pixel/pixelText" nextSound="pixel/clickText" updateHitbox="true">
+	<!--
+		Node containing all text settings
+	-->
+	<text font="pixel.otf" x="265" y="220" width="768" color="#FFFFFF" size="32" antialiasing="false" borderSize="2" borderStyle="shadow" borderColor="#000000" />
+
+	<!--
+		All positions for characters
+	-->
+	<charpos name="left" x="-510" y="183" />
+	<charpos name="middle" x="0" y="183" />
+	<charpos name="right" x="510" y="183" />
+
+	<!--
+		All animations for the dialogue box
+		For example, if you wanna add an "angry" animation, add an animation named "angry" (box idle), and "angry-open" (not needed, for box apparition)
+	-->
+	<anim name="normal-firstOpen" anim="Spirit Textbox spawn instance 10" fps="24" />
+</dialoguebox>

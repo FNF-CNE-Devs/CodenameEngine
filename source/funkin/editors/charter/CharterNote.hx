@@ -9,6 +9,9 @@ import flixel.util.FlxColor;
 
 class CharterNote extends UISprite implements ICharterSelectable {
 	var angleTween:FlxTween;
+	var __doAnim:Bool = false;
+	var __animSpeed:Float = 1;
+	var __susInstaLerp:Bool = false;
 
 	private static var colors:Array<FlxColor> = [
 		0xFFC24B99,
@@ -17,10 +20,11 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		0xFFF9393F
 	];
 
-	public var sustainSpr:FlxSprite;
+	public var sustainSpr:UISprite;
+	public var tempSusLength:Float = 0;
+	public var sustainDraggable:Bool = false;
+
 	public var typeText:UIText;
-	var __doAnim:Bool = false;
-	var __animSpeed:Float = 1;
 
 	public var selected:Bool = false;
 	public var draggable:Bool = true;
@@ -34,15 +38,15 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		animation.play("note");
 		this.setUnstretchedGraphicSize(40, 40, false);
 
-		cursor = BUTTON;
-		moves = false;
-
-		sustainSpr = new FlxSprite(10, 40);
-		sustainSpr.makeGraphic(1, 1, -1);
+		sustainSpr = new UISprite(10, 20);
+		sustainSpr.makeSolid(1, 1, -1);
+		sustainSpr.scale.set(10, 0);
 		members.push(sustainSpr);
 
 		typeText = new UIText(x, y, 0, Std.string(type));
-		//typeText.borderSize = 1.5;
+
+		cursor = sustainSpr.cursor = BUTTON;
+		moves = false;
 	}
 
 	public override function updateButtonHandler() {
@@ -78,13 +82,9 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 		typeText.exists = type != 0;
 		typeText.text = Std.string(this.type);
+		typeText.follow(this, 20 - (typeText.frameWidth/2), 20 - (typeText.frameHeight/2));
 
 		y = step * 40;
-
-		sustainSpr.scale.set(10, (40 * susLength) + (height/2));
-		sustainSpr.updateHitbox();
-		sustainSpr.exists = susLength != 0;
-		sustainSpr.alpha = alpha;
 
 		if (angleTween != null) angleTween.cancel();
 
@@ -132,8 +132,18 @@ class CharterNote extends UISprite implements ICharterSelectable {
 	var __passed:Bool = false;
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
-		if (sustainSpr.exists)
-			sustainSpr.follow(this, 15, 20);
+
+		var sprLength:Float = (40 * (susLength+tempSusLength)) + ((susLength+tempSusLength) != 0 ? (height/2) : 0);
+		sustainSpr.scale.set(10, __susInstaLerp ? sprLength : CoolUtil.fpsLerp(sustainSpr.scale.y, sprLength, 1/2));
+		sustainSpr.updateHitbox();
+		sustainSpr.follow(this, 15, 20);
+
+		sustainDraggable = false;
+		if (!hovered && susLength != 0) {
+			UIState.state.updateSpriteRect(sustainSpr);
+			sustainDraggable = UIState.state.isOverlapping(sustainSpr, @:privateAccess sustainSpr.__rect);
+		}
+
 		if (typeText.exists)
 			typeText.follow(this, 20 - (typeText.frameWidth/2), 20 - (typeText.frameHeight/2));
 

@@ -36,7 +36,7 @@ class Flx3DView extends FlxView3D {
 	var meshes:Array<Mesh> = [];
 	public function new(x:Float = 0, y:Float = 0, width:Int = -1, height:Int = -1) {
 		if (!Flx3DUtil.is3DAvailable())
-			throw "[Flx3DView] 3D is not available on this platform. Stages in use: " + Flx3DUtil.getTotal3D() + ", Max stages allowed: " + FlxG.stage.stage3Ds.length + ".";
+			throw "[Flx3DView] 3D is not available on this platform. Stages in use: " + Flx3DUtil.getUsed3D() + ", Max stages allowed: " + Flx3DUtil.getTotal3D() + ".";
 		super(x, y, width, height);
 		__cur3DStageID = __3DIDS++;
 	}

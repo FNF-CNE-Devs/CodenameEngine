@@ -3,11 +3,9 @@ package funkin.editors.charter;
 import funkin.backend.chart.ChartData;
 import funkin.backend.chart.ChartData.ChartMetaData;
 import haxe.Json;
-import funkin.backend.assets.ModsFolder;
 import funkin.editors.charter.SongCreationScreen.SongCreationData;
 import funkin.options.type.NewOption;
 import funkin.backend.system.framerate.Framerate;
-import flixel.util.FlxColor;
 import funkin.menus.FreeplayState.FreeplaySonglist;
 import funkin.editors.EditorTreeMenu;
 import funkin.options.*;
@@ -115,6 +113,7 @@ class CharterSelection extends EditorTreeMenu {
 		#end
 
 		var option = new EditorIconOption(creation.meta.name, "Press ACCEPT to choose a difficulty to edit.", creation.meta.icon, function() {
+			curSong = creation.meta;
 			var list:Array<OptionType> = [
 				for(d in creation.meta.difficulties)
 					if (d != "") new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {

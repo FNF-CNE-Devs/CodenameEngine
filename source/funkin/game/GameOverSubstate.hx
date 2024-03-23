@@ -4,10 +4,7 @@ import funkin.editors.charter.Charter;
 import funkin.backend.scripting.events.GameOverCreationEvent;
 import funkin.backend.scripting.events.CancellableEvent;
 import funkin.backend.scripting.Script;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.sound.FlxSound;
-import flixel.FlxSubState;
-import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import funkin.menus.StoryMenuState;
@@ -20,7 +17,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	public var characterName:String;
 	public var gameOverSong:String;
-	public var gameOverSongBPM:Int;
+	public var gameOverSongBPM:Float;
 	public var lossSFXName:String;
 	public var retrySFX:String;
 	public var player:Bool;

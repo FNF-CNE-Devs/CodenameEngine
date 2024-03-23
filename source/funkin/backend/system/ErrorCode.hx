@@ -1,7 +1,6 @@
 package funkin.backend.system;
 
-@:enum
-abstract ErrorCode(Int) {
+enum abstract ErrorCode(Int) {
 	var OK = 0;
 	var FAILED = 1;
 	var MISSING_PROPERTY = 2;

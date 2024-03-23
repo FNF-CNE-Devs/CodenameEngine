@@ -34,18 +34,14 @@ class Update {
 		}
 
 		for(lib in libs) {
-			// install libs
-		var globalism = lib.global == "true" ? "--global" : "";
+			var globalism:Null<String> = lib.global == "true" ? "--global" : null;
 			switch(lib.type) {
 				case "lib":
 					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}"...');
-					Sys.command('haxelib $globalism install ${lib.name} ${lib.version != null ? " " + lib.version : " "}');
+					Sys.command('haxelib install ${lib.name} ${lib.version != null ? " " + lib.version : " "}${globalism != null ? ' $globalism' : ''} --always');
 				case "git":
 					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}" from git url "${lib.url}"');
-					if (lib.ref != null)
-						Sys.command('haxelib $globalism git ${lib.name} ${lib.url} ${lib.ref}');
-					else
-						Sys.command('haxelib $globalism git ${lib.name} ${lib.url}');
+					Sys.command('haxelib git ${lib.name} ${lib.url}${lib.ref != null ? ' ${lib.ref}' : ''}${globalism != null ? ' $globalism' : ''} --always');
 				default:
 					prettyPrint('Cannot resolve library of type "${lib.type}"');
 			}
@@ -68,8 +64,7 @@ class Update {
 					break;
 				} else if (curHaxeVer[i] > requiredHaxeVer[i]) {
 					prettyPrint("!! WARNING !!"
-					+ "\nHaxeFlixel has incompability issues with the latest version of Haxe, 4.3.0 and above, due to macros."
-					+ "\nProceeding will cause compilation issues related to macros (ex: cannot access flash package in macro)");
+					+ "\nUsing Haxe 4.3.0 and above is currently not recommended due to lack of testing.");
 					Sys.println('');
 					Sys.println('We recommend downgrading back to 4.2.5.');
 					break;
@@ -79,13 +74,35 @@ class Update {
 	}
 
 	public static function prettyPrint(text:String) {
+		var lines = text.split("\n");
+		var length = -1;
+		for(line in lines)
+			if(line.length > length)
+				length = line.length;
 		var header = "══════";
-		for(i in 0...(text.length-(text.lastIndexOf("\n")+1)))
+		for(i in 0...length)
 			header += "═";
 		Sys.println("");
 		Sys.println('╔$header╗');
-		Sys.println('║   $text   ║');
+		for(line in lines) {
+			Sys.println('║   ${centerText(line, length)}   ║');
+		}
 		Sys.println('╚$header╝');
+	}
+
+
+	public static function centerText(text:String, width:Int):String {
+		var centerOffset = (width - text.length) / 2;
+		var left = repeat(' ', Math.floor(centerOffset));
+		var right = repeat(' ', Math.ceil(centerOffset));
+		return left + text + right;
+	}
+
+	public static inline function repeat(ch:String, amt:Int) {
+		var str = "";
+		for(i in 0...amt)
+			str += ch;
+		return str;
 	}
 }
 

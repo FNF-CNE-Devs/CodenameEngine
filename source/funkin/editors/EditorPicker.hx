@@ -1,6 +1,5 @@
 package funkin.editors;
 
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.math.FlxPoint;
 import flixel.effects.FlxFlicker;
 

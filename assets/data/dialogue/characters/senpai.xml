@@ -1,0 +1,5 @@
+<!DOCTYPE codename-engine-dialogue-character>
+<character sprite="pixel/senpai" x="-392" y="-599" graphicSizex="1334" antialiasing="false" textSound="pixel/pixelText">
+	<anim name="normal-show" anim="Senpai Portrait Enter instance 10" fps="24" x="4.4" />
+	<anim name="angry-show" anim="Senpai Portrait Angry instance 10" x="-56" y="-9" fps="24" />
+</character>

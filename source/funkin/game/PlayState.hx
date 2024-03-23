@@ -2,7 +2,6 @@ package funkin.game;
 
 import funkin.editors.charter.CharterSelection;
 import flixel.FlxState;
-import funkin.editors.EditorTreeMenu;
 import funkin.editors.SaveWarning;
 import funkin.backend.chart.EventsData;
 import funkin.backend.system.RotatingSpriteGroup;
@@ -15,11 +14,9 @@ import funkin.game.SplashHandler;
 import funkin.backend.scripting.DummyScript;
 import funkin.menus.StoryMenuState.WeekData;
 import funkin.backend.FunkinText;
-import flixel.group.FlxSpriteGroup;
 import funkin.backend.scripting.Script;
 import funkin.backend.scripting.ScriptPack;
 import flixel.FlxSubState;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.math.FlxPoint;
 import flixel.sound.FlxSound;
 import flixel.text.FlxText;
@@ -520,7 +517,7 @@ class PlayState extends MusicBeatState
 	@:dox(hide) override public function create()
 	{
 		Note.__customNoteTypeExists = [];
-		// SCRIPTING & DATA INITIALISATION
+		// SCRIPTING & DATA INITIALIZATION
 		#if REGION
 		instance = this;
 		if (FlxG.sound.music != null) FlxG.sound.music.stop();
@@ -557,25 +554,24 @@ class PlayState extends MusicBeatState
 		detailsPausedText = "Paused - " + detailsText;
 		#end
 
-		// CHARACTER INITIALISATION
+		// CHARACTER INITIALIZATION
 		#if REGION
 		comboGroup = new RotatingSpriteGroup(FlxG.width * 0.55, (FlxG.height * 0.5) - 60);
 		comboGroup.maxSize = 25;
 		#end
 
-		// SCRIPTS & STAGE INITIALISATION
+		// CAMERA FOLLOW, SCRIPTS & STAGE INITIALIZATION
 		#if REGION
+		camFollow = new FlxObject(0, 0, 2, 2);
+		add(camFollow);
+
 		if (SONG.stage == null || SONG.stage.trim() == "") SONG.stage = "stage";
 		add(stage = new Stage(SONG.stage));
-
-		// var camPos:FlxPoint = new FlxPoint(dadMidpoint.x, dadMidpoint.y);
-		// dadMidpoint.put();
-		var camPos:FlxPoint = new FlxPoint(0, 0);
 
 		if (!chartingMode || Options.charterEnablePlaytestScripts) {
 			switch(SONG.meta.name) {
 				// case "":
-					// ADD YOUR HARDCODED SCRIPTSa HERE!
+					// ADD YOUR HARDCODED SCRIPTS HERE!
 				default:
 					var scriptsFolders:Array<String> = ['songs/${SONG.meta.name.toLowerCase()}/scripts', 'data/charts/', 'songs/'];
 
@@ -613,7 +609,7 @@ class PlayState extends MusicBeatState
 		}
 		#end
 
-		// STRUMS & NOTES INITIALISATION
+		// STRUMS & NOTES INITIALIZATION
 		#if REGION
 		strumLine = new FlxObject(0, 50, FlxG.width, 10);
 		strumLine.scrollFactor.set();
@@ -675,7 +671,7 @@ class PlayState extends MusicBeatState
 		scripts.call("create");
 		#end
 
-		// CAMERA & HUD INITIALISATION
+		// HUD INITIALIZATION & CAMERA INITIALIZATION
 		#if REGION
 		var event = EventManager.get(AmountEvent).recycle(4);
 		if (!scripts.event("onPreGenerateStrums", event).cancelled) {
@@ -686,13 +682,10 @@ class PlayState extends MusicBeatState
 		for(str in strumLines)
 			str.generate(str.data, (chartingMode && Charter.startHere) ? Charter.startTime : null);
 
-		camFollow = new FlxObject(0, 0, 2, 2);
-		camFollow.setPosition(camPos.x, camPos.y);
-		add(camFollow);
-
 		FlxG.camera.follow(camFollow, LOCKON, 0.04);
 		FlxG.camera.zoom = defaultCamZoom;
 		// camHUD.zoom = defaultHudZoom;
+
 		if (smoothTransitionData != null && smoothTransitionData.stage == curStage) {
 			FlxG.camera.scroll.set(smoothTransitionData.camX, smoothTransitionData.camY);
 			FlxG.camera.zoom = smoothTransitionData.camZoom;
@@ -729,7 +722,7 @@ class PlayState extends MusicBeatState
 
 		scoreTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Score:0", 16);
 		missesTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Misses:0", 16);
-		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Acc:-% (N/A)", 16);
+		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy:-% (N/A)", 16);
 		accuracyTxt.addFormat(accFormat, 0, 1);
 
 		for(text in [scoreTxt, missesTxt, accuracyTxt]) {
@@ -739,6 +732,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.alignment = RIGHT;
 		missesTxt.alignment = CENTER;
 		accuracyTxt.alignment = LEFT;
+		updateRatingStuff();
 
 		for(e in [healthBar, healthBarBG, iconP1, iconP2, scoreTxt, missesTxt, accuracyTxt])
 			e.cameras = [camHUD];
@@ -765,7 +759,7 @@ class PlayState extends MusicBeatState
 			SaveWarning.warningFunc = saveWarn;
 			SaveWarning.saveFunc = () ->  {
 				@:privateAccess Chart.save('${Paths.getAssetsRoot()}/songs/${Charter.__song.toLowerCase()}', 
-					PlayState.SONG, Charter.__diff.toLowerCase(), {saveMetaInChart: false});
+					PlayState.SONG, Charter.__diff.toLowerCase(), {saveMetaInChart: false, saveEventsInChart: true});
 			}
 		}
 	}
@@ -801,7 +795,7 @@ class PlayState extends MusicBeatState
 	 */
 	public function startCutscene(prefix:String = "", ?cutsceneScriptPath:String, ?callback:Void->Void, checkSeen:Bool = false) {
 		if (callback == null) callback = startCountdown;
-		if (checkSeen && seenCutscene) {
+		if ((checkSeen && seenCutscene) || !playCutscenes) {
 			callback();
 			return;
 		}
@@ -809,34 +803,31 @@ class PlayState extends MusicBeatState
 		if (cutsceneScriptPath == null)
 			cutsceneScriptPath = Paths.script('songs/${SONG.meta.name.toLowerCase()}/${prefix}cutscene');
 
-		if (playCutscenes) {
-			inCutscene = true;
-			var videoCutscene = Paths.video('${PlayState.SONG.meta.name.toLowerCase()}-${prefix}cutscene');
-			var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}cutscene.mp4');
-			var dialogue = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}dialogue.xml');
-			persistentUpdate = true;
-			var toCall:Void->Void = function() {
-				if(checkSeen) seenCutscene = true;
-				callback();
-			}
+		inCutscene = true;
+		var videoCutscene = Paths.video('${PlayState.SONG.meta.name.toLowerCase()}-${prefix}cutscene');
+		var videoCutsceneAlt = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}cutscene.mp4');
+		var dialogue = Paths.file('songs/${PlayState.SONG.meta.name.toLowerCase()}/${prefix}dialogue.xml');
+		persistentUpdate = true;
+		var toCall:Void->Void = function() {
+			if(checkSeen) seenCutscene = true;
+			callback();
+		}
 
-			if (cutsceneScriptPath != null && Assets.exists(cutsceneScriptPath)) {
-				openSubState(new ScriptedCutscene(cutsceneScriptPath, toCall));
-			} else if (Assets.exists(dialogue)) {
-				MusicBeatState.skipTransIn = true;
-				openSubState(new DialogueCutscene(dialogue, toCall));
-			} else if (Assets.exists(videoCutsceneAlt)) {
-				MusicBeatState.skipTransIn = true;
-				persistentUpdate = false;
-				openSubState(new VideoCutscene(videoCutsceneAlt, toCall));
-				persistentDraw = false;
-			} else if (Assets.exists(videoCutscene)) {
-				MusicBeatState.skipTransIn = true;
-				persistentUpdate = false;
-				openSubState(new VideoCutscene(videoCutscene, toCall));
-				persistentDraw = false;
-			} else
-				callback();
+		if (cutsceneScriptPath != null && Assets.exists(cutsceneScriptPath)) {
+			openSubState(new ScriptedCutscene(cutsceneScriptPath, toCall));
+		} else if (Assets.exists(dialogue)) {
+			MusicBeatState.skipTransIn = true;
+			openSubState(new DialogueCutscene(dialogue, toCall));
+		} else if (Assets.exists(videoCutsceneAlt)) {
+			MusicBeatState.skipTransIn = true;
+			persistentUpdate = false;
+			openSubState(new VideoCutscene(videoCutsceneAlt, toCall));
+			persistentDraw = false;
+		} else if (Assets.exists(videoCutscene)) {
+			MusicBeatState.skipTransIn = true;
+			persistentUpdate = false;
+			openSubState(new VideoCutscene(videoCutscene, toCall));
+			persistentDraw = false;
 		} else
 			callback();
 	}
@@ -1072,8 +1063,6 @@ class PlayState extends MusicBeatState
 	public inline function getIconRPC():String
 		return SONG.meta.icon;
 
-	var __songPlaying:Bool = false;
-	var __wasAutoPause:Bool = false;
 	@:dox(hide)
 	override public function onFocus():Void
 	{
@@ -1188,8 +1177,10 @@ class PlayState extends MusicBeatState
 	function updateIconPositions() {
 		var iconOffset:Int = 26;
 
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0)) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0))) - (iconP2.width - iconOffset);
+		var center:Float = healthBar.x + healthBar.width * FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0);
+
+		iconP1.x = center - iconOffset;
+		iconP2.x = center - (iconP2.width - iconOffset);
 
 		health = FlxMath.bound(health, 0, maxHealth);
 
@@ -1197,17 +1188,7 @@ class PlayState extends MusicBeatState
 		iconP2.health = 1 - (healthBar.percent / 100);
 	}
 
-	@:dox(hide)
-	override public function update(elapsed:Float)
-	{
-		scripts.call("update", [elapsed]);
-
-		if (inCutscene) {
-			super.update(elapsed);
-			scripts.call("postUpdate", [elapsed]);
-			return;
-		}
-
+	function updateRatingStuff() {
 		scoreTxt.text = 'Score:$songScore';
 		missesTxt.text = '${comboBreaks ? "Combo Breaks" : "Misses"}:$misses';
 
@@ -1221,6 +1202,20 @@ class PlayState extends MusicBeatState
 			accuracyTxt._formatRanges[0].range.start = accuracyTxt.text.length - curRating.rating.length;
 			accuracyTxt._formatRanges[0].range.end = accuracyTxt.text.length;
 		}
+	}
+
+	@:dox(hide)
+	override public function update(elapsed:Float)
+	{
+		scripts.call("update", [elapsed]);
+
+		if (inCutscene) {
+			super.update(elapsed);
+			scripts.call("postUpdate", [elapsed]);
+			return;
+		}
+
+		updateRatingStuff();
 
 		if (controls.PAUSE && startedCountdown && canPause)
 			pauseGame();
@@ -1388,12 +1383,13 @@ class PlayState extends MusicBeatState
 	 * @param retrySFX SFX played whenever the player retries. Defaults to `retrySFX` (`gameOverEnd`)
 	 */
 	public function gameOver(?character:Character, ?deathCharID:String, ?gameOverSong:String, ?lossSFX:String, ?retrySFX:String) {
+		var charToUse:Character = character.getDefault(opponentMode ? dad : boyfriend);  // Imma still make it check null later just in case dad or bf are also null for some weird scripts  - Nex
 		var event:GameOverEvent = scripts.event("onGameOver", EventManager.get(GameOverEvent).recycle(
-			character == null ? 0 : character.x,
-			character == null ? 0 : character.y,
-			character.getDefault(opponentMode ? dad : boyfriend),
-			deathCharID.getDefault(character != null ? character.gameOverCharacter : "bf-dead"),
-			character != null ? character.isPlayer : true,
+			charToUse == null ? 0 : charToUse.x,
+			charToUse == null ? 0 : charToUse.y,
+			charToUse,
+			deathCharID.getDefault(charToUse != null ? charToUse.gameOverCharacter : "bf-dead"),
+			charToUse != null ? charToUse.isPlayer : true,
 			gameOverSong.getDefault(this.gameOverSong),
 			lossSFX.getDefault(this.lossSFX),
 			retrySFX.getDefault(this.retrySFX)
