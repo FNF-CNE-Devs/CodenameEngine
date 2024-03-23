@@ -490,6 +490,14 @@ class Charter extends UIState {
 			Framerate.codenameBuildField.alpha = 0.4;
 		}
 		updateDisplaySprites();
+
+		// ! IF YOU EVER WANNA VIEW IN THE FUTURE, JUST USE A FLXSPRITE :D -lunar
+		/*var dataDisplay:FlxSprite = new FlxSprite().loadGraphic(waveformHandler.waveDatas.get("Voices.ogg"));
+		dataDisplay.scrollFactor.set(1, 0);
+		dataDisplay.scale.set(2, 2);
+		dataDisplay.updateHitbox();
+		dataDisplay.screenCenter(Y);
+		dataDisplay.cameras = [charterCamera]; dataDisplay.x = -dataDisplay.width; add(dataDisplay);*/
 	}
 
 	override function destroy() {
