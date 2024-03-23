@@ -170,10 +170,11 @@
 	<haxelib name="flxanimate" />
 
 	<haxelib name="hscript-improved" />
-	<haxelib name="discord-rpc" if="DISCORD_RPC"/>
+	<haxelib name="hxdiscord_rpc" if="DISCORD_RPC"/>
 	<haxelib name="markdown" />
 
 	<haxedef name="no-deprecation-warnings"/>
+	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="DISCORD_RPC"/>
 
 	<!-- _________________________________ Additional stuff _______________________________ -->
 
