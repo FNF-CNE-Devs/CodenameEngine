@@ -23,11 +23,13 @@ class DiscordUtil
 
 	public static var user:#if DISCORD_RPC DUser #else Dynamic #end = null;
 	public static var lastPresence:#if DISCORD_RPC DPresence #else Dynamic #end = null;
+	public static var events:#if DISCORD_RPC DEvents #else Dynamic #end = null;
 	public static var config:#if DISCORD_RPC DiscordJson #else Dynamic #end = null;
 
 	public static function init()
 	{
 		#if DISCORD_RPC
+		events = {};
 		reloadJsonData();
 
 		discordThread = Thread.create(function()
@@ -173,6 +175,9 @@ class DiscordUtil
 		handlers.ready = cpp.Function.fromStaticFunction(onReady);
 		handlers.disconnected = cpp.Function.fromStaticFunction(onDisconnected);
 		handlers.errored = cpp.Function.fromStaticFunction(onError);
+		handlers.joinGame = cpp.Function.fromStaticFunction(onJoin);
+		handlers.joinRequest = cpp.Function.fromStaticFunction(onJoinReq);
+		handlers.spectateGame = cpp.Function.fromStaticFunction(onSpectate);
 		Discord.Initialize(id, cpp.RawPointer.addressOf(handlers), 1, null);
 		stopThread = false;
 		#end
@@ -193,10 +198,8 @@ class DiscordUtil
 	#if DISCORD_RPC
 	private static function onReady(request:cpp.RawConstPointer<DiscordUser>):Void
 	{
-		var requestPtr:cpp.Star<DiscordUser> = cpp.ConstPointer.fromRaw(request).ptr;
-
 		user = new DUser();
-		user.init(requestPtr);
+		user.init(cpp.ConstPointer.fromRaw(request).ptr);
 
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
@@ -206,26 +209,69 @@ class DiscordUtil
 		], INFO);
 
 		ready = true;
+
+		if(events.ready != null) events.ready(user);
 	}
 
 	private static function onDisconnected(errorCode:Int, message:cpp.ConstCharStar):Void
 	{
+		var finalMsg:String = cast (message, String);
+
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
 			Logs.logText("Disconnected ("),
-			Logs.logText('$errorCode: ${cast (message, String)}', RED),
+			Logs.logText('$errorCode: $finalMsg', RED),
 			Logs.logText(")")
 		], INFO);
+
+		if(events.disconnected != null) events.disconnected(errorCode, finalMsg);
 	}
 
 	private static function onError(errorCode:Int, message:cpp.ConstCharStar):Void
 	{
+		var finalMsg:String = cast (message, String);
+
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
 			Logs.logText("Error ("),
-			Logs.logText('$errorCode: ${cast (message, String)}', RED),
+			Logs.logText('$errorCode: $finalMsg', RED),
 			Logs.logText(")")
 		], ERROR);
+
+		if(events.errored != null) events.errored(errorCode, finalMsg);
+	}
+
+	private static function onJoin(joinSecret:cpp.ConstCharStar):Void
+	{
+		Logs.traceColored([
+			Logs.logText("[Discord] ", BLUE),
+			Logs.logText("Someone has just joined", GREEN)
+		], INFO);
+
+		if(events.joinGame != null) events.joinGame(cast (joinSecret, String));
+	}
+
+	private static function onSpectate(spectateSecret:cpp.ConstCharStar):Void
+	{
+		Logs.traceColored([
+			Logs.logText("[Discord] ", BLUE),
+			Logs.logText("Someone started spectating your game", YELLOW)
+		], INFO);
+
+		if(events.spectateGame != null) events.spectateGame(cast (spectateSecret, String));
+	}
+
+	private static function onJoinReq(request:cpp.RawConstPointer<DiscordUser>):Void
+	{
+		Logs.traceColored([
+			Logs.logText("[Discord] ", BLUE),
+			Logs.logText("Someone has just requested to join", YELLOW)
+		], WARNING);
+
+		if(events.joinRequest == null) return;
+		var req:DUser = new DUser();
+		req.init(cpp.ConstPointer.fromRaw(request).ptr);
+		events.joinRequest(req);
 	}
 	#end
 }
@@ -307,4 +353,14 @@ typedef DPresence =
 	var ?joinSecret:String; /* max 128 bytes */
 	var ?spectateSecret:String; /* max 128 bytes */
 	var ?instance:OneOfTwo<Int, cpp.Int8>;
+}
+
+typedef DEvents =
+{
+	var ?ready:DUser->Void;
+	var ?disconnected:(errorCode:Int, message:String)->Void;
+	var ?errored:(errorCode:Int, message:String)->Void;
+	var ?joinGame:String->Void;
+	var ?spectateGame:String->Void;
+	var ?joinRequest:DUser->Void;
 }
