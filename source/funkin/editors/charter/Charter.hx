@@ -675,7 +675,7 @@ class Charter extends UIState {
 
 		if (autoSaveTimer < Options.charterAutoSaveWarningTime && !autoSaveNotif.cancelled && !autoSaveNotif.showedAnimation) {
 			if (Options.charterAutoSavesSeperateFolder)
-				__autoSaveLocation = DateTools.format(Date.now(), "%Y-%m-%d_%H-%M");
+				__autoSaveLocation = __diff.toLowerCase() + DateTools.format(Date.now(), "%m-%d_%H-%M");
 			autoSaveNotif.startAutoSave(autoSaveTimer, 
 				!Options.charterAutoSavesSeperateFolder ? 'Saved chart at ${__diff.toLowerCase()}.json!' : 
 				'Saved chart at $__autoSaveLocation.json!'
