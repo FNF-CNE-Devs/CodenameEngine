@@ -161,6 +161,13 @@
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
+	<!-- KEEP BOTH OF THESE AS THERE ARE SOME PARTICULAR CASES! -->
+	<define name="disable-version-check"/>
+	<haxedef name="disable-version-check"/>
+
+	<haxedef name="no-deprecation-warnings"/>
+	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="DISCORD_RPC"/>
+
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 
@@ -172,10 +179,6 @@
 	<haxelib name="hscript-improved" />
 	<haxelib name="hxdiscord_rpc" if="DISCORD_RPC"/>
 	<haxelib name="markdown" />
-
-	<haxedef name="no-deprecation-warnings"/>
-	<haxedef name="disable-version-check"/>
-	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="DISCORD_RPC"/>
 
 	<!-- _________________________________ Additional stuff _______________________________ -->
 
