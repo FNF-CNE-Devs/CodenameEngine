@@ -51,9 +51,10 @@ class CharterAutoSaveUI extends UISliceSprite {
 		}, 24, 14);
 		cancelButton.frames = Paths.getFrames("editors/ui/grayscale-button");
 		cancelButton.color = 0xFFAC3D3D; cancelButton.alpha = 0.2;
-		members.push(cancelButton);
+		members.push(cancelButton); cancelButton.visible = false;
 
 		cancelIcon = new FlxSprite(x-(10+16), y+8).loadGraphic(Paths.image("editors/autosave-delete"));
+		cancelIcon.color = 0xFF880000;
 		members.push(cancelIcon);
 
 		alpha = 0;

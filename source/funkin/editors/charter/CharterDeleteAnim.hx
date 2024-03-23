@@ -20,6 +20,7 @@ class CharterDeleteAnim extends CharterNote {
 
 	var __garbageAlpha:Float = 0;
 	var __deletionTimer:Float = .1;
+	@:noCompletion var __mousePos:FlxPoint = FlxPoint.get();
 	public override function update(elapsed:Float) {
 		for (deleteData in deleteNotes) {
 			deleteData.time -= elapsed;
@@ -31,10 +32,11 @@ class CharterDeleteAnim extends CharterNote {
 
 		__garbageAlpha = FlxMath.lerp(__garbageAlpha, FlxG.mouse.pressedRight && __deletionTimer <= 0 ? 1 : 0, 1/10);
 
+		FlxG.mouse.getWorldPosition(Charter.instance.uiCamera, __mousePos);
 		if (FlxG.mouse.pressedRight && __deletionTimer <= 0)
 			garbageIcon.setPosition(
-				FlxG.mouse.screenX + garbageIcon.width/2 + (.5*FlxG.random.float(-1, 1)), 
-				FlxG.mouse.screenY - garbageIcon.height + (.5*FlxG.random.float(-1, 1))
+				__mousePos.x + garbageIcon.width/2 + (.5*FlxG.random.float(-1, 1)), 
+				__mousePos.y - garbageIcon.height + (.5*FlxG.random.float(-1, 1))
 			);
 		garbageIcon.alpha = __garbageAlpha;
 	}
@@ -61,5 +63,10 @@ class CharterDeleteAnim extends CharterNote {
 		}
 
 		if (garbageIcon.alpha > 0) garbageIcon.draw();
+	}
+
+	public override function destroy() {
+		super.destroy();
+		__mousePos.put();
 	}
 }

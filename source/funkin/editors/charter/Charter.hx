@@ -1,5 +1,7 @@
 package funkin.editors.charter;
+// ! FUCK YOU CHUF (your biggest fan -lunar) <3
 
+import flixel.input.FlxPointer;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
@@ -85,6 +87,7 @@ class Charter extends UIState {
 	public var uiCamera:FlxCamera;
 	public var selectionBox:UISliceSprite;
 	public var autoSaveNotif:CharterAutoSaveUI;
+	public static var autoSaveTimer:Float = 0;
 
 	public static var selection:Selection;
 
@@ -667,7 +670,6 @@ class Charter extends UIState {
 		for(s in selection) s.selected = true;
 	}
 
-	public static var autoSaveTimer:Float = 0;
 	var __autoSaveLocation:String = null;
 	public function updateAutoSaving(elapsed:Float) {
 		if (!Options.charterAutoSaves) return;
@@ -681,7 +683,6 @@ class Charter extends UIState {
 				'Saved chart at $__autoSaveLocation.json!'
 			);
 		}
-
 		if (autoSaveTimer <= 0) {
 			autoSaveTimer = Options.charterAutoSaveTime;
 			if (!autoSaveNotif.cancelled) {
