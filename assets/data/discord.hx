@@ -1,5 +1,7 @@
+import funkin.backend.utils.DiscordUtil;
+
 function onGameOver() {
-	changePresence('Game Over', PlayState.SONG.meta.displayName + " (" + PlayState.difficulty + ")");
+	DiscordUtil.changePresence('Game Over', PlayState.SONG.meta.displayName + " (" + PlayState.difficulty + ")");
 }
 
 function onPlayStateUpdate() {
@@ -14,27 +16,27 @@ function onPlayStateUpdate() {
 
 function onMenuLoaded(name:String) {
 	// Name is either "Main Menu", "Freeplay", "Title Screen", "Options Menu", "Credits Menu"
-	changePresenceSince("In the Menus", null);
+	DiscordUtil.changePresenceSince("In the Menus", null);
 }
 
 function onEditorTreeLoaded(name:String) {
 	switch(name) {
 		case "Character Editor":
-			changePresenceSince("Choosing a Character", null);
+			DiscordUtil.changePresenceSince("Choosing a Character", null);
 		case "Chart Editor":
-			changePresenceSince("Choosing a Chart", null);
+			DiscordUtil.changePresenceSince("Choosing a Chart", null);
 		case "Stage Editor":
-			changePresenceSince("Choosing a Stage", null);
+			DiscordUtil.changePresenceSince("Choosing a Stage", null);
 	}
 }
 
 function onEditorLoaded(name:String, editingThing:String) {
 	switch(name) {
 		case "Character Editor":
-			changePresenceSince("Editing a Character", editingThing);
+			DiscordUtil.changePresenceSince("Editing a Character", editingThing);
 		case "Chart Editor":
-			changePresenceSince("Editing a Chart", editingThing);
+			DiscordUtil.changePresenceSince("Editing a Chart", editingThing);
 		case "Stage Editor":
-			changePresenceSince("Editing a Stage", editingThing);
+			DiscordUtil.changePresenceSince("Editing a Stage", editingThing);
 	}
 }

@@ -21,11 +21,11 @@ class DiscordUtil
 	public static var currentID(default, set):String = null;
 	public static var discordThread:#if DISCORD_RPC Thread #else Dynamic #end = null;
 	public static var ready:Bool = false;
+	public static var initialized:Bool = false;
 	private static var stopThread:Bool = false;
 
 	public static var user:#if DISCORD_RPC DUser #else Dynamic #end = null;
 	public static var lastPresence:#if DISCORD_RPC DPresence #else Dynamic #end = null;
-	public static var events:#if DISCORD_RPC DEvents #else Dynamic #end = null;
 	public static var config:#if DISCORD_RPC DiscordJson #else Dynamic #end = null;
 
 	public static var script:Script;
@@ -33,8 +33,10 @@ class DiscordUtil
 	public static function init()
 	{
 		#if DISCORD_RPC
-		events = {};
 		reloadJsonData();
+		if (initialized)
+			return;
+		initialized = true;
 
 		discordThread = Thread.create(function()
 		{
@@ -96,12 +98,13 @@ class DiscordUtil
 
 	public static function loadScript()
 	{
-		if(script != null) {
+		if (script != null)
+		{
 			call("destroy");
 			script = FlxDestroyUtil.destroy(script);
 		}
 		script = Script.create(Paths.script('data/discord'));
-		script.setParent(DiscordUtil);
+		// script.setParent(DiscordUtil);
 		script.load();
 	}
 
@@ -259,7 +262,6 @@ class DiscordUtil
 
 		ready = true;
 
-		// if(events.ready != null) events.ready(user);
 		call("onReady", [user]);
 	}
 
@@ -273,9 +275,6 @@ class DiscordUtil
 			Logs.logText('$errorCode: $finalMsg', RED),
 			Logs.logText(")")
 		], INFO);
-
-		if (events.disconnected != null)
-			events.disconnected(errorCode, finalMsg);
 
 		call("onReady", [errorCode, cast(finalMsg, String)]);
 	}
@@ -291,18 +290,12 @@ class DiscordUtil
 			Logs.logText(")")
 		], ERROR);
 
-		if (events.errored != null)
-			events.errored(errorCode, finalMsg);
-
 		call("onError", [errorCode, cast(finalMsg, String)]);
 	}
 
 	private static function onJoin(joinSecret:cpp.ConstCharStar):Void
 	{
 		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone has just joined", GREEN)], INFO);
-
-		if (events.joinGame != null)
-			events.joinGame(cast(joinSecret, String));
 
 		call("onJoinGame", [cast(joinSecret, String)]);
 	}
@@ -313,9 +306,6 @@ class DiscordUtil
 			Logs.logText("[Discord] ", BLUE),
 			Logs.logText("Someone started spectating your game", YELLOW)
 		], INFO);
-
-		if (events.spectateGame != null)
-			events.spectateGame(cast(spectateSecret, String));
 
 		call("onJoinGame", [cast(spectateSecret, String)]);
 	}
@@ -328,9 +318,6 @@ class DiscordUtil
 		], WARNING);
 
 		var req:DUser = DUser.initRaw(request);
-		if (events.joinRequest != null)
-			events.joinRequest(req);
-
 		call("onJoinRequest", [req]);
 	}
 	#end
