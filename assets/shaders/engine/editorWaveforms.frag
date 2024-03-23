@@ -2,11 +2,11 @@
 
 // Used in charter by waveforms
 
-const vec3 gradient1 = vec3(114./255., 81./255., 135./255);
-const vec3 gradient2 = vec3(144./255., 80./255., 186./255);
+const vec3 gradient1 = vec3(114.0/255.0, 81.0/255.0, 135.0/255.0);
+const vec3 gradient2 = vec3(144.0/255.0, 80.0/255.0, 186.0/255.0);
 
-const vec4 outlinecolor = vec4(vec3(.1), .1);
-const vec3 lowdetailcol = vec3(0., 0., 1.);
+const vec4 outlinecolor = vec4(0.1);
+const vec3 lowdetailcol = vec3(0.0, 0.0, 1.0);
 
 uniform vec2 textureRes;
 uniform float pixelOffset;
@@ -20,17 +20,16 @@ uniform bool lowDetail;
 
 float getAmplitude(vec2 pixel) {
 	float pixelID = floor((pixel.y+pixelOffset)/3.0);
-	
+
 	// TODO: INVESTIGATE THE 1.+ AND WHY IT WORKS (SRSLY I GOT NO CLUE) -lunar
 	vec2 wavePixel = vec2(mod(pixelID,waveformSize.x), 1.0+floor(pixelID/waveformSize.x));
 	vec4 waveData = texture2D(waveformTexture, wavePixel / waveformSize);
 
-	switch (int(mod(wavePixel.x, 3.0))) {
-		case 0: return waveData.r; break;
-		case 1: return waveData.g; break;
-		case 2: return waveData.b; break;
-	}
-	return 0.;
+	int id = int(mod(wavePixel.x, 3.0));
+	if(id == 0) return waveData.r;
+	if(id == 1) return waveData.g;
+	if(id == 2) return waveData.b;
+	return 0.0;
 }
 
 float getAmpWidth(float amplitude) {
@@ -45,26 +44,26 @@ bool inWaveForm(vec2 pixel, float width) {
 float getHightlight(float ampwidth) {
 	float remapCoord = (ampwidth/textureRes.x)/2.0;
 	float mappedCoord = map(openfl_TextureCoordv.x, remapCoord, 1.0-remapCoord, 0.0, 1.0);
-	return 1.-(abs(mappedCoord-0.5)*2.0);
+	return 1.0-(abs(mappedCoord-0.5)*2.0);
 }
 
 void outlineWaveform(vec2 pixel, vec2 offset) {
 	float amplitude = getAmplitude(pixel - offset);
-	float ampwidth = (1.-amplitude) * textureRes.x;
+	float ampwidth = (1.0-amplitude) * textureRes.x;
 
 	if (!inWaveForm(pixel, ampwidth))
-		gl_FragColor -= outlinecolor*mix(0.5, .8, amplitude);
+		gl_FragColor -= outlinecolor*mix(0.5, 0.8, amplitude);
 }
 
 void highDetailWaveform(vec2 pixel, float amplitude, float ampwidth) {
 	vec3 gradientColor = mix(gradient1, gradient2, openfl_TextureCoordv.x);
-	gradientColor *= pixel.y+pixelOffset>playerPosition ? 0.7 : 1.0; 
+	gradientColor *= pixel.y+pixelOffset>playerPosition ? 0.7 : 1.0;
 	gradientColor = mix(gradientColor, gradientColor * vec3(1.8), map(getHightlight(amplitude), 0.0, 1.0, 0.5, 1.0));
 
-	float ampwidthHighlight = getAmpWidth(amplitude*(1.0/3.0));
+	float ampwidthHighlight = getAmpWidth(amplitude/3.0);
 	if (inWaveForm(pixel, ampwidthHighlight))
 		gradientColor = mix(gradientColor, gradientColor * vec3(1.8), map(getHightlight(ampwidthHighlight), 0.0, 1.0, 0.5, 1.0));
-	
+
 	gl_FragColor = vec4(vec3(gradientColor * mix(0.5, 0.8, amplitude))*openfl_Alphav, openfl_Alphav);
 
 	outlineWaveform(pixel, vec2(0.0, -1.0));

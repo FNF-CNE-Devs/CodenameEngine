@@ -28,7 +28,7 @@ void main() {
 
 	hsv.g = (1.0/3.0) * strength * coords.y;
 
-	hsv.r = mod(elapsed + coords.x + coords.y, 1);
+	hsv.r = mod(elapsed + coords.x + coords.y, 1.0);
 
 	gl_FragColor = vec4(hsv2rgb(hsv), color.a);
 }

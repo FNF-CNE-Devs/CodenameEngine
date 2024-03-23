@@ -60,10 +60,6 @@ class CharterWaveformHandler extends FlxBasic {
 
 		waveDatas.set(name, waveData);
 		return waveData;
-		
-		// ! IF YOU EVER WANNA VIEW IN THE FUTURE, JUST USE A FLXSPRITE :D -lunar
-		// var dataDisplay:FlxSprite = new FlxSprite().loadGraphic(waveformHandler.waveDatas.get("Voices.ogg"));
-		// dataDisplay.cameras = [charterCamera]; dataDisplay.x = -dataDisplay.width; add(dataDisplay);
 	}
 
 	public function generateShader(name:String, sound:FlxSound):CustomShader {
