@@ -13,6 +13,9 @@ class PsychParser {
 		base.notes = FNFLegacyParser.__convertToSwagSections(chart);
 		base.stage = chart.stage;
 
+		for (section in base.notes)
+			section.sectionBeats = Conductor.beatsPerMeasure;
+
 		for (strumLine in chart.strumLines)
 			if (strumLine.type == ADDITIONAL && base.gfVersion == null)
 				base.gfVersion = strumLine.characters.getDefault(["gf"])[0];

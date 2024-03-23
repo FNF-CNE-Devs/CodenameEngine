@@ -221,6 +221,7 @@ typedef SwagSection =
 {
 	var sectionNotes:Array<Dynamic>;
 	var lengthInSteps:Int;
+	var ?sectionBeats:Float;
 	var ?typeOfSection:Int;
 	var mustHitSection:Bool;
 	var ?gfSection:Bool;
