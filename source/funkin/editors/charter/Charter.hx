@@ -806,7 +806,7 @@ class Charter extends UIState {
 					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
 				else if (FlxG.mouse.justPressedRight) {
 					closeCurrentContextMenu(); 
-					gridActionType = DELTE_SELECTION;
+					gridActionType = DELETE_SELECTION;
 				}
 					
 				if (gridBackdropDummy.hovered) {
@@ -886,7 +886,7 @@ class Charter extends UIState {
 					gridActionType = NONE;
 					currentCursor = ARROW;
 				}
-			case DELTE_SELECTION:
+			case DELETE_SELECTION:
 				notesGroup.forEach(function(n) {
 					if (n.hovered || n.sustainDraggable) {
 						deletedNotes.push(n);
@@ -1960,7 +1960,7 @@ enum abstract CharterGridActionType(Int) {
 	var NOTE_DRAG = 2;
 	var INVALID_DRAG = 3;
 	var SUSTAIN_DRAG = 4;
-	var DELTE_SELECTION = 5;
+	var DELETE_SELECTION = 5;
 }
 
 typedef PlaytestInfo = {
