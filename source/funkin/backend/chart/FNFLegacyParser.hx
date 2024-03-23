@@ -152,9 +152,7 @@ class FNFLegacyParser {
 					if (base.player2 == null) base.player2 = strumLine.characters.getDefault(["dad"])[0];
 				case PLAYER:
 					if (base.player1 == null) base.player1 = strumLine.characters.getDefault(["bf"])[0];
-				case ADDITIONAL:
-					// if (base.gf == null || base.gfVersion == null)
-					//	base.gf = base.gfVersion = strumLine.characters.getDefault(["gf"])[0];
+				case ADDITIONAL: // do nothing
 			}
 
 		return base;
@@ -205,6 +203,7 @@ typedef SwagSong =
 	var speed:Float;
 	var ?stage:String;
 	var ?noteTypes:Array<String>;
+	var ?events:Array<Dynamic>;
 
 	var player1:String;
 	var player2:String;
@@ -224,6 +223,7 @@ typedef SwagSection =
 	var lengthInSteps:Int;
 	var ?typeOfSection:Int;
 	var mustHitSection:Bool;
+	var ?gfSection:Bool;
 	var bpm:Float;
 	var changeBPM:Bool;
 	var altAnim:Null<Bool>;

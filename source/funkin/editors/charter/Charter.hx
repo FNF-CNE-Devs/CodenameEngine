@@ -1293,7 +1293,7 @@ class Charter extends UIState {
 	}
 
 	function _file_saveas(_) {
-		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false)), {
+		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false), null, Options.editorPrettyPrint ? "\t" : null), {
 			defaultSaveFile: '${__diff.toLowerCase()}.json'
 		}));
 		undos.save();
@@ -1309,7 +1309,7 @@ class Charter extends UIState {
 	}
 
 	function _file_saveas_no_events(_) {
-		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false, false)), {
+		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false, false), null, Options.editorPrettyPrint ? "\t" : null), {
 			defaultSaveFile: '${__diff.toLowerCase()}.json'
 		}));
 		undos.save();
@@ -1333,17 +1333,21 @@ class Charter extends UIState {
 	}
 
 	function _file_saveas_fnflegacy(_) {
-		openSubState(new SaveSubstate(Json.stringify(FNFLegacyParser.encode(PlayState.SONG), Options.editorPrettyPrint ? "\t" : null), {
+		openSubState(new SaveSubstate(Json.stringify(FNFLegacyParser.encode(PlayState.SONG), null, Options.editorPrettyPrint ? "\t" : null), {
 			defaultSaveFile: '${__song.toLowerCase().replace(" ", "-")}${__diff.toLowerCase() == "normal" ? "" : '-${__diff.toLowerCase()}'}.json',
 		}));
 	}
-	function _file_saveas_psych(_) {}
+	function _file_saveas_psych(_) {
+		openSubState(new SaveSubstate(Json.stringify(PsychParser.encode(PlayState.SONG), null, Options.editorPrettyPrint ? "\t" : null), {
+			defaultSaveFile: '${__song.toLowerCase().replace(" ", "-")}${__diff.toLowerCase() == "normal" ? "" : '-${__diff.toLowerCase()}'}.json',
+		}));
+	}
 
 	function _file_events_save(_) {
 		#if sys
 		CoolUtil.safeSaveFile(
 			'${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}/events.json',
-			Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events})
+			Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events}, null, Options.editorPrettyPrint ? "\t" : null)
 		);
 		#else
 		_file_events_saveas(_);
@@ -1352,7 +1356,7 @@ class Charter extends UIState {
 
 	function _file_events_saveas(_) {
 		#if sys
-		openSubState(new SaveSubstate(Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events}), {
+		openSubState(new SaveSubstate(Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events}, null, Options.editorPrettyPrint ? "\t" : null), {
 			defaultSaveFile: 'events.json'
 		}));
 		#end
