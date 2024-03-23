@@ -1,9 +1,11 @@
 package funkin.backend.utils;
 
+import funkin.backend.scripting.events.DiscordPresenceUpdateEvent;
+import funkin.backend.scripting.events.CancellableEvent;
+import funkin.backend.scripting.*; // lazy
 import flixel.util.typeLimit.OneOfTwo;
 import openfl.display.BitmapData;
 import funkin.backend.system.macros.Utils;
-import funkin.backend.scripting.events.DiscordPresenceUpdateEvent;
 import haxe.Json;
 import flixel.sound.FlxSound;
 #if DISCORD_RPC
@@ -25,6 +27,8 @@ class DiscordUtil
 	public static var lastPresence:#if DISCORD_RPC DPresence #else Dynamic #end = null;
 	public static var events:#if DISCORD_RPC DEvents #else Dynamic #end = null;
 	public static var config:#if DISCORD_RPC DiscordJson #else Dynamic #end = null;
+
+	public static var scripts:ScriptPack;
 
 	public static function init()
 	{
@@ -75,6 +79,39 @@ class DiscordUtil
 		config.clientID = config.clientID.getDefault("1027994136193810442");
 		currentID = config.clientID;
 		#end
+	}
+
+	public static function event<T:CancellableEvent>(name:String, event:T):T
+	{
+		if (scripts != null)
+			scripts.event(name, event);
+		return event;
+	}
+
+	public static function call(name:String, ?args:Array<Dynamic>)
+	{
+		if (scripts != null)
+			scripts.call(name, args);
+	}
+
+	public static function loadScript()
+	{
+		if(scripts != null) {
+			call("destroy");
+			scripts = FlxDestroyUtil.destroy(scripts);
+		}
+		scripts = new ScriptPack("DiscordScript");
+		for (i in funkin.backend.assets.ModsFolder.getLoadedMods())
+		{
+			var path = Paths.script('data/discord/LIB_$i');
+			var script = Script.create(path);
+			if (script is DummyScript)
+				continue;
+
+			script.remappedNames.set(script.fileName, '$i:${script.fileName}');
+			scripts.add(script);
+			script.load();
+		}
 	}
 
 	public static function changePresence(details:String, state:String, ?smallImageKey:String)
@@ -132,12 +169,15 @@ class DiscordUtil
 		if (data.largeImageText == null)
 			data.largeImageText = config.logoText;
 
+		var evt = EventManager.get(DiscordPresenceUpdateEvent).recycle(data);
 		#if GLOBAL_SCRIPT
-		var event = funkin.backend.scripting.GlobalScript.event("onDiscordPresenceUpdate", EventManager.get(DiscordPresenceUpdateEvent).recycle(data));
-		if (event.cancelled)
-			return;
-		data = event.presence;
+		// kept for "backwards compat"
+		funkin.backend.scripting.GlobalScript.event("onDiscordPresenceUpdate", evt);
 		#end
+		event("onDiscordPresenceUpdate", evt);
+		if (evt.cancelled)
+			return;
+		data = evt.presence;
 		lastPresence = data;
 
 		var dp:DiscordRichPresence = DiscordRichPresence.create();
@@ -180,6 +220,8 @@ class DiscordUtil
 		handlers.spectateGame = cpp.Function.fromStaticFunction(onSpectate);
 		Discord.Initialize(id, cpp.RawPointer.addressOf(handlers), 1, null);
 		stopThread = false;
+
+		loadScript();
 		#end
 
 		return currentID = id;
@@ -192,14 +234,16 @@ class DiscordUtil
 		#if DISCORD_RPC
 		Discord.Shutdown();
 		#end
+
+		call("destroy");
+		scripts = FlxDestroyUtil.destroy(scripts);
 	}
 
 	// HANDLERS
 	#if DISCORD_RPC
 	private static function onReady(request:cpp.RawConstPointer<DiscordUser>):Void
 	{
-		user = new DUser();
-		user.init(cpp.ConstPointer.fromRaw(request).ptr);
+		user = DUser.initRaw(request);
 
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
@@ -210,12 +254,13 @@ class DiscordUtil
 
 		ready = true;
 
-		if(events.ready != null) events.ready(user);
+		// if(events.ready != null) events.ready(user);
+		call("onReady", [user]);
 	}
 
 	private static function onDisconnected(errorCode:Int, message:cpp.ConstCharStar):Void
 	{
-		var finalMsg:String = cast (message, String);
+		var finalMsg:String = cast(message, String);
 
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
@@ -224,12 +269,15 @@ class DiscordUtil
 			Logs.logText(")")
 		], INFO);
 
-		if(events.disconnected != null) events.disconnected(errorCode, finalMsg);
+		if (events.disconnected != null)
+			events.disconnected(errorCode, finalMsg);
+
+		call("onReady", [errorCode, cast(finalMsg, String)]);
 	}
 
 	private static function onError(errorCode:Int, message:cpp.ConstCharStar):Void
 	{
-		var finalMsg:String = cast (message, String);
+		var finalMsg:String = cast(message, String);
 
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
@@ -238,17 +286,20 @@ class DiscordUtil
 			Logs.logText(")")
 		], ERROR);
 
-		if(events.errored != null) events.errored(errorCode, finalMsg);
+		if (events.errored != null)
+			events.errored(errorCode, finalMsg);
+
+		call("onError", [errorCode, cast(finalMsg, String)]);
 	}
 
 	private static function onJoin(joinSecret:cpp.ConstCharStar):Void
 	{
-		Logs.traceColored([
-			Logs.logText("[Discord] ", BLUE),
-			Logs.logText("Someone has just joined", GREEN)
-		], INFO);
+		Logs.traceColored([Logs.logText("[Discord] ", BLUE), Logs.logText("Someone has just joined", GREEN)], INFO);
 
-		if(events.joinGame != null) events.joinGame(cast (joinSecret, String));
+		if (events.joinGame != null)
+			events.joinGame(cast(joinSecret, String));
+
+		call("onJoinGame", [cast(joinSecret, String)]);
 	}
 
 	private static function onSpectate(spectateSecret:cpp.ConstCharStar):Void
@@ -258,7 +309,10 @@ class DiscordUtil
 			Logs.logText("Someone started spectating your game", YELLOW)
 		], INFO);
 
-		if(events.spectateGame != null) events.spectateGame(cast (spectateSecret, String));
+		if (events.spectateGame != null)
+			events.spectateGame(cast(spectateSecret, String));
+
+		call("onJoinGame", [cast(spectateSecret, String)]);
 	}
 
 	private static function onJoinReq(request:cpp.RawConstPointer<DiscordUser>):Void
@@ -268,10 +322,11 @@ class DiscordUtil
 			Logs.logText("Someone has just requested to join", YELLOW)
 		], WARNING);
 
-		if(events.joinRequest == null) return;
-		var req:DUser = new DUser();
-		req.init(cpp.ConstPointer.fromRaw(request).ptr);
-		events.joinRequest(req);
+		var req:DUser = DUser.initRaw(request);
+		if (events.joinRequest != null)
+			events.joinRequest(req);
+
+		call("onJoinRequest", [req]);
 	}
 	#end
 }
@@ -311,21 +366,28 @@ final class DUser
 	**/
 	public var avatar:String;
 
-	public function new()
+	private function new()
 	{
 	}
 
-	public function init(userData:cpp.Star<DiscordUser>)
+	public static function initRaw(req:cpp.RawConstPointer<DiscordUser>)
 	{
-		userId = userData.userId;
-		username = userData.username;
-		discriminator = Std.parseInt(userData.discriminator);
-		avatar = userData.avatar;
+		return init(cpp.ConstPointer.fromRaw(req).ptr);
+	}
 
-		if (discriminator != 0)
-			tag = '${username}#${discriminator}';
+	public static function init(userData:cpp.Star<DiscordUser>)
+	{
+		var d = new DUser();
+		d.userId = userData.userId;
+		d.username = userData.username;
+		d.discriminator = Std.parseInt(userData.discriminator);
+		d.avatar = userData.avatar;
+
+		if (d.discriminator != 0)
+			d.tag = '${d.username}#${d.discriminator}';
 		else
-			tag = '${username}';
+			d.tag = '${d.username}';
+		return d;
 	}
 
 	/**
@@ -358,8 +420,8 @@ typedef DPresence =
 typedef DEvents =
 {
 	var ?ready:DUser->Void;
-	var ?disconnected:(errorCode:Int, message:String)->Void;
-	var ?errored:(errorCode:Int, message:String)->Void;
+	var ?disconnected:(errorCode:Int, message:String) -> Void;
+	var ?errored:(errorCode:Int, message:String) -> Void;
 	var ?joinGame:String->Void;
 	var ?spectateGame:String->Void;
 	var ?joinRequest:DUser->Void;
