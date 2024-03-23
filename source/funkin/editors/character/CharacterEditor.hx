@@ -224,7 +224,7 @@ class CharacterEditor extends UIState {
 		FlxG.cameras.add(uiCamera);
 		FlxG.cameras.add(animsCamera);
 
-		character = new Character(0,0,__character, false, false);
+		character = new Character(0,0, __character, false, false);
 		character.debugMode = true;
 		character.cameras = [charCamera];
 
@@ -257,6 +257,8 @@ class CharacterEditor extends UIState {
 			Framerate.memoryCounter.alpha = 0.4;
 			Framerate.codenameBuildField.alpha = 0.4;
 		}
+
+		DiscordUtil.call("onEditorLoaded", ["Character Editor", __character]);
 	}
 
 	override function destroy() {

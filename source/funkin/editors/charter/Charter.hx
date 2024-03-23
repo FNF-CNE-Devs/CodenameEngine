@@ -490,6 +490,8 @@ class Charter extends UIState {
 			Framerate.codenameBuildField.alpha = 0.4;
 		}
 		updateDisplaySprites();
+
+		DiscordUtil.call("onEditorLoaded", ["Chart Editor", __song + " (" + __diff + ")"]);
 	}
 
 	override function destroy() {

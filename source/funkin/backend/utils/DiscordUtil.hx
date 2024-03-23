@@ -101,6 +101,7 @@ class DiscordUtil
 			script = FlxDestroyUtil.destroy(script);
 		}
 		script = Script.create(Paths.script('data/discord'));
+		script.setParent(DiscordUtil);
 		script.load();
 	}
 
@@ -133,6 +134,20 @@ class DiscordUtil
 			smallImageKey: smallImageKey,
 			startTimestamp: Std.int(start / 1000),
 			endTimestamp: Std.int(end / 1000)
+		});
+		#end
+	}
+
+	public static function changePresenceSince(details:String, state:String, ?smallImageKey:String, ?offset:Float = 0)
+	{
+		#if DISCORD_RPC
+		var start:Float = Date.now().getTime() + offset;
+
+		changePresenceAdvanced({
+			state: state,
+			details: details,
+			smallImageKey: smallImageKey,
+			startTimestamp: Std.int(start / 1000)
 		});
 		#end
 	}
