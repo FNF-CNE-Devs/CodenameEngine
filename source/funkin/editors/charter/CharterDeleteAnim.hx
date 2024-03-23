@@ -13,7 +13,7 @@ class CharterDeleteAnim extends CharterNote {
 		snappedToStrumline = selectable = autoAlpha = false; 
 		@:privateAccess __animSpeed = 1.25;
 
-		garbageIcon = new FlxSprite().loadGraphic(Paths.image("editors/autosave-delete"));
+		garbageIcon = new FlxSprite().loadGraphic(Paths.image("editors/deleter"));
 		garbageIcon.color = 0xFF880000;
 		garbageIcon.cameras = [Charter.instance.uiCamera];
 	}
