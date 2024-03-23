@@ -2,6 +2,7 @@ package funkin.editors.charter;
 
 class CharterDeleteAnim extends CharterNote {
 	public var garbageIcon:FlxSprite;
+	public var garbageCircle:FlxSprite;
 
 	public var deleteNotes:Array<{note:CharterNote, time:Float}> = [];
 	public var deleteTime:Float = .4;
@@ -9,13 +10,17 @@ class CharterDeleteAnim extends CharterNote {
 	public function new() {
 		super();
 
-		sustainSpr.color = 0xFF6D2425; color = 0xFF797171;
+		sustainSpr.color = 0xFF630000; color = 0xFF605A5A;
 		snappedToStrumline = selectable = autoAlpha = false; 
 		@:privateAccess __animSpeed = 1.25;
 
 		garbageIcon = new FlxSprite().loadGraphic(Paths.image("editors/deleter"));
 		garbageIcon.color = 0xFF880000;
 		garbageIcon.cameras = [Charter.instance.uiCamera];
+
+		garbageCircle = new FlxSprite().loadGraphic(Paths.image("editors/deleter circle"));
+		garbageCircle.color = 0xFF880000; garbageCircle.alpha = .6;
+		garbageCircle.cameras = [Charter.instance.uiCamera];
 	}
 
 	var __garbageAlpha:Float = 0;
@@ -33,12 +38,20 @@ class CharterDeleteAnim extends CharterNote {
 		__garbageAlpha = FlxMath.lerp(__garbageAlpha, FlxG.mouse.pressedRight && __deletionTimer <= 0 ? 1 : 0, 1/10);
 
 		FlxG.mouse.getWorldPosition(Charter.instance.uiCamera, __mousePos);
-		if (FlxG.mouse.pressedRight && __deletionTimer <= 0)
+		if (FlxG.mouse.pressedRight && __deletionTimer <= 0) {
 			garbageIcon.setPosition(
-				__mousePos.x + garbageIcon.width/2 + (.5*FlxG.random.float(-1, 1)), 
-				__mousePos.y - garbageIcon.height + (.5*FlxG.random.float(-1, 1))
+				__mousePos.x + garbageIcon.width/2 + (.65*FlxG.random.float(-1, 1)) + 2, 
+				__mousePos.y - garbageIcon.height + (.65*FlxG.random.float(-1, 1)) - 8
 			);
+
+			garbageCircle.setPosition(
+				__mousePos.x - garbageCircle.width/2, 
+				(__mousePos.y - garbageCircle.height/2) + 2
+			);
+		}
+
 		garbageIcon.alpha = __garbageAlpha;
+		garbageCircle.alpha = __garbageAlpha*.6;
 	}
 
 	public override function draw() @:privateAccess {
@@ -63,6 +76,7 @@ class CharterDeleteAnim extends CharterNote {
 		}
 
 		if (garbageIcon.alpha > 0) garbageIcon.draw();
+		if (garbageCircle.alpha > 0) garbageCircle.draw();
 	}
 
 	public override function destroy() {

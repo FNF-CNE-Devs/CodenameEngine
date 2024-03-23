@@ -45,16 +45,16 @@ class CharterAutoSaveUI extends UISliceSprite {
 
 			icon.animation.curAnim.curFrame = 2;
 			(new FlxTimer()).start(1, (_) -> {disappearAnimation(true);});
-			autosavingText.text += "(Canceled!)"; cancelButton.visible = false;
-			for (member in [this, autosavingText]) member.color = 0xFFB62C2C;
-			for (member in [progressBar, progressBarBack]) member.color = 0xFFE53D3D;
+			autosavingText.text += " (Canceled)!"; cancelButton.visible = false;
+			for (member in [this, autosavingText]) member.color = 0xFFE67F7F;
+			for (member in [progressBar, progressBarBack]) member.color = 0xFFE67F7F;
 		}, 24, 14);
 		cancelButton.frames = Paths.getFrames("editors/ui/grayscale-button");
 		cancelButton.color = 0xFFAC3D3D; cancelButton.alpha = 0.2;
 		members.push(cancelButton); cancelButton.visible = false;
 
 		cancelIcon = new FlxSprite(x-(10+16), y+8).loadGraphic(Paths.image("editors/autosave-delete"));
-		cancelIcon.color = 0xFF880000;
+		cancelIcon.color = 0xFFD60E0E;
 		members.push(cancelIcon);
 
 		alpha = 0;
