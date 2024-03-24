@@ -307,7 +307,7 @@ class DiscordUtil
 			Logs.logText("Someone started spectating your game", YELLOW)
 		], INFO);
 
-		call("onJoinGame", [cast(spectateSecret, String)]);
+		call("onSpectateGame", [cast(spectateSecret, String)]);
 	}
 
 	private static function onJoinReq(request:cpp.RawConstPointer<DiscordUser>):Void
