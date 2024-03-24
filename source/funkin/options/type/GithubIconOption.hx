@@ -19,10 +19,10 @@ class GithubIconOption extends TextOption
 		return usePortrait = value;
 	}
 
-	public function new(user:Dynamic, desc:String, ?callback:Void->Void, ?customName:String, size:Int = 96, usePortrait:Bool = true) {
+	public function new(user:Dynamic, desc:String, ?callback:Void->Void, ?customName:String, size:Int = 96, usePortrait:Bool = true, waitUntilLoad:Float = 0.25) {
 		super(customName == null ? user.login : customName, desc, callback == null ? function() CoolUtil.openURL(user.html_url) : callback);
 		this.user = user;
-		this.icon = new GithubUserIcon(user, size);
+		this.icon = new GithubUserIcon(user, size, waitUntilLoad);
 		this.usePortrait = usePortrait;
 		add(icon);
 	}
@@ -30,22 +30,28 @@ class GithubIconOption extends TextOption
 
 class GithubUserIcon extends FlxSprite
 {
-	private var loading:Bool = false;
+	public var waitUntilLoad:Null<Float>;
 	private var user:Dynamic;
 	private var size:Int;
 
-	public override function new(user:Dynamic, size:Int = 96) {
+	public override function new(user:Dynamic, size:Int = 96, waitUntilLoad:Float = 0.25) {
 		this.user = user;
 		this.size = size;
+		this.waitUntilLoad = waitUntilLoad;
 		super();
 		makeGraphic(size, size, FlxColor.TRANSPARENT);
 		antialiasing = true;
 	}
 
+	override function update(elapsed:Float) {
+		if(waitUntilLoad > 0) waitUntilLoad -= elapsed;
+		super.update(elapsed);
+	}
+
 	final mutex = new sys.thread.Mutex();
 	override function drawComplex(camera:FlxCamera):Void {  // Making the image downlaod only if the player actually sees it on the screeeeen  - Nex
-		if(!loading) {
-			loading = true;
+		if(waitUntilLoad <= 0) {
+			waitUntilLoad = null;
 			Main.execAsync(function() {
 				var key:String = 'GITHUB-USER:${user.login}';
 				var bmap:Dynamic = FlxG.bitmap.get(key);
