@@ -1,10 +1,18 @@
 package funkin.backend.chart;
 
+import funkin.backend.chart.FNFLegacyParser.SwagSection;
 import funkin.backend.chart.ChartData.ChartEvent;
 import funkin.backend.chart.FNFLegacyParser.SwagSong;
 import funkin.backend.system.Conductor;
 
 class PsychParser {
+	// Alreadly parsed in sections
+	public static var ignoreEvents:Array<String> = [
+		"Camera Movement",
+		"Alt Animation Toggle",
+		"BPM Change"
+	];
+
 	public static function parse(data:Dynamic, result:ChartData)
 		FNFLegacyParser.parse(data, result);
 
@@ -23,22 +31,29 @@ class PsychParser {
 		for (strumLine in chart.strumLines)
 			for (note in strumLine.notes) {
 				var section:Int = Math.floor(Conductor.getStepForTime(note.time) / Conductor.getMeasureLength());
-				if (section > 0 && section < base.notes.length)
-					base.notes[section].sectionNotes.push([
+				var swagSection:SwagSection = base.notes[section];
+				
+				if (section >= 0 && section < base.notes.length) {
+					var sectionNote:Array<Dynamic> = [
 						note.time, // TIME
-						note.id + (strumLine.type == PLAYER ? 3 : 0), // DATA
+						note.id, // DATA
 						note.sLen, // SUSTAIN LENGTH
 						chart.noteTypes.getDefault([""])[note.type] // NOTE TYPE
-					]);
+					];
+
+					if ((swagSection.mustHitSection && strumLine.type == OPPONENT) ||
+						 (!swagSection.mustHitSection && strumLine.type == PLAYER))
+						sectionNote[1] += 4;
+					swagSection.sectionNotes.push(sectionNote); 
+				}
 			}
-
-		base.events = [];
-
+			
 		var groupedEvents:Array<Array<ChartEvent>> = [];
 		var __last:Array<ChartEvent> = null;
 		var __lastTime:Float = Math.NaN;
-		for (e in chart.events) {
-			if (e == null) continue;
+		for (e in [for (event in chart.events) Reflect.copy(event)]) {
+			if (e == null || ignoreEvents.contains(e.name)) continue;
+
 			if (__last != null && __lastTime == e.time)
 				__last.push(e);
 			else {
@@ -48,6 +63,7 @@ class PsychParser {
 			}
 		}
 
+		base.events = [];
 		for (events in groupedEvents) {
 			var psychEvents:Array<Dynamic> = [];
 			for (event in events)
@@ -72,8 +88,8 @@ class PsychParser {
 						var eventStep:Float = Conductor.getStepForTime(event.time);
 						psychEvents.push([
 							"Change Scroll Speed",
-							event.params[1]/chart.scrollSpeed, // SCROLL SPEED MULTIPLER
-							Conductor.getTimeForStep(eventStep+event.params[2]) - Conductor.getTimeForStep(eventStep), // TIME
+							FlxMath.roundDecimal(event.params[1]/chart.scrollSpeed, 2), // SCROLL SPEED MULTIPLER
+							FlxMath.roundDecimal((Conductor.getTimeForStep(eventStep+event.params[2]) - Conductor.getTimeForStep(eventStep))/1000, 2), // TIME
 						]);
 					default:
 						// TODO: allow custom formats in event.json
@@ -84,6 +100,12 @@ class PsychParser {
 
 						psychEvents.push([event.name, val1, val2]);
 				}
+
+			for (psychEvent in psychEvents)
+				for (i in 1...3) // Turn both vals into strings
+					if (!(psychEvent[i] is String)) 
+						psychEvent[i] = Std.string(psychEvent[i]);
+
 			base.events.push([events[0].time, psychEvents]);
 		}
 

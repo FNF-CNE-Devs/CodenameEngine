@@ -121,12 +121,18 @@ class FNFLegacyParser {
 		for (strumLine in chart.strumLines)
 			for (note in strumLine.notes) {
 				var section:Int = Math.floor(Conductor.getStepForTime(note.time) / Conductor.getMeasureLength());
-				if (section > 0 && section < base.notes.length)
-					base.notes[section].sectionNotes.push([
+				var swagSection:SwagSection = base.notes[section];
+				if (section > 0 && section < base.notes.length) {
+					var sectionNote:Array<Dynamic> = [
 						note.time, // TIME
-						note.id + (strumLine.type == PLAYER ? 3 : 0), // DATA
+						note.id, // DATA
 						note.sLen // SUSTAIN LENGTH
-					]);
+					];
+
+					if (swagSection.mustHitSection)
+						if (strumLine.type == OPPONENT) sectionNote[1] += 4;
+					swagSection.sectionNotes.push(note); 
+				}
 			}
 		
 		return {song: base};
@@ -159,7 +165,7 @@ class FNFLegacyParser {
 	}
 
 	@:noCompletion public static function __convertToSwagSections(chart:ChartData):Array<SwagSection> {
-		var events:Array<ChartEvent> = chart.events.copy();
+		var events:Array<ChartEvent> = [for (event in chart.events) Reflect.copy(event)];
 
 		var measures:Float = Conductor.getMeasuresLength();
 		var sections:Int = Math.floor(measures) + (measures % 1 > 0 ? 1 : 0);
@@ -176,8 +182,9 @@ class FNFLegacyParser {
 			};
 
 			var sectionEndTime:Float = Conductor.getTimeForStep(Conductor.getMeasureLength() * (section+1));
-			while(events.length > 0 && events.last().time <= sectionEndTime) {
-				var event:ChartEvent = events.pop();
+			while(events.length > 0 && events[0].time < sectionEndTime) {
+				var event:ChartEvent = events.shift();
+				trace(section, event);
 				switch (event.name) {
 					case "Camera Movement":
 						baseSection.mustHitSection = chart.strumLines[event.params[0]].type == PLAYER;
