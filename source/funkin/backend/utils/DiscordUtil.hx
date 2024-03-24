@@ -148,16 +148,17 @@ class DiscordUtil
 		#end
 	}
 
-	public static function changePresenceSince(details:String, state:String, ?smallImageKey:String, ?offset:Float = 0)
+	public static function changePresenceSince(details:String, state:String, ?smallImageKey:String, ?time:Null<Float> = null)
 	{
 		#if DISCORD_RPC
-		var start:Float = Date.now().getTime() + offset;
+		if(time == null)
+			time = Date.now().getTime();
 
 		changePresenceAdvanced({
 			state: state,
 			details: details,
 			smallImageKey: smallImageKey,
-			startTimestamp: Std.int(start / 1000)
+			startTimestamp: Std.int(time / 1000)
 		});
 		#end
 	}
