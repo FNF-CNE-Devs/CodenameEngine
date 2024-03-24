@@ -65,7 +65,7 @@ class UITopMenuButton extends UISliceSprite {
 
 		var opened = curMenu != null ? curMenu.contextMenuOpened() : false;
 
-		if(opened && FlxG.mouse.justReleased) {
+		if(opened && FlxG.mouse.justPressed) {
 			__rect.x = x;
 			__rect.y = y;
 			__rect.width = bWidth;
