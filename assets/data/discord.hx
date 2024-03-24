@@ -5,13 +5,12 @@ function onGameOver() {
 }
 
 function onPlayStateUpdate() {
-	// Setting parent to make code cleaner
-	var old = __script__.interp.scriptObject;
-	__script__.interp.scriptObject = PlayState.instance;
-
-	DiscordUtil.changeSongPresence(detailsText, (paused ? "Paused - " : "") + SONG.meta.displayName + " (" + difficulty + ")", inst, getIconRPC());
-
-	__script__.interp.scriptObject = old;
+	DiscordUtil.changeSongPresence(
+		PlayState.instance.detailsText,
+		(PlayState.instance.paused ? "Paused - " : "") + PlayState.SONG.meta.displayName + " (" + PlayState.difficulty + ")",
+		PlayState.instance.inst,
+		PlayState.instance.getIconRPC()
+	);
 }
 
 function onMenuLoaded(name:String) {
