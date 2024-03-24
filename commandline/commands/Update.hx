@@ -79,7 +79,7 @@ class Update {
 			Sys.command("vs_Community.exe --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows10SDK.19041 -p");
 			FileSystem.deleteFile("vs_Community.exe");
 
-			prettyPrint('Because of this component if you want to compile you have to restart the device.');
+			prettyPrint('If it didn\'t say it before: Because of this component if you want to compile you have to restart the device.');
 			Sys.print("Do you wish to do it now [y/n]? ");
 			if(Sys.stdin().readLine().toLowerCase() == "y") Sys.command("shutdown /r /t 0 /f");
 		}
