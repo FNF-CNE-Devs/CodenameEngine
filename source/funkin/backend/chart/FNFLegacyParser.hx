@@ -129,8 +129,9 @@ class FNFLegacyParser {
 						note.sLen // SUSTAIN LENGTH
 					];
 
-					if (swagSection.mustHitSection)
-						if (strumLine.type == OPPONENT) sectionNote[1] += 4;
+					if ((swagSection.mustHitSection && strumLine.type == OPPONENT) ||
+						(!swagSection.mustHitSection && strumLine.type == PLAYER))
+					   sectionNote[1] += 4;
 					swagSection.sectionNotes.push(note); 
 				}
 			}
