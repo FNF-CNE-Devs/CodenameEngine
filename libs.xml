@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <libraries>
 	<!-- OpenFL & Lime (Required for Flixel) -->
-	<lib name="openfl" version="9.2.2"/>
-	<lib name="lime"  version="8.1.2"/>
+	<lib name="openfl" version="9.2.2" />
+	<lib name="lime"  version="8.1.2" />
 
 	<!-- Flixel -->
 	<git name="flixel" url="https://github.com/FNF-CNE-Devs/flixel" />
@@ -11,7 +11,7 @@
 	<!-- Other Libraries -->
 	<git name="hscript-improved" url="https://github.com/FNF-CNE-Devs/hscript-improved" ref="custom-classes" />
 	<git name="flxanimate" url="https://github.com/FNF-CNE-Devs/flxanimate" />
-	<git name="hxdiscord_rpc" url="https://github.com/NeeEoo/hxdiscord_rpc" ref="buttons" /> <!-- Temp until it gets added to main -->
+	<git name="hxdiscord_rpc" url="https://github.com/NeeEoo/hxdiscord_rpc" /> <!-- Temp until it gets added to main -->
 	<!-- <lib name="hxdiscord_rpc" /> -->
 	<lib name="hxvlc" />
 
