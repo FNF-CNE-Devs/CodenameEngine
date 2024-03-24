@@ -827,10 +827,10 @@ class Charter extends UIState {
 				if (FlxG.mouse.justPressed)
 					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
 				else if (FlxG.mouse.justPressedRight) {
-					closeCurrentContextMenu(); 
+					closeCurrentContextMenu();
 					gridActionType = DELETE_SELECTION;
 				}
-					
+
 				if (gridBackdropDummy.hovered) {
 					// AUTO DETECT
 					if (FlxG.mouse.pressed && (Math.abs(mousePos.x - dragStartPos.x) > 20 || Math.abs(mousePos.y - dragStartPos.y) > 20))
@@ -1431,7 +1431,7 @@ class Charter extends UIState {
 	}
 
 	function _edit_undo(_) {
-		if (strumLines.isDragging || selectionDragging || subState != null) return;
+		if (strumLines.isDragging || selectionDragging || (subState != null && !(subState is UIContextMenu))) return;
 
 		selection = [];
 		var undo = undos.undo();
@@ -1477,7 +1477,7 @@ class Charter extends UIState {
 	}
 
 	function _edit_redo(_) {
-		if (strumLines.isDragging || selectionDragging || subState != null) return;
+		if (strumLines.isDragging || selectionDragging || (subState != null && !(subState is UIContextMenu))) return;
 
 		selection = [];
 		var redo = undos.redo();
