@@ -111,7 +111,6 @@ class PsychParser {
 
 			base.events.push([events[0].time, psychEvents]);
 		}
-
 		return {song: base};
 	}
 }

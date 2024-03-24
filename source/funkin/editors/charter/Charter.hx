@@ -165,11 +165,11 @@ class Charter extends UIState {
 					},
 					null,
 					{
-						label: "Export As FNF Legacy...",
+						label: "Export For FNF Legacy...",
 						onSelect: _file_saveas_fnflegacy,
 					},
 					{
-						label: "Export As Psych Engine...",
+						label: "Export For Psych Engine...",
 						onSelect: _file_saveas_psych,
 					},
 					null,
