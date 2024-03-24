@@ -30,6 +30,13 @@ class DiscordUtil
 
 	public static var script:Script;
 
+	// Constants
+	public static var REPLY_NO:Int = Discord.REPLY_NO;
+	public static var REPLY_YES:Int = Discord.REPLY_YES;
+	public static var REPLY_IGNORE:Int = Discord.REPLY_IGNORE;
+	public static var PARTY_PRIVATE:Int = Discord.PARTY_PRIVATE;
+	public static var PARTY_PUBLIC:Int = Discord.PARTY_PUBLIC;
+
 	public static function init()
 	{
 		#if DISCORD_RPC
@@ -218,6 +225,12 @@ class DiscordUtil
 		#end
 	}
 
+	public static function clearPresence() {
+		#if DISCORD_RPC
+		Discord.ClearPresence();
+		#end
+	}
+
 	private static function set_currentID(id:String):String
 	{
 		if (currentID == id)
@@ -252,6 +265,13 @@ class DiscordUtil
 
 		call("destroy");
 		script = FlxDestroyUtil.destroy(script);
+	}
+
+	public static function respond(userId:String, reply:Int)
+	{
+		#if DISCORD_RPC
+		Discord.Respond(fixString(userId), reply);
+		#end
 	}
 
 	// HANDLERS
