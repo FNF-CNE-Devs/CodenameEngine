@@ -23,7 +23,7 @@ function onPlayStateUpdate() {
 }
 
 function onMenuLoaded(name:String) {
-	// Name is either "Main Menu", "Freeplay", "Title Screen", "Options Menu", "Credits Menu"
+	// Name is either "Main Menu", "Freeplay", "Title Screen", "Options Menu", "Credits Menu", "Beta Warning"
 	DiscordUtil.changePresenceSince("In the Menus", null);
 }
 
