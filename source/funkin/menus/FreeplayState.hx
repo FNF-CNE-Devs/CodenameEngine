@@ -116,7 +116,7 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 
-		DiscordUtil.changePresence("In the Menus", null);
+		DiscordUtil.call("onMenuLoaded", ["Freeplay"]);
 
 		super.create();
 

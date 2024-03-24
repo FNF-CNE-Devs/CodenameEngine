@@ -116,7 +116,7 @@ class StoryMenuState extends MusicBeatState {
 
 		changeWeek(0, true);
 
-		DiscordUtil.changePresence("In the Menus", null);
+		DiscordUtil.call("onMenuLoaded", ["Story Menu"]);
 		CoolUtil.playMenuSong();
 	}
 

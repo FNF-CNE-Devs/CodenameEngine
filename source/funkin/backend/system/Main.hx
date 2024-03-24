@@ -120,7 +120,6 @@ class Main extends Sprite
 		ShaderResizeFix.init();
 		Logs.init();
 		Paths.init();
-		DiscordUtil.init();
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.init();
 		#end
