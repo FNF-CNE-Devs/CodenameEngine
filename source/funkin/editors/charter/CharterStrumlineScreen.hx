@@ -112,7 +112,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 
 		var strOffset:Float = strumLine.strumLinePos == null ? (strumLine.type == 1 ? 0.75 : 0.25) : strumLine.strumLinePos;
 
-		var startingPos:FlxPoint = strumLine.strumLinePos == null ?
+		var startingPos:FlxPoint = strumLine.strumPos == null ?
 			FlxPoint.get(strOffset, 50) :
 			FlxPoint.get(strOffset, strumLine.strumPos[1]);
 

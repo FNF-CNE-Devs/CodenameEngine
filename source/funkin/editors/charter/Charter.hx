@@ -1,5 +1,7 @@
 package funkin.editors.charter;
+// ! FUCK YOU CHUF (your biggest fan -lunar) <3
 
+import flixel.input.FlxPointer;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import flixel.graphics.FlxGraphic;
@@ -85,6 +87,7 @@ class Charter extends UIState {
 	public var uiCamera:FlxCamera;
 	public var selectionBox:UISliceSprite;
 	public var autoSaveNotif:CharterAutoSaveUI;
+	public static var autoSaveTimer:Float = 0;
 
 	public static var selection:Selection;
 
@@ -159,6 +162,15 @@ class Charter extends UIState {
 						label: "Save Meta As...",
 						keybind: [CONTROL, ALT ,SHIFT, S],
 						onSelect: _file_meta_saveas,
+					},
+					null,
+					{
+						label: "Export As FNF Legacy...",
+						onSelect: _file_saveas_fnflegacy,
+					},
+					{
+						label: "Export As Psych Engine...",
+						onSelect: _file_saveas_psych,
 					},
 					null,
 					{
@@ -491,6 +503,14 @@ class Charter extends UIState {
 		}
 		updateDisplaySprites();
 
+		// ! IF YOU EVER WANNA VIEW IN THE FUTURE, JUST USE A FLXSPRITE :D -lunar
+		/*var dataDisplay:FlxSprite = new FlxSprite().loadGraphic(waveformHandler.waveDatas.get("Voices.ogg"));
+		dataDisplay.scrollFactor.set(1, 0);
+		dataDisplay.scale.set(2, 2);
+		dataDisplay.updateHitbox();
+		dataDisplay.screenCenter(Y);
+		dataDisplay.cameras = [charterCamera]; dataDisplay.x = -dataDisplay.width; add(dataDisplay);*/
+
 		DiscordUtil.call("onEditorLoaded", ["Chart Editor", __song + " (" + __diff + ")"]);
 	}
 
@@ -568,8 +588,10 @@ class Charter extends UIState {
 		buildNoteTypesUI();
 		refreshBPMSensitive();
 
-		// Undo Stuffs :D
-		__relinkUndos();
+		// Just for now until i add event stacking -lunar
+		try {__relinkUndos();}
+		catch (e) {Logs.trace('Failed to relink undos: ${Std.string(e)}', ERROR);}
+		
 		__applyPlaytestInfo();
 	}
 
@@ -669,7 +691,6 @@ class Charter extends UIState {
 		for(s in selection) s.selected = true;
 	}
 
-	public static var autoSaveTimer:Float = 0;
 	var __autoSaveLocation:String = null;
 	public function updateAutoSaving(elapsed:Float) {
 		if (!Options.charterAutoSaves) return;
@@ -683,7 +704,6 @@ class Charter extends UIState {
 				'Saved chart at $__autoSaveLocation.json!'
 			);
 		}
-
 		if (autoSaveTimer <= 0) {
 			autoSaveTimer = Options.charterAutoSaveTime;
 			if (!autoSaveNotif.cancelled) {
@@ -691,9 +711,9 @@ class Charter extends UIState {
 				var songPath:String = '${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}';
 	
 				if (Options.charterAutoSavesSeperateFolder)
-					Chart.save(songPath, PlayState.SONG, __autoSaveLocation, {saveMetaInChart: false, folder: "autosaves"});
+					Chart.save(songPath, PlayState.SONG, __autoSaveLocation, {saveMetaInChart: false, folder: "autosaves", prettyPrint: Options.editorPrettyPrint});
 				else 
-					Chart.save(songPath, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false});
+					Chart.save(songPath, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false, prettyPrint: Options.editorPrettyPrint});
 				undos.save();
 			}
 			autoSaveNotif.cancelled = false;
@@ -808,7 +828,7 @@ class Charter extends UIState {
 					FlxG.mouse.getWorldPosition(charterCamera, dragStartPos);
 				else if (FlxG.mouse.justPressedRight) {
 					closeCurrentContextMenu(); 
-					gridActionType = DELTE_SELECTION;
+					gridActionType = DELETE_SELECTION;
 				}
 					
 				if (gridBackdropDummy.hovered) {
@@ -888,7 +908,7 @@ class Charter extends UIState {
 					gridActionType = NONE;
 					currentCursor = ARROW;
 				}
-			case DELTE_SELECTION:
+			case DELETE_SELECTION:
 				notesGroup.forEach(function(n) {
 					if (n.hovered || n.sustainDraggable) {
 						deletedNotes.push(n);
@@ -1275,7 +1295,7 @@ class Charter extends UIState {
 	}
 
 	function _file_saveas(_) {
-		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false)), {
+		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false), null, Options.editorPrettyPrint ? "\t" : null), {
 			defaultSaveFile: '${__diff.toLowerCase()}.json'
 		}));
 		undos.save();
@@ -1291,7 +1311,7 @@ class Charter extends UIState {
 	}
 
 	function _file_saveas_no_events(_) {
-		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false, false)), {
+		openSubState(new SaveSubstate(Json.stringify(Chart.filterChartForSaving(PlayState.SONG, false, false), null, Options.editorPrettyPrint ? "\t" : null), {
 			defaultSaveFile: '${__diff.toLowerCase()}.json'
 		}));
 		undos.save();
@@ -1314,11 +1334,23 @@ class Charter extends UIState {
 		}));
 	}
 
+	function _file_saveas_fnflegacy(_) {
+		openSubState(new SaveSubstate(Json.stringify(FNFLegacyParser.encode(PlayState.SONG), null, Options.editorPrettyPrint ? "\t" : null), {
+			defaultSaveFile: '${__song.toLowerCase().replace(" ", "-")}${__diff.toLowerCase() == "normal" ? "" : '-${__diff.toLowerCase()}'}.json',
+		}));
+	}
+	
+	function _file_saveas_psych(_) {
+		openSubState(new SaveSubstate(Json.stringify(PsychParser.encode(PlayState.SONG), null, Options.editorPrettyPrint ? "\t" : null), {
+			defaultSaveFile: '${__song.toLowerCase().replace(" ", "-")}${__diff.toLowerCase() == "normal" ? "" : '-${__diff.toLowerCase()}'}.json',
+		}));
+	}
+
 	function _file_events_save(_) {
 		#if sys
 		CoolUtil.safeSaveFile(
 			'${Paths.getAssetsRoot()}/songs/${__song.toLowerCase()}/events.json',
-			Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events})
+			Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events}, null, Options.editorPrettyPrint ? "\t" : null)
 		);
 		#else
 		_file_events_saveas(_);
@@ -1327,7 +1359,7 @@ class Charter extends UIState {
 
 	function _file_events_saveas(_) {
 		#if sys
-		openSubState(new SaveSubstate(Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events}), {
+		openSubState(new SaveSubstate(Json.stringify({events: PlayState.SONG.events == null ? [] : PlayState.SONG.events}, null, Options.editorPrettyPrint ? "\t" : null), {
 			defaultSaveFile: 'events.json'
 		}));
 		#end
@@ -1336,7 +1368,7 @@ class Charter extends UIState {
 	#if sys
 	function saveTo(path:String, separateEvents:Bool = false) {
 		buildChart();
-		Chart.save(path, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false, saveEventsInChart: !separateEvents});
+		Chart.save(path, PlayState.SONG, __diff.toLowerCase(), {saveMetaInChart: false, saveEventsInChart: !separateEvents, prettyPrint: Options.editorPrettyPrint});
 	}
 	#end
 
@@ -1962,7 +1994,7 @@ enum abstract CharterGridActionType(Int) {
 	var NOTE_DRAG = 2;
 	var INVALID_DRAG = 3;
 	var SUSTAIN_DRAG = 4;
-	var DELTE_SELECTION = 5;
+	var DELETE_SELECTION = 5;
 }
 
 typedef PlaytestInfo = {

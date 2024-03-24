@@ -1,5 +1,6 @@
 package funkin.backend.chart;
 
+import funkin.backend.system.Conductor;
 import funkin.backend.chart.ChartData;
 import flixel.util.FlxColor;
 import haxe.io.Path;
@@ -143,7 +144,7 @@ class Chart {
 				base = data;
 			} else {
 				// base game chart
-				BaseGameParser.parse(data, base);
+				FNFLegacyParser.parse(data, base);
 			}
 			#end
 		}

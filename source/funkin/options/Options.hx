@@ -43,7 +43,7 @@ class Options
 	 */
 	public static var intensiveBlur:Bool = true;
 	public static var editorSFX:Bool = true;
-	public static var resizableEditors:Bool = true;
+	public static var editorPrettyPrint:Bool = false;
 	public static var maxUndos:Int = 120;
 
 	/**

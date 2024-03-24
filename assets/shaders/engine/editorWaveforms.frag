@@ -32,70 +32,57 @@ float getAmplitude(vec2 pixel) {
 	return 0.0;
 }
 
+float getAmpWidth(float amplitude) {
+	return (1.0-amplitude) * textureRes.x;
+}
+
 bool inWaveForm(vec2 pixel, float width) {
-	float widthdiv2 = width/2.;
+	float widthdiv2 = width/2.0;
 	return pixel.x > widthdiv2 && pixel.x < textureRes.x-widthdiv2;
 }
 
+float getHightlight(float ampwidth) {
+	float remapCoord = (ampwidth/textureRes.x)/2.0;
+	float mappedCoord = map(openfl_TextureCoordv.x, remapCoord, 1.0-remapCoord, 0.0, 1.0);
+	return 1.0-(abs(mappedCoord-0.5)*2.0);
+}
+
+void outlineWaveform(vec2 pixel, vec2 offset) {
+	float amplitude = getAmplitude(pixel - offset);
+	float ampwidth = (1.0-amplitude) * textureRes.x;
+
+	if (!inWaveForm(pixel, ampwidth))
+		gl_FragColor -= outlinecolor*mix(0.5, 0.8, amplitude);
+}
+
 void highDetailWaveform(vec2 pixel, float amplitude, float ampwidth) {
-	if (inWaveForm(pixel, ampwidth)) {
-		vec3 gradientColor = mix(gradient1, gradient2, openfl_TextureCoordv.x);
-		gradientColor *= pixel.y+pixelOffset>playerPosition ? 0.7 : 1.0;
+	vec3 gradientColor = mix(gradient1, gradient2, openfl_TextureCoordv.x);
+	gradientColor *= pixel.y+pixelOffset>playerPosition ? 0.7 : 1.0;
+	gradientColor = mix(gradientColor, gradientColor * vec3(1.8), map(getHightlight(amplitude), 0.0, 1.0, 0.5, 1.0));
 
-		float remapCoord = (amplitude/textureRes.x)/2.0;
+	float ampwidthHighlight = getAmpWidth(amplitude/3.0);
+	if (inWaveForm(pixel, ampwidthHighlight))
+		gradientColor = mix(gradientColor, gradientColor * vec3(1.8), map(getHightlight(ampwidthHighlight), 0.0, 1.0, 0.5, 1.0));
 
-		float mappedCoord = map(openfl_TextureCoordv.x, remapCoord, 1.0-remapCoord, 0.0, 1.0);
-		float hightlightAmount = 1.0-(abs(mappedCoord-0.5)*2.0);
+	gl_FragColor = vec4(vec3(gradientColor * mix(0.5, 0.8, amplitude))*openfl_Alphav, openfl_Alphav);
 
-		gradientColor = mix(gradientColor, gradientColor * vec3(1.8), map(hightlightAmount, 0.0, 1.0, 0.5, 1.0));
-
-		float ampwidthHighlight = (1.0-(amplitude*(1.0/3.0))) * textureRes.x;
-		if (inWaveForm(pixel, ampwidthHighlight)) {
-			float remapCoord = (ampwidthHighlight/textureRes.x)/2.0;
-
-			float mappedCoord = map(openfl_TextureCoordv.x, remapCoord, 1.0-remapCoord, 0.0, 1.0);
-			float hightlightAmount = 1.0-(abs(mappedCoord-0.5)*2.0);
-
-			gradientColor = mix(gradientColor, gradientColor * vec3(1.8), map(hightlightAmount, 0.0, 1.0, 0.5, 1.0));
-		}
-
-		gl_FragColor = vec4(vec3(gradientColor * mix(0.5, 0.8, amplitude))*openfl_Alphav, openfl_Alphav);
-
-		float lastAmplitude = getAmplitude(pixel - vec2(0.0, -1.0));
-		float lastAmpwidth = (1.0-lastAmplitude) * textureRes.x;
-
-		if (!inWaveForm(pixel, lastAmpwidth))
-			gl_FragColor -= outlinecolor*mix(0.5, 0.8, amplitude);
-
-		float nextAmplitude = getAmplitude(pixel - vec2(0.0, 1.0));
-		float nextAmpwidth = (1.0-nextAmplitude) * textureRes.x;
-
-		if (!inWaveForm(pixel, nextAmpwidth))
-			gl_FragColor -= outlinecolor*mix(0.5, 0.8, amplitude);
-
-		if (!inWaveForm(pixel, ampwidth+2.0) && amplitude > 0.0)
-	 		gl_FragColor -= outlinecolor;
-	}
+	outlineWaveform(pixel, vec2(0.0, -1.0));
+	outlineWaveform(pixel, vec2(0.0, 1.0));
 }
 
 void lowDetailWaveform(vec2 pixel, float amplitude, float ampwidth) {
-	if (inWaveForm(pixel, ampwidth)) {
-		vec3 color = lowdetailcol;
-		color *= pixel.y+pixelOffset>playerPosition ? 0.7 : 1.0;
-
-		gl_FragColor = vec4(color, 1.0);
-	}
+	gl_FragColor = vec4(lowdetailcol * (pixel.y+pixelOffset>playerPosition ? 0.7 : 1.0), 1.0);
 }
 
 void main()
 {
 	vec2 pixel = openfl_TextureCoordv * textureRes;
-
 	float amplitude = getAmplitude(pixel);
-	float ampwidth = (1.0-amplitude) * textureRes.x;
+	float ampwidth = getAmpWidth(amplitude);
 
-	if (lowDetail)
-		lowDetailWaveform(pixel, amplitude, ampwidth);
-	else
-		highDetailWaveform(pixel, amplitude, ampwidth);
+	gl_FragColor = vec4(0.0);
+	if (!inWaveForm(pixel, ampwidth)) return;
+
+	if (lowDetail) lowDetailWaveform(pixel, amplitude, ampwidth);
+	else highDetailWaveform(pixel, amplitude, ampwidth);
 }
