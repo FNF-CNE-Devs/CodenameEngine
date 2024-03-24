@@ -401,7 +401,7 @@ final class DUser
 	/**
 	 * If the user has nitro
 	**/
-	public var premium:NitroType;
+	public var premiumType:NitroType;
 
 	private function new()
 	{
@@ -422,7 +422,7 @@ final class DUser
 		d.globalName = userData.globalName;
 		d.bot = userData.bot;
 		d.flags = userData.flags;
-		d.premium = userData.premium;
+		d.premiumType = userData.premiumType;
 
 		if (d.discriminator != 0)
 			d.handle = '${d.username}#${d.discriminator}';

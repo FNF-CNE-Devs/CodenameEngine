@@ -11,7 +11,7 @@
 	<!-- Other Libraries -->
 	<git name="hscript-improved" url="https://github.com/FNF-CNE-Devs/hscript-improved" ref="custom-classes" />
 	<git name="flxanimate" url="https://github.com/FNF-CNE-Devs/flxanimate" />
-	<git name="hxdiscord_rpc" url="https://github.com/NeeEoo/hxdiscord_rpc" /> <!-- Temp until it gets added to main -->
+	<git name="hxdiscord_rpc" url="https://github.com/NeeEoo/hxdiscord_rpc" /> <!-- Since original repo wants non fork of discord-rpc -->
 	<!-- <lib name="hxdiscord_rpc" /> -->
 	<lib name="hxvlc" />
 
