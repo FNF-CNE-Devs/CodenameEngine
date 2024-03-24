@@ -89,7 +89,10 @@ class PsychParser {
 						psychEvents.push([
 							"Change Scroll Speed",
 							FlxMath.roundDecimal(event.params[1]/chart.scrollSpeed, 2), // SCROLL SPEED MULTIPLER
-							FlxMath.roundDecimal((Conductor.getTimeForStep(eventStep+event.params[2]) - Conductor.getTimeForStep(eventStep))/1000, 2), // TIME
+							FlxMath.roundDecimal( // TIME
+								event.params[0] ? // IS TWEENED?
+								(Conductor.getTimeForStep(eventStep+event.params[2]) - Conductor.getTimeForStep(eventStep))/1000 
+								: 0, 2)
 						]);
 					default:
 						// TODO: allow custom formats in event.json
