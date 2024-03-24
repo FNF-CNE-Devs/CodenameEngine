@@ -61,6 +61,8 @@ class UpdateScreen extends MusicBeatState {
 		updater.execute();
 
 		FlxG.camera.addShader(rainbowShader = new CustomShader("engine/updaterShader"));
+
+		DiscordUtil.call("onMenuLoaded", ["Update Screen"]);
 	}
 
 
