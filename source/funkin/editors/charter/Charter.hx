@@ -510,6 +510,8 @@ class Charter extends UIState {
 		dataDisplay.updateHitbox();
 		dataDisplay.screenCenter(Y);
 		dataDisplay.cameras = [charterCamera]; dataDisplay.x = -dataDisplay.width; add(dataDisplay);*/
+
+		DiscordUtil.call("onEditorLoaded", ["Chart Editor", __song + " (" + __diff + ")"]);
 	}
 
 	override function destroy() {
@@ -548,7 +550,7 @@ class Charter extends UIState {
 		notesGroup.autoSort = false;
 		var noteCount:Int = 0;
 		for (strL in PlayState.SONG.strumLines)
-			for (note in strL.notes) noteCount++;
+			noteCount += strL.notes.length;
 		notesGroup.preallocate(noteCount);
 
 		var notesCreated:Int = 0;

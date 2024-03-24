@@ -55,7 +55,7 @@ class MainState extends FlxState {
 
 		Main.refreshAssets();
 		ModsFolder.onModSwitch.dispatch(ModsFolder.currentModFolder);
-		DiscordUtil.reloadJsonData();
+		DiscordUtil.init();
 		EventsData.reloadEvents();
 		TitleState.initialized = false;
 

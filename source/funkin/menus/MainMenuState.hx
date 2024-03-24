@@ -32,7 +32,7 @@ class MainMenuState extends MusicBeatState
 	{
 		super.create();
 
-		DiscordUtil.changePresence("In the Menus", null);
+		DiscordUtil.call("onMenuLoaded", ["Main Menu"]);
 
 		CoolUtil.playMenuSong();
 
