@@ -4,6 +4,15 @@ function onGameOver() {
 	DiscordUtil.changePresence('Game Over', PlayState.SONG.meta.displayName + " (" + PlayState.difficulty + ")");
 }
 
+function onDiscordPresenceUpdate(e) {
+	var data = e.presence;
+
+	if(data.button1Label == null)
+		data.button1Label = "Codename Engine Discord";
+	if(data.button1Url == null)
+		data.button1Url = "https://discord.gg/2NTCdsQvx4";
+}
+
 function onPlayStateUpdate() {
 	DiscordUtil.changeSongPresence(
 		PlayState.instance.detailsText,

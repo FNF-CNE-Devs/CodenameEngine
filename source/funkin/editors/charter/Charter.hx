@@ -530,7 +530,7 @@ class Charter extends UIState {
 		notesGroup.autoSort = false;
 		var noteCount:Int = 0;
 		for (strL in PlayState.SONG.strumLines)
-			for (note in strL.notes) noteCount++;
+			noteCount += strL.notes.length;
 		notesGroup.preallocate(noteCount);
 
 		var notesCreated:Int = 0;

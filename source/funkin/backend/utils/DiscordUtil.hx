@@ -206,6 +206,13 @@ class DiscordUtil
 		Utils.safeSetWrapper(dp.joinSecret, data.joinSecret, fixString);
 		Utils.safeSetWrapper(dp.spectateSecret, data.spectateSecret, fixString);
 		Utils.safeSet(dp.instance, data.instance);
+		if (data.matchSecret == null && data.joinSecret == null && data.spectateSecret == null)
+		{
+			Utils.safeSetWrapper(dp.button1Label, data.button1Label, fixString);
+			Utils.safeSetWrapper(dp.button1Url, data.button1Url, fixString);
+			Utils.safeSetWrapper(dp.button2Label, data.button2Label, fixString);
+			Utils.safeSetWrapper(dp.button2Url, data.button2Url, fixString);
+		}
 
 		Discord.UpdatePresence(cpp.RawConstPointer.addressOf(dp));
 		#end
@@ -255,8 +262,8 @@ class DiscordUtil
 
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
-			Logs.logText("Connected to User ("),
-			Logs.logText(user.tag, GRAY),
+			Logs.logText("Connected to User " + user.globalName + " ("),
+			Logs.logText(user.handle, GRAY),
 			Logs.logText(")")
 		], INFO);
 
@@ -285,9 +292,7 @@ class DiscordUtil
 
 		Logs.traceColored([
 			Logs.logText("[Discord] ", BLUE),
-			Logs.logText("Error ("),
-			Logs.logText('$errorCode: $finalMsg', RED),
-			Logs.logText(")")
+			Logs.logText('Error ($errorCode: $finalMsg)', RED)
 		], ERROR);
 
 		call("onError", [errorCode, cast(finalMsg, String)]);
@@ -336,7 +341,7 @@ final class DUser
 	/**
 	 * The username + discriminator if they have it
 	**/
-	public var tag:String;
+	public var handle:String;
 
 	/**
 	 * The user id, aka 860561967383445535
@@ -358,6 +363,26 @@ final class DUser
 	**/
 	public var avatar:String;
 
+	/**
+	 * The user's display name
+	**/
+	public var globalName:String;
+
+	/**
+	 * If the user is a bot or not
+	**/
+	public var bot:Bool;
+
+	/**
+	 * Idk check discord docs
+	**/
+	public var flags:Int;
+
+	/**
+	 * If the user has nitro
+	**/
+	public var premium:NitroType;
+
 	private function new()
 	{
 	}
@@ -374,11 +399,15 @@ final class DUser
 		d.username = userData.username;
 		d.discriminator = Std.parseInt(userData.discriminator);
 		d.avatar = userData.avatar;
+		d.globalName = userData.globalName;
+		d.bot = userData.bot;
+		d.flags = userData.flags;
+		d.premium = userData.premium;
 
 		if (d.discriminator != 0)
-			d.tag = '${d.username}#${d.discriminator}';
+			d.handle = '${d.username}#${d.discriminator}';
 		else
-			d.tag = '${d.username}';
+			d.handle = '${d.username}';
 		return d;
 	}
 
@@ -387,6 +416,14 @@ final class DUser
 	**/
 	public function getAvatar(size:Int = 256):BitmapData
 		return BitmapData.fromBytes(HttpUtil.requestBytes('https://cdn.discordapp.com/avatars/$userId/$avatar.png?size=$size'));
+}
+
+enum abstract NitroType(Int) to Int from Int
+{
+	var NONE = 0;
+	var NITRO_CLASSIC = 1;
+	var NITRO = 2;
+	var NITRO_BASIC = 3;
 }
 
 typedef DPresence =
@@ -407,6 +444,10 @@ typedef DPresence =
 	var ?joinSecret:String; /* max 128 bytes */
 	var ?spectateSecret:String; /* max 128 bytes */
 	var ?instance:OneOfTwo<Int, cpp.Int8>;
+	var ?button1Label:String; /* max 32 bytes */
+	var ?button1Url:String; /* max 512 bytes */
+	var ?button2Label:String; /* max 32 bytes */
+	var ?button2Url:String; /* max 512 bytes */
 }
 
 typedef DEvents =
