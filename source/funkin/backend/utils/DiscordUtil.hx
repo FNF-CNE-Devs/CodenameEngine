@@ -148,7 +148,7 @@ class DiscordUtil
 		#end
 	}
 
-	public static function changePresenceSince(details:String, state:String, ?smallImageKey:String, ?time:Null<Float> = null)
+	public static function changePresenceSince(details:String, state:String, ?smallImageKey:String, ?time:Float)
 	{
 		#if DISCORD_RPC
 		if(time == null)
