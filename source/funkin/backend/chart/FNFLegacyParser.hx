@@ -185,7 +185,6 @@ class FNFLegacyParser {
 			var sectionEndTime:Float = Conductor.getTimeForStep(Conductor.getMeasureLength() * (section+1));
 			while(events.length > 0 && events[0].time < sectionEndTime) {
 				var event:ChartEvent = events.shift();
-				trace(section, event);
 				switch (event.name) {
 					case "Camera Movement":
 						baseSection.mustHitSection = chart.strumLines[event.params[0]].type == PLAYER;
