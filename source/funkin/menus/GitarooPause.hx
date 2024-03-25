@@ -55,7 +55,7 @@ class GitarooPause extends MusicBeatState
 
 		if (controls.ACCEPT)
 		{
-			if (PlayState.chartingMode && Charter.undos.unsaved)
+			if (PlayState.instance != null && PlayState.chartingMode && Charter.undos.unsaved)
 				PlayState.instance.saveWarn(false);
 			else {
 				if (replaySelect)
