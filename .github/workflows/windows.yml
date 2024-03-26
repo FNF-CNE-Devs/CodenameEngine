@@ -37,11 +37,11 @@ jobs:
         with:
           name: Codename Engine
           path: export/release/windows/bin
-      - name: Uploading artifact (executable)
-        uses: actions/upload-artifact@v2
-        with:
-          name: Update-Windows
-          path: export/release/windows/bin/CodenameEngine.exe
+      # - name: Uploading artifact (executable)
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Update-Windows
+      #     path: export/release/windows/bin/CodenameEngine.exe
       - name: Clearing already existing cache
         uses: actions/github-script@v6
         with:

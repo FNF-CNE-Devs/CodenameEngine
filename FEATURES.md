@@ -5,7 +5,7 @@ _**QOL = Quality of Life**_
 
 <details>
   <summary><h2>Player QOL Features</h2></summary>
-  
+
 - New input system
 - New accuracy and misses system, added to fix the base game UI.
 - New options, including:
@@ -72,7 +72,7 @@ _**QOL = Quality of Life**_
         - Weeks are located in `data/weeks/weeks/`
         - If you need to rearrange the weeks in-game, you can use the `data/weeks/weeks.txt` file.
 	- Editors for Charts and Characters (Stage coming soon)
-		- Undos/Redos supported 
+		- Undos/Redos supported
 		- Warning on closing unsaved work
 		- Clean UI (for ocd freaks)
 		- Mature Chart editor (Character editor rework soon)

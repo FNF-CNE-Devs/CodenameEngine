@@ -29,11 +29,11 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 
 		for(i in begin...end) {
 			__loopSprite = members[i];
-			if (!Charter.selection.contains(__loopSprite))
+			if (__loopSprite != null && !Charter.selection.contains(__loopSprite))
 				noteFunc(__loopSprite);
 		}
 		for(c in Charter.selection.copy())
-			if (c is CharterNote) noteFunc(cast (c, CharterNote));
+			if (c != null && c is CharterNote) noteFunc(cast (c, CharterNote));
 
 		__currentlyLooping = oldCur;
 	}
@@ -64,7 +64,7 @@ class CharterNoteGroup extends FlxTypedGroup<CharterNote> {
 
 		if (autoSort && members.length != __lastSort)
 			sortNotes();
-		
+
 		forEach((n) -> {
 			if(n.exists && n.active) {
 				n.cameras = n.__lastDrawCameras = cameras;

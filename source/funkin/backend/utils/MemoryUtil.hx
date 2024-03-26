@@ -79,6 +79,8 @@ class MemoryUtil {
 	public static inline function currentMemUsage() {
 		#if cpp
 		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
+		#elseif hl
+		return Gc.stats().currentMemory;
 		#elseif sys
 		return cast(cast(System.totalMemory, UInt), Float);
 		#else

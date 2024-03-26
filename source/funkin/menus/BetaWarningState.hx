@@ -29,6 +29,8 @@ class BetaWarningState extends MusicBeatState {
 		var off = Std.int((FlxG.height - (disclaimer.y + disclaimer.height)) / 2);
 		disclaimer.y += off;
 		titleAlphabet.y += off;
+
+		DiscordUtil.call("onMenuLoaded", ["Beta Warning"]);
 	}
 
 	public override function update(elapsed:Float) {

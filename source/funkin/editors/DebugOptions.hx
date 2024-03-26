@@ -36,16 +36,36 @@ class DebugOptionsScreen extends OptionsScreen {
 			}));
 		#end
 		add(new Checkbox(
-			"Enable Editor SFXs",
+			"Editor SFXs",
 			"If checked, will play sound effects when working on editors (ex: will play sfxs when checking checkboxes...)",
 			"editorSFX"));
 		add(new Checkbox(
-			"Resizable Editors",
-			"If checked, editors will be resizable and extensible like other programs instead of zooming in upon maximization.",
-			"resizableEditors"));
+			"Pretty Print",
+			"If checked, the saved files from the editor will be formatted to be easily viewable (does not apply to xmls...)",
+			"editorPrettyPrint"));
 		add(new Checkbox(
 			"Intensive Blur",
 			"If checked, will use more intensive blur that may be laggier but look better.",
 			"intensiveBlur"));
+		add(new Checkbox(
+			"Editor Autosaves",
+			"If checked, this will autosave your files in the editor, with the settings listed below.",
+			"charterAutoSaves"));
+		add(new NumOption(
+			"Autosaving Time",
+			"This controls how often the editor will autosave your file (in seconds...)",
+			60, 60*10, 30,
+			"charterAutoSaveTime"
+		));
+		add(new NumOption(
+			"Save Warning Time",
+			"This controls how long the editor will warn you before it autosaves (in seconds..., 0 to disable)",
+			0, 15, 1,
+			"charterAutoSaveWarningTime"
+		));
+		add(new Checkbox(
+			"Autosaves Folder",
+			"If checked, this will autosave your file in a seperate folder with a time stamp instead of overriding your current file. (song/autosaves/)",
+			"charterAutoSavesSeperateFolder"));
 	}
 }
