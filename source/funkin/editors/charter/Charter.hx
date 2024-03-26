@@ -872,13 +872,6 @@ class Charter extends UIState {
 						}
 					}
 				}
-
-				if (FlxG.mouse.justReleasedRight) {
-					var mousePos = FlxG.mouse.getScreenPosition(uiCamera);
-					closeCurrentContextMenu();
-					openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
-					mousePos.put();
-				}
 			case SUSTAIN_DRAG:
 				selectionDragging = FlxG.mouse.pressed;
 				if (selectionDragging) {
@@ -922,9 +915,8 @@ class Charter extends UIState {
 				});
 
 				if (FlxG.mouse.justReleasedRight) {
-					if (deletedNotes.length > 0)
-						undos.addToUndo(CDeleteSelection(deletedNotes.copy()));
-					else {
+					if (deletedNotes.length > 0) undos.addToUndo(CDeleteSelection(deletedNotes.copy()));
+					else if (noteDeleteAnims.garbageIcon.alpha <= .5) {
 						var mousePos = FlxG.mouse.getScreenPosition(uiCamera);
 						closeCurrentContextMenu();
 						openContextMenu(topMenu[1].childs, null, mousePos.x, mousePos.y);
