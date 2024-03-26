@@ -72,6 +72,7 @@ class DiscordUtil
 	public static function reloadJsonData()
 	{
 		#if DISCORD_RPC
+		config = null;
 		var jsonPath = Paths.json("config/discord");
 		if (Assets.exists(jsonPath))
 		{
@@ -80,10 +81,9 @@ class DiscordUtil
 			catch (e)
 				Logs.trace('Couldn\'t load Discord RPC configuration: ${e.toString()}', ERROR);
 		}
-		else
-		{
+
+		if (config == null)
 			config = {};
-		}
 
 		config.logoKey = config.logoKey.getDefault("icon");
 		config.logoText = config.logoText.getDefault(Application.current.meta.get('title'));
@@ -153,7 +153,7 @@ class DiscordUtil
 	public static function changePresenceSince(details:String, state:String, ?smallImageKey:String, ?time:Float)
 	{
 		#if DISCORD_RPC
-		if(time == null)
+		if (time == null)
 			time = Date.now().getTime();
 
 		changePresenceAdvanced({
@@ -228,7 +228,8 @@ class DiscordUtil
 		#end
 	}
 
-	public static function clearPresence() {
+	public static function clearPresence()
+	{
 		#if DISCORD_RPC
 		Discord.ClearPresence();
 		#end
