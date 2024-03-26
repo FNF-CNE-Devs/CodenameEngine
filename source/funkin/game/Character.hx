@@ -150,7 +150,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 	public function fixChar(switchAnims:Bool = false, autoInterval:Bool = false)
 	{
-		if (isDanceLeftDanceRight = (hasAnimation("danceLeft") && hasAnimation("danceRight")) && autoInterval)
+		if ((isDanceLeftDanceRight = hasAnimation("danceLeft") && hasAnimation("danceRight")) && autoInterval)
 			beatInterval = 1;
 
 		// alternative to xor operator
