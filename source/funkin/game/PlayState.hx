@@ -751,8 +751,8 @@ class PlayState extends MusicBeatState
 				FlxG.sound.load(Paths.sound(s));
 
 		if (chartingMode) {
-			WindowUtils.endfix = " (Chart Playtesting)";
 			WindowUtils.prefix = Charter.undos.unsaved ? "* " : "";
+			WindowUtils.suffix = " (Chart Playtesting)";
 
 			SaveWarning.showWarning = Charter.undos.unsaved;
 			SaveWarning.selectionClass = CharterSelection;
@@ -950,7 +950,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.destroySound(vocals);
 		}
 
-		WindowUtils.resetTitle();
+		WindowUtils.resetAffixes();
 		SaveWarning.reset();
 
 		instance = null;

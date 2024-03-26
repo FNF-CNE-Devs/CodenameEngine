@@ -49,7 +49,7 @@ class CharacterEditor extends UIState {
 	public override function create() {
 		super.create();
 
-		WindowUtils.endfix = " (Character Editor)";
+		WindowUtils.suffix = " (Character Editor)";
 		SaveWarning.selectionClass = CharacterSelection;
 		SaveWarning.saveFunc = () -> {_file_save(null);};
 
