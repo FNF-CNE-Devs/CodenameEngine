@@ -31,11 +31,13 @@ class DiscordUtil
 	public static var script:Script;
 
 	// Constants
+	#if DISCORD_RPC
 	public static var REPLY_NO:Int = Discord.REPLY_NO;
 	public static var REPLY_YES:Int = Discord.REPLY_YES;
 	public static var REPLY_IGNORE:Int = Discord.REPLY_IGNORE;
 	public static var PARTY_PRIVATE:Int = Discord.PARTY_PRIVATE;
 	public static var PARTY_PUBLIC:Int = Discord.PARTY_PUBLIC;
+	#end
 
 	public static function init()
 	{
@@ -408,6 +410,7 @@ final class DUser
 	{
 	}
 
+	#if DISCORD_RPC
 	public static function initRaw(req:cpp.RawConstPointer<DiscordUser>)
 	{
 		return init(cpp.ConstPointer.fromRaw(req).ptr);
@@ -431,6 +434,7 @@ final class DUser
 			d.handle = '${d.username}';
 		return d;
 	}
+	#end
 
 	/**
 	 * Calling this function gets the BitmapData of the user
