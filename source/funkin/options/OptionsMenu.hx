@@ -52,6 +52,8 @@ class OptionsMenu extends TreeMenu {
 
 		CoolUtil.playMenuSong();
 
+		DiscordUtil.call("onMenuLoaded", ["Options Menu"]);
+
 		var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBGBlue'));
 		// bg.scrollFactor.set();
 		bg.scale.set(1.15, 1.15);
@@ -93,7 +95,7 @@ class OptionsMenu extends TreeMenu {
 				} catch(e) {
 					Logs.trace('Error while parsing options.xml: ${Std.string(e)}', ERROR);
 				}
-				
+
 				if (access != null)
 					for(o in parseOptionsFromXML(access))
 						main.add(o);
@@ -147,7 +149,7 @@ class OptionsMenu extends TreeMenu {
 						Logs.trace("A choice option requires an \"id\" for option saving.", WARNING);
 						continue;
 					}
-					
+
 					var optionOptions:Array<Dynamic> = [];
 					var optionDisplayOptions:Array<String> = [];
 
@@ -155,10 +157,10 @@ class OptionsMenu extends TreeMenu {
 						optionOptions.push(choice.att.value);
 						optionDisplayOptions.push(choice.att.name);
 					}
-					
+
 					if(optionOptions.length > 0)
 						options.push(new ArrayOption(name, desc, optionOptions, optionDisplayOptions, node.att.id, null, FlxG.save.data));
-					
+
 				case "menu":
 					options.push(new TextOption(name + " >", desc, function() {
 						optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node)));

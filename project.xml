@@ -7,7 +7,7 @@
 		package="com.yoshman29.codenameengine"
 		version="0.1.0" company="Yoshman29" />
 
-	<!-- 
+	<!--
 		CHANGE THE SAVE PATH & NAME FOR YOUR MOD HERE!
 	-->
 	<app save-path="YoshiCrafter29/CodenameEngine" save-name="save-default" mod-saves="true" />
@@ -150,6 +150,13 @@
 	<haxedef name="EXPERIMENTAL_FLXGRAPHIC_DESTROY_FIX" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
+
+	<!-- KEEP BOTH OF THESE AS THERE ARE SOME PARTICULAR CASES! -->
+	<define name="disable-version-check"/>
+	<haxedef name="disable-version-check"/>
+
+	<haxedef name="no-deprecation-warnings"/>
+	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="DISCORD_RPC"/>
 
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />

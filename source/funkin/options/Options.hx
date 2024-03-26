@@ -48,7 +48,7 @@ class Options
 	 */
 	public static var intensiveBlur:Bool = true;
 	public static var editorSFX:Bool = true;
-	public static var resizableEditors:Bool = true;
+	public static var editorPrettyPrint:Bool = false;
 	public static var maxUndos:Int = 120;
 
 	/**
@@ -67,6 +67,11 @@ class Options
 	public static var charterShowSections:Bool = true;
 	public static var charterShowBeats:Bool = true;
 	public static var charterEnablePlaytestScripts:Bool = true;
+	public static var charterLowDetailWaveforms:Bool = false;
+	public static var charterAutoSaves:Bool = true;
+	public static var charterAutoSaveTime:Float = 60*5;
+	public static var charterAutoSaveWarningTime:Float = 5;
+	public static var charterAutoSavesSeperateFolder:Bool = false;
 
 	/**
 	 * PLAYER 1 CONTROLS

@@ -45,6 +45,8 @@ class CreditsMain extends TreeMenu {
 
 		addVirtualPad(UP_DOWN, A_B);
 		super.create();
+
+		DiscordUtil.call("onMenuLoaded", ["Credits Menu"]);
 	}
 
 	/**

@@ -79,12 +79,14 @@ class GlobalScript {
 	}
 
 	public static function event<T:CancellableEvent>(name:String, event:T):T {
-		if (scripts != null) scripts.call(name, [event]);
+		if (scripts != null)
+			scripts.event(name, event);
 		return event;
 	}
 
 	public static function call(name:String, ?args:Array<Dynamic>) {
-		if (scripts != null) scripts.call(name, args);
+		if (scripts != null)
+			scripts.call(name, args);
 	}
 	public static function onModSwitch(newMod:String) {
 		call("destroy");
@@ -93,7 +95,8 @@ class GlobalScript {
 		for (i in funkin.backend.assets.ModsFolder.getLoadedMods()) {
 			var path = Paths.script('data/global/LIB_$i');
 			var script = Script.create(path);
-			if (script is DummyScript) continue;
+			if (script is DummyScript)
+				continue;
 			script.remappedNames.set(script.fileName, '$i:${script.fileName}');
 			scripts.add(script);
 			script.load();

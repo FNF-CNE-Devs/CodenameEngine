@@ -116,7 +116,7 @@ class StoryMenuState extends MusicBeatState {
 
 		changeWeek(0, true);
 
-		DiscordUtil.changePresence("In the Menus", null);
+		DiscordUtil.call("onMenuLoaded", ["Story Menu"]);
 		CoolUtil.playMenuSong();
 
 		addVirtualPad(LEFT_FULL, A_B);
@@ -278,7 +278,6 @@ class StoryMenuState extends MusicBeatState {
 	}
 
 	public function addCharacter(charName:String) {
-		
 		var char:Access = null;
 		try {
 			char = new Access(Xml.parse(Assets.getText(Paths.xml('weeks/characters/$charName'))).firstElement());
@@ -309,7 +308,7 @@ class StoryMenuState extends MusicBeatState {
 		} else {
 			weeksFound = [for(c in Paths.getFolderContent('data/weeks/weeks/', false, source)) if (Path.extension(c).toLowerCase() == "xml") Path.withoutExtension(c)];
 		}
-		
+
 		if (weeksFound.length > 0) {
 			for(s in weeksFound)
 				weeks.push(s);

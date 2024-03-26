@@ -107,7 +107,7 @@ class NativeWindow
 
 		#if (!macro && lime_cffi)
 		handle = NativeCFFI.lime_window_create(parent.application.__backend.handle, width, height, flags, title);
-		
+
 		#if (DARK_MODE_WINDOW && !macro)
 			funkin.backend.utils.NativeAPI.setDarkMode(title, true);
 		#end

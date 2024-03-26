@@ -1,6 +1,9 @@
 package funkin.backend.chart;
 
-class BaseGameParser {
+import funkin.backend.chart.ChartData.ChartEvent;
+import funkin.backend.system.Conductor;
+
+class FNFLegacyParser {
 	public static function parse(data:Dynamic, result:ChartData) {
 		// base fnf chart parsing
 		var data:SwagSong = data;
@@ -109,7 +112,95 @@ class BaseGameParser {
 			curTime += curCrochet * beatsPerMeasure;
 		}
 	}
+
+	// have conductor set up BEFORE you run this :D -lunar
+	public static function encode(chart:ChartData):Dynamic {
+		var base:SwagSong = __convertToSwagSong(chart);
+		base.notes = __convertToSwagSections(chart);
+
+		for (strumLine in chart.strumLines)
+			for (note in strumLine.notes) {
+				var section:Int = Math.floor(Conductor.getStepForTime(note.time) / Conductor.getMeasureLength());
+				var swagSection:SwagSection = base.notes[section];
+				if (section > 0 && section < base.notes.length) {
+					var sectionNote:Array<Dynamic> = [
+						note.time, // TIME
+						note.id, // DATA
+						note.sLen // SUSTAIN LENGTH
+					];
+
+					if ((swagSection.mustHitSection && strumLine.type == OPPONENT) ||
+						(!swagSection.mustHitSection && strumLine.type == PLAYER))
+					   sectionNote[1] += 4;
+					swagSection.sectionNotes.push(note); 
+				}
+			}
+		
+		return {song: base};
+	}
+
+	// To make it easier to write the psych parser... -lunar
+	@:noCompletion public static function __convertToSwagSong(chart:ChartData):SwagSong {
+		var base:SwagSong = {
+			song: chart.meta.name,
+			notes: null,
+			bpm: chart.meta.bpm,
+			needsVoices: chart.meta.needsVoices,
+			speed: chart.scrollSpeed,
+
+			player1: null,
+			player2: null,
+			validScore: true
+		};
+
+		for (strumLine in chart.strumLines)
+			switch (strumLine.type) {
+				case OPPONENT:
+					if (base.player2 == null) base.player2 = strumLine.characters.getDefault(["dad"])[0];
+				case PLAYER:
+					if (base.player1 == null) base.player1 = strumLine.characters.getDefault(["bf"])[0];
+				case ADDITIONAL: // do nothing
+			}
+
+		return base;
+	}
+
+	@:noCompletion public static function __convertToSwagSections(chart:ChartData):Array<SwagSection> {
+		var events:Array<ChartEvent> = [for (event in chart.events) Reflect.copy(event)];
+
+		var measures:Float = Conductor.getMeasuresLength();
+		var sections:Int = Math.floor(measures) + (measures % 1 > 0 ? 1 : 0);
+
+		var notes:Array<SwagSection> = cast new haxe.ds.Vector<SwagSection>(sections);
+		for (section in 0...sections) {
+			var baseSection:SwagSection = {
+				sectionNotes: [],
+				lengthInSteps: Std.int(Conductor.getMeasureLength()),
+				mustHitSection: notes[section-1] != null ? notes[section-1].mustHitSection : false,
+				bpm: notes[section-1] != null ? notes[section-1].bpm : chart.meta.bpm,
+				changeBPM: false,
+				altAnim: notes[section-1] != null ? notes[section-1].altAnim : false
+			};
+
+			var sectionEndTime:Float = Conductor.getTimeForStep(Conductor.getMeasureLength() * (section+1));
+			while(events.length > 0 && events[0].time < sectionEndTime) {
+				var event:ChartEvent = events.shift();
+				switch (event.name) {
+					case "Camera Movement":
+						baseSection.mustHitSection = chart.strumLines[event.params[0]].type == PLAYER;
+					case "Alt Animation Toggle":
+						baseSection.altAnim = event.params[0] || event.params[1];
+					case "BPM Change":
+						baseSection.changeBPM = true;
+						baseSection.bpm = event.params[0];
+				}
+			}
+			notes[section] = baseSection;
+		}
+		return notes;
+	}
 }
+
 typedef SwagSong =
 {
 	var song:String;
@@ -117,13 +208,14 @@ typedef SwagSong =
 	var bpm:Float;
 	var needsVoices:Bool;
 	var speed:Float;
-	var stage:String;
-	var noteTypes:Array<String>;
+	var ?stage:String;
+	var ?noteTypes:Array<String>;
+	var ?events:Array<Dynamic>;
 
 	var player1:String;
 	var player2:String;
-	var gf:String;
-	var gfVersion:String;
+	var ?gf:String;
+	var ?gfVersion:String;
 	var validScore:Bool;
 
 	// ADDITIONAL STUFF THAT MAY NOT BE PRESENT IN CHART
@@ -136,9 +228,12 @@ typedef SwagSection =
 {
 	var sectionNotes:Array<Dynamic>;
 	var lengthInSteps:Int;
+	var ?sectionBeats:Float;
+	var ?typeOfSection:Int;
 	var mustHitSection:Bool;
+	var ?gfSection:Bool;
 	var bpm:Float;
 	var changeBPM:Bool;
 	var altAnim:Null<Bool>;
-	@:optional var camTarget:Null<Float>;
+	var ?camTarget:Null<Float>;
 }

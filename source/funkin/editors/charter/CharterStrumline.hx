@@ -5,6 +5,7 @@ import funkin.game.Character;
 import funkin.editors.ui.UITopMenu.UITopMenuButton;
 import funkin.game.HealthIcon;
 import funkin.backend.chart.ChartData.ChartStrumLine;
+import funkin.backend.shaders.CustomShader;
 import flixel.sound.FlxSound;
 
 class CharterStrumline extends UISprite {
@@ -21,6 +22,17 @@ class CharterStrumline extends UISprite {
 	public var curMenu:UIContextMenu = null;
 
 	public var vocals:FlxSound;
+
+	public var selectedWaveform(default, set):Int = -1;
+	public function set_selectedWaveform(value:Int):Int {
+		if (value == -1) waveformShader = null;
+		else {
+			var shaderName:String = Charter.waveformHandler.waveformList[value];
+			waveformShader = Charter.waveformHandler.waveShaders.get(shaderName);
+		}
+		return selectedWaveform = value;
+	}
+	public var waveformShader:CustomShader; 
 
 	public function new(strumLine:ChartStrumLine) {
 		super();
@@ -60,6 +72,8 @@ class CharterStrumline extends UISprite {
 
 		vocals = strumLine.vocalsSuffix.length > 0 ? FlxG.sound.load(Paths.voices(PlayState.SONG.meta.name, PlayState.difficulty, strumLine.vocalsSuffix)) : new FlxSound();
 		vocals.group = FlxG.sound.defaultMusicGroup;
+
+		selectedWaveform = -1;
 	}
 
 	private var __healthYOffset:Float = 0;
@@ -154,6 +168,22 @@ class CharterStrumlineOptions extends UITopMenuButton {
 				icon: 3
 			}
 		];
+
+		contextMenu.insert(0, {
+			label: "No Waveform",
+			onSelect: function(_) {strLine.selectedWaveform = -1;},
+			icon: strLine.selectedWaveform == -1 ? 1 : 0
+		});
+
+		for (i => name in Charter.waveformHandler.waveformList)
+			contextMenu.insert(1+i, {
+				label: name,
+				onSelect: function(_) {strLine.selectedWaveform = i;},
+				icon: strLine.selectedWaveform == i ? 6 : 5
+			});
+
+		contextMenu.insert(1+Charter.waveformHandler.waveformList.length, null);
+
 		super.openContextMenu();
 	}
 }

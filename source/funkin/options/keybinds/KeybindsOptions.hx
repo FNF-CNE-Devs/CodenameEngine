@@ -192,7 +192,7 @@ class KeybindsOptions extends MusicBeatSubstate {
 
 		if (canSelect) {
 			changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
-			
+
 			if (controls.BACK) {
 				MusicBeatState.skipTransIn = true;
 				if (isSubState)

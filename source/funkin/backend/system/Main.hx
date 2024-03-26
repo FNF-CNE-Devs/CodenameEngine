@@ -129,8 +129,6 @@ class Main extends Sprite
 		ShaderResizeFix.init();
 		Logs.init();
 		Paths.init();
-		ModsFolder.init();
-		DiscordUtil.init();
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.init();
 		#end
@@ -168,6 +166,7 @@ class Main extends Sprite
 
 		#if !mobile FlxG.mouse.useSystemCursor = true; #end
 
+		ModsFolder.init();
 		#if MOD_SUPPORT
 		ModsFolder.switchMod(modToLoad.getDefault(Options.lastLoadedMod));
 		#end
