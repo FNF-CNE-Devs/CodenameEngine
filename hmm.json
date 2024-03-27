@@ -17,12 +17,14 @@
     {
       "name": "openfl",
       "type": "haxelib",
-      "version": "9.2.2"
+      "version": null
     },
     {
       "name": "away3d",
-      "type": "haxelib",
-      "version": null
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://github.com/FNF-CNE-Devs/away3d"
     },
     {
       "name": "format",
@@ -57,10 +59,8 @@
     },
     {
       "name": "hxvlc",
-      "type": "git",
-      "dir": null,
-      "ref": "main",
-      "url": "https://github.com/MAJigsaw77/hxvlc"
+      "type": "haxelib",
+      "version": null
     },
     {
       "name": "hxdiscord_rpc",
