@@ -87,8 +87,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		lossSFX = FlxG.sound.play(Paths.sound(lossSFXName));
 		Conductor.changeBPM(gameOverSongBPM);
 
-		DiscordUtil.changePresence('Game Over', PlayState.SONG.meta.displayName + " (" + PlayState.difficulty + ")");
-
+		DiscordUtil.call("onGameOver", []);
 		gameoverScript.call("postCreate");
 	}
 

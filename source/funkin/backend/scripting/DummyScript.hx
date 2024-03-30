@@ -5,7 +5,7 @@ package funkin.backend.scripting;
  */
 class DummyScript extends Script {
 	public var variables:Map<String, Dynamic> = [];
-	
+
 	public override function get(v:String) {return variables.get(v);}
 	public override function set(v:String, v2:Dynamic) {return variables.set(v, v2);}
 	public override function onCall(method:String, parameters:Array<Dynamic>):Dynamic {

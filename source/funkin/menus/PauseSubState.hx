@@ -161,7 +161,7 @@ class PauseSubState extends MusicBeatSubstate
 				else {
 					PlayState.resetSongInfos();
 					if (Charter.instance != null) Charter.instance.__clearStatics();
-					
+
 					CoolUtil.playMenuSong();
 					FlxG.switchState(PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
 				}

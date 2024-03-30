@@ -43,6 +43,8 @@ class CreditsMain extends TreeMenu {
 
 		main = new OptionsScreen('Credits', 'The people who made this possible!', selectables);
 		super.create();
+
+		DiscordUtil.call("onMenuLoaded", ["Credits Menu"]);
 	}
 
 	/**

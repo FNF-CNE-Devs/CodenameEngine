@@ -6,7 +6,7 @@ import funkin.editors.extra.PropertyButton;
 
 using StringTools;
 
-class MetaDataScreen extends UISubstateWindow {
+class CharterMetaDataScreen extends UISubstateWindow {
 	public var metadata:ChartMetaData;
 	public var saveButton:UIButton;
 	public var closeButton:UIButton;

@@ -51,7 +51,7 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 		if (Assets.exists(Paths.pack('events/$name'))) {
 			var packimg = Assets.getText(Paths.pack('events/$name')).split('________PACKSEP________')[3];
 			if (isBase64 = (packimg != null))
-				path = Assets.getText(Paths.pack('events/$name')).split('________PACKSEP________')[3];	
+				path = Assets.getText(Paths.pack('events/$name')).split('________PACKSEP________')[3];
 		}
 		var spr = new FlxSprite().loadGraphic(isBase64 ? openfl.display.BitmapData.fromBase64(path.trim(), 'UTF8') : path);
 		return spr;

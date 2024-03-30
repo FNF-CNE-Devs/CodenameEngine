@@ -49,10 +49,10 @@ class CharacterEditor extends UIState {
 	public override function create() {
 		super.create();
 
-		WindowUtils.endfix = " (Character Editor)";
+		WindowUtils.suffix = " (Character Editor)";
 		SaveWarning.selectionClass = CharacterSelection;
 		SaveWarning.saveFunc = () -> {_file_save(null);};
-		
+
 		topMenu = [
 			{
 				label: "File",
@@ -224,7 +224,7 @@ class CharacterEditor extends UIState {
 		FlxG.cameras.add(uiCamera);
 		FlxG.cameras.add(animsCamera);
 
-		character = new Character(0,0,__character, false, false);
+		character = new Character(0,0, __character, false, false);
 		character.debugMode = true;
 		character.cameras = [charCamera];
 
@@ -257,6 +257,8 @@ class CharacterEditor extends UIState {
 			Framerate.memoryCounter.alpha = 0.4;
 			Framerate.codenameBuildField.alpha = 0.4;
 		}
+
+		DiscordUtil.call("onEditorLoaded", ["Character Editor", __character]);
 	}
 
 	override function destroy() {
@@ -328,14 +330,14 @@ class CharacterEditor extends UIState {
 
 	function _file_save(_) {
 		#if sys
-		sys.io.File.saveContent(
+		CoolUtil.safeSaveFile(
 			'${Paths.getAssetsRoot()}/data/characters/${character.curCharacter}.xml',
 			buildCharacter()
 		);
 		undos.save();
-		return;
-		#end
+		#else
 		_file_saveas(_);
+		#end
 	}
 
 	function _file_saveas(_) {
