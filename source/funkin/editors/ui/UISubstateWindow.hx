@@ -2,12 +2,12 @@ package funkin.editors.ui;
 
 import openfl.filters.ShaderFilter;
 import flixel.tweens.FlxTween;
-import funkin.backend.shaders.CustomShader;
+import openfl.filters.BlurFilter;
 
 // TODO: make UIWarningSubstate extend this
 class UISubstateWindow extends MusicBeatSubstate {
-	var camShaders:Array<FlxCamera> = [];
-	var blurShader:CustomShader = new CustomShader(Options.intensiveBlur ? "engine/editorBlur" : "engine/editorBlurFast");
+	var camFilters:Array<FlxCamera> = [];
+	var blurFilter:BlurFilter = new BlurFilter(5, 5);
 
 	var titleSpr:UIText;
 	var messageSpr:UIText;
@@ -30,27 +30,22 @@ class UISubstateWindow extends MusicBeatSubstate {
 		super.create();
 
 		for(c in FlxG.cameras.list) {
-			// Prevent adding a shader if it already has one
+			// Prevents a shader being added if there's already an existing one
 			@:privateAccess if(c._filters != null) {
-				var shouldSkip = false;
-				for(filter in c._filters) {
-					if(filter is ShaderFilter) {
-						var filter:ShaderFilter = cast filter;
-						if(filter.shader is CustomShader) {
-							var shader:CustomShader = cast filter.shader;
-
-							if(shader.path == blurShader.path) {
-								shouldSkip = true;
-								break;
-							}
-						}
+                var shouldSkip = false;
+                for(filter in c._filters) {
+                    if(filter is BlurFilter) {
+                        var filter:BlurFilter = cast filter;
+                        shouldSkip = true;
+                        break;
 					}
-				}
-				if(shouldSkip)
-					continue;
-			}
-			camShaders.push(c);
-			c.addShader(blurShader);
+                }
+                if(shouldSkip)
+                    continue;
+            }
+
+			camFilters.push(c);
+			c.setFilters([blurFilter]);
 		}
 
 		camera = subCam = new FlxCamera();
@@ -70,11 +65,10 @@ class UISubstateWindow extends MusicBeatSubstate {
 	}
 
 	public override function destroy() {
-		super.destroy();
-		for(e in camShaders)
-			e.removeShader(blurShader);
-
-		blurShader = null;
+		@:privateAccess {
+			for(e in camFilters)
+				if(e._filters != null) e._filters.remove(blurFilter);
+		}
 		FlxTween.cancelTweensOf(subCam);
 		FlxG.cameras.remove(subCam);
 	}
