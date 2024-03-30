@@ -1,6 +1,5 @@
 package funkin.editors.ui;
 
-import openfl.filters.ShaderFilter;
 import flixel.tweens.FlxTween;
 import openfl.filters.BlurFilter;
 
