@@ -6,7 +6,7 @@ import openfl.filters.BlurFilter;
 
 class UIWarningSubstate extends MusicBeatSubstate {
 	var camFilters:Array<FlxCamera> = [];
-	var blurFilter:BlurFilter = new BlurFilter(5, 5);
+	var blurFilter:BlurFilter = new BlurFilter(5, 5, Options.intensiveBlur ? 3 : 1);
 
 	var title:String;
 	var message:String;
