@@ -6,7 +6,7 @@ import openfl.filters.BlurFilter;
 // TODO: make UIWarningSubstate extend this
 class UISubstateWindow extends MusicBeatSubstate {
 	var camFilters:Array<FlxCamera> = [];
-	var blurFilter:BlurFilter = new BlurFilter(5, 5, Options.intensiveBlur);
+	var blurFilter:BlurFilter = new BlurFilter(5, 5);
 
 	var titleSpr:UIText;
 	var messageSpr:UIText;
@@ -61,6 +61,16 @@ class UISubstateWindow extends MusicBeatSubstate {
 
 		FlxTween.tween(camera, {alpha: 1}, 0.25, {ease: FlxEase.cubeOut});
 		FlxTween.tween(camera, {zoom: 1}, 0.66, {ease: FlxEase.elasticOut});
+
+		var daQuality = blurFilter.quality;
+		if (Options.blurBG) switch(Options.blurQuality){
+			case highBlur:
+				daQuality = 3;
+			case mediumBlur:
+				daQuality = 2;
+			case lowBlur:
+				daQuality = 1;
+		}
 	}
 
 	public override function destroy() {
