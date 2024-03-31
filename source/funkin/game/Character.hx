@@ -25,8 +25,6 @@ using StringTools;
 @:allow(funkin.game.PlayState)
 class Character extends FunkinSprite implements IBeatReceiver implements IOffsetCompatible
 {
-	public var extra:Map<String, String> = [];
-
 	private var __stunnedTime:Float = 0;
 	private var __lockAnimThisFrame:Bool = false;
 

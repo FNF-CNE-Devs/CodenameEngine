@@ -201,6 +201,9 @@ class Chart {
 	public static function save(songFolderPath:String, chart:ChartData, difficulty:String = "normal", ?saveSettings:ChartSaveSettings):ChartData {
 		if (saveSettings == null) saveSettings = {};
 
+		if (saveSettings.saveMetaInChart == null) saveSettings.saveMetaInChart = true;
+		if (saveSettings.saveEventsInChart == null) saveSettings.saveEventsInChart = true;
+
 		var filteredChart = filterChartForSaving(chart, saveSettings.saveMetaInChart, saveSettings.saveEventsInChart);
 		var meta = filteredChart.meta;
 
