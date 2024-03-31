@@ -33,8 +33,8 @@ enum abstract XMLAnimType(Int)
 
 class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements IOffsetCompatible implements IXMLEvents
 {
-	public var extra:Map<String, String> = [];
-	
+	public var extra:Map<String, Dynamic> = [];
+
 	public var spriteAnimType:XMLAnimType = NONE;
 	public var beatAnims:Array<BeatAnim> = [];
 	public var name:String;
