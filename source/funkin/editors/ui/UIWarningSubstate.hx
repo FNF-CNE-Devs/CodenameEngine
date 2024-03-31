@@ -5,7 +5,7 @@ import openfl.filters.BlurFilter;
 
 class UIWarningSubstate extends MusicBeatSubstate {
 	var camFilters:Array<FlxCamera> = [];
-	var blurFilter:BlurFilter = new BlurFilter(5, 5, Options.intensiveBlur ? 3 : 1);
+	var blurFilter:BlurFilter = new BlurFilter(5, 5, Options.intensiveBlur);
 
 	var title:String;
 	var message:String;
@@ -24,7 +24,7 @@ class UIWarningSubstate extends MusicBeatSubstate {
 	}
 
 	public override function create() {
-		for(c in FlxG.cameras.list) {
+		if (Options.blurBG) for(c in FlxG.cameras.list) {
 			// Prevents a shader being added if there's already an existing one
 			@:privateAccess if(c._filters != null) {
                 var shouldSkip = false;
@@ -86,7 +86,7 @@ class UIWarningSubstate extends MusicBeatSubstate {
 	}
 
 	public override function destroy() {
-		@:privateAccess {
+		if (Options.blurBG) @:privateAccess {
 			for(e in camFilters)
 				if(e._filters != null) e._filters.remove(blurFilter);
 		}
