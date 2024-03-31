@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-character>
-<character isPlayer="true" flipX="true" x="200" y="570" antialiasing="false" scale="6" gameOverChar="bf-pixel-dead">
+<character isPlayer="true" flipX="true" x="200" y="570" antialiasing="false" scale="6" gameOverChar="bf-pixel-dead" color="#7BD6F6">
 	<anim name="idle"       anim="BF IDLE" fps="24" loop="false" x="0" y="0" />
 
 	<!-- Offsets are actually multiplied by scale -->
