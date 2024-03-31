@@ -42,7 +42,7 @@ class Options
 	 * EDITORS SETTINGS
 	 */
 	public static var blurBG:Bool = true;
-	public static var blurQuality:Array<Dynamic> = ["highBlur", "mediumBlur", "lowBlur"];
+	public static var blurQuality:String = "mediumBlur";
 	public static var editorSFX:Bool = true;
 	public static var editorPrettyPrint:Bool = false;
 	public static var maxUndos:Int = 120;

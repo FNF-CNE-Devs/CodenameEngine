@@ -62,14 +62,13 @@ class UISubstateWindow extends MusicBeatSubstate {
 		FlxTween.tween(camera, {alpha: 1}, 0.25, {ease: FlxEase.cubeOut});
 		FlxTween.tween(camera, {zoom: 1}, 0.66, {ease: FlxEase.elasticOut});
 
-		var daQuality = blurFilter.quality;
-		if (Options.blurBG) switch(Options.blurQuality){
-			case highBlur:
-				daQuality = 3;
-			case mediumBlur:
-				daQuality = 2;
-			case lowBlur:
-				daQuality = 1;
+		switch(Options.blurQuality){
+			case "highBlur":
+				blurFilter.quality = 3;
+			case "mediumBlur":
+				blurFilter.quality = 2;
+			case "lowBlur":
+				blurFilter.quality = 1;
 		}
 	}
 
