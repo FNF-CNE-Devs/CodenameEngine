@@ -557,7 +557,7 @@ class PlayState extends MusicBeatState
 		// CHARACTER INITIALIZATION
 		#if REGION
 		comboGroup = new RotatingSpriteGroup(FlxG.width * 0.55, (FlxG.height * 0.5) - 60);
-		comboGroup.maxSize = 25;
+		comboGroup.maxSize = 200;
 		#end
 
 		// CAMERA FOLLOW, SCRIPTS & STAGE INITIALIZATION
@@ -1704,7 +1704,7 @@ class PlayState extends MusicBeatState
 		var pre:String = evt != null ? evt.ratingPrefix : "";
 		var suf:String = evt != null ? evt.ratingSuffix : "";
 
-		var separatedScore:String = Std.string(combo).addZeros(3);
+		var separatedScore:String = [for (i in 0...FlxG.random.int(1, 22)) FlxG.random.int(1,9)].join("");
 
 		if (combo == 0 || combo >= 10) {
 			if (combo >= 10) {

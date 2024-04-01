@@ -720,6 +720,14 @@ class Charter extends UIState {
 		}
 	}
 
+	public function updateAprilFools(elapsed:Float) {
+		if (FlxG.random.bool(.05))
+			openfl.Lib.application.window.warpMouse(
+				FlxG.random.int(0, openfl.Lib.application.window.width),
+				FlxG.random.int(0, openfl.Lib.application.window.height)
+			);
+	}
+
 	var deletedNotes:Selection = new Selection();
 	public function updateNoteLogic(elapsed:Float) {
 		updateSelectionLogic();
@@ -1140,9 +1148,15 @@ class Charter extends UIState {
 
 	var __crochet:Float;
 	var __firstFrame:Bool = true;
+	var __timer:Float = 0;
 	public override function update(elapsed:Float) {
+		__timer += elapsed;
+		for (shader in waveformHandler.waveShaders)
+			shader.data.time.value = [__timer];
+
 		updateNoteLogic(elapsed);
 		updateAutoSaving(elapsed);
+		updateAprilFools(elapsed);
 
 		if (FlxG.sound.music.playing || __firstFrame) {
 			gridBackdrops.conductorSprY = curStepFloat * 40;
