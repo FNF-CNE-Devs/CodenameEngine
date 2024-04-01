@@ -16,7 +16,6 @@ class TreeMenu extends UIState {
 	public var pathLabel:FunkinText;
 	public var pathDesc:FunkinText;
 	public var pathBG:FlxSprite;
-
 	public static var lastState:Class<FlxState> = null;  // Static for fixing the softlock bugs when resetting the state  - Nex
 
 	public function new() {
