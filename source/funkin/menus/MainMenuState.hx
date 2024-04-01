@@ -4,9 +4,7 @@ import haxe.Json;
 import funkin.backend.FunkinText;
 import funkin.menus.credits.CreditsMain;
 import flixel.FlxState;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.effects.FlxFlicker;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -34,7 +32,7 @@ class MainMenuState extends MusicBeatState
 	{
 		super.create();
 
-		DiscordUtil.changePresence("In the Menus", null);
+		DiscordUtil.call("onMenuLoaded", ["Main Menu"]);
 
 		CoolUtil.playMenuSong();
 
@@ -62,11 +60,17 @@ class MainMenuState extends MusicBeatState
 
 		for (i=>option in optionShit)
 		{
-			var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 160));
+			var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 130));
 			menuItem.frames = Paths.getFrames('menus/mainmenu/${option}');
 			menuItem.animation.addByPrefix('idle', option + " basic", 24);
 			menuItem.animation.addByPrefix('selected', option + " white", 24);
 			menuItem.animation.play('idle');
+			menuItem.scale.set(0.8, 0.8);
+			if (option == "visual novel") {
+				menuItem.scale.set(0.7, 0.7);
+				menuItem.y += 8;
+			}
+			menuItem.updateHitbox();
 			menuItem.ID = i;
 			menuItem.screenCenter(X);
 			menuItems.add(menuItem);
@@ -105,9 +109,7 @@ class MainMenuState extends MusicBeatState
 				if (FlxG.keys.justPressed.SEVEN)
 					FlxG.switchState(new funkin.desktop.DesktopMain());
 				if (FlxG.keys.justPressed.EIGHT) {
-					#if sys
-					sys.io.File.saveContent("chart.json", Json.stringify(funkin.backend.chart.Chart.parse("dadbattle", "hard")));
-					#end
+					CoolUtil.safeSaveFile("chart.json", Json.stringify(funkin.backend.chart.Chart.parse("dadbattle", "hard")));
 				}
 				*/
 			}
@@ -122,7 +124,6 @@ class MainMenuState extends MusicBeatState
 				FlxG.switchState(new TitleState());
 
 			#if MOD_SUPPORT
-			// make it customisable
 			if (controls.SWITCHMOD || virtualPad.buttonE.justPressed) {
 				openSubState(new ModSwitchMenu());
 				persistentUpdate = false;
@@ -168,6 +169,7 @@ class MainMenuState extends MusicBeatState
 			switch (daChoice)
 			{
 				case 'story mode': FlxG.switchState(new StoryMenuState());
+				case 'visual novel': FlxG.switchState(new VisualNovel());
 				case 'freeplay': FlxG.switchState(new FreeplayState());
 				case 'donate': FlxG.switchState(new CreditsMain());
 				case 'options': FlxG.switchState(new OptionsMenu());
@@ -198,6 +200,9 @@ class MainMenuState extends MusicBeatState
 
 			spr.updateHitbox();
 			spr.centerOffsets();
+
+			if (spr.ID == optionShit.indexOf("visual novel") && spr.ID == curSelected)
+				spr.offset.y += 26; // this sprite really weird -lunar
 		});
 	}
 }

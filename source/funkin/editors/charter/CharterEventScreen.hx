@@ -79,13 +79,13 @@ class CharterEventScreen extends UISubstateWindow {
 				else {
 					chartEvent.events = [for (i in eventsList.buttons.members) i.event];
 					chartEvent.refreshEventIcons();
+					Charter.instance.updateBPMEvents();
 
 					Charter.undos.addToUndo(CEditEvent(chartEvent, oldEvents, [for (event in events) Reflect.copy(event)]));
 				}
 			}
 
 			close();
-			Charter.instance.updateBPMEvents();
 		});
 		saveButton.x -= saveButton.bWidth;
 		add(saveButton);

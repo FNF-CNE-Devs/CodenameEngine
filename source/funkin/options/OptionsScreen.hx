@@ -71,11 +71,8 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 	}
 
 	public function updateMenuDesc(?customTxt:String) {
-		if (parent.treeParent == null) return;
-		
-		var text:String = members[curSelected].desc;
-		if (customTxt != null) text = customTxt;
-		parent.treeParent.updateDesc(text);
+		if (parent == null || parent.treeParent == null) return;
+		parent.treeParent.updateDesc(customTxt != null ? customTxt : members[curSelected].desc);
 	}
 
 	public dynamic function onClose(o:OptionsScreen) {}

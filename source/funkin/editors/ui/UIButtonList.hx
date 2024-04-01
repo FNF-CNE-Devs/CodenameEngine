@@ -1,10 +1,7 @@
 package funkin.editors.ui;
 
 import flixel.FlxCamera;
-import flixel.group.FlxGroup;
-import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
-import funkin.game.Character;
 import flixel.util.FlxSort;
 import flixel.math.FlxMath;
 
@@ -124,7 +121,6 @@ class UIButtonList<T:UIButton> extends UIWindow {
 				if (dragCallback != null) dragCallback(cast button, button.ID, i);
 				button.ID = i; // Ok back to normal :D
 			}
-				
 		}
 		addButton.selectable = (hovered && !dragging);
 

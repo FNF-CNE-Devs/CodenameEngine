@@ -1,26 +1,23 @@
 package funkin.backend.utils;
 
 import flixel.text.FlxText;
-import openfl.text.TextFormatAlign;
 import funkin.backend.utils.XMLUtil.TextFormat;
+import flixel.util.typeLimit.OneOfTwo;
 import flixel.tweens.FlxTween;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.sound.FlxSound;
 import funkin.backend.system.Conductor;
 import flixel.sound.FlxSoundGroup;
 import haxe.Json;
-import funkin.menus.StoryMenuState.WeekData;
 import haxe.io.Path;
+import haxe.io.Bytes;
 import haxe.xml.Access;
 import flixel.input.keyboard.FlxKey;
 import lime.utils.Assets;
 import flixel.animation.FlxAnimation;
 import flixel.util.FlxColor;
 import flixel.util.FlxAxes;
-import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.frames.FlxFramesCollection;
 import openfl.geom.ColorTransform;
-import funkin.backend.chart.Chart;
 import haxe.CallStack;
 
 using StringTools;
@@ -80,6 +77,48 @@ class CoolUtil
 			}
 		}
 		#end
+	}
+
+	/**
+	 * Safe saves a file (even adding eventual missing folders) and shows a warning box instead of making the program crash
+	 * @param path Path to save the file at.
+	 * @param content Content of the file to save (as String or Bytes).
+	 */
+	@:noUsing public static function safeSaveFile(path:String, content:OneOfTwo<String, Bytes>, showErrorBox:Bool = true) {
+		#if sys
+		try {
+			addMissingFolders(Path.directory(path));
+			if(content is Bytes) sys.io.File.saveBytes(path, content);
+			else sys.io.File.saveContent(path, content);
+		} catch(e) {
+			var errMsg:String = 'Error while trying to save the file: ${Std.string(e).replace('\n', ' ')}';
+			Logs.traceColored([Logs.logText(errMsg, RED)], ERROR);
+			if(showErrorBox) funkin.backend.utils.NativeAPI.showMessageBox("Codename Engine Warning", errMsg, MSG_WARNING);
+		}
+		#end
+	}
+
+	/**
+	 * Creates eventual missing folders to the specified `path`
+	 *
+	 * WARNING: eventual files in `path` will be considered as folders! Just to make possible folders be named as `songs.json` for example
+	 *
+	 * @param path Path to check.
+	 * @return The initial Path.
+	 */
+	@:noUsing public static function addMissingFolders(path:String):String {
+		#if sys
+		var folders:Array<String> = path.split("/");
+		var currentPath:String = "";
+
+		for (folder in folders) {
+			currentPath += folder + "/";
+			if (!sys.FileSystem.exists(currentPath)) {
+				sys.FileSystem.createDirectory(currentPath);
+			}
+		}
+		#end
+		return path;
 	}
 
 	/**

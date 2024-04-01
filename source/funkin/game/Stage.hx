@@ -3,7 +3,6 @@ package funkin.game;
 import funkin.backend.scripting.events.StageXMLEvent;
 import funkin.backend.scripting.events.StageNodeEvent;
 import flixel.math.FlxPoint;
-import funkin.backend.MusicBeatGroup;
 import flixel.FlxState;
 import haxe.xml.Access;
 import funkin.backend.system.interfaces.IBeatReceiver;

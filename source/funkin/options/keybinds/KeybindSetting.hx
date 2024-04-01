@@ -1,9 +1,6 @@
 package funkin.options.keybinds;
 
 import flixel.effects.FlxFlicker;
-import funkin.backend.system.Controls;
-import flixel.addons.transition.FlxTransitionableState;
-import flixel.util.FlxColor;
 import flixel.input.keyboard.FlxKey;
 
 using StringTools;
@@ -55,10 +52,10 @@ class KeybindSetting extends FlxTypedSpriteGroup<FlxSprite> {
 			var min = Math.min(icon.scale.x, icon.scale.y);
 			icon.scale.set(min, min);
 			add(icon);
-			
+
 			title.setPosition(100, 0);
 		}
-		
+
 		setPosition(x, y);
 	}
 

@@ -1,6 +1,9 @@
 package funkin.backend.system.macros;
 
 #if macro
+import haxe.macro.Context;
+import haxe.macro.Expr;
+
 /**
  * Macro that generates all additional fields, making events much easier to code in.
  * It adds the `recycle` function, which allows you to "reset" an event's values.
@@ -18,7 +21,6 @@ class EventMacro {
 		for(f in fields)
 			if (f.name == "recycle")
 				return fields;
-
 
 		// gets all fields
 		var values:Array<EventVar> = [];
@@ -48,8 +50,8 @@ class EventMacro {
 		// add recycle option
 		var func:Function = {
 			args: [for(a in values) {
-				value: a.expr, 
-				type: a.type, 
+				value: a.expr,
+				type: a.type,
 				opt: false,
 				name: a.name
 			}],
@@ -87,7 +89,7 @@ class EventMacro {
 							})
 					});
 				}
-				
+
 				// add a "set this" expr to reset each private/hidden variables
 				for(v in hiddenValues) {
 					var name = v.name;

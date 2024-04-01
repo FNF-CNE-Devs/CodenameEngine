@@ -1,16 +1,9 @@
 package funkin.backend.system;
 
-import funkin.backend.chart.Chart;
 import funkin.backend.chart.ChartData;
-import openfl.Lib;
 import flixel.FlxState;
 import funkin.backend.system.interfaces.IBeatReceiver;
 import flixel.util.FlxSignal.FlxTypedSignal;
-
-/**
- * ...
- * @author
- */
 
 typedef BPMChangeEvent =
 {

@@ -1,0 +1,556 @@
+<vn>
+	<!-- Characters -->
+
+	<character id="pessy">
+		<name>Pessy</name>
+		<image>pessy</image>
+		<scale>1</scale>
+		<color>653BA9</color>
+		<side>left</side>
+	</character>
+
+	<character id="cody">
+		<name>Cody</name>
+		<image>cody</image>
+		<scale>1</scale>
+		<color>A36BCC</color>
+		<side>right</side>
+	</character>
+
+	<character id="gaysex">
+		<name>Pessy &amp; Cody</name>
+		<image>kiss</image>
+		<scale>1</scale>
+		<color>7c4cb6</color>
+		<side>center</side>
+		<offset>0,50</offset>
+	</character>
+
+	<!-- Dialogue -->
+<entry id="start" bg="school">
+	The day starts of as usual, with Cody and Pessy meeting each other whilst on the way to school
+</entry>
+
+<entry character="pessy" bg="school">
+	Hey Cody! How are you doing?
+</entry>
+
+<entry character="cody" bg="school">
+	Hey Pessy, I'm doing well!
+</entry>
+
+<entry character="pessy" bg="school">
+	Did you sleep well Cody?
+	<choice id="sleepyes">Yes i did</choice>
+	<choice id="sleepno">No i didn't</choice>
+</entry>
+
+<entry id="sleepyes" character="cody" bg="school">
+	I slept well, I dreamt about all the possibilities of what Friday Night Funkin' could include in their next update!
+</entry>
+
+<entry character="cody" bg="school">
+	I imagine what the lemon demon songs for the erect difficulty would sound like!
+</entry>
+
+
+<entry character="pessy" bg="school">
+	Oh yeah!! I bet it's gonna sound really creepy but also good!
+</entry>
+
+<entry character="cody" bg="school" next="talk-current-mods">
+	I bet. The voice actor for him is really good at it!
+</entry>
+
+<entry id="sleepno" character="cody" bg="school">
+	I had a horrible nightmare, I dreamt of Friday Night Funkin' getting canceled.
+</entry>
+
+<entry character="cody" bg="school">
+	It was due to the developers being exposed of spending all the kickstarter money on crack. A team member who is against this posted a google doc of the situation on twitter.
+</entry>
+
+<entry character="pessy" bg="school">
+	Oh man that must have been a really bad nightmare. At least they are now showing teasers online like that erect sampler they showed the other day!
+</entry>
+
+<entry character="cody" bg="school" next="talk-current-mods">
+	Yeah, I'm really glad that they are now finally doing that after almost 3 years of nothing. The FNF mods were really making this community alive.
+</entry>
+
+
+talk about current mods, where each engine talking about each others engines mods and how cool they are
+
+<entry id="talk-current-mods" character="cody" bg="school">
+	Have you heard about the mod…
+
+	<choice id="talkimpostor">Talk about: Impostor V4</choice>
+	<choice id="talkhotline">Talk about: Hotline 024</choice>
+	<choice id="talkmario">Talk about: Mario's Madness</choice>
+	<choice id="talk17">Talk about: 17 Bucks</choice>
+</entry>
+
+<entry id="talkimpostor" character="cody" bg="school">
+	Vs Impostor?
+</entry>
+
+<entry character="pessy" bg="school">
+	Yea i heard about that! I find it very sus! Ha.
+</entry>
+
+<entry character="pessy" bg="school">
+	But actually it's a really good mod. I like how Maroon's parasite form looks! It really fits for his song.
+</entry>
+
+<entry character="cody" bg="school">
+	Yeah me too!! My favorite part from Vs Impostor is Finale. That song is so good I love it to death!!!
+</entry>
+
+<entry character="pessy" bg="school">
+	I don't blame you! That's the best song from the mod tbh.
+</entry>
+
+<entry character="pessy" bg="school">
+	Have you heard about Sunday's Desolation?
+</entry>
+
+<entry character="cody" bg="school">
+	Oh yeah I did! That's such a good mod. It's really high quality for a fanmade mod about Wednesday's Infidelity!
+</entry>
+
+<entry character="pessy" bg="school">
+	Yeah, it even has one of your developers for your engine on the team. That's really awesome!!
+</entry>
+
+<entry character="cody" bg="school" next="fnfstuff">
+	I think that's really cool actually. I like that this mod is all about Oswald from the original mod. Really cool that the team is making a whole mod about him!
+</entry>
+
+—-
+
+<entry id="talkhotline" character="cody" bg="school">
+	Hotline 024?
+</entry>
+
+<entry character="pessy" bg="school">
+	Yea i heard about that! I really like Nikku's character design, and how she can mimic other voices!
+</entry>
+
+<entry character="cody" bg="school">
+	Yeah!! There's even a whole tricky-themed song in the mod, and even Nikku is mimicking Tricky's voice at certain parts!!
+</entry>
+
+<entry character="pessy" bg="school">
+	Kinda sucks that the original tricky mod was made on Kade Engine, Kevin is just really too much of a hardcoding guy and he is really unoptimized. I don't like talking to him that much.
+</entry>
+
+<entry character="cody" bg="school">
+	I do see him hanging out with the other engines. But lately his popularity has kinda stopped.
+</entry>
+
+<entry character="pessy" bg="school">
+	Yeah… I do admit he's the reason why people started modding FNF though, he's the one that started FNF modding!
+</entry>
+
+<entry character="cody" bg="school">
+	I agree… He actually makes me feel nostalgic of the early era of FNF modding…
+</entry>
+
+<entry character="pessy" bg="school">
+	Have you seen Cyber Sensation recently?
+</entry>
+
+<entry character="cody" bg="school">
+	I did actually! Unfortunate that it got canceled though…
+</entry>
+
+<entry character="pessy" bg="school" next="fnfstuff">
+	Yeah… the creator had to leave the community. Got exhausted from the game.
+</entry>
+
+<entry character="cody" bg="school">
+	I don't blame her. FNF does get really tiring after a good while.
+</entry>
+
+—---
+
+<entry id="talkmario" character="cody" bg="school">
+	Mario's Madness?
+</entry>
+
+<entry character="pessy" bg="school">
+	Yeah! That's one of the trending mods right now! I like how All-Stars play out. It's such a sad but awesome ending!
+</entry>
+
+<entry character="cody" bg="school">
+	I agree!! Some people are mad about it, but to be honest BF wins too much. He had to lose at some point.
+</entry>
+
+<entry character="pessy" bg="school">
+	True. Sometimes all good things must come to an end.
+</entry>
+
+<entry character="cody" bg="school">
+	heyy mmv2 reference!! That's from the dialogue when mario sees bf again before All-Stars happens lol!!
+</entry>
+
+<entry character="pessy" bg="school">
+	omg LMAO cody you're so funny!!!
+</entry>
+
+<entry bg="school">
+	They laughed for a solid 5 minutes.
+</entry>
+
+<entry character="pessy" bg="school">
+	haha….. Anyways, did you hear about Gorefield getting a big update?
+</entry>
+
+<entry character="cody" bg="school">
+	Yeah I did!! V2 is such a huge improvement from V1 it's insane.
+</entry>
+
+<entry character="pessy" bg="school">
+	Yeah!! I like how Cataclysm goes… It's pretty similar to All-Stars
+</entry>
+
+<entry character="cody" bg="school">
+	It's a really awesome song to be honest!! Such an awesome ending to the mod. I like that there are flashbacks of the previous songs played and that they are being controlled by Godfield.
+</entry>
+
+<entry character="pessy" bg="school">
+	Again, it's like how All-Stars play out! Like how Ultra M is controlling the past enemies the player faced against at Act 4.
+</entry>
+
+<entry character="cody" bg="school" next="fnfstuff">
+	I really like that mods do that.
+</entry>
+
+—---
+
+
+<entry id="talk17" character="cody" bg="school">
+	17 Bucks?
+</entry>
+
+<entry character="pessy" bg="school">
+	Yeah I have! The charm of it is actually so amazing.
+</entry>
+
+<entry character="cody" bg="school">
+	I agree, my favorite song from the mod is Kevinteenbucks.
+</entry>
+
+<entry character="pessy" bg="school">
+	Cool! Mine is Fitin'. The song loops forever but to be honest that's really funny to me!
+</entry>
+
+<entry character="cody" bg="school">
+	I think that's funny too! That's actually my first time seeing a mod do that when I first played it.
+</entry>
+
+<entry character="pessy" bg="school">
+	Yeah, it's pretty awesome! Pretty cool how people in this community can code such cool things.
+</entry>
+
+<entry character="pessy" bg="school">
+	Have you heard about YTP Invasion?
+</entry>
+
+<entry character="cody" bg="school">
+	Yeah!! It's not out yet, but it's going to really soon!
+</entry>
+
+<entry character="pessy" bg="school">
+	Yup.. I think it's gonna drop this month actually!
+</entry>
+
+<entry character="cody" bg="school">
+	Whaaat, really??
+</entry>
+
+<entry character="pessy" bg="school">
+	Yes, they announced that sometime ago on their twitter account! They released a trailer about it and everyone got super hyped about it!!
+</entry>
+
+<entry character="cody" bg="school">
+	Woahhh… cool!! What is it all about?
+</entry>
+
+<entry character="pessy" bg="school">
+	Well basically, it's a mod about iconic Youtube Poop (YTP for short) characters rap battling against boyfriend.
+</entry>
+
+<entry character="cody" bg="school" next="fnfstuff">
+	Sounds cool! I think that's gonna be a really awesome mod everyone will love.
+</entry>
+
+—---
+
+
+talk about some stuff that's been happening with the base game
+
+<entry id="fnfstuff" character="cody" bg="school">
+	Did you see that new FNF blog that recently got released? It shows the new chart editor that's with the base game!
+</entry>
+
+<entry character="pessy" bg="school">
+	I saw!!! It looked really cool. I saw it looked inspired by your editor.
+</entry>
+
+<entry character="cody" bg="school">
+	I know! It feels inspired by yours too!
+</entry>
+
+<entry character="pessy" bg="school">
+	Yeah! I rembeber adding waveforms way back! Also they added your note selection and dragging!
+</entry>
+
+<entry character="cody" bg="school">
+	That just makes me really happy. Even though I'm not that much of a popular engine, the FNF developers still might have taken some inpriation from me. Which is awesome considering they defenitely took some from you!
+</entry>
+
+<entry character="pessy" bg="school">
+	That shows they take advice from FNF modders and FNF engine developers! They care about the community.
+</entry>
+
+<entry character="cody" bg="school">
+	That may be true because they also updated their erect songs after dropping the erect sampler!
+</entry>
+
+<entry character="pessy" bg="school">
+	They did? Wow! That's actually really awesome. What songs did they change?
+</entry>
+
+<entry character="cody" bg="school">
+	So far we only know Fresh and Pico. They dropped the updated versions on their Tiktok account.
+</entry>
+
+<entry character="pessy" bg="school">
+	Oh cool! I didn't really like how BF sounded in Pico. His vocals were kinda just all over the place.
+</entry>
+
+<entry character="cody" bg="school">
+	Yeah they actually changed that! His vocals became less intense and are actually more calm now.
+</entry>
+
+<entry character="pessy" bg="school" next="personaltalk">
+	That's awesome. I really can't wait for the update!
+</entry>
+
+—-
+
+small personal talk
+
+<entry id="personaltalk" bg="school">
+	The both of them start thinking about their personal things. Both of them think they should share it to the other.
+</entry>
+
+<entry character="cody" bg="school">
+	I recently transitioned from alpha to beta state the other day.
+</entry>
+
+<entry character="pessy" bg="school">
+	Oh really? That's great news! Good job on making progress on your engine!
+</entry>
+
+<entry character="cody" bg="school">
+	Thank you! I'm actually excited to release this engine at some point.
+</entry>
+
+<entry character="cody" bg="school">
+	I also heard that you started working on the final version of psych. That's pretty cool!
+</entry>
+
+<entry character="cody" bg="school">
+	I heard it's gonna have a stage editor! I'm really excited to see that!
+</entry>
+
+<entry character="pessy" bg="school">
+	Yea and I'm also working on adding Language support, and a new chart editor.
+</entry>
+
+<entry character="cody" bg="school">
+    Oh awesome!! That's cool that you're finishing your engine. I can't wait for it to drop!
+</entry>
+
+<entry bg="school" next="crush">
+    They both went silent for a moment.
+</entry>
+
+—--
+
+talking about crushes
+
+<entry id="crush" character="pessy" bg="school">
+	I have a crush on this engine where you can softcode literally anything…
+</entry>
+
+<entry character="cody" bg="school">
+	R…really? Who is this engine you're talking about…?
+</entry>
+
+<entry character="pessy" bg="school">
+	…Y-...you…
+</entry>
+
+<entry character="cody" bg="school">
+	…W-what? Oh my god… I think I'm blushing…!!
+</entry>
+
+<entry character="pessy" bg="school">
+	…yeah…
+</entry>
+
+<entry character="cody" bg="school">
+	…well…
+
+	<option id="crushaccepted">Tell Pessy your feelings for her</option>
+	<option id="friendzone">I don't feel the same way</option>
+</entry>
+
+<entry id="crushaccepted" character="cody" bg="school">
+	I have a crush on an engine that is user-friendly and has lua scripting…
+</entry>
+
+<entry character="pessy" bg="school">
+	…Cody…
+</entry>
+
+<entry bg="school">
+	Pessy leans to Cody for a kiss.
+
+	<choice id="kiss">Kiss Pessy</choice>
+	<choice id="no-kiss">Reject the kiss</choice>
+</entry>
+
+<entry id="kiss" bg="school">
+	Cody leans to Pessy to kiss her.
+</entry>
+
+<entry character="gaysex" bg="school">
+   *muwha* *sloppy kisses*
+</entry>
+
+<entry character="gaysex" bg="school">
+   *drools* *muwah muah*
+</entry>
+
+<entry character="cody" bg="school">
+   …that… was something.
+</entry>
+
+<entry character="pessy" bg="school">
+   Cody… I love you.
+</entry>
+
+<entry character="cody" bg="school">
+   …I… love you too…
+</entry>
+
+<entry character="pessy" bg="school">
+   …
+</entry>
+
+<entry character="cody" bg="school" next="ending">
+   …
+</entry>
+
+<entry bg="school" next="ending">
+	Pessy looks at her clock. It seems they are running late for class!
+</entry>
+
+
+<entry id="no-kiss" bg="school">
+	Cody backs up.
+</entry>
+
+<entry character="cody" bg="school">
+	Hey wait… I don't really wanna start this relationship yet.
+</entry>
+
+<entry character="pessy" bg="school">
+	Oh… well that's alright. Do you wanna have a date sometime later then?
+</entry>
+
+<entry character="cody" bg="school" next="ending">
+	Sure. I think we gotta develop our feelings for each other first before we take it to the next level.
+</entry>
+
+<entry bg="school" next="ending">
+	Pessy looks at her clock. It seems they are running late for class!
+</entry>
+
+
+<entry id="friendzone" character="cody" bg="school">
+	…Pessy… I really don't want to hurt your feelings, but I don't feel the same way for you…
+</entry>
+
+<entry character="pessy" bg="school">
+	Oh… well… I'm sorry for being weird there…
+</entry>
+
+<entry character="cody" bg="school">
+	It's ok Pessy… I think it's best if we just stay as friends.
+</entry>
+
+<entry character="pessy" bg="school">
+	Alrighty… I'm ok with that.
+</entry>
+
+<entry bg="school" next="ending">
+	Pessy looks at her clock. It seems they are running late for class!
+</entry>
+
+—
+
+ending
+
+<entry id="ending" character="pessy" bg="school">
+	We should probably get to class now!
+</entry>
+
+<entry character="cody" bg="school">
+	It was really fun talking to you.
+</entry>
+
+<entry character="pessy" bg="school">
+	Same here.
+</entry>
+
+<entry character="cody" bg="school">
+	Well I will see you sometime later, ok?
+</entry>
+
+<entry character="pessy" bg="school">
+	Alrighty… Bye Cody!!
+</entry>
+
+<entry character="cody" bg="school" next="credits">
+	Bye Pessy!
+</entry>
+
+Credits:
+
+<entry id="credits" bg="school">
+	Credits:
+	Coding: Ne_Eo
+	Music &amp; Sfx: Bromaster819
+	Writing: Syrup, Bromaster819, Ne_Eo, SlightlyCreative, swordcube
+	Art: Mkv8
+</entry>
+
+<entry bg="school">
+	Time spent writing this novel: 3h 19m
+	Time since idea: 3h 57m
+</entry>
+
+<entry bg="school">
+	Replay?
+
+	<choice id="start">Yes</choice>
+	<choice id="exit">Exit</choice>
+</entry>
+
+
+</vn>

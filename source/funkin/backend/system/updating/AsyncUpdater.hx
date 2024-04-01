@@ -21,14 +21,14 @@ class AsyncUpdater {
 	public function new(releases:Array<GitHubRelease>) {
 		this.releases = releases;
 	}
-	
+
 	public function execute() {
 		Main.execAsync(installUpdates);
 	}
 	#end
-	
-	
-	#if windows 
+
+
+	#if windows
 	public static var executableGitHubName:String = "update-windows.exe";
 	public static var executableName:String = "CodenameEngine.exe";
 	#end
@@ -49,7 +49,7 @@ class AsyncUpdater {
 
 	public var lastTime:Float = 0;
 	public var oldBytesLoaded:Float = 0;
-	
+
 	public function installUpdates() {
 		prepareInstallationEnvironment();
 		downloadFiles();
@@ -64,7 +64,7 @@ class AsyncUpdater {
 			progress.curFileName = e;
 			trace('extracting file ${path}');
 			var reader = ZipUtil.openZip(path);
-			
+
 			progress.curZipProgress = new ZipProgress();
 			ZipUtil.uncompressZip(reader, './', null, progress.curZipProgress);
 			// FileSystem.deleteFile(path);
@@ -72,7 +72,7 @@ class AsyncUpdater {
 		if (executableReplaced = FileSystem.exists('$path$executableName')) {
 			progress.curFile = files.length;
 			progress.curFileName = executableName;
-			
+
 			var progPath = Sys.programPath();
 			var bakFile = '${Path.withoutExtension(progPath)}.bak';
 			if (FileSystem.exists(bakFile))
@@ -133,7 +133,7 @@ class AsyncUpdater {
 		downloadStream.addEventListener(ProgressEvent.PROGRESS, function(e) {
 			progress.bytesLoaded = e.bytesLoaded;
 			progress.bytesTotal = e.bytesTotal;
-			
+
 			var curTime = Lib.getTimer();
 
 			progress.downloadSpeed = (e.bytesLoaded - oldBytesLoaded) / ((curTime - lastTime) / 1000);
@@ -160,7 +160,7 @@ class AsyncUpdater {
 
 	public function prepareInstallationEnvironment() {
 		progress.step = PREPARING;
-		
+
 		#if windows
 		path = '${Sys.getEnv("TEMP")}\\Codename Engine\\Updater\\';
 		#else
@@ -185,8 +185,7 @@ class UpdaterProgress {
 	public function new() {}
 }
 
-@:enum
-abstract UpdaterStep(Int) {
+enum abstract UpdaterStep(Int) {
 	var PREPARING = 0;
 	var DOWNLOADING_ASSETS = 1;
 	var DOWNLOADING_EXECUTABLE = 2;

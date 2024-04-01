@@ -3,7 +3,6 @@ package funkin.editors.charter;
 import flixel.text.FlxText.FlxTextFormat;
 import flixel.text.FlxText.FlxTextFormatMarkerPair;
 import funkin.backend.shaders.CustomShader;
-import flixel.math.FlxRect;
 import funkin.game.Character;
 import funkin.game.Stage;
 import funkin.game.HealthIcon;

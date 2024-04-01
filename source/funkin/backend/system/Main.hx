@@ -4,26 +4,17 @@ import funkin.editors.SaveWarning;
 import funkin.backend.assets.AssetsLibraryList;
 import funkin.backend.system.framerate.SystemInfo;
 import openfl.utils.AssetLibrary;
-import openfl.utils.AssetCache;
 import openfl.text.TextFormat;
 import flixel.system.ui.FlxSoundTray;
-import funkin.backend.utils.NativeAPI;
-import funkin.menus.BetaWarningState;
-import funkin.menus.TitleState;
-import flixel.FlxGame;
-import flixel.FlxState;
 import openfl.Assets;
 import openfl.Lib;
-import openfl.display.FPS;
 import openfl.display.Sprite;
-import openfl.events.Event;
 import flixel.graphics.FlxGraphic;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-import lime.app.Application;
 import funkin.backend.system.modules.*;
 #if android
 import haxe.io.Path;
@@ -138,8 +129,6 @@ class Main extends Sprite
 		ShaderResizeFix.init();
 		Logs.init();
 		Paths.init();
-		ModsFolder.init();
-		DiscordUtil.init();
 		#if GLOBAL_SCRIPT
 		funkin.backend.scripting.GlobalScript.init();
 		#end
@@ -177,6 +166,7 @@ class Main extends Sprite
 
 		#if !mobile FlxG.mouse.useSystemCursor = true; #end
 
+		ModsFolder.init();
 		#if MOD_SUPPORT
 		ModsFolder.switchMod(modToLoad.getDefault(Options.lastLoadedMod));
 		#end

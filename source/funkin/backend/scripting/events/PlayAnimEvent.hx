@@ -30,8 +30,7 @@ final class PlayAnimEvent extends CancellableEvent {
 /**
 	Contains all contexts possible for `PlayAnimEvent`.
 **/
-@:enum
-abstract PlayAnimContext(String) {
+enum abstract PlayAnimContext(String) {
 	/**
 		No context was given for the animation.
 		The character won't dance until the animation is finished

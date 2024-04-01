@@ -7,7 +7,7 @@
 		package="com.yoshman29.codenameengine"
 		version="0.1.0" company="Yoshman29" />
 
-	<!-- 
+	<!--
 		CHANGE THE SAVE PATH & NAME FOR YOUR MOD HERE!
 	-->
 	<app save-path="YoshiCrafter29/CodenameEngine" save-name="save-default" mod-saves="true" />
@@ -86,16 +86,8 @@
 
 	<!-- _________________________________ Engine Settings _______________________________ -->
 
-	<!-- Comment this out to disable multiple windows for editors !-->
-	<define name="ALLOW_MULTITASKING" />
-	<define name="openfl_dpi_aware" />
-
 	<!-- Comment this out to disable updates !-->
 	<!-- <define name="UPDATE_CHECKING" unless="web || hl || neko"/> -->
-
-	<!-- Fixes thing with macros -->
-	<define name="HL" if="hl"/>
-	<define name="SYS" if="cpp || hl || neko"/>
 
 	<!-- Comment this out to disable Discord RPC !-->
 	<section if="cpp">
@@ -134,9 +126,6 @@
 	<!-- Comment this out to disable support for custom ndlls. !-->
 	<haxedef name="NDLLS_SUPPORTED" unless="web || iphonesim" />
 
-	<!-- Comment this out to disable support for custom extended classes (data/classes). !-->
-	<define name="SOFTCODED_CLASSES" />
-
 	<!-- Comment this out to disable support for Away3D Flixel Intergration (reduces compile times)-->
 	<define name="THREE_D_SUPPORT" />
 
@@ -162,6 +151,13 @@
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
+	<!-- KEEP BOTH OF THESE AS THERE ARE SOME PARTICULAR CASES! -->
+	<define name="disable-version-check"/>
+	<haxedef name="disable-version-check"/>
+
+	<haxedef name="no-deprecation-warnings"/>
+	<haxedef name="DISCORD_DISABLE_IO_THREAD" if="DISCORD_RPC"/>
+
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 
@@ -182,10 +178,10 @@
 
 	<section if="COMPILE_ALL_CLASSES">
 		<haxeflag name="-dce" value="no" />
-		<haxeflag name="--macro" value="funkin.backend.system.macros.ScriptsMacro.addAdditionalClasses()" />
+		<haxeflag name="--macro" value="funkin.backend.system.macros.Macros.addAdditionalClasses()" />
 	</section>
 
-	<haxeflag name="--macro" value="exclude('funkin.backend.system.updating')" unless="UPDATE_CHECKING"/>
+	<haxeflag name="--macro" value="funkin.backend.system.macros.Macros.initMacros()" />
 
 	<!-- Fix flash package issues -->
 	<haxeflag name="--macro" value="allowPackage('flash')" />

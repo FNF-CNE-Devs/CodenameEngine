@@ -1,6 +1,5 @@
 package funkin.backend;
 
-import flixel.addons.transition.FlxTransitionableState;
 import funkin.backend.system.framerate.Framerate;
 import funkin.backend.system.GraphicCacheSprite;
 import funkin.backend.system.Controls;

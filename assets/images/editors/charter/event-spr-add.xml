@@ -10,7 +10,7 @@
 	<SubTexture name="add-bottomleft" x="0" y="30" width="11" height="4"/>
 	<SubTexture name="add-bottom" x="11" y="30" width="19" height="4"/>
 	<SubTexture name="add-bottomright" x="30" y="30" width="18" height="4"/>
-	
+
 	<SubTexture name="edit-topleft" x="0" y="34" width="11" height="4"/>
 	<SubTexture name="edit-top" x="11" y="34" width="19" height="4"/>
 	<SubTexture name="edit-topright" x="30" y="34" width="18" height="4"/>

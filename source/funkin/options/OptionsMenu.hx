@@ -3,9 +3,6 @@ package funkin.options;
 import funkin.backend.system.framerate.Framerate;
 import funkin.options.type.Checkbox;
 import haxe.xml.Access;
-import flixel.tweens.FlxTween;
-import funkin.menus.MainMenuState;
-import flixel.util.typeLimit.OneOfTwo;
 import funkin.options.type.*;
 import funkin.options.categories.*;
 import funkin.options.TreeMenu;
@@ -55,6 +52,8 @@ class OptionsMenu extends TreeMenu {
 
 		CoolUtil.playMenuSong();
 
+		DiscordUtil.call("onMenuLoaded", ["Options Menu"]);
+
 		var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBGBlue'));
 		// bg.scrollFactor.set();
 		bg.scale.set(1.15, 1.15);
@@ -86,6 +85,7 @@ class OptionsMenu extends TreeMenu {
 				addVirtualPadCamera();
 			}
 		})]);
+
 		// this is mods settings ig... I HAVE NO FUCKING IDEA HOW TO ADD VPAD INTO IT HELP
 		var xmlPath = Paths.xml("config/options");
 		for(source in [funkin.backend.assets.AssetsLibraryList.AssetSource.SOURCE, funkin.backend.assets.AssetsLibraryList.AssetSource.MODS]) {
@@ -96,7 +96,7 @@ class OptionsMenu extends TreeMenu {
 				} catch(e) {
 					Logs.trace('Error while parsing options.xml: ${Std.string(e)}', ERROR);
 				}
-				
+
 				if (access != null)
 					for(o in parseOptionsFromXML(access))
 						main.add(o);
@@ -150,7 +150,7 @@ class OptionsMenu extends TreeMenu {
 						Logs.trace("A choice option requires an \"id\" for option saving.", WARNING);
 						continue;
 					}
-					
+
 					var optionOptions:Array<Dynamic> = [];
 					var optionDisplayOptions:Array<String> = [];
 
@@ -158,10 +158,10 @@ class OptionsMenu extends TreeMenu {
 						optionOptions.push(choice.att.value);
 						optionDisplayOptions.push(choice.att.name);
 					}
-					
+
 					if(optionOptions.length > 0)
 						options.push(new ArrayOption(name, desc, optionOptions, optionDisplayOptions, node.att.id, null, FlxG.save.data));
-					
+
 				case "menu":
 					options.push(new TextOption(name + " >", desc, function() {
 						optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node)));

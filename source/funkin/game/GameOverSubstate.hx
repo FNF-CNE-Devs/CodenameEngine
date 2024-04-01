@@ -4,10 +4,7 @@ import funkin.editors.charter.Charter;
 import funkin.backend.scripting.events.GameOverCreationEvent;
 import funkin.backend.scripting.events.CancellableEvent;
 import funkin.backend.scripting.Script;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.sound.FlxSound;
-import flixel.FlxSubState;
-import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import funkin.menus.StoryMenuState;
@@ -90,8 +87,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		lossSFX = FlxG.sound.play(Paths.sound(lossSFXName));
 		Conductor.changeBPM(gameOverSongBPM);
 
-		DiscordUtil.changePresence('Game Over', PlayState.SONG.meta.displayName + " (" + PlayState.difficulty + ")");
-
+		DiscordUtil.call("onGameOver", []);
 		gameoverScript.call("postCreate");
 	}
 

@@ -1,4 +1,5 @@
 story mode
+visual novel
 freeplay
 options
 donate

@@ -33,6 +33,8 @@ class CharacterSelection extends EditorTreeMenu
 		}));
 
 		main = new OptionsScreen("Character Editor", "Select a character to edit", list);
+
+		DiscordUtil.call("onEditorTreeLoaded", ["Character Editor"]);
 	}
 
 	override function createPost() {

@@ -1,6 +1,5 @@
 package funkin.menus.credits;
 
-import funkin.backend.system.github.GitHub;
 import funkin.options.OptionsScreen;
 import funkin.options.type.*;
 import funkin.options.TreeMenu;
@@ -46,6 +45,8 @@ class CreditsMain extends TreeMenu {
 
 		addVirtualPad(UP_DOWN, A_B);
 		super.create();
+
+		DiscordUtil.call("onMenuLoaded", ["Credits Menu"]);
 	}
 
 	/**

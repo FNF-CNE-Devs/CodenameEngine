@@ -1,17 +1,8 @@
 package funkin.backend.system.macros;
 
 #if macro
-import haxe.macro.Type.ClassType;
-import Type.ValueType;
-import haxe.macro.Expr.Function;
 import haxe.macro.Expr;
-import haxe.macro.Type.MetaAccess;
-import haxe.macro.Type.FieldKind;
-import haxe.macro.Type.ClassField;
-import haxe.macro.Type.VarAccess;
 import haxe.macro.*;
-import Sys;
-import haxe.io.Path;
 
 using StringTools;
 using haxe.macro.PositionTools;
@@ -30,11 +21,11 @@ class HashLinkFixer {
 
 	public static function init() {
 		#if !display
-		#if HL
-		for(apply in applyOn) {
-			compile(apply);
+		if(Context.defined("hl")) {
+			for(apply in applyOn) {
+				compile(apply);
+			}
 		}
-		#end
 		#end
 	}
 

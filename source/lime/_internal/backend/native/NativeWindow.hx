@@ -107,8 +107,8 @@ class NativeWindow
 
 		#if (!macro && lime_cffi)
 		handle = NativeCFFI.lime_window_create(parent.application.__backend.handle, width, height, flags, title);
-		
-		#if DARK_MODE_WINDOW
+
+		#if (DARK_MODE_WINDOW && !macro)
 			funkin.backend.utils.NativeAPI.setDarkMode(title, true);
 		#end
 
@@ -727,7 +727,7 @@ class NativeWindow
 	}
 }
 
-@:enum private abstract MouseCursorType(Int) from Int to Int
+enum abstract MouseCursorType(Int) from Int to Int
 {
 	var HIDDEN = 0;
 	var ARROW = 1;
@@ -744,7 +744,7 @@ class NativeWindow
 	var WAIT_ARROW = 12;
 }
 
-@:enum private abstract WindowFlags(Int)
+enum abstract WindowFlags(Int)
 {
 	var WINDOW_FLAG_FULLSCREEN = 0x00000001;
 	var WINDOW_FLAG_BORDERLESS = 0x00000002;

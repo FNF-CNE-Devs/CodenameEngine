@@ -3,8 +3,8 @@ package funkin.backend.utils;
 import funkin.backend.utils.native.*;
 
 /**
- * Class for Windows-only functions, such as transparent windows, message boxes, and more.
- * Does not have any effect on other platforms.
+ * Class for functions that talk to a lower level than haxe, such as message boxes, and more.
+ * Some functions might not have effect on some platforms.
  */
 class NativeAPI {
 	@:dox(hide) public static function registerAudio() {

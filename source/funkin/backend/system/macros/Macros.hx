@@ -1,14 +1,13 @@
 package funkin.backend.system.macros;
 
 #if macro
-import haxe.macro.Context;
-import haxe.macro.Compiler;
+import haxe.macro.*;
 import haxe.macro.Expr;
 
 /**
  * Macros containing additional help functions to expand HScript capabilities.
  */
-class ScriptsMacro {
+class Macros {
 	public static function addAdditionalClasses() {
 		for(inc in [
 			// FLIXEL
@@ -27,19 +26,25 @@ class ScriptsMacro {
 		])
 			Compiler.include(inc);
 
-		for(inc in [#if SYS "sys", "openfl.net", "funkin.backend.system.net" #end]) {
-			#if !HL
-			Compiler.include(inc);
-			#else
-			// TODO: Hashlink
-			//Compiler.include(inc, ["sys.net.UdpSocket", "openfl.net.DatagramSocket"]); // fixes FATAL ERROR : Failed to load function std@socket_set_broadcast
-			#end
+		var isHl = Context.defined("hl");
+
+		if(Context.defined("sys")) {
+			for(inc in ["sys", "openfl.net", "funkin.backend.system.net"]) {
+				if(!isHl)
+					Compiler.include(inc);
+				else {
+					// TODO: Hashlink
+					//Compiler.include(inc, ["sys.net.UdpSocket", "openfl.net.DatagramSocket"]); // fixes FATAL ERROR : Failed to load function std@socket_set_broadcast
+				}
+			}
 		}
 
-		Compiler.include("funkin", #if !UPDATE_CHECKING ['funkin.backend.system.updating'] #end);
+		Compiler.include("funkin", [#if !UPDATE_CHECKING 'funkin.backend.system.updating' #end]);
+	}
 
-		#if HL HashLinkFixer.init(); #end
-		// Todo rewrite this to use if(Context.defined(""))
+	public static function initMacros() {
+		if(Context.defined("hl"))
+			HashLinkFixer.init();
 	}
 }
 #end

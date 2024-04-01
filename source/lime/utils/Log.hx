@@ -2,7 +2,9 @@ package lime.utils;
 
 import haxe.PosInfos;
 import haxe.Exception;
+#if !macro
 import funkin.backend.system.Logs as FunkinLogs;
+#end
 #if js
 import flixel.FlxG;
 #elseif sys
@@ -48,13 +50,15 @@ class Log
 				
 				File.saveContent('crash/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '.txt', message);
 			} catch (e:Exception)
-				FunkinLogs.trace('Couldn\'t save error message. (${e.message})', WARNING, YELLOW);
+				trace('Couldn\'t save error message. (${e.message})');
 			#end
 
 			#if (mobile || windows)
 			lime.app.Application.current.window.alert(message, "Error!");
-			#else
+			#elseif !macro
 			FunkinLogs.trace(message, ERROR, RED);
+			#else
+			trace(message);
 			#end
 
 			#if js
@@ -70,8 +74,13 @@ class Log
 
 	public static function info(message:Dynamic, ?info:PosInfos):Void
 	{
-		if (level >= LogLevel.INFO)
+		if (level >= LogLevel.INFO) {
+			#if !macro
 			FunkinLogs.trace('[${info.className}] $message', INFO, RED);
+			#else
+			trace('[${info.className}] $message');
+			#end
+		}
 	}
 
 	public static inline function print(message:Dynamic):Void
@@ -102,15 +111,24 @@ class Log
 
 	public static function verbose(message:Dynamic, ?info:PosInfos):Void
 	{
-		if (level >= LogLevel.VERBOSE)
+		if (level >= LogLevel.VERBOSE) {
+			#if !macro
 			FunkinLogs.trace('[${info.className}] $message', VERBOSE);
+			#else
+			trace('[${info.className}] $message');
+			#end
+		}
 	}
 
 	public static function warn(message:Dynamic, ?info:PosInfos):Void
 	{
 		if (level >= LogLevel.WARN)
 		{
+			#if !macro
 			FunkinLogs.trace('[${info.className}] $message', WARNING, YELLOW);
+			#else
+			trace('[${info.className}] $message');
+			#end
 		}
 	}
 

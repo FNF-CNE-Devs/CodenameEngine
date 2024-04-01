@@ -1,9 +1,6 @@
 package funkin.options.keybinds;
 
-import funkin.backend.system.Controls;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.util.FlxColor;
-import flixel.input.keyboard.FlxKey;
 
 using StringTools;
 
@@ -195,7 +192,7 @@ class KeybindsOptions extends MusicBeatSubstate {
 
 		if (canSelect) {
 			changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
-			
+
 			if (controls.BACK) {
 				MusicBeatState.skipTransIn = true;
 				if (isSubState)
