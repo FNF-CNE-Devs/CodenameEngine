@@ -61,15 +61,15 @@ class Main extends Sprite
 
 	public function new()
 	{
+		#if mobile
+		Sys.setCwd(#if (android)Path.addTrailingSlash(#end SUtil.getStorageDirectory()#if (android))#end);
+		#end
+
 		super();
 
 		instance = this;
 
 		CrashHandler.init();
-
-		#if mobile
-		Sys.setCwd(#if (android)Path.addTrailingSlash(#end SUtil.getStorageDirectory()#if (android))#end);
-		#end
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
@@ -136,12 +136,12 @@ class Main extends Sprite
 		#if (sys && TEST_BUILD)
 			trace("Used cne test / cne build. Switching into source assets.");
 			#if MOD_SUPPORT
-				ModsFolder.modsPath = './${pathBack}mods/';
-				ModsFolder.addonsPath = './${pathBack}addons/';
+				ModsFolder.modsPath = #if !mobile './' + #end '${pathBack}mods/';
+				ModsFolder.addonsPath = #if !mobile './' + #end '${pathBack}addons/';
 			#end
-			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', './${pathBack}assets/', true));
+			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', #if !mobile './' + #end '${pathBack}assets/', true));
 		#elseif USE_ADAPTED_ASSETS
-			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', './assets/', true));
+			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', #if !mobile './' + #end 'assets/', true));
 		#end
 
 

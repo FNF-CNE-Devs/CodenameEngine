@@ -740,6 +740,11 @@ class PlayState extends MusicBeatState
 
 		startingSong = true;
 
+		#if !android
+		addVirtualPad(NONE, P);
+    	addVirtualPadCamera(false);
+		#end
+
 		super.create();
 
 		for(s in introSprites)
@@ -1217,7 +1222,7 @@ class PlayState extends MusicBeatState
 
 		updateRatingStuff();
 
-		if (controls.PAUSE && startedCountdown && canPause)
+		if (#if android FlxG.android.justReleased.BACK || #else virtualPad.buttonP.justPressed || #end controls.PAUSE && startedCountdown && canPause)
 			pauseGame();
 
 		if (canAccessDebugMenus) {

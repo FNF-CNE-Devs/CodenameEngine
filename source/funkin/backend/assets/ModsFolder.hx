@@ -35,11 +35,11 @@ class ModsFolder {
 	/**
 	 * Path to the `mods` folder.
 	 */
-	public static var modsPath:String = "./mods/";
+	public static var modsPath:String = #if !mobile "./" + #end "mods";
 	/**
 	 * Path to the `addons` folder.
 	 */
-	public static var addonsPath:String = "./addons/";
+	public static var addonsPath:String = #if !mobile "./" + #end "addons/";
 
 	/**
 	 * If accessing a file as assets/data/global/LIB_mymod.hx should redirect to mymod:assets/data/global.hx
@@ -54,6 +54,7 @@ class ModsFolder {
 	 * Initialises `mods` folder.
 	 */
 	public static function init() {
+		if (!FileSystem.exists('mods')) FileSystem.createDirectory('mods');
 		if(!getModsList().contains(Options.lastLoadedMod))
 			Options.lastLoadedMod = null;
 	}
