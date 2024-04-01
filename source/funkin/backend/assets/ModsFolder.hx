@@ -35,7 +35,7 @@ class ModsFolder {
 	/**
 	 * Path to the `mods` folder.
 	 */
-	public static var modsPath:String = #if !mobile "./" + #end "mods";
+	public static var modsPath:String = #if !mobile "./" + #end "mods/";
 	/**
 	 * Path to the `addons` folder.
 	 */
