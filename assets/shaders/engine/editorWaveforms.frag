@@ -2,6 +2,11 @@
 
 // Used in charter by waveforms
 
+#define HEIGHT      0.05   // Height of the Bar
+#define BACKLIGHT   0.6    // Backlight
+#define BRIGHTNESS  0.33   // overall Brightness
+#define GLOW        1.25   // Glow intensity of the Bar
+
 const vec3 gradient1 = vec3(114.0/255.0, 81.0/255.0, 135.0/255.0);
 const vec3 gradient2 = vec3(144.0/255.0, 80.0/255.0, 186.0/255.0);
 
@@ -17,6 +22,8 @@ uniform sampler2D waveformTexture;
 uniform ivec2 waveformSize;
 
 uniform bool lowDetail;
+
+uniform float time;
 
 float getAmplitude(vec2 pixel) {
 	float pixelID = floor((pixel.y+pixelOffset)/3.0);
@@ -52,26 +59,7 @@ void outlineWaveform(vec2 pixel, vec2 offset) {
 	float ampwidth = (1.0-amplitude) * textureRes.x;
 
 	if (!inWaveForm(pixel, ampwidth))
-		gl_FragColor -= outlinecolor*mix(0.5, 0.8, amplitude);
-}
-
-void highDetailWaveform(vec2 pixel, float amplitude, float ampwidth) {
-	vec3 gradientColor = mix(gradient1, gradient2, openfl_TextureCoordv.x);
-	gradientColor *= pixel.y+pixelOffset>playerPosition ? 0.7 : 1.0;
-	gradientColor = mix(gradientColor, gradientColor * vec3(1.8), map(getHightlight(amplitude), 0.0, 1.0, 0.5, 1.0));
-
-	float ampwidthHighlight = getAmpWidth(amplitude/3.0);
-	if (inWaveForm(pixel, ampwidthHighlight))
-		gradientColor = mix(gradientColor, gradientColor * vec3(1.8), map(getHightlight(ampwidthHighlight), 0.0, 1.0, 0.5, 1.0));
-
-	gl_FragColor = vec4(vec3(gradientColor * mix(0.5, 0.8, amplitude))*openfl_Alphav, openfl_Alphav);
-
-	outlineWaveform(pixel, vec2(0.0, -1.0));
-	outlineWaveform(pixel, vec2(0.0, 1.0));
-}
-
-void lowDetailWaveform(vec2 pixel, float amplitude, float ampwidth) {
-	gl_FragColor = vec4(lowdetailcol * (pixel.y+pixelOffset>playerPosition ? 0.7 : 1.0), 1.0);
+		gl_FragColor = vec4(vec3(0.), 1.);
 }
 
 void main()
@@ -80,9 +68,21 @@ void main()
 	float amplitude = getAmplitude(pixel);
 	float ampwidth = getAmpWidth(amplitude);
 
-	gl_FragColor = vec4(0.0);
-	if (!inWaveForm(pixel, ampwidth)) return;
+	gl_FragColor = vec4(vec3(0.0), .1);
 
-	if (lowDetail) lowDetailWaveform(pixel, amplitude, ampwidth);
-	else highDetailWaveform(pixel, amplitude, ampwidth);
+	vec2 uv = openfl_TextureCoordv.xy - 0.5;
+
+	float c = BACKLIGHT;
+	float a = abs(uv.x);
+	float s = 1.0 - smoothstep(0.0, ampwidth/textureRes.x, a);
+	c *= 1.33 - smoothstep(0.0, 0.5, a);
+	c*=c*c;
+	c += s*.5;
+
+	if (inWaveForm(pixel, ampwidth))
+		c += s;
+	
+	gl_FragColor = vec4((cos(6.283 * (uv.y + time + vec3(0.0,.33,0.66)))*map(getHightlight(amplitude), 0.0, 1.0, 0.5, 1.0)) + GLOW, 1.0) * c * BRIGHTNESS;
+	gl_FragColor.xyz *= map(getHightlight(amplitude), 0.0, 1.0, 0.5, 1.0);
+	gl_FragColor.xyz *= pixel.y+pixelOffset>playerPosition ? 0.6 : 1.0;
 }
