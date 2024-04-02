@@ -110,7 +110,7 @@ class Framerate extends Sprite {
 
 		#if android
 		// thank me later :3
-		if(FlxG.android.justPressed.BACK){
+		if(FlxG.android.justReleased.BACK){
 			++presses;
 			resetTimer.cancel();
 			if(presses >= 3){

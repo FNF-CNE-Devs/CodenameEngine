@@ -93,16 +93,14 @@ class Hitbox extends FlxButtonGroup
 		hint.moves = false;
 		hint.scrollFactor.set();
 		hint.alpha = 0.00001;
-		hint.visible = Options.hideHitbox;
-		//hint.antialiasing = ClientPrefs.data.antialiasing;
-		//if (!ClientPrefs.data.hideHitboxHints)
-		//{
+		hint.visible = !Options.hideHitbox;
+		hint.antialiasing = Options.antialiasing;
 			hint.onDown.callback = function()
 			{
 				if (hintTween != null)
 					hintTween.cancel();
 
-				hintTween = FlxTween.tween(hint, {alpha: 1}, 1 / 100, {
+				hintTween = FlxTween.tween(hint, {alpha: Options.controlsAlpha}, Options.controlsAlpha / 100, {
 					ease: FlxEase.circInOut,
 					onComplete: function(twn:FlxTween)
 					{
@@ -115,7 +113,7 @@ class Hitbox extends FlxButtonGroup
 				if (hintTween != null)
 					hintTween.cancel();
 
-				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, 1 / 10, {
+				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, Options.controlsAlpha / 10, {
 					ease: FlxEase.circInOut,
 					onComplete: function(twn:FlxTween)
 					{
@@ -128,7 +126,7 @@ class Hitbox extends FlxButtonGroup
 				if (hintTween != null)
 					hintTween.cancel();
 
-				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, 1 / 10, {
+				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, Options.controlsAlpha / 10, {
 					ease: FlxEase.circInOut,
 					onComplete: function(twn:FlxTween)
 					{
@@ -136,7 +134,6 @@ class Hitbox extends FlxButtonGroup
 					}
 				});
 			}
-		//}
 		#if FLX_DEBUG
 		hint.ignoreDrawDebug = true;
 		#end

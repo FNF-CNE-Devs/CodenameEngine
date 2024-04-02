@@ -739,7 +739,7 @@ class PlayState extends MusicBeatState
 		#end
 
 		startingSong = true;
-
+		addMobileControls();
 		#if !android
 		addVirtualPad(NONE, P);
     	addVirtualPadCamera(false);
@@ -1465,6 +1465,7 @@ class PlayState extends MusicBeatState
 	 * Immediately switches to the next song, or goes back to the Story/Freeplay menu.
 	 */
 	public function nextSong() {
+		mobileControls.visible = false;
 		if (isStoryMode)
 		{
 			campaignScore += songScore;

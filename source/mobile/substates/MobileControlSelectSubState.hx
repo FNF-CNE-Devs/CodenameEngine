@@ -17,6 +17,7 @@ import flixel.tweens.*;
 import flixel.FlxG;
 import funkin.backend.assets.Paths;
 import mobile.objects.PsychAlphabet;
+import funkin.backend.utils.CoolUtil;
 
 using StringTools;
 
@@ -51,13 +52,6 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 			FlxColor.fromRGB(FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255))));
 		bg.velocity.set(40, 40);
 		bg.alpha = 0;
-		FlxTween.tween(bg, {alpha: 0.45}, 0.3, {
-			ease: FlxEase.quadOut,
-			onComplete: (twn:FlxTween) ->
-			{
-				FlxTween.tween(ui, {alpha: 1}, 0.2, {ease: FlxEase.circOut});
-			}
-		});
 		add(bg);
 
 		ui = new FlxCamera();
@@ -67,7 +61,6 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 
 		itemText = new PsychAlphabet(0, 60, '');
 		itemText.alignment = LEFT;
-		itemText.cameras = [ui];
 		add(itemText);
 
 		leftArrow = new FlxSprite(0, itemText.y - 25);
@@ -75,7 +68,6 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 		leftArrow.animation.addByPrefix('idle', 'arrow left');
 		leftArrow.animation.addByPrefix('press', "arrow push left");
 		leftArrow.animation.play('idle');
-		leftArrow.cameras = [ui];
 		add(leftArrow);
 
 		itemText.x = leftArrow.width + 70;
@@ -84,7 +76,6 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 		rightArrow = new FlxSprite().loadGraphicFromSprite(leftArrow);
 		rightArrow.flipX = true;
 		rightArrow.setPosition(itemText.x + itemText.width + 10, itemText.y - 25);
-		rightArrow.cameras = [ui];
 		add(rightArrow);
 
 		positionText = new FlxText(0, FlxG.height, FlxG.width / 4, '');
@@ -96,13 +87,11 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 		positionTextBg.visible = false;
 		positionTextBg.alpha = 0.8;
 		add(positionTextBg);
-		positionText.cameras = [ui];
 		add(positionText);
 
 		keyboardText = new FlxText(0, 0, FlxG.width, "-- No Controls --", 14);
 		keyboardText.setFormat(Paths.font("vcr.ttf"), 36, FlxColor.WHITE, FlxTextAlign.CENTER);
 		keyboardText.screenCenter();
-		keyboardText.cameras = [ui];
 		add(keyboardText);
 		keyboardText.kill();
 
@@ -111,7 +100,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 			MobileControls.mode = curOption;
 			if (options[curOption] == 'Pad-Custom')
 				MobileControls.setCustomMode(control.virtualPad);
-			FlxG.sound.play(Paths.sound('cancelMenu'));
+			CoolUtil.playMenuSFX(CANCEL);
 			if(closeCallBack != null) closeCallBack();
 			close();
 		});
@@ -123,7 +112,6 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 		exit.label.fieldWidth = exit.width;
 		exit.label.x = ((exit.width - exit.label.width) / 2) + exit.x;
 		exit.label.offset.y = -10; // WHY THE FUCK I CAN'T CHANGE THE LABEL Y
-		exit.cameras = [ui];
 		add(exit);
 
 		reset = new UIButton(exit.x, exit.height + exit.y + 20, "Reset", () ->
@@ -137,44 +125,47 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 		reset.label.fieldWidth = reset.width;
 		reset.label.x = ((reset.width - reset.label.width) / 2) + reset.x;
 		reset.label.offset.y = -10;
-		reset.cameras = [ui];
 		add(reset);
 
+		cameras = [ui];
+		FlxTween.tween(bg, {alpha: 0.45}, 0.3, {
+			ease: FlxEase.quadOut,
+			onComplete: (twn:FlxTween) ->
+			{
+				FlxTween.tween(ui, {alpha: 1}, 0.2, {ease: FlxEase.circOut});
+			}
+		});
 		changeOption(0);
 		setOptionText();
+		FlxG.mouse.visible = true;
 	}
 
 	override function update(elapsed:Float)
 	{
-		checkArrowButton(leftArrow, () ->
-		{
-			changeOption(-1);
-		});
+		checkArrowButton(leftArrow, () -> changeOption(-1));
+		checkArrowButton(rightArrow, () -> changeOption(1));
 
-		checkArrowButton(rightArrow, () ->
-		{
-			changeOption(1);
-		});
-
-		if (options[curOption] == 'Pad-Custom')
-		{
-			if (buttonBinded)
+		for(touch in FlxG.touches.list){	
+			if (options[curOption] == 'Pad-Custom')
 			{
-				if (TouchFunctions.touchJustReleased)
+				if (buttonBinded)
 				{
-					bindButton = null;
-					buttonBinded = false;
+					if (touch.justReleased)
+					{
+						bindButton = null;
+						buttonBinded = false;
+					}
+					else
+						moveButton(touch, bindButton);
 				}
 				else
-					moveButton(TouchFunctions.touch, bindButton);
-			}
-			else
-			{
-				control.virtualPad.forEachAlive((button:FlxButton) ->
 				{
-					if (button.justPressed)
-						moveButton(TouchFunctions.touch, button);
-				});
+					control.virtualPad.forEachAlive((button:FlxButton) ->
+					{
+						if (button.justPressed)
+							moveButton(touch, button);
+					});
+				}
 			}
 		}
 
@@ -252,15 +243,21 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 
 	function checkArrowButton(button:FlxSprite, func:Void->Void)
 	{
-		if (TouchFunctions.touchOverlapObject(button))
+		// OVERLAPS WON'T WORK IDFK WHY
+		for(camera in button.cameras)
+		if (FlxG.mouse.getScreenPosition(camera).x >= button.x && FlxG.mouse.getScreenPosition(camera).x <= button.x + button.width &&
+			FlxG.mouse.getScreenPosition(camera).y >= button.y && FlxG.mouse.getScreenPosition(camera).y <= button.y + button.height)
 		{
-			if (TouchFunctions.touchPressed)
-				button.animation.play('press');
-			if (TouchFunctions.touchJustPressed)
+			if (FlxG.mouse.justPressed){
+				CoolUtil.playMenuSFX();
 				func();
+			}
+			if (FlxG.mouse.pressed)
+				button.animation.play('press');
 		}
-		if (TouchFunctions.touchJustReleased && button.animation.curAnim.name == 'press')
+		if (FlxG.mouse.justReleased && button.animation.curAnim.name == 'press')
 			button.animation.play('idle');
+
 		if (FlxG.keys.justPressed.LEFT && button == leftArrow || FlxG.keys.justPressed.RIGHT && button == rightArrow)
 			func();
 	}

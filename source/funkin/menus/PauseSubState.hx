@@ -13,7 +13,7 @@ import flixel.util.FlxColor;
 import funkin.options.keybinds.KeybindsOptions;
 import funkin.menus.StoryMenuState;
 import funkin.backend.utils.FunkinParentDisabler;
-import flixel.util.FlxTimer;
+import mobile.substates.MobileControlSelectSubState;
 
 class PauseSubState extends MusicBeatSubstate
 {
@@ -43,10 +43,8 @@ class PauseSubState extends MusicBeatSubstate
 	{
 		super.create();
 
-		#if !mobile
 		if (menuItems.contains("Exit to charter") && !PlayState.chartingMode)
 			menuItems.remove("Exit to charter");
-		#end
 
 		add(parentDisabler = new FunkinParentDisabler());
 
@@ -157,18 +155,8 @@ class PauseSubState extends MusicBeatSubstate
 				PlayState.instance.registerSmoothTransition();
 				FlxG.resetState();
 			case "Change Controls":
-				persistentDraw = false;
-				var daSubstate:Dynamic = new #if mobile mobile.substates.MobileControlSelectSubState(() -> {
-					FlxG.state.persistentUpdate = true;
-					camVPad.visible = true;
-					new FlxTimer().start(0.2, (tmr:FlxTimer) -> canOpen = true);
-				}, () -> {
-					FlxG.state.persistentUpdate = false;
-					camVPad.visible = false;
-					canOpen = false;
-				}) #else KeybindsOptions() #end;
-				if(canOpen)
-					openSubState(daSubstate);
+				var daSubstate:Class<MusicBeatSubstate> = #if mobile MobileControlSelectSubState #else KeybindsOptions #end;
+					openSubState(Type.createInstance(daSubstate, #if mobile [()->camVPad.visible = true, ()->camVPad.visible = false] #else [] #end));
 			// case "Chart Editor":
 			case "Change Options":
 				FlxG.switchState(new OptionsMenu());

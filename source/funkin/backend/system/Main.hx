@@ -136,12 +136,12 @@ class Main extends Sprite
 		#if (sys && TEST_BUILD)
 			trace("Used cne test / cne build. Switching into source assets.");
 			#if MOD_SUPPORT
-				ModsFolder.modsPath = #if !mobile './' + #end '${pathBack}mods/';
-				ModsFolder.addonsPath = #if !mobile './' + #end '${pathBack}addons/';
+				ModsFolder.modsPath = Sys.getCwd() + '${pathBack}mods/';
+				ModsFolder.addonsPath = Sys.getCwd() + '${pathBack}addons/';
 			#end
-			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', #if !mobile './' + #end '${pathBack}assets/', true));
+			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', Sys.getCwd() + '${pathBack}assets/', true));
 		#elseif USE_ADAPTED_ASSETS
-			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', #if !mobile './' + #end 'assets/', true));
+			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', Sys.getCwd() + 'assets/', true));
 		#end
 
 

@@ -2,6 +2,7 @@ package mobile.backend;
 
 import flixel.FlxG;
 import flixel.FlxBasic;
+import flixel.FlxObject;
 import flixel.input.touch.FlxTouch;
 
 class TouchFunctions
@@ -16,6 +17,18 @@ class TouchFunctions
 		for (touch in FlxG.touches.list)
 			return touch.overlaps(object);
 		return false;
+	}
+
+	public static function touchOverlapObjectComplex(object:FlxObject):Bool{
+		var overlap = false;
+		for (camera in object.cameras){
+			for (touch in FlxG.touches.list){
+				@:privateAccess
+				if(object.overlapsPoint(touch.getWorldPosition(camera, object._point), true, camera))
+					overlap = true;
+			}
+		}
+		return overlap;
 	}
 
 	@:noCompletion
