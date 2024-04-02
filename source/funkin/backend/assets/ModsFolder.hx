@@ -35,11 +35,11 @@ class ModsFolder {
 	/**
 	 * Path to the `mods` folder.
 	 */
-	public static var modsPath:String = Sys.getCwd() + "mods/";
+	public static var modsPath:String = SUtil.getStorageDirectory() + "mods/";
 	/**
 	 * Path to the `addons` folder.
 	 */
-	public static var addonsPath:String = Sys.getCwd() + "addons/";
+	public static var addonsPath:String = SUtil.getStorageDirectory() + "addons/";
 
 	/**
 	 * If accessing a file as assets/data/global/LIB_mymod.hx should redirect to mymod:assets/data/global.hx
