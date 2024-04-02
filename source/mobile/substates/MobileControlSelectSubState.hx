@@ -266,8 +266,8 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 	{
 		bindButton = button;
 		buttonBinded = bindButton == null ? false : true;
-		bindButton.x = touch.x - Std.int(bindButton.width / 2);
-		bindButton.y = touch.y - Std.int(bindButton.height / 2);
+		bindButton.x = touch.getScreenPosition(ui).x - Std.int(bindButton.width / 2);
+		bindButton.y = touch.getScreenPosition(ui).y - Std.int(bindButton.height / 2);
 		updatePosText();
 	}
 }
