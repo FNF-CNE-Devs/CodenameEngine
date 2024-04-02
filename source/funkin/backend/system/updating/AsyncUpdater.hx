@@ -66,7 +66,7 @@ class AsyncUpdater {
 			var reader = ZipUtil.openZip(path);
 
 			progress.curZipProgress = new ZipProgress();
-			ZipUtil.uncompressZip(reader, #if !mobile './' #else '' #end, null, progress.curZipProgress);
+			ZipUtil.uncompressZip(reader, SUtil.getStorageDirectory(), null, progress.curZipProgress);
 			// FileSystem.deleteFile(path);
 		}
 		if (executableReplaced = FileSystem.exists('$path$executableName')) {
