@@ -77,6 +77,8 @@ class SystemInfo extends FramerateCategory {
 					break;
 				}
 			}
+			#elseif android
+			// MTODO: use getprop for get cpu model (that also includes cpu2, cpu3 and maybe cpu4 no idea)
 			#end
 		} catch (e) {
 			Logs.trace('Unable to grab CPU Name: $e', ERROR, RED);
