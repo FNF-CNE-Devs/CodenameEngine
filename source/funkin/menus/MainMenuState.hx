@@ -80,14 +80,16 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nCommit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[TAB] Open Mods menu\n');
+		var modsKey:String = MobileControls.mobileC ? "Y" : "TAB";
+
+		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nCommit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[${modsKey}] Open Mods menu\n');
 		versionShit.y -= versionShit.height;
 		versionShit.scrollFactor.set();
 		add(versionShit);
 
 		changeItem();
 
-		addVirtualPad(UP_DOWN, A_B_E);
+		addVirtualPad(UP_DOWN, A_B_X_Y);
 	}
 
 	var selectedSomethin:Bool = false;
@@ -100,7 +102,7 @@ class MainMenuState extends MusicBeatState
 		if (!selectedSomethin)
 		{
 			if (canAccessDebugMenus) {
-				if (FlxG.keys.justPressed.SEVEN) {
+				if (FlxG.keys.justPressed.SEVEN || virtualPad.buttonX.justPressed) {
 					persistentUpdate = false;
 					persistentDraw = true;
 					openSubState(new funkin.editors.EditorPicker());
@@ -124,7 +126,7 @@ class MainMenuState extends MusicBeatState
 				FlxG.switchState(new TitleState());
 
 			#if MOD_SUPPORT
-			if (controls.SWITCHMOD || virtualPad.buttonE.justPressed) {
+			if (controls.SWITCHMOD || virtualPad.buttonY.justPressed) {
 				openSubState(new ModSwitchMenu());
 				persistentUpdate = false;
 				persistentDraw = true;
