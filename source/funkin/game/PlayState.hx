@@ -740,9 +740,10 @@ class PlayState extends MusicBeatState
 
 		startingSong = true;
 		addMobileControls();
+		mobileControls.visible = true;
 		#if !android
 		addVirtualPad(NONE, P);
-    	addVirtualPadCamera(false);
+		addVirtualPadCamera(false);
 		#end
 
 		super.create();
@@ -1424,6 +1425,7 @@ class PlayState extends MusicBeatState
 	 */
 	public function endSong():Void
 	{
+		mobileControls.visible = false;
 		scripts.call("onSongEnd");
 		canPause = false;
 		inst.volume = 0;
