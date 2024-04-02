@@ -6,6 +6,7 @@ import android.widget.Toast;
 import android.os.Environment;
 import android.Permissions;
 import lime.app.Application;
+import haxe.io.Path;
 #end
 import funkin.backend.utils.NativeAPI;
 import haxe.io.Path;
@@ -37,7 +38,7 @@ class SUtil
 		var daPath:String = '';
 
 		#if android
-		daPath = Context.getExternalFilesDir(null);
+		daPath = Path.addTrailingSlash(Context.getExternalFilesDir(null));
 		#elseif ios
 		daPath = LimeSystem.documentsDirectory;
 		#end

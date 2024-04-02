@@ -33,7 +33,7 @@ class VisualNovel extends MusicBeatState {
 			text.skip();
 			return;
 		}
-		
+
 		if(currentEntry.next != null) {
 			currentEntryId = redirectMap[currentEntry.next];
 		} else {
@@ -113,7 +113,7 @@ class VisualNovel extends MusicBeatState {
 
 			var _entry:Xml = cast entry;
 
-			e.text = _entry.firstChild().nodeValue.trim();
+			e.text = _entry.firstChild().nodeValue.trim().replace("\r\n", "\n");
 
 			var choices = [];
 

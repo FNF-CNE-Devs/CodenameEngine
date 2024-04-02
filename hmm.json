@@ -17,7 +17,7 @@
     {
       "name": "openfl",
       "type": "haxelib",
-      "version": null
+      "version": "9.2.2"
     },
     {
       "name": "away3d",

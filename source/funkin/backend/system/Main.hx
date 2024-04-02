@@ -16,9 +16,6 @@ import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import funkin.backend.system.modules.*;
-#if android
-import haxe.io.Path;
-#end
 
 #if ALLOW_MULTITHREADING
 import sys.thread.Thread;
@@ -62,7 +59,7 @@ class Main extends Sprite
 	public function new()
 	{
 		#if mobile
-		Sys.setCwd(#if (android)Path.addTrailingSlash(#end SUtil.getStorageDirectory()#if (android))#end);
+		Sys.setCwd(SUtil.getStorageDirectory());
 		#end
 
 		super();
