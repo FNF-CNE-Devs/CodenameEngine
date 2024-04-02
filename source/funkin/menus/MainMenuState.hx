@@ -60,17 +60,11 @@ class MainMenuState extends MusicBeatState
 
 		for (i=>option in optionShit)
 		{
-			var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 130));
+			var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 160));
 			menuItem.frames = Paths.getFrames('menus/mainmenu/${option}');
 			menuItem.animation.addByPrefix('idle', option + " basic", 24);
 			menuItem.animation.addByPrefix('selected', option + " white", 24);
 			menuItem.animation.play('idle');
-			menuItem.scale.set(0.8, 0.8);
-			if (option == "visual novel") {
-				menuItem.scale.set(0.7, 0.7);
-				menuItem.y += 8;
-			}
-			menuItem.updateHitbox();
 			menuItem.ID = i;
 			menuItem.screenCenter(X);
 			menuItems.add(menuItem);
@@ -167,7 +161,6 @@ class MainMenuState extends MusicBeatState
 			switch (daChoice)
 			{
 				case 'story mode': FlxG.switchState(new StoryMenuState());
-				case 'visual novel': FlxG.switchState(new VisualNovel());
 				case 'freeplay': FlxG.switchState(new FreeplayState());
 				case 'donate': FlxG.switchState(new CreditsMain());
 				case 'options': FlxG.switchState(new OptionsMenu());
@@ -198,9 +191,6 @@ class MainMenuState extends MusicBeatState
 
 			spr.updateHitbox();
 			spr.centerOffsets();
-
-			if (spr.ID == optionShit.indexOf("visual novel") && spr.ID == curSelected)
-				spr.offset.y += 26; // this sprite really weird -lunar
 		});
 	}
 }

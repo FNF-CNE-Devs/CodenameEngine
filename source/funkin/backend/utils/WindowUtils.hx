@@ -1,6 +1,5 @@
 package funkin.backend.utils;
 
-import flixel.text.Uwuifier;
 import openfl.Lib;
 
 class WindowUtils {
@@ -53,7 +52,7 @@ class WindowUtils {
 	}
 
 	public static inline function updateTitle()
-		Lib.application.window.title = Uwuifier.uwuifySentence('$prefix$winTitle$suffix');
+		Lib.application.window.title = '$prefix$winTitle$suffix';
 
 	// backwards compat
 	@:noCompletion public static var endfix(get, set):String;

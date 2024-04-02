@@ -150,7 +150,7 @@ class Alphabet extends FlxSpriteGroup
 
 	function doSplitWords():Void
 	{
-		splitWords = flixel.text.Uwuifier.uwuifySentence(_finalText).split("");
+		splitWords = _finalText.split("");
 	}
 
 	//public var personTalking:String = 'gf';
