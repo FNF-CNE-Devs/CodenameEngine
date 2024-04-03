@@ -67,9 +67,6 @@ class MainState extends FlxState {
 			betaWarningShown = true;
 		}
 
-		WindowUtils.resetTitle();
-		WindowUtils.updateTitle();
-
 		#if sys
 		sys.FileSystem.createDirectory(SUtil.getStorageDirectory() + '.temp/');
 		#if windows new funkin.backend.utils.native.HiddenProcess("attrib +h .temp"); #end
