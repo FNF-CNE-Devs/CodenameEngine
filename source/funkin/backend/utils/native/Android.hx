@@ -1,6 +1,7 @@
 package funkin.backend.utils.native;
 
 #if android
+class Android
 {
     // MTODO: cpp part
 	public static function getTotalRam():Float
