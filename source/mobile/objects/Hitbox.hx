@@ -93,8 +93,9 @@ class Hitbox extends FlxButtonGroup
 		hint.moves = false;
 		hint.scrollFactor.set();
 		hint.alpha = 0.00001;
-		hint.visible = !Options.hideHitbox;
 		hint.antialiasing = Options.antialiasing;
+		if (!Options.hideHitbox)
+		{
 			hint.onDown.callback = function()
 			{
 				if (hintTween != null)
@@ -134,6 +135,7 @@ class Hitbox extends FlxButtonGroup
 					}
 				});
 			}
+		}
 		#if FLX_DEBUG
 		hint.ignoreDrawDebug = true;
 		#end

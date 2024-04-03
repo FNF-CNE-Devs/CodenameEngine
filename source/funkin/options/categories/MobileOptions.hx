@@ -33,14 +33,14 @@ class MobileOptions extends OptionsScreen {
 		add(new Checkbox(
 			"Allow Screen Timeout",
 			"If checked, The phone will enter sleep mode if the player is inactive.",
-			"screenTimeOut",
-			changeScreenTimeout));
+			"screenTimeOut"));
 	}
 
 	override function update(elapsed) super.update(elapsed);
 
+	override dynamic function onClose(o:OptionsScreen) System.allowScreenTimeout = Options.screenTimeOut;
+
 	function changeControlsAlpha(alpha) MusicBeatState.instance.virtualPad.alpha = alpha;
-	function changeScreenTimeout(bool) System.allowScreenTimeout = bool;
 	function openMobileControlsMenu() {
 		if(!canEnter) return;
 		canEnter = false;

@@ -73,7 +73,6 @@ class TitleState extends MusicBeatState
 			titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
 			titleText.antialiasing = true;
 			titleText.animation.play('idle');
-			titleText.screenCenter(X);
 			titleText.updateHitbox();
 		}
 		add(titleText);

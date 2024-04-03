@@ -16,7 +16,6 @@ class MainState extends FlxState {
 	public static var initiated:Bool = false;
 	public static var betaWarningShown:Bool = false;
 	public override function create() {
-		flixel.text.Uwuifier.disableUWU = true;
 		super.create();
 		if (!initiated)
 			Main.loadGameSettings();
@@ -66,9 +65,6 @@ class MainState extends FlxState {
 			FlxG.switchState(new BetaWarningState());
 			betaWarningShown = true;
 		}
-
-		WindowUtils.resetTitle();
-		WindowUtils.updateTitle();
 
 		#if sys
 		sys.FileSystem.createDirectory(SUtil.getStorageDirectory() + '.temp/');

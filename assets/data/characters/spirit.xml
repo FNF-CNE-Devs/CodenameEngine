@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-character>
-<character isPlayer="false" flipX="false" x="70" y="380" antialiasing="false" scale="6" camx="100">
+<character isPlayer="false" flipX="false" x="70" y="380" antialiasing="false" scale="6" camx="100" color="#FF3C6E">
 	<anim name="idle" anim="idle spirit_" fps="24" loop="false" x="0" y="0" />
 
 	<!-- Offsets are actually multiplied by scale -->

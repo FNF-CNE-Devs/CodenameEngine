@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-character>
-<character isPlayer="false" flipX="true" x="100" y="300" camx="-100">
+<character isPlayer="false" flipX="true" x="100" y="300" camx="-100" color="#B7D855">
 	<anim name="idle" anim="Pico Idle Dance" fps="24" loop="false"/>
 
 	<!-- Sing Animations -->
