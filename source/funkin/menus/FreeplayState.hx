@@ -173,7 +173,7 @@ class FreeplayState extends MusicBeatState
 
 		interpColor = new FlxInterpolateColor(bg.color);
 
-		addVirtualPad(LEFT_FULL, A_B);
+		addVirtualPad('LEFT_FULL', 'A_B');
 	}
 
 	#if PRELOAD_ALL

@@ -742,7 +742,7 @@ class PlayState extends MusicBeatState
 		addMobileControls();
 		mobileControls.visible = true;
 		#if !android
-		addVirtualPad(NONE, P);
+		addVirtualPad('NONE', 'P');
 		addVirtualPadCamera(false);
 		#end
 

@@ -112,8 +112,6 @@ typedef OptionCategory = {
 	var desc:String;
 	var state:OneOfTwo<OptionsScreen, Class<OptionsScreen>>;
 	var ?substate:OneOfTwo<MusicBeatSubstate, Class<MusicBeatSubstate>>;
-	@:optional var DPadMode:FlxDPadMode;
-	@:optional var ActionMode:FlxActionMode;
 }
 
 typedef OptionTypeDef = {

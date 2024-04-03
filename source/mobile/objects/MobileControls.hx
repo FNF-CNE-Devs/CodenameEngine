@@ -10,7 +10,7 @@ import funkin.options.Options;
 
 class MobileControls extends FlxTypedSpriteGroup<FlxButtonGroup>
 {
-	public var virtualPad:FlxVirtualPad = new FlxVirtualPad(NONE, NONE);
+	public var virtualPad:FlxVirtualPad = new FlxVirtualPad(FlxDPadMode.NONE, FlxActionMode.NONE);
 	public var hitbox:Hitbox = new Hitbox();
 	// YOU CAN'T CHANGE PROPERTIES USING THIS EXCEPT WHEN IN RUNTIME!! (except for the variables it already has like buttonUp, buttonLeft...)
 	public var current:CurrentManager;
@@ -48,16 +48,16 @@ class MobileControls extends FlxTypedSpriteGroup<FlxButtonGroup>
 		switch (virtualPadMode)
 		{
 			case 0:
-				virtualPad = new FlxVirtualPad(RIGHT_FULL, NONE);
+				virtualPad = new FlxVirtualPad('RIGHT_FULL', 'NONE');
 				add(virtualPad);
 			case 1:
-				virtualPad = new FlxVirtualPad(LEFT_FULL, NONE);
+				virtualPad = new FlxVirtualPad('LEFT_FULL', 'NONE');
 				add(virtualPad);
 			case 2:
-				virtualPad = getCustomMode(new FlxVirtualPad(RIGHT_FULL, NONE));
+				virtualPad = getCustomMode(new FlxVirtualPad('RIGHT_FULL', 'NONE'));
 				add(virtualPad);
 			case 3:
-				virtualPad = new FlxVirtualPad(BOTH, NONE);
+				virtualPad = new FlxVirtualPad('BOTH', 'NONE');
 				add(virtualPad);
 			case 4:
 				hitbox = new Hitbox();

@@ -16,11 +16,22 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 	public var name:String;
 	public var desc:String;
 
-	public function new(name:String, desc:String, ?options:Array<OptionType>) {
+	public var dpadMode:String = 'NONE';
+	public var actionMode:String = 'NONE';
+	public var prevVPadModes:Array<Dynamic> = [];
+
+	public function new(name:String, desc:String, ?options:Array<OptionType>, dpadMode:String = 'NONE', actionMode:String = 'NONE') {
 		super();
 		this.name = name;
 		this.desc = desc;
 		if (options != null) for(o in options) add(o);
+		if(MusicBeatState.instance.virtualPad != null)
+			prevVPadModes = [MusicBeatState.instance.virtualPad.curDPadMode, MusicBeatState.instance.virtualPad.curActionMode];
+		this.dpadMode = dpadMode;
+		this.actionMode = actionMode;
+		MusicBeatState.instance.removeVirtualPad();
+		MusicBeatState.instance.addVirtualPad(dpadMode, actionMode);
+		MusicBeatState.instance.addVirtualPadCamera(false);
 	}
 
 	public override function update(elapsed:Float) {
@@ -59,6 +70,11 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 
 	public function close() {
 		onClose(this);
+		if(prevVPadModes != []){
+			MusicBeatState.instance.removeVirtualPad();
+			MusicBeatState.instance.addVirtualPad(prevVPadModes[0], prevVPadModes[1]);
+			MusicBeatState.instance.addVirtualPadCamera(false);
+		}
 	}
 
 	public function changeSelection(sel:Int, force:Bool = false) {

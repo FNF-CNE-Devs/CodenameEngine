@@ -13,6 +13,9 @@ import mobile.objects.FlxButtonGroup;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.Assets;
+import haxe.ds.Map;
+import flixel.util.typeLimit.OneOfTwo;
+
 enum FlxDPadMode
 {
 	UP_DOWN;
@@ -69,17 +72,36 @@ class FlxVirtualPad extends FlxButtonGroup
 	public var buttonY:FlxButton = new FlxButton(0, 0);
 	public var buttonZ:FlxButton = new FlxButton(0, 0);
 
+	public var curDPadMode:FlxDPadMode = NONE;
+	public var curActionMode:FlxActionMode = NONE;
+
+	public static var dpadModes:Map<String, FlxDPadMode>;
+	public static var actionModes:Map<String, FlxActionMode>;
+
 	/**
 	 * Create a gamepad.
 	 *
 	 * @param   FlxDPadMode     The D-Pad mode. `LEFT_FULL` for example.
 	 * @param   FlxActionMode   The action buttons mode. `A_B_C` for example.
 	 */
-	public function new(DPad:FlxDPadMode, Action:FlxActionMode)
+	public function new(DPad:OneOfTwo<FlxDPadMode, String>, Action:OneOfTwo<FlxActionMode, String>)
 	{
 		super();
+		var dpadMode:FlxDPadMode;
+		var actionMode:FlxActionMode;
 
-		switch (DPad)
+		if(DPad is FlxDPadMode)
+			dpadMode = cast DPad;
+		else
+			dpadMode = cast getDPadModeByString(cast DPad);
+
+		if(Action is FlxActionMode)
+			actionMode = cast DPad;
+		else
+			actionMode = cast getActionModeByString(cast Action);
+		curDPadMode = dpadMode;
+		curActionMode = actionMode;
+		switch (dpadMode)
 		{
 			case UP_DOWN:
 				add(buttonUp = createButton(0, FlxG.height - 255, 'up', 0x00FF00));
@@ -113,7 +135,7 @@ class FlxVirtualPad extends FlxButtonGroup
 			case NONE: // do nothing
 		}
 
-		switch (Action)
+		switch (actionMode)
 		{
 			case A:
 				add(buttonA = createButton(FlxG.width - 132, FlxG.height - 135, 'a', 0xFF0000));
@@ -167,6 +189,24 @@ class FlxVirtualPad extends FlxButtonGroup
 		if (guh >= 0.9)
 			guh = guh - 0.07;
 		alpha = Options.controlsAlpha;
+	}
+
+	public static function getDPadModeByString(mode:String):FlxDPadMode {
+		if(dpadModes == null){
+			dpadModes = new Map();
+			for(enumValue in FlxDPadMode.createAll())
+				dpadModes.set(enumValue.getName(), enumValue);
+		}
+		return dpadModes.exists(mode) ? dpadModes.get(mode) : NONE;
+	}
+
+	public static function getActionModeByString(mode:String):FlxActionMode {
+		if(actionModes == null){
+			actionModes = new Map();
+			for(enumValue in FlxActionMode.createAll())
+				actionModes.set(enumValue.getName(), enumValue);
+		}
+		return actionModes.exists(mode) ? actionModes.get(mode) : NONE;
 	}
 
 	/**

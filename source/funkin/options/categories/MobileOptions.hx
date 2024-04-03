@@ -11,7 +11,9 @@ class MobileOptions extends OptionsScreen {
 	var canEnter:Bool = true;
 
 	public override function new() {
-		super("Mobile", 'Change Mobile Related Things such as Controls alpha, screen timeout....');
+		dpadMode = 'LEFT_FULL';
+		actionMode = 'A_B';
+		super("Mobile", 'Change Mobile Related Things such as Controls alpha, screen timeout....', null, 'LEFT_FULL', 'A_B');
 		add(new TextOption(
 			"Mobile Controls",
 			"Choose which control to play with (hitbox, vpad left, vpad right, custom...).",

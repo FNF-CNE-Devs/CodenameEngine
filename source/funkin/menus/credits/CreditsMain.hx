@@ -43,7 +43,7 @@ class CreditsMain extends TreeMenu {
 
 		main = new OptionsScreen('Credits', 'The people who made this possible!', selectables);
 
-		addVirtualPad(UP_DOWN, A_B);
+		addVirtualPad('UP_DOWN', 'A_B');
 		super.create();
 
 		DiscordUtil.call("onMenuLoaded", ["Credits Menu"]);

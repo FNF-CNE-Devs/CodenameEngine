@@ -17,6 +17,7 @@ import mobile.flixel.FlxVirtualPad;
 import flixel.FlxCamera;
 import flixel.input.actions.FlxActionInput;
 import flixel.util.FlxDestroyUtil;
+import flixel.util.typeLimit.OneOfTwo;
 
 class MusicBeatState extends FlxState implements IBeatReceiver
 {
@@ -119,7 +120,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	var trackedInputsMobileControls:Array<FlxActionInput> = [];
 	var trackedInputsVirtualPad:Array<FlxActionInput> = [];
 
-	public function addVirtualPad(DPad:FlxDPadMode, Action:FlxActionMode):Void
+	public function addVirtualPad(DPad:OneOfTwo<FlxDPadMode, String>, Action:OneOfTwo<FlxActionMode, String>):Void
 	{
 		if (virtualPad != null)
 			removeVirtualPad();
@@ -127,7 +128,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		virtualPad = new FlxVirtualPad(DPad, Action);
 		add(virtualPad);
 
-		controls.setVirtualPadUI(virtualPad, DPad, Action);
+		controls.setVirtualPadUI(virtualPad, virtualPad.curDPadMode, virtualPad.curActionMode);
 		trackedInputsVirtualPad = controls.trackedInputsUI;
 		controls.trackedInputsUI = [];
 	}
@@ -236,6 +237,13 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 					script.remappedNames.set(script.fileName, '$i:${script.fileName}');
 					stateScripts.add(script);
 					script.load();
+					stateScripts.set('setVirtualPadMode', function(DPadMode:String, ActionMode:String, ?addCamera = false){
+						if(virtualPad == null) return;
+						removeVirtualPad();
+						addVirtualPad(DPadMode, ActionMode);
+						if(addCamera)
+							addVirtualPadCamera(false);
+					});
 				}
 			}
 			else stateScripts.reload();

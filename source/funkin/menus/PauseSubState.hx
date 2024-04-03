@@ -111,7 +111,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		PlayState.instance.updateDiscordPresence();
 
-		addVirtualPad(UP_DOWN, A_B);
+		addVirtualPad('UP_DOWN', 'A_B');
 		addVirtualPadCamera();
 	}
 
