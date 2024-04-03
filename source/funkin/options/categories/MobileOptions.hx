@@ -34,10 +34,9 @@ class MobileOptions extends OptionsScreen {
 			"screenTimeOut"));
 	}
 
-	override function update(elapsed) {
-		System.allowScreenTimeout = Options.screenTimeOut; 
-		super.update(elapsed);
-	}
+	override function update(elapsed) super.update(elapsed);
+
+	override dynamic function onClose(o:OptionsScreen) System.allowScreenTimeout = Options.screenTimeOut;
 
 	function changeControlsAlpha(alpha) MusicBeatState.instance.virtualPad.alpha = alpha;
 	function openMobileControlsMenu() {
