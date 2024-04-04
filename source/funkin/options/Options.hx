@@ -41,7 +41,7 @@ class Options
 	// mobile options
 	public static var screenTimeOut:Bool = false;
 	public static var hideHitbox:Bool = false;
-	public static var controlsAlpha:Float = 0.6;
+	public static var controlsAlpha:Float = FlxG.onMobile ? 0.6 : 0;
 
 	/**
 	 * EDITORS SETTINGS
