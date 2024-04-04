@@ -22,7 +22,7 @@ class MainState extends FlxState {
 		initiated = true;
 
 		#if sys
-		CoolUtil.deleteFolder(SUtil.getStorageDirectory() + '.temp/'); // delete temp folder
+		CoolUtil.deleteFolder('.temp/'); // delete temp folder
 		#end
 		Options.save();
 
@@ -67,7 +67,7 @@ class MainState extends FlxState {
 		}
 
 		#if sys
-		sys.FileSystem.createDirectory(SUtil.getStorageDirectory() + '.temp/');
+		sys.FileSystem.createDirectory('.temp/');
 		#if windows new funkin.backend.utils.native.HiddenProcess("attrib +h .temp"); #end
 		#end
 	}

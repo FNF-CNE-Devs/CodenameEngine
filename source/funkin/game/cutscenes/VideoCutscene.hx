@@ -87,7 +87,7 @@ class VideoCutscene extends Cutscene {
 
 			// ZIP PATH: EXPORT
 			// TODO: this but better and more ram friendly
-			localPath = SUtil.getStorageDirectory() + '.temp/video-${curVideo++}.mp4';
+			localPath = '.temp/video-${curVideo++}.mp4';
 			Main.execAsync(function() {
 				File.saveBytes(localPath, Assets.getBytes(path));
 				videoReady = true;

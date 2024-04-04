@@ -70,6 +70,8 @@ class Main extends Sprite
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
+		#if android FlxG.android.preventDefaultKeys = [BACK]; #end
+
 		#if !html5
 		FlxG.game.addChild(framerateSprite = new funkin.backend.system.framerate.Framerate());
 		//framerateSprite.scaleX = framerateSprite.scaleY = stage.window.scale;
@@ -133,12 +135,12 @@ class Main extends Sprite
 		#if (sys && TEST_BUILD)
 			trace("Used cne test / cne build. Switching into source assets.");
 			#if MOD_SUPPORT
-				ModsFolder.modsPath = SUtil.getStorageDirectory() + '${pathBack}mods/';
-				ModsFolder.addonsPath = SUtil.getStorageDirectory() + '${pathBack}addons/';
+				ModsFolder.modsPath = Sys.getCwd() + '${pathBack}mods/';
+				ModsFolder.addonsPath = Sys.getCwd() + '${pathBack}addons/';
 			#end
-			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', SUtil.getStorageDirectory() + '${pathBack}assets/', true));
+			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', Sys.getCwd() + '${pathBack}assets/', true));
 		#elseif USE_ADAPTED_ASSETS
-			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', SUtil.getStorageDirectory() + 'assets/', true));
+			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', Sys.getCwd() + 'assets/', true));
 		#end
 
 
