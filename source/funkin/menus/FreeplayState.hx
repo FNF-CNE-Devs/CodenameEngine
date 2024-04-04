@@ -173,7 +173,7 @@ class FreeplayState extends MusicBeatState
 
 		interpColor = new FlxInterpolateColor(bg.color);
 
-		addVirtualPad('LEFT_FULL', 'A_B');
+		addVirtualPad('LEFT_FULL', 'A_B_X_Y');
 	}
 
 	#if PRELOAD_ALL
@@ -220,7 +220,7 @@ class FreeplayState extends MusicBeatState
 		if (canSelect) {
 			changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
 			changeDiff((controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0));
-			changeCoopMode((FlxG.keys.justPressed.TAB ? 1 : 0));
+			changeCoopMode(((virtualPad.buttonX.justPressed || FlxG.keys.justPressed.TAB) ? 1 : 0));
 			// putting it before so that its actually smooth
 			updateOptionsAlpha();
 		}
@@ -258,7 +258,7 @@ class FreeplayState extends MusicBeatState
 		}
 
 		#if sys
-		if (FlxG.keys.justPressed.EIGHT && Sys.args().contains("-livereload"))
+		if (virtualPad.buttonY.justPressed || FlxG.keys.justPressed.EIGHT && Sys.args().contains("-livereload"))
 			convertChart();
 		#end
 
@@ -356,10 +356,10 @@ class FreeplayState extends MusicBeatState
 	 * Array containing all labels for Co-Op / Opponent modes.
 	 */
 	public var coopLabels:Array<String> = [
-		"[TAB] Solo",
-		"[TAB] Opponent Mode",
-		"[TAB] Co-Op Mode",
-		"[TAB] Co-Op Mode (Switched)"
+		'[${MobileControls.mobileC ? 'X' : 'TAB'}] Solo',
+		'[${MobileControls.mobileC ? 'X' : 'TAB'}] Opponent Mode',
+		'[${MobileControls.mobileC ? 'X' : 'TAB'}] Co-Op Mode',
+		'[${MobileControls.mobileC ? 'X' : 'TAB'}] Co-Op Mode (Switched)'
 	];
 
 	/**
