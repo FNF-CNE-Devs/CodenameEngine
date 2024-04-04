@@ -1,7 +1,9 @@
 package mobile.flixel;
 
 import flixel.FlxG;
+#if MOD_SUPPORT
 import sys.FileSystem;
+#end
 import flixel.math.FlxPoint;
 import funkin.options.Options;
 import mobile.flixel.FlxButton;
@@ -241,9 +243,10 @@ class FlxVirtualPad extends FlxButtonGroup
 	{
 		var graphic:FlxGraphic;
 		var path:String = Paths.image('mobile/virtualpad/$Graphic');
+		#if MOD_SUPPORT
 		if(FileSystem.exists(path))
 			graphic = FlxGraphic.fromBitmapData(BitmapData.fromFile(path));
-		else if(Assets.exists(path))
+		else #end if(Assets.exists(path))
 			graphic = FlxGraphic.fromBitmapData(Assets.getBitmapData(path));
 		else
 			graphic = FlxGraphic.fromBitmapData(Assets.getBitmapData(Paths.image('mobile/virtualpad/default')));
