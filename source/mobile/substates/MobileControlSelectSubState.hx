@@ -190,6 +190,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 
 	function changeOption(change:Int)
 	{
+		CoolUtil.playMenuSFX();
 		curOption += change;
 
 		if (curOption < 0)
@@ -248,10 +249,8 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 		if (FlxG.mouse.getScreenPosition(camera).x >= button.x && FlxG.mouse.getScreenPosition(camera).x <= button.x + button.width &&
 			FlxG.mouse.getScreenPosition(camera).y >= button.y && FlxG.mouse.getScreenPosition(camera).y <= button.y + button.height)
 		{
-			if (FlxG.mouse.justPressed){
-				CoolUtil.playMenuSFX();
+			if (FlxG.mouse.justPressed)
 				func();
-			}
 			if (FlxG.mouse.pressed)
 				button.animation.play('press');
 		}
