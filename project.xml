@@ -121,7 +121,7 @@
 	<haxedef name="SOFTCODED_STATES" />
 
 	<!-- Comment this out to use the default OpenFL assets system for the assets/ folder. !-->
-	<haxedef name="USE_ADAPTED_ASSETS" unless="web || mobile" />
+	<haxedef name="USE_ADAPTED_ASSETS" unless="web" />
 
 	<!-- Comment this out to disable support for custom ndlls. !-->
 	<haxedef name="NDLLS_SUPPORTED" unless="web || iphonesim" />
