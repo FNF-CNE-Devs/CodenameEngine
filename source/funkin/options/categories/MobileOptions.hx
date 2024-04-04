@@ -26,14 +26,17 @@ class MobileOptions extends OptionsScreen {
 			0.1, // change
 			"controlsAlpha", // save name or smth
 			changeControlsAlpha)); // callback
-		add(new Checkbox(
-			"Hide Hitbox",
-			"If checked, The hitbox control will not visible.",
-			"hideHitbox"));
+		if (MobileControls.mode == 4)
+			add(new Checkbox(
+				"Hide Hitbox",
+				"If checked, The hitbox control will not visible.",
+				"hideHitbox"));
+		#if mobile
 		add(new Checkbox(
 			"Allow Screen Timeout",
 			"If checked, The phone will enter sleep mode if the player is inactive.",
 			"screenTimeOut"));
+		#end
 	}
 
 	override function update(elapsed) super.update(elapsed);
