@@ -3,6 +3,9 @@ on: workflow_dispatch
 jobs:
   Android:
     runs-on: ubuntu-latest
+	strategy:
+		matrix:
+		  storage-type: [EXTERNAL, OBB, DATA, MEDIA]
     steps:
       - name: Checkout
         uses: actions/checkout@main
@@ -27,12 +30,12 @@ jobs:
           haxelib run lime config JAVA_HOME $JAVA_HOME
           haxelib run lime config ANDROID_SETUP true
       - name: Compile
-        run: haxelib run lime build android -final
+        run: haxelib run lime build android -D ${{ matrix.storage-type }}
       - name: Upload Artifact
         if: ${{ success() }}
         uses: actions/upload-artifact@main
         with:
-          name: androidBuild
+          name: androidBuild-${{ matrix.storage-type }}
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
   iOS:
