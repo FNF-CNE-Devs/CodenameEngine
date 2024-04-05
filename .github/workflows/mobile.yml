@@ -2,7 +2,7 @@ name: Mobile
 on: workflow_dispatch
 jobs:
   Android:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     strategy:
         matrix:
            storage-type: [EXTERNAL, OBB, DATA, MEDIA]
@@ -20,7 +20,6 @@ jobs:
           haxe-version: 4.3.4
       - name: Install Libraries
         run: |
-          haxelib setup ~/haxelib
           haxelib --quiet install hmm
           haxelib run hmm install --quiet
       - name: Configure Android
@@ -49,7 +48,6 @@ jobs:
           haxe-version: 4.3.4
       - name: Install Libraries
         run: |
-          haxelib setup ~/haxelib
           haxelib --quiet install hmm
           haxelib run hmm install --quiet
       - name: Compile
