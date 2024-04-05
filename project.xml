@@ -203,11 +203,11 @@
 		<certificate path="key.keystore" password="nullfunni" alias="null" alias-password="nullfunni" unless="debug" />
 
 		<!--Target SDK-->
-		<!--<android target-sdk-version="29" if="EXTERNAL || MEDIA"/>-->
+		<<android target-sdk-version="29" if="EXTERNAL || MEDIA"/>
 	</section>
 
-	<section if="ios">
+	<!--<section if="ios">
 		<define name='objc' />
 		<ios linker-flags='-ObjC' />
-	</section>
+	</section>-->
 </project>
