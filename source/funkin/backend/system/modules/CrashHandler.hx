@@ -1,11 +1,11 @@
 package funkin.backend.system.modules;
 
+import openfl.events.UncaughtErrorEvent;
+import openfl.events.ErrorEvent;
+import openfl.errors.Error;
+import openfl.events.UncaughtErrorEvent;
 import haxe.CallStack;
 import haxe.Exception;
-import openfl.errors.Error;
-import openfl.events.ErrorEvent;
-import lime.utils.Log as LimeLogger;
-import openfl.events.UncaughtErrorEvent;
 import lime.system.System as LimeSystem;
 #if sys
 import sys.FileSystem;
@@ -16,46 +16,48 @@ class CrashHandler
 {
 	public static function init():Void
 	{
-		openfl.Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onError);
+		openfl.Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onUncaughtError);
 		#if cpp
-		untyped __global__.__hxcpp_set_critical_error_handler(onCriticalError);
+		untyped __global__.__hxcpp_set_critical_error_handler(onError);
 		#elseif hl
-		hl.Api.setErrorHandler(onCriticalError);
+		hl.Api.setErrorHandler(onError);
 		#end
 	}
 
-	private static function onError(event:UncaughtErrorEvent):Void
+	private static function onUncaughtError(e:UncaughtErrorEvent):Void
 	{
-		event.preventDefault();
-		event.stopImmediatePropagation();
+		e.preventDefault();
+		e.stopPropagation();
+		e.stopImmediatePropagation();
 
-		final log:Array<String> = [];
-
-		if (Std.isOfType(event.error, Error))
-			log.push(cast(event.error, Error).message);
-		else if (Std.isOfType(event.error, ErrorEvent))
-			log.push(cast(event.error, ErrorEvent).text);
-		else
-			log.push(Std.string(event.error));
-
-		for (item in CallStack.exceptionStack(true))
-		{
-			switch (item)
-			{
-				case CFunction:
-					log.push('C Function');
-				case Module(m):
-					log.push('Module [$m]');
-				case FilePos(s, file, line, column):
-					log.push('$file [line $line]');
-				case Method(classname, method):
-					log.push('$classname [method $method]');
-				case LocalFunction(name):
-					log.push('Local Function [$name]');
-			}
+		var m:String = e.error;
+		if (Std.isOfType(e.error, Error)) {
+			var err = cast(e.error, Error);
+			m = '${err.message}';
+		} else if (Std.isOfType(e.error, ErrorEvent)) {
+			var err = cast(e.error, ErrorEvent);
+			m = '${err.text}';
 		}
-
-		final msg:String = log.join('\n');
+		var stack = CallStack.exceptionStack();
+		var stackLabel:String = "";
+		for(e in stack) {
+			switch(e) {
+				case CFunction: stackLabel += "Non-Haxe (C) Function";
+				case Module(c): stackLabel += 'Module ${c}';
+				case FilePos(parent, file, line, col):
+					switch(parent) {
+						case Method(cla, func):
+							stackLabel += '(${file}) ${cla.split(".").last()}.$func() - line $line';
+						case _:
+							stackLabel += '(${file}) - line $line';
+					}
+				case LocalFunction(v):
+					stackLabel += 'Local Function ${v}';
+				case Method(cl, m):
+					stackLabel += '${cl} - ${m}';
+			}
+			stackLabel += "\r\n";
+		}
 
 		#if sys
 		try
@@ -63,13 +65,13 @@ class CrashHandler
 			if (!FileSystem.exists('crash'))
 				FileSystem.createDirectory('crash');
 
-			File.saveContent('crash/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '.txt', msg);
+			File.saveContent('crash/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '.txt', '$m\n\n$stackLabel');
 		}
 		catch (e:Exception)
 			trace('Couldn\'t save error message. (${e.message})', null);
 		#end
 
-		NativeAPI.showMessageBox("Error!", msg, MSG_ERROR);
+		NativeAPI.showMessageBox("Error!", '$m\n\n$stackLabel', MSG_ERROR);
 
 		#if js
 		if (FlxG.sound.music != null)
@@ -81,50 +83,10 @@ class CrashHandler
 		#end
 	}
 
-	private static inline function onCriticalError(error:Dynamic):Void
+	#if (cpp || hl)
+	private static function onError(message:Dynamic):Void
 	{
-		final log:Array<String> = [Std.isOfType(error, String) ? error : Std.string(error)];
-
-		for (item in CallStack.exceptionStack(true))
-		{
-			switch (item)
-			{
-				case CFunction:
-					log.push('C Function');
-				case Module(m):
-					log.push('Module [$m]');
-				case FilePos(s, file, line, column):
-					log.push('$file [line $line]');
-				case Method(classname, method):
-					log.push('$classname [method $method]');
-				case LocalFunction(name):
-					log.push('Local Function [$name]');
-			}
-		}
-
-		final msg:String = log.join('\n');
-
-		#if sys
-		try
-		{
-			if (!FileSystem.exists('crash'))
-				FileSystem.createDirectory('crash');
-
-			File.saveContent('crash/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '-critical' + '.txt', msg);
-		}
-		catch (e:Exception)
-			trace('Couldn\'t save error message. (${e.message})', null);
-		#end
-
-		NativeAPI.showMessageBox("Critical Error!", msg, MSG_ERROR);
-
-		#if js
-		if (FlxG.sound.music != null)
-			FlxG.sound.music.stop();
-
-		js.Browser.window.location.reload(true);
-		#else
-		LimeSystem.exit(1);
-		#end
+		throw Std.string(message);
 	}
+	#end
 }
