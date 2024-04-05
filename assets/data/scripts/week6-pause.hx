@@ -64,6 +64,7 @@ function create(event) {
 	FlxG.sound.play(Paths.sound(isThorns ? 'pixel/ANGRY' : 'pixel/clickText'));
 
 	addVirtualPad('UP_DOWN', 'A');
+	addVirtualPadCamera(false);
 }
 
 function confText(text) {
