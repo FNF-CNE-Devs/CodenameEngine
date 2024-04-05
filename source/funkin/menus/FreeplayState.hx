@@ -349,11 +349,12 @@ class FreeplayState extends MusicBeatState
 	/**
 	 * Array containing all labels for Co-Op / Opponent modes.
 	 */
-	public var coopLabels:Array<String> = [
-		'[${MobileControls.mobileC ? 'X' : 'TAB'}] Solo',
-		'[${MobileControls.mobileC ? 'X' : 'TAB'}] Opponent Mode',
-		'[${MobileControls.mobileC ? 'X' : 'TAB'}] Co-Op Mode',
-		'[${MobileControls.mobileC ? 'X' : 'TAB'}] Co-Op Mode (Switched)'
+	public var coopLabels:Array<String> = MobileControls.mobileC ? ['[X] Solo', '[X] Opponent Mode'] : 
+	[
+		'[TAB] Solo',
+		'[TAB] Opponent Mode',
+		'[TAB] Co-Op Mode',
+		'[TAB] Co-Op Mode (Switched)'
 	];
 
 	/**

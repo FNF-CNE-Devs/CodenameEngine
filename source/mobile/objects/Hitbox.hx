@@ -94,14 +94,15 @@ class Hitbox extends FlxButtonGroup
 		hint.scrollFactor.set();
 		hint.alpha = 0.00001;
 		hint.antialiasing = Options.antialiasing;
-		if (!Options.hideHitbox)
+		if (Options.hitboxType != 'hidden')
 		{
+			var controlsAlpha = Options.hitboxType == 'gradient' ? Options.controlsAlpha : 0.25; // so it won't cover up your whole screen with a solid color
 			hint.onDown.callback = function()
 			{
 				if (hintTween != null)
 					hintTween.cancel();
 
-				hintTween = FlxTween.tween(hint, {alpha: Options.controlsAlpha}, Options.controlsAlpha / 100, {
+				hintTween = FlxTween.tween(hint, {alpha: controlsAlpha}, controlsAlpha / 100, {
 					ease: FlxEase.circInOut,
 					onComplete: function(twn:FlxTween)
 					{
@@ -114,7 +115,7 @@ class Hitbox extends FlxButtonGroup
 				if (hintTween != null)
 					hintTween.cancel();
 
-				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, Options.controlsAlpha / 10, {
+				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, controlsAlpha / 10, {
 					ease: FlxEase.circInOut,
 					onComplete: function(twn:FlxTween)
 					{
@@ -127,7 +128,7 @@ class Hitbox extends FlxButtonGroup
 				if (hintTween != null)
 					hintTween.cancel();
 
-				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, Options.controlsAlpha / 10, {
+				hintTween = FlxTween.tween(hint, {alpha: 0.00001}, controlsAlpha / 10, {
 					ease: FlxEase.circInOut,
 					onComplete: function(twn:FlxTween)
 					{
@@ -146,14 +147,20 @@ class Hitbox extends FlxButtonGroup
 	{
 		var shape:Shape = new Shape();
 		shape.graphics.beginFill(0xFFFFFF);
-		shape.graphics.lineStyle(3, 0xFFFFFF, 1);
-		shape.graphics.drawRect(0, 0, Width, Height);
-		shape.graphics.lineStyle(0, 0, 0);
-		shape.graphics.drawRect(3, 3, Width - 6, Height - 6);
-		shape.graphics.endFill();
-		shape.graphics.beginGradientFill(RADIAL, [0xFFFFFF, FlxColor.TRANSPARENT], [1, 0], [0, 255], null, null, null, 0.5);
-		shape.graphics.drawRect(3, 3, Width - 6, Height - 6);
-		shape.graphics.endFill();
+		if(Options.hitboxType == 'gradient'){
+			shape.graphics.lineStyle(3, 0xFFFFFF, 1);
+			shape.graphics.drawRect(0, 0, Width, Height);
+			shape.graphics.lineStyle(0, 0, 0);
+			shape.graphics.drawRect(3, 3, Width - 6, Height - 6);
+			shape.graphics.endFill();
+			shape.graphics.beginGradientFill(RADIAL, [0xFFFFFF, FlxColor.TRANSPARENT], [1, 0], [0, 255], null, null, null, 0.5);
+			shape.graphics.drawRect(3, 3, Width - 6, Height - 6);
+			shape.graphics.endFill();
+		} else {
+			shape.graphics.lineStyle(10, 0xFFFFFF, 1);
+			shape.graphics.drawRect(0, 0, Width, Height);
+			shape.graphics.endFill();
+		}
 		var bitmap:BitmapData = new BitmapData(Width, Height, true, 0);
 		bitmap.draw(shape);
 		return bitmap;

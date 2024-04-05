@@ -41,6 +41,7 @@ class Options
 	// mobile options
 	public static var screenTimeOut:Bool = false;
 	public static var hideHitbox:Bool = false;
+	public static var hitboxType:String = 'gradient';
 	public static var controlsAlpha:Float = FlxG.onMobile ? 0.6 : 0;
 
 	/**

@@ -26,11 +26,12 @@ class MobileOptions extends OptionsScreen {
 			0.1, // change
 			"controlsAlpha", // save name or smth
 			changeControlsAlpha)); // callback
-		if (MobileControls.mode == 4)
-			add(new Checkbox(
-				"Hide Hitbox",
-				"If checked, The hitbox control will not visible.",
-				"hideHitbox"));
+		add(new ArrayOption(
+			"Hitbox Design",
+			"Choose how your hitbox should look like!",
+			['gradient', 'noGradient', 'hidden'],
+			['Gradient', 'No Gradient', 'Hidden'],
+			'hitboxType'));
 		#if mobile
 		add(new Checkbox(
 			"Allow Screen Timeout",
