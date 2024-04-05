@@ -204,6 +204,12 @@
 
 		<!--Target SDK-->
 		<android target-sdk-version="29" if="EXTERNAL || MEDIA"/>
+
+		<config:android permission="android.permission.MANAGE_EXTERNAL_STORAGE" if="EXTERNAL || MEDIA"/>
+		
+		<!-- Fix Networking -->
+		<config:android permission="android.permission.INTERNET" />
+		<config:android permission="android.permission.ACCESS_NETWORK_STATE" />
 	</section>
 
 	<!--<section if="ios">
