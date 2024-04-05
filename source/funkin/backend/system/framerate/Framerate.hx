@@ -126,8 +126,8 @@ class Framerate extends Sprite {
 		super.__enterFrame(t);
 		bgSprite.alpha = debugAlpha * 0.5;
 
-		x = 10 + offset.x;
-		y = 2 + offset.y;
+		x = FlxG.game.x + 10 + offset.x;
+		y = FlxG.game.y + 2 + offset.y;
 
 		var width = Math.max(fpsCounter.width, #if SHOW_BUILD_ON_FPS Math.max(memoryCounter.width, codenameBuildField.width) #else memoryCounter.width #end) + (x*2);
 		var height = #if SHOW_BUILD_ON_FPS codenameBuildField.y + codenameBuildField.height #else memoryCounter.y + memoryCounter.height #end;
