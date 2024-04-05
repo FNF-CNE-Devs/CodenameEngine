@@ -1,4 +1,4 @@
-name: Mobile
+name: Main
 on: workflow_dispatch
 jobs:
   Windows:
