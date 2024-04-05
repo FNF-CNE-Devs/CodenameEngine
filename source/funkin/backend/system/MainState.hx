@@ -8,6 +8,9 @@ import funkin.menus.TitleState;
 import funkin.menus.BetaWarningState;
 import funkin.backend.chart.EventsData;
 import flixel.FlxState;
+#if mobile
+import mobile.states.CopyState;
+#end
 
 /**
  * Simple state used for loading the game
@@ -58,6 +61,11 @@ class MainState extends FlxState {
 		DiscordUtil.init();
 		EventsData.reloadEvents();
 		TitleState.initialized = false;
+
+		#if mobile
+		if(!CopyState.checkExistingFiles())
+			FlxG.switchState(new CopyState());
+		#end
 
 		if (betaWarningShown)
 			FlxG.switchState(new TitleState());

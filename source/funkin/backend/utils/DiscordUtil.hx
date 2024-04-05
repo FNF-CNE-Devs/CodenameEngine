@@ -178,8 +178,10 @@ class DiscordUtil
 	public static function changePresenceAdvanced(data:DPresence)
 	{
 		#if DISCORD_RPC
-		if (data == null)
+		if (data == null){
+			trace('data is null *explods*');
 			return;
+		}
 
 		// copy last presence
 		if (data.largeImageKey == null)
@@ -193,12 +195,29 @@ class DiscordUtil
 		funkin.backend.scripting.GlobalScript.event("onDiscordPresenceUpdate", evt);
 		#end
 		event("onDiscordPresenceUpdate", evt);
-		if (evt.cancelled)
+		if (evt.cancelled){
+			trace('event killed u');
 			return;
+		}
 		data = evt.presence;
 		lastPresence = data;
 
 		var dp:DiscordRichPresence = DiscordRichPresence.create();
+		// ignore dis
+		/*for(fieldName in Reflect.fields(data)){
+			if(!Reflect.fields(dp).contains(fieldName)) continue;
+			var dataField = Reflect.field(data, fieldName);
+			var dpField = Reflect.field(dp, fieldName);
+			if(fieldName.startsWith("button") && (fieldName.endsWith("Label") || fieldName.endsWith("Url")))
+				if (data.matchSecret == null && data.joinSecret == null && data.spectateSecret == null){
+					Reflect.setField(dp, fieldName, fixString(dataField));
+					continue;
+				}
+			if(Std.isOfType(dpField, Int) || Std.isOfType(dpField, cpp.Int64) || fieldName == "instance") // it keeps giving cpp error when checking for cpp.Int8 and haxe says u can't use abstract as a value when checking cpp.ConstCharStar so i guess i have to check it like this
+				Reflect.setField(dp, fieldName, dataField)
+			else
+				Reflect.setField(dp, fieldName, fixString(dataField));
+		}*/
 		// TODO: make this use a reflection-like macro
 		Utils.safeSetWrapper(dp.state, data.state, fixString);
 		Utils.safeSetWrapper(dp.details, data.details, fixString);
@@ -452,6 +471,30 @@ enum abstract NitroType(Int) to Int from Int
 	var NITRO_BASIC = 3;
 }
 
+// @:structInit
+// class DPresence
+// {
+// 	@:optional public var state:String; /* max 128 bytes */
+// 	@:optional public var details:String; /* max 128 bytes */
+// 	@:optional public var startTimestamp:OneOfTwo<Int, haxe.Int64>;
+// 	@:optional public var endTimestamp:OneOfTwo<Int, haxe.Int64>;
+// 	@:optional public var largeImageKey:String; /* max 32 bytes */
+// 	@:optional public var largeImageText:String; /* max 128 bytes */
+// 	@:optional public var smallImageKey:String; /* max 32 bytes */
+// 	@:optional public var smallImageText:String; /* max 128 bytes */
+// 	@:optional public var partyId:String; /* max 128 bytes */
+// 	@:optional public var partySize:Int;
+// 	@:optional public var partyMax:Int;
+// 	@:optional public var partyPrivacy:Int;
+// 	@:optional public var matchSecret:String; /* max 128 bytes */
+// 	@:optional public var joinSecret:String; /* max 128 bytes */
+// 	@:optional public var spectateSecret:String; /* max 128 bytes */
+// 	@:optional public var instance:OneOfTwo<Int, cpp.Int8>;
+// 	@:optional public var button1Label:String; /* max 32 bytes */
+// 	@:optional public var button1Url:String; /* max 512 bytes */
+// 	@:optional public var button2Label:String; /* max 32 bytes */
+// 	@:optional public var button2Url:String; /* max 512 bytes */
+// }
 typedef DPresence =
 {
 	var ?state:String; /* max 128 bytes */
@@ -475,7 +518,6 @@ typedef DPresence =
 	var ?button2Label:String; /* max 32 bytes */
 	var ?button2Url:String; /* max 512 bytes */
 }
-
 typedef DEvents =
 {
 	var ?ready:DUser->Void;

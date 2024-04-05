@@ -67,7 +67,6 @@ class AssetsLibraryList extends AssetLibrary {
 			}
 			#end
 		}
-		trace('CNE Custom AssetLibrary - getFiles: $content');
 		return content;
 	}
 
@@ -92,7 +91,6 @@ class AssetsLibraryList extends AssetLibrary {
 			}
 			#end
 		}
-		trace('CNE Custom AssetLibrary - getFolders: $content');
 		return content;
 	}
 

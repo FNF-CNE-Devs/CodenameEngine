@@ -41,6 +41,8 @@ class NativeAPI {
 	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
 		#if windows
 		Windows.showMessageBox(caption, message, icon);
+		#elseif (ios || iphonesim || web)
+		trace('$caption - $message');
 		#else
 		lime.app.Application.current.window.alert(message, caption);
 		#end

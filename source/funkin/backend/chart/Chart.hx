@@ -43,15 +43,11 @@ class Chart {
 				fromMods = Paths.assetsTree.existsSpecific(path, "TEXT", MODS);
 				try {
 					data = Json.parse(Assets.getText(path));
-					if(path == metaPath)
-						Logs.trace('Parsed default metadata for $songName ($path)');
-					else
-						Logs.trace('Parsed $difficulty metadata for $songName ($path)');
 				} catch(e) {
 					Logs.trace('Failed to load song metadata for ${songName} ($path): ${Std.string(e)}', ERROR);
 				}
 				if (data != null) break;
-			} else Logs.trace('Failed to load song metadata for ${songName} ($path): (file dosen\'t exist)', ERROR);
+			}
 		}
 
 		if (data == null)
