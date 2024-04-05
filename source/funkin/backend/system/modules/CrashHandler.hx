@@ -3,9 +3,6 @@ package funkin.backend.system.modules;
 import openfl.events.UncaughtErrorEvent;
 import openfl.events.ErrorEvent;
 import openfl.errors.Error;
-import openfl.events.UncaughtErrorEvent;
-import haxe.CallStack;
-import haxe.Exception;
 import lime.system.System as LimeSystem;
 #if sys
 import sys.FileSystem;
@@ -38,7 +35,7 @@ class CrashHandler
 			var err = cast(e.error, ErrorEvent);
 			m = '${err.text}';
 		}
-		var stack = CallStack.exceptionStack();
+		var stack = haxe.CallStack.exceptionStack();
 		var stackLabel:String = "";
 		for(e in stack) {
 			switch(e) {
@@ -67,7 +64,7 @@ class CrashHandler
 
 			File.saveContent('crash/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '.txt', '$m\n\n$stackLabel');
 		}
-		catch (e:Exception)
+		catch (e:haxe.Exception)
 			trace('Couldn\'t save error message. (${e.message})', null);
 		#end
 
