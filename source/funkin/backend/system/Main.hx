@@ -68,6 +68,8 @@ class Main extends Sprite
 
 		CrashHandler.init();
 
+		SUtil.requestPermissions();
+
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
 		#if android FlxG.android.preventDefaultKeys = [BACK]; #end

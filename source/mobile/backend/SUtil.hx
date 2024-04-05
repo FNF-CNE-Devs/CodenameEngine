@@ -104,7 +104,7 @@ class SUtil
 	#end
 
 	#if android
-	public static function doPermissionsShit():Void
+	public static function requestPermissions():Void
 	{
 		if (!Permissions.getGrantedPermissions().contains(Permissions.READ_EXTERNAL_STORAGE)
 			&& !Permissions.getGrantedPermissions().contains(Permissions.WRITE_EXTERNAL_STORAGE))
