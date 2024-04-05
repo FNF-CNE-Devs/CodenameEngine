@@ -77,7 +77,7 @@ class Main extends Sprite
 		#if android FlxG.android.preventDefaultKeys = [BACK]; #end
 
 		#if !html5
-		FlxG.game.addChild(framerateSprite = new funkin.backend.system.framerate.Framerate());
+		addChild(framerateSprite = new funkin.backend.system.framerate.Framerate());
 		//framerateSprite.scaleX = framerateSprite.scaleY = stage.window.scale;
 		framerateSprite.setScale();
 		FlxG.stage.window.onResize.add((w:Int, h:Int) -> framerateSprite.setScale(Math.min(w / FlxG.width, h / FlxG.height)));
