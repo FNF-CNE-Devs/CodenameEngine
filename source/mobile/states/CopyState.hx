@@ -37,7 +37,7 @@ class CopyState extends MusicBeatState
 	var canUpdate:Bool = true;
 	var shouldCopy:Bool = false;
 
-	static final textFilesExtensions:Array<String> = ['txt', 'xml', 'hxs', 'hx', 'json', 'frag', 'vert'];
+	static final textFilesExtensions:Array<String> = ['ini', 'txt', 'xml', 'hxs', 'hx', 'lua', 'json', 'frag', 'vert'];
 
 	override function create()
 	{
