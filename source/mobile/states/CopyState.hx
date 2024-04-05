@@ -207,7 +207,7 @@ class CopyState extends MusicBeatState
 			locatedFiles.remove(file);
 
 		maxLoopTimes = locatedFiles.length;
-
-		return (maxLoopTimes < 0);
+		
+		return maxLoopTimes > 0;
 	}
 }
