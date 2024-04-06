@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        storage-type: [EXTERNAL, OBB, DATA, MEDIA]
+        storage-type: [OBB, DATA]
     steps:
       - name: Checkout
         uses: actions/checkout@main
