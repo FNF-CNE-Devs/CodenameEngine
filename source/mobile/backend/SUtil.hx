@@ -86,7 +86,7 @@ class SUtil
 			NativeAPI.showMessageBox("Success!", fileName + " file has been saved", MSG_INFORMATION);
 		}
 		catch (e:haxe.Exception)
-			trace("File couldn't be saved. (${e.message})");
+			trace('File couldn\'t be saved. (${e.message})');
 	}
 	#end
 }

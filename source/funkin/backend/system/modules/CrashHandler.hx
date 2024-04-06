@@ -62,13 +62,13 @@ class CrashHandler
 			if (!FileSystem.exists('crash'))
 				FileSystem.createDirectory('crash');
 
-			File.saveContent('crash/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '.txt', '$m\n\n$stackLabel');
+			File.saveContent('crash/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '.txt', '$m\n$stackLabel');
 		}
 		catch (e:haxe.Exception)
 			trace('Couldn\'t save error message. (${e.message})');
 		#end
 
-		NativeAPI.showMessageBox("Error!", '$m\n\n$stackLabel', MSG_ERROR);
+		NativeAPI.showMessageBox("Error!", '$m\n$stackLabel', MSG_ERROR);
 
 		#if js
 		if (FlxG.sound.music != null)
