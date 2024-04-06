@@ -28,12 +28,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
-
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.4
-
       - name: Install Libraries
         run: |
           DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install -o Dpkg::Progress-Fancy="0" -o APT::Color="0" -o Dpkg::Use-Pty="0" libvlc-dev libvlccore-dev < /dev/null > /dev/null
@@ -76,23 +74,28 @@ jobs:
   Android:
     runs-on: ubuntu-20.04
     strategy:
-        matrix:
-           storage-type: [EXTERNAL, OBB, DATA, MEDIA]
+      matrix:
+        storage-type: [EXTERNAL, OBB, DATA, MEDIA]
     steps:
       - name: Checkout
         uses: actions/checkout@main
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@main
+        id: setup-ndk
+        with:
+          ndk-version: r21e
       - name: Setup Java JDK
         uses: actions/setup-java@main
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '11'
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.4
       - name: Install Libraries
         run: |
-          haxelib --quiet install hmm
+          haxelib install hmm --quiet
           haxelib run hmm install --quiet
       - name: Configure Android
         run: |
@@ -100,6 +103,8 @@ jobs:
           haxelib run lime config ANDROID_NDK_ROOT $ANDROID_NDK_HOME
           haxelib run lime config JAVA_HOME $JAVA_HOME
           haxelib run lime config ANDROID_SETUP true
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
       - name: Compile
         run: haxelib run lime build android -D ${{ matrix.storage-type }}
       - name: Upload Artifact
@@ -120,13 +125,13 @@ jobs:
           haxe-version: 4.3.4
       - name: Install Libraries
         run: |
-          haxelib --quiet install hmm
+          haxelib install hmm --quiet
           haxelib run hmm install --quiet
       - name: Compile
         run: haxelib run lime build ios
       - name: Make Ipa
         run: |
-          cd export/release/ios/build/Release-iphoneos
+          cd export/release/ios/build/*-iphoneos
           mkdir Payload
           mv *.app Payload
           zip -r CodenameEngine.ipa Payload
