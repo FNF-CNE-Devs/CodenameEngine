@@ -44,9 +44,9 @@ class CrashHandler
 				case FilePos(parent, file, line, col):
 					switch(parent) {
 						case Method(cla, func):
-							stackLabel += '(${file}) ${cla.split(".").last()}.$func() [line $line]';
+							stackLabel += '${file.replace('.hx', '')}.$func() [line $line]';
 						case _:
-							stackLabel += '(${file}) [line $line]';
+							stackLabel += '${file.replace('.hx', '')} [line $line]';
 					}
 				case LocalFunction(v):
 					stackLabel += 'Local Function ${v}';
@@ -65,7 +65,7 @@ class CrashHandler
 			File.saveContent('crash/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '.txt', '$m\n\n$stackLabel');
 		}
 		catch (e:haxe.Exception)
-			trace('Couldn\'t save error message. (${e.message})', null);
+			trace('Couldn\'t save error message. (${e.message})');
 		#end
 
 		NativeAPI.showMessageBox("Error!", '$m\n\n$stackLabel', MSG_ERROR);
