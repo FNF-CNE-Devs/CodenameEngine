@@ -1,17 +1,9 @@
 package mobile.backend;
 
 #if android
-import android.Settings;
 import android.content.Context;
-#if debug
-import android.widget.Toast;
-#end
-import android.os.Environment;
-import android.Permissions;
-import lime.app.Application;
 #end
 import funkin.backend.utils.NativeAPI;
-import lime.system.System as LimeSystem;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
@@ -44,7 +36,7 @@ class SUtil
 		}
 		daPath = haxe.io.Path.addTrailingSlash(daPath);
 		#elseif ios
-		daPath = LimeSystem.documentsDirectory;
+		daPath = lime.system.System.documentsDirectory;
 		#end
 
 		return daPath;
@@ -72,8 +64,13 @@ class SUtil
 
 				total += part;
 
-				if (!FileSystem.exists(total))
-					FileSystem.createDirectory(total);
+				try 
+				{
+					if (!FileSystem.exists(total))
+						FileSystem.createDirectory(total);
+				}
+				catch (e:haxe.Exception)
+					throw 'Error while creating folder.\n(${e.message}\nTry restarting the game\n(Press OK to exit)';
 			}
 		}
 	}
@@ -89,7 +86,7 @@ class SUtil
 			NativeAPI.showMessageBox("Success!", fileName + " file has been saved", MSG_INFORMATION);
 		}
 		catch (e:haxe.Exception)
-			trace("File couldn't be saved.\n(${e.message})");
+			trace("File couldn't be saved. (${e.message})");
 	}
 	#end
 }
