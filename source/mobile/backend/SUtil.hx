@@ -42,11 +42,12 @@ class SUtil
 			case EXTERNAL_OBB:
 				daPath = Context.getObbDir();
 		}
+		daPath = Path.addTrailingSlash(daPath);
 		#elseif ios
 		daPath = LimeSystem.documentsDirectory;
 		#end
 
-		return #if android haxe.io.Path.addTrailingSlash(daPath) #else daPath #end;
+		return daPath;
 	}
 
 	/**

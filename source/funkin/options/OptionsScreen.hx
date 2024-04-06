@@ -18,7 +18,7 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 
 	public var dpadMode:String = 'NONE';
 	public var actionMode:String = 'NONE';
-	public var prevVPadModes:Array<Dynamic> = [];
+	public var prevVPadModes:Array<String> = [];
 
 	public function new(name:String, desc:String, ?options:Array<OptionType>, dpadMode:String = 'NONE', actionMode:String = 'NONE') {
 		super();
@@ -26,7 +26,7 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		this.desc = desc;
 		if (options != null) for(o in options) add(o);
 		if(MusicBeatState.instance.virtualPad != null)
-			prevVPadModes = [MusicBeatState.instance.virtualPad.curDPadMode, MusicBeatState.instance.virtualPad.curActionMode];
+			prevVPadModes = [MusicBeatState.instance.virtualPad.curDPadMode.getName(), MusicBeatState.instance.virtualPad.curActionMode.getName()];
 		this.dpadMode = dpadMode;
 		this.actionMode = actionMode;
 		MusicBeatState.instance.removeVirtualPad();

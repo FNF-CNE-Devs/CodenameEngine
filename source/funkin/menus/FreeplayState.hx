@@ -367,7 +367,13 @@ class FreeplayState extends MusicBeatState
 		if (!songs[curSelected].coopAllowed && !songs[curSelected].opponentModeAllowed) return;
 
 		var bothEnabled = songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed;
-		var event = event("onChangeCoopMode", EventManager.get(MenuChangeEvent).recycle(curCoopMode, FlxMath.wrap(curCoopMode + change, 0, bothEnabled ? 3 : 1), change));
+		var changeThingy:Int = -1;
+		if(MobileControls.mobileC)
+			changeThingy = FlxMath.wrap(curCoopMode + change, 0, 1);
+		else
+			changeThingy = FlxMath.wrap(curCoopMode + change, 0, bothEnabled ? 3 : 1);
+
+		var event = event("onChangeCoopMode", EventManager.get(MenuChangeEvent).recycle(curCoopMode, changeThingy, change));
 
 		if (event.cancelled) return;
 
