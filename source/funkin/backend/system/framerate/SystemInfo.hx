@@ -6,6 +6,15 @@ import funkin.backend.system.Logs;
 
 using StringTools;
 
+#if cpp
+#if windows
+@:cppFileCode('#include <windows.h>')
+#elseif (ios || mac)
+@:cppFileCode('#include <mach-o/arch.h>')
+#else
+@:headerInclude('sys/utsname.h')
+#end
+#end
 class SystemInfo extends FramerateCategory {
 	public static var osInfo:String = "Unknown";
 	public static var gpuName:String = "Unknown";
@@ -78,7 +87,8 @@ class SystemInfo extends FramerateCategory {
 				}
 			}
 			#elseif android
-			// MTODO: use getprop for get cpu model (that also includes cpu2, cpu3 and maybe cpu4 no idea)
+			// MTODO: find a way to get cpu model
+			cpuName = "null";
 			#end
 		} catch (e) {
 			Logs.trace('Unable to grab CPU Name: $e', ERROR, RED);
@@ -120,7 +130,7 @@ class SystemInfo extends FramerateCategory {
 	static function formatSysInfo() {
 		__formattedSysText = "";
 		if (osInfo != "Unknown") __formattedSysText += 'System: $osInfo';
-		if (cpuName != "Unknown") __formattedSysText += '\nCPU: $cpuName ${openfl.system.Capabilities.cpuArchitecture} ${(openfl.system.Capabilities.supports64BitProcesses ? '64-Bit' : '32-Bit')}';
+		if (cpuName != "Unknown") __formattedSysText += '\nCPU: $cpuName ${getCPUArch()}';
 		if (gpuName != cpuName || vRAM != "Unknown") {
 			var gpuNameKnown = gpuName != "Unknown" && gpuName != cpuName;
 			var vramKnown = vRAM != "Unknown";
@@ -147,5 +157,45 @@ class SystemInfo extends FramerateCategory {
 
 		this.text.text = _text;
 		super.__enterFrame(t);
+	}
+
+	#if windows
+	@:functionCode('
+		SYSTEM_INFO osInfo;
+
+		GetSystemInfo(&osInfo);
+
+		switch(osInfo.wProcessorArchitecture)
+		{
+			case 9:
+				return ::String("x86_64");
+			case 5:
+				return ::String("ARM");
+			case 12:
+				return ::String("ARM64");
+			case 6:
+				return ::String("IA-64");
+			case 0:
+				return ::String("x86");
+			default:
+				return ::String("Unknown");
+		}
+	')
+	#elseif (ios || mac)
+	@:functionCode('
+		const NXArchInfo *archInfo = NXGetLocalArchInfo();
+    	return ::String(archInfo == NULL ? "Unknown" : archInfo->name);
+	')
+	#elseif cpp
+	@:functionCode('
+		struct utsname osInfo{};
+		uname(&osInfo);
+		return ::String(osInfo.machine);
+	')
+	#end
+	@:noCompletion
+	private static function getCPUArch():String
+	{
+		return "Unknown";
 	}
 }

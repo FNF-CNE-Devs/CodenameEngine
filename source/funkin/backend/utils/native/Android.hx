@@ -3,17 +3,29 @@ package funkin.backend.utils.native;
 #if android
 class Android
 {
-	public static function getTotalRam():Null<Float>
-	{
-		var f = sys.io.File.read('/proc/meminfo');
-		var result = f.readAll().toString();
-		if (result == "" || result == null || result.charAt(0) != "M") return null;
-		var memTotalLine = result.split('\n')[0];
-		memTotalLine = memTotalLine.replace(' ', '');
-		memTotalLine = memTotalLine.replace('kB', '');
-		memTotalLine = memTotalLine.replace('MemTotal:', '');
+	@:functionCode('
+		FILE *meminfo = fopen("/proc/meminfo", "r");
 
-		return Std.parseFloat(memTotalLine);
+		if(meminfo == NULL)
+			return -1;
+
+		char line[256];
+		while(fgets(line, sizeof(line), meminfo))
+		{
+			int ram;
+			if(sscanf(line, "MemTotal: %d kB", &ram) == 1)
+			{
+				fclose(meminfo);
+				return (ram / 1024);
+			}
+		}
+
+		fclose(meminfo);
+		return -1;
+	')
+	public static function getTotalRam():Float
+	{
+		return 0;
 	}
 }
 #end
