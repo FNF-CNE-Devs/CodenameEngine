@@ -140,6 +140,9 @@ class MemoryUtil {
 				return line.substring("Type:".length).trim();
 			}
 		}
+		#elseif android
+		// MTODO: Do get mem type for android smh?
+		return "null";
 		#end
 		return "Unknown";
 	}
