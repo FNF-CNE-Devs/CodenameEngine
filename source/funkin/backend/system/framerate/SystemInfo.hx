@@ -87,7 +87,9 @@ class SystemInfo extends FramerateCategory {
 				}
 			}
 			#elseif android
-			// MTODO: find a way to get cpu model
+			cpuName = android.os.Build.BOARD;
+			#elseif (ios || iphonesim)
+			// there's no way I'm doing this on iOS
 			cpuName = "null";
 			#end
 		} catch (e) {
