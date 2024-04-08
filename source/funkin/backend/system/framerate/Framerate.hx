@@ -44,7 +44,7 @@ class Framerate extends Sprite {
 		return __bitmap;
 	}
 
-	#if (android || ios || iphone || iphonesim || desktop)
+	#if (desktop || mobile)
 	#if android public var presses:Int = 0; #end
 	public var sillyTimer:FlxTimer = new FlxTimer();
 	#end
@@ -119,7 +119,7 @@ class Framerate extends Sprite {
 			}
 			sillyTimer.start(0.3, (tmr:FlxTimer) -> presses = 0);
 		}
-		#elseif (ios || iphone || iphonesim)
+		#elseif ios
 		// lazy to use touch-
 		for(camera in FlxG.cameras.list)
 			if(FlxG.mouse.getScreenPosition(camera).x >= 0 && FlxG.mouse.getScreenPosition(camera).x <= 30 &&
@@ -134,8 +134,8 @@ class Framerate extends Sprite {
 		super.__enterFrame(t);
 		bgSprite.alpha = debugAlpha * 0.5;
 
-		x = FlxG.game.x + 10 + offset.x;
-		y = FlxG.game.y + 2 + offset.y;
+		x = #if mobile FlxG.game.x + #end 10 + offset.x;
+		y = #if mobile FlxG.game.y + #end 2 + offset.y;
 
 		var width = Math.max(fpsCounter.width, #if SHOW_BUILD_ON_FPS Math.max(memoryCounter.width, codenameBuildField.width) #else memoryCounter.width #end) + (x*2);
 		var height = #if SHOW_BUILD_ON_FPS codenameBuildField.y + codenameBuildField.height #else memoryCounter.y + memoryCounter.height #end;
