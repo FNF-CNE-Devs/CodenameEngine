@@ -109,14 +109,14 @@ class Framerate extends Sprite {
 		debugAlpha = CoolUtil.fpsLerp(debugAlpha, debugMode > 1 ? 1 : 0, 0.5);
 		#if android
 		if(FlxG.android.justReleased.BACK){
-			++presses;
 			sillyTimer.cancel();
+			++presses;
 			if(presses >= 3){
 				debugMode = (debugMode + 1) % 3;
 				presses = 0;
 				return;
 			}
-			sillyTimer.start(0.4, (tmr:FlxTimer) -> presses = 0);
+			sillyTimer.start(0.3, (tmr:FlxTimer) -> presses = 0);
 		}
 		#elseif ios
 		for(camera in FlxG.cameras.list)
