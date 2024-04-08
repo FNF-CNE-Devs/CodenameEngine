@@ -203,9 +203,10 @@
 		<certificate path="key.keystore" password="nullfunni" alias="null" alias-password="nullfunni" unless="debug" />
 
 		<!--Target SDK-->
-		<android target-sdk-version="29" if="EXTERNAL || MEDIA"/>
+		<android target-sdk-version="31" />
 
-		<config:android permission="android.permission.MANAGE_EXTERNAL_STORAGE" if="EXTERNAL || MEDIA"/>
+		<config:android permission="android.permission.MANAGE_EXTERNAL_STORAGE" />
+		<config:android permission="android.permission.REQUEST_INSTALL_PACKAGES" />
 		
 		<!-- Fix Networking -->
 		<config:android permission="android.permission.INTERNET" />
