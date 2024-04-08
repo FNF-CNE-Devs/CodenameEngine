@@ -70,7 +70,7 @@ class MemoryUtil {
 		#elseif mac
 		return funkin.backend.utils.native.Mac.getTotalRam();
 		#elseif ios
-		return funkin.backend.utils.native.iOS.getTotalRam();
+		return funkin.backend.utils.native.IOS.getTotalRam();
 		#elseif linux
 		return funkin.backend.utils.native.Linux.getTotalRam();
 		#elseif android

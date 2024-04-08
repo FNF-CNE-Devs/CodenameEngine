@@ -2,7 +2,7 @@ package funkin.backend.utils.native;
 
 #if ios
 @:cppFileCode("#include <sys/sysctl.h>")
-class iOS {
+class IOS {
 	@:functionCode('
 	int mib [] = { CTL_HW, HW_MEMSIZE };
 	int64_t value = 0;
