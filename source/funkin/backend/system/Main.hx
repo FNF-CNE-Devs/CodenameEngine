@@ -68,12 +68,14 @@ class Main extends Sprite
 
 		CrashHandler.init();
 
+		#if !html5 framerateSprite = new funkin.backend.system.framerate.Framerate(); #end
+
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
 		#if android FlxG.android.preventDefaultKeys = [BACK]; #end
 
 		#if !html5
-		addChild(framerateSprite = new funkin.backend.system.framerate.Framerate());
+		addChild(framerateSprite);
 		FlxG.stage.window.onResize.add((w:Int, h:Int) -> framerateSprite.setScale());
 		SystemInfo.init();
 		#end
