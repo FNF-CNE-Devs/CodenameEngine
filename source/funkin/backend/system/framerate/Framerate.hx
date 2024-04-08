@@ -116,7 +116,7 @@ class Framerate extends Sprite {
 				presses = 0;
 				return;
 			}
-			sillyTimer.start(0.3, (tmr:FlxTimer) -> presses = 0);
+			sillyTimer.start(0.4, (tmr:FlxTimer) -> presses = 0);
 		}
 		#elseif ios
 		for(camera in FlxG.cameras.list)
