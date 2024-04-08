@@ -3,6 +3,7 @@ package mobile.backend;
 import flixel.FlxG;
 import flixel.FlxBasic;
 import flixel.FlxObject;
+import flixel.FlxCamera;
 import flixel.input.touch.FlxTouch;
 
 class TouchFunctions
@@ -12,19 +13,23 @@ class TouchFunctions
 	public static var touchJustReleased(get, never):Bool;
 	public static var touch(get, never):FlxTouch;
 
-	public static function touchOverlapObject(object:FlxBasic):Bool
+	public static function touchOverlapObject(object:FlxBasic, camera:FlxCamera):Bool
 	{
 		for (touch in FlxG.touches.list)
-			return touch.overlaps(object);
+			if (touch.overlaps(object, camera))
+				return true;
 		return false;
 	}
 
-	public static function touchOverlapObjectComplex(object:FlxObject):Bool{
+	public static function touchOverlapObjectComplex(object:FlxObject):Bool
+	{
 		var overlap = false;
-		for (camera in object.cameras){
-			for (touch in FlxG.touches.list){
+		for (camera in object.cameras)
+		{
+			for (touch in FlxG.touches.list)
+			{
 				@:privateAccess
-				if(object.overlapsPoint(touch.getWorldPosition(camera, object._point), true, camera))
+				if (object.overlapsPoint(touch.getWorldPosition(camera, object._point), true, camera))
 					overlap = true;
 			}
 		}
@@ -35,7 +40,8 @@ class TouchFunctions
 	private static function get_touchPressed():Bool
 	{
 		for (touch in FlxG.touches.list)
-			return touch.pressed;
+			if (touch.pressed)
+				return true;
 		return false;
 	}
 
@@ -43,7 +49,8 @@ class TouchFunctions
 	private static function get_touchJustPressed():Bool
 	{
 		for (touch in FlxG.touches.list)
-			return touch.justPressed;
+			if (touch.justPressed)
+				return true;
 		return false;
 	}
 
@@ -51,7 +58,8 @@ class TouchFunctions
 	private static function get_touchJustReleased():Bool
 	{
 		for (touch in FlxG.touches.list)
-			return touch.justReleased;
+			if (touch.justReleased)
+				return true;
 		return false;
 	}
 

@@ -44,9 +44,9 @@ class Framerate extends Sprite {
 		return __bitmap;
 	}
 
-	#if android
-	public var presses:Int = 0;
-	public var resetTimer:FlxTimer = new FlxTimer();
+	#if (android || ios || iphone || iphonesim || desktop)
+	#if android public var presses:Int = 0; #end
+	public var sillyTimer:FlxTimer = new FlxTimer();
 	#end
 
 	public function new() {
@@ -107,19 +107,27 @@ class Framerate extends Sprite {
 	public override function __enterFrame(t:Int) {
 		alpha = CoolUtil.fpsLerp(alpha, debugMode > 0 ? 1 : 0, 0.5);
 		debugAlpha = CoolUtil.fpsLerp(debugAlpha, debugMode > 1 ? 1 : 0, 0.5);
-
+		// peak :3
 		#if android
-		// thank me later :3
 		if(FlxG.android.justReleased.BACK){
 			++presses;
-			resetTimer.cancel();
+			sillyTimer.cancel();
 			if(presses >= 3){
 				debugMode = (debugMode + 1) % 3;
 				presses = 0;
 				return;
 			}
-			resetTimer.start(0.3, (tmr:FlxTimer) -> presses = 0);
+			sillyTimer.start(0.3, (tmr:FlxTimer) -> presses = 0);
 		}
+		#elseif (ios || iphone || iphonesim)
+		// lazy to use touch-
+		for(camera in FlxG.cameras.list)
+			if(FlxG.mouse.getScreenPosition(camera).x >= 0 && FlxG.mouse.getScreenPosition(camera).x <= 30 &&
+				FlxG.mouse.getScreenPosition(camera).y >= 0 && FlxG.mouse.getScreenPosition(camera).y <= 30){
+				if(FlxG.mouse.justPressed)
+						sillyTimer.start(0.4, (tmr:FlxTimer) -> debugMode = (debugMode + 1) % 3);
+					if(FlxG.mouse.justReleased) sillyTimer.cancel();
+			} else if(sillyTimer.active && !sillyTimer.finished) sillyTimer.cancel();
 		#end
 
 		if (alpha < 0.05) return;
