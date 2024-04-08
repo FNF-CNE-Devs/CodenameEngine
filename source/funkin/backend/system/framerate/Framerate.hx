@@ -44,7 +44,7 @@ class Framerate extends Sprite {
 		return __bitmap;
 	}
 
-	#if (desktop || mobile)
+	#if mobile
 	#if android public var presses:Int = 0; #end
 	public var sillyTimer:FlxTimer = new FlxTimer();
 	#end
@@ -107,7 +107,6 @@ class Framerate extends Sprite {
 	public override function __enterFrame(t:Int) {
 		alpha = CoolUtil.fpsLerp(alpha, debugMode > 0 ? 1 : 0, 0.5);
 		debugAlpha = CoolUtil.fpsLerp(debugAlpha, debugMode > 1 ? 1 : 0, 0.5);
-		// peak :3
 		#if android
 		if(FlxG.android.justReleased.BACK){
 			++presses;
@@ -120,10 +119,9 @@ class Framerate extends Sprite {
 			sillyTimer.start(0.3, (tmr:FlxTimer) -> presses = 0);
 		}
 		#elseif ios
-		// lazy to use touch-
 		for(camera in FlxG.cameras.list)
-			if(FlxG.mouse.getScreenPosition(camera).x >= 0 && FlxG.mouse.getScreenPosition(camera).x <= 30 &&
-				FlxG.mouse.getScreenPosition(camera).y >= 0 && FlxG.mouse.getScreenPosition(camera).y <= 30){
+			if(FlxG.mouse.getScreenPosition(camera).x >= 0 && FlxG.mouse.getScreenPosition(camera).x <= 80 &&
+				FlxG.mouse.getScreenPosition(camera).y >= 0 && FlxG.mouse.getScreenPosition(camera).y <= 60){
 				if(FlxG.mouse.justPressed)
 						sillyTimer.start(0.4, (tmr:FlxTimer) -> debugMode = (debugMode + 1) % 3);
 					if(FlxG.mouse.justReleased) sillyTimer.cancel();
