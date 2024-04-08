@@ -9,7 +9,7 @@ using StringTools;
 #if cpp
 #if windows
 @:cppFileCode('#include <windows.h>')
-#elseif (ios || mac)
+#elseif (mac || ios)
 @:cppFileCode('#include <mach-o/arch.h>')
 #else
 @:headerInclude('sys/utsname.h')
@@ -71,7 +71,7 @@ class SystemInfo extends FramerateCategory {
 			if (process.exitCode() != 0) throw 'Could not fetch CPU information';
 
 			cpuName = process.stdout.readAll().toString().trim().split("\n")[1].trim();
-			#elseif mac
+			#elseif (mac || ios)
 			var process = new HiddenProcess("sysctl -a | grep brand_string"); // Somehow this isnt able to use the args but it still works
 			if (process.exitCode() != 0) throw 'Could not fetch CPU information';
 
@@ -88,9 +88,6 @@ class SystemInfo extends FramerateCategory {
 			}
 			#elseif android
 			cpuName = android.os.Build.BOARD;
-			#elseif (ios || iphonesim)
-			// there's no way I'm doing this on iOS
-			cpuName = "null";
 			#end
 		} catch (e) {
 			Logs.trace('Unable to grab CPU Name: $e', ERROR, RED);
@@ -183,7 +180,7 @@ class SystemInfo extends FramerateCategory {
 				return ::String("Unknown");
 		}
 	')
-	#elseif (ios || mac)
+	#elseif (mac || ios)
 	@:functionCode('
 		const NXArchInfo *archInfo = NXGetLocalArchInfo();
     	return ::String(archInfo == NULL ? "Unknown" : archInfo->name);
