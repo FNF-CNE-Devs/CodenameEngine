@@ -17,22 +17,17 @@ import sys.FileSystem;
 using StringTools;
 
 /**
- * A class for mobile
- * @author Mihai Alexandru (M.A. Jigsaw)
- * @modification's author: Lily (mcagabe19)
+ * A storage class for mobile.
+ * @author Mihai Alexandru (M.A. Jigsaw) and Lily (mcagabe19)
  */
 class SUtil
 {
-	/**
-	 * This returns the external storage path that the game will use by the type.
-	 */
-	 #if sys
-	 public static function getStorageDirectory(type:StorageType = #if OBB EXTERNAL_OBB #else EXTERNAL_DATA #end):String
-	 {
+	#if sys
+	public static function getStorageDirectory(type:StorageType = #if OBB EXTERNAL_OBB #else EXTERNAL_DATA #end):String
+	{
 		var daPath:String = '';
-
 		#if android
-		switch (type)
+ 		switch (type)
 		{
 			case EXTERNAL_DATA:
 				daPath = Context.getExternalFilesDir(null);
@@ -47,9 +42,6 @@ class SUtil
 		return daPath;
 	}
 
-	/**
-	 * This is mostly a fork of https://github.com/openfl/hxp/blob/master/src/hxp/System.hx#L595
-	 */
 	public static function mkDirs(directory:String):Void
 	{
 		var total:String = '';
@@ -69,24 +61,24 @@ class SUtil
 
 				total += part;
 
-				try 
-				{
-					if (!FileSystem.exists(total))
-						FileSystem.createDirectory(total);
+				try {
+				if (!FileSystem.exists(total))
+					FileSystem.createDirectory(total);
 				}
 				catch (e:haxe.Exception)
-					throw 'Error while creating folder.\n(${e.message}\nTry restarting the game\n(Press OK to exit)';
+					trace('Error while creating folder. (${e.message}');
 			}
 		}
 	}
 
-	public static function saveContent(fileName:String = 'file', fileExtension:String = '.json', fileData:String = 'You forgor to add somethin\' in yo code :3'):Void
+	public static function saveContent(fileName:String = 'file', fileExtension:String = '.json',
+			fileData:String = 'You forgor to add somethin\' in yo code :3'):Void
 	{
 		try
 		{
 			if (!FileSystem.exists('saves'))
 				FileSystem.createDirectory('saves');
-			
+
 			File.saveContent('saves/' + fileName + fileExtension, fileData);
 			NativeAPI.showMessageBox("Success!", fileName + " file has been saved", MSG_INFORMATION);
 		}
