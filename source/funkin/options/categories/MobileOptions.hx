@@ -1,6 +1,7 @@
 package funkin.options.categories;
 
 import flixel.FlxG;
+import flixel.input.keyboard.FlxKey;
 import lime.system.System;
 import flixel.util.FlxTimer;
 import funkin.backend.MusicBeatState;
@@ -44,7 +45,19 @@ class MobileOptions extends OptionsScreen {
 
 	override dynamic function onClose(o:OptionsScreen) System.allowScreenTimeout = Options.screenTimeOut;
 
-	function changeControlsAlpha(alpha) MusicBeatState.instance.virtualPad.alpha = alpha;
+	function changeControlsAlpha(alpha) {
+		MusicBeatState.instance.virtualPad.alpha = alpha;
+		if (MobileControls.mobileC) {
+			FlxG.sound.volumeUpKeys = [];
+			FlxG.sound.volumeDownKeys = [];
+			FlxG.sound.muteKeys = [];
+		} else {
+			FlxG.sound.volumeUpKeys = [FlxKey.PLUS, FlxKey.NUMPADPLUS];
+			FlxG.sound.volumeDownKeys = [FlxKey.MINUS, FlxKey.NUMPADMINUS];
+			FlxG.sound.muteKeys = [FlxKey.ZERO, FlxKey.NUMPADZERO];
+		}
+	}
+
 	function openMobileControlsMenu() {
 		if(!canEnter) return;
 		canEnter = false;
