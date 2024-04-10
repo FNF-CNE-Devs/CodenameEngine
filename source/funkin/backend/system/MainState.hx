@@ -22,7 +22,14 @@ class MainState extends FlxState {
 		super.create();
 		funkin.backend.system.Main.framerateSprite.setScale();
 		if (!initiated)
+		{
+			if (CopyState.checkExistingFiles())
+			{
+				FlxG.switchState(new CopyState());
+				return;
+			}
 			Main.loadGameSettings();
+		}
 		initiated = true;
 
 		#if sys
@@ -64,10 +71,7 @@ class MainState extends FlxState {
 		TitleState.initialized = false;
 
 		#if mobile
-		if(CopyState.checkExistingFiles() && !initiated){
-			FlxG.switchState(new CopyState());
-			return;
-		}
+		
 		#end
 
 		if (betaWarningShown)
