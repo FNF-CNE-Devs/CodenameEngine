@@ -23,9 +23,9 @@ class AssetTreeInfo extends FramerateCategory {
 				}
 
 				if (l is ScriptedAssetLibrary)
-					text += '${Type.getClassName(Type.getClass(l))} - ${cast(l, ScriptedAssetLibrary).scriptName} (${cast(l, ScriptedAssetLibrary).modName} | ${formatLibPath(cast(l, ScriptedAssetLibrary).libName)} | ${cast(l, ScriptedAssetLibrary).prefix})\n';
+					text += '${Type.getClassName(Type.getClass(l))} - ${cast(l, ScriptedAssetLibrary).scriptName} (${cast(l, ScriptedAssetLibrary).modName} | ${cast(l, ScriptedAssetLibrary).libName} | ${cast(l, ScriptedAssetLibrary).prefix})\n';
 				else if (l is IModsAssetLibrary)
-					text += '${Type.getClassName(Type.getClass(l))} - ${cast(l, IModsAssetLibrary).modName} - ${formatLibPath(cast(l, IModsAssetLibrary).libName)} (${cast(l, IModsAssetLibrary).prefix})\n';
+					text += '${Type.getClassName(Type.getClass(l))} - ${cast(l, IModsAssetLibrary).modName} - ${cast(l, IModsAssetLibrary).libName} (${cast(l, IModsAssetLibrary).prefix})\n';
 				else
 					text += Std.string(e) + "\n";
 			}
@@ -35,19 +35,5 @@ class AssetTreeInfo extends FramerateCategory {
 
 		this.text.text = text;
 		super.__enterFrame(t);
-	}
-
-	// i don't want it to be showing the absolute path and 
-	function formatLibPath(libName:String):String {
-		// lily not letting me use it grrrr
-		/*if(libName.startsWith(Sys.getCwd()))
-			libName.replace(Sys.getCwd(), "./");
-		#if mobile
-		if(libName.startsWith(SUtil.getStorageDirectory()))
-			libName.replace(SUtil.getStorageDirectory(), "./");
-		#end
-		if(!libName.startsWith("./"))
-			libName = "?/" + libName; // when shit is fucked and directory is unkown ig?*/
-		return libName;
 	}
 }

@@ -21,28 +21,29 @@ using StringTools;
 class SUtil
 {
 	#if sys
-	public static function getStorageDirectory(type:StorageType = #if EXTERNAL EXTERNAL #elseif OBB EXTERNAL_OBB #elseif MEDIA EXTERNAL_MEDIA #else EXTERNAL_DATA #end):String
+	public static function getStorageDirectory(#if android ?force:Bool = false, type:StorageType = #if EXTERNAL EXTERNAL #elseif OBB EXTERNAL_OBB #elseif MEDIA EXTERNAL_MEDIA #else EXTERNAL_DATA #end #end):String
 	{
 		var daPath:String = '';
 		#if android
- 		switch (type)
+		var forcedPath:String = '/storage/emulated/0/';
+		var packageNameLocal:String = 'com.yoshman29.codenameengine';
+		var fileLocal:String = 'CodenameEngine';
+		switch (type)
 		{
 			case EXTERNAL_DATA:
-				daPath = Context.getExternalFilesDir();
+				daPath = force ? forcedPath + 'Android/data/' + packageNameLocal + '/files' : Context.getExternalFilesDir();
 			case EXTERNAL_OBB:
-				daPath = Context.getObbDir();
+				daPath = force ? forcedPath + 'Android/obb/' + packageNameLocal : Context.getObbDir();
 			case EXTERNAL_MEDIA:
-				//daPath = Environment.getExternalStorageDirectory() + '/Android/media/' + lime.app.Application.current.meta.get('packageName');
-				daPath = '/storage/emulated/0/.CodenameEngine';
+				daPath = force ? forcedPath + 'Android/media/' + packageNameLocal : Environment.getExternalStorageDirectory() + '/Android/media/' + lime.app.Application.current.meta.get('packageName');
 			case EXTERNAL:
-				daPath = Environment.getExternalStorageDirectory() + '/.' + lime.app.Application.current.meta.get('file');
+				daPath = force ? forcedPath + '.' + fileLocal : Environment.getExternalStorageDirectory() + '/.' + lime.app.Application.current.meta.get('file');
 		}
 		daPath = haxe.io.Path.addTrailingSlash(daPath);
 		#elseif ios
 		daPath = lime.system.System.documentsDirectory;
 		#end
 
-		trace('returned: $daPath');
 		return daPath;
 	}
 
@@ -65,9 +66,10 @@ class SUtil
 
 				total += part;
 
-				try {
-				if (!FileSystem.exists(total))
-					FileSystem.createDirectory(total);
+				try
+				{
+					if (!FileSystem.exists(total))
+						FileSystem.createDirectory(total);
 				}
 				catch (e:haxe.Exception)
 					trace('Error while creating folder. (${e.message}');
@@ -93,21 +95,27 @@ class SUtil
 	#if android
 	public static function doPermissionsShit():Void
 	{
-		if (!Permissions.getGrantedPermissions().contains(Permissions.READ_EXTERNAL_STORAGE) && !Permissions.getGrantedPermissions().contains(Permissions.WRITE_EXTERNAL_STORAGE))
+		if (!Permissions.getGrantedPermissions().contains(Permissions.READ_EXTERNAL_STORAGE)
+			&& !Permissions.getGrantedPermissions().contains(Permissions.WRITE_EXTERNAL_STORAGE))
 		{
 			Permissions.requestPermission(Permissions.READ_EXTERNAL_STORAGE);
 			Permissions.requestPermission(Permissions.WRITE_EXTERNAL_STORAGE);
 			NativeAPI.showMessageBox('Notice!', 'If you accepted the permissions you are all good!' + '\nIf you didn\'t then expect a crash' + '\nPress Ok to see what happens', MSG_INFORMATION);
 			if (!Environment.isExternalStorageManager())
 				Settings.requestSetting("android.settings.MANAGE_APP_ALL_FILES_ACCESS_PERMISSION");
-		} else {
-			try {
+		}
+		else
+		{
+			try
+			{
 				if (!FileSystem.exists(SUtil.getStorageDirectory()))
 					FileSystem.createDirectory(SUtil.getStorageDirectory());
-            } catch(e:Dynamic) {
-				NativeAPI.showMessageBox("Error!", "Please create folder to\n" + #if EXTERNAL "/storage/emulated/0/." + lime.app.Application.current.meta.get('file') #elseif MEDIA "/storage/emulated/0/Android/media/" + lime.app.Application.current.meta.get('packageName') #else SUtil.getStorageDirectory() #end + "\nPress OK to close the game", MSG_ERROR);
+			}
+			catch (e:Dynamic)
+			{
+				NativeAPI.showMessageBox("Error!", "Please create folder to\n" + SUtil.getStorageDirectory(true) + "\nPress OK to close the game", MSG_ERROR);
 				lime.system.System.exit(1);
-            }
+			}
 		}
 	}
 	#end
