@@ -23,11 +23,13 @@ class MainState extends FlxState {
 		funkin.backend.system.Main.framerateSprite.setScale();
 		if (!initiated)
 		{
+			#if mobile
 			if (CopyState.checkExistingFiles())
 			{
 				FlxG.switchState(new CopyState());
 				return;
 			}
+			#end
 			Main.loadGameSettings();
 		}
 		initiated = true;
@@ -69,10 +71,6 @@ class MainState extends FlxState {
 		DiscordUtil.init();
 		EventsData.reloadEvents();
 		TitleState.initialized = false;
-
-		#if mobile
-		
-		#end
 
 		if (betaWarningShown)
 			FlxG.switchState(new TitleState());
