@@ -64,7 +64,7 @@ class MainState extends FlxState {
 		TitleState.initialized = false;
 
 		#if mobile
-		if(CopyState.checkExistingFiles()){
+		if(CopyState.checkExistingFiles() && !initiated){
 			FlxG.switchState(new CopyState());
 			return;
 		}
