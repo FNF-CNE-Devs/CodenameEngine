@@ -23,6 +23,7 @@ class MainState extends FlxState {
 		funkin.backend.system.Main.framerateSprite.setScale();
 		if (!initiated)
 		{
+			Main.loadGameSettings();
 			#if mobile
 			if (CopyState.checkExistingFiles())
 			{
@@ -30,7 +31,6 @@ class MainState extends FlxState {
 				return;
 			}
 			#end
-			Main.loadGameSettings();
 		}
 		initiated = true;
 
