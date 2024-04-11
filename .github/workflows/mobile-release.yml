@@ -2,7 +2,7 @@ name: Mobile + Release
 on: workflow_dispatch
 jobs:
   Android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         storage-type: [EXTERNAL, MEDIA, OBB, DATA]
