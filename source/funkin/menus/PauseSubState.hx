@@ -155,8 +155,8 @@ class PauseSubState extends MusicBeatSubstate
 				PlayState.instance.registerSmoothTransition();
 				FlxG.resetState();
 			case "Change Controls":
-				var daSubstate:Class<MusicBeatSubstate> = #if mobile MobileControlSelectSubState #else KeybindsOptions #end;
-					openSubState(Type.createInstance(daSubstate, #if mobile [()->camVPad.visible = true, ()->camVPad.visible = false] #else [] #end));
+				var daSubstate:Class<MusicBeatSubstate> = MobileControls.mobileC ? MobileControlSelectSubState : KeybindsOptions;
+					openSubState(Type.createInstance(daSubstate, MobileControls.mobileC ? [()->camVPad.visible = true, ()->camVPad.visible = false] : []));
 			// case "Chart Editor":
 			case "Change Options":
 				FlxG.switchState(new OptionsMenu());
