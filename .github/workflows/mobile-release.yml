@@ -116,7 +116,7 @@ jobs:
       - name: Move DATA File
         run: mv /home/runner/CodenameEngine-release.apk /home/runner/CodenameEngine-DATA.apk
 
-      - name: Download EXTENAL Build
+      - name: Download EXTERNAL Build
         uses: actions/download-artifact@main
         with:
            name: androidBuild-EXTERNAL
