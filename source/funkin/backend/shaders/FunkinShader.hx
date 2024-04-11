@@ -32,7 +32,7 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 	 * Accepts `#pragma header`.
 	 * @param frag Fragment source (pass `null` to use default)
 	 * @param vert Vertex source (pass `null` to use default)
-	 * @param glslVer Version of GLSL to use (defaults to 120)
+	 * @param glslVer Version of GLSL to use (defaults to 120 at desktop, 100 at mobile)
 	 */
 	public override function new(frag:String, vert:String, glslVer:String = #if mobile "100" #else "120" #end) {
 		if (frag == null) frag = ShaderTemplates.defaultFragmentSource;
