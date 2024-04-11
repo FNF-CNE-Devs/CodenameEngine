@@ -94,6 +94,8 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		if (isAnimFinished() && animation.exists(getAnimName() + '-loop'))
+			playAnim(getAnimName() + '-loop', false, lastAnimContext);
 		if (animateAtlas != null)
 			animateAtlas.update(elapsed);
 	}
