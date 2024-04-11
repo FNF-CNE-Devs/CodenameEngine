@@ -1,4 +1,4 @@
-package funkin.backend.utils.native;
+package mobile.backend.utils.native;
 
 #if ios
 @:cppFileCode("#include <sys/sysctl.h>")

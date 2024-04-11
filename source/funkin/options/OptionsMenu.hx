@@ -30,7 +30,7 @@ class OptionsMenu extends TreeMenu {
 		{
 			name: 'Mobile Options >',
 			desc: 'Change Options Related To Mobile & Mobile Controls',
-			state: MobileOptions,
+			state: mobile.options.categories.MobileOptions,
 		},
 		{
 			name: 'Miscellaneous >',

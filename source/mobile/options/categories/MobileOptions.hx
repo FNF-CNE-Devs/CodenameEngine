@@ -1,11 +1,11 @@
-package funkin.options.categories;
+package mobile.options.categories;
 
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
-import lime.system.System;
 import flixel.util.FlxTimer;
 import funkin.backend.MusicBeatState;
 import mobile.substates.MobileControlSelectSubState;
+import funkin.options.OptionsScreen;
 
 class MobileOptions extends OptionsScreen {
 
@@ -15,11 +15,11 @@ class MobileOptions extends OptionsScreen {
 		dpadMode = 'LEFT_FULL';
 		actionMode = 'A_B';
 		super("Mobile", 'Change Mobile Related Things such as Controls alpha, screen timeout....', null, 'LEFT_FULL', 'A_B');
-		add(new TextOption(
+		add(new funkin.options.type.TextOption(
 			"Mobile Controls",
 			"Choose which control to play with (hitbox, vpad left, vpad right, custom...).",
 			openMobileControlsMenu));
-		add(new NumOption(
+		add(new funkin.options.type.NumOption(
 			"Controls Alpha",
 			"Change how transparent the mobile controls should be",
 			0.0, // minimum
@@ -27,14 +27,14 @@ class MobileOptions extends OptionsScreen {
 			0.1, // change
 			"controlsAlpha", // save name or smth
 			changeControlsAlpha)); // callback
-		add(new ArrayOption(
+		add(new funkin.options.type.ArrayOption(
 			"Hitbox Design",
 			"Choose how your hitbox should look like!",
 			['gradient', 'noGradient', 'hidden'],
 			['Gradient', 'No Gradient', 'Hidden'],
 			'hitboxType'));
 		#if mobile
-		add(new Checkbox(
+		add(new funkin.options.type.Checkbox(
 			"Allow Screen Timeout",
 			"If checked, The phone will enter sleep mode if the player is inactive.",
 			"screenTimeOut"));
@@ -43,11 +43,11 @@ class MobileOptions extends OptionsScreen {
 
 	override function update(elapsed) super.update(elapsed);
 
-	override dynamic function onClose(o:OptionsScreen) System.allowScreenTimeout = Options.screenTimeOut;
+	override dynamic function onClose(o:OptionsScreen) lime.system.System.allowScreenTimeout = funkin.options.Options.screenTimeOut;
 
 	function changeControlsAlpha(alpha) {
 		MusicBeatState.instance.virtualPad.alpha = alpha;
-		if (MobileControls.mobileC) {
+		if (mobile.objects.MobileControls.mobileC) {
 			FlxG.sound.volumeUpKeys = [];
 			FlxG.sound.volumeDownKeys = [];
 			FlxG.sound.muteKeys = [];

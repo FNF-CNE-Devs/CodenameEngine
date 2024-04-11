@@ -1,4 +1,4 @@
-package funkin.backend.utils.native;
+package mobile.backend.utils.native;
 
 #if android
 class Android

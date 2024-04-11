@@ -1,6 +1,6 @@
 // fully stolen from PsychJNI bleh
 
-package mobile.utils;
+package mobile.backend;
 
 #if android
 import lime.system.JNI;
