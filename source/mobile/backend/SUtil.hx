@@ -23,7 +23,8 @@ class SUtil
 	#if sys
 	public static function getStorageDirectory(?force:Bool = false #if (android), type:StorageType = #if EXTERNAL EXTERNAL #elseif OBB EXTERNAL_OBB #elseif MEDIA EXTERNAL_MEDIA #else EXTERNAL_DATA #end #end):String
 	{
-		var daPath:String = '';
+		#if mobile
+		var daPath:String;
 		#if android
 		var forcedPath:String = '/storage/emulated/0/';
 		var packageNameLocal:String = 'com.yoshman29.codenameengine';
@@ -45,6 +46,9 @@ class SUtil
 		#end
 
 		return daPath;
+		#else
+		return Sys.getCwd();
+		#end
 	}
 
 	public static function mkDirs(directory:String):Void
