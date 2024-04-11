@@ -3,6 +3,10 @@ package funkin.backend.system.framerate;
 import funkin.backend.utils.native.HiddenProcess;
 import funkin.backend.utils.MemoryUtil;
 import funkin.backend.system.Logs;
+#if android
+import android.os.Build;
+import android.os.Build.VERSION;
+#end
 
 using StringTools;
 
@@ -87,7 +91,7 @@ class SystemInfo extends FramerateCategory {
 				}
 			}
 			#elseif android
-			cpuName = android.os.Build.BOARD;
+			cpuName = (VERSION.SDK_INT >= VERSION_CODES.S) ? Build.SOC_MODEL : Build.HARDWARE;
 			#end
 		} catch (e) {
 			Logs.trace('Unable to grab CPU Name: $e', ERROR, RED);
