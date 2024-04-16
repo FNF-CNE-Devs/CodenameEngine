@@ -37,6 +37,7 @@ enum FlxActionMode
 	A_B_C;
 	A_B_E;
 	A_B_X_Y;
+	A_B_M_E;
 	A_B_C_X_Y;
 	A_B_C_X_Y_Z;
 	A_B_C_D_V_X_Y_Z;
@@ -190,6 +191,12 @@ class FlxVirtualPad extends FlxButtonGroup
 				add(buttonY = createButton(FlxG.width - 258, FlxG.height - 251, 'y', 0x4A35B9));
 				add(buttonB = createButton(FlxG.width - 258, FlxG.height - 131, 'b', 0xFFCB00));
 				add(buttonZ = createButton(FlxG.width - 132, FlxG.height - 251, 'z', 0xCCB98E));
+				add(buttonA = createButton(FlxG.width - 132, FlxG.height - 131, 'a', 0xFF0000));
+			// CNE Releated
+			case A_B_M_E:
+				add(buttonM = createButton(FlxG.width - 510, FlxG.height - 131, 'm', 0x00BBFF));
+				add(buttonB = createButton(FlxG.width - 258, FlxG.height - 131, 'b', 0xFFCB00));
+				add(buttonE = createButton(FlxG.width - 384, FlxG.height - 131, 'e', 0xFF7D00));
 				add(buttonA = createButton(FlxG.width - 132, FlxG.height - 131, 'a', 0xFF0000));
 			case NONE: // do nothing
 		}

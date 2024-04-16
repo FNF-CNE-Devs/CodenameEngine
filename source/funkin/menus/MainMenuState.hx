@@ -73,7 +73,7 @@ class MainMenuState extends MusicBeatState
 		}
 
 		FlxG.camera.follow(camFollow, null, 0.06);
-		var modsKey:String = MobileControls.mobileC ? "Y" : controls.getKeyName(SWITCHMOD);
+		var modsKey:String = MobileControls.mobileC ? "M" : controls.getKeyName(SWITCHMOD);
 
 		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nCommit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[${modsKey}] Open Mods menu\n');
 		versionShit.y -= versionShit.height;
@@ -82,7 +82,7 @@ class MainMenuState extends MusicBeatState
 
 		changeItem();
 
-		addVirtualPad('UP_DOWN', 'A_B_X_Y');
+		addVirtualPad('UP_DOWN', 'A_B_M_E');
 	}
 
 	var selectedSomethin:Bool = false;
@@ -95,7 +95,7 @@ class MainMenuState extends MusicBeatState
 		if (!selectedSomethin)
 		{
 			if (canAccessDebugMenus) {
-				if (FlxG.keys.justPressed.SEVEN || virtualPad.buttonX.justPressed) {
+				if (FlxG.keys.justPressed.SEVEN || virtualPad.buttonE.justPressed) {
 					persistentUpdate = false;
 					persistentDraw = true;
 					openSubState(new funkin.editors.EditorPicker());
@@ -119,7 +119,7 @@ class MainMenuState extends MusicBeatState
 				FlxG.switchState(new TitleState());
 
 			#if MOD_SUPPORT
-			if (controls.SWITCHMOD || virtualPad.buttonY.justPressed) {
+			if (controls.SWITCHMOD || virtualPad.buttonM.justPressed) {
 				openSubState(new ModSwitchMenu());
 				persistentUpdate = false;
 				persistentDraw = true;
@@ -143,7 +143,7 @@ class MainMenuState extends MusicBeatState
 	override function closeSubState() {
 		super.closeSubState();
 		removeVirtualPad();
-		addVirtualPad('UP_DOWN', 'A_B_X_Y');
+		addVirtualPad('UP_DOWN', 'A_B_M_E');
 	}
 
 	public override function switchTo(nextState:FlxState):Bool {
