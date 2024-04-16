@@ -71,7 +71,6 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 	public function close() {
 		onClose(this);
 		if(prevVPadModes.length > 0){
-			trace(prevVPadModes);
 			MusicBeatState.instance.removeVirtualPad();
 			MusicBeatState.instance.addVirtualPad(prevVPadModes[0], prevVPadModes[1]);
 			MusicBeatState.instance.addVirtualPadCamera(false);

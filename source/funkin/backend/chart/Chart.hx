@@ -84,7 +84,6 @@ class Chart {
 				}
 			}
 		}
-		trace(data);
 		return data;
 	}
 

@@ -140,6 +140,12 @@ class MainMenuState extends MusicBeatState
 		});
 	}
 
+	override function closeSubState() {
+		super.closeSubState();
+		removeVirtualPad();
+		addVirtualPad('UP_DOWN', 'A_B_X_Y');
+	}
+
 	public override function switchTo(nextState:FlxState):Bool {
 		try {
 			menuItems.forEach(function(spr:FlxSprite) {
