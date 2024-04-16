@@ -39,7 +39,7 @@ In the future (when the engine won't be a WIP anymore) we're gonna also publish 
 <details>
   <summary><h2>Mobile Credits</h2></summary>
 
-- Credits to [mcagabe19](https://youtube.com/@mcagabe19) for head porting
+- Credits to [mcagabe19](https://youtube.com/@mcagabe19) for head porting (retired)
 - Credits to [Karim Akra](https://youtube.com/@Karim0690) to helping for the port
 - Credits to [MAJigsaw77](https://github.com/MAJigsaw77) for mobile controls
 </details>
