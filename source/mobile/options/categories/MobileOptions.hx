@@ -57,12 +57,14 @@ class MobileOptions extends OptionsScreen {
 	override function update(elapsed) super.update(elapsed);
 
 	override public function destroy() {
+		#if mobile LimeSystem.allowScreenTimeout = Options.screenTimeOut; #end
+		#if android
 		File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
-		LimeSystem.allowScreenTimeout = Options.screenTimeOut;
 		if (Options.storageType != lastStorageType) {
 			funkin.backend.utils.NativeAPI.showMessageBox('Notice!', 'Storage Type has been changed and you needed restart the game!!\nPress OK to close the game.');
 			LimeSystem.exit(0);
 		}
+		#end
 	}
 
 	function changeControlsAlpha(alpha) {
