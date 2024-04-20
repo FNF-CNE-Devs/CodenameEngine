@@ -7,6 +7,7 @@ import android.Permissions;
 import android.Settings;
 import funkin.options.Options;
 #end
+import lime.system.System as LimeSystem;
 import funkin.backend.utils.NativeAPI;
 #if sys
 import sys.io.File;
@@ -28,9 +29,12 @@ class SUtil
 		var daPath:String;
 		#if android
 		daPath = force ? StorageType.fromStrForce(Options.storageType) : StorageType.fromStr(Options.storageType);
+		if (!FileSystem.exists(LimeSystem.applicationStorageDirectory + 'storagetype.txt')) File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
+		var curStorageType:String = File.getContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt');
+		daPath = force ? StorageType.fromStrForce(curStorageType) : StorageType.fromStr(curStorageType);
 		daPath = haxe.io.Path.addTrailingSlash(daPath);
 		#elseif ios
-		daPath = lime.system.System.documentsDirectory;
+		daPath = LimeSystem.documentsDirectory;
 		#end
 
 		return daPath;
@@ -106,7 +110,7 @@ class SUtil
 			catch (e:Dynamic)
 			{
 				NativeAPI.showMessageBox("Error!", "Please create folder to\n" + SUtil.getStorageDirectory(true) + "\nPress OK to close the game", MSG_ERROR);
-				lime.system.System.exit(1);
+				LimeSystem.exit(1);
 			}
 		}
 	}

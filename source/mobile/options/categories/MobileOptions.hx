@@ -7,6 +7,10 @@ import funkin.backend.MusicBeatState;
 import mobile.substates.MobileControlSelectSubState;
 import funkin.options.OptionsScreen;
 import funkin.options.Options;
+import lime.system.System as LimeSystem;
+#if sys
+import sys.io.File;
+#end
 
 class MobileOptions extends OptionsScreen {
 	var canEnter:Bool = true;
@@ -43,9 +47,9 @@ class MobileOptions extends OptionsScreen {
 		#if android
 		add(new funkin.options.type.ArrayOption(
 			"Storage Type",
-			"Test reasons",
-			['EXTERNAL_DATA', 'EXTERNAL_OBB', 'EXTERNAL', 'EXTERNAL_OBB'],
-			['Data', 'Obb', '.' + lime.app.Application.current.meta.get('file'), 'Media'],
+			"Choose which folder Codename Engine should use!",
+			['EXTERNAL_DATA', 'EXTERNAL_OBB', 'EXTERNAL_MEDIA', 'EXTERNAL'],
+			['Data', 'Obb', 'Media', '.' + lime.app.Application.current.meta.get('file')],
 			'storageType'));
 		#end
 	}
@@ -53,12 +57,11 @@ class MobileOptions extends OptionsScreen {
 	override function update(elapsed) super.update(elapsed);
 
 	override public function destroy() {
-		/*Options.save();
-		Options.applySettings();*/
-		lime.system.System.allowScreenTimeout = Options.screenTimeOut;
+		File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
+		LimeSystem.allowScreenTimeout = Options.screenTimeOut;
 		if (Options.storageType != lastStorageType) {
 			funkin.backend.utils.NativeAPI.showMessageBox('Notice!', 'Storage Type has been changed and you needed restart the game!!\nPress OK to close the game.');
-			lime.system.System.exit(0);
+			LimeSystem.exit(0);
 		}
 	}
 
