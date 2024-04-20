@@ -6,10 +6,11 @@ import flixel.util.FlxTimer;
 import funkin.backend.MusicBeatState;
 import mobile.substates.MobileControlSelectSubState;
 import funkin.options.OptionsScreen;
+import funkin.options.Options;
 
 class MobileOptions extends OptionsScreen {
-
 	var canEnter:Bool = true;
+	var lastStorageType:String = Options.storageType;
 
 	public override function new() {
 		dpadMode = 'LEFT_FULL';
@@ -39,11 +40,27 @@ class MobileOptions extends OptionsScreen {
 			"If checked, The phone will enter sleep mode if the player is inactive.",
 			"screenTimeOut"));
 		#end
+		#if android
+		add(new funkin.options.type.ArrayOption(
+			"Storage Type",
+			"Test reasons",
+			['EXTERNAL_DATA', 'EXTERNAL_OBB', 'EXTERNAL', 'EXTERNAL_OBB'],
+			['Data', 'Obb', '.' + lime.app.Application.current.meta.get('file'), 'Media'],
+			'storageType'));
+		#end
 	}
 
 	override function update(elapsed) super.update(elapsed);
 
-	override dynamic function onClose(o:OptionsScreen) lime.system.System.allowScreenTimeout = funkin.options.Options.screenTimeOut;
+	override public function destroy() {
+		/*Options.save();
+		Options.applySettings();*/
+		lime.system.System.allowScreenTimeout = Options.screenTimeOut;
+		if (Options.storageType != lastStorageType) {
+			funkin.backend.utils.NativeAPI.showMessageBox('Notice!', 'Storage Type has been changed and you needed restart the game!!\nPress OK to close the game.');
+			lime.system.System.exit(0);
+		}
+	}
 
 	function changeControlsAlpha(alpha) {
 		MusicBeatState.instance.virtualPad.alpha = alpha;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.Permissions;
 import android.Settings;
+import funkin.options.Options;
 #end
 import funkin.backend.utils.NativeAPI;
 #if sys
@@ -21,25 +22,12 @@ using StringTools;
 class SUtil
 {
 	#if sys
-	public static function getStorageDirectory(?force:Bool = false #if (android), type:StorageType = #if EXTERNAL EXTERNAL #elseif OBB EXTERNAL_OBB #elseif MEDIA EXTERNAL_MEDIA #else EXTERNAL_DATA #end #end):String
+	public static function getStorageDirectory(?force:Bool = false):String
 	{
 		#if mobile
 		var daPath:String;
 		#if android
-		var forcedPath:String = '/storage/emulated/0/';
-		var packageNameLocal:String = 'com.yoshman29.codenameengine';
-		var fileLocal:String = 'CodenameEngine';
-		switch (type)
-		{
-			case EXTERNAL_DATA:
-				daPath = force ? forcedPath + 'Android/data/' + packageNameLocal + '/files' : Context.getExternalFilesDir();
-			case EXTERNAL_OBB:
-				daPath = force ? forcedPath + 'Android/obb/' + packageNameLocal : Context.getObbDir();
-			case EXTERNAL_MEDIA:
-				daPath = force ? forcedPath + 'Android/media/' + packageNameLocal : Environment.getExternalStorageDirectory() + '/Android/media/' + lime.app.Application.current.meta.get('packageName');
-			case EXTERNAL:
-				daPath = force ? forcedPath + '.' + fileLocal : Environment.getExternalStorageDirectory() + '/.' + lime.app.Application.current.meta.get('file');
-		}
+		daPath = force ? StorageType.fromStrForce(Options.storageType) : StorageType.fromStr(Options.storageType);
 		daPath = haxe.io.Path.addTrailingSlash(daPath);
 		#elseif ios
 		daPath = lime.system.System.documentsDirectory;
@@ -126,10 +114,41 @@ class SUtil
 	#end
 }
 
-enum StorageType
+enum abstract StorageType(String) from String to String
 {
-	EXTERNAL_DATA;
-	EXTERNAL_OBB;
-	EXTERNAL_MEDIA;
-	EXTERNAL;
+	final forcedPath = '/storage/emulated/0/';
+	final packageNameLocal = 'com.yoshman29.codenameengine';
+	final fileLocal = 'CodenameEngine';
+
+	public static function fromStr(str:String):StorageType {
+		final EXTERNAL_DATA = Context.getExternalFilesDir();
+		final EXTERNAL_OBB = Context.getObbDir();
+		final EXTERNAL_MEDIA = Environment.getExternalStorageDirectory() + '/Android/media/' + lime.app.Application.current.meta.get('packageName');
+		final EXTERNAL = Environment.getExternalStorageDirectory() + '/.' + lime.app.Application.current.meta.get('file');
+
+		return switch (str)
+		{
+			case "EXTERNAL_DATA": EXTERNAL_DATA;
+			case "EXTERNAL_OBB": EXTERNAL_OBB;
+			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
+			case "EXTERNAL": EXTERNAL;
+			default: null;
+		}
+	}
+
+	public static function fromStrForce(str:String):StorageType {
+		final EXTERNAL_DATA = forcedPath + 'Android/data/' + packageNameLocal + '/files';
+		final EXTERNAL_OBB = forcedPath + 'Android/obb/' + packageNameLocal;
+		final EXTERNAL_MEDIA = forcedPath + 'Android/media/' + packageNameLocal;
+		final EXTERNAL = forcedPath + '.' + fileLocal;
+
+		return switch (str)
+		{
+			case "EXTERNAL_DATA": EXTERNAL_DATA;
+			case "EXTERNAL_OBB": EXTERNAL_OBB;
+			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
+			case "EXTERNAL": EXTERNAL;
+			default: null;
+		}
+	}
 }

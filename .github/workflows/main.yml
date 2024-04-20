@@ -73,9 +73,6 @@ jobs:
           if-no-files-found: error
   Android:
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        storage-type: [EXTERNAL, MEDIA, OBB, DATA]
     steps:
       - name: Checkout
         uses: actions/checkout@main
@@ -108,12 +105,12 @@ jobs:
       - name: Free Disk Space
         run: sudo swapoff -a && sudo rm -f /swapfile && sudo apt clean && docker rmi $(docker image ls -aq) && df -h
       - name: Compile
-        run: haxelib run lime build android -D ${{ matrix.storage-type }}
+        run: haxelib run lime build android
       - name: Upload Artifact
         if: ${{ success() }}
         uses: actions/upload-artifact@main
         with:
-          name: androidBuild-${{ matrix.storage-type }}
+          name: androidBuild
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
   iOS:

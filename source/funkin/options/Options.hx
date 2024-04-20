@@ -34,15 +34,17 @@ class Options
 	public static var hitWindow:Float = 250;
 	public static var songOffset:Float = 0;
 	public static var framerate:Int = 60;
-	public static var gpuOnlyBitmaps:Bool = #if (mac || web || mobile) false #else true #end; // causes issues on mac and web
+	public static var gpuOnlyBitmaps:Bool = #if (mac || web || mobile) false #else true #end; // causes issues on mac, web and mobile
 
 	public static var lastLoadedMod:String = null;
 
 	// mobile options
-	public static var screenTimeOut:Bool = false;
+	#if mobile public static var screenTimeOut:Bool = false; #end
 	public static var hideHitbox:Bool = false;
 	public static var hitboxType:String = 'gradient';
 	public static var controlsAlpha:Float = FlxG.onMobile ? 0.6 : 0;
+
+	#if android public static var storageType:String = "EXTERNAL_DATA"; #end
 
 	/**
 	 * EDITORS SETTINGS

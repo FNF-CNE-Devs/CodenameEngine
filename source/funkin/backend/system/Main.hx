@@ -63,7 +63,7 @@ class Main extends Sprite
 		instance = this;
 
 		#if mobile
-		#if (android && EXTERNAL || MEDIA)
+		#if android
 		SUtil.doPermissionsShit();
 		#end
 		Sys.setCwd(SUtil.getStorageDirectory(false));
