@@ -14,7 +14,7 @@ import sys.io.File;
 
 class MobileOptions extends OptionsScreen {
 	var canEnter:Bool = true;
-	var lastStorageType:String = Options.storageType;
+	#if android var lastStorageType:String = Options.storageType; #end
 
 	public override function new() {
 		dpadMode = 'LEFT_FULL';
