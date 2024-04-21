@@ -17,9 +17,16 @@ import sys.io.File;
 
 class MobileOptions extends OptionsScreen {
 	var canEnter:Bool = true;
-	#if android final lastStorageType:String = Options.storageType; #end
+	#if android
+	final lastStorageType:String = Options.storageType;
+	var externalPaths:Array<String> = SUtil.checkExternalPaths(true);
+	var typeNames:Array<String> = ['Data', 'Obb', 'Media', 'External'];
+	var typeVars:Array<String> = ['EXTERNAL_DATA', 'EXTERNAL_OBB', 'EXTERNAL_MEDIA', 'EXTERNAL'];
+	#end
 
 	public override function new() {
+		typeNames = typeNames.concat(externalPaths);
+		typeVars = typeVars.concat(externalPaths);
 		dpadMode = 'LEFT_FULL';
 		actionMode = 'A_B';
 		super("Mobile", 'Change Mobile Related Things such as Controls alpha, screen timeout....', null, 'LEFT_FULL', 'A_B');
@@ -51,8 +58,8 @@ class MobileOptions extends OptionsScreen {
 		add(new funkin.options.type.ArrayOption(
 			"Storage Type",
 			"Choose which folder Codename Engine should use! (CHANGING THIS MAKES DELETE YOUR OLD FOLDER!!)",
-			['EXTERNAL_DATA', 'EXTERNAL_OBB', 'EXTERNAL_MEDIA', 'EXTERNAL'],
-			['Data', 'Obb', 'Media', 'External'],
+			typeVars,
+			typeNames,
 			'storageType'));
 		#end
 	}

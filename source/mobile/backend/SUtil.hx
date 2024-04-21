@@ -116,6 +116,22 @@ class SUtil
 			}
 		}
 	}
+
+	public static function checkExternalPaths(?splitStorage = false):Array<String> {
+		var process = new sys.io.Process('grep -o "/storage/....-...." /proc/mounts | paste -sd \',\'');
+		var paths:String = process.stdout.readAll().toString();
+		if (splitStorage) paths = paths.replace('/storage/', '');
+		return paths.split(',');
+	}
+
+	public static function getExternalDirectory(external:String):String {
+		var daPath:String = '';
+		for (path in checkExternalPaths())
+			if (path.contains(external)) daPath = path;
+
+		daPath = haxe.io.Path.addTrailingSlash(daPath.endsWith("\n") ? daPath.substr(0, daPath.length - 1) : daPath);
+		return daPath;
+	}
 	#end
 	#end
 }
@@ -140,7 +156,7 @@ enum abstract StorageType(String) from String to String
 			case "EXTERNAL_OBB": EXTERNAL_OBB;
 			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
 			case "EXTERNAL": EXTERNAL;
-			default: EXTERNAL_DATA;
+			default: SUtil.getExternalDirectory(str) + '.' + fileLocal;
 		}
 	}
 
@@ -157,7 +173,7 @@ enum abstract StorageType(String) from String to String
 			case "EXTERNAL_OBB": EXTERNAL_OBB;
 			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
 			case "EXTERNAL": EXTERNAL;
-			default: EXTERNAL_DATA;
+			default: SUtil.getExternalDirectory(str) + '.' + fileLocal;
 		}
 	}
 }
