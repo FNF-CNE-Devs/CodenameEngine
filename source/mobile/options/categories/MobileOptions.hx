@@ -52,7 +52,7 @@ class MobileOptions extends OptionsScreen {
 			"Storage Type",
 			"Choose which folder Codename Engine should use! (CHANGING THIS MAKES DELETE YOUR OLD FOLDER!!)",
 			['EXTERNAL_DATA', 'EXTERNAL_OBB', 'EXTERNAL_MEDIA', 'EXTERNAL'],
-			['Data', 'Obb', 'Media', '.' + lime.app.Application.current.meta.get('file')],
+			['Data', 'Obb', 'Media', 'External'],
 			'storageType'));
 		#end
 	}
