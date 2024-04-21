@@ -33,7 +33,7 @@ class UIState extends MusicBeatState {
 		__mousePos = FlxPoint.get();
 		super.create();
 		Framerate.offset.y = 30;
-		FlxG.mouse.visible = !MobileControls.mobileC;
+		FlxG.mouse.visible = true;
 
 		FlxG.stage.window.onKeyDown.add(onKeyDown);
 		FlxG.stage.window.onKeyUp.add(onKeyUp);
@@ -76,8 +76,6 @@ class UIState extends MusicBeatState {
 	}
 
 	public function isOverlapping(spr:UISprite, rect:FlxRect) {
-		if(MobileControls.mobileC) return false;
-
 		for(camera in spr.__lastDrawCameras) {
 			var pos = FlxG.mouse.getScreenPosition(camera, FlxPoint.get());
 			__rect.x = rect.x;
@@ -107,7 +105,6 @@ class UIState extends MusicBeatState {
 
 	public override function tryUpdate(elapsed:Float) {
 		super.tryUpdate(elapsed);
-		if(MobileControls.mobileC) return;
 
 		FlxG.mouse.getScreenPosition(FlxG.camera, __mousePos);
 

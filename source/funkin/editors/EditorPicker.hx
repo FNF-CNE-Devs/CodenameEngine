@@ -86,7 +86,7 @@ class EditorPicker extends MusicBeatSubstate {
 			subCam.scroll.x += camVelocity * elapsed;
 			return;
 		}
-		changeSelection((!MobileControls.mobileC ? -FlxG.mouse.wheel : 0) + (controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
+		changeSelection(-FlxG.mouse.wheel + (controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
 
 		if (!MobileControls.mobileC) FlxG.mouse.getScreenPosition(subCam, curMousePos);
 		if (!MobileControls.mobileC && curMousePos.x != oldMousePos.x || curMousePos.y != oldMousePos.y) {
