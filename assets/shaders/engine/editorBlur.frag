@@ -24,7 +24,7 @@ void main() {
 	float fsteps = steps;
 	for(float inside = 1.0; inside < stepsInside+1.0; inside++) {
 		for(int i = 0; i < steps; i++) {
-			float fi = i;
+			float fi = float(i);
 			color += getColor(camPos + vec2(
 				strength * (inside / stepsInside) * cos(fi / fsteps * (PI * 2.0)),
 				strength * (inside / stepsInside) * sin(fi / fsteps * (PI * 2.0))
