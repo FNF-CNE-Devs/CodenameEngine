@@ -37,7 +37,7 @@ class CharterSelection extends EditorTreeMenu {
 				list.push(new NewOption("New Difficulty", "New Difficulty", function() {
 					FlxG.state.openSubState(new ChartCreationScreen(saveChart));
 				}));
-				optionsTree.add(new OptionsScreen(s.name, "Select a difficulty to continue.", list));
+				optionsTree.add(new OptionsScreen(s.name, "Select a difficulty to continue.", list, 'UP_DOWN', 'A_B'));
 			}, s.parsedColor.getDefault(0xFFFFFFFF))
 		];
 
@@ -48,6 +48,8 @@ class CharterSelection extends EditorTreeMenu {
 		main = new OptionsScreen("Chart Editor", "Select a song to modify the charts from.", list);
 
 		DiscordUtil.call("onEditorTreeLoaded", ["Chart Editor"]);
+
+		addVirtualPad('UP_DOWN', 'A_B');
 	}
 
 	override function createPost() {

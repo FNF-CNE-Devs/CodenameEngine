@@ -116,31 +116,6 @@ class SUtil
 			}
 		}
 	}
-
-	public static function onStorageChange():Void
-	{
-		File.saveContent(lime.system.System.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
-
-		var lastStoragePath:String = StorageType.fromStrForce(mobile.options.categories.MobileOptions.lastStorageType) + '/';
-		/*var curStoragePath:String = StorageType.fromStrForce(File.getContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt')) + '/';
-
-		if (!FileSystem.exists(curStoragePath)) FileSystem.createDirectory(curStoragePath);
-		for (smth in FileSystem.readDirectory(lastStoragePath))
-		{
-			trace(smth);
-			trace(curStoragePath);
-			trace(lastStoragePath);
-			FileSystem.rename(lastStoragePath + smth, curStoragePath + smth);
-			FileSystem.rename(lastStoragePath + smth, curStoragePath + smth);
-		}*/
-
-		try
-		{
-			Sys.command('rm', ['-rf', lastStoragePath]);
-		}
-		catch (e:haxe.Exception)
-			trace('Failed to remove last directory. (${e.message})');
-	}
 	#end
 	#end
 }

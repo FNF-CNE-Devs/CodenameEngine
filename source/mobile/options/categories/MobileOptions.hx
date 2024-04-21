@@ -8,13 +8,16 @@ import mobile.substates.MobileControlSelectSubState;
 import funkin.options.OptionsScreen;
 import funkin.options.Options;
 import lime.system.System as LimeSystem;
+#if android
+import mobile.backend.SUtil;
+#end
 #if sys
 import sys.io.File;
 #end
 
 class MobileOptions extends OptionsScreen {
 	var canEnter:Bool = true;
-	#if android public static final lastStorageType:String = Options.storageType; #end
+	#if android final lastStorageType:String = Options.storageType; #end
 
 	public override function new() {
 		dpadMode = 'LEFT_FULL';
@@ -47,7 +50,7 @@ class MobileOptions extends OptionsScreen {
 		#if android
 		add(new funkin.options.type.ArrayOption(
 			"Storage Type",
-			"Choose which folder Codename Engine should use!",
+			"Choose which folder Codename Engine should use! (CHANGING THIS MAKES DELETE YOUR OLD FOLDER!!)",
 			['EXTERNAL_DATA', 'EXTERNAL_OBB', 'EXTERNAL_MEDIA', 'EXTERNAL'],
 			['Data', 'Obb', 'Media', '.' + lime.app.Application.current.meta.get('file')],
 			'storageType'));
@@ -60,7 +63,7 @@ class MobileOptions extends OptionsScreen {
 		#if mobile LimeSystem.allowScreenTimeout = Options.screenTimeOut; #end
 		#if android
 		if (Options.storageType != lastStorageType) {
-			mobile.backend.SUtil.onStorageChange();
+			onStorageChange();
 			funkin.backend.utils.NativeAPI.showMessageBox('Notice!', 'Storage Type has been changed and you needed restart the game!!\nPress OK to close the game.');
 			LimeSystem.exit(0);
 		}
@@ -90,5 +93,19 @@ class MobileOptions extends OptionsScreen {
 			FlxG.state.persistentUpdate = true;
 			new FlxTimer().start(0.2, (tmr:FlxTimer) -> canEnter = true);
 		}));
+	}
+
+	function onStorageChange():Void
+	{
+		File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
+	
+		var lastStoragePath:String = StorageType.fromStrForce(lastStorageType) + '/';
+	
+		try
+		{
+			Sys.command('rm', ['-rf', lastStoragePath]);
+		}
+		catch (e:haxe.Exception)
+			trace('Failed to remove last directory. (${e.message})');
 	}
 }
