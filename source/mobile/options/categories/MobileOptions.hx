@@ -14,7 +14,7 @@ import sys.io.File;
 
 class MobileOptions extends OptionsScreen {
 	var canEnter:Bool = true;
-	#if android var lastStorageType:String = Options.storageType; #end
+	#if android public static final lastStorageType:String = Options.storageType; #end
 
 	public override function new() {
 		dpadMode = 'LEFT_FULL';
@@ -59,8 +59,8 @@ class MobileOptions extends OptionsScreen {
 	override public function destroy() {
 		#if mobile LimeSystem.allowScreenTimeout = Options.screenTimeOut; #end
 		#if android
-		File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
 		if (Options.storageType != lastStorageType) {
+			mobile.backend.SUtil.onStorageChange();
 			funkin.backend.utils.NativeAPI.showMessageBox('Notice!', 'Storage Type has been changed and you needed restart the game!!\nPress OK to close the game.');
 			LimeSystem.exit(0);
 		}

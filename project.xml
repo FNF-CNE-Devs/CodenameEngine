@@ -217,6 +217,4 @@
 		<define name='objc' />
 		<ios linker-flags='-ObjC' />
 	</section>-->
-
-	<haxeflag name="--macro" value="mobile.backend.macros.SUtilMacro.check()" />
 </project>

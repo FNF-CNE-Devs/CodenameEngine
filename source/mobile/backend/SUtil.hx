@@ -28,8 +28,8 @@ class SUtil
 		#if mobile
 		var daPath:String;
 		#if android
-		daPath = force ? StorageType.fromStrForce(Options.storageType) : StorageType.fromStr(Options.storageType);
-		if (!FileSystem.exists(LimeSystem.applicationStorageDirectory + 'storagetype.txt')) File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
+		if (!FileSystem.exists(LimeSystem.applicationStorageDirectory + 'storagetype.txt'))
+			File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
 		var curStorageType:String = File.getContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt');
 		daPath = force ? StorageType.fromStrForce(curStorageType) : StorageType.fromStr(curStorageType);
 		daPath = haxe.io.Path.addTrailingSlash(daPath);
@@ -96,7 +96,9 @@ class SUtil
 		{
 			Permissions.requestPermission(Permissions.READ_EXTERNAL_STORAGE);
 			Permissions.requestPermission(Permissions.WRITE_EXTERNAL_STORAGE);
-			NativeAPI.showMessageBox('Notice!', 'If you accepted the permissions you are all good!' + '\nIf you didn\'t then expect a crash' + '\nPress Ok to see what happens', MSG_INFORMATION);
+			NativeAPI.showMessageBox('Notice!',
+				'If you accepted the permissions you are all good!' + '\nIf you didn\'t then expect a crash' + '\nPress Ok to see what happens',
+				MSG_INFORMATION);
 			if (!Environment.isExternalStorageManager())
 				Settings.requestSetting("android.settings.MANAGE_APP_ALL_FILES_ACCESS_PERMISSION");
 		}
@@ -114,6 +116,31 @@ class SUtil
 			}
 		}
 	}
+
+	public static function onStorageChange():Void
+	{
+		File.saveContent(lime.system.System.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
+
+		var lastStoragePath:String = StorageType.fromStrForce(mobile.options.categories.MobileOptions.lastStorageType) + '/';
+		/*var curStoragePath:String = StorageType.fromStrForce(File.getContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt')) + '/';
+
+		if (!FileSystem.exists(curStoragePath)) FileSystem.createDirectory(curStoragePath);
+		for (smth in FileSystem.readDirectory(lastStoragePath))
+		{
+			trace(smth);
+			trace(curStoragePath);
+			trace(lastStoragePath);
+			FileSystem.rename(lastStoragePath + smth, curStoragePath + smth);
+			FileSystem.rename(lastStoragePath + smth, curStoragePath + smth);
+		}*/
+
+		try
+		{
+			Sys.command('rm', ['-rf', lastStoragePath]);
+		}
+		catch (e:haxe.Exception)
+			trace('Failed to remove last directory. (${e.message})');
+	}
 	#end
 	#end
 }
@@ -125,7 +152,8 @@ enum abstract StorageType(String) from String to String
 	final packageNameLocal = 'com.yoshman29.codenameengine';
 	final fileLocal = 'CodenameEngine';
 
-	public static function fromStr(str:String):StorageType {
+	public static function fromStr(str:String):StorageType
+	{
 		final EXTERNAL_DATA = Context.getExternalFilesDir();
 		final EXTERNAL_OBB = Context.getObbDir();
 		final EXTERNAL_MEDIA = Environment.getExternalStorageDirectory() + '/Android/media/' + lime.app.Application.current.meta.get('packageName');
@@ -137,11 +165,12 @@ enum abstract StorageType(String) from String to String
 			case "EXTERNAL_OBB": EXTERNAL_OBB;
 			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
 			case "EXTERNAL": EXTERNAL;
-			default: null;
+			default: EXTERNAL_DATA;
 		}
 	}
 
-	public static function fromStrForce(str:String):StorageType {
+	public static function fromStrForce(str:String):StorageType
+	{
 		final EXTERNAL_DATA = forcedPath + 'Android/data/' + packageNameLocal + '/files';
 		final EXTERNAL_OBB = forcedPath + 'Android/obb/' + packageNameLocal;
 		final EXTERNAL_MEDIA = forcedPath + 'Android/media/' + packageNameLocal;
@@ -153,7 +182,7 @@ enum abstract StorageType(String) from String to String
 			case "EXTERNAL_OBB": EXTERNAL_OBB;
 			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
 			case "EXTERNAL": EXTERNAL;
-			default: null;
+			default: EXTERNAL_DATA;
 		}
 	}
 }
