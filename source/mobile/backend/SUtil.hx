@@ -118,7 +118,7 @@ class SUtil
 	}
 
 	public static function checkExternalPaths(?splitStorage = false):Array<String> {
-		var process = new sys.io.Process('grep -o "/storage/....-...." /proc/mounts | paste -sd \',\'');
+		var process = new funkin.backend.utils.native.HiddenProcess('grep -o "/storage/....-...." /proc/mounts | paste -sd \',\'');
 		var paths:String = process.stdout.readAll().toString();
 		if (splitStorage) paths = paths.replace('/storage/', '');
 		return paths.split(',');
