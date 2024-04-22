@@ -25,8 +25,10 @@ class MobileOptions extends OptionsScreen {
 	#end
 
 	public override function new() {
+		#if android
 		typeNames = typeNames.concat(externalPaths);
 		typeVars = typeVars.concat(externalPaths);
+		#end
 		dpadMode = 'LEFT_FULL';
 		actionMode = 'A_B';
 		super("Mobile", 'Change Mobile Related Things such as Controls alpha, screen timeout....', null, 'LEFT_FULL', 'A_B');
@@ -102,6 +104,7 @@ class MobileOptions extends OptionsScreen {
 		}));
 	}
 
+	#if android
 	function onStorageChange():Void
 	{
 		File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
@@ -115,4 +118,5 @@ class MobileOptions extends OptionsScreen {
 		catch (e:haxe.Exception)
 			trace('Failed to remove last directory. (${e.message})');
 	}
+	#end
 }
