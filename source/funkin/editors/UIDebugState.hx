@@ -7,7 +7,8 @@ class UIDebugState extends UIState {
 	public override function create() {
 		super.create();
 
-		#if !mobile FlxG.mouse.useSystemCursor = #end FlxG.mouse.visible = true;
+		FlxG.mouse.useSystemCursor = !MobileControls.mobileC;
+		FlxG.mouse.visible = true;
 
 		var bg = new FlxSprite().makeSolid(FlxG.width, FlxG.height, 0xFF444444);
 		bg.updateHitbox();
