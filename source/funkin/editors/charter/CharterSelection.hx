@@ -16,6 +16,7 @@ using StringTools;
 class CharterSelection extends EditorTreeMenu {
 	public var freeplayList:FreeplaySonglist;
 	public var curSong:ChartMetaData;
+	private final button:String = MobileControls.mobileC ? 'A' : 'ACCEPT';
 	public override function create() {
 		bgType = "charter";
 
@@ -26,11 +27,11 @@ class CharterSelection extends EditorTreeMenu {
 		freeplayList = FreeplaySonglist.get(false);
 
 		var list:Array<OptionType> = [
-			for(s in freeplayList.songs) new EditorIconOption(s.name, "Press ACCEPT to choose a difficulty to edit.", s.icon, function() {
+			for(s in freeplayList.songs) new EditorIconOption(s.name, "Press " + button + " to choose a difficulty to edit.", s.icon, function() {
 				curSong = s;
 				var list:Array<OptionType> = [
 					for(d in s.difficulties) if (d != "")
-						new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
+						new TextOption(d, "Press " + button + " to edit the chart for the selected difficulty", function() {
 							FlxG.switchState(new Charter(s.name, d));
 						})
 				];
@@ -45,11 +46,9 @@ class CharterSelection extends EditorTreeMenu {
 			FlxG.state.openSubState(new SongCreationScreen(saveSong));
 		}));
 
-		main = new OptionsScreen("Chart Editor", "Select a song to modify the charts from.", list);
+		main = new OptionsScreen("Chart Editor", "Select a song to modify the charts from.", list, 'UP_DOWN', 'A');
 
 		DiscordUtil.call("onEditorTreeLoaded", ["Chart Editor"]);
-
-		addVirtualPad('UP_DOWN', 'A_B');
 	}
 
 	override function createPost() {
@@ -116,11 +115,11 @@ class CharterSelection extends EditorTreeMenu {
 		if (creation.voicesBytes != null) sys.io.File.saveBytes('$songFolder/song/Voices.${Paths.SOUND_EXT}', creation.voicesBytes);
 		#end
 
-		var option = new EditorIconOption(creation.meta.name, "Press ACCEPT to choose a difficulty to edit.", creation.meta.icon, function() {
+		var option = new EditorIconOption(creation.meta.name, "Press " + button + " to choose a difficulty to edit.", creation.meta.icon, function() {
 			curSong = creation.meta;
 			var list:Array<OptionType> = [
 				for(d in creation.meta.difficulties)
-					if (d != "") new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
+					if (d != "") new TextOption(d, "Press " + button + " to edit the chart for the selected difficulty", function() {
 						FlxG.switchState(new Charter(creation.meta.name, d));
 					})
 			];
@@ -153,7 +152,7 @@ class CharterSelection extends EditorTreeMenu {
 
 		// Add to List
 		curSong.difficulties.push(name);
-		var option = new TextOption(name, "Press ACCEPT to edit the chart for the selected difficulty", function() {
+		var option = new TextOption(name, "Press " + button + " to edit the chart for the selected difficulty", function() {
 			FlxG.switchState(new Charter(curSong.name, name));
 		});
 		optionsTree.members[optionsTree.members.length-1].insert(optionsTree.members[optionsTree.members.length-1].length-1, option);
