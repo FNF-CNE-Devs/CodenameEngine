@@ -1,6 +1,5 @@
 package funkin.menus.ui;
 
-import funkin.backend.assets.ModsFolder;
 import openfl.utils.AssetLibrary;
 import haxe.xml.Access;
 import funkin.backend.assets.LimeLibrarySymbol;
