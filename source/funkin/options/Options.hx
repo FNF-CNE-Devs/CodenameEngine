@@ -44,7 +44,7 @@ class Options
 	public static var hitboxType:String = 'gradient';
 	public static var controlsAlpha:Float = FlxG.onMobile ? 0.6 : 0;
 
-	#if android public static var storageType:String = "EXTERNAL"; #end
+	#if android public static var storageType:String = "EXTERNAL_DATA"; #end
 
 	/**
 	 * EDITORS SETTINGS
