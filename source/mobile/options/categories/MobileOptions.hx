@@ -26,8 +26,10 @@ class MobileOptions extends OptionsScreen {
 
 	public override function new() {
 		#if android
-		typeNames = typeNames.concat(externalPaths);
-		typeVars = typeVars.concat(externalPaths);
+		if (externalPaths != null && externalPaths.length > 0 || externalPaths[0] != '') {
+			typeNames = typeNames.concat(externalPaths);
+			typeVars = typeVars.concat(externalPaths);
+		}
 		#end
 		dpadMode = 'LEFT_FULL';
 		actionMode = 'A_B';
