@@ -91,11 +91,11 @@ class SUtil
 	#if android
 	public static function doPermissionsShit():Void
 	{
-		if (!Permissions.getGrantedPermissions().contains(Permissions.READ_EXTERNAL_STORAGE)
-			&& !Permissions.getGrantedPermissions().contains(Permissions.WRITE_EXTERNAL_STORAGE))
+		if (!Permissions.getGrantedPermissions().contains('android.permission.READ_EXTERNAL_STORAGE')
+			&& !Permissions.getGrantedPermissions().contains('android.permission.WRITE_EXTERNAL_STORAGE'))
 		{
-			Permissions.requestPermission(Permissions.READ_EXTERNAL_STORAGE);
-			Permissions.requestPermission(Permissions.WRITE_EXTERNAL_STORAGE);
+			Permissions.requestPermission('android.permission.READ_EXTERNAL_STORAGE');
+			Permissions.requestPermission('android.permission.WRITE_EXTERNAL_STORAGE');
 			NativeAPI.showMessageBox('Notice!',
 				'If you accepted the permissions you are all good!' + '\nIf you didn\'t then expect a crash' + '\nPress Ok to see what happens',
 				MSG_INFORMATION);
