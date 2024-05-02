@@ -91,16 +91,16 @@ class SUtil
 	#if android
 	public static function doPermissionsShit():Void
 	{
-		if (!Permissions.getGrantedPermissions().contains('android.permission.READ_EXTERNAL_STORAGE')
-			&& !Permissions.getGrantedPermissions().contains('android.permission.WRITE_EXTERNAL_STORAGE'))
+		if (!Permissions.getGrantedPermissions().contains('READ_EXTERNAL_STORAGE')
+			&& !Permissions.getGrantedPermissions().contains('WRITE_EXTERNAL_STORAGE'))
 		{
-			Permissions.requestPermission('android.permission.READ_EXTERNAL_STORAGE');
-			Permissions.requestPermission('android.permission.WRITE_EXTERNAL_STORAGE');
+			Permissions.requestPermission('READ_EXTERNAL_STORAGE');
+			Permissions.requestPermission('WRITE_EXTERNAL_STORAGE');
 			NativeAPI.showMessageBox('Notice!',
 				'If you accepted the permissions you are all good!' + '\nIf you didn\'t then expect a crash' + '\nPress Ok to see what happens',
 				MSG_INFORMATION);
 			if (!Environment.isExternalStorageManager())
-				Settings.requestSetting("android.settings.MANAGE_APP_ALL_FILES_ACCESS_PERMISSION");
+				Settings.requestSetting('MANAGE_APP_ALL_FILES_ACCESS_PERMISSION');
 		}
 		else
 		{
@@ -111,7 +111,7 @@ class SUtil
 			}
 			catch (e:Dynamic)
 			{
-				NativeAPI.showMessageBox("Error!", "Please create folder to\n" + SUtil.getStorageDirectory(true) + "\nPress OK to close the game", MSG_ERROR);
+				NativeAPI.showMessageBox('Error!', 'Please create folder to\n' + SUtil.getStorageDirectory(true) + '\nPress OK to close the game', MSG_ERROR);
 				LimeSystem.exit(1);
 			}
 		}
