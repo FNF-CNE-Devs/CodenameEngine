@@ -91,7 +91,7 @@ class SystemInfo extends FramerateCategory {
 				}
 			}
 			#elseif android
-			cpuName = (VERSION.SDK_INT >= VERSION_CODES.S) ? Build.SOC_MODEL : '${Build.HARDWARE} ${Build.BOARD}';
+			cpuName = (VERSION.SDK_INT >= VERSION_CODES.S) ? Build.SOC_MODEL : Build.HARDWARE;
 			#end
 		} catch (e) {
 			Logs.trace('Unable to grab CPU Name: $e', ERROR, RED);
@@ -131,7 +131,7 @@ class SystemInfo extends FramerateCategory {
 	}
 
 	static function formatSysInfo() {
-		__formattedSysText = "";
+		__formattedSysText = #if android 'Device: ${Build.BRAND.charAt(0).toUpperCase() + Build.BRAND.substring(1)} ${Build.MODEL} (${Build.BOARD})\n' #else "" #end;
 		if (osInfo != "Unknown") __formattedSysText += 'System: $osInfo';
 		if (cpuName != "Unknown") __formattedSysText += '\nCPU: $cpuName ${getCPUArch()}';
 		if (gpuName != cpuName || vRAM != "Unknown") {
