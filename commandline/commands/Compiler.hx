@@ -20,7 +20,7 @@ class Compiler {
 		Sys.command("lime", arg);
 	}
 
-	private static function getBuildTarget() {
+	public static function getBuildTarget() {
 		return switch(Sys.systemName()) {
 			case "Windows":
 				"windows";

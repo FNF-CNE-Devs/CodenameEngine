@@ -1,6 +1,6 @@
 {
-    "editor.detectIndentation": false,
-    "editor.insertSpaces": false,
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
 	"files.associations": {
 		"*.hx": "haxe",
 		"*.hscript": "haxe",

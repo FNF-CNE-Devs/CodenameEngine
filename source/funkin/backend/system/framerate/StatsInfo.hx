@@ -14,7 +14,7 @@ class StatsInfo extends FramerateCategory {
 		_text = "totalDC: " + Context3DStats.totalDrawCalls();
 		_text += "\nstageDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE);
 		_text += "\nstage3DDC: " + Context3DStats.contextDrawCalls(DrawCallContext.STAGE3D);
-		
+
 		this.text.text = _text;
 		super.__enterFrame(t);
 	}

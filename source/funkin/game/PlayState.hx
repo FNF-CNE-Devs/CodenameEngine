@@ -649,7 +649,7 @@ class PlayState extends MusicBeatState
 			var strLine = new StrumLine(chars,
 				startingPos,
 				strumLine.strumScale == null ? 1 : strumLine.strumScale,
-				strumLine.type == 2 || (!coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode))), 
+				strumLine.type == 2 || (!coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode))),
 				strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls,
 				strumLine.vocalsSuffix
 			);
@@ -751,15 +751,15 @@ class PlayState extends MusicBeatState
 				FlxG.sound.load(Paths.sound(s));
 
 		if (chartingMode) {
-			WindowUtils.endfix = " (Chart Playtesting)";
 			WindowUtils.prefix = Charter.undos.unsaved ? "* " : "";
+			WindowUtils.suffix = " (Chart Playtesting)";
 
 			SaveWarning.showWarning = Charter.undos.unsaved;
 			SaveWarning.selectionClass = CharterSelection;
 			SaveWarning.warningFunc = saveWarn;
 			SaveWarning.saveFunc = () ->  {
-				@:privateAccess Chart.save('${Paths.getAssetsRoot()}/songs/${Charter.__song.toLowerCase()}', 
-					PlayState.SONG, Charter.__diff.toLowerCase(), {saveMetaInChart: false, saveEventsInChart: true});
+				@:privateAccess Chart.save('${Paths.getAssetsRoot()}/songs/${Charter.__song.toLowerCase()}',
+					PlayState.SONG, Charter.__diff.toLowerCase(), {saveMetaInChart: false, prettyPrint: Options.editorPrettyPrint});
 			}
 		}
 	}
@@ -784,7 +784,7 @@ class PlayState extends MusicBeatState
 	 * This function is dynamic, which means you can do `updateDiscordPresence = function() {}` in scripts.
 	 */
 	public dynamic function updateDiscordPresence()
-		DiscordUtil.changeSongPresence(detailsText, (paused ? "Paused - " : "") + SONG.meta.displayName + " (" + difficulty + ")", inst, getIconRPC());
+		DiscordUtil.call("onPlayStateUpdate", []);
 
 	/**
 	 * Starts a cutscene.
@@ -950,7 +950,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.destroySound(vocals);
 		}
 
-		WindowUtils.resetTitle();
+		WindowUtils.resetAffixes();
 		SaveWarning.reset();
 
 		instance = null;
@@ -1846,10 +1846,10 @@ class PlayState extends MusicBeatState
 	private inline function get_playerStrums():StrumLine
 		return strumLines.members[1];
 	private inline function get_gfSpeed():Int
-		return (strumLines.members[2] != null && strumLines.members[2].characters[0] != null) ? strumLines.members[2].characters[0].danceInterval : 1;
+		return (strumLines.members[2] != null && strumLines.members[2].characters[0] != null) ? strumLines.members[2].characters[0].beatInterval : 1;
 	private inline function set_gfSpeed(v:Int):Int {
 		if (strumLines.members[2] != null && strumLines.members[2].characters[0] != null)
-			strumLines.members[2].characters[0].danceInterval = v;
+			strumLines.members[2].characters[0].beatInterval = v;
 		return v;
 	}
 

@@ -34,8 +34,10 @@ class TitleState extends MusicBeatState
 		MusicBeatState.skipTransIn = true;
 
 		startIntro();
-		
+
 		super.create();
+
+		DiscordUtil.call("onMenuLoaded", ["Title Screen"]);
 	}
 
 	var logoBl:FlxSprite;

@@ -7,7 +7,7 @@ import openfl.text.TextField;
 class MemoryCounter extends Sprite {
 	public var memoryText:TextField;
 	public var memoryPeakText:TextField;
-	
+
 	public var memory:Float = 0;
 	public var memoryPeak:Float = 0;
 

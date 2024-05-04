@@ -79,7 +79,7 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 		fixEvents();
 	}
 
-	public inline function fixEvents() { 
+	public inline function fixEvents() {
 		for (i in Charter.instance.eventsGroup.members) {
 			for (j in i.events) {
 				var paramTypes:Array<EventParamInfo> = EventsData.getEventParams(j.name);

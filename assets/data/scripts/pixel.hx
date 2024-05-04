@@ -35,8 +35,8 @@ function onNoteCreation(event) {
 	note.updateHitbox();
 }
 
-function onPostNoteCreation(event) {  
-    var splashes = event.note;
+function onPostNoteCreation(event) {
+	var splashes = event.note;
 	if (pixelSplashes)
 		splashes.splash = "pixel-default";
 }

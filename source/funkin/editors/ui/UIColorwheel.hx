@@ -87,11 +87,11 @@ class UIColorwheel extends UISliceSprite {
 		for (item in [colorPicker, colorPickerSelector, colorSlider, colorSliderSelector, colorHexTextBox, hexLabel, rgbLabel])
 			members.push(item);
 
-		updateWheel();
+		updateWheel(false);
 	}
 
 	inline function updateColorPickerSelector()
-        colorPickerSelector.selector.setPosition(colorPicker.x + (colorPicker.width *saturation) - 8, colorPicker.y + (colorPicker.height + (colorPicker.height * -brightness))- 8);
+		colorPickerSelector.selector.setPosition(colorPicker.x + (colorPicker.width *saturation) - 8, colorPicker.y + (colorPicker.height + (colorPicker.height * -brightness))- 8);
 
 	inline function updateColorPickerMouse(mousePos:FlxPoint) {
 		saturation = mousePos.x/colorPicker.width; brightness = 1 + -(mousePos.y/colorPicker.height);
@@ -103,12 +103,13 @@ class UIColorwheel extends UISliceSprite {
 	inline function updateColorSliderMouse(mousePos:FlxPoint)
 		hue = (mousePos.y / colorSlider.height) * 360;
 
-	public function updateWheel() {
+	public function updateWheel(checkChanged:Bool = true) {
+		if(checkChanged) colorChanged = true;
 		colorPickerShader.hset("hue", hue / 360);
 		colorPickerSelector.curColor = color = curColor = FlxColor.fromHSB(hue, saturation, brightness); colorSliderSelector.curColor = FlxColor.fromHSB(hue, 1, 1);
 
 		updateColorPickerSelector(); updateColorSliderPickerSelector();
-		colorHexTextBox.label.text = curColorString = curColor.toHexString(false).replace("0x", "#");
+		colorHexTextBox.label.text = curColorString = curColor.toWebString();
 		for (numStepper in rgbNumSteppers) {
 			numStepper.label.text = Std.string(switch (numStepper.ID) {
 				default: curColor.red;
@@ -121,7 +122,7 @@ class UIColorwheel extends UISliceSprite {
 	// For Character Editor
 	public var colorChanged:Bool = false;
 
-	// Make the colorwhell feel better
+	// Make the colorwheel feel better
 	static inline var hitBoxExtenstion:Float = 8;
 
 	public override function update(elapsed:Float) {
@@ -138,7 +139,6 @@ class UIColorwheel extends UISliceSprite {
 					if (sprite == colorSlider) updateColorSliderMouse(mousePos);
 					if (sprite == colorPicker) updateColorPickerMouse(mousePos);
 					updateWheel();
-					colorChanged = true;
 
 					spritePos.put();
 					break;

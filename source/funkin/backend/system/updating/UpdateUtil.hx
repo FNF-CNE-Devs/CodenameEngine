@@ -11,7 +11,7 @@ using funkin.backend.system.github.GitHub;
 class UpdateUtil {
 	public static final repoOwner:String = "YoshiCrafter29";
 	public static final repoName:String = "CodenameTestRepo";
-	
+
 	public static function init() {
 		// deletes old bak file if it exists
 		#if sys
@@ -22,11 +22,11 @@ class UpdateUtil {
 	}
 
 	public static function checkForUpdates():UpdateCheckCallback {
-		var curTag = 'v${Application.current.meta.get('version')}';	
+		var curTag = 'v${Application.current.meta.get('version')}';
 		trace(curTag);
-		
+
 		var error = false;
-		
+
 		var newUpdates = __doReleaseFiltering(GitHub.getReleases(repoOwner, repoName, function(e) {
 			error = true;
 		}), curTag);
@@ -35,7 +35,7 @@ class UpdateUtil {
 			success: false,
 			newUpdate: false
 		};
-		
+
 		if (newUpdates.length <= 0) {
 			return {
 				success: true,

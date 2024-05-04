@@ -30,22 +30,10 @@ In the future (when the engine won't be a WIP anymore) we're gonna also publish 
 
 ##### Tested on Windows 10 21H2
 1. Install [version 4.2.5 of Haxe](https://haxe.org/download/version/4.2.5/).
-2. Download [Visual Studio Build Tools](https://aka.ms/vs/17/release/vs_BuildTools.exe)
-3. Wait for the Visual Studio Installer to install
-4. On the Visual Studio installer screen, go to the "Individual components" tab and only select those options:
-    - MSVC v143 VS 2022 C++ x64/x86 build tools (Latest)
-    - Windows 10/11 SDK (any works)
-5. This is what your Installation details panel should look like. Once correct, press "Install".
-    - ⚠ This will download around 1.07 GB of data from the internet, and will require around 5.5 GB of available space on your computer.
-
-<p align="center">
-<img src="https://github.com/YoshiCrafter29/CodenameEngine/blob/main/art/github/windows-installation-details.png?raw=true" />
-</p>
-
-6. Once you finish downloading those components, download and install [`git-scm`](https://git-scm.com/download/win).
+2. Download and install [`git-scm`](https://git-scm.com/download/win).
     - Leave all installation options as default.
-7. Run `update.bat` using cmd or double-clicking it, and wait for the libraries to install.
-8. Once the libraries are installed, run `haxelib run lime test windows` to compile and launch the game (may take a long time)
+3. Run `update.bat` using cmd or double-clicking it, and wait for the libraries to install.
+4. Once the libraries are installed, run `haxelib run lime test windows` to compile and launch the game (may take a long time)
     - ℹ You can run `haxelib run lime setup` to make the lime command global, allowing you to execute `lime test windows` directly.
 </details>
 <details>
@@ -97,6 +85,5 @@ In the future (when the engine won't be a WIP anymore) we're gonna also publish 
 - Credits to [Ne_Eo](https://twitter.com/Ne_Eo_Twitch) and the [3D-HaxeFlixel](https://github.com/lunarcleint/3D-HaxeFlixel) repository for Away3D Flixel support
 - Credits to the [FlxAnimate](https://github.com/Dot-Stuff/flxanimate) team for the Animate Atlas support
 - Credits to Smokey555 for the backup Animate Atlas to spritesheet code
-- Credits to MAJigsaw77 for [hxvlc](https://github.com/MAJigsaw77/hxvlc) for video cutscene/mp4 support
-- Credits to Aidan63 for [discord-rpc](https://github.com/Aidan63/linc_discord-rpc) for discord rpc integration
+- Credits to MAJigsaw77 for [hxvlc](https://github.com/MAJigsaw77/hxvlc) (video cutscene/mp4 support) and [hxdiscord_rpc](https://github.com/MAJigsaw77/hxdiscord_rpc) (discord rpc integration)
 </details>

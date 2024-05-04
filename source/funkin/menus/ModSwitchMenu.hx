@@ -22,19 +22,7 @@ class ModSwitchMenu extends MusicBeatSubstate {
 		bg.alpha = 0;
 		FlxTween.tween(bg, {alpha: 0.5}, 0.25, {ease: FlxEase.cubeOut});
 
-		for(modFolder in FileSystem.readDirectory(ModsFolder.modsPath)) {
-			if (FileSystem.isDirectory('${ModsFolder.modsPath}${modFolder}')) {
-				mods.push(modFolder);
-			} else {
-				var ext = Path.extension(modFolder).toLowerCase();
-				switch(ext) {
-					case 'zip':
-						// is a zip mod!!
-						mods.push(Path.withoutExtension(modFolder));
-				}
-			}
-		}
-
+		mods = ModsFolder.getModsList();
 		mods.push(null);
 
 		alphabets = new FlxTypedGroup<Alphabet>();
