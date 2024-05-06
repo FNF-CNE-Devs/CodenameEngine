@@ -77,7 +77,6 @@ class AssetsLibraryList extends AssetLibrary
 				l = cast(l, openfl.utils.AssetLibrary).__proxy;
 			}
 
-			// TODO: do base folder scanning
 			#if MOD_SUPPORT
 			if (source == MODS || source == BOTH)
 			{
@@ -130,7 +129,6 @@ class AssetsLibraryList extends AssetLibrary
 				l = cast(l, openfl.utils.AssetLibrary).__proxy;
 			}
 
-			// TODO: do base folder scanning
 			#if MOD_SUPPORT
 			if (source == MODS || source == BOTH)
 			{
