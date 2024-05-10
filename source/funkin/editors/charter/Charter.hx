@@ -611,7 +611,8 @@ class Charter extends UIState {
 		var wavesToGenerate:Array<{name:String, sound:FlxSound}> = [
 			{name: "Inst.ogg", sound: FlxG.sound.music},
 		];
-		if (PlayState.SONG.meta.needsVoices != false) 
+		@:privateAccess
+		if (vocals._sound != null && PlayState.SONG.meta.needsVoices != false) 
 			wavesToGenerate.push({name: "Voices.ogg", sound: vocals});
 
 		for (strumLine in strumLines)
