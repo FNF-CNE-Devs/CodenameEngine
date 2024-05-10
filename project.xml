@@ -131,7 +131,7 @@
 
 	<!-- Comment this out to disable video cutscene support, in case of compilation errors. !-->
 	<section if="cpp">
-		<define name="VIDEO_CUTSCENES" if="desktop || android" />
+		<define name="VIDEO_CUTSCENES" if="desktop || mobile" />
 	</section>
 
 	<!-- Comment this out to disable commit number on FPS -->
