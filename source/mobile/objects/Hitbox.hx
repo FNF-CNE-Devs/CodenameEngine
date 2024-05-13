@@ -13,8 +13,7 @@ import flixel.util.FlxDestroyUtil;
  * A zone with 4 hint's (A hitbox).
  * It's really easy to customize the layout.
  *
- * @author: Mihai Alexandru
- * @modification's author: Karim Akra & Lily (mcagabe19)
+ * @author: Mihai Alexandru and Karim Akra
  */
 class Hitbox extends FlxButtonGroup
 {

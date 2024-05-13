@@ -18,7 +18,7 @@ using StringTools;
 
 /**
  * A storage class for mobile.
- * @author Mihai Alexandru (M.A. Jigsaw) and Lily (mcagabe19)
+ * @author Mihai Alexandru (M.A. Jigsaw)
  */
 class SUtil
 {
