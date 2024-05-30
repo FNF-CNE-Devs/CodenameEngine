@@ -127,7 +127,7 @@ jobs:
           haxelib install hmm --quiet
           haxelib run hmm install --quiet
       - name: Compile
-        run: haxelib run lime build ios
+        run: haxelib run lime build ios -D HXVLC_OPENAL
       - name: Make Ipa
         run: |
           cd export/release/ios/build/*-iphoneos
