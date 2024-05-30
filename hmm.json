@@ -58,9 +58,11 @@
       "url": "https://github.com/mcagabe19-stuff/hxcpp"
     },
     {
-      "name": "hxvlc",
-      "type": "haxelib",
-      "version": null
+       "name": "hxvlc",
+       "type": "git",
+       "dir": null,
+       "ref": "testing",
+       "url": "https://github.com/MAJigsaw77/hxvlc"
     },
     {
       "name": "hxdiscord_rpc",
