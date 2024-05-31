@@ -30,9 +30,9 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	 */
 	public var onNoteUpdate:FlxTypedSignal<NoteUpdateEvent->Void> = new FlxTypedSignal<NoteUpdateEvent->Void>();
 	/**
-	 * Signal that triggers whenever a note is being updated. Similar to onNoteUpdate, except strumline specific.
+	 * Signal that triggers whenever a note is being deleted. Similar to onNoteDelete, except strumline specific.
 	 * To add a listener, do
-	 * `strumLine.onNoteUpdate.add(function(e:NoteUpdateEvent) {});`
+	 * `strumLine.onNoteDelete.add(function(e:SimpleNoteEvent) {});`
 	 */
 	public var onNoteDelete:FlxTypedSignal<SimpleNoteEvent->Void> = new FlxTypedSignal<SimpleNoteEvent->Void>();
 	/**
