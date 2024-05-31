@@ -158,7 +158,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		// [ true  ][ false ][ true  ]
 		// [ false ][ true  ][ true  ]
 		// [ true  ][ true  ][ false ]
-		// bros provided evedince :skull:
+		// bros provided evidence :skull:
 		if (isPlayer != playerOffsets && switchAnims)
 		{
 			// character is flipped
