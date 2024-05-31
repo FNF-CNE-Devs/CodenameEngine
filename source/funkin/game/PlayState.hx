@@ -1585,7 +1585,7 @@ class PlayState extends MusicBeatState
 				if (char == null) continue;
 
 				if(event.stunned) char.stunned = true;
-				char.playSingAnim(directionID, event.animSuffix, MISS, event.forceAnim);
+				char.playSafeSingAnim(directionID, event.animSuffix, MISS, event.forceAnim);
 			}
 		}
 
@@ -1666,7 +1666,7 @@ class PlayState extends MusicBeatState
 			if (!event.animCancelled)
 				for(char in event.characters)
 					if (char != null)
-						char.playSingAnim(event.direction, event.animSuffix, SING, event.forceAnim);
+						char.playSafeSingAnim(event.direction, event.animSuffix, SING, event.forceAnim);
 
 			if (event.note.__strum != null) {
 				if (!event.strumGlowCancelled) event.note.__strum.press(event.note.strumTime);
