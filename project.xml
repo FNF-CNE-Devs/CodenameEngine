@@ -213,9 +213,8 @@
 		<config:android permission="android.permission.ACCESS_NETWORK_STATE" />
 	</section>
 
-	<section if="ios">
-		<!--<define name='objc' />
-		<ios linker-flags='-ObjC' />-->
-		<haxedef name="HXVLC_OPENAL" />
-	</section>
+	<!--<section if="ios">
+		<define name='objc' />
+		<ios linker-flags='-ObjC' />
+	</section>-->
 </project>
