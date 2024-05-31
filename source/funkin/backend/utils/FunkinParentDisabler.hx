@@ -41,7 +41,9 @@ class FunkinParentDisabler extends FlxBasic {
 		}
 	}
 
-	public override function update(elapsed:Float) {}
+	public override function update(elapsed:Float) {
+		@:privateAccess for(c in __cameras) c.updateFlashSpritePosition();
+	}
 	public override function draw() {}
 
 	public function reset() {

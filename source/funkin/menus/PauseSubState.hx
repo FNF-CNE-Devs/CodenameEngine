@@ -106,7 +106,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		pauseScript.call("postCreate");
 
-		PlayState.instance.updateDiscordPresence();
+		game.updateDiscordPresence();
 	}
 
 	override function update(elapsed:Float)
@@ -146,7 +146,7 @@ class PauseSubState extends MusicBeatSubstate
 				close();
 			case "Restart Song":
 				parentDisabler.reset();
-				PlayState.instance.registerSmoothTransition();
+				game.registerSmoothTransition();
 				FlxG.resetState();
 			case "Change Controls":
 				persistentDraw = false;
@@ -157,7 +157,7 @@ class PauseSubState extends MusicBeatSubstate
 				FlxG.switchState(new funkin.editors.charter.Charter(PlayState.SONG.meta.name, PlayState.difficulty, false));
 			case "Exit to menu":
 				if (PlayState.chartingMode && Charter.undos.unsaved)
-					PlayState.instance.saveWarn(false);
+					game.saveWarn(false);
 				else {
 					PlayState.resetSongInfos();
 					if (Charter.instance != null) Charter.instance.__clearStatics();
