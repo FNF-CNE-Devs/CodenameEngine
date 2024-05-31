@@ -430,13 +430,18 @@ class Controls extends FlxActionSet
 		return byName[name].check();
 	}
 
+	public function getKeyName(control:Control):String
+	{
+		return getDialogueName(getActionFromControl(control));
+	}
+
 	public function getDialogueName(action:FlxActionDigital):String
 	{
 		var input = action.inputs[0];
 		return switch input.device
 		{
-			case KEYBOARD: return '[${(input.inputID : FlxKey)}]';
-			case GAMEPAD: return '(${(input.inputID : FlxGamepadInputID)})';
+			case KEYBOARD: return '${(input.inputID : FlxKey)}';
+			case GAMEPAD: return '${(input.inputID : FlxGamepadInputID)}';
 			case device: throw 'unhandled device: $device';
 		}
 	}
