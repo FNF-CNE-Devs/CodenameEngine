@@ -50,7 +50,7 @@ class Alphabet extends FlxSpriteGroup
 
 	// TODO: fix this shit refreshing
 	public function refreshAlphabetXML(path:String) {
-		AlphaCharacter.__alphaPath = path;
+		AlphaCharacter.__alphaPath = Paths.getAssetsRoot() + path;
 		try {
 			var xml = new Access(Xml.parse(Assets.getText(path)).firstElement());
 			AlphaCharacter.boldAnims = [];
@@ -85,7 +85,7 @@ class Alphabet extends FlxSpriteGroup
 		isBold = bold;
 
 		var alphabetPath = Paths.xml("alphabet");
-		if (alphabetPath != AlphaCharacter.__alphaPath) {
+		if (Paths.getAssetsRoot() + alphabetPath != AlphaCharacter.__alphaPath) {
 			refreshAlphabetXML(alphabetPath);
 		}
 		#if MOD_SUPPORT else {
