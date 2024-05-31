@@ -59,10 +59,8 @@
     },
     {
        "name": "hxvlc",
-       "type": "git",
-       "dir": null,
-       "ref": "testing",
-       "url": "https://github.com/MAJigsaw77/hxvlc"
+       "type": "haxelib",
+       "version": null
     },
     {
       "name": "hxdiscord_rpc",
