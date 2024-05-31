@@ -11,4 +11,8 @@
 	<anim name="singDOWNmiss"  anim="BF NOTE DOWN MISS"  fps="24" loop="false" x="-11" y="-19"/>
 	<anim name="hey"           anim="BF HEY"             fps="24" loop="false" x="7"   y="4"/>
 	<anim name="scared"        anim="BF idle shaking"    fps="24" loop="true"  x="-4"  y="0"/>
+	<anim name="hit"           anim="BF hit"             fps="24" loop="false" x="13"  y="19"/>
+	<anim name="pre-attack"    anim="bf pre attack"      fps="24" loop="false" x="-47" y="-36"/>
+	<anim name="attack"        anim="boyfriend attack"   fps="24" loop="false" x="289" y="270"/>
+	<anim name="dodge"         anim="boyfriend dodge"    fps="24" loop="false" x="-7"  y="-15"/>
 </character>
