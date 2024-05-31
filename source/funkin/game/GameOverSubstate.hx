@@ -108,7 +108,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		if (controls.BACK)
 		{
 			if (PlayState.chartingMode && Charter.undos.unsaved)
-				PlayState.instance.saveWarn(false);
+				game.saveWarn(false);
 			else {
 				PlayState.resetSongInfos();
 				if (Charter.instance != null) Charter.instance.__clearStatics();
