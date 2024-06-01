@@ -35,6 +35,12 @@ class NdllUtil {
 	 */
 	public static function getFunction(ndll:String, name:String, args:Int):Dynamic {
 		#if NDLLS_SUPPORTED
+		if(Options.safemode)
+		{
+			Logs.trace('NDLLs are not allowed on Safe Mode.', WARNING);
+			return noop;
+		}
+
 		var func:Dynamic = getFunctionFromPath(Paths.ndll('$ndll-$os'), name, args);
 
 		return Reflect.makeVarArgs(function(a:Array<Dynamic>) {
@@ -57,6 +63,12 @@ class NdllUtil {
 	 */
 	public static function getFunctionFromPath(ndll:String, name:String, args:Int):Dynamic {
 		#if NDLLS_SUPPORTED
+		if(Options.safemode)
+		{
+			Logs.trace('NDLLs are not allowed on Safe Mode.', WARNING);
+			return noop;
+		}
+
 		if (!Assets.exists(ndll)) {
 			Logs.trace('Couldn\'t find ndll at ${ndll}.', WARNING);
 			return noop;
