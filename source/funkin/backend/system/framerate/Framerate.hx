@@ -20,6 +20,7 @@ class Framerate extends Sprite {
 	#if SHOW_BUILD_ON_FPS
 	public static var codenameBuildField:CodenameBuildField;
 	#end
+	public static var safemodeField:SafeModeChecker;
 
 	public static var fontName:String = #if windows '${Sys.getEnv("windir")}\\Fonts\\consola.ttf' #else "_sans" #end;
 
@@ -73,6 +74,7 @@ class Framerate extends Sprite {
 		#if SHOW_BUILD_ON_FPS
 		__addToList(codenameBuildField = new CodenameBuildField());
 		#end
+		__addToList(safemodeField = new SafeModeChecker());
 		__addCategory(new ConductorInfo());
 		__addCategory(new FlixelInfo());
 		__addCategory(new SystemInfo());
@@ -111,6 +113,8 @@ class Framerate extends Sprite {
 
 		var width = Math.max(fpsCounter.width, #if SHOW_BUILD_ON_FPS Math.max(memoryCounter.width, codenameBuildField.width) #else memoryCounter.width #end) + (x*2);
 		var height = #if SHOW_BUILD_ON_FPS codenameBuildField.y + codenameBuildField.height #else memoryCounter.y + memoryCounter.height #end;
+		if(safemodeField.isSafeMode)
+			height += safemodeField.height;
 		bgSprite.x = -x;
 		bgSprite.y = offset.x;
 		bgSprite.scaleX = width;

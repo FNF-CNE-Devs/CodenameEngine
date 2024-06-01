@@ -35,6 +35,7 @@ class Options
 	public static var songOffset:Float = 0;
 	public static var framerate:Int = 120;
 	public static var gpuOnlyBitmaps:Bool = #if (mac || web) false #else true #end; // causes issues on mac and web
+	public static var safemode:Bool = false;
 
 	public static var lastLoadedMod:String = null;
 

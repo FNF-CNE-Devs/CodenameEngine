@@ -38,6 +38,10 @@ class HScript extends Script {
 		interp.importFailedCallback = importFailedCallback;
 		interp.staticVariables = Script.staticVariables;
 		interp.allowStaticVariables = interp.allowPublicVariables = true;
+		if(Options.safemode)
+		{
+			interp.importBlocklist = Script.getBlacklistedImports();
+		}
 
 		interp.variables.set("trace", Reflect.makeVarArgs((args) -> {
 			var v:String = Std.string(args.shift());
@@ -133,7 +137,11 @@ class HScript extends Script {
 		onCreate(path);
 
 		for(k=>e in Script.getDefaultVariables(this))
+		{
+			if(Script.getBlacklistedImports().contains(k))
+				continue;
 			set(k, e);
+		}
 
 		load();
 		setParent(oldParent);

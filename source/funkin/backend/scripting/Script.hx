@@ -105,6 +105,17 @@ class Script extends FlxBasic implements IFlxDestroyable {
 		defines.set("CODENAME_COMMIT", funkin.backend.system.macros.GitCommitMacro.commitNumber);
 		return defines;
 	}
+	public static function getBlacklistedImports():Array<String>
+	{
+		return [
+			"Reflect", 
+			"Type", 
+			"Sys", 
+			"cpp.Lib", 
+			"sys.io.Process"
+		];
+	}
+
 	/**
 	 * All available script extensions
 	 */
@@ -194,6 +205,8 @@ class Script extends FlxBasic implements IFlxDestroyable {
 		this.path = path;
 		onCreate(path);
 		for(k=>e in getDefaultVariables(this)) {
+			if(getBlacklistedImports().contains(k))
+				continue;
 			set(k, e);
 		}
 		set("disableScript", () -> {

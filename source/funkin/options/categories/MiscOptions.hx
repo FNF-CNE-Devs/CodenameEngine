@@ -28,5 +28,10 @@ class MiscOptions extends OptionsScreen {
 			function() {
 				// TODO: SAVE DATA RESETTING
 		}));
+		add(new Checkbox(
+			"Safe Mode",
+			"If checked, it will restrict the usage of low-level classes like 'Sys' class",
+			"safemode"
+		));
 	}
 }
