@@ -59,8 +59,7 @@ typedef ChartEvent = {
 	var params:Array<Dynamic>;
 }
 
-@:enum
-abstract ChartStrumLineType(Int) from Int to Int {
+enum abstract ChartStrumLineType(Int) from Int to Int {
 	/**
 	 * STRUMLINE IS MARKED AS OPPONENT - WILL BE PLAYED BY CPU, OR PLAYED BY PLAYER IF OPPONENT MODE IS ON
 	 */

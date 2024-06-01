@@ -31,7 +31,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 	public function new() {
 		super();
-		
+
 		antialiasing = true; ID = -1;
 		loadGraphic(Paths.image('editors/charter/note'), true, 157, 154);
 		animation.add("note", [for(i in 0...frames.frames.length) i], 0, true);
@@ -154,7 +154,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 		if (strumLine != null) {
 			sustainSpr.alpha = alpha = !strumLine.strumLine.visible ? (__passed ? 0.2 : 0.4) : (__passed ? 0.6 : 1);
-			typeText.alpha = !strumLine.strumLine.visible ? (__passed ? 0.4 : 0.6) : (__passed ? 0.8 : 1); 
+			typeText.alpha = !strumLine.strumLine.visible ? (__passed ? 0.4 : 0.6) : (__passed ? 0.8 : 1);
 		}
 
 		colorTransform.redMultiplier = colorTransform.greenMultiplier = colorTransform.blueMultiplier = selected ? 0.75 : 1;

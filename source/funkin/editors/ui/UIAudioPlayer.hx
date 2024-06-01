@@ -87,7 +87,7 @@ class UIAudioPlayer extends UIButton {
 			playingSprite.animation.play(sound.playing ? "playing" : "paused");
 			timeText.text = '${FlxStringUtil.formatTime(sound.time/1000, true)} / ${FlxStringUtil.formatTime(sound.length/1000)}';
 
-			if(timeBarPlayer.clipRect == null) 
+			if(timeBarPlayer.clipRect == null)
 				timeBarPlayer.clipRect = new FlxRect(0, 0, timeBarPlayer.frameWidth, timeBarPlayer.frameHeight);
 
 			timeBarPlayer.clipRect.x = timeBarPlayer.frameWidth * (sound.time/sound.length);
@@ -106,13 +106,13 @@ class UIAudioPlayer extends UIButton {
 
 			var spritePos:FlxPoint = sprite.getScreenPosition(FlxPoint.get(), __lastDrawCameras[0]);
 
-			if (((mousePos.x > (spritePos.x)) && (mousePos.x < (spritePos.x) + timeBar.barWidth)) 
+			if (((mousePos.x > (spritePos.x)) && (mousePos.x < (spritePos.x) + timeBar.barWidth))
 				&& ((mousePos.y > (spritePos.y)) && (mousePos.y < (spritePos.y) + timeBar.barHeight))) {
 				if (FlxG.mouse.justPressed) {
 					draggingObj = sprite;
 					wasPlaying = draggingObj == timeBar ? sound.playing : false;
 				}
-	
+
 				if (FlxG.mouse.pressed) {
 					if (draggingObj == timeBar) {
 						if (sound.playing) sound.pause();
@@ -137,7 +137,7 @@ class UIAudioPlayer extends UIButton {
 		super.destroy();
 
 		sound.stop();
-		@:privateAccess sound.reset(); 
+		@:privateAccess sound.reset();
 		bytes = null;
 	}
 }

@@ -53,7 +53,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 				finish();
 			}
 		});
-		
+
 		super.create();
 	}
 

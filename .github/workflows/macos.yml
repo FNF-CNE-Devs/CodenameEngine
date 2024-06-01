@@ -2,11 +2,12 @@
 name: Mac OS Build
 on:
   push:
+  workflow_dispatch:
 jobs:
   build:
     name: Mac OS Build
     permissions: write-all
-    runs-on: macos-latest
+    runs-on: macos-13
     steps:
       - name: Pulling the new commit
         uses: actions/checkout@v2
@@ -31,16 +32,18 @@ jobs:
       - name: Building the game
         run: |
           haxelib run lime build mac
+      - name: Tar files
+        run: tar -zcvf CodenameEngine.tar.gz export/release/macos/bin
       - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v2
         with:
           name: Codename Engine
-          path: export/release/macos/bin
-      - name: Uploading artifact (executable)
-        uses: actions/upload-artifact@v2
-        with:
-          name: Update-Mac
-          path: export/release/macos/bin/CodenameEngine
+          path: CodenameEngine.tar.gz
+      # - name: Uploading artifact (executable)
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: Update-Mac
+      #     path: export/release/macos/bin/CodenameEngine
       - name: Clearing already existing cache
         uses: actions/github-script@v6
         with:

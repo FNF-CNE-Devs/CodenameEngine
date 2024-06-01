@@ -29,7 +29,7 @@ class CharterSelection extends EditorTreeMenu {
 			for(s in freeplayList.songs) new EditorIconOption(s.name, "Press ACCEPT to choose a difficulty to edit.", s.icon, function() {
 				curSong = s;
 				var list:Array<OptionType> = [
-					for(d in s.difficulties) if (d != "") 
+					for(d in s.difficulties) if (d != "")
 						new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
 							FlxG.switchState(new Charter(s.name, d));
 						})
@@ -46,6 +46,8 @@ class CharterSelection extends EditorTreeMenu {
 		}));
 
 		main = new OptionsScreen("Chart Editor", "Select a song to modify the charts from.", list);
+
+		DiscordUtil.call("onEditorTreeLoaded", ["Chart Editor"]);
 	}
 
 	override function createPost() {
@@ -107,7 +109,7 @@ class CharterSelection extends EditorTreeMenu {
 		sys.FileSystem.createDirectory('$songFolder/charts');
 
 		// Save Files
-		sys.io.File.saveContent('$songFolder/meta.json', Json.stringify(creation.meta, "\t"));
+		CoolUtil.safeSaveFile('$songFolder/meta.json', Json.stringify(creation.meta, "\t"));
 		if (creation.instBytes != null) sys.io.File.saveBytes('$songFolder/song/Inst.${Paths.SOUND_EXT}', creation.instBytes);
 		if (creation.voicesBytes != null) sys.io.File.saveBytes('$songFolder/song/Voices.${Paths.SOUND_EXT}', creation.voicesBytes);
 		#end
@@ -145,9 +147,7 @@ class CharterSelection extends EditorTreeMenu {
 		var songFolder:String = '${Paths.getAssetsRoot()}/songs/${curSong.name}';
 
 		// Save Files
-		#if sys
-		sys.io.File.saveContent('$songFolder/charts/${name}.json', Json.stringify(data, "\t"));
-		#end
+		CoolUtil.safeSaveFile('$songFolder/charts/${name}.json', Json.stringify(data, "\t"));
 
 		// Add to List
 		curSong.difficulties.push(name);
@@ -160,7 +160,7 @@ class CharterSelection extends EditorTreeMenu {
 		var meta = Json.parse(sys.io.File.getContent('$songFolder/meta.json'));
 		if (meta.difficulties != null && !meta.difficulties.contains(name)) {
 			meta.difficulties.push(name);
-			sys.io.File.saveContent('$songFolder/meta.json', Json.stringify(meta));
+			CoolUtil.safeSaveFile('$songFolder/meta.json', Json.stringify(meta));
 		}
 	}
 }

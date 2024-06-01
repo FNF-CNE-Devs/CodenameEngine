@@ -28,7 +28,7 @@ final class DirectionAnimEvent extends CancellableEvent {
 	**/
 	public var frame:Int;
 	/**
-		Whenever the animation will play reversed or not.
+		Force the animation to replay even if it's already playing.
 	**/
 	public var force:Bool = true;
 }

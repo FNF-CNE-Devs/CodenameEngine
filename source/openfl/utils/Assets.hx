@@ -91,7 +91,7 @@ class Assets
 		@usage		var bitmap = new Bitmap (Assets.getBitmapData ("image.png"));
 		@param	id		The ID or asset path for the bitmap
 		@param	useCache		(Optional) Whether to allow use of the asset cache (Default: true)
-		@param	useCache		Whenever the image should be immediately pushed to GPU.
+		@param	pushToGPU		Whenever the image should be immediately pushed to GPU.
 		@return		A new BitmapData object
 	**/
 	public static function getBitmapData(id:String, useCache:Bool = true, pushToGPU:Bool = true):BitmapData

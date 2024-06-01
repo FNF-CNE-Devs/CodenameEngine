@@ -108,7 +108,7 @@ class NoteTypeButton extends UIButton {
 		var path:String = 'game/notes/default';
 		if (Assets.exists(Paths.image('game/notes/${notetype}')))
 			path = 'game/notes/${notetype}';
-		
+
 		noteSpr.frames = Paths.getFrames(path);
 		noteSpr.animation.addByPrefix('scroll', 'green0');
 		noteSpr.animation.play("scroll");

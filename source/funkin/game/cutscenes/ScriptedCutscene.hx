@@ -51,7 +51,7 @@ class ScriptedCutscene extends Cutscene {
 		script.call("destroy");
 		super.destroy();
 	}
-	
+
 	// VIDEOS
 	#if REGION
 	public function startVideo(path:String, ?callback:Void->Void) {

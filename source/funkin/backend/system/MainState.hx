@@ -41,7 +41,7 @@ class MainState extends FlxState {
 				else if (addon.startsWith("[HIGH]")) _highPriorityAddons.insert(0, addon);
 				else _noPriorityAddons.insert(0, addon);
 			}
-			for (addon in _lowPriorityAddons) 
+			for (addon in _lowPriorityAddons)
 				Paths.assetsTree.addLibrary(ModsFolder.loadModLib('${ModsFolder.addonsPath}$addon', StringTools.ltrim(addon.substr("[LOW]".length))));
 		}
 		if (ModsFolder.currentModFolder != null)
@@ -55,7 +55,7 @@ class MainState extends FlxState {
 
 		Main.refreshAssets();
 		ModsFolder.onModSwitch.dispatch(ModsFolder.currentModFolder);
-		DiscordUtil.reloadJsonData();
+		DiscordUtil.init();
 		EventsData.reloadEvents();
 		TitleState.initialized = false;
 
@@ -68,7 +68,7 @@ class MainState extends FlxState {
 
 		#if sys
 		sys.FileSystem.createDirectory('./.temp/');
-		#if windows Sys.command("attrib +h .temp"); #end
+		#if windows new funkin.backend.utils.native.HiddenProcess("attrib +h .temp"); #end
 		#end
 	}
 }

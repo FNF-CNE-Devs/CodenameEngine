@@ -3,7 +3,6 @@ package funkin.backend.system.github;
 #if GITHUB_API
 import haxe.Json;
 import haxe.Exception;
-import haxe.Http;
 #end
 
 // TODO: Document further and perhaps make this a Haxelib.
@@ -18,7 +17,7 @@ class GitHub {
 	public static function getReleases(user:String, repository:String, ?onError:Exception->Void):Array<GitHubRelease> {
 		#if GITHUB_API
 		try {
-			var data = Json.parse(__requestOnGitHubServers('https://api.github.com/repos/${user}/${repository}/releases'));
+			var data = Json.parse(HttpUtil.requestText('https://api.github.com/repos/${user}/${repository}/releases'));
 			if (!(data is Array))
 				throw __parseGitHubException(data);
 
@@ -41,7 +40,7 @@ class GitHub {
 	public static function getContributors(user:String, repository:String, ?onError:Exception->Void):Array<GitHubContributor> {
 		#if GITHUB_API
 		try {
-			var data = Json.parse(__requestOnGitHubServers('https://api.github.com/repos/${user}/${repository}/contributors'));
+			var data = Json.parse(HttpUtil.requestText('https://api.github.com/repos/${user}/${repository}/contributors'));
 			if (!(data is Array))
 				throw __parseGitHubException(data);
 
@@ -63,7 +62,7 @@ class GitHub {
 	public static function getOrganization(org:String, ?onError:Exception->Void):GitHubOrganization {
 		#if GITHUB_API
 		try {
-			var data = Json.parse(__requestOnGitHubServers('https://api.github.com/orgs/$org'));
+			var data = Json.parse(HttpUtil.requestText('https://api.github.com/orgs/$org'));
 			if (Reflect.hasField(data, "documentation_url"))
 				throw __parseGitHubException(data);
 
@@ -86,7 +85,7 @@ class GitHub {
 	 public static function getOrganizationMembers(org:String, ?onError:Exception->Void):Array<GitHubContributor> {
 		#if GITHUB_API
 		try {
-			var data = Json.parse(__requestOnGitHubServers('https://api.github.com/orgs/$org/members'));
+			var data = Json.parse(HttpUtil.requestText('https://api.github.com/orgs/$org/members'));
 			if (Reflect.hasField(data, "documentation_url"))
 				throw __parseGitHubException(data);
 
@@ -111,7 +110,7 @@ class GitHub {
 		try {
 			var url = 'https://api.github.com/users/$user';
 
-			var data = Json.parse(__requestOnGitHubServers(url));
+			var data = Json.parse(HttpUtil.requestText(url));
 			if (Reflect.hasField(data, "documentation_url"))
 				throw __parseGitHubException(data);
 
@@ -134,59 +133,6 @@ class GitHub {
 	public static inline function filterReleases(releases:Array<GitHubRelease>, keepPrereleases:Bool = true, keepDrafts:Bool = false)
 		return #if GITHUB_API [for(release in releases) if (release != null && (!release.prerelease || (release.prerelease && keepPrereleases)) && (!release.draft || (release.draft && keepDrafts))) release] #else releases #end;
 
-	public static function __requestOnGitHubServers(url:String) {
-		var r = null;
-		#if GITHUB_API
-		var h = new Http(url);
-		h.setHeader("User-Agent", "request");
-
-		h.onStatus = function(s) {
-			if(isRedirect(s))
-				r = __requestOnGitHubServers(h.responseHeaders.get("Location"));
-		};
-
-		h.onData = function(d) {
-			if(r == null) r = d;
-		}
-		h.onError = function(e) {
-			throw e;
-		}
-
-		h.request(false);
-		#end
-		return r;
-	}
-	public static function __requestBytesOnGitHubServers(url:String) {
-		var r = null;
-		#if GITHUB_API
-		var h = new Http(url);
-		h.setHeader("User-Agent", "request");
-
-		h.onStatus = function(s) {
-			if(isRedirect(s))
-				r = __requestBytesOnGitHubServers(h.responseHeaders.get("Location"));
-		};
-
-		h.onBytes = function(d) {
-			if(r == null) r = d;
-		}
-		h.onError = function(e) {
-			throw e;
-		}
-
-		h.request(false);
-		#end
-		return r;
-	}
-	private static function isRedirect(status:Int):Bool {
-        switch (status) {
-			// 301: Moved Permanently, 302: Found (Moved Temporarily), 307: Temporary Redirect, 308: Permanent Redirect  - Nex
-            case 301 | 302 | 307 | 308 :
-                trace("Redirected with status code: " + status);
-				return true;
-        }
-		return false;
-	}
 	private static function __parseGitHubException(obj:Dynamic):GitHubException {
 		#if GITHUB_API
 		var msg:String = "(No message)";

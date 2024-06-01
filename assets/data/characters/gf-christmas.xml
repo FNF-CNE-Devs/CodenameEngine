@@ -1,5 +1,5 @@
 <!DOCTYPE codename-engine-character>
-<character x="115" icon="gf" y="325" isGF="true" flipX="false" isPlayer="false" antialiasing="true">
+<character x="115" icon="gf" y="325" isGF="true" flipX="false" isPlayer="false" antialiasing="true" color="#A5004D">
 	<anim x="0" loop="true" y="-9" fps="24" anim="GF FEAR" name="scared"/>
 	<anim x="0" loop="false" y="-9" fps="24" anim="GF Down Note" name="singDOWN"/>
 	<anim x="0" loop="false" y="-9" fps="24" anim="GF Dancing Beat" indices="15,16,17,18,19,20,21,22,23,24,25,26,27,28,29" name="danceRight"/>

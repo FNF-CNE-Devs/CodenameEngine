@@ -13,7 +13,7 @@ class EventsData {
 	public static var defaultEventsList:Array<String> = ["HScript Call", "Camera Movement", "Add Camera Zoom", "Camera Modulo Change", "Camera Flash", "BPM Change", "Scroll Speed Change", "Alt Animation Toggle", "Play Animation"];
 	public static var defaultEventsParams:Map<String, Array<EventParamInfo>> = [
 		"HScript Call" => [
-			{name: "Function Name", type: TString, defValue: "myFunc"}, 
+			{name: "Function Name", type: TString, defValue: "myFunc"},
 			{name: "Function Parameters (String split with commas)", type: TString, defValue: ""}
 		],
 		"Camera Movement" => [{name: "Camera Target", type: TStrumLine, defValue: 0}],
@@ -48,7 +48,7 @@ class EventsData {
 			}
 		],
 		"Alt Animation Toggle" => [{name: "Enable On Sing Poses", type: TBool, defValue: true}, {name: "Enable On Idle", type: TBool, defValue: true}, {name: "Strumline", type: TStrumLine, defValue: 0}],
-		"Play Animation" => [{name: "Character", type: TStrumLine, defValue: 0}, {name: "Animation", type: TString, defValue: "animation"}],
+		"Play Animation" => [{name: "Character", type: TStrumLine, defValue: 0}, {name: "Animation", type: TString, defValue: "animation"}, {name: "Is forced?", type: TBool, defValue: true}],
 	];
 
 	public static var eventsList:Array<String> = defaultEventsList.copy();
@@ -65,7 +65,7 @@ class EventsData {
 		var hscriptInterp:Interp = new Interp();
 		hscriptInterp.variables.set("Bool", TBool);
 		hscriptInterp.variables.set("Int", function (?min:Int, ?max:Int, ?step:Float):EventParamType {return TInt(min, max, step);});
-		hscriptInterp.variables.set("Float", function (?min:Int, ?max:Int, ?step:Float, ?precision:Int):EventParamType {return TFloat(min, max, step, precision);});
+		hscriptInterp.variables.set("Float", function (?min:Float, ?max:Float, ?step:Float, ?precision:Int):EventParamType {return TFloat(min, max, step, precision);});
 		hscriptInterp.variables.set("String", TString);
 		hscriptInterp.variables.set("StrumLine", TStrumLine);
 		hscriptInterp.variables.set("ColorWheel", TColorWheel);

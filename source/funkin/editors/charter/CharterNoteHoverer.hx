@@ -44,18 +44,18 @@ class CharterNoteHoverer extends CharterNote {
 				if (Charter.instance.gridActionType == NOTE_DRAG) {
 					var verticalChange:Float = (__mousePos.y - Charter.instance.dragStartPos.y) / 40;
 					var horizontalChange:Int = CoolUtil.floorInt((__mousePos.x - (Std.int(Charter.instance.dragStartPos.x / 40) * 40)) / 40);
-		
+
 					for (s in Charter.selection) {
 						if (s != null && s.draggable && s is CharterNote) {
 							var draggingNote:CharterNote = cast(s, CharterNote);
 							y = (draggingNote.step + verticalChange);
-							if (!FlxG.keys.pressed.SHIFT) 
+							if (!FlxG.keys.pressed.SHIFT)
 								y -= ((draggingNote.step + verticalChange)
 									- Charter.instance.quantStepRounded(draggingNote.step+verticalChange, verticalChange > 0 ? 0.35 : 0.65));
 							y *= 40;
 							var newID:Int = Std.int(FlxMath.bound(draggingNote.fullID + horizontalChange, 0, (Charter.instance.strumLines.members.length*4)-1));
 							x = (id=newID) * 40; y = FlxMath.bound(y, 0, (Charter.instance.__endStep*40) - height);
-		
+
 							angle = switch(animation.curAnim.curFrame = (draggingNote.id % 4)) {
 								case 0: -90;
 								case 1: 180;
