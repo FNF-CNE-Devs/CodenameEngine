@@ -38,9 +38,6 @@ class HScript extends Script {
 		interp.importFailedCallback = importFailedCallback;
 		interp.staticVariables = Script.staticVariables;
 		interp.allowStaticVariables = interp.allowPublicVariables = true;
-		#if SAFE_MODE
-		interp.importBlocklist = Script.disallowedimports;
-		#end
 
 		interp.variables.set("trace", Reflect.makeVarArgs((args) -> {
 			var v:String = Std.string(args.shift());

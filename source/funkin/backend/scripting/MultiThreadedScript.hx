@@ -39,9 +39,6 @@ class MultiThreadedScript implements IFlxDestroyable implements IHScriptCustomBe
 				hscript.interp.variables = parentHScript.interp.variables;
 				hscript.interp.publicVariables = parentHScript.interp.publicVariables;
 				hscript.interp.staticVariables = parentHScript.interp.staticVariables;
-				#if SAFE_MODE
-				hscript.interp.importBlocklist = Script.disallowedimports;
-				#end
 
 				script.setParent(parentHScript.interp.scriptObject);
 			}
