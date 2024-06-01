@@ -16,13 +16,24 @@ class Script extends FlxBasic implements IFlxDestroyable {
 	 * are reset every mod switch so once you're done with them make sure to make them null!!
 	 */
 	public static var staticVariables:Map<String, Dynamic> = [];
-
+	#if SAFE_MODE
+	/**
+	 * List of blacklisted import for Safety (thanks @EliteMasterEric for the idea! :3)
+	 */
+	public static var disallowedimports:Array<String> = [
+		"Reflect", 
+		"Type", 
+		"Sys", 
+		"cpp.Lib", 
+		"sys.io.Process"
+	];
+	#end
 	public static function getDefaultVariables(?script:Script):Map<String, Dynamic> {
 		return [
 			// Haxe related stuff
 			"Std"			   => Std,
 			"Math"			  => Math,
-			"Reflect"			  => Reflect,
+			#if !SAFE_MODE "Reflect" => Reflect, #end
 			"StringTools"	   => StringTools,
 			"Json"			  => haxe.Json,
 

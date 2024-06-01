@@ -29,7 +29,7 @@ class Macros {
 		var isHl = Context.defined("hl");
 
 		if(Context.defined("sys")) {
-			for(inc in ["sys", "openfl.net", "funkin.backend.system.net"]) {
+			for(inc in [#if !SAFE_MODE "sys", #end "openfl.net", "funkin.backend.system.net"]) {
 				if(!isHl)
 					Compiler.include(inc);
 				else {

@@ -115,6 +115,10 @@
 		 Reduces compilation time at the cost of limited HScript flexibility. !-->
 	<define name="CUSTOM_CLASSES" />
 
+	<!-- Comment this out to disable safe mode 
+		Improves HScript capability at the cost of vulnerability !-->
+	<define name="SAFE_MODE"/>
+
 	<!-- Comment this out to disable multithreading !-->
 	<haxedef name="ALLOW_MULTITHREADING" unless="web || flash" />
 
@@ -134,7 +138,7 @@
 	<haxedef name="USE_ADAPTED_ASSETS" unless="web" />
 
 	<!-- Comment this out to disable support for custom ndlls. !-->
-	<haxedef name="NDLLS_SUPPORTED" unless="web || iphonesim" />
+	<haxedef name="NDLLS_SUPPORTED" unless="web || iphonesim || SAFE_MODE" />
 
 	<!-- Comment this out to disable support for Away3D Flixel Intergration (reduces compile times)-->
 	<define name="THREE_D_SUPPORT" />
