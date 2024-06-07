@@ -11,7 +11,6 @@ class Strum extends FlxSprite {
 	 */
 	public var animSuffix:String = "";
 
-	public var cpu = false; // Unused
 	public var lastHit:Float = -5000;
 
 	public var scrollSpeed:Null<Float> = null; // custom scroll speed per strum
