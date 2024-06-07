@@ -29,6 +29,30 @@ class NativeAPI {
 		#end
 	}
 
+	/**
+	 * Gets the specified file's (or folder) attribute.
+	 */
+	public static function getFileAttribute(path:String, useAbsol:Bool = true):FileAttribute {
+		#if windows
+		if(useAbsol) path = sys.FileSystem.absolutePath(path);
+		return Windows.getFileAttribute(path);
+		#else
+		return NORMAL;
+		#end
+	}
+
+	/**
+	 * Sets the specified file's (or folder) attribute. If it fails, the return value is `0`.
+	 */
+	public static function setFileAttribute(path:String, attrib:FileAttribute, useAbsol:Bool = true):Int {
+		#if windows
+		if(useAbsol) path = sys.FileSystem.absolutePath(path);
+		return Windows.setFileAttribute(path, attrib);
+		#else
+		return 0;
+		#end
+	}
+
 	public static function setDarkMode(title:String, enable:Bool) {
 		#if windows
 		Windows.setDarkMode(title, enable);
@@ -61,14 +85,12 @@ class NativeAPI {
 		var fg = cast(foregroundColor, Int);
 		var bg = cast(backgroundColor, Int);
 		Windows.setConsoleColors((bg * 16) + fg);
-		#else
-		#if sys
+		#elseif sys
 		Sys.print("\x1b[0m");
 		if(foregroundColor != NONE)
 			Sys.print("\x1b[" + Std.int(consoleColorToANSI(foregroundColor)) + "m");
 		if(backgroundColor != NONE)
 			Sys.print("\x1b[" + Std.int(consoleColorToANSI(backgroundColor) + 10) + "m");
-		#end
 		#end
 	}
 
@@ -113,6 +135,26 @@ class NativeAPI {
 			case WHITE | _:		0xFFFFFFFF;
 		}
 	}
+}
+
+enum abstract FileAttribute(Int) {
+	// Settables
+	var ARCHIVE = 0x20;
+	var HIDDEN = 0x2;
+	var NORMAL = 0x80;
+	var NOT_CONTENT_INDEXED = 0x2000;
+	var OFFLINE = 0x1000;
+	var READONLY = 0x1;
+	var SYSTEM = 0x4;
+	var TEMPORARY = 0x100;
+
+	// Non Settables
+	var COMPRESSED = 0x800;
+	var DEVICE = 0x40;
+	var DIRECTORY = 0x10;
+	var ENCRYPTED = 0x4000;
+	var REPARSE_POINT = 0x400;
+	var SPARSE_FILE = 0x200;
 }
 
 enum abstract ConsoleColor(Int) {
