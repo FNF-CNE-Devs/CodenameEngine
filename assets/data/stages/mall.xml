@@ -10,12 +10,12 @@
 	<sprite name="bottomBoppers" x="-297" y="120" sprite="bottomBop" scroll="0.9" type="onbeat" beatInterval="1"/>
 	<sprite name="fgSnow" x="-600" y="680" sprite="fgSnow"/>
 
-	<high-memory>
-		<sprite name="santa" x="-840" y="150" sprite="santa" type="onbeat" beatInterval="1"/>
-	</high-memory>
-
 
 	<girlfriend x="540" y="110"/>
 	<dad/>
 	<boyfriend x="1030" camyoffset="-150" camxoffset="-150"/>
+
+	<high-memory>
+		<sprite name="santa" x="-840" y="150" sprite="santa" type="onbeat" beatInterval="1"/>
+	</high-memory>
 </stage>
