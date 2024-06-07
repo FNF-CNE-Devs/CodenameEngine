@@ -1,21 +1,21 @@
 <!DOCTYPE codename-engine-stage>
 <stage zoom="0.8" name="mall" folder="stages/mall/" startCamPosY="450" startCamPosX="500">
-	<sprite name="bg" x="-1000" y="-500" sprite="bgWalls" scroll="0.2"/>
+	<sprite name="bg" x="-1380" y="-620" sprite="bgWalls" scale="0.8" scroll="0.2"/>
 
 	<high-memory>
-		<sprite name="upperBoppers" x="-240" y="-90" sprite="upperBop" scroll="0.2" type="onbeat" beatInterval="1"/>
+		<sprite name="upperBoppers" x="-400" y="-60" sprite="upperBop" scale="0.85" scroll="0.33" type="onbeat" beatInterval="1"/>
 	</high-memory>
-	<sprite name="bgEscalator" x="-1100" y="-600" sprite="bgEscalator" scroll="0.3" scale="0.9" updateHitbox="true"/>
+	<sprite name="bgEscalator" x="-1090" y="-540" sprite="bgEscalator" scroll="0.3" scale="0.9" updateHitbox="true"/>
 	<sprite name="tree" x="370" y="-250" sprite="christmasTree" scroll="0.4"/>
-	<sprite name="bottomBoppers" x="-300" y="140" sprite="bottomBop" scroll="0.9" type="onbeat" beatInterval="1"/>
-	<sprite name="fgSnow" x="-600" y="700" sprite="fgSnow"/>
+	<sprite name="bottomBoppers" x="-297" y="120" sprite="bottomBop" scroll="0.9" type="onbeat" beatInterval="1"/>
+	<sprite name="fgSnow" x="-600" y="680" sprite="fgSnow"/>
+
+
+	<girlfriend x="540" y="110"/>
+	<dad/>
+	<boyfriend x="1030" camyoffset="-150" camxoffset="-150"/>
 
 	<high-memory>
 		<sprite name="santa" x="-840" y="150" sprite="santa" type="onbeat" beatInterval="1"/>
 	</high-memory>
-
-
-	<girlfriend />
-	<dad />
-	<boyfriend x="870" camyoffset="-200"/>
 </stage>
