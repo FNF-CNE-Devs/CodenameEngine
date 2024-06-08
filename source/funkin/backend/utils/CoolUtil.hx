@@ -1,5 +1,8 @@
 package funkin.backend.utils;
 
+#if sys
+import sys.FileSystem;
+#end
 import flixel.text.FlxText;
 import funkin.backend.utils.XMLUtil.TextFormat;
 import flixel.util.typeLimit.OneOfTwo;
@@ -62,18 +65,15 @@ class CoolUtil
 	 */
 	@:noUsing public static function deleteFolder(delete:String) {
 		#if sys
-		if (!sys.FileSystem.exists(delete)) return;
-		var files:Array<String> = sys.FileSystem.readDirectory(delete);
+		if (!FileSystem.exists(delete)) return;
+		var files:Array<String> = FileSystem.readDirectory(delete);
 		for(file in files) {
-			if (sys.FileSystem.isDirectory(delete + "/" + file)) {
+			if (FileSystem.isDirectory(delete + "/" + file)) {
 				deleteFolder(delete + "/" + file);
-				sys.FileSystem.deleteDirectory(delete + "/" + file);
+				FileSystem.deleteDirectory(delete + "/" + file);
 			} else {
-				try {
-					sys.FileSystem.deleteFile(delete + "/" + file);
-				} catch(e) {
-					Logs.trace("Could not delete " + delete + "/" + file, WARNING);
-				}
+				try FileSystem.deleteFile(delete + "/" + file)
+				catch(e) Logs.trace("Could not delete " + delete + "/" + file, WARNING);
 			}
 		}
 		#end
@@ -99,6 +99,22 @@ class CoolUtil
 	}
 
 	/**
+	 * Sets an attribute to a file or a folder adding eventual missing folders in the path
+	 * (WARNING: Only works on `windows`. On other platforms the return code it's always going to be `0` but still creates eventual missing folders if the platforms allows it to).
+	 * @param path Path to the file or folder
+	 * @param attrib The attribute to set (WARNING: There are some non settable attributes, such as the `COMPRESSED` one)
+	 * @param useAbsol If it should use the absolute path (By default it's `true` but if it's `false` you can use files outside from this program's directory for example)
+	 * @return The result code: 0 means that it failed setting
+	 */
+	@:noUsing public static inline function safeSetAttribute(path:String, attrib:NativeAPI.FileAttribute, useAbsol:Bool = true) {
+		addMissingFolders(Path.directory(path));
+
+		var result = NativeAPI.setFileAttribute(path, attrib, useAbsol);
+		if(result == 0) Logs.trace('Failed to set attribute to $path with a code of: $result', WARNING);
+		return result;
+	}
+
+	/**
 	 * Creates eventual missing folders to the specified `path`
 	 *
 	 * WARNING: eventual files in `path` will be considered as folders! Just to make possible folders be named as `songs.json` for example
@@ -113,9 +129,8 @@ class CoolUtil
 
 		for (folder in folders) {
 			currentPath += folder + "/";
-			if (!sys.FileSystem.exists(currentPath)) {
-				sys.FileSystem.createDirectory(currentPath);
-			}
+			if (!FileSystem.exists(currentPath))
+				FileSystem.createDirectory(currentPath);
 		}
 		#end
 		return path;
