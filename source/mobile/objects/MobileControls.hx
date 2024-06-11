@@ -179,7 +179,7 @@ class CurrentManager {
 	public var target:FlxButtonGroup;
 
 	public function new(control:MobileControls){
-		if(MobileControls.mode == 4) {
+		if(MobileControls.mode == 3) {
 			target = control.hitbox;
 			buttonLeft = control.hitbox.buttonLeft;
 			buttonDown = control.hitbox.buttonDown;
