@@ -24,7 +24,6 @@ enum FlxDPadMode
 	LEFT_RIGHT;
 	LEFT_FULL;
 	RIGHT_FULL;
-	BOTH;
 	NONE;
 }
 
@@ -134,15 +133,6 @@ class FlxVirtualPad extends FlxButtonGroup
 				add(buttonLeft = createButton(FlxG.width - 384, FlxG.height - 305, 'left', 0xFF00FF));
 				add(buttonRight = createButton(FlxG.width - 132, FlxG.height - 305, 'right', 0xFF0000));
 				add(buttonDown = createButton(FlxG.width - 258, FlxG.height - 197, 'down', 0x00FFFF));
-			case BOTH:
-				add(buttonUp = createButton(105, FlxG.height - 356, 'up', 0x00FF00));
-				add(buttonLeft = createButton(0, FlxG.height - 246, 'left', 0xFF00FF));
-				add(buttonRight = createButton(207, FlxG.height - 246, 'right', 0xFF0000));
-				add(buttonDown = createButton(105, FlxG.height - 131, 'down', 0x00FFFF));
-				add(buttonUp2 = createButton(FlxG.width - 258, FlxG.height - 404, 'up', 0x00FF00));
-				add(buttonLeft2 = createButton(FlxG.width - 384, FlxG.height - 305, 'left', 0xFF00FF));
-				add(buttonRight2 = createButton(FlxG.width - 132, FlxG.height - 305, 'right', 0xFF0000));
-				add(buttonDown2 = createButton(FlxG.width - 258, FlxG.height - 197, 'down', 0xA100FFFF));
 			case NONE: // do nothing
 		}
 

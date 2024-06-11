@@ -33,11 +33,9 @@ class MobileControls extends FlxTypedSpriteGroup<FlxButtonGroup>
 				initControler(1);
 			case 2: // CUSTOM
 				initControler(2);
-			case 3: // BOTH
-				initControler(3);
-			case 4: // HITBOX
+			case 3: // HITBOX
 				initControler(4);
-			case 5: // KEYBOARD
+			case 4: // KEYBOARD
 		}
 		current = new CurrentManager(this);
 		//updateButtonsColors();
@@ -57,9 +55,6 @@ class MobileControls extends FlxTypedSpriteGroup<FlxButtonGroup>
 				virtualPad = getCustomMode(new FlxVirtualPad('RIGHT_FULL', 'NONE'));
 				add(virtualPad);
 			case 3:
-				virtualPad = new FlxVirtualPad('BOTH', 'NONE');
-				add(virtualPad);
-			case 4:
 				hitbox = new Hitbox();
 				add(hitbox);
 		}

@@ -470,21 +470,12 @@ class Controls extends FlxActionSet
 			case LEFT_RIGHT:
 				inline forEachBound(Control.LEFT, (action, state) -> addButtonUI(action, vpad.buttonLeft, state));
 				inline forEachBound(Control.RIGHT, (action, state) -> addButtonUI(action, vpad.buttonRight, state));
-			case LEFT_FULL | RIGHT_FULL:
-				inline forEachBound(Control.UP, (action, state) -> addButtonUI(action, vpad.buttonUp, state));
-				inline forEachBound(Control.DOWN, (action, state) -> addButtonUI(action, vpad.buttonDown, state));
-				inline forEachBound(Control.LEFT, (action, state) -> addButtonUI(action, vpad.buttonLeft, state));
-				inline forEachBound(Control.RIGHT, (action, state) -> addButtonUI(action, vpad.buttonRight, state));
-			case BOTH:
-				inline forEachBound(Control.UP, (action, state) -> addButtonUI(action, vpad.buttonUp, state));
-				inline forEachBound(Control.DOWN, (action, state) -> addButtonUI(action, vpad.buttonDown, state));
-				inline forEachBound(Control.LEFT, (action, state) -> addButtonUI(action, vpad.buttonLeft, state));
-				inline forEachBound(Control.RIGHT, (action, state) -> addButtonUI(action, vpad.buttonRight, state));
-				inline forEachBound(Control.UP, (action, state) -> addButtonUI(action, vpad.buttonUp2, state));
-				inline forEachBound(Control.DOWN, (action, state) -> addButtonUI(action, vpad.buttonDown2, state));
-				inline forEachBound(Control.LEFT, (action, state) -> addButtonUI(action, vpad.buttonLeft2, state));
-				inline forEachBound(Control.RIGHT, (action, state) -> addButtonUI(action, vpad.buttonRight2, state));
 			case NONE: // do nothing
+			default:
+				inline forEachBound(Control.UP, (action, state) -> addButtonUI(action, vpad.buttonUp, state));
+				inline forEachBound(Control.DOWN, (action, state) -> addButtonUI(action, vpad.buttonDown, state));
+				inline forEachBound(Control.LEFT, (action, state) -> addButtonUI(action, vpad.buttonLeft, state));
+				inline forEachBound(Control.RIGHT, (action, state) -> addButtonUI(action, vpad.buttonRight, state));
 		}
 
 		switch (Action)
@@ -495,10 +486,10 @@ class Controls extends FlxActionSet
 				inline forEachBound(Control.BACK, (action, state) -> addButtonUI(action, vpad.buttonB, state));
 			case P:
 				inline forEachBound(Control.PAUSE, (action, state) -> addButtonUI(action, vpad.buttonP, state));
-			case A_B | A_B_C | A_B_E | A_B_X_Y | A_B_M_E | A_B_C_X_Y | A_B_C_X_Y_Z | A_B_C_D_V_X_Y_Z:
+			case NONE: // do nothing
+			default:
 				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonUI(action, vpad.buttonA, state));
 				inline forEachBound(Control.BACK, (action, state) -> addButtonUI(action, vpad.buttonB, state));
-			case NONE: // do nothing
 		}
 	}
 
@@ -515,21 +506,12 @@ class Controls extends FlxActionSet
 			case LEFT_RIGHT:
 				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
 				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
-			case LEFT_FULL | RIGHT_FULL:
-				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp, state));
-				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown, state));
-				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
-			case BOTH:
-				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp, state));
-				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown, state));
-				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
-				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
-				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp2, state));
-				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown2, state));
-				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft2, state));
-				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight2, state));
 			case NONE: // do nothing
+			default:
+				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp, state));
+				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown, state));
+				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
+				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
 		}
 
 		switch (Action)
@@ -540,10 +522,10 @@ class Controls extends FlxActionSet
 				inline forEachBound(Control.BACK, (action, state) -> addButtonNOTES(action, VirtualPad.buttonB, state));
 			case P:
 				inline forEachBound(Control.PAUSE, (action, state) -> addButtonNOTES(action, VirtualPad.buttonP, state));
-			case A_B | A_B_C | A_B_E | A_B_X_Y | A_B_M_E | A_B_C_X_Y | A_B_C_X_Y_Z | A_B_C_D_V_X_Y_Z:
+			case NONE: // do nothing
+			default:
 				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonA, state));
 				inline forEachBound(Control.BACK, (action, state) -> addButtonNOTES(action, VirtualPad.buttonB, state));
-			case NONE: // do nothing
 		}
 	}
 

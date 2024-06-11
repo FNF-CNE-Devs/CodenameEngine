@@ -153,10 +153,8 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 			case 0 | 1 | 2:
 				controls.setVirtualPadNOTES(mobileControls.virtualPad, RIGHT_FULL, NONE);
 			case 3:
-				controls.setVirtualPadNOTES(mobileControls.virtualPad, BOTH, NONE);
-			case 4:
 				controls.setHitBox(mobileControls.hitbox);
-			case 5: // do nothing
+			case 4: // do nothing
 		}
 
 		trackedInputsMobileControls = controls.trackedInputsNOTES;
