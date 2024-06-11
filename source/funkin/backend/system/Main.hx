@@ -158,7 +158,7 @@ class Main extends Sprite
 
 		FlxG.fixedTimestep = false;
 
-		FlxG.scaleMode = scaleMode = new FunkinRatioScaleMode();
+		if (!funkin.options.Options.wideScreen) FlxG.scaleMode = scaleMode = new FunkinRatioScaleMode();
 
 		Conductor.init();
 		AudioSwitchFix.init();
@@ -200,7 +200,7 @@ class Main extends Sprite
 	}
 
 	private static function onStateSwitch() {
-		scaleMode.resetSize();
+		if (!funkin.options.Options.wideScreen) scaleMode.resetSize();
 	}
 
 	private static function onStateSwitchPost() {
