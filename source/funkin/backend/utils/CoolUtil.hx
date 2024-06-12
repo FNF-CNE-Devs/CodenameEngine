@@ -718,6 +718,16 @@ class CoolUtil
 
 	@:noUsing public static inline function flxeaseFromString(mainEase:String, suffix:String)
 		return Reflect.field(FlxEase, mainEase + (mainEase == "linear" ? "" : suffix));
+
+	/*
+	 * Returns the filename of a path, without the extension.
+	 * @param path Path to get the filename from
+	 * @return Filename
+	 */
+	 @:noUsing public static inline function getFilename(file:String) {
+		var file = new haxe.io.Path(file);
+		return file.file;
+	}
 }
 
 /**
