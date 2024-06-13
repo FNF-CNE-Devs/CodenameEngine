@@ -17,7 +17,7 @@ class CharacterGhostsHandler extends FlxTypedGroup<Character> {
 	}
 
 	public function createGhost(anim:String) {
-		var ghost:Character = new Character(0,0, character.curCharacter);
+		var ghost:Character = new Character(0,0, character.curCharacter, false, false);
 		ghost.applyXML(character.xml); // apply cur character stuff
 		ghost.playAnim(anim);
 		ghost.stopAnimation();
