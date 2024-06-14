@@ -39,7 +39,8 @@ In the future (when the engine won't be a WIP anymore) we're gonna also publish 
 <details>
   <summary><h2>Mobile Credits</h2></summary>
 
-- Credits to [Karim Akra](https://youtube.com/@Karim0690) to porting the engine
+- Credits to [Lily](ttps://youtube.com/@mcagabe19) to porting the enging
+- Credits to [Karim Akra](https://youtube.com/@Karim0690) to helping me to port the engine
 - Credits to [MAJigsaw77](https://github.com/MAJigsaw77) for mobile controls
 </details>
 
