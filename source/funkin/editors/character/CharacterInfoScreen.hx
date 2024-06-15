@@ -119,7 +119,7 @@ class CharacterInfoScreen extends UISubstateWindow {
 		add(isPlayerCheckbox);
 		addLabelOn(isPlayerCheckbox, "Is Player");
 
-		isGFCheckbox = new UICheckbox(isPlayerCheckbox.x + 128, positionXStepper.y + 10 + 32 + 28, "isGF", character.isGF);
+		isGFCheckbox = new UICheckbox(isPlayerCheckbox.x + 128, positionXStepper.y + 10 + 32 + 28, "isGF", false);
 		add(isGFCheckbox);
 		addLabelOn(isGFCheckbox, "Is GF");
 
@@ -168,7 +168,6 @@ class CharacterInfoScreen extends UISubstateWindow {
 
 		var xml = Xml.createElement("character");
 		xml.set("isPlayer", isPlayerCheckbox.checked ? "true" : "false");
-		xml.set("isGF", isGFCheckbox.checked ? "true" : "false");
 		xml.set("x", Std.string(positionXStepper.value));
 		xml.set("y", Std.string(positionYStepper.value));
 		xml.set("gameOverChar", gameOverCharTextBox.label.text);
