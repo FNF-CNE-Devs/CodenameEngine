@@ -205,12 +205,12 @@
 		<!--Target SDK-->
 		<android target-sdk-version="31" />
 
+		<config:android permission="android.permission.WAKE_LOCK" />
+		<config:android permission="android.permission.INTERNET" />
+		<config:android permission="android.permission.VIBRATE" />
+		<config:android permission="android.permission.ACCESS_NETWORK_STATE" />
 		<config:android permission="android.permission.MANAGE_EXTERNAL_STORAGE" />
 		<config:android permission="android.permission.REQUEST_INSTALL_PACKAGES" />
-		
-		<!-- Fix Networking -->
-		<config:android permission="android.permission.INTERNET" />
-		<config:android permission="android.permission.ACCESS_NETWORK_STATE" />
 	</section>
 
 	<!--<section if="ios">
