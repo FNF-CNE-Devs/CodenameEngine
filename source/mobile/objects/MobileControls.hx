@@ -34,7 +34,7 @@ class MobileControls extends FlxTypedSpriteGroup<FlxButtonGroup>
 			case 2: // CUSTOM
 				initControler(2);
 			case 3: // HITBOX
-				initControler(4);
+				initControler(3);
 			case 4: // KEYBOARD
 		}
 		current = new CurrentManager(this);
