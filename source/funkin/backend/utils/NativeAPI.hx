@@ -1,6 +1,7 @@
 package funkin.backend.utils;
 
 import funkin.backend.utils.native.*;
+import flixel.util.typeLimit.OneOfTwo;
 
 /**
  * Class for functions that talk to a lower level than haxe, such as message boxes, and more.
@@ -32,7 +33,7 @@ class NativeAPI {
 	/**
 	 * Gets the specified file's (or folder) attribute.
 	 */
-	public static function getFileAttribute(path:String, useAbsol:Bool = true):FileAttribute {
+	public static function getFileAttributeRaw(path:String, useAbsol:Bool = true):Int {
 		#if windows
 		if(useAbsol) path = sys.FileSystem.absolutePath(path);
 		return Windows.getFileAttribute(path);
@@ -42,12 +43,34 @@ class NativeAPI {
 	}
 
 	/**
+	 * Gets the specified file's (or folder) attribute.
+	 */
+	public static function getFileAttribute(path:String, useAbsol:Bool = true):FileAttributeWrapper {
+		return new FileAttributeWrapper(getFileAttributeRaw(path, useAbsol));
+	}
+
+	/**
 	 * Sets the specified file's (or folder) attribute. If it fails, the return value is `0`.
 	 */
 	public static function setFileAttribute(path:String, attrib:FileAttribute, useAbsol:Bool = true):Int {
 		#if windows
 		if(useAbsol) path = sys.FileSystem.absolutePath(path);
 		return Windows.setFileAttribute(path, attrib);
+		#else
+		return 0;
+		#end
+	}
+
+	/**
+	 * Sets the specified file's (or folder) attribute. If it fails, the return value is `0`.
+	 */
+	public static function setFileAttributes(path:String, attrib:OneOfTwo<FileAttributeWrapper, Int>, useAbsol:Bool = true):Int {
+		#if windows
+		if(useAbsol) path = sys.FileSystem.absolutePath(path);
+		if(attrib is FileAttributeWrapper)
+			return Windows.setFileAttribute(path, cast(attrib, FileAttributeWrapper).flags);
+		else
+			return Windows.setFileAttribute(path, cast(attrib, Int));
 		#else
 		return 0;
 		#end
@@ -137,7 +160,7 @@ class NativeAPI {
 	}
 }
 
-enum abstract FileAttribute(Int) {
+enum abstract FileAttribute(Int) from Int to Int {
 	// Settables
 	var ARCHIVE = 0x20;
 	var HIDDEN = 0x2;
@@ -155,6 +178,9 @@ enum abstract FileAttribute(Int) {
 	var ENCRYPTED = 0x4000;
 	var REPARSE_POINT = 0x400;
 	var SPARSE_FILE = 0x200;
+
+	// For checking (mainly)
+	var NOTHING = -1;
 }
 
 enum abstract ConsoleColor(Int) {

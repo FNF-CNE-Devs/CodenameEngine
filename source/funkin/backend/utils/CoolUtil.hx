@@ -100,7 +100,7 @@ class CoolUtil
 
 	/**
 	 * Sets an attribute to a file or a folder adding eventual missing folders in the path
-	 * (WARNING: Only works on `windows`. On other platforms the return code it's always going to be `0` but still creates eventual missing folders if the platforms allows it to).
+	 * (WARNING: Only works on `windows` for now. On other platforms the return code it's always going to be `0` but still creates eventual missing folders if the platforms allows it to).
 	 * @param path Path to the file or folder
 	 * @param attrib The attribute to set (WARNING: There are some non settable attributes, such as the `COMPRESSED` one)
 	 * @param useAbsol If it should use the absolute path (By default it's `true` but if it's `false` you can use files outside from this program's directory for example)
@@ -113,6 +113,39 @@ class CoolUtil
 		if(result == 0) Logs.trace('Failed to set attribute to $path with a code of: $result', WARNING);
 		return result;
 	}
+
+	/**
+	 * Sets file attributes to a file or a folder adding eventual missing folders in the path
+	 * (WARNING: Only works on `windows` for now. On other platforms the return code it's always going to be `0` but still creates eventual missing folders if the platforms allows it to).
+	 * @param path Path to the file or folder
+	 * @param attrib The attribute to set (WARNING: There are some non settable attributes, such as the `COMPRESSED` one)
+	 * @param useAbsol If it should use the absolute path (By default it's `true` but if it's `false` you can use files outside from this program's directory for example)
+	 * @return The result code: 0 means that it failed setting
+	 */
+	 @:noUsing public static inline function safeSetAttributes(path:String, attrib:OneOfTwo<FileAttributeWrapper, Int>, useAbsol:Bool = true) {
+		addMissingFolders(Path.directory(path));
+
+		var result = NativeAPI.setFileAttributes(path, attrib, useAbsol);
+		if(result == 0) Logs.trace('Failed to set attributes to $path with a code of: $result', WARNING);
+		return result;
+	}
+
+	/**
+	 * Gets the attributes of a file or a folder adding eventual missing folders in the path
+	 * (WARNING: Only works on `windows` for now. On other platforms the return code it's always going to be `0` but still creates eventual missing folders if the platforms allows it to).
+	 * @param path Path to the file or folder
+	 * @param useAbsol If it should use the absolute path (By default it's `true` but if it's `false` you can use files outside from this program's directory for example)
+	 * @return The result code: 0 means that it failed setting
+	 */
+	 // uncomment if it crashes when using it normall
+	/*@:noUsing public static inline function safeGetAttribute(path:String, useAbsol:Bool = true) {
+		addMissingFolders(Path.directory(path));
+
+		var result = NativeAPI.getFileAttribute(path, useAbsol);
+		if(result == 0) Logs.trace('Failed to get attribute to $path with a code of: $result', WARNING);
+		return result;
+	}*/
+
 
 	/**
 	 * Creates eventual missing folders to the specified `path`
