@@ -1234,6 +1234,7 @@ class PlayState extends MusicBeatState
 				Logs.trace('Song scripts successfully reloaded.', WARNING, GREEN);
 			}
 		}
+
                 if (doIconBop) {
 			iconP1.scale.set(lerp(iconP1.scale.x, 1, 0.33), lerp(iconP1.scale.y, 1, 0.33));
 			iconP2.scale.set(lerp(iconP2.scale.x, 1, 0.33), lerp(iconP2.scale.y, 1, 0.33));
@@ -1787,13 +1788,16 @@ class PlayState extends MusicBeatState
 			FlxG.camera.zoom += 0.015 * camZoomingStrength;
 			camHUD.zoom += 0.03 * camZoomingStrength;
 		}
-                if (doIconBop) {
+
+                if (doIconBop)
+		{
 			iconP1.scale.set(1.2, 1.2);
 			iconP2.scale.set(1.2, 1.2);
 
 			iconP1.updateHitbox();
 			iconP2.updateHitbox();
 		}
+
 		scripts.call("beatHit", [curBeat]);
 	}
 
