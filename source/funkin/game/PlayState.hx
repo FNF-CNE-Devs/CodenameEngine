@@ -211,9 +211,13 @@ class PlayState extends MusicBeatState
 	 */
 	public var canAccessDebugMenus:Bool = true;
 	/**
-	 * Wether or not to show the secret gitaroo pause.
+	 * Whether or not to show the secret gitaroo pause.
 	 */
 	public var allowGitaroo:Bool = true;
+	/**
+	 * Whether or not to bop the icons on beat.
+	 */
+	public var doIconBop:Bool = true;
 
 	/**
 	 * Whenever cam zooming is enabled, enables on a note hit if not cancelled.
@@ -1783,13 +1787,13 @@ class PlayState extends MusicBeatState
 			FlxG.camera.zoom += 0.015 * camZoomingStrength;
 			camHUD.zoom += 0.03 * camZoomingStrength;
 		}
+                if (doIconBop) {
+			iconP1.scale.set(1.2, 1.2);
+			iconP2.scale.set(1.2, 1.2);
 
-		iconP1.scale.set(1.2, 1.2);
-		iconP2.scale.set(1.2, 1.2);
-
-		iconP1.updateHitbox();
-		iconP2.updateHitbox();
-
+			iconP1.updateHitbox();
+			iconP2.updateHitbox();
+		}
 		scripts.call("beatHit", [curBeat]);
 	}
 
