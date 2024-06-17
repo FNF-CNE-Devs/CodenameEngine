@@ -158,12 +158,16 @@ class Main extends Sprite
 
 		FlxG.fixedTimestep = false;
 
+		#if mobile
 		if (!funkin.options.Options.wideScreen) FlxG.scaleMode = scaleMode = new FunkinRatioScaleMode();
+		#end
 
 		Conductor.init();
 		AudioSwitchFix.init();
 		EventManager.init();
+		#if mobile
 		FlxG.signals.preStateSwitch.add(onStateSwitch);
+		#end
 		FlxG.signals.postStateSwitch.add(onStateSwitchPost);
 
 		FlxG.mouse.useSystemCursor = !MobileControls.mobileC;
@@ -199,9 +203,11 @@ class Main extends Sprite
 			{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
 	}
 
+	#if mobile
 	private static function onStateSwitch() {
 		if (!funkin.options.Options.wideScreen) scaleMode.resetSize();
 	}
+	#end
 
 	private static function onStateSwitchPost() {
 		// manual asset clearing since base openfl one doesnt clear lime one
