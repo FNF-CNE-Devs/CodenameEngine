@@ -1234,13 +1234,13 @@ class PlayState extends MusicBeatState
 				Logs.trace('Song scripts successfully reloaded.', WARNING, GREEN);
 			}
 		}
+                if (doIconBop) {
+			iconP1.scale.set(lerp(iconP1.scale.x, 1, 0.33), lerp(iconP1.scale.y, 1, 0.33));
+			iconP2.scale.set(lerp(iconP2.scale.x, 1, 0.33), lerp(iconP2.scale.y, 1, 0.33));
 
-		iconP1.scale.set(lerp(iconP1.scale.x, 1, 0.33), lerp(iconP1.scale.y, 1, 0.33));
-		iconP2.scale.set(lerp(iconP2.scale.x, 1, 0.33), lerp(iconP2.scale.y, 1, 0.33));
-
-		iconP1.updateHitbox();
-		iconP2.updateHitbox();
-
+			iconP1.updateHitbox();
+			iconP2.updateHitbox();
+		}
 		updateIconPositions();
 
 		if (startingSong)
