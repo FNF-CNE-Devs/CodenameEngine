@@ -6,6 +6,7 @@ import sys.FileSystem;
 import flixel.text.FlxText;
 import funkin.backend.utils.XMLUtil.TextFormat;
 import flixel.util.typeLimit.OneOfTwo;
+import flixel.util.typeLimit.OneOfThree;
 import flixel.tweens.FlxTween;
 import flixel.system.frontEnds.SoundFrontEnd;
 import flixel.sound.FlxSound;
@@ -99,18 +100,66 @@ class CoolUtil
 	}
 
 	/**
-	 * Sets an attribute to a file or a folder adding eventual missing folders in the path
-	 * (WARNING: Only works on `windows`. On other platforms the return code it's always going to be `0` but still creates eventual missing folders if the platforms allows it to).
+	 * Gets file attributes from a file or a folder adding eventual missing folders in the path
+	 * (WARNING: Only works on `windows` for now. On other platforms the attributes' value it's always going to be `0` -thanks to the wrapper you can also use `isNothing` for checking- but still creates eventual missing folders if the platforms allows it to).
 	 * @param path Path to the file or folder
-	 * @param attrib The attribute to set (WARNING: There are some non settable attributes, such as the `COMPRESSED` one)
 	 * @param useAbsol If it should use the absolute path (By default it's `true` but if it's `false` you can use files outside from this program's directory for example)
-	 * @return The result code: 0 means that it failed setting
+	 * @return The attributes through the `FileAttributeWrapper`
 	 */
-	@:noUsing public static inline function safeSetAttribute(path:String, attrib:NativeAPI.FileAttribute, useAbsol:Bool = true) {
+	@:noUsing public static inline function safeGetAttributes(path:String, useAbsol:Bool = true):FileAttributeWrapper {
 		addMissingFolders(Path.directory(path));
 
-		var result = NativeAPI.setFileAttribute(path, attrib, useAbsol);
-		if(result == 0) Logs.trace('Failed to set attribute to $path with a code of: $result', WARNING);
+		var result = NativeAPI.getFileAttributes(path, useAbsol);
+		if(result.isNothing) Logs.trace('The file where it has been tried to get the attributes from, might be corrupted or inexistent (code: ${result.getValue()})', WARNING);
+		return result;
+	}
+
+	/**
+	 * Sets file attributes to a file or a folder adding eventual missing folders in the path
+	 * (WARNING: Only works on `windows` for now. On other platforms the return code it's always going to be `0` but still creates eventual missing folders if the platforms allows it to).
+	 * @param path Path to the file or folder
+	 * @param attrib The attribute(s) to set (WARNING: There are some non settable attributes, such as the `COMPRESSED` one)
+	 * @param useAbsol If it should use the absolute path (By default it's `true` but if it's `false` you can use files outside from this program's directory for example)
+	 * @return The result code: `0` means that it failed setting
+	 */
+	@:noUsing public static inline function safeSetAttributes(path:String, attrib:OneOfThree<NativeAPI.FileAttribute, FileAttributeWrapper, Int>, useAbsol:Bool = true):Int {
+		// yes, i'm aware that FileAttribute is also an Int so need to include it too, but at least like this we don't have to make cast sometimes while passing the arguments  - Nex
+		addMissingFolders(Path.directory(path));
+
+		var result = NativeAPI.setFileAttributes(path, attrib, useAbsol);
+		if(result == 0) Logs.trace('Failed to set attributes to $path with a code of: $result', WARNING);
+		return result;
+	}
+
+	/**
+	 * Adds one (or more) file attributes to a file or a folder adding eventual missing folders in the path
+	 * (WARNING: Only works on `windows` for now. On other platforms the return code it's always going to be `0` but still creates eventual missing folders if the platforms allows it to).
+	 * @param path Path to the file or folder
+	 * @param attrib The attribute(s) to add (WARNING: There are some non settable attributes, such as the `COMPRESSED` one)
+	 * @param useAbsol If it should use the absolute path (By default it's `true` but if it's `false` you can use files outside from this program's directory for example)
+	 * @return The result code: `0` means that it failed setting
+	 */
+	@:noUsing public static inline function safeAddAttributes(path:String, attrib:OneOfTwo<NativeAPI.FileAttribute, Int>, useAbsol:Bool = true):Int {
+		addMissingFolders(Path.directory(path));
+
+		var result = NativeAPI.addFileAttributes(path, attrib, useAbsol);
+		if(result == 0) Logs.trace('Failed to add attributes to $path with a code of: $result', WARNING);
+		return result;
+	}
+
+	/**
+	 * Removes one (or more) file attributes to a file or a folder adding eventual missing folders in the path
+	 * (WARNING: Only works on `windows` for now. On other platforms the return code it's always going to be `0` but still creates eventual missing folders if the platforms allows it to).
+	 * @param path Path to the file or folder
+	 * @param attrib The attribute(s) to remove (WARNING: There are some non settable attributes, such as the `COMPRESSED` one)
+	 * @param useAbsol If it should use the absolute path (By default it's `true` but if it's `false` you can use files outside from this program's directory for example)
+	 * @return The result code: `0` means that it failed setting
+	 */
+	@:noUsing public static inline function safeRemoveAttributes(path:String, attrib:OneOfTwo<NativeAPI.FileAttribute, Int>, useAbsol:Bool = true):Int {
+		addMissingFolders(Path.directory(path));
+
+		var result = NativeAPI.removeFileAttributes(path, attrib, useAbsol);
+		if(result == 0) Logs.trace('Failed to remove attributes to $path with a code of: $result', WARNING);
 		return result;
 	}
 
@@ -718,6 +767,16 @@ class CoolUtil
 
 	@:noUsing public static inline function flxeaseFromString(mainEase:String, suffix:String)
 		return Reflect.field(FlxEase, mainEase + (mainEase == "linear" ? "" : suffix));
+
+	/*
+	 * Returns the filename of a path, without the extension.
+	 * @param path Path to get the filename from
+	 * @return Filename
+	 */
+	 @:noUsing public static inline function getFilename(file:String) {
+		var file = new haxe.io.Path(file);
+		return file.file;
+	}
 }
 
 /**
