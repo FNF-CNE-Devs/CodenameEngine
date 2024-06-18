@@ -157,7 +157,7 @@ class Windows {
 	@:functionCode('
 		return GetFileAttributes(path);
 	')
-	public static function getFileAttribute(path:String):FileAttribute
+	public static function getFileAttributes(path:String):FileAttribute
 	{
 		return NORMAL;
 	}
@@ -165,7 +165,7 @@ class Windows {
 	@:functionCode('
 		return SetFileAttributes(path, attrib);
 	')
-	public static function setFileAttribute(path:String, attrib:FileAttribute):Int
+	public static function setFileAttributes(path:String, attrib:FileAttribute):Int
 	{
 		return 0;
 	}
