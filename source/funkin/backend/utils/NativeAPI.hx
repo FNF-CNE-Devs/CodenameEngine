@@ -1,6 +1,8 @@
 package funkin.backend.utils;
 
 import funkin.backend.utils.native.*;
+import flixel.util.typeLimit.OneOfTwo;
+import flixel.util.typeLimit.OneOfThree;
 
 /**
  * Class for functions that talk to a lower level than haxe, such as message boxes, and more.
@@ -30,24 +32,53 @@ class NativeAPI {
 	}
 
 	/**
-	 * Gets the specified file's (or folder) attribute.
+	 * Gets the specified file's (or folder) attributes.
 	 */
-	public static function getFileAttribute(path:String, useAbsol:Bool = true):FileAttribute {
+	public static function getFileAttributesRaw(path:String, useAbsol:Bool = true):Int {
 		#if windows
 		if(useAbsol) path = sys.FileSystem.absolutePath(path);
-		return Windows.getFileAttribute(path);
+		return Windows.getFileAttributes(path);
 		#else
-		return NORMAL;
+		return -1;
 		#end
 	}
 
 	/**
-	 * Sets the specified file's (or folder) attribute. If it fails, the return value is `0`.
+	 * Gets the specified file's (or folder) attributes and passes it to `FileAttributeWrapper`.
 	 */
-	public static function setFileAttribute(path:String, attrib:FileAttribute, useAbsol:Bool = true):Int {
+	public static function getFileAttributes(path:String, useAbsol:Bool = true):FileAttributeWrapper {
+		return new FileAttributeWrapper(getFileAttributesRaw(path, useAbsol));
+	}
+
+	/**
+	 * Sets the specified file's (or folder) attributes. If it fails, the return value is `0`.
+	 */
+	public static function setFileAttributes(path:String, attrib:OneOfThree<NativeAPI.FileAttribute, FileAttributeWrapper, Int>, useAbsol:Bool = true):Int {
 		#if windows
 		if(useAbsol) path = sys.FileSystem.absolutePath(path);
-		return Windows.setFileAttribute(path, attrib);
+		return Windows.setFileAttributes(path, attrib is FileAttributeWrapper ? cast(attrib, FileAttributeWrapper).getValue() : cast(attrib, Int));
+		#else
+		return 0;
+		#end
+	}
+
+	/**
+	 * Removes from the specified file's (or folder) one (or more) specific attribute.
+	 */
+	public static function addFileAttributes(path:String, attrib:OneOfTwo<NativeAPI.FileAttribute, Int>, useAbsol:Bool = true):Int {
+		#if windows
+		return setFileAttributes(path, getFileAttributesRaw(path, useAbsol) | cast(attrib, Int), useAbsol);
+		#else
+		return 0;
+		#end
+	}
+
+	/**
+	 * Removes from the specified file's (or folder) one (or more) specific attribute.
+	 */
+	public static function removeFileAttributes(path:String, attrib:OneOfTwo<NativeAPI.FileAttribute, Int>, useAbsol:Bool = true):Int {
+		#if windows
+		return setFileAttributes(path, getFileAttributesRaw(path, useAbsol) & ~cast(attrib, Int), useAbsol);
 		#else
 		return 0;
 		#end
@@ -139,7 +170,7 @@ class NativeAPI {
 	}
 }
 
-enum abstract FileAttribute(Int) {
+enum abstract FileAttribute(Int) from Int to Int {
 	// Settables
 	var ARCHIVE = 0x20;
 	var HIDDEN = 0x2;

@@ -108,7 +108,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		switchOffset('singLEFTmiss', 'singRIGHTmiss');
 
 		__swappedLeftRightAnims = true;
-		trace("fuck");
 	}
 
 	@:noCompletion var __baseFlipped:Bool = false;
@@ -191,7 +190,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	}
 
 	public function isFlippedOffsets()
-		return __switchAnims && ((isPlayer != playerOffsets) != (flipX != __baseFlipped));
+		return (isPlayer != playerOffsets) != (flipX != __baseFlipped);
 
 	public override function draw() {
 		if (isFlippedOffsets()) {
@@ -313,7 +312,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			if (!characterProperties.contains(attribute))
 				extra[attribute] = xml.x.get(attribute);
 
-		trace(__switchAnims);
 		fixChar(__switchAnims, !hasInterval);
 		dance();
 	}
