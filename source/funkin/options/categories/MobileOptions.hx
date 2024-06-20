@@ -58,8 +58,7 @@ class MobileOptions extends OptionsScreen {
 		add(new Checkbox(
 			"Wide Screen",
 			"If checked, It'll change aspect ratio of the game.",
-			"wideScreen",
-			() -> FlxG.scaleMode = new mobile.funkin.backend.system.MobileRatioScaleMode()));
+			"wideScreen"));
 		#end
 		#if android
 		add(new ArrayOption(
@@ -71,12 +70,19 @@ class MobileOptions extends OptionsScreen {
 		#end
 	}
 
-	override function update(elapsed) super.update(elapsed);
+	override function update(elapsed) {
+		final lastScreenTimeOut:Bool = Options.screenTimeOut;
+		final lastWideScreen:Bool = Options.wideScreen;
+		#if mobile
+		if (lastScreenTimeOut != Options.screenTimeOut) LimeSystem.allowScreenTimeout = Options.screenTimeOut;
+		if (lastWideScreen != Options.wideScreen) FlxG.scaleMode = new mobile.funkin.backend.system.MobileRatioScaleMode();
+		#end
+		super.update(elapsed);
+	}
 
 	override public function destroy() {
-		#if mobile LimeSystem.allowScreenTimeout = Options.screenTimeOut; #end
 		#if android
-		if (Options.storageType != lastStorageType) {
+		if (lastStorageType != Options.storageType) {
 			onStorageChange();
 			funkin.backend.utils.NativeAPI.showMessageBox('Notice!', 'Storage Type has been changed and you needed restart the game!!\nPress OK to close the game.');
 			LimeSystem.exit(0);
