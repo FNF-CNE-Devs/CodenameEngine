@@ -13,7 +13,7 @@ import flixel.util.FlxColor;
 import funkin.options.keybinds.KeybindsOptions;
 import funkin.menus.StoryMenuState;
 import funkin.backend.utils.FunkinParentDisabler;
-import mobile.substates.MobileControlSelectSubState;
+import mobile.funkin.menus.MobileControlSelectSubState;
 
 class PauseSubState extends MusicBeatSubstate
 {

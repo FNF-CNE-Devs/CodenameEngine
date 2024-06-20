@@ -1,15 +1,15 @@
-package mobile.options.categories;
+package mobile.funkin.options.categories;
 
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxTimer;
 import funkin.backend.MusicBeatState;
-import mobile.substates.MobileControlSelectSubState;
+import mobile.funkin.menus.MobileControlSelectSubState;
 import funkin.options.OptionsScreen;
 import funkin.options.Options;
 import lime.system.System as LimeSystem;
 #if android
-import mobile.backend.SUtil;
+import mobile.funkin.backend.utils.SUtil;
 #end
 #if sys
 import sys.io.File;
@@ -57,6 +57,11 @@ class MobileOptions extends OptionsScreen {
 			"Allow Screen Timeout",
 			"If checked, The phone will enter sleep mode if the player is inactive.",
 			"screenTimeOut"));
+		add(new funkin.options.type.Checkbox(
+			"Wide Screen",
+			"If checked, It'll change aspect ratio of the game.",
+			"wideScreen",
+			() -> FlxG.scaleMode = new mobile.funkin.backend.system.MobileRatioScaleMode()));
 		#end
 		#if android
 		add(new funkin.options.type.ArrayOption(

@@ -2,7 +2,6 @@ package funkin.backend.system.framerate;
 
 import funkin.backend.assets.IModsAssetLibrary;
 import funkin.backend.assets.ScriptedAssetLibrary;
-import mobile.backend.SUtil;
 
 class AssetTreeInfo extends FramerateCategory {
 	public function new() {

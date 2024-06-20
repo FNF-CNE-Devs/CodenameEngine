@@ -11,7 +11,7 @@ import flixel.util.FlxColor;
 import lime.app.Application;
 import funkin.backend.scripting.events.*;
 import funkin.options.OptionsMenu;
-import mobile.substates.MobileControlSelectSubState;
+import mobile.funkin.menus.MobileControlSelectSubState;
 
 using StringTools;
 

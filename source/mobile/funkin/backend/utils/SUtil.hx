@@ -1,11 +1,10 @@
-package mobile.backend;
+package mobile.funkin.backend.utils;
 
 #if android
 import android.content.Context;
 import android.os.Environment;
 import android.Permissions;
 import android.Settings;
-import funkin.options.Options;
 #end
 import lime.system.System as LimeSystem;
 import funkin.backend.utils.NativeAPI;
@@ -29,7 +28,7 @@ class SUtil
 		var daPath:String;
 		#if android
 		if (!FileSystem.exists(LimeSystem.applicationStorageDirectory + 'storagetype.txt'))
-			File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', Options.storageType);
+			File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', funkin.options.Options.storageType);
 		var curStorageType:String = File.getContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt');
 		daPath = force ? StorageType.fromStrForce(curStorageType) : StorageType.fromStr(curStorageType);
 		daPath = haxe.io.Path.addTrailingSlash(daPath);

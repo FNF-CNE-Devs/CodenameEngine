@@ -39,11 +39,13 @@ class Options
 	public static var lastLoadedMod:String = null;
 
 	// mobile options
-	#if mobile public static var screenTimeOut:Bool = false; #end
+	#if mobile
+	public static var screenTimeOut:Bool = false;
+	public static var wideScreen:Bool = false;
+	#end
 	public static var hideHitbox:Bool = false;
 	public static var hitboxType:String = 'gradient';
 	public static var controlsAlpha:Float = FlxG.onMobile ? 0.6 : 0;
-
 	#if android public static var storageType:String = "EXTERNAL_DATA"; #end
 
 	/**

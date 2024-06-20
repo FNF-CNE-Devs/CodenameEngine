@@ -1,9 +1,9 @@
-package mobile.substates;
+package mobile.funkin.menus;
 
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.util.FlxGradient;
-import mobile.backend.TouchFunctions;
+import mobile.funkin.backend.TouchFunctions;
 import mobile.flixel.FlxButton;
 import flixel.input.touch.FlxTouch;
 import flixel.ui.FlxButton as UIButton;
@@ -200,21 +200,13 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 
 		switch (curOption)
 		{
-			case 0 | 1 | 3:
-				reset.visible = false;
-				keyboardText.kill();
-				changeControls();
 			case 2:
 				reset.visible = true;
 				keyboardText.kill();
 				changeControls();
-			case 3:
+			default:
 				reset.visible = false;
 				keyboardText.kill();
-				changeControls();
-			case 4:
-				reset.visible = false;
-				keyboardText.revive();
 				changeControls();
 		}
 		updatePosText();

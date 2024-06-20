@@ -1,4 +1,4 @@
-package mobile.states;
+package mobile.funkin.backend.system;
 
 import funkin.backend.MusicBeatState;
 import lime.utils.Assets as LimeAssets;
@@ -13,7 +13,7 @@ import funkin.backend.assets.Paths;
 import funkin.backend.utils.NativeAPI;
 import sys.FileSystem;
 import sys.io.File;
-import mobile.backend.SUtil;
+import mobile.funkin.backend.utils.SUtil;
 import flixel.util.FlxColor;
 #if (target.threaded)
 import sys.thread.Thread;

@@ -9,7 +9,7 @@ import funkin.menus.BetaWarningState;
 import funkin.backend.chart.EventsData;
 import flixel.FlxState;
 #if mobile
-import mobile.states.CopyState;
+import mobile.funkin.backend.system.CopyState;
 #end
 
 /**
