@@ -1,4 +1,4 @@
-package mobile.funkin.options.categories;
+package funkin.options.categories;
 
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
@@ -13,8 +13,7 @@ import mobile.funkin.backend.utils.SUtil;
 import sys.io.File;
 #end
 
-@:access('funkin.options.OptionsScreen')
-class MobileOptions extends funkin.options.OptionsScreen {
+class MobileOptions extends OptionsScreen {
 	var canEnter:Bool = true;
 	#if android
 	final lastStorageType:String = Options.storageType;
@@ -33,11 +32,11 @@ class MobileOptions extends funkin.options.OptionsScreen {
 		dpadMode = 'LEFT_FULL';
 		actionMode = 'A_B';
 		super("Mobile", 'Change Mobile Related Things such as Controls alpha, screen timeout....', null, 'LEFT_FULL', 'A_B');
-		add(new funkin.options.type.TextOption(
+		add(new TextOption(
 			"Mobile Controls",
 			"Choose which control to play with (hitbox, vpad left, vpad right, custom...).",
 			openMobileControlsMenu));
-		add(new funkin.options.type.NumOption(
+		add(new NumOption(
 			"Controls Alpha",
 			"Change how transparent the mobile controls should be",
 			0.0, // minimum
@@ -45,25 +44,25 @@ class MobileOptions extends funkin.options.OptionsScreen {
 			0.1, // change
 			"controlsAlpha", // save name or smth
 			changeControlsAlpha)); // callback
-		add(new funkin.options.type.ArrayOption(
+		add(new ArrayOption(
 			"Hitbox Design",
 			"Choose how your hitbox should look like!",
 			['gradient', 'noGradient', 'hidden'],
 			['Gradient', 'No Gradient', 'Hidden'],
 			'hitboxType'));
 		#if mobile
-		add(new funkin.options.type.Checkbox(
+		add(new Checkbox(
 			"Allow Screen Timeout",
 			"If checked, The phone will enter sleep mode if the player is inactive.",
 			"screenTimeOut"));
-		add(new funkin.options.type.Checkbox(
+		add(new Checkbox(
 			"Wide Screen",
 			"If checked, It'll change aspect ratio of the game.",
 			"wideScreen",
 			() -> FlxG.scaleMode = new mobile.funkin.backend.system.MobileRatioScaleMode()));
 		#end
 		#if android
-		add(new funkin.options.type.ArrayOption(
+		add(new ArrayOption(
 			"Storage Type",
 			"Choose which folder Codename Engine should use! (CHANGING THIS MAKES DELETE YOUR OLD FOLDER!!)",
 			typeVars,
