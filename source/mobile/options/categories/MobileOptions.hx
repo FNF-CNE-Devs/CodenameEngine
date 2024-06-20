@@ -57,10 +57,6 @@ class MobileOptions extends OptionsScreen {
 			"Allow Screen Timeout",
 			"If checked, The phone will enter sleep mode if the player is inactive.",
 			"screenTimeOut"));
-		add(new funkin.options.type.Checkbox(
-			"Wide Screen",
-			"If checked, It'll change aspect ratio of the game.",
-			"wideScreen"));
 		#end
 		#if android
 		add(new funkin.options.type.ArrayOption(

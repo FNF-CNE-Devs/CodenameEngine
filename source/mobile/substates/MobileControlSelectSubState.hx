@@ -208,6 +208,10 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 				reset.visible = true;
 				keyboardText.kill();
 				changeControls();
+			case 3:
+				reset.visible = false;
+				keyboardText.kill();
+				changeControls();
 			case 4:
 				reset.visible = false;
 				keyboardText.revive();
