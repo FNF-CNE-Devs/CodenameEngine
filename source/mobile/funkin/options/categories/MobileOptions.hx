@@ -4,8 +4,6 @@ import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxTimer;
 import funkin.backend.MusicBeatState;
-import mobile.funkin.menus.MobileControlSelectSubState;
-import funkin.options.OptionsScreen;
 import funkin.options.Options;
 import lime.system.System as LimeSystem;
 #if android
@@ -15,7 +13,8 @@ import mobile.funkin.backend.utils.SUtil;
 import sys.io.File;
 #end
 
-class MobileOptions extends OptionsScreen {
+@:access('funkin.options.OptionsScreen')
+class MobileOptions extends funkin.options.OptionsScreen {
 	var canEnter:Bool = true;
 	#if android
 	final lastStorageType:String = Options.storageType;
@@ -104,7 +103,7 @@ class MobileOptions extends OptionsScreen {
 		canEnter = false;
 		FlxG.state.persistentUpdate = false;
 		MusicBeatState.instance.camVPad.visible = false;
-		FlxG.state.openSubState(new MobileControlSelectSubState(() -> {
+		FlxG.state.openSubState(new mobile.funkin.menus.MobileControlSelectSubState(() -> {
 			MusicBeatState.instance.camVPad.visible = true;
 			FlxG.state.persistentUpdate = true;
 			new FlxTimer().start(0.2, (tmr:FlxTimer) -> canEnter = true);
