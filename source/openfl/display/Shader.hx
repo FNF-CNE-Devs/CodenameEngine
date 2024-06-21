@@ -381,7 +381,11 @@ class Shader
 		{
 			var message = "Unable to initialize the shader program";
 			message += "\n" + gl.getProgramInfoLog(program);
+			#if !ios
+			openfl.Lib.application.window.alert('$message', 'Shader Compile Error!');
+			#else
 			Log.error(message);
+			#end
 		}
 
 		return program;
