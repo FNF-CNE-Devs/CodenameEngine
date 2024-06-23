@@ -25,7 +25,7 @@ class MainState extends FlxState {
 		{
 			Main.loadGameSettings();
 			#if mobile
-			if (CopyState.checkExistingFiles())
+			if (!CopyState.checkExistingFiles())
 			{
 				FlxG.switchState(new CopyState());
 				return;
