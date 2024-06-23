@@ -13,7 +13,7 @@ import haxe.io.Path;
 import mobile.funkin.backend.utils.SUtil;
 import funkin.backend.assets.Paths;
 import funkin.backend.utils.NativeAPI;
-import funkin.menus.TitleState;
+import funkin.backend.system.MainState;
 
 #if sys
 import sys.io.File;
@@ -48,7 +48,7 @@ class CopyState extends funkin.backend.MusicBeatState
 		checkExistingFiles();
 		if (maxLoopTimes <= 0)
 		{
-			FlxG.switchState(new TitleState());
+			FlxG.switchState(new MainState());
 			return;
 		}
 
@@ -97,8 +97,8 @@ class CopyState extends funkin.backend.MusicBeatState
 					File.saveContent('logs/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '-CopyState' + '.txt', failedFilesStack.join('\n'));
 				}
 				canUpdate = false;
-				FlxG.sound.play(Paths.sound('confirmMenu')).onComplete = () -> {
-					FlxG.switchState(new TitleState());
+				FlxG.sound.play(Paths.sound('menu/confirm')).onComplete = () -> {
+					FlxG.switchState(new MainState());
 				};
 			}
 
@@ -210,7 +210,7 @@ class CopyState extends funkin.backend.MusicBeatState
 
 		maxLoopTimes = locatedFiles.length;
 
-		return (maxLoopTimes < 0);
+		return (maxLoopTimes <= 0);
 	}
 }
 #end
