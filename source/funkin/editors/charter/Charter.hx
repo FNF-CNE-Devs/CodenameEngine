@@ -118,10 +118,6 @@ class Charter extends UIState {
 				label: "File",
 				childs: [
 					{
-						label: "New"
-					},
-					null,
-					{
 						label: "Save",
 						keybind: [CONTROL, S],
 						onSelect: _file_save,
