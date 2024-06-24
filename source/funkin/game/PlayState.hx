@@ -359,11 +359,19 @@ class PlayState extends MusicBeatState
 	 * Camera zoom at which the game lerps to.
 	 */
 	public var defaultCamZoom:Float = 1.05;
-
+	/**
+	 * Speed at which the game camera zoom lerps to.
+	 */
+	public var camGameZoomLerp:Float = 0.05;
+	
 	/**
 	 * Camera zoom at which the hud lerps to.
 	 */
 	public var defaultHudZoom:Float = 1.0;
+	/**
+	 * Speed at which the hud camera zoom lerps to.
+	 */
+	public var camHUDZoomLerp:Float = 0.05;
 
 	/**
 	 * Zoom for the pixel assets.
@@ -1301,8 +1309,8 @@ class PlayState extends MusicBeatState
 
 		if (camZooming)
 		{
-			FlxG.camera.zoom = lerp(FlxG.camera.zoom, defaultCamZoom, 0.05);
-			camHUD.zoom = lerp(camHUD.zoom, defaultHudZoom, 0.05);
+			FlxG.camera.zoom = lerp(FlxG.camera.zoom, defaultCamZoom, camGameZoomLerp);
+			camHUD.zoom = lerp(camHUD.zoom, defaultHudZoom, camHUDZoomLerp);
 		}
 
 		// RESET = Quick Game Over Screen
