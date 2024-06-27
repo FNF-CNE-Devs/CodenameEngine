@@ -1,9 +1,9 @@
 package mobile.funkin.backend.system;
 
 import flixel.FlxG;
-import funkin.backend.system.FunkinRatioScaleMode;
+import flixel.system.scaleModes.BaseScaleMode;
 
-class MobileRatioScaleMode extends FunkinRatioScaleMode
+class MobileRatioScaleMode extends BaseScaleMode
 {
 	public static var allowWideScreen(default, set):Bool = true;
 
@@ -48,4 +48,6 @@ class MobileRatioScaleMode extends FunkinRatioScaleMode
 		FlxG.scaleMode = new MobileRatioScaleMode();
 		return value;
 	}
+
+	public function resetSize() {}
 }

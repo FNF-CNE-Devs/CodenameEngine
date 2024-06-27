@@ -44,7 +44,7 @@ enum FlxActionMode
 }
 
 /**
- * A highly modified FlxFlxVirtualPad.
+ * A highly modified FlxVirtualPad.
  * It's easy to customize the layout.
  *
  * @author Ka Wing Chin
