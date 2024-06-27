@@ -348,10 +348,6 @@ class CharacterEditor extends UIState {
 	}
 
 	function buildCharacter():String {
-		if (character.isPlayer != character.playerOffsets) {
-			character.switchOffset('singLEFT', 'singRIGHT');
-			character.switchOffset('singLEFTmiss', 'singRIGHTmiss');
-		}
 		var charXML:Xml = character.buildXML([
 			for (button in characterAnimsWindow.buttons.members)
 				button.anim
@@ -587,6 +583,12 @@ class CharacterEditor extends UIState {
 
 	function changeOffset(anim:String, change:FlxPoint, addtoUndo:Bool = true) {
 		if (character.getNameList().length == 0) return;
+
+		var animData = character.animDatas.get(anim);
+		if (animData != null) {
+			animData.x += change.x;
+			animData.y += change.y;
+		}
 
 		character.animOffsets.set(anim, character.getAnimOffset(anim) + change);
 		for (i in characterAnimsWindow.buttons.members)
