@@ -111,7 +111,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		game.updateDiscordPresence();
 
-		addVirtualPad('UP_DOWN', 'A_B');
+		addVirtualPad('UP_DOWN', 'A');
 		addVirtualPadCamera();
 	}
 
@@ -156,7 +156,9 @@ class PauseSubState extends MusicBeatSubstate
 				FlxG.resetState();
 			case "Change Controls":
 				var daSubstate:Class<MusicBeatSubstate> = MobileControls.mobileC ? MobileControlSelectSubState : KeybindsOptions;
-					openSubState(Type.createInstance(daSubstate, MobileControls.mobileC ? [()->camVPad.visible = true, ()->camVPad.visible = false] : []));
+				persistentUpdate = false;
+				removeVirtualPad();	
+				openSubState(Type.createInstance(daSubstate, []));
 			// case "Chart Editor":
 			case "Change Options":
 				FlxG.switchState(new OptionsMenu());
@@ -188,6 +190,14 @@ class PauseSubState extends MusicBeatSubstate
 			}
 
 		super.destroy();
+	}
+
+	override function closeSubState() {
+		persistentUpdate = true;
+		super.closeSubState();
+		removeVirtualPad();
+		addVirtualPad('UP_DOWN', 'A');
+		addVirtualPadCamera();
 	}
 
 	function changeSelection(change:Int = 0):Void

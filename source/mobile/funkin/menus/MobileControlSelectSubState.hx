@@ -32,6 +32,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 	var positionTextBg:FlxSprite;
 	var bg:FlxBackdrop;
 	var ui:FlxCamera;
+	var buttonCamera:FlxCamera;
 	var curOption:Int = MobileControls.mode;
 	var buttonBinded:Bool = false;
 	var bindButton:FlxButton;
@@ -58,6 +59,10 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 		ui.bgColor.alpha = 0;
 		ui.alpha = 0;
 		FlxG.cameras.add(ui, false);
+
+		buttonCamera = new FlxCamera();
+		buttonCamera.bgColor.alpha = 0;
+		FlxG.cameras.add(buttonCamera, false);
 
 		itemText = new PsychAlphabet(0, 60, '');
 		itemText.alignment = LEFT;
@@ -128,6 +133,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 		add(reset);
 
 		cameras = [ui];
+		leftArrow.cameras = rightArrow.cameras = reset.cameras = exit.cameras = [buttonCamera];
 		FlxTween.tween(bg, {alpha: 0.45}, 0.3, {
 			ease: FlxEase.quadOut,
 			onComplete: (twn:FlxTween) ->
