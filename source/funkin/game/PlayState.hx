@@ -218,7 +218,10 @@ class PlayState extends MusicBeatState
 	 * Whether or not to bop the icons on beat.
 	 */
 	public var doIconBop:Bool = true;
-
+	/**
+	 * Whether or not to flip the health bar (change it from having the opponent on the left to the opponent on the right, and vice versa for the player).
+	 */
+	public var flipHealthbar:Bool = false;
 	/**
 	 * Whenever cam zooming is enabled, enables on a note hit if not cancelled.
 	 */
@@ -729,6 +732,7 @@ class PlayState extends MusicBeatState
 		iconP2 = new HealthIcon(dad != null ? dad.getIcon() : "face", false);
 		for(icon in [iconP1, iconP2]) {
 			icon.y = healthBar.y - (icon.height / 2);
+			icon.flipX = flipHealthbar;
 			add(icon);
 		}
 
@@ -748,6 +752,8 @@ class PlayState extends MusicBeatState
 
 		for(e in [healthBar, healthBarBG, iconP1, iconP2, scoreTxt, missesTxt, accuracyTxt])
 			e.cameras = [camHUD];
+
+		healthBar.flipX = healthBarBG.flipX = flipHealthbar;
 		#end
 
 		startingSong = true;
@@ -1191,8 +1197,8 @@ class PlayState extends MusicBeatState
 
 		var center:Float = healthBar.x + healthBar.width * FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0);
 
-		iconP1.x = center - iconOffset;
-		iconP2.x = center - (iconP2.width - iconOffset);
+		iconP1.x = center - (flipHealthbar ? (iconP2.width - iconOffset) : iconOffset);
+		iconP2.x = center - (flipHealthbar ? iconOffset : (iconP2.width - iconOffset));
 
 		health = FlxMath.bound(health, 0, maxHealth);
 
