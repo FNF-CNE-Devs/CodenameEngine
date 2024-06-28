@@ -1197,7 +1197,7 @@ class PlayState extends MusicBeatState
 
 		var center:Float = healthBar.x + healthBar.width * FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0);
 
-		iconP1.x = center - (flipHealthbar ? (iconP2.width - iconOffset) : iconOffset);
+		iconP1.x = center - (flipHealthbar ? (iconP1.width - iconOffset) : iconOffset);
 		iconP2.x = center - (flipHealthbar ? iconOffset : (iconP2.width - iconOffset));
 
 		health = FlxMath.bound(health, 0, maxHealth);
