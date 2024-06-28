@@ -62,6 +62,7 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 
 		buttonCamera = new FlxCamera();
 		buttonCamera.bgColor.alpha = 0;
+		buttonCamera.alpha = 0;
 		FlxG.cameras.add(buttonCamera, false);
 
 		itemText = new PsychAlphabet(0, 60, '');
@@ -138,7 +139,8 @@ class MobileControlSelectSubState extends MusicBeatSubstate
 			ease: FlxEase.quadOut,
 			onComplete: (twn:FlxTween) ->
 			{
-				FlxTween.tween(ui, {alpha: 1}, 0.2, {ease: FlxEase.circOut});
+				for (camera in [ui, buttonCamera])
+					FlxTween.tween(camera, {alpha: 1}, 0.2, {ease: FlxEase.circOut});
 			}
 		});
 		changeOption(0);
