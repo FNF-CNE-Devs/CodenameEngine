@@ -374,7 +374,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Speed at which the hud camera zoom lerps to.
 	 */
-	public var camHUDZoomLerp:Float = 0.05;
+	public var camHudZoomLerp:Float = 0.05;
 
 	/**
 	 * Zoom for the pixel assets.
