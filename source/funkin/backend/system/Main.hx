@@ -146,7 +146,7 @@ class Main extends Sprite
 			#end
 			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', Sys.getCwd() + '${pathBack}assets/', true));
 		#elseif USE_ADAPTED_ASSETS
-			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', #if mobile SUtil.getStorageDirectory() + #else Sys.getCwd() + #end 'assets/', true));
+			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', Sys.getCwd() + 'assets/', true));
 		#end
 
 
