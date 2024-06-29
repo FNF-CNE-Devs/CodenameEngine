@@ -108,6 +108,9 @@ class FreeplayState extends MusicBeatState
 				curSelected = k;
 			}
 		}
+
+		#if mobile if (funkin.backend.assets.ModsFolder.currentModFolder == null) for (song in songs) song.difficulties = ['EASY', 'NORMAL', 'HARD']; #end // mobile temporary fix
+
 		if (songs[curSelected] != null) {
 			for(k=>diff in songs[curSelected].difficulties) {
 				if (diff == Options.freeplayLastDifficulty) {
