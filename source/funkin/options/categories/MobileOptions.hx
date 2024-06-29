@@ -71,9 +71,9 @@ class MobileOptions extends OptionsScreen {
 	}
 
 	override function update(elapsed) {
+		#if mobile
 		final lastScreenTimeOut:Bool = Options.screenTimeOut;
 		final lastWideScreen:Bool = Options.wideScreen;
-		#if mobile
 		if (lastScreenTimeOut != Options.screenTimeOut) LimeSystem.allowScreenTimeout = Options.screenTimeOut;
 		if (lastWideScreen != Options.wideScreen) FlxG.scaleMode = new mobile.funkin.backend.system.MobileRatioScaleMode();
 		#end
