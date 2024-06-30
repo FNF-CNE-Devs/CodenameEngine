@@ -342,7 +342,9 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 
 	public override function destroy()
 	{
+		script.call('destroy');
 		super.destroy();
+		scripts.destroy();
 
 		cameraOffset.put();
 		globalOffset.put();
