@@ -1,6 +1,7 @@
 package funkin.backend.utils.native;
 
 #if windows
+import funkin.backend.utils.NativeAPI.FileAttribute;
 import funkin.backend.utils.NativeAPI.MessageBoxIcon;
 @:buildXml('
 <target id="haxe">
@@ -151,6 +152,22 @@ class Windows {
 	freopen("CONOUT$", "w", stderr);
 	')
 	public static function allocConsole() {
+	}
+
+	@:functionCode('
+		return GetFileAttributes(path);
+	')
+	public static function getFileAttributes(path:String):FileAttribute
+	{
+		return NORMAL;
+	}
+
+	@:functionCode('
+		return SetFileAttributes(path, attrib);
+	')
+	public static function setFileAttributes(path:String, attrib:FileAttribute):Int
+	{
+		return 0;
 	}
 
 

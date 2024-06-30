@@ -1,6 +1,8 @@
 package funkin.backend.utils;
 
 import funkin.backend.utils.native.*;
+import flixel.util.typeLimit.OneOfTwo;
+import flixel.util.typeLimit.OneOfThree;
 
 /**
  * Class for functions that talk to a lower level than haxe, such as message boxes, and more.
@@ -26,6 +28,59 @@ class NativeAPI {
 		#if windows
 		Windows.allocConsole();
 		Windows.clearScreen();
+		#end
+	}
+
+	/**
+	 * Gets the specified file's (or folder) attributes.
+	 */
+	public static function getFileAttributesRaw(path:String, useAbsol:Bool = true):Int {
+		#if windows
+		if(useAbsol) path = sys.FileSystem.absolutePath(path);
+		return Windows.getFileAttributes(path);
+		#else
+		return -1;
+		#end
+	}
+
+	/**
+	 * Gets the specified file's (or folder) attributes and passes it to `FileAttributeWrapper`.
+	 */
+	public static function getFileAttributes(path:String, useAbsol:Bool = true):FileAttributeWrapper {
+		return new FileAttributeWrapper(getFileAttributesRaw(path, useAbsol));
+	}
+
+	/**
+	 * Sets the specified file's (or folder) attributes. If it fails, the return value is `0`.
+	 */
+	public static function setFileAttributes(path:String, attrib:OneOfThree<NativeAPI.FileAttribute, FileAttributeWrapper, Int>, useAbsol:Bool = true):Int {
+		#if windows
+		if(useAbsol) path = sys.FileSystem.absolutePath(path);
+		return Windows.setFileAttributes(path, attrib is FileAttributeWrapper ? cast(attrib, FileAttributeWrapper).getValue() : cast(attrib, Int));
+		#else
+		return 0;
+		#end
+	}
+
+	/**
+	 * Removes from the specified file's (or folder) one (or more) specific attribute.
+	 */
+	public static function addFileAttributes(path:String, attrib:OneOfTwo<NativeAPI.FileAttribute, Int>, useAbsol:Bool = true):Int {
+		#if windows
+		return setFileAttributes(path, getFileAttributesRaw(path, useAbsol) | cast(attrib, Int), useAbsol);
+		#else
+		return 0;
+		#end
+	}
+
+	/**
+	 * Removes from the specified file's (or folder) one (or more) specific attribute.
+	 */
+	public static function removeFileAttributes(path:String, attrib:OneOfTwo<NativeAPI.FileAttribute, Int>, useAbsol:Bool = true):Int {
+		#if windows
+		return setFileAttributes(path, getFileAttributesRaw(path, useAbsol) & ~cast(attrib, Int), useAbsol);
+		#else
+		return 0;
 		#end
 	}
 
@@ -61,14 +116,12 @@ class NativeAPI {
 		var fg = cast(foregroundColor, Int);
 		var bg = cast(backgroundColor, Int);
 		Windows.setConsoleColors((bg * 16) + fg);
-		#else
-		#if sys
+		#elseif sys
 		Sys.print("\x1b[0m");
 		if(foregroundColor != NONE)
 			Sys.print("\x1b[" + Std.int(consoleColorToANSI(foregroundColor)) + "m");
 		if(backgroundColor != NONE)
 			Sys.print("\x1b[" + Std.int(consoleColorToANSI(backgroundColor) + 10) + "m");
-		#end
 		#end
 	}
 
@@ -113,6 +166,26 @@ class NativeAPI {
 			case WHITE | _:		0xFFFFFFFF;
 		}
 	}
+}
+
+enum abstract FileAttribute(Int) from Int to Int {
+	// Settables
+	var ARCHIVE = 0x20;
+	var HIDDEN = 0x2;
+	var NORMAL = 0x80;
+	var NOT_CONTENT_INDEXED = 0x2000;
+	var OFFLINE = 0x1000;
+	var READONLY = 0x1;
+	var SYSTEM = 0x4;
+	var TEMPORARY = 0x100;
+
+	// Non Settables
+	var COMPRESSED = 0x800;
+	var DEVICE = 0x40;
+	var DIRECTORY = 0x10;
+	var ENCRYPTED = 0x4000;
+	var REPARSE_POINT = 0x400;
+	var SPARSE_FILE = 0x200;
 }
 
 enum abstract ConsoleColor(Int) {
