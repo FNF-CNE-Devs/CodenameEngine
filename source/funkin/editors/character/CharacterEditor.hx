@@ -9,7 +9,7 @@ import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.game.Character;
 
 class CharacterEditor extends UIState {
-	static var __character:String;
+	public static var __character:String;
 	public var character:Character;
 
 	public var ghosts:CharacterGhostsHandler;
@@ -325,7 +325,20 @@ class CharacterEditor extends UIState {
 		else FlxG.switchState(new CharacterSelection());
 	}
 
-	function _file_new(_) {
+	public function _file_new(_) {
+		openSubState(new SaveSubstate('
+			<!DOCTYPE codename-engine-character>
+			<character isPlayer="false" flipX="false" holdTime="6.1" color="#AF66CE">
+				<anim name="idle"      anim="Dad idle dance"      fps="24" loop="false" x="0" y="0"/>
+				<anim name="singUP"    anim="Dad Sing note UP"    fps="24" loop="false" x="-6" y="50"/>
+				<anim name="singLEFT"  anim="dad sing note right"  fps="24" loop="false" x="-10" y="10"/>
+				<anim name="singRIGHT" anim="Dad Sing Note LEFT" fps="24" loop="false" x="0" y="27"/>
+				<anim name="singDOWN"  anim="Dad Sing Note DOWN"  fps="24" loop="false" x="0" y="-30"/>
+			</character>', {defaultSaveFile: character.curCharacter + '.xml'}
+		));
+		undos.save();
+
+		openSubState(new CharacterSelection.CharacterCreationSubstate());
 	}
 
 	function _file_save(_) {
