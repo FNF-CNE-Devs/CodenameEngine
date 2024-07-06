@@ -119,6 +119,13 @@ class TitleState extends MusicBeatState
 	{
 		if (FlxG.keys.justPressed.F)  FlxG.fullscreen = !FlxG.fullscreen;
 
+		#if desktop
+		if (FlxG.keys.justPressed.ESCAPE)
+		{
+			lime.system.System.exit(0);
+		}
+		#end
+
 		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER;
 
 		#if mobile
