@@ -71,7 +71,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 	public var fullID(get, never):Int; // instead of %4 get fullID (for mousepos stuff)
 	public function get_fullID():Int
-		return (strumLineID * 4) + id;
+		return (strumLineID * Charter.keyCount) + id;
 
 	public function updatePos(step:Float, id:Int, susLength:Float = 0, ?type:Int = 0, ?strumLine:CharterStrumline = null) {
 		this.step = step;
@@ -175,14 +175,14 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 	public function handleDrag(change:FlxPoint) {
 		var newStep = FlxMath.bound(step + change.x, 0, Charter.instance.__endStep-1);
-		var newID:Int = Std.int(FlxMath.bound(fullID + Std.int(change.y), 0, (Charter.instance.strumLines.members.length*4)-1));
+		var newID:Int = Std.int(FlxMath.bound(fullID + Std.int(change.y), 0, (Charter.instance.strumLines.members.length*Charter.keyCount)-1));
 
-		updatePos(newStep, newID % 4, susLength, type, Charter.instance.strumLines.members[Std.int(newID/4)]);
+		updatePos(newStep, newID % Charter.keyCount, susLength, type, Charter.instance.strumLines.members[Std.int(newID/Charter.keyCount)]);
 	}
 
 	public override function draw() {
 		if (snappedToStrumline)
-			x = (strumLine != null ? strumLine.x : 0) + (id % 4) * 40;
+			x = (strumLine != null ? strumLine.x : 0) + (id % Charter.keyCount) * 40;
 
 		drawMembers();
 		drawSuper();

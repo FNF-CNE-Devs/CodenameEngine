@@ -17,7 +17,7 @@ class CharterNoteHoverer extends CharterNote {
 		switch (Charter.instance.gridActionType) {
 			case NONE:
 				var inBoundsY:Bool = (__mousePos.y > 0 && __mousePos.y < (Charter.instance.__endStep)*40);
-				if ((__mousePos.x > 0 && __mousePos.x < Charter.instance.gridBackdrops.strumlinesAmount * 160 && inBoundsY) && showHoverer) {
+				if ((__mousePos.x > 0 && __mousePos.x < Charter.instance.gridBackdrops.strumlinesAmount * 40 * Charter.keyCount && inBoundsY) && showHoverer) {
 					step = FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((__mousePos.y-20) / 40) : Charter.instance.quantStep(__mousePos.y/40), 0, Charter.instance.__endStep-1);
 					id = Math.floor(__mousePos.x / 40); y = step * 40; x = id * 40; visible = true; sustainSpr.visible = typeText.visible = false;
 					angle = switch(animation.curAnim.curFrame = (id % 4)) {
@@ -53,7 +53,7 @@ class CharterNoteHoverer extends CharterNote {
 								y -= ((draggingNote.step + verticalChange)
 									- Charter.instance.quantStepRounded(draggingNote.step+verticalChange, verticalChange > 0 ? 0.35 : 0.65));
 							y *= 40;
-							var newID:Int = Std.int(FlxMath.bound(draggingNote.fullID + horizontalChange, 0, (Charter.instance.strumLines.members.length*4)-1));
+							var newID:Int = Std.int(FlxMath.bound(draggingNote.fullID + horizontalChange, 0, (Charter.instance.strumLines.members.length*Charter.keyCount)-1));
 							x = (id=newID) * 40; y = FlxMath.bound(y, 0, (Charter.instance.__endStep*40) - height);
 
 							angle = switch(animation.curAnim.curFrame = (draggingNote.id % 4)) {

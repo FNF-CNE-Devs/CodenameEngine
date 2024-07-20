@@ -34,14 +34,14 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 		}
 
 		for (i=>strum in members)
-			if (strum != null && !strum.dragging) strum.x = CoolUtil.fpsLerp(strum.x, 160 * i, 0.225);
+			if (strum != null && !strum.dragging) strum.x = CoolUtil.fpsLerp(strum.x, 40*Charter.keyCount * i, 0.225);
 
 		if (Charter.instance.eventsBackdrop != null && members[0] != null)
 			Charter.instance.eventsBackdrop.x = members[0].button.x - Charter.instance.eventsBackdrop.width;
 		if (Charter.instance.strumlineLockButton != null && members[0] != null)
-			Charter.instance.strumlineLockButton.x = members[0].x - (40*4);
+			Charter.instance.strumlineLockButton.x = members[0].x - (40*Charter.keyCount);
 		if (Charter.instance.strumlineAddButton != null && members[Std.int(Math.max(0, members.length-1))] != null)
-			Charter.instance.strumlineAddButton.x = members[members.length-1].x + (40*4);
+			Charter.instance.strumlineAddButton.x = members[members.length-1].x + (40*Charter.keyCount);
 
 		if ((FlxG.mouse.justReleased || !draggable) && isDragging)
 			finishDrag();
@@ -52,7 +52,7 @@ class CharterStrumLineGroup extends FlxTypedGroup<CharterStrumline> {
 
 	public function snapStrums() {
 		for (i=>strum in members)
-			if (strum != null && !strum.dragging) strum.x = 160 * i;
+			if (strum != null && !strum.dragging) strum.x = (40*Charter.keyCount) * i;
 	}
 
 	public function orderStrumline(strumLine:CharterStrumline, newID:Int) {

@@ -82,7 +82,7 @@ class CharterStrumline extends UISprite {
 	public override function update(elapsed:Float) {
 		if (FlxG.keys.justPressed.K) draggable = !draggable;
 
-		healthIcons.follow(this, ((40 * 4) - healthIcons.width) / 2, 7 + (__healthYOffset = FlxMath.lerp(__healthYOffset, draggable ? 8 : 0, 1/20)));
+		healthIcons.follow(this, ((40 * Charter.keyCount) - healthIcons.width) / 2, 7 + (__healthYOffset = FlxMath.lerp(__healthYOffset, draggable ? 8 : 0, 1/20)));
 
 		draggingSprite.selectable = draggable;
 		UIState.state.updateSpriteRect(draggingSprite);
@@ -91,7 +91,7 @@ class CharterStrumline extends UISprite {
 		draggingSprite.scale.set(dragScale, dragScale);
 		draggingSprite.updateHitbox();
 
-		draggingSprite.follow(this, (160/2) - (draggingSprite.width/2), 6 + (__draggingYOffset = FlxMath.lerp(__draggingYOffset, draggable ? 3 : 0, 1/12)));
+		draggingSprite.follow(this, ((Charter.keyCount*40)/2) - (draggingSprite.width/2), 6 + (__draggingYOffset = FlxMath.lerp(__draggingYOffset, draggable ? 3 : 0, 1/12)));
 		var fullAlpha:Float = UIState.state.isOverlapping(draggingSprite, @:privateAccess draggingSprite.__rect) || dragging ? 0.9 : 0.35;
 		draggingSprite.alpha = FlxMath.lerp(draggingSprite.alpha, draggable ? fullAlpha : 0, 1/12);
 		button.follow(this, 0, 95);
@@ -125,13 +125,13 @@ class CharterStrumlineOptions extends UITopMenuButton {
 	public function new(parent:CharterStrumline) {
 		super(0, 95, null, "Options ↓", []);
 		strLine = parent;
-		bWidth = 40 * 4;
-		this.label.fieldWidth = bWidth;
 	}
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 		alpha = FlxMath.lerp(1/20, 1, alpha); // so that instead of 0% it is 33% visible
+		bWidth = 40 * Charter.keyCount;
+		this.label.fieldWidth = bWidth;
 	}
 
 	public override function openContextMenu() {
