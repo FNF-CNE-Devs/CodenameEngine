@@ -9,7 +9,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
-          haxe-version: 4.2.5
+          haxe-version: 4.3.5
       - name: Install Libraries
         run: |
           haxelib install hmm --quiet
@@ -30,7 +30,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
-          haxe-version: 4.2.5
+          haxe-version: 4.3.5
       - name: Install Libraries
         run: |
           DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install -o Dpkg::Progress-Fancy="0" -o APT::Color="0" -o Dpkg::Use-Pty="0" libvlc-dev libvlccore-dev < /dev/null > /dev/null
@@ -81,7 +81,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
-          haxe-version: 4.2.5
+          haxe-version: 4.3.5
       - name: Install Libraries
         run: |
           haxelib install hmm --quiet
@@ -110,7 +110,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
-          haxe-version: 4.2.5
+          haxe-version: 4.3.5
       - name: Install Libraries
         run: |
           haxelib install hmm --quiet
