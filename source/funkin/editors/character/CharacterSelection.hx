@@ -24,7 +24,13 @@ class CharacterSelection extends EditorTreeMenu
 			for (char in (modsList.length == 0 ? Character.getList(false) : modsList))
 				new IconOption(char, "Press " + button + " to edit this character.", Character.getIconFromCharName(char),
 			 	function() {
+					#if mobile
+					openSubState(new UIWarningSubstate("CharacterEditor: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+						{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+					]));
+					#else
 					FlxG.switchState(new CharacterEditor(char));
+					#end
 				})
 		];
 
