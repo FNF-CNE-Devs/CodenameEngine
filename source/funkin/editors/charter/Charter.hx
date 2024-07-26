@@ -628,8 +628,6 @@ class Charter extends UIState {
 					sound: strumLine.vocals
 				});
 
-		trace(wavesToGenerate, @:privateAccess vocals._sound, @:privateAccess vocals._sound?.length);
-
 		var oldWaveformList:Array<String> = waveformHandler.waveformList;
 		var newWaveformList:Array<String> = [for (data in wavesToGenerate) data.name];
 
