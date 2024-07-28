@@ -155,6 +155,17 @@ class Main extends Sprite
 		FlxG.signals.preStateSwitch.add(onStateSwitch);
 		FlxG.signals.postStateSwitch.add(onStateSwitchPost);
 
+		FlxG.signals.focusLost.add(function()
+		{
+			Options.volume = FlxG.sound.volume;
+			FlxG.sound.volume = Options.inactiveVolume / 100;
+		});
+
+		FlxG.signals.focusGained.add(function()
+		{
+			FlxG.sound.volume = Options.volume;
+		});
+
 		FlxG.mouse.useSystemCursor = true;
 
 		ModsFolder.init();
