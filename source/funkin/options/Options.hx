@@ -150,7 +150,8 @@ class Options
 	}
 
 	public static function save() {
-		volume = FlxG.sound.volume;
+		if (Main.isFocused)
+			volume = FlxG.sound.volume;
 		__flush();
 	}
 }

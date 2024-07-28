@@ -51,6 +51,8 @@ class Main extends Sprite
 
 	public static var time:Int = 0;
 
+	public static var isFocused:Bool = true;
+
 	// You can pretty much ignore everything from here on - your code should go in your states.
 
 	#if ALLOW_MULTITHREADING
@@ -157,12 +159,14 @@ class Main extends Sprite
 
 		FlxG.signals.focusLost.add(function()
 		{
+			isFocused = false;
 			Options.volume = FlxG.sound.volume;
 			FlxG.sound.volume = Options.inactiveVolume / 100;
 		});
 
 		FlxG.signals.focusGained.add(function()
 		{
+			isFocused = true;
 			FlxG.sound.volume = Options.volume;
 		});
 
