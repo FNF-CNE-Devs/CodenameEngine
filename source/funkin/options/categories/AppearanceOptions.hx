@@ -49,7 +49,7 @@ class AppearanceOptions extends OptionsScreen {
 			"autoPause"));
 		add(new NumOption(
 			"Inactive Volume",
-			"Volume the window will change too when the window is inactive.",
+			"Volume percentage the window will change too when the window is inactive.",
 			0,
 			100,
 			2,
