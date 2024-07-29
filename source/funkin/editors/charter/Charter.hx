@@ -1221,14 +1221,16 @@ class Charter extends UIState {
 			if(FlxG.keys.justPressed.ANY && !strumLines.isDragging && this.currentFocus == null)
 				UIUtil.processShortcuts(topMenu);
 
-			if (FlxG.keys.pressed.CONTROL) {
-				if (FlxG.mouse.wheel != 0) {
-					zoom += 0.25 * FlxG.mouse.wheel;
-					__camZoom = Math.pow(2, zoom);
-				}
-			} else {
-				if (!FlxG.sound.music.playing) {
-					Conductor.songPosition -= (__crochet * FlxG.mouse.wheel) - Conductor.songOffset;
+			if (!topMenuSpr.anyMenuOpened) {
+				if (FlxG.keys.pressed.CONTROL) {
+					if (FlxG.mouse.wheel != 0) {
+						zoom += 0.25 * FlxG.mouse.wheel;
+						__camZoom = Math.pow(2, zoom);
+					}
+				} else {
+					if (!FlxG.sound.music.playing) {
+						Conductor.songPosition -= (__crochet * FlxG.mouse.wheel) - Conductor.songOffset;
+					}
 				}
 			}
 		}
