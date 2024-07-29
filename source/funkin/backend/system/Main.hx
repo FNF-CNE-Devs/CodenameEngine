@@ -103,6 +103,8 @@ class Main extends Sprite
 		return time = Lib.getTimer();
 	}
 
+	private static var lastVolume:Float = 0;
+
 	public static function loadGameSettings() {
 		WindowUtils.init();
 		SaveWarning.init();
@@ -160,14 +162,16 @@ class Main extends Sprite
 		FlxG.signals.focusLost.add(function()
 		{
 			isFocused = false;
+			lastVolume = FlxG.sound.volume;
 			Options.volume = FlxG.sound.volume;
-			FlxG.sound.volume = Options.inactiveVolume / 100;
+			if(Options.inactiveVolumeEnabled)
+				FlxG.sound.volume = Options.inactiveVolume / 100;
 		});
 
 		FlxG.signals.focusGained.add(function()
 		{
 			isFocused = true;
-			FlxG.sound.volume = Options.volume;
+			FlxG.sound.volume = lastVolume;
 		});
 
 		FlxG.mouse.useSystemCursor = true;

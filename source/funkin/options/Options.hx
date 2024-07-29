@@ -26,6 +26,7 @@ class Options
 	public static var antialiasing:Bool = true;
 	public static var volume:Float = 1;
 	public static var inactiveVolume:Float = 2;
+	public static var inactiveVolumeEnabled:Bool = true;
 	public static var week6PixelPerfect:Bool = true;
 	public static var gameplayShaders:Bool = true;
 	public static var colorHealthBar:Bool = true;
