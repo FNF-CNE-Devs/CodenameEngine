@@ -620,17 +620,24 @@ class Charter extends UIState {
 		updateWaveforms();
 	}
 
+	inline function isSoundLoaded(sound:FlxSound) {
+		@:privateAccess
+		return sound != null && sound._sound != null && sound._sound.length > 0;
+	}
+
 	public function updateWaveforms() {
-		var wavesToGenerate:Array<{name:String, sound:FlxSound}> = [
-			{name: "Inst.ogg", sound: FlxG.sound.music},
-		];
-		if (PlayState.SONG.meta.needsVoices != false) 
+		var wavesToGenerate:Array<{name:String, sound:FlxSound}> = [];
+
+		if(isSoundLoaded(FlxG.sound.music))
+			wavesToGenerate.push({name: "Inst.ogg", sound: FlxG.sound.music});
+
+		if (PlayState.SONG.meta.needsVoices != false && isSoundLoaded(vocals))
 			wavesToGenerate.push({name: "Voices.ogg", sound: vocals});
 
 		for (strumLine in strumLines)
-			if (strumLine.vocals != null && strumLine.strumLine.vocalsSuffix != null && strumLine.strumLine.vocalsSuffix != "")
+			if (strumLine.vocals != null && strumLine.strumLine.vocalsSuffix != null && strumLine.strumLine.vocalsSuffix != "" && isSoundLoaded(strumLine.vocals))
 				wavesToGenerate.push({
-					name: 'Voices${strumLine.strumLine.vocalsSuffix}.ogg', 
+					name: 'Voices${strumLine.strumLine.vocalsSuffix}.ogg',
 					sound: strumLine.vocals
 				});
 
