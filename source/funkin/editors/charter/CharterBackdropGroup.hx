@@ -21,17 +21,23 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 	public function new(strumLineGroup:CharterStrumLineGroup) {
 		super();
 		this.strumLineGroup = strumLineGroup;
+		generateGridGraphic();
+	}
 
-		__gridGraphic = FlxG.bitmap.create(40*Charter.keyCount, 160, 0xFF272727, true);
+	private function generateGridGraphic()
+	{
+		if (__gridGraphic != null) __gridGraphic.destroy();
+
+		__gridGraphic = FlxG.bitmap.create(40*Charter.instance.keyCount, 160, 0xFF272727, true);
 		__gridGraphic.bitmap.lock();
 
 		// Checkerboard
 		for(y in 0...4)
-			for(x in 0...Math.ceil(Charter.keyCount/2)) __gridGraphic.bitmap.fillRect(new Rectangle(40*((x*2)+(y%2)), 40*y, 40, 40), 0xFF545454);
+			for(x in 0...Math.ceil(Charter.instance.keyCount/2)) __gridGraphic.bitmap.fillRect(new Rectangle(40*((x*2)+(y%2)), 40*y, 40, 40), 0xFF545454);
 
 		// Edges
 		__gridGraphic.bitmap.fillRect(new Rectangle(0, 0, 1, 160), 0xFFDDDDDD);
-		__gridGraphic.bitmap.fillRect(new Rectangle((40*Charter.keyCount)-1, 0, 1, 160), 0xFFDDDDDD);
+		__gridGraphic.bitmap.fillRect(new Rectangle((40*Charter.instance.keyCount)-1, 0, 1, 160), 0xFFDDDDDD);
 		__gridGraphic.bitmap.unlock();
 	}
 
@@ -41,6 +47,12 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 			grid.active = grid.visible = false;
 			add(grid);
 		}
+	}
+
+	public function updateGrids() {
+		generateGridGraphic();
+		for (grid in members)
+			grid.gridBackDrop.loadGraphic(__gridGraphic);
 	}
 
 	public override function update(elapsed:Float) {
@@ -68,7 +80,7 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 
 			grid.notesGroup.clear();
 			notesGroup.forEach((n) -> {
-				var onStr:Bool = (n.snappedToStrumline ? n.strumLineID : Std.int(FlxMath.bound((n.x+n.width)/(40*Charter.keyCount), 0, strumLineGroup.members.length-1))) == i;
+				var onStr:Bool = (n.snappedToStrumline ? n.strumLineID : Std.int(FlxMath.bound((n.x+n.width)/(40*Charter.instance.keyCount), 0, strumLineGroup.members.length-1))) == i;
 				if(n.exists && n.visible && onStr)
 					grid.notesGroup.add(n);
 			});
@@ -148,7 +160,7 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 			sep.makeSolid(1, 1, -1);
 			sep.alpha = 0.5;
 			sep.scrollFactor.set(1, 1);
-			sep.scale.set((Charter.keyCount * 40), sep == sectionSeparator ? 4 : 2);
+			sep.scale.set((Charter.instance.keyCount * 40), sep == sectionSeparator ? 4 : 2);
 			sep.updateHitbox();
 		}
 		add(beatSeparator);
@@ -159,7 +171,7 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 		bottomSeparator.makeSolid(1, 1, -1);
 		bottomSeparator.alpha = 0.5;
 		bottomSeparator.scrollFactor.set(1, 1);
-		bottomSeparator.scale.set(Charter.keyCount * 40, 4);
+		bottomSeparator.scale.set(Charter.instance.keyCount * 40, 4);
 		bottomSeparator.updateHitbox();
 		add(bottomSeparator);
 
@@ -167,7 +179,7 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 		topSeparator.makeSolid(1, 1, -1);
 		topSeparator.alpha = 0.5;
 		topSeparator.scrollFactor.set(1, 1);
-		topSeparator.scale.set(Charter.keyCount * 40, 4);
+		topSeparator.scale.set(Charter.instance.keyCount * 40, 4);
 		topSeparator.updateHitbox();
 		add(topSeparator);
 
@@ -186,7 +198,7 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 
 		// Follower
 		conductorFollowerSpr = new FlxSprite(0, 0).makeSolid(1, 1, -1);
-		conductorFollowerSpr.scale.set(Charter.keyCount * 40, 4);
+		conductorFollowerSpr.scale.set(Charter.instance.keyCount * 40, 4);
 		conductorFollowerSpr.updateHitbox();
 		add(conductorFollowerSpr);
 	}
@@ -209,17 +221,22 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 		sectionSeparator.spacing.y = (10 * Conductor.beatsPerMeasure * Conductor.stepsPerBeat) - 1;
 		beatSeparator.spacing.y = (20 * Conductor.stepsPerBeat) - 1;
 
-		topLimit.scale.set(Charter.keyCount * 40, Math.ceil(FlxG.height / cameras[0].zoom));
+		topLimit.scale.set(Charter.instance.keyCount * 40, Math.ceil(FlxG.height / cameras[0].zoom));
 		topLimit.updateHitbox();
 		topLimit.y = -topLimit.height;
 
-		bottomLimit.scale.set(Charter.keyCount * 40, Math.ceil(FlxG.height / cameras[0].zoom));
+		bottomLimit.scale.set(Charter.instance.keyCount * 40, Math.ceil(FlxG.height / cameras[0].zoom));
 		bottomLimit.updateHitbox();
+
+		for (spr in [conductorFollowerSpr, sectionSeparator, beatSeparator]) {
+			spr.scale.x = Charter.instance.keyCount * 40;
+			spr.updateHitbox();
+		}
 
 		waveformSprite.visible = waveformSprite.shader != null;
 		if (waveformSprite.shader == null) return;
 
-		waveformSprite.scale.set(Charter.keyCount * 40, FlxG.height * (1/cameras[0].zoom));
+		waveformSprite.scale.set(Charter.instance.keyCount * 40, FlxG.height * (1/cameras[0].zoom));
 		waveformSprite.updateHitbox();
 
 		waveformSprite.y = (cameras[0].scroll.y+FlxG.height/2)-(waveformSprite.height/2);
