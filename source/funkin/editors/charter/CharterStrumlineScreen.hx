@@ -20,6 +20,7 @@ class CharterStrumlineScreen extends UISubstateWindow {
 	public var visibleCheckbox:UICheckbox;
 	public var scrollSpeedStepper:UINumericStepper;
 	public var usesChartscrollSpeed:UICheckbox;
+	public var keyCountStepper:UINumericStepper;
 
 	public var characterIcons:Array<HealthIcon> = [];
 
@@ -44,7 +45,8 @@ class CharterStrumlineScreen extends UISubstateWindow {
 				type: OPPONENT,
 				notes: [],
 				position: "dad",
-				visible: true
+				visible: true,
+				keyCount: 4
 			};
 
 		winTitle = creatingStrumLine ? 'Creating strumline #$strumLineID' : 'Editing strumline #$strumLineID properties';
@@ -158,10 +160,14 @@ class CharterStrumlineScreen extends UISubstateWindow {
 		vocalsSuffixDropDown = new UIDropDown(typeDropdown.x, hudScaleStepper.y + 128, 200, 32, suffixlist, strumLine.vocalsSuffix != null && strumLine.vocalsSuffix != "" ? suffixlist.indexOf(strumLine.vocalsSuffix) : 0);
 		add(vocalsSuffixDropDown);
 		addLabelOn(vocalsSuffixDropDown, "Vocal Suffix");
+
+		keyCountStepper = new UINumericStepper(vocalsSuffixDropDown.x + 200 + 26, vocalsSuffixDropDown.y, strumLine.keyCount != null ? strumLine.keyCount : 4, 1, 0, 1, null, 84);
+		add(keyCountStepper);
+		addLabelOn(keyCountStepper, "Key Count");
 	}
 
 	function saveStrumline() {
-		for (stepper in [hudXStepper, hudYStepper, hudScaleStepper])
+		for (stepper in [hudXStepper, hudYStepper, hudScaleStepper, keyCountStepper])
 			@:privateAccess stepper.__onChange(stepper.label.text);
 
 		var newStrumLine:ChartStrumLine = {
@@ -176,7 +182,8 @@ class CharterStrumlineScreen extends UISubstateWindow {
 			strumPos: [0, hudYStepper.value],
 			strumLinePos: hudXStepper.value,
 			strumScale: hudScaleStepper.value,
-			vocalsSuffix: vocalsSuffixDropDown.options[vocalsSuffixDropDown.index] != "NONE" ? vocalsSuffixDropDown.options[vocalsSuffixDropDown.index] : ""
+			vocalsSuffix: vocalsSuffixDropDown.options[vocalsSuffixDropDown.index] != "NONE" ? vocalsSuffixDropDown.options[vocalsSuffixDropDown.index] : "",
+			keyCount: Std.int(keyCountStepper.value)
 		};
 		if(!usesChartscrollSpeed.checked) newStrumLine.scrollSpeed = scrollSpeedStepper.value;
 		if (onSave != null) onSave(newStrumLine);

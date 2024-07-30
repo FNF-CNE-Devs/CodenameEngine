@@ -1016,9 +1016,13 @@ class PlayState extends MusicBeatState
 	}
 
 	@:dox(hide)
-	private inline function generateStrums(amount:Int = 4):Void
-		for(p in strumLines)
-			p.generateStrums(amount);
+	private inline function generateStrums(amount:Int = 4):Void {
+		for(p in strumLines) {
+			var kc = amount == 4 ? (p.data.keyCount != null ? p.data.keyCount : amount) : amount;
+			p.generateStrums(kc);
+		}
+	}
+	
 
 	@:dox(hide)
 	override function openSubState(SubState:FlxSubState)

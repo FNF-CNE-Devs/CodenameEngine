@@ -23,6 +23,17 @@ class CharterStrumline extends UISprite {
 
 	public var vocals:FlxSound;
 
+	public var keyCount:Int = 4;
+	public var startingID(get, null):Int;
+	public function get_startingID():Int {
+		var index = Charter.instance.strumLines.members.indexOf(this);
+		if (index < 1) return 0; //-1 or 0
+
+		var v:Int = 0;
+		for (i in 0...index) v += Charter.instance.strumLines.members[i].keyCount;
+		return v;
+	}
+
 	public var selectedWaveform(default, set):Int = -1;
 	public function set_selectedWaveform(value:Int):Int {
 		if (value == -1) waveformShader = null;
@@ -44,6 +55,8 @@ class CharterStrumline extends UISprite {
 		if(strumLine.visible == null) strumLine.visible = true;
 
 		var icons = strumLine.characters != null ? strumLine.characters : [];
+
+		keyCount = strumLine.keyCount != null ? strumLine.keyCount : 4;
 
 		healthIcons = new FlxSpriteGroup(x, y);
 
@@ -85,7 +98,7 @@ class CharterStrumline extends UISprite {
 	public override function update(elapsed:Float) {
 		if (FlxG.keys.justPressed.K) draggable = !draggable;
 
-		healthIcons.follow(this, ((40 * Charter.instance.keyCount) - healthIcons.width) / 2, 7 + (__healthYOffset = FlxMath.lerp(__healthYOffset, draggable ? 8 : 0, 1/20)));
+		healthIcons.follow(this, ((40 * keyCount) - healthIcons.width) / 2, 7 + (__healthYOffset = FlxMath.lerp(__healthYOffset, draggable ? 8 : 0, 1/20)));
 
 		draggingSprite.selectable = draggable;
 		UIState.state.updateSpriteRect(draggingSprite);
@@ -94,7 +107,7 @@ class CharterStrumline extends UISprite {
 		draggingSprite.scale.set(dragScale, dragScale);
 		draggingSprite.updateHitbox();
 
-		draggingSprite.follow(this, ((Charter.instance.keyCount*40)/2) - (draggingSprite.width/2), 6 + (__draggingYOffset = FlxMath.lerp(__draggingYOffset, draggable ? 3 : 0, 1/12)));
+		draggingSprite.follow(this, ((keyCount*40)/2) - (draggingSprite.width/2), 6 + (__draggingYOffset = FlxMath.lerp(__draggingYOffset, draggable ? 3 : 0, 1/12)));
 		var fullAlpha:Float = UIState.state.isOverlapping(draggingSprite, @:privateAccess draggingSprite.__rect) || dragging ? 0.9 : 0.35;
 		draggingSprite.alpha = FlxMath.lerp(draggingSprite.alpha, draggable ? fullAlpha : 0, 1/12);
 		button.follow(this, 0, 95);
@@ -104,6 +117,7 @@ class CharterStrumline extends UISprite {
 
 	public function updateInfo() {
 		var icons = strumLine.characters != null ? strumLine.characters : [];
+		keyCount = strumLine.keyCount != null ? strumLine.keyCount : 4;
 
 		healthIcons.clear();
 
@@ -136,7 +150,7 @@ class CharterStrumlineOptions extends UITopMenuButton {
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 		alpha = FlxMath.lerp(1/20, 1, alpha); // so that instead of 0% it is 33% visible
-		bWidth = 40 * Charter.instance.keyCount;
+		bWidth = 40 * strLine.keyCount;
 		this.label.fieldWidth = bWidth;
 	}
 

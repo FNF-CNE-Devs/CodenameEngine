@@ -8,7 +8,6 @@ import flixel.addons.display.FlxBackdrop;
 class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 	public var strumLineGroup:CharterStrumLineGroup;
 	public var notesGroup:CharterNoteGroup;
-	var __gridGraphic:FlxGraphic;
 
 	public var conductorSprY:Float = 0;
 	public var bottomLimitY:Float = 0;
@@ -21,38 +20,14 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 	public function new(strumLineGroup:CharterStrumLineGroup) {
 		super();
 		this.strumLineGroup = strumLineGroup;
-		generateGridGraphic();
-	}
-
-	private function generateGridGraphic()
-	{
-		if (__gridGraphic != null) __gridGraphic.destroy();
-
-		__gridGraphic = FlxG.bitmap.create(40*Charter.instance.keyCount, 160, 0xFF272727, true);
-		__gridGraphic.bitmap.lock();
-
-		// Checkerboard
-		for(y in 0...4)
-			for(x in 0...Math.ceil(Charter.instance.keyCount/2)) __gridGraphic.bitmap.fillRect(new Rectangle(40*((x*2)+(y%2)), 40*y, 40, 40), 0xFF545454);
-
-		// Edges
-		__gridGraphic.bitmap.fillRect(new Rectangle(0, 0, 1, 160), 0xFFDDDDDD);
-		__gridGraphic.bitmap.fillRect(new Rectangle((40*Charter.instance.keyCount)-1, 0, 1, 160), 0xFFDDDDDD);
-		__gridGraphic.bitmap.unlock();
 	}
 
 	public function createGrids(amount:Int = 0) {
 		for (i in 0...amount) {
-			var grid = new CharterBackdrop(__gridGraphic);
+			var grid = new CharterBackdrop();
 			grid.active = grid.visible = false;
 			add(grid);
 		}
-	}
-
-	public function updateGrids() {
-		generateGridGraphic();
-		for (grid in members)
-			grid.gridBackDrop.loadGraphic(__gridGraphic);
 	}
 
 	public override function update(elapsed:Float) {
@@ -65,7 +40,7 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 			if (strumLine == null) continue;
 
 			if (members[i] == null)
-				members[i] = recycle(CharterBackdrop, () -> {return new CharterBackdrop(__gridGraphic);});
+				members[i] = recycle(CharterBackdrop, () -> {return new CharterBackdrop();});
 
 			var grid = members[i];
 			grid.cameras = this.cameras;
@@ -80,7 +55,7 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 
 			grid.notesGroup.clear();
 			notesGroup.forEach((n) -> {
-				var onStr:Bool = (n.snappedToStrumline ? n.strumLineID : Std.int(FlxMath.bound((n.x+n.width)/(40*Charter.instance.keyCount), 0, strumLineGroup.members.length-1))) == i;
+				var onStr:Bool = (n.snappedToStrumline ? n.strumLineID : Std.int(FlxMath.bound((n.x+n.width)/(40*strumLine.keyCount), 0, strumLineGroup.members.length-1))) == i;
 				if(n.exists && n.visible && onStr)
 					grid.notesGroup.add(n);
 			});
@@ -123,6 +98,9 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 
 class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 	public var gridBackDrop:FlxBackdrop;
+	var __gridGraphic:FlxGraphic;
+	var __lastKeyCount:Int;
+
 	public var topLimit:FlxSprite;
 	public var topSeparator:FlxSprite;
 	public var bottomLimit:FlxSprite;
@@ -137,10 +115,10 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 	public var notesGroup:FlxTypedGroup<CharterNote> = new FlxTypedGroup<CharterNote>();
 	public var strumLine:CharterStrumline;
 
-	public function new(gridGraphic:FlxGraphic) {
+	public function new() {
 		super();
 
-		gridBackDrop = new FlxBackdrop(gridGraphic, Y, 0, 0);
+		gridBackDrop = new FlxBackdrop(generateGridGraphic(), Y, 0, 0);
 		add(gridBackDrop);
 
 		waveformSprite = new FlxSprite().makeSolid(1, 1, 0xFF000000);
@@ -160,7 +138,7 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 			sep.makeSolid(1, 1, -1);
 			sep.alpha = 0.5;
 			sep.scrollFactor.set(1, 1);
-			sep.scale.set((Charter.instance.keyCount * 40), sep == sectionSeparator ? 4 : 2);
+			sep.scale.set((4 * 40), sep == sectionSeparator ? 4 : 2);
 			sep.updateHitbox();
 		}
 		add(beatSeparator);
@@ -171,7 +149,7 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 		bottomSeparator.makeSolid(1, 1, -1);
 		bottomSeparator.alpha = 0.5;
 		bottomSeparator.scrollFactor.set(1, 1);
-		bottomSeparator.scale.set(Charter.instance.keyCount * 40, 4);
+		bottomSeparator.scale.set(4 * 40, 4);
 		bottomSeparator.updateHitbox();
 		add(bottomSeparator);
 
@@ -179,7 +157,7 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 		topSeparator.makeSolid(1, 1, -1);
 		topSeparator.alpha = 0.5;
 		topSeparator.scrollFactor.set(1, 1);
-		topSeparator.scale.set(Charter.instance.keyCount * 40, 4);
+		topSeparator.scale.set(4 * 40, 4);
 		topSeparator.updateHitbox();
 		add(topSeparator);
 
@@ -198,18 +176,43 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 
 		// Follower
 		conductorFollowerSpr = new FlxSprite(0, 0).makeSolid(1, 1, -1);
-		conductorFollowerSpr.scale.set(Charter.instance.keyCount * 40, 4);
+		conductorFollowerSpr.scale.set(4 * 40, 4);
 		conductorFollowerSpr.updateHitbox();
 		add(conductorFollowerSpr);
+	}
+
+	private function generateGridGraphic()
+	{
+		var keyCount = strumLine != null ? strumLine.keyCount : 4;
+		if (keyCount == __lastKeyCount) return __gridGraphic; //doesnt need to be regenerated
+		__lastKeyCount = keyCount;
+
+		if (__gridGraphic != null) __gridGraphic.destroy();
+
+		__gridGraphic = FlxG.bitmap.create(40*keyCount, 160, 0xFF272727, true);
+		__gridGraphic.bitmap.lock();
+
+		// Checkerboard
+		for(y in 0...4)
+			for(x in 0...Math.ceil(keyCount/2)) __gridGraphic.bitmap.fillRect(new Rectangle(40*((x*2)+(y%2)), 40*y, 40, 40), 0xFF545454);
+
+		// Edges
+		__gridGraphic.bitmap.fillRect(new Rectangle(0, 0, 1, 160), 0xFFDDDDDD);
+		__gridGraphic.bitmap.fillRect(new Rectangle((40*keyCount)-1, 0, 1, 160), 0xFFDDDDDD);
+		__gridGraphic.bitmap.unlock();
+
+		return __gridGraphic;
 	}
 
 	public function updateSprites() {
 		var x:Float = 0; // fuck you
 		var alpha:Float = 0.9;
+		var keyCount:Int = 4;
 
 		if (strumLine != null) {
 			x = strumLine.x;
 			alpha = strumLine.strumLine.visible ? 0.9 : 0.4;
+			keyCount = strumLine.keyCount;
 		} else alpha = 0.9;
 
 		for (spr in [gridBackDrop, sectionSeparator, beatSeparator, topLimit, bottomLimit, 
@@ -218,25 +221,27 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 			spr.cameras = this.cameras;
 		}
 
+		if (keyCount != __lastKeyCount) gridBackDrop.loadGraphic(generateGridGraphic()); //update grid if keycount changed
+
 		sectionSeparator.spacing.y = (10 * Conductor.beatsPerMeasure * Conductor.stepsPerBeat) - 1;
 		beatSeparator.spacing.y = (20 * Conductor.stepsPerBeat) - 1;
 
-		topLimit.scale.set(Charter.instance.keyCount * 40, Math.ceil(FlxG.height / cameras[0].zoom));
+		topLimit.scale.set(keyCount * 40, Math.ceil(FlxG.height / cameras[0].zoom));
 		topLimit.updateHitbox();
 		topLimit.y = -topLimit.height;
 
-		bottomLimit.scale.set(Charter.instance.keyCount * 40, Math.ceil(FlxG.height / cameras[0].zoom));
+		bottomLimit.scale.set(keyCount * 40, Math.ceil(FlxG.height / cameras[0].zoom));
 		bottomLimit.updateHitbox();
 
-		for (spr in [conductorFollowerSpr, sectionSeparator, beatSeparator]) {
-			spr.scale.x = Charter.instance.keyCount * 40;
+		for (spr in [conductorFollowerSpr, sectionSeparator, beatSeparator, topSeparator, bottomSeparator]) {
+			spr.scale.x = keyCount * 40;
 			spr.updateHitbox();
 		}
 
 		waveformSprite.visible = waveformSprite.shader != null;
 		if (waveformSprite.shader == null) return;
 
-		waveformSprite.scale.set(Charter.instance.keyCount * 40, FlxG.height * (1/cameras[0].zoom));
+		waveformSprite.scale.set(keyCount * 40, FlxG.height * (1/cameras[0].zoom));
 		waveformSprite.updateHitbox();
 
 		waveformSprite.y = (cameras[0].scroll.y+FlxG.height/2)-(waveformSprite.height/2);

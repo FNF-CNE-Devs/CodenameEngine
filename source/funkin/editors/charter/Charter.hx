@@ -97,18 +97,6 @@ class Charter extends UIState {
 	public static var clipboard:Array<CharterCopyboardObject> = [];
 	public static var waveformHandler:CharterWaveformHandler;
 
-	public var keyCount(default, set):Int = 4;
-	private function set_keyCount(value:Int) {
-		if (value < 1) value = 1;
-
-		if (keyCount != value) {
-			keyCount = value;
-			gridBackdrops.updateGrids();
-			this.sideScroll = sideScroll;
-		}
-		return value;
-	}
-
 	public function new(song:String, diff:String, reload:Bool = true) {
 		super();
 		if (song != null) {
@@ -323,17 +311,6 @@ class Charter extends UIState {
 						label: "Reset scroll",
 						keybind: [SHIFT, DOWN],
 						onSelect: _view_scrollreset
-					},
-					null,
-					{
-						label: "Decrease grid width",
-						keybind: [CONTROL, LBRACKET],
-						onSelect: _view_decrease_keycount
-					},
-					{
-						label: "Increase grid width",
-						keybind: [CONTROL, RBRACKET],
-						onSelect: _view_increase_keycount
 					}
 				]
 			},
@@ -821,7 +798,7 @@ class Charter extends UIState {
 						n.snappedToStrumline = false;
 						n.setPosition(n.fullID * 40 + (mousePos.x - dragStartPos.x), n.step * 40 + (mousePos.y - dragStartPos.y));
 						n.y = FlxMath.bound(n.y, 0, (__endStep*40) - n.height);
-						n.x = FlxMath.bound(n.x, 0, ((strumLines.members.length * keyCount)-1) * 40);
+						n.x = FlxMath.bound(n.x, 0, (strumLines.totalKeyCount-1) * 40);
 						n.cursor = HAND;
 					}, function (e:CharterEvent) {
 						e.y =  e.step * 40 + (mousePos.y - dragStartPos.y) - 17;
@@ -850,7 +827,7 @@ class Charter extends UIState {
 							if (s is CharterNote) {
 								var note:CharterNote = cast s;
 								if (note.fullID + changePoint.y < 0) boundedChange.y += Math.abs(note.fullID + changePoint.y);
-								if (note.fullID + changePoint.y > (strumLines.members.length*keyCount)-1) boundedChange.y -= (note.fullID + changePoint.y) - ((strumLines.members.length*keyCount)-1);
+								if (note.fullID + changePoint.y > strumLines.totalKeyCount-1) boundedChange.y -= (note.fullID + changePoint.y) - (strumLines.totalKeyCount-1);
 							}
 
 							s.handleDrag(boundedChange);
@@ -883,7 +860,7 @@ class Charter extends UIState {
 						gridActionType = BOX_SELECTION;
 
 					var id = Math.floor(mousePos.x / 40);
-					var mouseOnGrid = id >= 0 && id < keyCount * gridBackdrops.strumlinesAmount && mousePos.y >= 0;
+					var mouseOnGrid = id >= 0 && id < strumLines.totalKeyCount && mousePos.y >= 0;
 
 					if (FlxG.mouse.justReleased) {
 							for (n in selection) n.selected = false;
@@ -891,9 +868,10 @@ class Charter extends UIState {
 
 							if (mouseOnGrid && mousePos.y > 0 && mousePos.y < (__endStep)*40) {
 								var note = new CharterNote();
+								var targetStrumline = strumLines.getStrumlineFromID(id);
 								note.updatePos(
 									FlxMath.bound(FlxG.keys.pressed.SHIFT ? ((mousePos.y-20) / 40) : quantStep(mousePos.y/40), 0, __endStep-1),
-									id % keyCount, 0, noteType, strumLines.members[Std.int(id/keyCount)]
+									(id-targetStrumline.startingID) % targetStrumline.keyCount, 0, noteType, targetStrumline
 								);
 								notesGroup.add(note);
 								selection = [note];
@@ -1196,7 +1174,7 @@ class Charter extends UIState {
 			gridBackdrops.conductorSprY = lerp(gridBackdrops.conductorSprY, curStepFloat * 40, __firstFrame ? 1 : 1/3);
 		}
 		charterCamera.scroll.set(
-			lerp(charterCamera.scroll.x, ((( (40*keyCount) * gridBackdrops.strumlinesAmount) - FlxG.width) / 2) + sideScroll, __firstFrame ? 1 : 1/3),
+			lerp(charterCamera.scroll.x, (((40*strumLines.totalKeyCount) - FlxG.width) / 2) + sideScroll, __firstFrame ? 1 : 1/3),
 			gridBackdrops.conductorSprY - (FlxG.height * 0.5)
 		);
 
@@ -1324,7 +1302,7 @@ class Charter extends UIState {
 
 	var sideScroll(default, set):Float = 0;
 	function set_sideScroll(val:Float) {
-		return sideScroll = FlxMath.bound(val, -((40*keyCount) * gridBackdrops.strumlinesAmount) / 2, ((40*keyCount) * gridBackdrops.strumlinesAmount) / 2);
+		return sideScroll = FlxMath.bound(val, -(40*strumLines.totalKeyCount) / 2, (40*strumLines.totalKeyCount) / 2);
 	}
 
 	// TOP MENU OPTIONS
@@ -1670,13 +1648,6 @@ class Charter extends UIState {
 	}
 	function _view_scrollreset(_) {
 		sideScroll = 0;
-	}
-
-	inline function _view_increase_keycount(_) {
-		keyCount += 1;
-	}
-	inline function _view_decrease_keycount(_){
-		keyCount -= 1;
 	}
 	
 	inline function _snap_increasesnap(_) changequant(1);

@@ -48,9 +48,9 @@ class CharterStrumlineButton extends UISprite {
 	public var textColorLerp:Float = 1;
 
 	public override function update(elapsed:Float) {
-		button.follow(this, ((40 * Charter.instance.keyCount) - button.width) / 2, 20+buttonYOffset);
+		button.follow(this, ((40 * 4) - button.width) / 2, 20+buttonYOffset);
 		text.follow(this, 0, 84);
-		text.fieldWidth = (40 * Charter.instance.keyCount);
+		text.fieldWidth = (40 * 4);
 
 		shakeTimer -= elapsed;
 		if (shakeTimer > 0)
