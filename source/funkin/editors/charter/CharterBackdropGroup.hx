@@ -4,6 +4,7 @@ import flixel.graphics.FlxGraphic;
 import funkin.backend.system.Conductor;
 import openfl.geom.Rectangle;
 import flixel.addons.display.FlxBackdrop;
+import funkin.backend.shaders.CustomShader;
 
 class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 	public var strumLineGroup:CharterStrumLineGroup;
@@ -98,9 +99,6 @@ class CharterBackdropGroup extends FlxTypedGroup<CharterBackdrop> {
 
 class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 	public var gridBackDrop:FlxBackdrop;
-	var __gridGraphic:FlxGraphic;
-	var __lastKeyCount:Int;
-
 	public var topLimit:FlxSprite;
 	public var topSeparator:FlxSprite;
 	public var bottomLimit:FlxSprite;
@@ -115,11 +113,17 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 	public var notesGroup:FlxTypedGroup<CharterNote> = new FlxTypedGroup<CharterNote>();
 	public var strumLine:CharterStrumline;
 
+	public var gridShader:CustomShader = new CustomShader("engine/charterGrid");
+	var __lastKeyCount:Int = 4;
+
 	public function new() {
 		super();
 
-		gridBackDrop = new FlxBackdrop(generateGridGraphic(), Y, 0, 0);
+		gridBackDrop = new FlxBackdrop(null, Y, 0, 0);
+		gridBackDrop.makeSolid(1, 1, -1);
+		gridBackDrop.shader = gridShader;
 		add(gridBackDrop);
+		gridShader.hset("segments", 4);
 
 		waveformSprite = new FlxSprite().makeSolid(1, 1, 0xFF000000);
 		waveformSprite.scale.set(160, 1);
@@ -181,29 +185,6 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 		add(conductorFollowerSpr);
 	}
 
-	private function generateGridGraphic()
-	{
-		var keyCount = strumLine != null ? strumLine.keyCount : 4;
-		if (keyCount == __lastKeyCount) return __gridGraphic; //doesnt need to be regenerated
-		__lastKeyCount = keyCount;
-
-		if (__gridGraphic != null) __gridGraphic.destroy();
-
-		__gridGraphic = FlxG.bitmap.create(40*keyCount, 160, 0xFF272727, true);
-		__gridGraphic.bitmap.lock();
-
-		// Checkerboard
-		for(y in 0...4)
-			for(x in 0...Math.ceil(keyCount/2)) __gridGraphic.bitmap.fillRect(new Rectangle(40*((x*2)+(y%2)), 40*y, 40, 40), 0xFF545454);
-
-		// Edges
-		__gridGraphic.bitmap.fillRect(new Rectangle(0, 0, 1, 160), 0xFFDDDDDD);
-		__gridGraphic.bitmap.fillRect(new Rectangle((40*keyCount)-1, 0, 1, 160), 0xFFDDDDDD);
-		__gridGraphic.bitmap.unlock();
-
-		return __gridGraphic;
-	}
-
 	public function updateSprites() {
 		var x:Float = 0; // fuck you
 		var alpha:Float = 0.9;
@@ -221,7 +202,10 @@ class CharterBackdrop extends FlxTypedGroup<Dynamic> {
 			spr.cameras = this.cameras;
 		}
 
-		if (keyCount != __lastKeyCount) gridBackDrop.loadGraphic(generateGridGraphic()); //update grid if keycount changed
+		gridBackDrop.setGraphicSize(40*keyCount, 160);
+		gridBackDrop.updateHitbox();
+		if (__lastKeyCount != keyCount) gridShader.hset("segments", keyCount);
+		__lastKeyCount = keyCount;
 
 		sectionSeparator.spacing.y = (10 * Conductor.beatsPerMeasure * Conductor.stepsPerBeat) - 1;
 		beatSeparator.spacing.y = (20 * Conductor.stepsPerBeat) - 1;
