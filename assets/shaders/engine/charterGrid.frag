@@ -5,8 +5,8 @@
 
 uniform int segments;
 
-vec4 colorA = vec4(0.153, 0.153, 0.153, 1.0);
-vec4 colorB = vec4(0.329, 0.329, 0.329, 1.0);
+vec4 colorA = vec4(0.329, 0.329, 0.329, 1.0);
+vec4 colorB = vec4(0.153, 0.153, 0.153, 1.0);
 vec4 colorOutline = vec4(0.867, 0.867, 0.867, 1.0);
 
 void main()
