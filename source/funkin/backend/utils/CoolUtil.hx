@@ -777,6 +777,13 @@ class CoolUtil
 		var file = new haxe.io.Path(file);
 		return file.file;
 	}
+
+	@:noUsing public static function getClosestAngle(angle:Float, targetAngle:Float):Float {
+		var diff:Float = angle - targetAngle;
+		if (diff < -180) diff += 360;
+		else if (diff > 180) diff -= 360;
+		return angle - diff;
+	}
 }
 
 /**

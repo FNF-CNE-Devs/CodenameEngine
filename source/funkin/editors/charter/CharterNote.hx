@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
 import funkin.editors.charter.Charter.ICharterSelectable;
 import funkin.backend.system.Conductor;
@@ -88,8 +89,8 @@ class CharterNote extends UISprite implements ICharterSelectable {
 
 		if (angleTween != null) angleTween.cancel();
 
-		var destAngle = switch(animation.curAnim.curFrame = (id % 4)) {
-			case 0: -90;
+		var destAngle:Float = switch(animation.curAnim.curFrame = (id % 4)) {
+			case 0: 270;
 			case 1: 180;
 			case 2: 0;
 			case 3: 90;
@@ -108,7 +109,9 @@ class CharterNote extends UISprite implements ICharterSelectable {
 		if(angleTween != null)
 			angleTween.cancel();
 
-		angleTween = FlxTween.tween(this, {angle: destAngle}, (2/3)/__animSpeed, {ease: function(t) {
+		destAngle = CoolUtil.getClosestAngle(angle, destAngle);
+
+		angleTween = FlxTween.angle(this, angle, destAngle, (2/3)/__animSpeed, {ease: function(t) {
 			return ((Math.sin(t * Math.PI) * 0.35) * 3 * t * Math.sqrt(1 - t)) + t;
 		}});
 	}
@@ -118,7 +121,7 @@ class CharterNote extends UISprite implements ICharterSelectable {
 			angleTween.cancel();
 			angleTween = null;
 			angle = switch(animation.curAnim.curFrame = (id % 4)) {
-				case 0: -90;
+				case 0: 270;
 				case 1: 180;
 				case 2: 0;
 				case 3: 90;
