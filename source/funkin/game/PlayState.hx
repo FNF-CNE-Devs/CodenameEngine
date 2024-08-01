@@ -1018,7 +1018,7 @@ class PlayState extends MusicBeatState
 	@:dox(hide)
 	private inline function generateStrums(amount:Null<Int> = null):Void {
 		for(p in strumLines) {
-			var kc = amount == null ? (p.data.keyCount != null ? p.data.keyCount : 4) : amount;
+			var kc = amount != null ? amount : p.data.keyCount;
 			p.generateStrums(kc);
 		}
 	}

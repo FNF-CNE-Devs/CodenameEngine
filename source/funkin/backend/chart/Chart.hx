@@ -170,6 +170,14 @@ class Chart {
 			base.events = base.events.concat(extraEvents);
 		#end
 
+		/**
+		 * Set defaults on strum lines
+		 */
+		for(strumLine in base.strumLines) {
+			if(strumLine.keyCount == null)
+				strumLine.keyCount = 4;
+		}
+
 		return base;
 	}
 
