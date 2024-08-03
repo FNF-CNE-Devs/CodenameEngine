@@ -98,6 +98,8 @@ class NativeAPI {
 		Windows.showMessageBox(caption, message, icon);
 		#elseif (ios || iphonesim || web)
 		trace('$caption - $message');
+		#elseif android
+		android.Tools.showAlertDialog(caption, message, {name: "OK", func: null}, null);
 		#else
 		lime.app.Application.current.window.alert(message, caption);
 		#end
