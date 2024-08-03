@@ -5,7 +5,7 @@ Make sure to read the wiki and join the Discord server linked there!
 - It includes many new features, as seen [here](other/FEATURES.md)<br>
 - Wanna see the new features added in the most recent update? Click [here](other/PATCHNOTES.md)<br>
 - Build instructions can be found [here](other/BUILDING.md).
-	- Also, navigating to `shell-scripts\cne` and running the command `.\cne test` uses the source assets folder instead of the export one for easier development (Although you can still use `lime test windows` normally).
+	- Running the command `.\cne test` within the root directory uses the source assets folder instead of the export one for easier development (Although you can still use `lime test windows` normally).
 
 ## PLEASE NOTE - THIS IS STILL IN A BETA STATE
 ### Mods created with beta versions of Codename may not be compatible with the release version
