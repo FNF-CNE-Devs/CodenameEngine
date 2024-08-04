@@ -164,7 +164,7 @@ class Main extends Sprite
 			isFocused = false;
 			lastVolume = FlxG.sound.volume;
 			Options.volume = FlxG.sound.volume;
-			if(Options.inactiveVolumeEnabled)
+			if(Options.inactiveVolumeEnabled && !Options.autoPause)
 				FlxG.sound.volume = Options.inactiveVolume / 100;
 		});
 
