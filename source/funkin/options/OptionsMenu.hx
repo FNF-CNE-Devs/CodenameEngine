@@ -65,22 +65,21 @@ class OptionsMenu extends TreeMenu {
 			}
 		})]);
 
-		var xmlPath = Paths.xml("config/options");
-		for(source in [funkin.backend.assets.AssetsLibraryList.AssetSource.SOURCE, funkin.backend.assets.AssetsLibraryList.AssetSource.MODS]) {
-			if (Paths.assetsTree.existsSpecific(xmlPath, "TEXT", source)) {
+		for (i in funkin.backend.assets.ModsFolder.getLoadedMods()) {
+			var xmlPath = Paths.xml('config/options/LIB_$i');
+
+			if (Paths.assetsTree.existsSpecific(xmlPath, "TEXT")) {
 				var access:Access = null;
 				try {
-					access = new Access(Xml.parse(Paths.assetsTree.getSpecificAsset(xmlPath, "TEXT", source)));
+					access = new Access(Xml.parse(Paths.assetsTree.getSpecificAsset(xmlPath, "TEXT")));
 				} catch(e) {
 					Logs.trace('Error while parsing options.xml: ${Std.string(e)}', ERROR);
 				}
-
 				if (access != null)
 					for(o in parseOptionsFromXML(access))
 						main.add(o);
 			}
 		}
-
 	}
 
 	public override function exit() {
