@@ -44,6 +44,20 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public var animDatas:Map<String, AnimData> = [];
 
 	/**
+	 * Linked Sprite Stuff
+	  * defaultSelfAlpha & defaultLinkAlpha is so it can alternate between sprites if wanted
+          * doLinkSwitching enables that ^^
+	  * doLinkVisiblitySync makes it so that if the parent sprite.visible is set to false, so will the child sprite.
+	  * doLinkPositionSync makes it so that the child sprite positions equals that of the parent sprite.
+	 */
+	public var linkedSprite:FunkinSprite;
+	public var doLinkSwitching:Bool = true;
+	public var doLinkPositionSync:Bool = true; // Should be off by default? Idrk.
+	public var doLinkVisiblitySync:Bool = true;
+	private var defaultSelfAlpha:Float;
+	private var defaultLinkAlpha:Float;
+
+	/**
 	 * ODD interval -> asynced; EVEN interval -> synced
 	 */
 	public var beatInterval(default, set):Int = 2;
@@ -96,6 +110,20 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		super.update(elapsed);
 		if (animateAtlas != null)
 			animateAtlas.update(elapsed);
+		updateLiniage();
+	}
+
+	private function updateLiniage() {
+		linkedSprite.visible = linkedSprite != null ? (doLinkVisiblitySync ? visible : linkedSprite.visible) : return;
+
+		if (alpha != defaultSelfAlpha && alpha != 0.000574705) { // Random number, so it will actually overwrite shiz.
+			defaultSelfAlpha = alpha;
+		} else if (linkedSprite.alpha != defaultLinkAlpha && linkSprite.alpha != 0.000574705) { // Random number, so it will actually overwrite shiz.
+			defaultLinkAlpha = linkedSprite.alpha;
+		} else if (doLinkPositionSync) {
+			linkedSprite.x = x;
+			linkedSprite.y = y;
+		}
 	}
 
 	public function loadSprite(path:String, Unique:Bool = false, Key:String = null)
@@ -281,33 +309,84 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	}
 	#end
 
+	public function addLinkedSprite(daSprite:FunkinSprite, ?overwriteLinkData = false) {
+	        doLinkPositionSync = overwriteLinkData;
+		if (overwriteLinkData) {
+	            daSprite.alpha = alpha;
+	            daSprite.x = x;
+	            daSprite.y = y;
+	        }
+	
+	        defaultLinkAlpha = daSprite.alpha;
+	        defaultSelfAlpha = alpha;
+	
+	        daSprite.alpha = 0.000574705;
+		linkedSprite = daSprite;
+	}
+
+	public function setDoLinkSwitching(doSwitch:Bool) {
+		doLinkSwitching = doSwitch ?? doLinkSwitching;
+		if (!doLinkSwitching) {
+			linkedSprite.alpha = defaultLinkAlpha;
+			alpha = defaultSelfAlpha;
+		}
+	}
+		
 	// PLAYANIM
 	#if REGION
 	public var lastAnimContext:PlayAnimContext = DANCE;
 
 	public function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
 	{
+		var spriteIsOffAlpha:Float = 0.000574705; // DO NOT change, this number needs to be this random float, or else you can't change the parent sprite alpha, trust me. - Nebula S. Nova
 		if (AnimName == null)
 			return;
-
-		if (animateAtlas != null)
-		{
+        
+	        var linkPlayed = false;
+		if (animateAtlas != null) {
 			@:privateAccess
-			// if (!animateAtlas.anim.animsMap.exists(AnimName) && !animateAtlas.anim.symbolDictionary.exists(AnimName)) return;
+			if (!animateAtlas.anim.animsMap.exists(AnimName) && !animateAtlas.anim.symbolDictionary.exists(AnimName)) {
+				if ((linkedSprite == null) || (!linkedSprite.animateAtlas.anim.animsMap.exists(AnimName) && !linkedSprite.animateAtlas.anim.symbolDictionary.exists(AnimName))) {
+				    return;
+				} else {
+				    linkPlayed = true;
+				    linkedSprite.alpha = doLinkSwitching ? defaultLinkAlpha : linkedSprite.alpha;
+				    alpha = doLinkSwitching ? spriteIsOffAlpha : alpha; 
+				    linkedSprite.animateAtlas.anim.play(AnimName, Force, Reversed, Frame);
+				    return;
+				}
+			}
+			linkedSprite.alpha = doLinkSwitching ? spriteIsOffAlpha : linkedSprite.alpha;
+			alpha = doLinkSwitching ? defaultSelfAlpha : alpha;
 			animateAtlas.anim.play(AnimName, Force, Reversed, Frame);
 			atlasPlayingAnim = AnimName;
+		} else {
+			if (!animation.exists(AnimName) && !debugMode) {
+				if ((linkedSprite == null) || (!linkedSprite.animation.exists(AnimName) && !debugMode)) {
+				    return;
+				} else {
+				    linkPlayed = true;
+				    linkedSprite.alpha = doLinkSwitching ? defaultLinkAlpha : linkedSprite.alpha;
+				    alpha = doLinkSwitching ? spriteIsOffAlpha : alpha;
+				    linkedSprite.animation.play(AnimName, Force, Reversed, Frame);
+				    return;
+				}
+			} else {
+				linkedSprite.alpha = doLinkSwitching ? spriteIsOffAlpha : linkedSprite.alpha;
+				alpha = doLinkSwitching ? defaultSelfAlpha : alpha;
+				animation.play(AnimName, Force, Reversed, Frame);
+		    	}		
 		}
-		else
-		{
-			if (!animation.exists(AnimName) && !debugMode)
-				return;
-			animation.play(AnimName, Force, Reversed, Frame);
-		}
-
-		var daOffset = getAnimOffset(AnimName);
-		frameOffset.set(daOffset.x, daOffset.y);
+	
+		var daOffset = linkPlayed ? linkedSprite.getAnimOffset(AnimName) : getAnimOffset(AnimName);
+		if (linkPlayed) {
+	    		linkedSprite.frameOffset.set(daOffset.x, daOffset.y);
+	        } else {
+	            	frameOffset.set(daOffset.x, daOffset.y);
+	        }
 		daOffset.putWeak();
 
+		linkedSprite.lastAnimContext = Context;
 		lastAnimContext = Context;
 	}
 
