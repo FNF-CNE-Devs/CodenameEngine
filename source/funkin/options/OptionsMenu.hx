@@ -65,8 +65,13 @@ class OptionsMenu extends TreeMenu {
 			}
 		})]);
 
+		var overridedMods:Array<String> = [];
+
 		for (i in funkin.backend.assets.ModsFolder.getLoadedMods()) {
 			var xmlPath = Paths.xml('config/options/LIB_$i');
+
+			if(overridedMods.contains(i))
+				continue;
 
 			if (Paths.assetsTree.existsSpecific(xmlPath, "TEXT")) {
 				var access:Access = null;
@@ -76,8 +81,12 @@ class OptionsMenu extends TreeMenu {
 					Logs.trace('Error while parsing options.xml: ${Std.string(e)}', ERROR);
 				}
 				if (access != null)
+				{
+					var firstElement = access.x.firstElement();
+					if(firstElement.exists("override")) overridedMods.push(firstElement.get("override"));
 					for(o in parseOptionsFromXML(access))
 						main.add(o);
+				}
 			}
 		}
 	}
