@@ -42,7 +42,24 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public var initialZoom:Float = 1;
 	public var debugMode:Bool = false;
 	public var animDatas:Map<String, AnimData> = [];
-
+	/**
+	 * Linked Sprite Stuff
+	 * defaultSelfAlpha & defaultLinkAlpha is so it can alternate between sprites if wanted
+	 		  * doLinkSwitching enables that ^^
+	 * doLinkVisiblitySync makes it so that if the parent sprite.visible is set to false, so will the child sprite.
+	 * doLinkPositionSync makes it so that the child sprite positions equals that of the parent sprite.
+	 */
+	 public var linkedSprites:Array<FunkinSprite> = []; // You can now link more than one to a parent :D
+    
+	 public var linkingTag:String;
+	 
+	 public var doLinkSwitching:Bool = true;
+	 public var doLinkPositionSync:Bool = true; // Should be off by default? Idrk.
+	 public var doLinkVisiblitySync:Bool = true;
+ 
+	 private var defaultSelfAlpha:Float;
+	 private var defaultLinkAlpha:Float;
+ 
 	/**
 	 * ODD interval -> asynced; EVEN interval -> synced
 	 */
@@ -96,6 +113,56 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		super.update(elapsed);
 		if (animateAtlas != null)
 			animateAtlas.update(elapsed);
+		updateLiniage();
+	}
+
+	function updateLiniage() {
+		for (linkedSprite in linkedSprites) {
+			linkedSprite.visible = linkedSprite != null ? (doLinkVisiblitySync ? visible : linkedSprite.visible) : return;
+
+			if (alpha != defaultSelfAlpha && alpha != 0.000574705) { // Random number, so it will actually overwrite shiz.
+				defaultSelfAlpha = alpha;
+			} else if (linkedSprite.alpha != defaultLinkAlpha
+				&& linkSprite.alpha != 0.000574705) { // Random number, so it will actually overwrite shiz.
+				defaultLinkAlpha = linkedSprite.alpha;
+			} else if (doLinkPositionSync) {
+				linkedSprite.x = x;
+				linkedSprite.y = y;
+			}
+		}
+	}
+
+	function getLinkedSpriteByTag(tag:String) {
+        for (linkedSprite in linkedSprite) {
+            if (linkedSprite.linkingTag == tag) {
+                return linkedSprite;
+            }
+        }
+    }
+
+	function addLinkedSprite(daSprite:FunkinSprite, ?overwriteLinkData = false, ?tag:String) {
+		doLinkPositionSync = overwriteLinkData;
+		if (overwriteLinkData) {
+			daSprite.alpha = alpha;
+			daSprite.x = x;
+			daSprite.y = y;
+		}
+        daSprite.linkingTag = tag;
+		defaultLinkAlpha = daSprite.alpha;
+		defaultSelfAlpha = alpha;
+
+		daSprite.alpha = 0.000574705;
+		linkedSprites.push(daSprite);
+	}
+
+	function setDoLinkSwitching(doSwitch:Bool) {
+		doLinkSwitching = if (doSwitch != null) { doLinkSwitching = doSwitch; };
+		if (!doLinkSwitching) {
+			for (linkedSprite in linkedSprites) {
+				linkedSprite.alpha = defaultLinkAlpha;
+			}
+			alpha = defaultSelfAlpha;
+		}
 	}
 
 	public function loadSprite(path:String, Unique:Bool = false, Key:String = null)
@@ -288,27 +355,51 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		if (AnimName == null)
-			return;
+            return;
 
-		if (animateAtlas != null)
-		{
-			@:privateAccess
-			// if (!animateAtlas.anim.animsMap.exists(AnimName) && !animateAtlas.anim.symbolDictionary.exists(AnimName)) return;
-			animateAtlas.anim.play(AnimName, Force, Reversed, Frame);
-			atlasPlayingAnim = AnimName;
-		}
-		else
-		{
-			if (!animation.exists(AnimName) && !debugMode)
-				return;
-			animation.play(AnimName, Force, Reversed, Frame);
-		}
+        var spriteIsOffAlpha:Float = 0.000574705; // DO NOT change, this number needs to be this random float, or else you can't change the parent sprite alpha, trust me. - Nebula S. Nova
+        if (animateAtlas != null)
+        {
+            @:privateAccess
+            if (!animateAtlas.anim.animsMap.exists(AnimName) && !animateAtlas.anim.symbolDictionary.exists(AnimName)) {
+                for (linkedSprite in linkedSprites) {
+                    if (linkedSprite.animateAtlas != null) {
+                        if (!linkedSprite.animateAtlas.anim.animsMap.exists(AnimName) && !linkedSprite.animateAtlas.anim.symbolDictionary.exists(AnimName)) {} else {
+                            linkedSprite.playAnim(AnimName, Force, Context, Reversed, Frame);
+                            linkedSprite.alpha = doLinkSwitching ? defaultLinkAlpha : linkedSprite.alpha;
+						    alpha = doLinkSwitching ? spriteIsOffAlpha : alpha;
+                            return;
+                        }
+                    }
+                }
+            } else {
+				linkedSprite.alpha = doLinkSwitching ? spriteIsOffAlpha : linkedSprite.alpha;
+				alpha = doLinkSwitching ? defaultSelfAlpha : alpha;
+                animateAtlas.anim.play(AnimName, Force, Reversed, Frame);
+                atlasPlayingAnim = AnimName;
+            }
+        } else {
+            if (!animation.exists(AnimName) && !debugMode) {
+                for (linkedSprite in linkedSprites) { 
+                    if (!linkedSprite.animation.exists && !debugMode) {} else {
+                        linkedSprite.playAnim(AnimName, Force, Context, Reversed, Frame);
+                        linkedSprite.alpha = doLinkSwitching ? defaultLinkAlpha : linkedSprite.alpha;
+                        alpha = doLinkSwitching ? spriteIsOffAlpha : alpha;
+                        return;
+                    }
+                }
+            } else {
+				linkedSprite.alpha = doLinkSwitching ? spriteIsOffAlpha : linkedSprite.alpha;
+				alpha = doLinkSwitching ? defaultSelfAlpha : alpha;
+                animation.play(AnimName, Force, Reversed, Frame);
+            }
 
-		var daOffset = getAnimOffset(AnimName);
-		frameOffset.set(daOffset.x, daOffset.y);
-		daOffset.putWeak();
+        }
+        var daOffset = getAnimOffset(AnimName);
+        frameOffset.set(daOffset.x, daOffset.y);
+        daOffset.putWeak();
 
-		lastAnimContext = Context;
+        lastAnimContext = Context;
 	}
 
 	public inline function getAnimOffset(name:String)
