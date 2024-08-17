@@ -23,10 +23,13 @@ class MainMenuState extends MusicBeatState
 
 	var optionShit:Array<String> = CoolUtil.coolTextFile(Paths.txt("config/menuItems"));
 
+	var bg:FlxSprite;
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
+	var versionText:FunkinText;
 
 	public var canAccessDebugMenus:Bool = true;
+	public var __cancelDefault:Bool = false;
 
 	override function create()
 	{
@@ -36,48 +39,50 @@ class MainMenuState extends MusicBeatState
 
 		CoolUtil.playMenuSong();
 
-		var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBG'));
-		add(bg);
-
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
 
-		magenta = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuDesat'));
-		magenta.visible = false;
-		magenta.color = 0xFFfd719b;
-		add(magenta);
+		if (!__cancelDefault) {
+			bg = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBG'));
+			add(bg);
 
-		for(bg in [bg, magenta]) {
-			bg.scrollFactor.set(0, 0.18);
-			bg.scale.set(1.15, 1.15);
-			bg.updateHitbox();
-			bg.screenCenter();
-			bg.antialiasing = true;
+			magenta = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuDesat'));
+			magenta.visible = false;
+			magenta.color = 0xFFfd719b;
+			add(magenta);
+
+			for(bg in [bg, magenta]) {
+				bg.scrollFactor.set(0, 0.18);
+				bg.scale.set(1.15, 1.15);
+				bg.updateHitbox();
+				bg.screenCenter();
+				bg.antialiasing = true;
+			}
+
+			menuItems = new FlxTypedGroup<FlxSprite>();
+			add(menuItems);
+
+			for (i=>option in optionShit)
+			{
+				var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 160));
+				menuItem.frames = Paths.getFrames('menus/mainmenu/${option}');
+				menuItem.animation.addByPrefix('idle', option + " basic", 24);
+				menuItem.animation.addByPrefix('selected', option + " white", 24);
+				menuItem.animation.play('idle');
+				menuItem.ID = i;
+				menuItem.screenCenter(X);
+				menuItems.add(menuItem);
+				menuItem.scrollFactor.set();
+				menuItem.antialiasing = true;
+			}
+
+			FlxG.camera.follow(camFollow, null, 0.06);
+
+			versionText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nCommit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[${controls.getKeyName(SWITCHMOD)}] Open Mods menu\n');
+			versionText.y -= versionText.height;
+			versionText.scrollFactor.set();
+			add(versionText);
 		}
-
-		menuItems = new FlxTypedGroup<FlxSprite>();
-		add(menuItems);
-
-		for (i=>option in optionShit)
-		{
-			var menuItem:FlxSprite = new FlxSprite(0, 60 + (i * 160));
-			menuItem.frames = Paths.getFrames('menus/mainmenu/${option}');
-			menuItem.animation.addByPrefix('idle', option + " basic", 24);
-			menuItem.animation.addByPrefix('selected', option + " white", 24);
-			menuItem.animation.play('idle');
-			menuItem.ID = i;
-			menuItem.screenCenter(X);
-			menuItems.add(menuItem);
-			menuItem.scrollFactor.set();
-			menuItem.antialiasing = true;
-		}
-
-		FlxG.camera.follow(camFollow, null, 0.06);
-
-		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nCommit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[${controls.getKeyName(SWITCHMOD)}] Open Mods menu\n');
-		versionShit.y -= versionShit.height;
-		versionShit.scrollFactor.set();
-		add(versionShit);
 
 		changeItem();
 	}
@@ -131,17 +136,21 @@ class MainMenuState extends MusicBeatState
 
 		super.update(elapsed);
 
-		menuItems.forEach(function(spr:FlxSprite)
-		{
-			spr.screenCenter(X);
-		});
+		if (!__cancelDefault) {
+			menuItems.forEach(function(spr:FlxSprite)
+			{
+				spr.screenCenter(X);
+			});
+		}
 	}
 
 	public override function switchTo(nextState:FlxState):Bool {
-		try {
-			menuItems.forEach(function(spr:FlxSprite) {
-				FlxTween.tween(spr, {alpha: 0}, 0.5, {ease: FlxEase.quintOut});
-			});
+		if (!__cancelDefault) {
+			try {
+				menuItems.forEach(function(spr:FlxSprite) {
+					FlxTween.tween(spr, {alpha: 0}, 0.5, {ease: FlxEase.quintOut});
+				});
+			}
 		}
 		return super.switchTo(nextState);
 	}
