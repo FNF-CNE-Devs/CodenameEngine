@@ -4,9 +4,11 @@ import funkin.options.OptionsScreen;
 import funkin.options.type.*;
 import funkin.options.TreeMenu;
 import haxe.xml.Access;
+import flixel.util.FlxColor;
 
 class CreditsMain extends TreeMenu {
 	var bg:FlxSprite;
+	var selectables:Array<OptionType> = []; // Now editable via script.
 
 	public override function create() {
 		bg = new FlxSprite(-80).loadGraphic(Paths.image('menus/menuBGBlue'));
@@ -18,7 +20,7 @@ class CreditsMain extends TreeMenu {
 		bg.antialiasing = true;
 		add(bg);
 
-		var selectables:Array<OptionType> = [];
+		//var selectables:Array<OptionType> = [];
 		var xmlPath = Paths.xml('config/credits');
 		for(source in [funkin.backend.assets.AssetsLibraryList.AssetSource.SOURCE, funkin.backend.assets.AssetsLibraryList.AssetSource.MODS]) {
 			if (Paths.assetsTree.existsSpecific(xmlPath, "TEXT", source)) {
@@ -68,11 +70,14 @@ class CreditsMain extends TreeMenu {
 					html_url: 'https://github.com/$username',
 					avatar_url: 'https://github.com/$username.png'
 				};
-
-				credsMenus.push(new GithubIconOption(user, desc, null,
+				var opt:GithubIconOption = new GithubIconOption(user, desc, null,
 					node.has.customName ? node.att.customName : null, node.has.size ? Std.parseInt(node.att.size) : 96,
 					node.has.portrait ? node.att.portrait.toLowerCase() == "false" ? false : true : true
-				));
+				);
+				if (node.getAtt("color") != null) {
+					@:privateAccess opt.__text.color = FlxColor.fromString(node.getAtt("color"));
+				}
+				credsMenus.push(opt);
 			} else {
 				if (!node.has.name) {
 					Logs.trace("A credit node requires a name attribute.", WARNING);
@@ -82,11 +87,15 @@ class CreditsMain extends TreeMenu {
 
 				switch(node.name) {
 					case "credit":
-						credsMenus.push(new PortraitOption(name, desc, function() if(node.has.url) CoolUtil.openURL(node.att.url),
+						var opt:PortraitOption = new PortraitOption(name, desc, function() if(node.has.url) CoolUtil.openURL(node.att.url),
 							node.has.icon && Paths.assetsTree.existsSpecific(Paths.image('credits/${node.att.icon}'), "IMAGE", source) ?
 							FlxG.bitmap.add(Paths.image('credits/${node.att.icon}')) : null, node.has.size ? Std.parseInt(node.att.size) : 96,
 							node.has.portrait ? node.att.portrait.toLowerCase() == "false" ? false : true : true
-						));
+						);
+						if (node.getAtt("color") != null) {
+							@:privateAccess opt.__text.color = FlxColor.fromString(node.getAtt("color"));
+						}
+						credsMenus.push(opt);
 
 					case "menu":
 						credsMenus.push(new TextOption(name + " >", desc, function() {
