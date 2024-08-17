@@ -85,7 +85,7 @@ class MainMenuState extends MusicBeatState
 	}
 
 	var selectedSomethin:Bool = false;
-	var forXPos:Bool = true;
+	var forceCenterX:Bool = true;
 
 	override function update(elapsed:Float)
 	{
@@ -134,7 +134,7 @@ class MainMenuState extends MusicBeatState
 
 		super.update(elapsed);
 
-		if (forXPos)
+		if (forceCenterX)
 		menuItems.forEach(function(spr:FlxSprite)
 		{
 			spr.screenCenter(X);
