@@ -33,7 +33,7 @@ jobs:
         run: |
           haxelib run lime build mac
       - name: Tar files
-        run: tar -zcvf CodenameEngine.tar.gz export/release/macos/bin
+        run: tar -zcvf CodenameEngine.tar.gz -C export/release/macos/bin .
       - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v2
         with:
