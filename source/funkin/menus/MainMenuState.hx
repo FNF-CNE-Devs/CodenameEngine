@@ -23,8 +23,10 @@ class MainMenuState extends MusicBeatState
 
 	var optionShit:Array<String> = CoolUtil.coolTextFile(Paths.txt("config/menuItems"));
 
+	var bg:FlxSprite;
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
+	var versionText:FunkinText;
 
 	public var canAccessDebugMenus:Bool = true;
 
@@ -36,7 +38,7 @@ class MainMenuState extends MusicBeatState
 
 		CoolUtil.playMenuSong();
 
-		var bg:FlxSprite = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBG'));
+		bg = new FlxSprite(-80).loadAnimatedGraphic(Paths.image('menus/menuBG'));
 		add(bg);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
@@ -75,10 +77,10 @@ class MainMenuState extends MusicBeatState
 		FlxG.camera.follow(camFollow, null, 0.06);
 		var modsKey:String = MobileControls.mobileC ? "M" : controls.getKeyName(SWITCHMOD);
 
-		var versionShit:FunkinText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nCommit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[${modsKey}] Open Mods menu\n');
-		versionShit.y -= versionShit.height;
-		versionShit.scrollFactor.set();
-		add(versionShit);
+		versionText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nCommit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[${controls.getKeyName(SWITCHMOD)}] Open Mods menu\n');
+		versionText.y -= versionText.height;
+		versionText.scrollFactor.set();
+		add(versionText);
 
 		changeItem();
 
@@ -86,6 +88,7 @@ class MainMenuState extends MusicBeatState
 	}
 
 	var selectedSomethin:Bool = false;
+	var forceCenterX:Bool = true;
 
 	override function update(elapsed:Float)
 	{
@@ -134,6 +137,7 @@ class MainMenuState extends MusicBeatState
 
 		super.update(elapsed);
 
+		if (forceCenterX)
 		menuItems.forEach(function(spr:FlxSprite)
 		{
 			spr.screenCenter(X);
