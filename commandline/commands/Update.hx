@@ -15,7 +15,7 @@ class Update {
 			FileSystem.createDirectory('.haxelib');
 
 		var libs:Array<Library> = [];
-		var libsXML:Access = new Access(Xml.parse(File.getContent('./libs.xml')).firstElement());
+		var libsXML:Access = new Access(Xml.parse(File.getContent('commandline/libs.xml')).firstElement());
 
 		for (libNode in libsXML.elements) {
 			var lib:Library = {
