@@ -1,8 +1,12 @@
 name: Main
 on: workflow_dispatch
 jobs:
-  Windows:
-    runs-on: windows-latest
+  Desktop:
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-12, macos-14]
     steps:
       - name: Checkout
         uses: actions/checkout@main
@@ -10,66 +14,56 @@ jobs:
         uses: krdlab/setup-haxe@master
         with:
           haxe-version: 4.3.6
+      - name: Install libVLC (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: sudo apt install libvlc-dev libvlccore-dev
       - name: Install Libraries
         run: |
-          haxelib install hmm --quiet
-          haxelib run hmm install --quiet
-      - name: Compile
-        run: haxelib run lime build windows
-      - name: Upload Artifact
+         haxelib install hmm --quiet
+         haxelib run hmm install --quiet
+      - name: Compile (Windows)
+        if: startsWith(matrix.os, 'windows')
+        run: haxelib run lime build windows -D officialBuild
+      - name: Compile (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: haxelib run lime build linux -D officialBuild
+      - name: Compile (macOS)
+        if: startsWith(matrix.os, 'macos')
+        run: haxelib run lime build mac -D officialBuild
+      - name: Upload Artifact (Windows)
+        if: startsWith(matrix.os, 'windows')
         uses: actions/upload-artifact@main
         with:
           name: windowsBuild
           path: export\release\windows\bin\*
           if-no-files-found: error
-  Linux:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@main
-      - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
-        with:
-          haxe-version: 4.3.6
-      - name: Install Libraries
-        run: |
-          DEBIAN_FRONTEND=noninteractive sudo apt-get -qq install -o Dpkg::Progress-Fancy="0" -o APT::Color="0" -o Dpkg::Use-Pty="0" libvlc-dev libvlccore-dev < /dev/null > /dev/null
-          haxelib install hmm --quiet
-          haxelib run hmm install --quiet
-      - name: Compile
-        run: haxelib run lime build linux
-      - name: Upload Artifact
+      - name: Upload Artifact (Linux)
+        if: startsWith(matrix.os, 'ubuntu')
         uses: actions/upload-artifact@main
         with:
           name: linuxBuild
           path: export/release/linux/bin/*
           if-no-files-found: error
-  macOS:
-    runs-on: macos-${{matrix.version}}
-    strategy:
-      matrix:
-        version: [12, 13, 14]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@main
-      - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
-        with:
-          haxe-version: 4.3.6
-      - name: Install Libraries
-        run: |
-          haxelib install hmm --quiet
-          haxelib run hmm install --quiet
-      - name: Compile
-        run: haxelib run lime build mac
-      - name: Upload Artifact
+      - name: Upload Artifact (macOS 12)
+        if: matrix.os == 'macos-12'
         uses: actions/upload-artifact@main
         with:
-          name: macOSBuild-${{matrix.version}}
+          name: macOSBuild-x86_64
           path: export/release/macos/bin/*
           if-no-files-found: error
-  Android:
-    runs-on: ubuntu-latest
+      - name: Upload Artifact (macOS 14)
+        if: matrix.os == 'macos-14'
+        uses: actions/upload-artifact@main
+        with:
+          name: macOSBuild-arm64
+          path: export/release/macos/bin/*
+          if-no-files-found: error
+  Mobile:
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-14]
     steps:
       - name: Checkout
         uses: actions/checkout@main
@@ -82,43 +76,34 @@ jobs:
           haxelib install hmm --quiet
           haxelib run hmm install --quiet
       - name: Configure Android
+        if: startsWith(matrix.os, 'ubuntu')
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
           haxelib run lime config ANDROID_NDK_ROOT $ANDROID_NDK_LATEST_HOME
           haxelib run lime config JAVA_HOME $JAVA_HOME_17_X64
           haxelib run lime config ANDROID_SETUP true
-      # - name: Free Disk Space
-        # run: sudo swapoff -a && sudo rm -f /swapfile && sudo apt clean && docker rmi $(docker image ls -aq)
-      - name: Compile
-        run: haxelib run lime build android
-      - name: Upload Artifact
-        uses: actions/upload-artifact@main
-        with:
-          name: androidBuild
-          path: export/release/android/bin/app/build/outputs/apk/release/*.apk
-          if-no-files-found: error
-  iOS:
-    runs-on: macos-14
-    steps:
-      - name: Checkout
-        uses: actions/checkout@main
-      - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
-        with:
-          haxe-version: 4.3.6
-      - name: Install Libraries
-        run: |
-          haxelib install hmm --quiet
-          haxelib run hmm install --quiet
-      - name: Compile
-        run: haxelib run lime build ios -nosign
+      - name: Compile (Android)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: haxelib run lime build android -D officialBuild
+      - name: Compile (iOS)
+        if: startsWith(matrix.os, 'macos')
+        run: haxelib run lime build ios -nosign -D officialBuild
       - name: Make Ipa
+        if: startsWith(matrix.os, 'macos')
         run: |
           cd export/release/ios/build/*-iphoneos
           mkdir Payload
           mv *.app Payload
           zip -r CodenameEngine.ipa Payload
-      - name: Upload Artifact
+      - name: Upload Artifact (Android)
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: actions/upload-artifact@main
+        with:
+          name: androidBuild
+          path: export/release/android/bin/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+      - name: Upload Artifact (iOS)
+        if: startsWith(matrix.os, 'macos')
         uses: actions/upload-artifact@main
         with:
           name: iOSBuild
