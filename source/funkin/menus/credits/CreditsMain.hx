@@ -8,7 +8,7 @@ import flixel.util.FlxColor;
 
 class CreditsMain extends TreeMenu {
 	var bg:FlxSprite;
-	var selectables:Array<OptionType> = []; // Now editable via script.
+	var items:Array<OptionType> = [];
 
 	public override function create() {
 		bg = new FlxSprite(-80).loadGraphic(Paths.image('menus/menuBGBlue'));
@@ -20,7 +20,6 @@ class CreditsMain extends TreeMenu {
 		bg.antialiasing = true;
 		add(bg);
 
-		//var selectables:Array<OptionType> = [];
 		var xmlPath = Paths.xml('config/credits');
 		for(source in [funkin.backend.assets.AssetsLibraryList.AssetSource.SOURCE, funkin.backend.assets.AssetsLibraryList.AssetSource.MODS]) {
 			if (Paths.assetsTree.existsSpecific(xmlPath, "TEXT", source)) {
@@ -33,17 +32,17 @@ class CreditsMain extends TreeMenu {
 
 				if (access != null)
 					for(c in parseCreditsFromXML(access, source))
-						selectables.push(c);
+						items.push(c);
 			}
 		}
-		selectables.push(new TextOption("Codename Engine >", "Select this to see all the contributors of the engine!", function() {
+		items.push(new TextOption("Codename Engine >", "Select this to see all the contributors of the engine!", function() {
 			optionsTree.add(Type.createInstance(CreditsCodename, []));
 		}));
-		selectables.push(new TextOption("Friday Night Funkin'", "Select this to open the itch.io page of the original game to donate!", function() {
+		items.push(new TextOption("Friday Night Funkin'", "Select this to open the itch.io page of the original game to donate!", function() {
 			CoolUtil.openURL("https://ninja-muffin24.itch.io/funkin");
 		}));
 
-		main = new OptionsScreen('Credits', 'The people who made this possible!', selectables);
+		main = new OptionsScreen('Credits', 'The people who made this possible!', items);
 		super.create();
 
 		DiscordUtil.call("onMenuLoaded", ["Credits Menu"]);
@@ -74,9 +73,8 @@ class CreditsMain extends TreeMenu {
 					node.has.customName ? node.att.customName : null, node.has.size ? Std.parseInt(node.att.size) : 96,
 					node.has.portrait ? node.att.portrait.toLowerCase() == "false" ? false : true : true
 				);
-				if (node.getAtt("color") != null) {
-					@:privateAccess opt.__text.color = FlxColor.fromString(node.getAtt("color"));
-				}
+				if (node.has.color)
+					@:privateAccess opt.__text.color = FlxColor.fromString(node.att.color);
 				credsMenus.push(opt);
 			} else {
 				if (!node.has.name) {
@@ -92,9 +90,8 @@ class CreditsMain extends TreeMenu {
 							FlxG.bitmap.add(Paths.image('credits/${node.att.icon}')) : null, node.has.size ? Std.parseInt(node.att.size) : 96,
 							node.has.portrait ? node.att.portrait.toLowerCase() == "false" ? false : true : true
 						);
-						if (node.getAtt("color") != null) {
-							@:privateAccess opt.__text.color = FlxColor.fromString(node.getAtt("color"));
-						}
+						if (node.has.color)
+							@:privateAccess opt.__text.color = FlxColor.fromString(node.att.color);
 						credsMenus.push(opt);
 
 					case "menu":
