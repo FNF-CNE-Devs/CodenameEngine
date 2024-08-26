@@ -6,16 +6,14 @@ class ModSubState extends MusicBeatSubstate {
 
 	//New Constructor
 	public function new(stateName:String, ?jsonData:Dynamic = null) {
-		
 		//State Name
-		if (stateName != null){
+		if (stateName != null)
 			lastName = stateName;
-		}
-		
+
 		//Extra Data
-		if(jsonData != null){
+		if(jsonData != null)
 			data = jsonData;
-		}
+
 		super(true, lastName);
 	}
 }
