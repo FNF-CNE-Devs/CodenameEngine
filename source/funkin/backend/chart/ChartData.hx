@@ -42,6 +42,7 @@ typedef ChartStrumLine = {
 	var ?strumScale:Float;
 	var ?scrollSpeed:Float;
 	var ?vocalsSuffix:String;
+	var ?keyCount:Int; // default=4
 
 	var ?strumLinePos:Float; // Backwards compatability
 }

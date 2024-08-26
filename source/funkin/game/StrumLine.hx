@@ -302,7 +302,7 @@ class StrumLine extends FlxTypedGroup<Strum> {
 	public function createStrum(i:Int, ?animPrefix:String) {
 		if (animPrefix == null)
 			animPrefix = strumAnimPrefix[i % strumAnimPrefix.length];
-		var babyArrow:Strum = new Strum(startingPos.x + ((Note.swagWidth * strumScale) * i), startingPos.y);
+		var babyArrow:Strum = new Strum(startingPos.x + ((Note.swagWidth * strumScale * (4 / (data.keyCount != null ? data.keyCount : 4))) * i), startingPos.y);
 		babyArrow.ID = i;
 
 		if(data.scrollSpeed != null)

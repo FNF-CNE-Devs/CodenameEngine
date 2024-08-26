@@ -685,7 +685,7 @@ class PlayState extends MusicBeatState
 
 		// HUD INITIALIZATION & CAMERA INITIALIZATION
 		#if REGION
-		var event = EventManager.get(AmountEvent).recycle(4);
+		var event = EventManager.get(AmountEvent).recycle(null);
 		if (!scripts.event("onPreGenerateStrums", event).cancelled) {
 			generateStrums(event.amount);
 			scripts.event("onPostGenerateStrums", event);
@@ -1016,9 +1016,12 @@ class PlayState extends MusicBeatState
 	}
 
 	@:dox(hide)
-	private inline function generateStrums(amount:Int = 4):Void
-		for(p in strumLines)
-			p.generateStrums(amount);
+	private inline function generateStrums(amount:Null<Int> = null):Void {
+		for(p in strumLines) {
+			var kc = amount != null ? amount : p.data.keyCount;
+			p.generateStrums(kc);
+		}
+	}
 
 	@:dox(hide)
 	override function openSubState(SubState:FlxSubState)

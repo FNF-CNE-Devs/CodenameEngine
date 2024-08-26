@@ -23,6 +23,17 @@ class CharterStrumline extends UISprite {
 
 	public var vocals:FlxSound;
 
+	public var keyCount:Int = 4;
+	public var startingID(get, null):Int;
+	public function get_startingID():Int {
+		var index = Charter.instance.strumLines.members.indexOf(this);
+		if (index < 1) return 0; //-1 or 0
+
+		var v:Int = 0;
+		for (i in 0...index) v += Charter.instance.strumLines.members[i].keyCount;
+		return v;
+	}
+
 	public var selectedWaveform(default, set):Int = -1;
 	public function set_selectedWaveform(value:Int):Int {
 		if (value == -1) waveformShader = null;
@@ -45,14 +56,19 @@ class CharterStrumline extends UISprite {
 
 		var icons = strumLine.characters != null ? strumLine.characters : [];
 
+		keyCount = strumLine.keyCount != null ? strumLine.keyCount : 4;
+
 		healthIcons = new FlxSpriteGroup(x, y);
 
+		var maxCol = icons.length < 4 ? icons.length : 4;
+		var maxRow = Math.floor((icons.length-1) / 4) + 1;
 		for (i=>icon in icons) {
 			var healthIcon = new HealthIcon(Character.getIconFromCharName(icon));
-			healthIcon.scale.x = healthIcon.scale.y = 0.6 - (icons.length / 20);
+			healthIcon.scale.x = healthIcon.scale.y = Math.max((0.6 - (icons.length / 20)), 0.35);
 			healthIcon.updateHitbox();
-			healthIcon.x = FlxMath.lerp(0, icons.length * 20, (icons.length-1 != 0 ? i / (icons.length-1) : 0));
-			healthIcon.y = draggable ? 29 : 7;
+
+			healthIcon.x = FlxMath.lerp(0, Math.min(icons.length * 20, 120), (maxCol-1 != 0 ? (i % 4) / (maxCol-1) : 0));
+			healthIcon.y = (draggable ? 29 : 7) + FlxMath.lerp(0, Math.min(maxRow * 15, 60), (maxRow-1 != 0 ? Math.floor(i / 4) / (maxRow-1) : 0));
 			healthIcon.alpha = strumLine.visible ? 1 : 0.4;
 			healthIcons.add(healthIcon);
 		}
@@ -82,7 +98,7 @@ class CharterStrumline extends UISprite {
 	public override function update(elapsed:Float) {
 		if (FlxG.keys.justPressed.K) draggable = !draggable;
 
-		healthIcons.follow(this, ((40 * 4) - healthIcons.width) / 2, 7 + (__healthYOffset = FlxMath.lerp(__healthYOffset, draggable ? 8 : 0, 1/20)));
+		healthIcons.follow(this, ((40 * keyCount) - healthIcons.width) / 2, 7 + (__healthYOffset = FlxMath.lerp(__healthYOffset, draggable ? 8 : 0, 1/20)));
 
 		draggingSprite.selectable = draggable;
 		UIState.state.updateSpriteRect(draggingSprite);
@@ -91,7 +107,7 @@ class CharterStrumline extends UISprite {
 		draggingSprite.scale.set(dragScale, dragScale);
 		draggingSprite.updateHitbox();
 
-		draggingSprite.follow(this, (160/2) - (draggingSprite.width/2), 6 + (__draggingYOffset = FlxMath.lerp(__draggingYOffset, draggable ? 3 : 0, 1/12)));
+		draggingSprite.follow(this, ((keyCount*40)/2) - (draggingSprite.width/2), 6 + (__draggingYOffset = FlxMath.lerp(__draggingYOffset, draggable ? 3 : 0, 1/12)));
 		var fullAlpha:Float = UIState.state.isOverlapping(draggingSprite, @:privateAccess draggingSprite.__rect) || dragging ? 0.9 : 0.35;
 		draggingSprite.alpha = FlxMath.lerp(draggingSprite.alpha, draggable ? fullAlpha : 0, 1/12);
 		button.follow(this, 0, 95);
@@ -101,15 +117,19 @@ class CharterStrumline extends UISprite {
 
 	public function updateInfo() {
 		var icons = strumLine.characters != null ? strumLine.characters : [];
+		keyCount = strumLine.keyCount != null ? strumLine.keyCount : 4;
 
 		healthIcons.clear();
 
+		var maxCol = icons.length < 4 ? icons.length : 4;
+		var maxRow = Math.floor((icons.length-1) / 4) + 1;
 		for (i=>icon in icons) {
 			var healthIcon = new HealthIcon(Character.getIconFromCharName(icon));
-			healthIcon.scale.x = healthIcon.scale.y = 0.6 - (icons.length / 20);
+			healthIcon.scale.x = healthIcon.scale.y = Math.max((0.6 - (icons.length / 20)), 0.35);
 			healthIcon.updateHitbox();
-			healthIcon.x = FlxMath.lerp(0, icons.length * 20, (icons.length-1 != 0 ? i / (icons.length-1) : 0));
-			healthIcon.y = draggable ? 14 : 7;
+
+			healthIcon.x = FlxMath.lerp(0, Math.min(icons.length * 20, 120), (maxCol-1 != 0 ? (i % 4) / (maxCol-1) : 0));
+			healthIcon.y = (draggable ? 14 : 7) + FlxMath.lerp(0, Math.min(maxRow * 15, 60), (maxRow-1 != 0 ? Math.floor(i / 4) / (maxRow-1) : 0));
 			healthIcon.alpha = strumLine.visible ? 1 : 0.4;
 			healthIcons.add(healthIcon);
 		}
@@ -125,13 +145,13 @@ class CharterStrumlineOptions extends UITopMenuButton {
 	public function new(parent:CharterStrumline) {
 		super(0, 95, null, "Options ↓", []);
 		strLine = parent;
-		bWidth = 40 * 4;
-		this.label.fieldWidth = bWidth;
 	}
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 		alpha = FlxMath.lerp(1/20, 1, alpha); // so that instead of 0% it is 33% visible
+		bWidth = 40 * strLine.keyCount;
+		this.label.fieldWidth = bWidth;
 	}
 
 	public override function openContextMenu() {
