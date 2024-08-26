@@ -2,17 +2,16 @@ package funkin.backend.scripting;
 
 class ModSubState extends MusicBeatSubstate {
 	public static var lastName:String = null;
-	public static var data:Dynamic = [];
+	public static var data:Dynamic = null;
 
-	//New Constructor
-	public function new(stateName:String, ?jsonData:Dynamic = null) {
-		//State Name
-		if (stateName != null)
-			lastName = stateName;
+	public function new(_stateName:String, ?_data:Dynamic) {
+		if(_stateName != null && _stateName != lastName) {
+			lastName = _stateName;
+			data = null;
+		}
 
-		//Extra Data
-		if(jsonData != null)
-			data = jsonData;
+		if(_data != null)
+			data = _data;
 
 		super(true, lastName);
 	}
