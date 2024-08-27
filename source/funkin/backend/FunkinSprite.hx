@@ -99,7 +99,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		if (isAnimFinished()) {
 			var name = getAnimName() + '-loop';
 			if (animation.exists(name))
-				playAnim(name, false, lastAnimContext, isCurAnimReversed());
+				playAnim(name, false, lastAnimContext);
 		}
 
 		if (animateAtlas != null)
@@ -345,7 +345,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		return name;
 	}
 
-	public inline function isCurAnimReversed():Bool {
+	public inline function isAnimReversed():Bool {
 		return animateAtlas != null ? animateAtlas.anim.reversed : animation.curAnim != null ? animation.curAnim.reversed : false;
 	}
 
