@@ -96,7 +96,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		super.update(elapsed);
 
 		// hate how it looks like but hey at least its optimized and fast  - Nex
-		if (isAnimFinished()) {
+		if (!debugMode && isAnimFinished()) {
 			var name = getAnimName() + '-loop';
 			if (animation.exists(name))
 				playAnim(name, false, lastAnimContext);
