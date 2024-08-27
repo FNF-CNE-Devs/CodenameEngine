@@ -2,7 +2,7 @@ package funkin.backend.scripting;
 
 class ModState extends MusicBeatState {
 	public static var lastName:String = null;
-	public static var data:Dynamic = null;
+	public static var data:Dynamic = null; //Use this to pass data between states (Optional)
 
 	public function new(_stateName:String, ?_data:Dynamic) {
 		if(_stateName != null && _stateName != lastName) {
