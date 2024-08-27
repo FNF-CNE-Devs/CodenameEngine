@@ -94,8 +94,14 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		if (isAnimFinished() && animation.exists(getAnimName() + '-loop'))
-			playAnim(getAnimName() + '-loop', false, lastAnimContext);
+
+		// hate how it looks like but hey at least its optimized and fast  - Nex
+		if (isAnimFinished()) {
+			var name = getAnimName() + '-loop';
+			if (animation.exists(name))
+				playAnim(name, false, lastAnimContext, isCurAnimReversed());
+		}
+
 		if (animateAtlas != null)
 			animateAtlas.update(elapsed);
 	}
@@ -337,6 +343,10 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 				name = animation.curAnim.name;
 		}
 		return name;
+	}
+
+	public inline function isCurAnimReversed():Bool {
+		return animateAtlas != null ? animateAtlas.anim.reversed : animation.curAnim != null ? animation.curAnim.reversed : false;
 	}
 
 	public inline function removeAnimation(name:String) {
