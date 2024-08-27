@@ -194,8 +194,10 @@ class CharacterInfoScreen extends UISubstateWindow {
 			var offset:FlxPoint = character.getAnimOffset(anim.name);
 			animXml.set("x", Std.string(offset.x));
 			animXml.set("y", Std.string(offset.y));
+			offset.put();
+
 			if (anim.indices.length > 0)
-				animXml.set("indices", anim.indices.join(","));
+				animXml.set("indices", CoolUtil.formatNumberRange(anim.indices));
 			xml.addChild(animXml);
 		}
 
