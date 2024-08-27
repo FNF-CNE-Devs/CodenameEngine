@@ -373,7 +373,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			offset.putWeak();
 
 			if (anim.indices.length > 0)
-				animXml.set("indices", anim.indices.join(","));
+				animXml.set("indices", CoolUtil.formatNumberRange(anim.indices));
 
 			xml.addChild(animXml);
 		}

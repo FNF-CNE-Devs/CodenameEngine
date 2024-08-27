@@ -209,14 +209,7 @@ class XMLUtil {
 		if (anim.has.y) animData.y = Std.parseFloat(anim.att.y).getDefault(animData.y);
 		if (anim.has.loop) animData.loop = anim.att.loop == "true";
 		if (anim.has.forced) animData.forced = anim.att.forced == "true";
-		if (anim.has.indices) {
-			var indicesSplit = anim.att.indices.split(",");
-			for(indice in indicesSplit) {
-				var i = Std.parseInt(indice.trim());
-				if (i != null)
-					animData.indices.push(i);
-			}
-		}
+		if (anim.has.indices) animData.indices = CoolUtil.parseNumberRange(anim.att.indices);
 
 		return animData;
 	}
