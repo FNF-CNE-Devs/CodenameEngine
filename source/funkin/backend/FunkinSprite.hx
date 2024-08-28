@@ -94,16 +94,15 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+		if (animateAtlas != null)
+			animateAtlas.update(elapsed);
 
 		// hate how it looks like but hey at least its optimized and fast  - Nex
 		if (!debugMode && isAnimFinished()) {
 			var name = getAnimName() + '-loop';
-			if (animation.exists(name))
+			if (hasAnimation(name))
 				playAnim(name, false, lastAnimContext);
 		}
-
-		if (animateAtlas != null)
-			animateAtlas.update(elapsed);
 	}
 
 	public function loadSprite(path:String, Unique:Bool = false, Key:String = null)
