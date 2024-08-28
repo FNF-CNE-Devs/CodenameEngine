@@ -22,6 +22,7 @@ class ModState extends MusicBeatState {
 	public function new(_stateName:String, ?_data:Dynamic) {
 		if(_stateName != null && _stateName != lastName) {
 			lastName = _stateName;
+			data = null;
 		}
 
 		if(_data != null)
