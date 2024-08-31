@@ -10,24 +10,29 @@ class ModSubState extends MusicBeatSubstate {
 	/**
 	* Optional extra data.
 	*/
-	public static var data:Dynamic = null;
+	public var data:Dynamic = null;
+	/**
+	* Last Optional extra data.
+	*/
+	public static var lastData:Dynamic = null;
 
 	/**
 	* ModSubState Constructor.
 	* Inherits from MusicBeatSubstate and allows the execution of an HScript from assets/data/states passed via parameters.
-	* 
+	*
 	* @param _stateName Name or path to a HScript file from assets/data/states.
-	* @param _data Optional extra Dynamic data passed from a previous state (JSON suggested). 
+	* @param _data Optional extra Dynamic data passed from a previous state (JSON suggested).
 	*/
 	public function new(_stateName:String, ?_data:Dynamic) {
 		if(_stateName != null && _stateName != lastName) {
 			lastName = _stateName;
-			data = null;
+			lastData = null;
 		}
 
 		if(_data != null)
-			data = _data;
+			lastData = _data;
 
+		data = lastData;
 		super(true, lastName);
 	}
 }
