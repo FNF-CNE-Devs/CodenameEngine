@@ -6,15 +6,15 @@ class ModState extends MusicBeatState {
 	* Name of HScript file in assets/data/states.
 	*/
 	public static var lastName:String = null;
+	/**
+	* Last Optional extra data.
+	*/
+	public static var lastData:Dynamic = null;
 
 	/**
 	* Optional extra data.
 	*/
 	public var data:Dynamic = null;
-	/**
-	* Last Optional extra data.
-	*/
-	public static var lastData:Dynamic = null;
 
 	/**
 	* ModState Constructor.
