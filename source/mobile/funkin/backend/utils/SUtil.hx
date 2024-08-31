@@ -86,8 +86,8 @@ class SUtil
 			if (!FileSystem.exists('saves'))
 				FileSystem.createDirectory('saves');
 
-			File.saveContent('saves/' + fileName + fileExtension, fileData);
-			NativeAPI.showMessageBox("Success!", fileName + " file has been saved", MSG_INFORMATION);
+			File.saveContent('saves/$fileName', fileData);
+			NativeAPI.showMessageBox("Success!", '$fileName has been saved.', MSG_INFORMATION);
 		}
 		catch (e:haxe.Exception)
 			trace('File couldn\'t be saved. (${e.message})');
