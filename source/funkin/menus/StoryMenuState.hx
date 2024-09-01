@@ -199,7 +199,7 @@ class StoryMenuState extends MusicBeatState {
 			}
 		}
 
-		intendedScore = FunkinSave.getWeekHighscore(weeks[curWeek].name, weeks[curWeek].difficulties[curDifficulty]).score;
+		intendedScore = FunkinSave.getWeekHighscore(weeks[curWeek].id, weeks[curWeek].difficulties[curDifficulty]).score;
 	}
 
 	public function loadXMLs() {
@@ -344,8 +344,8 @@ class StoryMenuState extends MusicBeatState {
 }
 
 typedef WeekData = {
-	var name:String;
-	var id:String;
+	var name:String;  // name SHOULD NOT be used for loading week highscores, its just the name on the right side of the week, remember that next time!!  - Nex
+	var id:String;  // id IS instead for saving and loading!!  - Nex
 	var sprite:String;
 	var chars:Array<String>;
 	var songs:Array<WeekSong>;
