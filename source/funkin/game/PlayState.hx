@@ -363,7 +363,7 @@ class PlayState extends MusicBeatState
 	 * Speed at which the game camera zoom lerps to.
 	 */
 	public var camGameZoomLerp:Float = 0.05;
-	
+
 	/**
 	 * Camera zoom at which the hud lerps to.
 	 */
@@ -1271,7 +1271,7 @@ class PlayState extends MusicBeatState
 				if (Conductor.songPosition >= 0)
 					startSong();
 			}
-		} else {
+		} else if (FlxG.sound.music != null) {
 			var instTime = FlxG.sound.music.time;
 			var isOffsync = vocals.time != instTime || [for(strumLine in strumLines.members) strumLine.vocals.time != instTime].contains(true);
 			__vocalOffsetViolation = Math.max(0, __vocalOffsetViolation + (isOffsync ? elapsed : -elapsed / 2));

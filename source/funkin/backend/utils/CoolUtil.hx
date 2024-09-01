@@ -777,6 +777,91 @@ class CoolUtil
 		var file = new haxe.io.Path(file);
 		return file.file;
 	}
+
+	/**
+	 * Converts a string of "1..3,5,7..9,8..5" into an array of numbers like [1,2,3,5,7,8,9,8,7,6,5]
+	 * @param input String to parse
+	 * @return Array of numbers
+	 */
+	public static function parseNumberRange(input:String):Array<Int> {
+		var result:Array<Int> = [];
+		var parts:Array<String> = input.split(",");
+
+		for (part in parts) {
+			part = part.trim();
+			var idx = part.indexOf("..");
+			if (idx != -1) {
+				var start = Std.parseInt(part.substring(0, idx).trim());
+				var end = Std.parseInt(part.substring(idx + 2).trim());
+
+				if(start == null || end == null) {
+					continue;
+				}
+
+				if (start < end) {
+					for (j in start...end + 1) {
+						result.push(j);
+					}
+				} else {
+					for (j in end...start + 1) {
+						result.push(start + end - j);
+					}
+				}
+			} else {
+				var num = Std.parseInt(part);
+				if (num != null) {
+					result.push(num);
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Converts an array of numbers into a string of ranges.
+	 * Example: [1,2,3,5,7,8,9,8,7,6,5] -> "1..3,5,7..9,8..5"
+	 * @param numbers Array of numbers
+	 * @return String representing the ranges
+	 */
+	public static function formatNumberRange(numbers:Array<Int>, seperator:String = ","):String {
+		if (numbers.length == 0) return "";
+
+		var result:Array<String> = [];
+		var i = 0;
+
+		while (i < numbers.length) {
+			var start = numbers[i];
+			var end = start;
+			var direction = 0; // 0: no sequence, 1: increasing, -1: decreasing
+
+			if (i + 1 < numbers.length) { // detect direction of sequence
+				if (numbers[i + 1] == end + 1) {
+					direction = 1;
+				} else if (numbers[i + 1] == end - 1) {
+					direction = -1;
+				}
+			}
+
+			if(direction != 0) {
+				while (i + 1 < numbers.length && (numbers[i + 1] == end + direction)) {
+					end = numbers[i + 1];
+					i++;
+				}
+			}
+
+			if (start == end) { // no direction
+				result.push('${start}');
+			} else if (start + direction == end) { // 1 step increment
+				result.push('${start},${end}');
+			} else { // store as range
+				result.push('${start}..${end}');
+			}
+
+			i++;
+		}
+
+		return result.join(seperator);
+	}
 }
 
 /**
