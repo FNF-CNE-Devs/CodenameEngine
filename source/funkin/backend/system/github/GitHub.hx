@@ -8,13 +8,13 @@ import haxe.Exception;
 // TODO: Document further and perhaps make this a Haxelib.
 class GitHub {
 	/**
-	 * Gets all the commits from a specific GitHub repository using the GitHub API.
+	 * Gets the latest 30 commits from a specific GitHub repository using the GitHub API.
 	 * @param user The user/organization that owns the repository
 	 * @param repository The repository name
 	 * @param onError Error Callback
 	 * @return Commits
 	 */
-	public static function getCommits(user:String, repository:String, ?onError:Exception->Void):Array<GitHubRelease> {
+	public static function getLatestCommits(user:String, repository:String, ?onError:Exception->Void):Array<GitHubRelease> {
 		#if GITHUB_API
 		try {
 			var data = Json.parse(HttpUtil.requestText('https://api.github.com/repos/${user}/${repository}/commits'));
@@ -75,6 +75,33 @@ class GitHub {
 		#end
 		return [];
 	}
+	
+	/**
+	 * Gets the commit count from a specific GitHub repository using the GitHub API.
+	 * @param user The user/organization that owns the repository
+	 * @param repository The repository name
+	 * @param onError Error Callback
+	 * @return Releases
+	 */
+	public static function getCommitCount(user:String, repository:String, ?onError:Exception->Void):Int {
+		#if GITHUB_API
+		try {
+			var commitCount = 0;
+			var data = getContributors(user, repository, onError);
+			if (!(data is Array))
+				throw __parseGitHubException(data);
+			for (contribution in data) {
+				commitCount += contribution.contributions;
+			}
+			return commitCount;
+		} catch(e) {
+			if (onError != null)
+				onError(e);
+		}
+		#end
+		return 0;
+	}
+
 
 	/**
 	 * Gets a specific GitHub organization using the GitHub API.
