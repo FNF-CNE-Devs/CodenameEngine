@@ -32,8 +32,8 @@ class FunkinParentDisabler extends FlxBasic {
 			FlxTimer.globalManager._timers = [];
 
 			// cameras
-			__cameras = [for(c in FlxG.cameras.list) if (c.active) c];
-			for(c in __cameras) c.active = false;
+			__cameras = [for(c in FlxG.cameras.list) if (!c.paused) c];
+			for(c in __cameras) c.paused = true;
 
 			// sounds
 			__sounds = [for(s in FlxG.sound.list) if (s.playing) s];
@@ -41,9 +41,6 @@ class FunkinParentDisabler extends FlxBasic {
 		}
 	}
 
-	public override function update(elapsed:Float) {
-		@:privateAccess for(c in __cameras) c.updateFlashSpritePosition();
-	}
 	public override function draw() {}
 
 	public function reset() {
@@ -63,7 +60,7 @@ class FunkinParentDisabler extends FlxBasic {
 				for(t in __tweens) FlxTween.globalManager._tweens.push(t);
 				for(t in __timers) FlxTimer.globalManager._timers.push(t);
 			}
-			for(c in __cameras) c.active = true;
+			for(c in __cameras) c.paused = false;
 			for(s in __sounds) s.play();
 		}
 	}
