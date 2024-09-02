@@ -73,7 +73,8 @@ function confText(text) {
 }
 
 function destroy() {
-	FlxG.cameras.remove(pauseCam);
+	if(FlxG.cameras.list.contains(pauseCam))
+		FlxG.cameras.remove(pauseCam);
 }
 
 var canDoShit = true;
