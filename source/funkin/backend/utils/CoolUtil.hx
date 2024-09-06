@@ -706,7 +706,7 @@ class CoolUtil
 	 */
 	@:noUsing public static inline function openURL(url:String) {
 		#if linux
-		Sys.command('/usr/bin/xdg-open', [url, "&"]);
+		Sys.command('/usr/bin/xdg-open', [url]);
 		#else
 		FlxG.openURL(url);
 		#end
