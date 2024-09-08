@@ -100,9 +100,9 @@ final class NoteHitEvent extends CancellableEvent {
 	 */
 	public var ratingAntialiasing:Bool = true;
 	/**
-	 * Whenever the animation should be forced to play.
+	 * Whenever the animation should be forced to play (if it's null it will be forced based on the sprite's data xml, if it has one).
 	 */
-	public var forceAnim:Bool = true;
+	public var forceAnim:Null<Bool> = true;
 
 	/**
 	 * Prevents the default sing animation from being played.
