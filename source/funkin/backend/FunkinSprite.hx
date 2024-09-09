@@ -101,7 +101,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		if (!debugMode && isAnimFinished()) {
 			var name = getAnimName() + '-loop';
 			if (hasAnimation(name))
-				playAnim(name, false, lastAnimContext);
+				playAnim(name, null, lastAnimContext);
 		}
 	}
 
@@ -133,7 +133,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 			// TODO: find a solution without countedBeat
 			var anim = beatAnims[FlxMath.wrap(countedBeat++, 0, beatAnims.length - 1)];
 			if (anim.name != null && anim.name != "null" && anim.name != "none")
-				playAnim(anim.name, anim.forced);
+				playAnim(anim.name);
 		}
 	}
 
@@ -292,10 +292,15 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	#if REGION
 	public var lastAnimContext:PlayAnimContext = DANCE;
 
-	public function playAnim(AnimName:String, Force:Bool = false, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
+	public function playAnim(AnimName:String, ?Force:Null<Bool>, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		if (AnimName == null)
 			return;
+
+		if (Force == null) {
+			var anim = animDatas.get(AnimName);
+			Force = anim != null && anim.forced;
+		}
 
 		if (animateAtlas != null)
 		{
