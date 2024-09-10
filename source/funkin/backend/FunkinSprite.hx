@@ -133,7 +133,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 			// TODO: find a solution without countedBeat
 			var anim = beatAnims[FlxMath.wrap(countedBeat++, 0, beatAnims.length - 1)];
 			if (anim.name != null && anim.name != "null" && anim.name != "none")
-				playAnim(anim.name);
+				playAnim(anim.name, anim.forced);
 		}
 	}
 
