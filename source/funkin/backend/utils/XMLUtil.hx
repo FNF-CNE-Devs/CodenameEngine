@@ -188,7 +188,7 @@ class XMLUtil {
 		return loadSpriteFromXML(Type.createInstance(cl, args), node, parentFolder, defaultAnimType);
 	}
 
-	public static function extractAnimFromXML(anim:Access, animType:XMLAnimType = NONE, loop:Bool = false, ?sprite:FunkinSprite):AnimData {
+	public static function extractAnimFromXML(anim:Access, animType:XMLAnimType = NONE, loop:Bool = false):AnimData {
 		var animData:AnimData = {
 			name: null,
 			anim: null,
