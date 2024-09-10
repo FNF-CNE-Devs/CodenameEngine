@@ -283,6 +283,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public inline function buildCharacter(xml:Access) {
 		this.xml = xml; // Modders wassup :D
 		sprite = curCharacter;
+		spriteAnimType = BEAT;
 
 		if (xml.x.exists("isPlayer")) playerOffsets = (xml.x.get("isPlayer") == "true");
 		if (xml.x.exists("x")) globalOffset.x = Std.parseFloat(xml.x.get("x"));
