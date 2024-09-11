@@ -207,7 +207,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	}
 
 	public var singAnims = ["singLEFT", "singDOWN", "singUP", "singRIGHT"];
-	public function playSingAnim(direction:Int, suffix:String = "", Context:PlayAnimContext = SING, ?Force:Bool = true, Reversed:Bool = false, Frame:Int = 0) {
+	public function playSingAnim(direction:Int, suffix:String = "", Context:PlayAnimContext = SING, ?Force:Null<Bool> = null, Reversed:Bool = false, Frame:Int = 0) {
 		var event = EventManager.get(DirectionAnimEvent).recycle(singAnims[direction % singAnims.length] + suffix, direction, suffix, Context, Reversed, Frame, Force);
 		script.call("onPlaySingAnim", [event]);
 		if (!event.cancelled)
@@ -283,6 +283,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public inline function buildCharacter(xml:Access) {
 		this.xml = xml; // Modders wassup :D
 		sprite = curCharacter;
+		spriteAnimType = BEAT;
 
 		if (xml.x.exists("isPlayer")) playerOffsets = (xml.x.get("isPlayer") == "true");
 		if (xml.x.exists("x")) globalOffset.x = Std.parseFloat(xml.x.get("x"));

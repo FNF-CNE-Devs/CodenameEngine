@@ -1932,7 +1932,7 @@ class PlayState extends MusicBeatState
 	}
 }
 
-class ComboRating {
+final class ComboRating {
 	public var percent:Float;
 	public var rating:String;
 	public var color:FlxColor;
