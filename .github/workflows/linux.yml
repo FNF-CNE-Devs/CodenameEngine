@@ -38,12 +38,12 @@ jobs:
       - name: Tar files
         run: tar -zcvf CodenameEngine.tar.gz -C export/release/linux/bin .
       - name: Uploading artifact (entire build)
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: Codename Engine
           path: CodenameEngine.tar.gz
       # - name: Uploading artifact (executable)
-      #   uses: actions/upload-artifact@v2
+      #   uses: actions/upload-artifact@v4
       #   with:
       #     name: Update-Linux
       #     path: export/release/linux/bin/CodenameEngine
