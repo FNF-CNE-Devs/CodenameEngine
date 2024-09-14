@@ -18,7 +18,7 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 		for (camera in cameras)
 		{
 			rMatrix.identity();
-			rMatrix.translate(-limb.offset.x, -limb.offset.y);
+			limb.prepareMatrix(rMatrix, FlxFrameAngle.ANGLE_0, _checkFlipX() != camera.flipX, _checkFlipY() != camera.flipY);
 			rMatrix.concat(_rMatrix);
 			if (!camera.visible || !camera.exists || !limbOnScreen(limb, _rMatrix, camera))
 				return;
