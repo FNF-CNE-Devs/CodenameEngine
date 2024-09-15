@@ -75,8 +75,8 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: true
-          automatic_release_tag: "dev-ef00491"
-          title: "DevBuild ef00491"
+          automatic_release_tag: "dev-ca565de"
+          title: "DevBuild ca565de"
           files: |
             /home/runner/*.apk
             /home/runner/*.zip
