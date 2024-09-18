@@ -19,7 +19,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 	public var stageScript:Script;
 	public var state:FlxState;
 	public var characterPoses:Map<String, StageCharPos> = [];
-	public var xmlImportedScripts:Map<Script, Bool> = [];
+	public var xmlImportedScripts:Map<String, Bool> = [];
 
 	private var spritesParentFolder = "";
 
@@ -143,11 +143,11 @@ class Stage extends FlxBasic implements IBeatReceiver {
 						var folder = node.getAtt("folder").getDefault("data/scripts/");
 						if (!folder.endsWith("/")) folder += "/";
 
-						var path = folder + node.getAtt("script");
-						var daScript = Script.create(Paths.script(path));
-						if (daScript is DummyScript) throw 'Script at ${path} does not exist.';
+						var path = Paths.script(folder + node.getAtt("script"));
+						var daScript = Script.create(path);
+						if (daScript is DummyScript) Logs.trace('Script at ${path} does not exist.', ERROR);
 						else {
-							xmlImportedScripts.set(daScript, node.getAtt("isShortLived") == "true");
+							xmlImportedScripts.set(path, node.getAtt("isShortLived") == "true");
 							PlayState.instance.scripts.add(daScript);
 							daScript.load();
 						}
@@ -200,9 +200,12 @@ class Stage extends FlxBasic implements IBeatReceiver {
 		if (event != null) PlayState.instance.scripts.event("onPostStageCreation", event);
 
 		// shortlived scripts destroy when the stage finishes setting up  - Nex
-		for (s=>b in xmlImportedScripts) if (b) {
-			PlayState.instance.scripts.remove(s);
-			s.destroy();
+		for (p=>b in xmlImportedScripts) if (b) {
+			var script = PlayState.instance.scripts.getByPath(p);
+			if (script == null) continue;
+
+			PlayState.instance.scripts.remove(script);
+			script.destroy();
 		}
 	}
 
