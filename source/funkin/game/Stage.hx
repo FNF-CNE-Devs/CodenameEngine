@@ -6,6 +6,7 @@ import flixel.math.FlxPoint;
 import flixel.FlxState;
 import haxe.xml.Access;
 import funkin.backend.system.interfaces.IBeatReceiver;
+import funkin.backend.scripting.DummyScript;
 import funkin.backend.scripting.Script;
 import haxe.io.Path;
 
@@ -18,6 +19,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 	public var stageScript:Script;
 	public var state:FlxState;
 	public var characterPoses:Map<String, StageCharPos> = [];
+	public var xmlImportedScripts:Map<Script, Bool> = [];
 
 	private var spritesParentFolder = "";
 
@@ -45,6 +47,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 			stageScript.load();
 		}
 
+		var event = null;
 		if (stageXML != null) {
 			if (PlayState.instance != null) {
 				var parsed:Null<Float>;
@@ -68,8 +71,8 @@ class Stage extends FlxBasic implements IBeatReceiver {
 			}
 
 			if (PlayState.instance != null) {
-				var event = PlayState.instance.scripts.event("onStageXMLParsed", EventManager.get(StageXMLEvent).recycle(this, stageXML, elems));
-				elems = event.elems;
+				event = EventManager.get(StageXMLEvent).recycle(this, stageXML, elems);
+				elems = PlayState.instance.scripts.event("onStageXMLParsed", event).elems;
 			}
 
 			for(node in elems) {
@@ -86,7 +89,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 						state.add(spr);
 						spr;
 					case "box" | "solid":
-						if ( !node.has.name || !node.has.width || !node.has.height) continue;
+						if (!node.has.name || !node.has.width || !node.has.height) continue;
 
 						var spr = new FlxSprite(
 							(node.has.x) ? Std.parseFloat(node.att.x).getDefault(0) : 0,
@@ -134,6 +137,22 @@ class Stage extends FlxBasic implements IBeatReceiver {
 						);
 						PlayState.instance.add(PlayState.instance.comboGroup);
 						PlayState.instance.comboGroup;
+					case "use-extension" | "extension" | "ext":
+						if (!node.has.script || PlayState.instance == null) continue;
+
+						var folder = node.getAtt("folder").getDefault("data/scripts/");
+						if (!folder.endsWith("/")) folder += "/";
+
+						var path = folder + node.getAtt("script");
+						var daScript = Script.create(Paths.script(path));
+						if (daScript is DummyScript) throw 'Script at ${path} does not exist.';
+						else {
+							xmlImportedScripts.set(daScript, node.getAtt("isShortLived") == "true");
+							PlayState.instance.scripts.add(daScript);
+							daScript.load();
+						}
+
+						null;
 					default: null;
 				}
 
@@ -173,8 +192,17 @@ class Stage extends FlxBasic implements IBeatReceiver {
 			});
 
 		if (PlayState.instance == null) return;
-		for(k=>e in stageSprites) {
+
+		for (k=>e in stageSprites)
 			stageScript.set(k, e);
+
+		// idk lemme check anyways just in case scripts did smth  - Nex
+		if (event != null) PlayState.instance.scripts.event("onPostStageCreation", event);
+
+		// shortlived scripts destroy when the stage finishes setting up  - Nex
+		for (s=>b in xmlImportedScripts) if (b) {
+			PlayState.instance.scripts.remove(s);
+			s.destroy();
 		}
 	}
 
