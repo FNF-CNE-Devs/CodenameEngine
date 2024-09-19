@@ -13,6 +13,7 @@ import haxe.io.Path;
 using StringTools;
 
 class Stage extends FlxBasic implements IBeatReceiver {
+	public var stageName:String = "";
 	public var stageXML:Access;
 	public var stagePath:String;
 	public var stageSprites:Map<String, FlxSprite> = [];
@@ -37,11 +38,8 @@ class Stage extends FlxBasic implements IBeatReceiver {
 		this.state = state;
 
 		stagePath = Paths.xml('stages/$stage');
-		try {
-			if (Assets.exists(stagePath)) stageXML = new Access(Xml.parse(Assets.getText(stagePath)).firstElement());
-		} catch(e) {
-			Logs.trace('Couldn\'t load stage "$stage": ${e.message}', ERROR);
-		}
+		try if (Assets.exists(stagePath)) stageXML = new Access(Xml.parse(Assets.getText(stagePath)).firstElement())
+		catch(e) Logs.trace('Couldn\'t load stage "$stage": ${e.message}', ERROR);
 
 		if (PlayState.instance != null) {
 			stageScript = Script.create(Paths.script('data/stages/$stage'));
@@ -51,12 +49,13 @@ class Stage extends FlxBasic implements IBeatReceiver {
 
 		var event = null;
 		if (stageXML != null) {
+			stageName = stageXML.getAtt("name").getDefault(stage);
+
 			if (PlayState.instance != null) {
 				var parsed:Null<Float>;
 				if(stageXML.has.startCamPosX && (parsed = Std.parseFloat(stageXML.att.startCamPosX)) != null) PlayState.instance.camFollow.x = parsed;
 				if(stageXML.has.startCamPosY && (parsed = Std.parseFloat(stageXML.att.startCamPosY)) != null) PlayState.instance.camFollow.y = parsed;
 				if(stageXML.has.zoom && (parsed = Std.parseFloat(stageXML.att.zoom)) != null) PlayState.instance.defaultCamZoom = parsed;
-				PlayState.instance.curStage = stageXML.has.name ? stageXML.att.name : stage;
 			}
 			if (stageXML.has.folder) {
 				spritesParentFolder = stageXML.att.folder;
@@ -140,7 +139,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 						PlayState.instance.add(PlayState.instance.comboGroup);
 						PlayState.instance.comboGroup;
 					case "use-extension" | "extension" | "ext":
-						if (XMLImportedScriptInfo.prepeareInfos(node, this) == null) continue;
+						if (XMLImportedScriptInfo.prepareInfos(node, this) == null) continue;
 						null;
 					default: null;
 				}
@@ -325,7 +324,7 @@ class XMLImportedScriptInfo {
 	public function getScript():Script
 		return PlayState.instance == null ? null : PlayState.instance.scripts.getByPath(path);
 
-	public static function prepeareInfos(node:Access, ?stage:Stage):XMLImportedScriptInfo {
+	public static function prepareInfos(node:Access, ?stage:Stage):XMLImportedScriptInfo {
 		if (!node.has.script || PlayState.instance == null) return null;
 
 		var folder = node.getAtt("folder").getDefault("data/scripts/");
