@@ -64,11 +64,8 @@ class Stage extends FlxBasic implements IBeatReceiver {
 
 			var elems = [];
 			for(node in stageXML.elements) {
-				if (node.name == "high-memory" && !Options.lowMemoryMode)
-					for(e in node.elements)
-						elems.push(e);
-				else
-					elems.push(node);
+				if (node.name == "high-memory" && !Options.lowMemoryMode) for(e in node.elements) __pushNcheckNode(elems, e);
+				else __pushNcheckNode(elems, node);
 			}
 
 			if (PlayState.instance != null) {
@@ -139,7 +136,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 						PlayState.instance.add(PlayState.instance.comboGroup);
 						PlayState.instance.comboGroup;
 					case "use-extension" | "extension" | "ext":
-						if (XMLImportedScriptInfo.prepareInfos(node, this) == null) continue;
+						if (__shouldLoadBefore(node) || XMLImportedScriptInfo.prepareInfos(node, this) == null) continue;
 						null;
 					default: null;
 				}
@@ -201,6 +198,15 @@ class Stage extends FlxBasic implements IBeatReceiver {
 			script.destroy();
 		}
 	}
+
+	@:dox(hide) private function __pushNcheckNode(array:Array<Access>, node:Access) {
+		array.push(node);
+		if ((node.name == "use-extension" || node.name == "extension" || node.name == "ext") && __shouldLoadBefore(node))
+			XMLImportedScriptInfo.prepareInfos(node, this);
+	}
+
+	@:dox(hide) private static inline function __shouldLoadBefore(node:Access):Bool
+		return node.getAtt("loadBefore") != "false";
 
 	public function addCharPos(name:String, node:Access, ?nonXMLInfo:StageCharPosInfo):StageCharPos {
 		var charPos = new StageCharPos();
@@ -316,6 +322,7 @@ typedef StageCharPosInfo = {
 class XMLImportedScriptInfo {
 	public var path:String;
 	public var shortLived:Bool = false;
+	public var loadBefore:Bool = true;
 	public var importStageSprites:Bool = false;
 
 	public function new(path:String)
@@ -333,13 +340,16 @@ class XMLImportedScriptInfo {
 		var path = Paths.script(folder + node.getAtt("script"));
 		var daScript = Script.create(path);
 		if (daScript is DummyScript) {
-			Logs.trace('Script at ${path} does not exist.', ERROR);
+			var msg = 'Script Extension at ${path} does not exist';
+			if (stage != null) msg += ' through stage "${stage.stageName}"';
+			Logs.trace(msg + ".", ERROR);
 			return null;
 		}
 
 		var infos = new XMLImportedScriptInfo(daScript.path);
 		infos.shortLived = node.getAtt("isShortLived") == "true";
 		infos.importStageSprites = node.getAtt("importStageSprites") == "true";
+		@:privateAccess infos.loadBefore = Stage.__shouldLoadBefore(node);
 
 		if (stage != null) stage.xmlImportedScripts.push(infos);
 		PlayState.instance.scripts.add(daScript);
