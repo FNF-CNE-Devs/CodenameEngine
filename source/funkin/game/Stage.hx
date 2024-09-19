@@ -19,13 +19,15 @@ class Stage extends FlxBasic implements IBeatReceiver {
 	public var stageScript:Script;
 	public var state:FlxState;
 	public var characterPoses:Map<String, StageCharPos> = [];
-	public var xmlImportedScripts:Map<String, Bool> = [];
+	public var xmlImportedScripts:Array<XMLImportedScriptInfo> = [];
 
 	private var spritesParentFolder = "";
 
-	public function getSprite(name:String) {
+	public function getSprite(name:String)
 		return stageSprites[name];
-	}
+
+	public function setStagesSprites(script:Script)
+		for (k=>e in stageSprites) script.set(k, e);
 
 	public function new(stage:String, ?state:FlxState) {
 		super();
@@ -138,20 +140,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 						PlayState.instance.add(PlayState.instance.comboGroup);
 						PlayState.instance.comboGroup;
 					case "use-extension" | "extension" | "ext":
-						if (!node.has.script || PlayState.instance == null) continue;
-
-						var folder = node.getAtt("folder").getDefault("data/scripts/");
-						if (!folder.endsWith("/")) folder += "/";
-
-						var path = Paths.script(folder + node.getAtt("script"));
-						var daScript = Script.create(path);
-						if (daScript is DummyScript) Logs.trace('Script at ${path} does not exist.', ERROR);
-						else {
-							xmlImportedScripts.set(path, node.getAtt("isShortLived") == "true");
-							PlayState.instance.scripts.add(daScript);
-							daScript.load();
-						}
-
+						if (XMLImportedScriptInfo.prepeareInfos(node, this) == null) continue;
 						null;
 					default: null;
 				}
@@ -193,15 +182,20 @@ class Stage extends FlxBasic implements IBeatReceiver {
 
 		if (PlayState.instance == null) return;
 
-		for (k=>e in stageSprites)
-			stageScript.set(k, e);
+		setStagesSprites(stageScript);
+
+		// i know this for gets run twice under, but its better like this in case a script modifies the short lived ones, i dont wanna save them in an array; more dynamic like this  - Nex
+		for (info in xmlImportedScripts) if (info.importStageSprites) {
+			var script = info.getScript();
+			if (script != null) setStagesSprites(script);
+		}
 
 		// idk lemme check anyways just in case scripts did smth  - Nex
 		if (event != null) PlayState.instance.scripts.event("onPostStageCreation", event);
 
 		// shortlived scripts destroy when the stage finishes setting up  - Nex
-		for (p=>b in xmlImportedScripts) if (b) {
-			var script = PlayState.instance.scripts.getByPath(p);
+		for (info in xmlImportedScripts) if (info.shortLived) {
+			var script = info.getScript();
 			if (script == null) continue;
 
 			PlayState.instance.scripts.remove(script);
@@ -318,4 +312,40 @@ typedef StageCharPosInfo = {
 	var y:Float;
 	var flip:Bool;
 	var scroll:Float;
+}
+
+class XMLImportedScriptInfo {
+	public var path:String;
+	public var shortLived:Bool = false;
+	public var importStageSprites:Bool = false;
+
+	public function new(path:String)
+		this.path = path;
+
+	public function getScript():Script
+		return PlayState.instance == null ? null : PlayState.instance.scripts.getByPath(path);
+
+	public static function prepeareInfos(node:Access, ?stage:Stage):XMLImportedScriptInfo {
+		if (!node.has.script || PlayState.instance == null) return null;
+
+		var folder = node.getAtt("folder").getDefault("data/scripts/");
+		if (!folder.endsWith("/")) folder += "/";
+
+		var path = Paths.script(folder + node.getAtt("script"));
+		var daScript = Script.create(path);
+		if (daScript is DummyScript) {
+			Logs.trace('Script at ${path} does not exist.', ERROR);
+			return null;
+		}
+
+		var infos = new XMLImportedScriptInfo(daScript.path);
+		infos.shortLived = node.getAtt("isShortLived") == "true";
+		infos.importStageSprites = node.getAtt("importStageSprites") == "true";
+
+		if (stage != null) stage.xmlImportedScripts.push(infos);
+		PlayState.instance.scripts.add(daScript);
+		daScript.load();
+
+		return infos;
+	}
 }
