@@ -16,6 +16,7 @@ using StringTools;
 class CharterSelection extends EditorTreeMenu {
 	public var freeplayList:FreeplaySonglist;
 	public var curSong:ChartMetaData;
+	private final button:String = MobileControls.mobileC ? 'A' : 'ACCEPT';
 	public override function create() {
 		bgType = "charter";
 
@@ -26,26 +27,44 @@ class CharterSelection extends EditorTreeMenu {
 		freeplayList = FreeplaySonglist.get(false);
 
 		var list:Array<OptionType> = [
-			for(s in freeplayList.songs) new EditorIconOption(s.name, "Press ACCEPT to choose a difficulty to edit.", s.icon, function() {
+			for(s in freeplayList.songs) new EditorIconOption(s.name, "Press " + button + " to choose a difficulty to edit.", s.icon, function() {
 				curSong = s;
 				var list:Array<OptionType> = [
 					for(d in s.difficulties) if (d != "")
-						new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
+						new TextOption(d, "Press " + button + " to edit the chart for the selected difficulty", function() {
+							#if mobile
+							openSubState(new UIWarningSubstate("Charter: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+								{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+							]));
+							#else
 							FlxG.switchState(new Charter(s.name, d));
+							#end
 						})
 				];
 				list.push(new NewOption("New Difficulty", "New Difficulty", function() {
+					#if mobile
+					openSubState(new UIWarningSubstate("New Difficulty: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+						{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+					]));
+					#else
 					FlxG.state.openSubState(new ChartCreationScreen(saveChart));
+					#end
 				}));
-				optionsTree.add(new OptionsScreen(s.name, "Select a difficulty to continue.", list));
+				optionsTree.add(new OptionsScreen(s.name, "Select a difficulty to continue.", list, 'UP_DOWN', 'A_B'));
 			}, s.parsedColor.getDefault(0xFFFFFFFF))
 		];
 
 		list.insert(0, new NewOption("New Song", "New Song", function() {
+			#if mobile
+			openSubState(new UIWarningSubstate("New Song: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+				{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+			]));
+			#else
 			FlxG.state.openSubState(new SongCreationScreen(saveSong));
+			#end
 		}));
 
-		main = new OptionsScreen("Chart Editor", "Select a song to modify the charts from.", list);
+		main = new OptionsScreen("Chart Editor", "Select a song to modify the charts from.", list, 'UP_DOWN', 'A');
 
 		DiscordUtil.call("onEditorTreeLoaded", ["Chart Editor"]);
 	}
@@ -114,16 +133,28 @@ class CharterSelection extends EditorTreeMenu {
 		if (creation.voicesBytes != null) sys.io.File.saveBytes('$songFolder/song/Voices.${Paths.SOUND_EXT}', creation.voicesBytes);
 		#end
 
-		var option = new EditorIconOption(creation.meta.name, "Press ACCEPT to choose a difficulty to edit.", creation.meta.icon, function() {
+		var option = new EditorIconOption(creation.meta.name, "Press " + button + " to choose a difficulty to edit.", creation.meta.icon, function() {
 			curSong = creation.meta;
 			var list:Array<OptionType> = [
 				for(d in creation.meta.difficulties)
-					if (d != "") new TextOption(d, "Press ACCEPT to edit the chart for the selected difficulty", function() {
+					if (d != "") new TextOption(d, "Press " + button + " to edit the chart for the selected difficulty", function() {
+						#if mobile
+						openSubState(new UIWarningSubstate("Charter: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+							{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+						]));
+						#else
 						FlxG.switchState(new Charter(creation.meta.name, d));
+						#end
 					})
 			];
 			list.push(new NewOption("New Difficulty", "New Difficulty", function() {
+				#if mobile
+				openSubState(new UIWarningSubstate("New Difficulty: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+					{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+				]));
+				#else
 				FlxG.state.openSubState(new ChartCreationScreen(saveChart));
+				#end
 			}));
 			optionsTree.insert(1, new OptionsScreen(creation.meta.name, "Select a difficulty to continue.", list));
 		}, creation.meta.parsedColor.getDefault(0xFFFFFFFF));
@@ -151,8 +182,14 @@ class CharterSelection extends EditorTreeMenu {
 
 		// Add to List
 		curSong.difficulties.push(name);
-		var option = new TextOption(name, "Press ACCEPT to edit the chart for the selected difficulty", function() {
+		var option = new TextOption(name, "Press " + button + " to edit the chart for the selected difficulty", function() {
+			#if mobile
+			openSubState(new UIWarningSubstate("Charter: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+				{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+			]));
+			#else
 			FlxG.switchState(new Charter(curSong.name, name));
+			#end
 		});
 		optionsTree.members[optionsTree.members.length-1].insert(optionsTree.members[optionsTree.members.length-1].length-1, option);
 

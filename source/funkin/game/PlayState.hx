@@ -536,6 +536,7 @@ class PlayState extends MusicBeatState
 
 	@:dox(hide) override public function create()
 	{
+		#if mobile lime.system.System.allowScreenTimeout = false; #end
 		Note.__customNoteTypeExists = [];
 		// SCRIPTING & DATA INITIALIZATION
 		#if REGION
@@ -759,6 +760,12 @@ class PlayState extends MusicBeatState
 		#end
 
 		startingSong = true;
+		addMobileControls();
+		mobileControls.visible = true;
+		#if !android
+		addVirtualPad('NONE', 'P');
+		addVirtualPadCamera(false);
+		#end
 
 		super.create();
 
@@ -958,6 +965,7 @@ class PlayState extends MusicBeatState
 
 	public override function destroy() {
 		scripts.call("destroy");
+		#if mobile lime.system.System.allowScreenTimeout = Options.screenTimeOut; #end
 		for(g in __cachedGraphics)
 			g.useCount--;
 		@:privateAccess
@@ -1033,6 +1041,8 @@ class PlayState extends MusicBeatState
 	{
 		var event = scripts.event("onSubstateOpen", EventManager.get(StateEvent).recycle(SubState));
 
+		#if mobile lime.system.System.allowScreenTimeout = Options.screenTimeOut; #end
+
 		if (!postCreated)
 			MusicBeatState.skipTransIn = true;
 
@@ -1058,6 +1068,7 @@ class PlayState extends MusicBeatState
 	override function closeSubState()
 	{
 		var event = scripts.event("onSubstateClose", EventManager.get(StateEvent).recycle(subState));
+		#if mobile lime.system.System.allowScreenTimeout = false; #end
 		if (event.cancelled) return;
 
 		if (paused)
@@ -1237,7 +1248,7 @@ class PlayState extends MusicBeatState
 
 		updateRatingStuff();
 
-		if (controls.PAUSE && startedCountdown && canPause)
+		if (#if android FlxG.android.justReleased.BACK || #else virtualPad.buttonP.justPressed || #end controls.PAUSE && startedCountdown && canPause)
 			pauseGame();
 
 		if (canAccessDebugMenus) {
@@ -1440,6 +1451,7 @@ class PlayState extends MusicBeatState
 	 */
 	public function endSong():Void
 	{
+		mobileControls.visible = false;
 		scripts.call("onSongEnd");
 		canPause = false;
 		inst.volume = 0;
@@ -1481,6 +1493,7 @@ class PlayState extends MusicBeatState
 	 * Immediately switches to the next song, or goes back to the Story/Freeplay menu.
 	 */
 	public function nextSong() {
+		mobileControls.visible = false;
 		if (isStoryMode)
 		{
 			campaignScore += songScore;

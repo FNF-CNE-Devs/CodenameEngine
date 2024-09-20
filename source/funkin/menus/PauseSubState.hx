@@ -14,6 +14,7 @@ import funkin.options.keybinds.KeybindsOptions;
 import funkin.menus.StoryMenuState;
 import funkin.backend.system.Conductor;
 import funkin.backend.utils.FunkinParentDisabler;
+import mobile.funkin.menus.MobileControlSelectSubState;
 
 class PauseSubState extends MusicBeatSubstate
 {
@@ -108,6 +109,9 @@ class PauseSubState extends MusicBeatSubstate
 		pauseScript.call("postCreate");
 
 		game.updateDiscordPresence();
+
+		addVirtualPad('UP_DOWN', 'A');
+		addVirtualPadCamera();
 	}
 
 	override function update(elapsed:Float)
@@ -150,8 +154,9 @@ class PauseSubState extends MusicBeatSubstate
 				game.registerSmoothTransition();
 				FlxG.resetState();
 			case "Change Controls":
-				persistentDraw = false;
-				openSubState(new KeybindsOptions());
+				persistentUpdate = false;
+				removeVirtualPad();
+				openSubState(MobileControls.mobileC ? new MobileControlSelectSubState() : new KeybindsOptions());
 			case "Change Options":
 				FlxG.switchState(new OptionsMenu());
 			case "Exit to charter":
@@ -185,6 +190,14 @@ class PauseSubState extends MusicBeatSubstate
 			}
 
 		super.destroy();
+	}
+
+	override function closeSubState() {
+		persistentUpdate = true;
+		super.closeSubState();
+		removeVirtualPad();
+		addVirtualPad('UP_DOWN', 'A');
+		addVirtualPadCamera();
 	}
 
 	function changeSelection(change:Int = 0):Void

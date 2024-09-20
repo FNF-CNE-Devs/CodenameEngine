@@ -11,6 +11,9 @@ import funkin.options.Options;
 import funkin.game.PlayState;
 import funkin.backend.scripting.EventManager;
 
+import mobile.funkin.backend.utils.SUtil;
+import mobile.objects.MobileControls;
+
 import openfl.utils.Assets;
 
 import flixel.FlxSprite;

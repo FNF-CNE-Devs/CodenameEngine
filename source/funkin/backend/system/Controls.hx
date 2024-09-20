@@ -9,6 +9,9 @@ import flixel.input.actions.FlxActionSet;
 import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
+import mobile.flixel.FlxButton as Button;
+import mobile.objects.Hitbox;
+import mobile.flixel.FlxVirtualPad;
 
 enum abstract Action(String) to String from String {
 	var UP = "up";
@@ -418,6 +421,129 @@ class Controls extends FlxActionSet
 	override function update()
 	{
 		super.update();
+	}
+	
+	public var trackedInputsUI:Array<FlxActionInput> = [];
+	public var trackedInputsNOTES:Array<FlxActionInput> = [];
+
+	public function addButtonNOTES(action:FlxActionDigital, button:Button, state:FlxInputState):Void
+	{
+		if (button == null)
+			return;
+
+		var input:FlxActionInputDigitalIFlxInput = new FlxActionInputDigitalIFlxInput(button, state);
+		trackedInputsNOTES.push(input);
+		action.add(input);
+	}
+
+	public function addButtonUI(action:FlxActionDigital, button:Button, state:FlxInputState):Void
+	{
+		if (button == null)
+			return;
+
+		var input:FlxActionInputDigitalIFlxInput = new FlxActionInputDigitalIFlxInput(button, state);
+		trackedInputsUI.push(input);
+		action.add(input);
+	}
+
+	public function setHitBox(hitbox:Hitbox):Void
+	{
+		if (Hitbox == null)
+			return;
+
+		inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, hitbox.buttonLeft, state));
+		inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, hitbox.buttonDown, state));
+		inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, hitbox.buttonUp, state));
+		inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, hitbox.buttonRight, state));
+	}
+
+	public function setVirtualPadUI(vpad:FlxVirtualPad, DPad:FlxDPadMode, Action:FlxActionMode):Void
+	{
+		if (vpad == null)
+			return;
+
+		switch (DPad)
+		{
+			case UP_DOWN:
+				inline forEachBound(Control.UP, (action, state) -> addButtonUI(action, vpad.buttonUp, state));
+				inline forEachBound(Control.DOWN, (action, state) -> addButtonUI(action, vpad.buttonDown, state));
+			case LEFT_RIGHT:
+				inline forEachBound(Control.LEFT, (action, state) -> addButtonUI(action, vpad.buttonLeft, state));
+				inline forEachBound(Control.RIGHT, (action, state) -> addButtonUI(action, vpad.buttonRight, state));
+			case NONE: // do nothing
+			default:
+				inline forEachBound(Control.UP, (action, state) -> addButtonUI(action, vpad.buttonUp, state));
+				inline forEachBound(Control.DOWN, (action, state) -> addButtonUI(action, vpad.buttonDown, state));
+				inline forEachBound(Control.LEFT, (action, state) -> addButtonUI(action, vpad.buttonLeft, state));
+				inline forEachBound(Control.RIGHT, (action, state) -> addButtonUI(action, vpad.buttonRight, state));
+		}
+
+		switch (Action)
+		{
+			case A:
+				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonUI(action, vpad.buttonA, state));
+			case B:
+				inline forEachBound(Control.BACK, (action, state) -> addButtonUI(action, vpad.buttonB, state));
+			case P:
+				inline forEachBound(Control.PAUSE, (action, state) -> addButtonUI(action, vpad.buttonP, state));
+			case NONE: // do nothing
+			default:
+				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonUI(action, vpad.buttonA, state));
+				inline forEachBound(Control.BACK, (action, state) -> addButtonUI(action, vpad.buttonB, state));
+		}
+	}
+
+	public function setVirtualPadNOTES(VirtualPad:FlxVirtualPad, DPad:FlxDPadMode, Action:FlxActionMode):Void
+	{
+		if (VirtualPad == null)
+			return;
+
+		switch (DPad)
+		{
+			case UP_DOWN:
+				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp, state));
+				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown, state));
+			case LEFT_RIGHT:
+				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
+				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
+			case NONE: // do nothing
+			default:
+				inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, VirtualPad.buttonUp, state));
+				inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, VirtualPad.buttonDown, state));
+				inline forEachBound(Control.NOTE_LEFT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonLeft, state));
+				inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonRight, state));
+		}
+
+		switch (Action)
+		{
+			case A:
+				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonA, state));
+			case B:
+				inline forEachBound(Control.BACK, (action, state) -> addButtonNOTES(action, VirtualPad.buttonB, state));
+			case P:
+				inline forEachBound(Control.PAUSE, (action, state) -> addButtonNOTES(action, VirtualPad.buttonP, state));
+			case NONE: // do nothing
+			default:
+				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonNOTES(action, VirtualPad.buttonA, state));
+				inline forEachBound(Control.BACK, (action, state) -> addButtonNOTES(action, VirtualPad.buttonB, state));
+		}
+	}
+
+	public function removeVirtualControlsInput(Tinputs:Array<FlxActionInput>):Void
+	{
+		for (action in this.digitalActions)
+		{
+			var i = action.inputs.length;
+			while (i-- > 0)
+			{
+				var x = Tinputs.length;
+				while (x-- > 0)
+				{
+					if (Tinputs[x] == action.inputs[i])
+						action.remove(action.inputs[i]);
+				}
+			}
+		}
 	}
 
 	// inline

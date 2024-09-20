@@ -1,0 +1,82 @@
+name: Mobile + Release
+on: workflow_dispatch
+jobs:
+  Mobile:
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-14]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.3.6
+      - name: Install Libraries
+        run: |
+          haxelib install hmm --quiet
+          haxelib run hmm install --quiet
+      - name: Configure Android
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          haxelib run lime config ANDROID_SDK $ANDROID_HOME
+          haxelib run lime config ANDROID_NDK_ROOT $ANDROID_NDK_LATEST_HOME
+          haxelib run lime config JAVA_HOME $JAVA_HOME_17_X64
+          haxelib run lime config ANDROID_SETUP true
+      - name: Compile (Android)
+        if: startsWith(matrix.os, 'ubuntu')
+        run: haxelib run lime build android -final
+      - name: Compile (iOS)
+        if: startsWith(matrix.os, 'macos')
+        run: haxelib run lime build ios -final -nosign
+      - name: Make Ipa And Zip For Release
+        if: startsWith(matrix.os, 'macos')
+        run: |
+          cd export/release/ios/build/*-iphoneos
+          mkdir Payload
+          mv *.app Payload
+          zip -r CodenameEngine.ipa Payload
+          zip CodenameEngine-iOS.zip CodenameEngine.ipa
+      - name: Upload Artifact (Android)
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: actions/upload-artifact@main
+        with:
+          name: androidBuild
+          path: export/release/android/bin/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+      - name: Upload Artifact (iOS)
+        if: startsWith(matrix.os, 'macos')
+        uses: actions/upload-artifact@main
+        with:
+          name: iOSBuild
+          path: export/release/ios/build/Release-iphoneos/*.zip
+          if-no-files-found: error
+  Releaser:
+    needs: [Mobile]
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Download Android Build
+        uses: actions/download-artifact@main
+        with:
+           name: androidBuild
+           path: /home/runner
+      - name: Move Android File
+        run: mv /home/runner/CodenameEngine-release.apk /home/runner/CodenameEngine-Android.apk
+      - name: Download iOS Build
+        uses: actions/download-artifact@main
+        with:
+           name: iOSBuild
+           path: /home/runner
+      - name: Publish The Release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
+          automatic_release_tag: "dev-ca565de"
+          title: "DevBuild ca565de"
+          files: |
+            /home/runner/*.apk
+            /home/runner/*.zip

@@ -5,6 +5,8 @@ import haxe.xml.Access;
 import funkin.options.type.*;
 import funkin.options.categories.*;
 import funkin.options.TreeMenu;
+import haxe.ds.Map;
+import mobile.flixel.FlxVirtualPad;
 
 class OptionsMenu extends TreeMenu {
 	public static var mainOptions:Array<OptionCategory> = [
@@ -23,6 +25,11 @@ class OptionsMenu extends TreeMenu {
 			name: 'Appearance >',
 			desc: 'Change Appearance options such as Flashing menus...',
 			state: AppearanceOptions
+		},
+		{
+			name: 'Mobile Options >',
+			desc: 'Change Options Related To Mobile & Mobile Controls',
+			state: MobileOptions
 		},
 		{
 			name: 'Miscellaneous >',
@@ -80,7 +87,8 @@ class OptionsMenu extends TreeMenu {
 						main.add(o);
 			}
 		}
-
+		addVirtualPad('UP_DOWN', 'A_B');
+		addVirtualPadCamera(false);
 	}
 
 	public override function exit() {
@@ -92,6 +100,7 @@ class OptionsMenu extends TreeMenu {
 	/**
 	 * XML STUFF
 	 */
+	 var vpadMap:Map<String, Array<String>> = new Map(); 
 	public function parseOptionsFromXML(xml:Access):Array<OptionType> {
 		var options:Array<OptionType> = [];
 
@@ -136,8 +145,14 @@ class OptionsMenu extends TreeMenu {
 
 				case "menu":
 					options.push(new TextOption(name + " >", desc, function() {
-						optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node)));
+						optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node), vpadMap.exists(name) ? vpadMap.get(name)[0] : 'NONE', vpadMap.exists(name) ? vpadMap.get(name)[1] : 'NONE'));
 					}));
+				case "virtualPad":
+					var arr = [
+						node.getAtt("dpadMode") == null ? MusicBeatState.instance.virtualPad.curDPadMode.getName() : node.getAtt("dpadMode"), 
+						node.getAtt("actionMode") == null ? MusicBeatState.instance.virtualPad.curActionMode.getName() : node.getAtt("actionMode")
+					];
+					vpadMap.set(node.getAtt("menuName"), arr);
 			}
 		}
 
