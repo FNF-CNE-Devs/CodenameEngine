@@ -353,6 +353,7 @@ class XMLImportedScriptInfo {
 
 		if (stage != null) stage.xmlImportedScripts.push(infos);
 		PlayState.instance.scripts.add(daScript);
+		daScript.set("scriptInfo", infos);
 		daScript.load();
 
 		return infos;
