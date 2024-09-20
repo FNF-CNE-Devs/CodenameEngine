@@ -25,7 +25,7 @@ jobs:
           mkdir Payload
           mv *.app Payload
           zip -r CodenameEngine.ipa Payload
-      - name: Upload Artifact (iOS)
+      - name: Uploading artifact
         uses: actions/upload-artifact@v4
         with:
           name: Codename Engine
