@@ -1,0 +1,32 @@
+name: iOS Build
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    name: iOS Build
+    permissions: write-all
+    runs-on: macos-13
+    steps:
+      - name: Pulling the new commit
+        uses: actions/checkout@v2
+      - name: Setting up Haxe
+        uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.2.5
+      - name: Installing/Updating libraries
+        run: |
+          haxe -cp commandline -D analyzer-optimize --run Main setup
+      - name: Building the game
+        run: haxelib run lime build ios -nosign
+      - name: Making ipa file
+        run: |
+          cd export/*/ios/build/*-iphoneos
+          mkdir Payload
+          mv *.app Payload
+          zip -r CodenameEngine.ipa Payload
+      - name: Upload Artifact (iOS)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Codename Engine
+          path: export/release/ios/build/Release-iphoneos/*.ipa
