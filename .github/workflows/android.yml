@@ -11,7 +11,7 @@ jobs:
       - name: Pulling the new commit
         uses: actions/checkout@v2
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
       - name: Restore existing build cache for faster compilation
