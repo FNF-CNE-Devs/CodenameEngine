@@ -28,7 +28,7 @@ jobs:
             cache-build-android
       - name: Installing/Updating libraries
         run: |
-          haxe -cp commandline -D analyzer-optimize --run Main setup
+          haxe -cp commandline -D analyzer-optimize --run Main setup --lib=./libs.android.xml
       - name: Configuring Android
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
@@ -37,7 +37,7 @@ jobs:
           haxelib run lime config ANDROID_SETUP true
       - name: Building the game
         run: haxelib run lime build android
-      - name: Uploading artifact 
+      - name: Uploading artifact
         uses: actions/upload-artifact@v4
         with:
           name: Codename Engine

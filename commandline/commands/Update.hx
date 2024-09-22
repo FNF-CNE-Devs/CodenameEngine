@@ -6,6 +6,8 @@ import sys.io.File;
 import sys.io.Process;
 import sys.FileSystem;
 
+using StringTools;
+
 class Update {
 	public static function main(args:Array<String>) {
 		prettyPrint("Preparing installation...");
@@ -14,13 +16,21 @@ class Update {
 		if (!FileSystem.exists('.haxelib'))
 			FileSystem.createDirectory('.haxelib');
 
+		var filename = "./libs.xml";
+		for(arg in args) {
+			if (arg.startsWith("--lib=")) {
+				filename = arg.substr("--lib=".length);
+			}
+		}
+
 		var libs:Array<Library> = [];
-		var libsXML:Access = new Access(Xml.parse(File.getContent('./libs.xml')).firstElement());
+		var libsXML:Access = new Access(Xml.parse(File.getContent(filename)).firstElement());
 
 		for (libNode in libsXML.elements) {
 			var lib:Library = {
 				name: libNode.att.name,
-				type: libNode.name
+				type: libNode.name,
+				skipDeps: libNode.has.skipDeps ? libNode.att.skipDeps == "true" : false
 			};
 			if (libNode.has.global) lib.global = libNode.att.global;
 			switch (lib.type) {
@@ -38,10 +48,10 @@ class Update {
 			switch(lib.type) {
 				case "lib":
 					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}"...');
-					Sys.command('haxelib install ${lib.name} ${lib.version != null ? " " + lib.version : " "}${globalism != null ? ' $globalism' : ''} --always');
+					Sys.command('haxelib install ${lib.name} ${lib.version != null ? " " + lib.version : " "}${globalism != null ? ' $globalism' : ''}${lib.skipDeps ? " --skip-dependencies" : ""} --always');
 				case "git":
 					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}" from git url "${lib.url}"');
-					Sys.command('haxelib git ${lib.name} ${lib.url}${lib.ref != null ? ' ${lib.ref}' : ''}${globalism != null ? ' $globalism' : ''} --always');
+					Sys.command('haxelib git ${lib.name} ${lib.url}${lib.ref != null ? ' ${lib.ref}' : ''}${globalism != null ? ' $globalism' : ''}${lib.skipDeps ? " --skip-dependencies" : ""} --always');
 				default:
 					prettyPrint('Cannot resolve library of type "${lib.type}"');
 			}
@@ -123,6 +133,7 @@ class Update {
 typedef Library = {
 	var name:String;
 	var type:String;
+	var skipDeps:Bool;
 	var ?global:String;
 	var ?version:String;
 	var ?ref:String;
