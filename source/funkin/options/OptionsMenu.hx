@@ -41,6 +41,13 @@ class OptionsMenu extends TreeMenu {
 	public override function create() {
 		super.create();
 
+		if (funkin.backend.system.Controls.instance.mobileC)
+		{
+			mainOptions = mainOptions.filter(function(option) {
+				return option.name != "Controls";
+			});
+		}
+
 		CoolUtil.playMenuSong();
 
 		DiscordUtil.call("onMenuLoaded", ["Options Menu"]);
