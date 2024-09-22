@@ -32,7 +32,7 @@ jobs:
       - name: Rebuilding lime and hxcpp
         run: |
           cd $(haxelib libpath hxcpp)tools/hxcpp
-          haxe build.hxml
+          haxe compile.hxml
           cd ${{ github.workspace }}
           haxelib run lime rebuild linux -release -clean
           haxelib run lime rebuild android -release -clean
