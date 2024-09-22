@@ -16,15 +16,20 @@ class Update {
 		if (!FileSystem.exists('.haxelib'))
 			FileSystem.createDirectory('.haxelib');
 
-		var filename = "./libs.xml";
+		var libFile = "./libs.xml";
 		for(arg in args) {
 			if (arg.startsWith("--lib=")) {
-				filename = arg.substr("--lib=".length);
+				libFile = arg.substr("--lib=".length);
 			}
 		}
 
+		if(!FileSystem.exists(libFile)) {
+			Sys.println('File $libFile does not exist.');
+			return;
+		}
+
 		var libs:Array<Library> = [];
-		var libsXML:Access = new Access(Xml.parse(File.getContent(filename)).firstElement());
+		var libsXML:Access = new Access(Xml.parse(File.getContent(libFile)).firstElement());
 
 		for (libNode in libsXML.elements) {
 			var lib:Library = {
