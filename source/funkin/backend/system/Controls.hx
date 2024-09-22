@@ -380,6 +380,7 @@ class Controls extends FlxActionSet
 	public function new(name, scheme = None)
 	{
 		super(name);
+		instance = this;
 
 		add(_up);
 		add(_left);
