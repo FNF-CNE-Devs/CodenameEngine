@@ -28,8 +28,6 @@ jobs:
       - name: Installing/Updating libraries
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup --lib=./libs.mobile.xml
-      - name: Building the game
-        run: haxelib run lime build ios -nosign
       - name: Rebuilding lime and hxcpp
         run: |
           cd $(haxelib libpath hxcpp)tools/hxcpp
@@ -38,6 +36,8 @@ jobs:
           haxelib run lime rebuild mac -release -clean
           haxelib run lime rebuild ios -release -clean
           haxelib run lime rebuild tools
+      - name: Building the game
+        run: haxelib run lime build ios -nosign
       - name: Clearing already existing cache
         uses: actions/github-script@v6
         with:

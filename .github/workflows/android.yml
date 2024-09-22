@@ -31,6 +31,7 @@ jobs:
           haxe -cp commandline -D analyzer-optimize --run Main setup --lib=./libs.mobile.xml
       - name: Rebuilding lime and hxcpp
         run: |
+          sudo apt-get install -qq libgl1-mesa-dev libglu1-mesa-dev libpulse-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev
           cd $(haxelib libpath hxcpp)tools/hxcpp
           haxe compile.hxml
           cd ${{ github.workspace }}
