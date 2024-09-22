@@ -44,7 +44,9 @@ jobs:
           haxelib run lime config JAVA_HOME $JAVA_HOME_17_X64
           haxelib run lime config ANDROID_SETUP true
       - name: Rebuilding lime (android)
-        run: haxelib run lime rebuild android -release -clean
+        run: |
+          haxelib run lime rebuild android -D HXCPP_ARMV7 -release -clean
+          haxelib run lime rebuild android -D HXCPP_ARM64 -release -clean
       - name: Building the game
         run: haxelib run lime build android
       - name: Uploading artifact
