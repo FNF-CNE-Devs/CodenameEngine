@@ -67,7 +67,7 @@ class Main extends Sprite
 
 		#if mobile
 		#if android
-		MobileUtil.doPermissionsShit();
+		MobileUtil.requestPermissionsFromUser();
 		#end
 		Sys.setCwd(MobileUtil.getStorageDirectory(false));
 		#end

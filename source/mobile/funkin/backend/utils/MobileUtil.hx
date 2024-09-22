@@ -19,15 +19,16 @@ using StringTools;
 
 /**
  * A storage class for mobile.
- * @author Mihai Alexandru (M.A. Jigsaw)
+ * @author Mihai Alexandru (M.A. Jigsaw) & Lily Ross (mcagabe19)
  */
 class MobileUtil
 {
 	#if sys
 	public static function getStorageDirectory(?force:Bool = false):String
 	{
-		#if mobile
 		var daPath:String;
+
+		#if mobile
 		#if android
 		if (!FileSystem.exists(LimeSystem.applicationStorageDirectory + 'storagetype.txt'))
 			File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', funkin.options.Options.storageType);
@@ -36,12 +37,11 @@ class MobileUtil
 		daPath = haxe.io.Path.addTrailingSlash(daPath);
 		#elseif ios
 		daPath = LimeSystem.documentsDirectory;
+		#else
+		daPath = Sys.getCwd();
 		#end
 
 		return daPath;
-		#else
-		return Sys.getCwd();
-		#end
 	}
 
 	public static function mkDirs(directory:String):Void
@@ -80,23 +80,8 @@ class MobileUtil
 		}
 	}
 
-	public static function saveContent(fileName:String = 'file', fileExtension:String = '.json',
-			fileData:String = 'You forgor to add somethin\' in yo code :3'):Void
-	{
-		try
-		{
-			if (!FileSystem.exists('saves'))
-				FileSystem.createDirectory('saves');
-
-			File.saveContent('saves/$fileName', fileData);
-			NativeAPI.showMessageBox("Success!", '$fileName has been saved.', MSG_INFORMATION);
-		}
-		catch (e:haxe.Exception)
-			trace('File couldn\'t be saved. (${e.message})');
-	}
-
 	#if android
-	public static function doPermissionsShit():Void
+	public static function requestPermissionsFromUser():Void
 	{
 		if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU)
 			Permissions.requestPermissions(['READ_MEDIA_IMAGES', 'READ_MEDIA_VIDEO', 'READ_MEDIA_AUDIO']);
