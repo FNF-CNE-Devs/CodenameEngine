@@ -170,7 +170,7 @@ class Main extends Sprite
 		FlxG.signals.preStateSwitch.add(onStateSwitch);
 		FlxG.signals.postStateSwitch.add(onStateSwitchPost);
 
-		FlxG.mouse.useSystemCursor = !controls.mobileC;
+		FlxG.mouse.useSystemCursor = !Controls.instance.mobileC;
 
 		ModsFolder.init();
 		#if MOD_SUPPORT
