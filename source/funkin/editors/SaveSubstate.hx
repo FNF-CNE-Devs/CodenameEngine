@@ -27,7 +27,7 @@ class SaveSubstate extends MusicBeatSubstate {
 		super.create();
 
 		#if mobile
-		mobile.funkin.backend.utils.SUtil.saveContent(options.defaultSaveFile.replace(options.saveExt, ''), options.saveExt, data);
+		mobile.funkin.backend.utils.MobileUtil.saveContent(options.defaultSaveFile.replace(options.saveExt, ''), options.saveExt, data);
 		close();
 		#else
 		var fileDialog = new FileDialog();

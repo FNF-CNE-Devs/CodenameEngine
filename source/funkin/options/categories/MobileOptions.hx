@@ -7,7 +7,7 @@ import funkin.backend.MusicBeatState;
 import funkin.options.Options;
 import lime.system.System as LimeSystem;
 #if android
-import mobile.funkin.backend.utils.SUtil;
+import mobile.funkin.backend.utils.MobileUtil;
 #end
 #if sys
 import sys.io.File;
@@ -17,7 +17,7 @@ class MobileOptions extends OptionsScreen {
 	var canEnter:Bool = true;
 	#if android
 	final lastStorageType:String = Options.storageType;
-	var externalPaths:Array<String> = SUtil.checkExternalPaths(true);
+	var externalPaths:Array<String> = MobileUtil.checkExternalPaths(true);
 	var typeNames:Array<String> = ['Data', 'Obb', 'Media', 'External'];
 	var typeVars:Array<String> = ['EXTERNAL_DATA', 'EXTERNAL_OBB', 'EXTERNAL_MEDIA', 'EXTERNAL'];
 	#end

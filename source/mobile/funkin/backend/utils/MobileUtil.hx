@@ -21,7 +21,7 @@ using StringTools;
  * A storage class for mobile.
  * @author Mihai Alexandru (M.A. Jigsaw)
  */
-class SUtil
+class MobileUtil
 {
 	#if sys
 	public static function getStorageDirectory(?force:Bool = false):String
@@ -115,12 +115,12 @@ class SUtil
 
 		try
 		{
-			if (!FileSystem.exists(SUtil.getStorageDirectory()))
-				mkDirs(SUtil.getStorageDirectory());
+			if (!FileSystem.exists(MobileUtil.getStorageDirectory()))
+				mkDirs(MobileUtil.getStorageDirectory());
 		}
 		catch (e:Dynamic)
 		{
-			NativeAPI.showMessageBox('Error!', 'Please create folder to\n' + SUtil.getStorageDirectory(true) + '\nPress OK to close the game', MSG_ERROR);
+			NativeAPI.showMessageBox('Error!', 'Please create folder to\n' + MobileUtil.getStorageDirectory(true) + '\nPress OK to close the game', MSG_ERROR);
 			LimeSystem.exit(1);
 		}
 	}
@@ -164,7 +164,7 @@ enum abstract StorageType(String) from String to String
 			case "EXTERNAL_OBB": EXTERNAL_OBB;
 			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
 			case "EXTERNAL": EXTERNAL;
-			default: SUtil.getExternalDirectory(str) + '.' + fileLocal;
+			default: MobileUtil.getExternalDirectory(str) + '.' + fileLocal;
 		}
 	}
 
@@ -181,7 +181,7 @@ enum abstract StorageType(String) from String to String
 			case "EXTERNAL_OBB": EXTERNAL_OBB;
 			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
 			case "EXTERNAL": EXTERNAL;
-			default: SUtil.getExternalDirectory(str) + '.' + fileLocal;
+			default: MobileUtil.getExternalDirectory(str) + '.' + fileLocal;
 		}
 	}
 }

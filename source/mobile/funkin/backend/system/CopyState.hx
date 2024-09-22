@@ -10,7 +10,7 @@ import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import openfl.utils.ByteArray;
 import haxe.io.Path;
-import mobile.funkin.backend.utils.SUtil;
+import mobile.funkin.backend.utils.MobileUtil;
 import funkin.backend.assets.Paths;
 import funkin.backend.utils.NativeAPI;
 import funkin.backend.system.MainState;
@@ -118,7 +118,7 @@ class CopyState extends funkin.backend.MusicBeatState
 		{
 			var directory = Path.directory(file);
 			if (!FileSystem.exists(directory))
-				SUtil.mkDirs(directory);
+				MobileUtil.mkDirs(directory);
 			try
 			{
 				if (OpenFLAssets.exists(getFile(file)))
@@ -152,7 +152,7 @@ class CopyState extends funkin.backend.MusicBeatState
 			if (fileData == null)
 				fileData = '';
 			if (!FileSystem.exists(directory))
-				SUtil.mkDirs(directory);
+				MobileUtil.mkDirs(directory);
 			File.saveContent(Path.join([directory, fileName]), fileData);
 		}
 		catch (e:haxe.Exception)
