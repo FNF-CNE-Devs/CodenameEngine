@@ -121,7 +121,7 @@ class Framerate extends Sprite {
 		#elseif ios
 		for(camera in FlxG.cameras.list) {
 			var pos = FlxG.mouse.getScreenPosition(camera);
-			if(posx >= 0 && posx <= 80 && posy >= 0 && posy <= 60) {
+			if(pos.x >= 0 && pos.x <= 80 && pos.y >= 0 && pos.y <= 60) {
 				if(FlxG.mouse.justPressed)
 					sillyTimer.start(0.4, (tmr:FlxTimer) -> debugMode = (debugMode + 1) % 3);
 
