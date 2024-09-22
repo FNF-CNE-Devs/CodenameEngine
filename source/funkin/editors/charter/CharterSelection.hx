@@ -33,7 +33,7 @@ class CharterSelection extends EditorTreeMenu {
 					for(d in s.difficulties) if (d != "")
 						new TextOption(d, "Press " + button + " to edit the chart for the selected difficulty", function() {
 							#if mobile
-							openSubState(new UIWarningSubstate("Charter: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+							openSubState(new UIWarningSubstate("Charter: Not Supported!", "This feature isn't supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Codename Devs", [
 								{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
 							]));
 							#else
@@ -43,7 +43,7 @@ class CharterSelection extends EditorTreeMenu {
 				];
 				list.push(new NewOption("New Difficulty", "New Difficulty", function() {
 					#if mobile
-					openSubState(new UIWarningSubstate("New Difficulty: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+					openSubState(new UIWarningSubstate("New Difficulty: Not Supported!", "This feature isn't supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Codename Devs", [
 						{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
 					]));
 					#else
@@ -56,7 +56,7 @@ class CharterSelection extends EditorTreeMenu {
 
 		list.insert(0, new NewOption("New Song", "New Song", function() {
 			#if mobile
-			openSubState(new UIWarningSubstate("New Song: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+			openSubState(new UIWarningSubstate("New Song: Not Supported!", "This feature isn't supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Codename Devs", [
 				{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
 			]));
 			#else
@@ -139,7 +139,7 @@ class CharterSelection extends EditorTreeMenu {
 				for(d in creation.meta.difficulties)
 					if (d != "") new TextOption(d, "Press " + button + " to edit the chart for the selected difficulty", function() {
 						#if mobile
-						openSubState(new UIWarningSubstate("Charter: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+						openSubState(new UIWarningSubstate("Charter: Not Supported!", "This feature isn't supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Codename Devs", [
 							{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
 						]));
 						#else
@@ -149,7 +149,7 @@ class CharterSelection extends EditorTreeMenu {
 			];
 			list.push(new NewOption("New Difficulty", "New Difficulty", function() {
 				#if mobile
-				openSubState(new UIWarningSubstate("New Difficulty: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+				openSubState(new UIWarningSubstate("New Difficulty: Not Supported!", "This feature isn't supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Codename Devs", [
 					{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
 				]));
 				#else
@@ -184,7 +184,7 @@ class CharterSelection extends EditorTreeMenu {
 		curSong.difficulties.push(name);
 		var option = new TextOption(name, "Press " + button + " to edit the chart for the selected difficulty", function() {
 			#if mobile
-			openSubState(new UIWarningSubstate("Charter: Not Supported!", "This feature isnt supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Mobile Porting Team", [
+			openSubState(new UIWarningSubstate("Charter: Not Supported!", "This feature isn't supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Codename Devs", [
 				{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
 			]));
 			#else
