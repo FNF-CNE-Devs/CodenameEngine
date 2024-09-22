@@ -352,7 +352,7 @@ class FreeplayState extends MusicBeatState
 	/**
 	 * Array containing all labels for Co-Op / Opponent modes.
 	 */
-	public var coopLabels:Array<String> = MobileControls.mobileC ? ['[X] Solo', '[X] Opponent Mode'] : 
+	public var coopLabels:Array<String> = controls.mobileC ? ['[X] Solo', '[X] Opponent Mode'] : 
 	[
 		'[TAB] Solo',
 		'[TAB] Opponent Mode',
@@ -371,7 +371,7 @@ class FreeplayState extends MusicBeatState
 
 		var bothEnabled = songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed;
 		var changeThingy:Int = -1;
-		if(MobileControls.mobileC)
+		if(controls.mobileC)
 			changeThingy = FlxMath.wrap(curCoopMode + change, 0, 1);
 		else
 			changeThingy = FlxMath.wrap(curCoopMode + change, 0, bothEnabled ? 3 : 1);

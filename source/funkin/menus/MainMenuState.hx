@@ -12,7 +12,6 @@ import lime.app.Application;
 import funkin.backend.scripting.events.*;
 
 import funkin.options.OptionsMenu;
-import mobile.funkin.menus.MobileControlSelectSubState;
 
 using StringTools;
 
@@ -76,7 +75,7 @@ class MainMenuState extends MusicBeatState
 		}
 
 		FlxG.camera.follow(camFollow, null, 0.06);
-		var modsKey:String = MobileControls.mobileC ? "M" : controls.getKeyName(SWITCHMOD);
+		var modsKey:String = controls.mobileC ? "M" : controls.getKeyName(SWITCHMOD);
 
 		versionText = new FunkinText(5, FlxG.height - 2, 0, 'Codename Engine v${Application.current.meta.get('version')}\nCommit ${funkin.backend.system.macros.GitCommitMacro.commitNumber} (${funkin.backend.system.macros.GitCommitMacro.commitHash})\n[$modsKey}] Open Mods menu\n');
 		versionText.y -= versionText.height;

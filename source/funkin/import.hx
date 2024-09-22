@@ -12,7 +12,6 @@ import funkin.game.PlayState;
 import funkin.backend.scripting.EventManager;
 
 import mobile.funkin.backend.utils.MobileUtil;
-import mobile.objects.MobileControls;
 
 import openfl.utils.Assets;
 

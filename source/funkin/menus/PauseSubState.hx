@@ -14,7 +14,6 @@ import funkin.options.keybinds.KeybindsOptions;
 import funkin.menus.StoryMenuState;
 import funkin.backend.system.Conductor;
 import funkin.backend.utils.FunkinParentDisabler;
-import mobile.funkin.menus.MobileControlSelectSubState;
 
 class PauseSubState extends MusicBeatSubstate
 {
@@ -156,7 +155,7 @@ class PauseSubState extends MusicBeatSubstate
 			case "Change Controls":
 				persistentUpdate = false;
 				removeVirtualPad();
-				openSubState(MobileControls.mobileC ? new MobileControlSelectSubState() : new KeybindsOptions());
+				openSubState(new KeybindsOptions());
 			case "Change Options":
 				FlxG.switchState(new OptionsMenu());
 			case "Exit to charter":

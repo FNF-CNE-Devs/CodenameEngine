@@ -18,7 +18,7 @@ class CharacterSelection extends EditorTreeMenu
 
 		var modsList:Array<String> = Character.getList(true);
 
-		final button:String = MobileControls.mobileC ? 'A' : 'ACCEPT';
+		final button:String = controls.mobileC ? 'A' : 'ACCEPT';
 
 		var list:Array<OptionType> = [
 			for (char in (modsList.length == 0 ? Character.getList(false) : modsList))
@@ -40,7 +40,7 @@ class CharacterSelection extends EditorTreeMenu
 			]));
 		}));
 
-		main = new OptionsScreen("Character Editor", "Select a character to edit", list, 'UP_DOWN', 'A');
+		main = new OptionsScreen("Character Editor", "Select a character to edit", list, 'UP_DOWN', 'A_B');
 
 		DiscordUtil.call("onEditorTreeLoaded", ["Character Editor"]);
 	}

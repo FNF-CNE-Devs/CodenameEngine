@@ -1,7 +1,6 @@
 package funkin.options;
 
 import funkin.options.type.OptionType;
-import mobile.objects.MobileControls;
 
 class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 	public static var optionHeight:Float = 120;
@@ -31,7 +30,7 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		this.actionMode = actionMode;
 		MusicBeatState.instance.removeVirtualPad();
 		MusicBeatState.instance.addVirtualPad(dpadMode, actionMode);
-		MusicBeatState.instance.addVirtualPadCamera(false);
+		MusicBeatState.instance.addVirtualPadCamera();
 	}
 
 	public override function update(elapsed:Float) {
@@ -57,14 +56,14 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 
 		if (members.length > 0) {
 			members[curSelected].selected = true;
-			if (controls.ACCEPT || (FlxG.mouse.justReleased && !MobileControls.mobileC))
+			if (controls.ACCEPT || (FlxG.mouse.justReleased && !controls.mobileC))
 				members[curSelected].onSelect();
 			if (controls.LEFT_P)
 				members[curSelected].onChangeSelection(-1);
 			if (controls.RIGHT_P)
 				members[curSelected].onChangeSelection(1);
 		}
-		if (controls.BACK || (FlxG.mouse.justReleasedRight && !MobileControls.mobileC))
+		if (controls.BACK || (FlxG.mouse.justReleasedRight && !controls.mobileC))
 			close();
 	}
 
@@ -73,7 +72,7 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		if(prevVPadModes.length > 0){
 			MusicBeatState.instance.removeVirtualPad();
 			MusicBeatState.instance.addVirtualPad(prevVPadModes[0], prevVPadModes[1]);
-			MusicBeatState.instance.addVirtualPadCamera(false);
+			MusicBeatState.instance.addVirtualPadCamera();
 		}
 	}
 

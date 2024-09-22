@@ -91,7 +91,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		gameoverScript.call("postCreate");
 
 		addVirtualPad('NONE', 'A_B');
-		addVirtualPadCamera(false);
+		addVirtualPadCamera();
 	}
 
 	override function update(elapsed:Float)

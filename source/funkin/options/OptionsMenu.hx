@@ -88,7 +88,7 @@ class OptionsMenu extends TreeMenu {
 			}
 		}
 		addVirtualPad('UP_DOWN', 'A_B');
-		addVirtualPadCamera(false);
+		addVirtualPadCamera();
 	}
 
 	public override function exit() {

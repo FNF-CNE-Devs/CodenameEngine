@@ -16,7 +16,7 @@ using StringTools;
 class CharterSelection extends EditorTreeMenu {
 	public var freeplayList:FreeplaySonglist;
 	public var curSong:ChartMetaData;
-	private final button:String = MobileControls.mobileC ? 'A' : 'ACCEPT';
+	private final button:String = controls.mobileC ? 'A' : 'ACCEPT';
 	public override function create() {
 		bgType = "charter";
 
@@ -64,7 +64,7 @@ class CharterSelection extends EditorTreeMenu {
 			#end
 		}));
 
-		main = new OptionsScreen("Chart Editor", "Select a song to modify the charts from.", list, 'UP_DOWN', 'A');
+		main = new OptionsScreen("Chart Editor", "Select a song to modify the charts from.", list, 'UP_DOWN', 'A_B');
 
 		DiscordUtil.call("onEditorTreeLoaded", ["Chart Editor"]);
 	}

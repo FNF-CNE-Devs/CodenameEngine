@@ -760,11 +760,11 @@ class PlayState extends MusicBeatState
 		#end
 
 		startingSong = true;
-		addMobileControls();
-		mobileControls.visible = true;
+		addHitbox();
+		hitbox.visible = true;
 		#if !android
 		addVirtualPad('NONE', 'P');
-		addVirtualPadCamera(false);
+		addVirtualPadCamera();
 		#end
 
 		super.create();
@@ -1451,7 +1451,7 @@ class PlayState extends MusicBeatState
 	 */
 	public function endSong():Void
 	{
-		mobileControls.visible = false;
+		hitbox.visible = false;
 		scripts.call("onSongEnd");
 		canPause = false;
 		inst.volume = 0;
@@ -1493,7 +1493,7 @@ class PlayState extends MusicBeatState
 	 * Immediately switches to the next song, or goes back to the Story/Freeplay menu.
 	 */
 	public function nextSong() {
-		mobileControls.visible = false;
+		hitbox.visible = false;
 		if (isStoryMode)
 		{
 			campaignScore += songScore;

@@ -33,10 +33,6 @@ class MobileOptions extends OptionsScreen {
 		dpadMode = 'LEFT_FULL';
 		actionMode = 'A_B';
 		super("Mobile", 'Change Mobile Related Things such as Controls alpha, screen timeout....', null, 'LEFT_FULL', 'A_B');
-		add(new TextOption(
-			"Mobile Controls",
-			"Choose which control to play with (hitbox, vpad left, vpad right, custom...).",
-			openMobileControlsMenu));
 		add(new NumOption(
 			"Controls Alpha",
 			"Change how transparent the mobile controls should be",
@@ -93,7 +89,7 @@ class MobileOptions extends OptionsScreen {
 
 	function changeControlsAlpha(alpha) {
 		MusicBeatState.instance.virtualPad.alpha = alpha;
-		if (mobile.objects.MobileControls.mobileC) {
+		if (mobile.objects.controls.mobileC) {
 			FlxG.sound.volumeUpKeys = [];
 			FlxG.sound.volumeDownKeys = [];
 			FlxG.sound.muteKeys = [];
@@ -102,18 +98,6 @@ class MobileOptions extends OptionsScreen {
 			FlxG.sound.volumeDownKeys = [FlxKey.MINUS, FlxKey.NUMPADMINUS];
 			FlxG.sound.muteKeys = [FlxKey.ZERO, FlxKey.NUMPADZERO];
 		}
-	}
-
-	function openMobileControlsMenu() {
-		if(!canEnter) return;
-		canEnter = false;
-		FlxG.state.persistentUpdate = false;
-		MusicBeatState.instance.camVPad.visible = false;
-		FlxG.state.openSubState(new mobile.funkin.menus.MobileControlSelectSubState(() -> {
-			MusicBeatState.instance.camVPad.visible = true;
-			FlxG.state.persistentUpdate = true;
-			new FlxTimer().start(0.2, (tmr:FlxTimer) -> canEnter = true);
-		}));
 	}
 
 	#if android
