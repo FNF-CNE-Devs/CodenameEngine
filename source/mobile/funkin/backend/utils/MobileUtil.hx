@@ -28,7 +28,6 @@ class MobileUtil
 	{
 		var daPath:String;
 
-		#if mobile
 		#if android
 		if (!FileSystem.exists(LimeSystem.applicationStorageDirectory + 'storagetype.txt'))
 			File.saveContent(LimeSystem.applicationStorageDirectory + 'storagetype.txt', funkin.options.Options.storageType);
