@@ -26,10 +26,10 @@ class SaveSubstate extends MusicBeatSubstate {
 	public override function create() {
 		super.create();
 
-		#if mobile
-		mobile.funkin.backend.utils.MobileUtil.saveContent(options.defaultSaveFile.replace(options.saveExt, ''), options.saveExt, data);
+		/*#if mobile
+		MobileUtil.saveContent(options.defaultSaveFile.replace(options.saveExt, ''), options.saveExt, data);
 		close();
-		#else
+		#else*/
 		var fileDialog = new FileDialog();
 		fileDialog.onCancel.add(function() close());
 		fileDialog.onSelect.add(function(str) {
@@ -37,7 +37,7 @@ class SaveSubstate extends MusicBeatSubstate {
 			close();
 		});
 		fileDialog.browse(SAVE, options.saveExt.getDefault(Path.extension(options.defaultSaveFile)), options.defaultSaveFile);
-		#end
+		//#end
 	}
 
 	public override function update(elapsed:Float) {
