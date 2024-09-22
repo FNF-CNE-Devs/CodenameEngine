@@ -31,7 +31,9 @@ jobs:
           haxe -cp commandline -D analyzer-optimize --run Main setup --lib=./libs.mobile.xml
       - name: Rebuilding lime and hxcpp
         run: |
-          haxelib run lime rebuild hxcpp
+          cd $(haxelib libpath hxcpp)tools/hxcpp
+          haxe build.hxml
+          cd ${{ github.workspace }}
           haxelib run lime rebuild linux -release -clean
           haxelib run lime rebuild android -release -clean
           haxelib run lime rebuild tools

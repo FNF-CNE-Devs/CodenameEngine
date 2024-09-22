@@ -32,7 +32,9 @@ jobs:
         run: haxelib run lime build ios -nosign
       - name: Rebuilding lime and hxcpp
         run: |
-          haxelib run lime rebuild hxcpp
+          cd $(haxelib libpath hxcpp)tools/hxcpp
+          haxe build.hxml
+          cd ${{ github.workspace }}
           haxelib run lime rebuild mac -release -clean
           haxelib run lime rebuild ios -release -clean
           haxelib run lime rebuild tools
