@@ -136,7 +136,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	public function removeVirtualPad():Void
 	{
 		if (trackedInputsVirtualPad.length > 0)
-			controls.removeVirtualControlsInput(trackedInputsVirtualPad);
+			controls.removeMobileControlsInput(trackedInputsVirtualPad);
 
 		if (virtualPad != null)
 			remove(virtualPad);
@@ -162,7 +162,7 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 
 	public function removeHitbox() {
 		if(trackedInputsHitbox.length > 0)
-			controls.removeVirtualControlsInput(trackedInputsHitbox);
+			controls.removeMobileControlsInput(trackedInputsHitbox);
 
 		if(hitbox != null)
 			remove(hitbox);
@@ -178,12 +178,12 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	}
 
 	override function destroy() {
-		// Hitbox Related
+		// Mobile Controls Related
 		if(trackedInputsHitbox.length > 0)
-			controls.removeVirtualControlsInput(trackedInputsHitbox);
+			controls.removeMobileControlsInput(trackedInputsHitbox);
 
 		if(trackedInputsVirtualPad.length > 0)
-			controls.removeVirtualControlsInput(trackedInputsVirtualPad);
+			controls.removeMobileControlsInput(trackedInputsVirtualPad);
 
 		if(virtualPad != null)
 			virtualPad = FlxDestroyUtil.destroy(virtualPad);

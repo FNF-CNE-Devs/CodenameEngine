@@ -375,6 +375,8 @@ class Controls extends FlxActionSet
 	inline function set_SWITCHMOD(val)
 		return @:privateAccess _switchMod._checked = val;
 
+	public static var instance:Controls;
+
 	public function new(name, scheme = None)
 	{
 		super(name);
@@ -423,10 +425,10 @@ class Controls extends FlxActionSet
 		super.update();
 	}
 	
-	public static var mobileC(get, never):Bool;
+	public var mobileC(get, never):Bool;
 	
 	@:noCompletion
-	private static function get_mobileC():Bool
+	private function get_mobileC():Bool
 		return Options.controlsAlpha >= 0.1;
 	
 	public var trackedInputsUI:Array<FlxActionInput> = [];
@@ -499,7 +501,7 @@ class Controls extends FlxActionSet
 		}
 	}
 
-	public function removeVirtualControlsInput(Tinputs:Array<FlxActionInput>):Void
+	public function removeMobileControlsInput(Tinputs:Array<FlxActionInput>):Void
 	{
 		for (action in this.digitalActions)
 		{
