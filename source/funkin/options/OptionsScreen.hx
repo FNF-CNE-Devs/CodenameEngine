@@ -24,13 +24,13 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		this.name = name;
 		this.desc = desc;
 		if (options != null) for(o in options) add(o);
-		if(MusicBeatState.instance.virtualPad != null)
-			prevVPadModes = [MusicBeatState.instance.virtualPad.curDPadMode.getName(), MusicBeatState.instance.virtualPad.curActionMode.getName()];
+		if(MusicBeatState.getState().virtualPad != null)
+			prevVPadModes = [MusicBeatState.getState().virtualPad.curDPadMode.getName(), MusicBeatState.getState().virtualPad.curActionMode.getName()];
 		this.dpadMode = dpadMode;
 		this.actionMode = actionMode;
-		MusicBeatState.instance.removeVirtualPad();
-		MusicBeatState.instance.addVirtualPad(dpadMode, actionMode);
-		MusicBeatState.instance.addVirtualPadCamera();
+		MusicBeatState.getState().removeVirtualPad();
+		MusicBeatState.getState().addVirtualPad(dpadMode, actionMode);
+		MusicBeatState.getState().addVirtualPadCamera();
 	}
 
 	public override function update(elapsed:Float) {
@@ -70,9 +70,9 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 	public function close() {
 		onClose(this);
 		if(prevVPadModes.length > 0){
-			MusicBeatState.instance.removeVirtualPad();
-			MusicBeatState.instance.addVirtualPad(prevVPadModes[0], prevVPadModes[1]);
-			MusicBeatState.instance.addVirtualPadCamera();
+			MusicBeatState.getState().removeVirtualPad();
+			MusicBeatState.getState().addVirtualPad(prevVPadModes[0], prevVPadModes[1]);
+			MusicBeatState.getState().addVirtualPadCamera();
 		}
 	}
 

@@ -149,8 +149,8 @@ class OptionsMenu extends TreeMenu {
 					}));
 				case "virtualPad":
 					var arr = [
-						node.getAtt("dpadMode") == null ? MusicBeatState.instance.virtualPad.curDPadMode.getName() : node.getAtt("dpadMode"), 
-						node.getAtt("actionMode") == null ? MusicBeatState.instance.virtualPad.curActionMode.getName() : node.getAtt("actionMode")
+						node.getAtt("dpadMode") == null ? MusicBeatState.getState().virtualPad.curDPadMode.getName() : node.getAtt("dpadMode"), 
+						node.getAtt("actionMode") == null ? MusicBeatState.getState().virtualPad.curActionMode.getName() : node.getAtt("actionMode")
 					];
 					vpadMap.set(node.getAtt("menuName"), arr);
 			}
