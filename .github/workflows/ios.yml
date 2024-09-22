@@ -27,7 +27,7 @@ jobs:
             cache-build-mac
       - name: Installing/Updating libraries
         run: |
-          haxe -cp commandline -D analyzer-optimize --run Main setup
+          haxe -cp commandline -D analyzer-optimize --run Main setup --lib=./libs.mobile.xml
       - name: Building the game
         run: haxelib run lime build ios -nosign
       - name: Clearing already existing cache
