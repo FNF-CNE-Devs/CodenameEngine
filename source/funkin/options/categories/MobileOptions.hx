@@ -89,7 +89,7 @@ class MobileOptions extends OptionsScreen {
 
 	function changeControlsAlpha(alpha) {
 		MusicBeatState.instance.virtualPad.alpha = alpha;
-		if (mobile.objects.controls.mobileC) {
+		if (Controls.instance.mobileC) {
 			FlxG.sound.volumeUpKeys = [];
 			FlxG.sound.volumeDownKeys = [];
 			FlxG.sound.muteKeys = [];
