@@ -761,7 +761,9 @@ class PlayState extends MusicBeatState
 
 		startingSong = true;
 		addHitbox();
+		#if TOUCH_CONTROLS
 		hitbox.visible = true;
+		#end
 		#if !android
 		addVirtualPad('NONE', 'P');
 		addVirtualPadCamera();
@@ -1248,7 +1250,7 @@ class PlayState extends MusicBeatState
 
 		updateRatingStuff();
 
-		if (#if android FlxG.android.justReleased.BACK || #else virtualPad.buttonP.justPressed || #end controls.PAUSE && startedCountdown && canPause)
+		if (#if android FlxG.android.justReleased.BACK || #elseif (TOUCH_CONTROLS && !android) virtualPad.buttonP.justPressed || #end controls.PAUSE && startedCountdown && canPause)
 			pauseGame();
 
 		if (canAccessDebugMenus) {
@@ -1451,7 +1453,9 @@ class PlayState extends MusicBeatState
 	 */
 	public function endSong():Void
 	{
+		#if TOUCH_CONTROLS
 		hitbox.visible = false;
+		#end
 		scripts.call("onSongEnd");
 		canPause = false;
 		inst.volume = 0;
@@ -1493,7 +1497,9 @@ class PlayState extends MusicBeatState
 	 * Immediately switches to the next song, or goes back to the Story/Freeplay menu.
 	 */
 	public function nextSong() {
+		#if TOUCH_CONTROLS
 		hitbox.visible = false;
+		#end
 		if (isStoryMode)
 		{
 			campaignScore += songScore;

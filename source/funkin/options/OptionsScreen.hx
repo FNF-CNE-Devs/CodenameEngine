@@ -24,6 +24,7 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		this.name = name;
 		this.desc = desc;
 		if (options != null) for(o in options) add(o);
+		#if TOUCH_CONTROLS
 		if(MusicBeatState.getState().virtualPad != null)
 			prevVPadModes = [MusicBeatState.getState().virtualPad.curDPadMode.getName(), MusicBeatState.getState().virtualPad.curActionMode.getName()];
 		this.dpadMode = dpadMode;
@@ -31,6 +32,7 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		MusicBeatState.getState().removeVirtualPad();
 		MusicBeatState.getState().addVirtualPad(dpadMode, actionMode);
 		MusicBeatState.getState().addVirtualPadCamera();
+		#end
 	}
 
 	public override function update(elapsed:Float) {
@@ -56,14 +58,14 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 
 		if (members.length > 0) {
 			members[curSelected].selected = true;
-			if (controls.ACCEPT || (FlxG.mouse.justReleased && !controls.mobileC))
+			if (controls.ACCEPT || (FlxG.mouse.justReleased && !controls.touchC))
 				members[curSelected].onSelect();
 			if (controls.LEFT_P)
 				members[curSelected].onChangeSelection(-1);
 			if (controls.RIGHT_P)
 				members[curSelected].onChangeSelection(1);
 		}
-		if (controls.BACK || (FlxG.mouse.justReleasedRight && !controls.mobileC))
+		if (controls.BACK || (FlxG.mouse.justReleasedRight && !controls.touchC))
 			close();
 	}
 

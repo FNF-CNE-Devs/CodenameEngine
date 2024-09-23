@@ -71,7 +71,7 @@ class EditorPicker extends MusicBeatSubstate {
 		}
 		sprites[0].selected = true;
 
-		if (!controls.mobileC) FlxG.mouse.getScreenPosition(subCam, oldMousePos);
+		if (!controls.touchC) FlxG.mouse.getScreenPosition(subCam, oldMousePos);
 
 		addVirtualPad('UP_DOWN', 'A_B');
 	}
@@ -88,14 +88,14 @@ class EditorPicker extends MusicBeatSubstate {
 		}
 		changeSelection(-FlxG.mouse.wheel + (controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
 
-		if (!controls.mobileC) FlxG.mouse.getScreenPosition(subCam, curMousePos);
-		if (!controls.mobileC && curMousePos.x != oldMousePos.x || curMousePos.y != oldMousePos.y) {
+		if (!controls.touchC) FlxG.mouse.getScreenPosition(subCam, curMousePos);
+		if (!controls.touchC && curMousePos.x != oldMousePos.x || curMousePos.y != oldMousePos.y) {
 			oldMousePos.set(curMousePos.x, curMousePos.y);
 			curSelected = -1;
 			changeSelection(Std.int(curMousePos.y / optionHeight)+1);
 		}
 
-		if (controls.ACCEPT || !controls.mobileC && FlxG.mouse.justReleased) {
+		if (controls.ACCEPT || !controls.touchC && FlxG.mouse.justReleased) {
 			if (options[curSelected].state != null) {
 				selected = true;
 				CoolUtil.playMenuSFX(CONFIRM);

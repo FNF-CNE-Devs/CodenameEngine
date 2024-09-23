@@ -223,7 +223,7 @@ class FreeplayState extends MusicBeatState
 		if (canSelect) {
 			changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
 			changeDiff((controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0));
-			changeCoopMode(((virtualPad.buttonX.justPressed || FlxG.keys.justPressed.TAB) ? 1 : 0));
+			changeCoopMode(((#if TOUCH_CONTROLS virtualPad.buttonX.justPressed || #end FlxG.keys.justPressed.TAB) ? 1 : 0));
 			// putting it before so that its actually smooth
 			updateOptionsAlpha();
 		}
@@ -261,7 +261,7 @@ class FreeplayState extends MusicBeatState
 		}
 
 		#if sys
-		if (virtualPad.buttonY.justPressed || FlxG.keys.justPressed.EIGHT && Sys.args().contains("-livereload"))
+		if (#if TOUCH_CONTROLS virtualPad.buttonY.justPressed || #end FlxG.keys.justPressed.EIGHT && Sys.args().contains("-livereload"))
 			convertChart();
 		#end
 
@@ -352,7 +352,7 @@ class FreeplayState extends MusicBeatState
 	/**
 	 * Array containing all labels for Co-Op / Opponent modes.
 	 */
-	public var coopLabels:Array<String> = controls.mobileC ? ['[X] Solo', '[X] Opponent Mode'] : 
+	public var coopLabels:Array<String> = controls.touchC ? ['[X] Solo', '[X] Opponent Mode'] : 
 	[
 		'[TAB] Solo',
 		'[TAB] Opponent Mode',
@@ -371,7 +371,7 @@ class FreeplayState extends MusicBeatState
 
 		var bothEnabled = songs[curSelected].coopAllowed && songs[curSelected].opponentModeAllowed;
 		var changeThingy:Int = -1;
-		if(controls.mobileC)
+		if(controls.touchC)
 			changeThingy = FlxMath.wrap(curCoopMode + change, 0, 1);
 		else
 			changeThingy = FlxMath.wrap(curCoopMode + change, 0, bothEnabled ? 3 : 1);

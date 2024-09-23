@@ -18,7 +18,7 @@ class CharacterSelection extends EditorTreeMenu
 
 		var modsList:Array<String> = Character.getList(true);
 
-		final button:String = controls.mobileC ? 'A' : 'ACCEPT';
+		final button:String = controls.touchC ? 'A' : 'ACCEPT';
 
 		var list:Array<OptionType> = [
 			for (char in (modsList.length == 0 ? Character.getList(false) : modsList))

@@ -97,6 +97,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	inline function get_controlsP2():Controls
 		return PlayerSettings.player2.controls;
 
+	#if TOUCH_CONTROLS
 	public var hitbox:Hitbox;
 	public var virtualPad:FlxVirtualPad;
 	public var camHitbox:FlxCamera;
@@ -104,9 +105,11 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 
 	var trackedInputsHitbox:Array<FlxActionInput> = [];
 	var trackedInputsVirtualPad:Array<FlxActionInput> = [];
+	#end
 
 	public function addVirtualPad(DPad:OneOfTwo<FlxDPadMode, String>, Action:OneOfTwo<FlxActionMode, String>)
 	{
+		#if TOUCH_CONTROLS
 		if (virtualPad != null)
 			removeVirtualPad();
 
@@ -116,18 +119,22 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 		controls.setVirtualPadUI(virtualPad, virtualPad.curDPadMode, virtualPad.curActionMode);
 		trackedInputsVirtualPad = controls.trackedInputsUI;
 		controls.trackedInputsUI = [];
+		#end
 	}
 
 	public function removeVirtualPad()
 	{
+		#if TOUCH_CONTROLS
 		if (trackedInputsVirtualPad.length > 0)
-			controls.removeMobileControlsInput(trackedInputsVirtualPad);
+			controls.removeTouchControlsInput(trackedInputsVirtualPad);
 
 		if (virtualPad != null)
 			remove(virtualPad);
+		#end
 	}
 
 	public function addHitbox(?defaultDrawTarget:Bool = false) {
+		#if TOUCH_CONTROLS
 		if (hitbox != null)
 			removeHitbox();
 
@@ -144,32 +151,38 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 		hitbox.cameras = [camHitbox];
 		hitbox.visible = false;
 		add(hitbox);
+		#end
 	}
 
 	public function removeHitbox() {
+		#if TOUCH_CONTROLS
 		if(trackedInputsHitbox.length > 0)
-			controls.removeMobileControlsInput(trackedInputsHitbox);
+			controls.removeTouchControlsInput(trackedInputsHitbox);
 
 		if(hitbox != null)
 			remove(hitbox);
+		#end
 	}
 
 	public function addVirtualPadCamera(?defaultDrawTarget:Bool = false) {
+		#if TOUCH_CONTROLS
 		if (virtualPad == null) return;
 
 		camVPad = new FlxCamera();
 		camVPad.bgColor.alpha = 0;
 		FlxG.cameras.add(camVPad, defaultDrawTarget);
 		virtualPad.cameras = [camVPad];
+		#end
 	}
 
 	override function destroy() {
-		// Mobile Controls Related
+		// Touch Controls Related
+		#if TOUCH_CONTROLS
 		if(trackedInputsHitbox.length > 0)
-			controls.removeMobileControlsInput(trackedInputsHitbox);
+			controls.removeTouchControlsInput(trackedInputsHitbox);
 
 		if(trackedInputsVirtualPad.length > 0)
-			controls.removeMobileControlsInput(trackedInputsVirtualPad);
+			controls.removeTouchControlsInput(trackedInputsVirtualPad);
 
 		if(virtualPad != null)
 			virtualPad = FlxDestroyUtil.destroy(virtualPad);
@@ -182,6 +195,7 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 
 		if(camVPad != null)
 			camVPad = FlxDestroyUtil.destroy(camVPad);
+		#end
 
 		// CNE Related
 		super.destroy();

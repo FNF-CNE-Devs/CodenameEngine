@@ -28,7 +28,7 @@ class OptionsMenu extends TreeMenu {
 		},
 		{
 			name: 'Mobile Options >',
-			desc: 'Change Options Related To Mobile & Mobile Controls',
+			desc: 'Change Options Related To Mobile & Touch Controls',
 			state: MobileOptions
 		},
 		{
@@ -41,7 +41,7 @@ class OptionsMenu extends TreeMenu {
 	public override function create() {
 		super.create();
 
-		if (funkin.backend.system.Controls.instance.mobileC)
+		if (funkin.backend.system.Controls.instance.touchC)
 		{
 			mainOptions = mainOptions.filter(function(option) {
 				return option.name != "Controls";
@@ -155,11 +155,13 @@ class OptionsMenu extends TreeMenu {
 						optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node), vpadMap.exists(name) ? vpadMap.get(name)[0] : 'NONE', vpadMap.exists(name) ? vpadMap.get(name)[1] : 'NONE'));
 					}));
 				case "virtualPad":
+					#if TOUCH_CONTROLS
 					var arr = [
 						node.getAtt("dpadMode") == null ? MusicBeatState.getState().virtualPad.curDPadMode.getName() : node.getAtt("dpadMode"), 
 						node.getAtt("actionMode") == null ? MusicBeatState.getState().virtualPad.curActionMode.getName() : node.getAtt("actionMode")
 					];
 					vpadMap.set(node.getAtt("menuName"), arr);
+					#end
 			}
 		}
 

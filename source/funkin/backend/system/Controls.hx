@@ -426,37 +426,44 @@ class Controls extends FlxActionSet
 		super.update();
 	}
 	
-	public var mobileC(get, never):Bool;
+	public var touchC(get, never):Bool;
 	
 	@:noCompletion
-	private function get_mobileC():Bool
-		return Options.controlsAlpha >= 0.1;
-	
+	private function get_touchC():Bool
+		return #if TOUCH_CONTROLS Options.controlsAlpha >= 0.1 #else false #end;
+
+	#if TOUCH_CONTROLS
 	public var trackedInputsUI:Array<FlxActionInput> = [];
 	public var trackedInputsNOTES:Array<FlxActionInput> = [];
+	#end
 
 	public function addButtonNOTES(action:FlxActionDigital, button:Button, state:FlxInputState):Void
 	{
+		#if TOUCH_CONTROLS
 		if (button == null)
 			return;
 
 		var input:FlxActionInputDigitalIFlxInput = new FlxActionInputDigitalIFlxInput(button, state);
 		trackedInputsNOTES.push(input);
 		action.add(input);
+		#end
 	}
 
 	public function addButtonUI(action:FlxActionDigital, button:Button, state:FlxInputState):Void
 	{
+		#if TOUCH_CONTROLS
 		if (button == null)
 			return;
 
 		var input:FlxActionInputDigitalIFlxInput = new FlxActionInputDigitalIFlxInput(button, state);
 		trackedInputsUI.push(input);
 		action.add(input);
+		#end
 	}
 
 	public function setHitBox(hitbox:Hitbox):Void
 	{
+		#if TOUCH_CONTROLS
 		if (Hitbox == null)
 			return;
 
@@ -464,10 +471,12 @@ class Controls extends FlxActionSet
 		inline forEachBound(Control.NOTE_DOWN, (action, state) -> addButtonNOTES(action, hitbox.buttonDown, state));
 		inline forEachBound(Control.NOTE_UP, (action, state) -> addButtonNOTES(action, hitbox.buttonUp, state));
 		inline forEachBound(Control.NOTE_RIGHT, (action, state) -> addButtonNOTES(action, hitbox.buttonRight, state));
+		#end
 	}
 
 	public function setVirtualPadUI(vpad:FlxVirtualPad, DPad:FlxDPadMode, Action:FlxActionMode):Void
 	{
+		#if TOUCH_CONTROLS
 		if (vpad == null)
 			return;
 
@@ -500,10 +509,12 @@ class Controls extends FlxActionSet
 				inline forEachBound(Control.ACCEPT, (action, state) -> addButtonUI(action, vpad.buttonA, state));
 				inline forEachBound(Control.BACK, (action, state) -> addButtonUI(action, vpad.buttonB, state));
 		}
+		#end
 	}
 
-	public function removeMobileControlsInput(Tinputs:Array<FlxActionInput>):Void
+	public function removeTouchControlsInput(Tinputs:Array<FlxActionInput>):Void
 	{
+		#if TOUCH_CONTROLS
 		for (action in this.digitalActions)
 		{
 			var i = action.inputs.length;
@@ -517,6 +528,7 @@ class Controls extends FlxActionSet
 				}
 			}
 		}
+		#end
 	}
 
 	// inline

@@ -16,7 +16,7 @@ using StringTools;
 class CharterSelection extends EditorTreeMenu {
 	public var freeplayList:FreeplaySonglist;
 	public var curSong:ChartMetaData;
-	private final button:String = controls.mobileC ? 'A' : 'ACCEPT';
+	private final button:String = controls.touchC ? 'A' : 'ACCEPT';
 	public override function create() {
 		bgType = "charter";
 

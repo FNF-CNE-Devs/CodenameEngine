@@ -33,9 +33,10 @@ class MobileOptions extends OptionsScreen {
 		dpadMode = 'LEFT_FULL';
 		actionMode = 'A_B';
 		super("Mobile", 'Change Mobile Related Things such as Controls alpha, screen timeout....', null, 'LEFT_FULL', 'A_B');
+		#if TOUCH_CONTROLS
 		add(new NumOption(
 			"Controls Alpha",
-			"Change how transparent the mobile controls should be",
+			"Change how transparent the touch controls should be",
 			0.0, // minimum
 			1.0, // maximum
 			0.1, // change
@@ -47,6 +48,7 @@ class MobileOptions extends OptionsScreen {
 			['gradient', 'noGradient', 'hidden'],
 			['Gradient', 'No Gradient', 'Hidden'],
 			'hitboxType'));
+		#end
 		#if mobile
 		add(new Checkbox(
 			"Allow Screen Timeout",
@@ -88,8 +90,9 @@ class MobileOptions extends OptionsScreen {
 	}
 
 	function changeControlsAlpha(alpha) {
+		#if TOUCH_CONTROLS
 		MusicBeatState.getState().virtualPad.alpha = alpha;
-		if (funkin.backend.system.Controls.instance.mobileC) {
+		if (funkin.backend.system.Controls.instance.touchC) {
 			FlxG.sound.volumeUpKeys = [];
 			FlxG.sound.volumeDownKeys = [];
 			FlxG.sound.muteKeys = [];
@@ -98,6 +101,7 @@ class MobileOptions extends OptionsScreen {
 			FlxG.sound.volumeDownKeys = [FlxKey.MINUS, FlxKey.NUMPADMINUS];
 			FlxG.sound.muteKeys = [FlxKey.ZERO, FlxKey.NUMPADZERO];
 		}
+		#end
 	}
 
 	#if android
