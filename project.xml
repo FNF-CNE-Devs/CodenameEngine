@@ -150,7 +150,7 @@
 	<!-- Comment this out to disable dark mode windows -->
 	<define name="DARK_MODE_WINDOW"/>
 
-	<define name="TOUCH_CONTROLS" if="mobile" />
+	<define name="TOUCH_CONTROLS" if="mobile || web" />
 
 	<haxedef name="VIDEO_CUTSCENES" if="VIDEO_CUTSCENES" />
 	<haxedef name="UPDATE_CHECKING" if="UPDATE_CHECKING" />
