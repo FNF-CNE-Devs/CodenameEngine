@@ -225,11 +225,13 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 					stateScripts.add(script);
 					script.load();
 					stateScripts.set('setVirtualPadMode', function(DPadMode:String, ActionMode:String, ?addCamera = false){
+						#if TOUCH_CONTROLS
 						if(virtualPad == null) return;
 						removeVirtualPad();
 						addVirtualPad(DPadMode, ActionMode);
 						if(addCamera)
 							addVirtualPadCamera();
+						#end
 					});
 				}
 			}
