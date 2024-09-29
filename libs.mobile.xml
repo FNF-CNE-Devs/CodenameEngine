@@ -25,7 +25,7 @@
 	<lib name="markdown" />
 
 	<!-- Android Specific -->
-	<git name="extension-androidtools" url="https://github.com/MAJigsaw77/extension-androidtools" ref="main" />
+	<git name="extension-androidtools" url="https://github.com/MAJigsaw77/extension-androidtools" ref="main" skipDeps="true" />
 
 	<git name="hxcpp" url="https://github.com/NeeEoo/hxcpp" ref="codename" />
 </libraries>
