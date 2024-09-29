@@ -25,7 +25,6 @@ jobs:
           # not caching the bin folder to prevent asset duplication and stuff like that
           key: cache-build-android
           path: |
-            ~/.gradle
             .haxelib/
             export/release/android/haxe/
             export/release/android/obj/
@@ -82,7 +81,6 @@ jobs:
           # caching again since for some reason it doesnt work with the first post cache shit
           key: cache-build-android
           path: |
-            ~/.gradle
             .haxelib/
             export/release/android/haxe/
             export/release/android/obj/
