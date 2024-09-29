@@ -68,3 +68,14 @@ jobs:
         with:
           name: Codename Engine
           path: export/release/ios/build/Release-iphoneos/*.ipa
+      # - name: Uploading new cache
+        # uses: actions/cache@v3
+        # with:
+          # caching again since for some reason it doesnt work with the first post cache shit
+          # key: cache-build-ios
+          # path: |
+            # .haxelib/
+            # export/release/ios/haxe/
+            # export/release/ios/obj/
+          # restore-keys: |
+            # cache-build-ios
