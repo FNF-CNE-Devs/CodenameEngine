@@ -56,6 +56,9 @@ class FNFLegacyParser {
 				continue; // Yoshi Engine charts crash fix
 			}
 
+			// Update beatsPerMeasure based on sectionBeats (this was never done before and sectionBeats was entirely unused -other nex)
+			beatsPerMeasure = section.sectionBeats != null ? section.sectionBeats : data.beatsPerMeasure.getDefault(4);
+
 			if (camFocusedBF != (camFocusedBF = section.mustHitSection)) {
 				result.events.push({
 					time: curTime,
