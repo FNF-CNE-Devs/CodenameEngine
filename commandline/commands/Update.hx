@@ -10,26 +10,30 @@ using StringTools;
 
 class Update {
 	public static function main(args:Array<String>) {
-		prettyPrint("Preparing installation...");
-
 		// to prevent messing with currently installed libs
 		if (!FileSystem.exists('.haxelib'))
 			FileSystem.createDirectory('.haxelib');
 
-		var libFile = "./libs.xml";
+		var filename = "./libs.xml";
+		var isSilent = false;
 		for(arg in args) {
 			if (arg.startsWith("--lib=")) {
-				libFile = arg.substr("--lib=".length);
+				filename = arg.substr("--lib=".length);
+			}
+			if (arg == "--silent" || arg == "-s") {
+				isSilent = true;
 			}
 		}
 
-		if(!FileSystem.exists(libFile)) {
-			Sys.println('File $libFile does not exist.');
+		if(!FileSystem.exists(filename)) {
+			prettyPrint('Cannot find libs.xml file at "$filename"');
 			return;
 		}
 
+		prettyPrint("Preparing installation...");
+
 		var libs:Array<Library> = [];
-		var libsXML:Access = new Access(Xml.parse(File.getContent(libFile)).firstElement());
+		var libsXML:Access = new Access(Xml.parse(File.getContent(filename)).firstElement());
 
 		for (libNode in libsXML.elements) {
 			var lib:Library = {
@@ -53,10 +57,10 @@ class Update {
 			switch(lib.type) {
 				case "lib":
 					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}"...');
-					Sys.command('haxelib install ${lib.name} ${lib.version != null ? " " + lib.version : " "}${globalism != null ? ' $globalism' : ''}${lib.skipDeps ? " --skip-dependencies" : ""} --always');
+					Sys.command('haxelib install ${lib.name} ${lib.version != null ? " " + lib.version : " "}${globalism != null ? ' $globalism' : ''}${lib.skipDeps ? " --skip-dependencies" : ""} --always${isSilent ? " --quiet" : ""}');
 				case "git":
 					prettyPrint((lib.global == "true" ? "Globally installing" : "Locally installing") + ' "${lib.name}" from git url "${lib.url}"');
-					Sys.command('haxelib git ${lib.name} ${lib.url}${lib.ref != null ? ' ${lib.ref}' : ''}${globalism != null ? ' $globalism' : ''}${lib.skipDeps ? " --skip-dependencies" : ""} --always');
+					Sys.command('haxelib git ${lib.name} ${lib.url}${lib.ref != null ? ' ${lib.ref}' : ''}${globalism != null ? ' $globalism' : ''}${lib.skipDeps ? " --skip-dependencies" : ""} --always${isSilent ? " --quiet" : ""}');
 				default:
 					prettyPrint('Cannot resolve library of type "${lib.type}"');
 			}
