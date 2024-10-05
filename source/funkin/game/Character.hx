@@ -214,7 +214,7 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 			playAnim(event.animName, event.force, event.context, event.reversed, event.frame);
 	}
 
-	public override function playAnim(AnimName:String, ?Force:Bool, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0) {
+	public override function playAnim(AnimName:String, ?Force:Bool, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0, ?OnComplete:Void->Void):Void {
 		var event = EventManager.get(PlayAnimEvent).recycle(AnimName, Force, Reversed, Frame, Context);
 		script.call("onPlayAnim", [event]);
 		if (event.cancelled) return;

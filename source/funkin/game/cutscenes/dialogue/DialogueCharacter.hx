@@ -61,7 +61,7 @@ class DialogueCharacter extends FunkinSprite {
 		dialogueCharScript.call("postCreate");
 	}
 
-	public override function playAnim(AnimName:String, ?Force:Bool, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0) {
+	public override function playAnim(AnimName:String, ?Force:Bool, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0, ?OnComplete:Void->Void):Void {
 		var event = EventManager.get(PlayAnimEvent).recycle(AnimName, Force, Reversed, Frame, Context);
 		dialogueCharScript.call("playAnim", [event]);
 		if(event.cancelled) return;

@@ -43,6 +43,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public var debugMode:Bool = false;
 	public var animDatas:Map<String, AnimData> = [];
 
+	var playAnimComplete:Void->Void = null;
 	/**
 	 * ODD interval -> asynced; EVEN interval -> synced
 	 */
@@ -102,6 +103,11 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 			var name = getAnimName() + '-loop';
 			if (hasAnimation(name))
 				playAnim(name, null, lastAnimContext);
+
+			if (playAnimComplete != null) {
+				playAnimComplete();
+				playAnimComplete = null;
+			}
 		}
 	}
 
@@ -231,6 +237,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	public override function destroy()
 	{
 		animateAtlas = FlxDestroyUtil.destroy(animateAtlas);
+		playAnimComplete = null;
 
 		if (animOffsets != null) {
 			for (key in animOffsets.keys()) {
@@ -294,7 +301,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 	#if REGION
 	public var lastAnimContext:PlayAnimContext = DANCE;
 
-	public function playAnim(AnimName:String, ?Force:Null<Bool>, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0):Void
+	public function playAnim(AnimName:String, ?Force:Null<Bool>, Context:PlayAnimContext = NONE, Reversed:Bool = false, Frame:Int = 0, ?OnComplete:Void->Void):Void
 	{
 		if (AnimName == null)
 			return;
@@ -323,6 +330,7 @@ class FunkinSprite extends FlxSkewedSprite implements IBeatReceiver implements I
 		daOffset.putWeak();
 
 		lastAnimContext = Context;
+		playAnimComplete = OnComplete;
 	}
 
 	public inline function getAnimOffset(name:String)
