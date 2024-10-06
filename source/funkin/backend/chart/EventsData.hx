@@ -10,7 +10,7 @@ import funkin.backend.assets.Paths;
 using StringTools;
 
 class EventsData {
-	public static var defaultEventsList:Array<String> = ["HScript Call", "Camera Movement", "Add Camera Zoom", "Camera Modulo Change", "Camera Flash", "BPM Change", "Scroll Speed Change", "Alt Animation Toggle", "Play Animation"];
+	public static var defaultEventsList:Array<String> = ["HScript Call", "Camera Movement", "Add Camera Zoom", "Camera Modulo Change", "Camera Flash", "BPM Change", "Scroll Speed Change", "Alt Animation Toggle", "Play Animation", "Time Signature Change"];
 	public static var defaultEventsParams:Map<String, Array<EventParamInfo>> = [
 		"HScript Call" => [
 			{name: "Function Name", type: TString, defValue: "myFunc"},
@@ -49,6 +49,7 @@ class EventsData {
 		],
 		"Alt Animation Toggle" => [{name: "Enable On Sing Poses", type: TBool, defValue: true}, {name: "Enable On Idle", type: TBool, defValue: true}, {name: "Strumline", type: TStrumLine, defValue: 0}],
 		"Play Animation" => [{name: "Character", type: TStrumLine, defValue: 0}, {name: "Animation", type: TString, defValue: "animation"}, {name: "Is forced?", type: TBool, defValue: true}],
+		"Time Signature Change" => [{name: "Target Beat Count", type: TFloat(1), defValue: 4}, {name: "Target Step Count", type: TFloat(1), defValue: 4}],
 	];
 
 	public static var eventsList:Array<String> = defaultEventsList.copy();

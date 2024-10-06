@@ -129,6 +129,7 @@ class Chart {
 					1 => "Camera Movement",
 					2 => "BPM Change",
 					3 => "Alt Animation Toggle",
+					4 => "Time Signature Change",
 				];
 
 				if (data.events == null) data.events = [];
