@@ -25,16 +25,16 @@ import openfl.display.ShaderInput;
 class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 	private static var __instanceFields = Type.getInstanceFields(FunkinShader);
 
-	public var glslVer:String = "120";
+	public var glslVer:String = #if mobile "300 es" #else "120" #end;
 
 	/**
 	 * Creates a new shader from the specified fragment and vertex source.
 	 * Accepts `#pragma header`.
 	 * @param frag Fragment source (pass `null` to use default)
 	 * @param vert Vertex source (pass `null` to use default)
-	 * @param glslVer Version of GLSL to use (defaults to 120)
+	 * @param glslVer Version of GLSL to use (defaults to 120 at OpenGL, 300 es at OpenGL ES)
 	 */
-	public override function new(frag:String, vert:String, glslVer:String = "120") {
+	public override function new(frag:String, vert:String, glslVer:String = #if lime_opengles "300 es" #else "120" #end) {
 		if (frag == null) frag = ShaderTemplates.defaultFragmentSource;
 		if (vert == null) vert = ShaderTemplates.defaultVertexSource;
 		this.glFragmentSource = frag;
@@ -93,19 +93,30 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 
 			var gl = __context.gl;
 
-			prefix += "#ifdef GL_ES
-				"
-				+ (precisionHint == FULL ? "#ifdef GL_FRAGMENT_PRECISION_HIGH
-				precision highp float;
-				#else
-				precision mediump float;
-				#endif" : "precision lowp float;")
-				+ "
-				#endif
-				";
+			#if (js && html5)
+			prefix += (precisionHint == FULL ? "precision mediump float;\n" : "precision lowp float;\n");
+			#else
+			prefix += "#ifdef GL_ES\n"
+				+ (precisionHint == FULL ? "#ifdef GL_FRAGMENT_PRECISION_HIGH\n"
+					+ "precision highp float;\n"
+					+ "#else\n"
+					+ "precision mediump float;\n"
+					+ "#endif\n" : "precision lowp float;\n")
+				+ "#endif\n\n";
+			#end
 
+			#if lime_opengles
+			prefix += 'out vec4 output_FragColor;\n';
+			var vertex = prefix
+				+ glVertexSource.replace("attribute", "in")
+					.replace("varying", "out")
+					.replace("texture2D", "texture")
+					.replace("gl_FragColor", "output_FragColor");
+			var fragment = prefix + glFragmentSource.replace("varying", "in").replace("texture2D", "texture").replace("gl_FragColor", "output_FragColor");
+			#else
 			var vertex = prefix + glVertexSource;
 			var fragment = prefix + glFragmentSource;
+			#end
 
 			var id = vertex + fragment;
 

@@ -18,21 +18,29 @@ class CharacterSelection extends EditorTreeMenu
 
 		var modsList:Array<String> = Character.getList(true);
 
+		final button:String = controls.touchC ? 'A' : 'ACCEPT';
+
 		var list:Array<OptionType> = [
 			for (char in (modsList.length == 0 ? Character.getList(false) : modsList))
-				new IconOption(char, "Press ACCEPT to edit this character.", Character.getIconFromCharName(char),
+				new IconOption(char, "Press " + button + " to edit this character.", Character.getIconFromCharName(char),
 			 	function() {
+					#if mobile
+					openSubState(new UIWarningSubstate("CharacterEditor: Not Supported!", "This feature isn't supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Codename Devs", [
+						{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+					]));
+					#else
 					FlxG.switchState(new CharacterEditor(char));
+					#end
 				})
 		];
 
 		list.insert(0, new NewOption("New Character", "New Character", function() {
-			openSubState(new UIWarningSubstate("New Character: Feature Not Implemented!", "This feature isnt implemented yet. Please wait for more cne updates to have this functional.\n\n\n- Codename Devs", [
+			openSubState(new UIWarningSubstate("New Character: Feature Not Implemented!", "This feature isn't implemented yet. Please wait for more cne updates to have this functional.\n\n\n- Codename Devs", [
 				{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
 			]));
 		}));
 
-		main = new OptionsScreen("Character Editor", "Select a character to edit", list);
+		main = new OptionsScreen("Character Editor", "Select a character to edit", list, 'UP_DOWN', 'A_B');
 
 		DiscordUtil.call("onEditorTreeLoaded", ["Character Editor"]);
 	}
