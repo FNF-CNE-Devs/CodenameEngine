@@ -64,6 +64,11 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 		]);
 	}
 
+	override function close() {
+		super.close();
+		parent.treeParent.pathDesc.clearFormats();
+	}
+
 	public function checkUpdate():Bool {
 		var curTime:Float = Date.now().getTime();
 		if(Options.lastUpdated != null && curTime < Options.lastUpdated + 120000) return false;  // Fuck you Github rate limits  - Nex
