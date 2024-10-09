@@ -5,16 +5,16 @@ import flixel.FlxState;
 import funkin.backend.system.interfaces.IBeatReceiver;
 import flixel.util.FlxSignal.FlxTypedSignal;
 
-typedef BPMChangeEvent =
-{
-	var stepTime:Float;
-	var songTime:Float;
-	var bpm:Float;
-	var beatsPerMeasure:Float;
-	var stepsPerBeat:Float;
+@:structInit
+class BPMChangeEvent {
+	public var stepTime:Float;
+	public var songTime:Float;
+	public var bpm:Float;
+	public var beatsPerMeasure:Float;
+	public var stepsPerBeat:Float;
 }
 
-class Conductor
+final class Conductor
 {
 	/**
 	 * FlxSignals
@@ -23,8 +23,7 @@ class Conductor
 	public static var onBeatHit:FlxTypedSignal<Int->Void> = new FlxTypedSignal();
 	public static var onStepHit:FlxTypedSignal<Int->Void> = new FlxTypedSignal();
 	public static var onBPMChange:FlxTypedSignal<Float->Void> = new FlxTypedSignal();
-	public static var onBeatsPerMeasureChange:FlxTypedSignal<Float->Void> = new FlxTypedSignal();
-	public static var onStepsPerBeatChange:FlxTypedSignal<Float->Void> = new FlxTypedSignal();
+	public static var onTimeSignatureChange:FlxTypedSignal<(Float,Float)->Void> = new FlxTypedSignal();
 
 	/**
 	 * Current BPM
@@ -111,15 +110,13 @@ class Conductor
 	public static function reset() {
 		songPosition = lastSongPos = curBeatFloat = curStepFloat = curBeat = curStep = 0;
 		bpmChangeMap = [];
-		changeBPM(0);
-		changeTimeSignature(4, 4);
+		changeBPM(0, 4, 4);
 	}
 
 	public static function setupSong(SONG:ChartData) {
 		reset();
 		mapBPMChanges(SONG);
-		changeBPM(SONG.meta.bpm);
-		changeTimeSignature(cast SONG.meta.beatsPerMeasure.getDefault(4), cast SONG.meta.stepsPerBeat.getDefault(4));
+		changeBPM(SONG.meta.bpm, cast SONG.meta.beatsPerMeasure.getDefault(4), cast SONG.meta.stepsPerBeat.getDefault(4));
 	}
 	/**
 	 * Maps BPM changes from a song.
@@ -135,23 +132,28 @@ class Conductor
 				stepsPerBeat: song.meta.stepsPerBeat.getDefault(4)
 			}
 		];
-		
+
 		if (song.events == null) return;
-		
+
 		var curBPM:Float = song.meta.bpm;
 		var curBeatsPerMeasure:Float = song.meta.beatsPerMeasure.getDefault(4);
 		var curStepsPerBeat:Float = song.meta.stepsPerBeat.getDefault(4);
 		var songTime:Float = 0;
 		var stepTime:Float = 0;
-		
+
 		for(e in song.events) {
-			if (e.name == "BPM Change" && e.params != null && e.params[0] is Float) {
-				if (e.params[0] == curBPM) continue;
-				var steps = (e.time - songTime) / ((60 / curBPM) * 1000 / stepsPerBeat);
+			var name = e.name;
+			var params = e.params;
+			var eventTime = e.time;
+			if(params == null) continue;
+
+			if (name == "BPM Change" && params[0] is Float) {
+				if (params[0] == curBPM) continue;
+				var steps = (eventTime - songTime) / ((60 / curBPM) * 1000 / stepsPerBeat);
 				stepTime += steps;
-				songTime = e.time;
-				curBPM = e.params[0];
-		
+				songTime = eventTime;
+				curBPM = params[0];
+
 				bpmChangeMap.push({
 					stepTime: stepTime,
 					songTime: songTime,
@@ -159,21 +161,19 @@ class Conductor
 					beatsPerMeasure: curBeatsPerMeasure, // keep old beatsPerMeasure and stepsPerMeasure so shit doesnt break
 					stepsPerBeat: curStepsPerBeat
 				});
-			}
-		
-			if (e.name == "Time Signature Change" && e.params != null) {
-				var newBeatsPerMeasure = e.params[0];
-				var newStepsPerBeat = e.params[1];
-		
+			} else if (name == "Time Signature Change") {
+				var newBeatsPerMeasure = params[0];
+				var newStepsPerBeat = params[1];
+
 				if (newBeatsPerMeasure == curBeatsPerMeasure && newStepsPerBeat == curStepsPerBeat) continue;
-		
-				var steps = (e.time - songTime) / ((60 / curBPM) * 1000 / stepsPerBeat);
+
+				var steps = (eventTime - songTime) / ((60 / curBPM) * 1000 / stepsPerBeat);
 				stepTime += steps;
-				songTime = e.time;
-		
+				songTime = eventTime;
+
 				curBeatsPerMeasure = newBeatsPerMeasure;
 				curStepsPerBeat = newStepsPerBeat;
-		
+
 				bpmChangeMap.push({
 					stepTime: stepTime,
 					songTime: songTime,
@@ -183,6 +183,9 @@ class Conductor
 				});
 			}
 		}
+
+		// sort from early to last
+		bpmChangeMap.sort(function(a, b) return Std.int(a.songTime - b.songTime));
 	}
 
 	private static var elapsed:Float;
@@ -219,7 +222,7 @@ class Conductor
 		if (FlxG.state != null && FlxG.state is MusicBeatState && cast(FlxG.state, MusicBeatState).cancelConductorUpdate) return;
 
 		__updateSongPos(FlxG.elapsed);
-		
+
 		if (bpm > 0) {
 			// Check for BPM change
 			__lastChange = {
@@ -229,23 +232,22 @@ class Conductor
 				beatsPerMeasure: beatsPerMeasure,
 				stepsPerBeat: stepsPerBeat
 			};
-		
+
+			var currentPos = Conductor.songPosition;
+
 			for (change in Conductor.bpmChangeMap) {
-				if (Conductor.songPosition >= change.songTime)
+				if (currentPos >= change.songTime)
 					__lastChange = change;
-			}
-		
-			// Change BPM if necessary
-			if (__lastChange.bpm > 0 && bpm != __lastChange.bpm) {
-				changeBPM(__lastChange.bpm);
+				else
+					break;
 			}
 
-			// Check for time signature change
-			if (__lastChange.beatsPerMeasure != beatsPerMeasure || __lastChange.stepsPerBeat != stepsPerBeat) {
-				changeTimeSignature(__lastChange.beatsPerMeasure, __lastChange.stepsPerBeat);
+			// Change BPM if necessary and check for time signature change
+			if ((__lastChange.bpm > 0 && bpm != __lastChange.bpm) || (__lastChange.beatsPerMeasure != beatsPerMeasure || __lastChange.stepsPerBeat != stepsPerBeat)) {
+				changeBPM(__lastChange.bpm, __lastChange.beatsPerMeasure, __lastChange.stepsPerBeat);
 			}
-		
-			curStepFloat = __lastChange.stepTime + ((Conductor.songPosition - __lastChange.songTime) / Conductor.stepCrochet);
+
+			curStepFloat = __lastChange.stepTime + ((currentPos - __lastChange.songTime) / Conductor.stepCrochet);
 			curBeatFloat = curStepFloat / stepsPerBeat;
 			curMeasureFloat = curBeatFloat / beatsPerMeasure;
 
@@ -303,28 +305,20 @@ class Conductor
 		}
 	}
 
-	public static function changeBPM(newBpm:Float, beatsPerMeasure:Float = 4, stepsPerBeat:Float = 4)
+	public static function changeBPM(newBpm:Float, newBeatsPerMeasure:Float = 4, newStepsPerBeat:Float = 4)
 	{
-		bpm = newBpm;
+		var timesignChange = (beatsPerMeasure != newBeatsPerMeasure || stepsPerBeat != newStepsPerBeat);
+		var bpmChange = (bpm != newBpm);
 
-		crochet = ((60 / bpm) * 1000);
-		stepCrochet = crochet / stepsPerBeat;
-
-		Conductor.beatsPerMeasure = beatsPerMeasure;
-		Conductor.stepsPerBeat = stepsPerBeat;
-
-		onBPMChange.dispatch(bpm);
-	}
-	
-	public static function changeTimeSignature(newBeatsPerMeasure:Float, newStepsPerBeat:Float) {
 		beatsPerMeasure = newBeatsPerMeasure;
 		stepsPerBeat = newStepsPerBeat;
+		bpm = newBpm;
 
-		crochet = ((60 / bpm) * 1000);
+		crochet = (60 / bpm) * 1000;
 		stepCrochet = crochet / stepsPerBeat;
 
-		onBeatsPerMeasureChange.dispatch(beatsPerMeasure);
-		onStepsPerBeatChange.dispatch(stepsPerBeat);
+		if (timesignChange) onTimeSignatureChange.dispatch(beatsPerMeasure, stepsPerBeat);
+		if (bpmChange) onBPMChange.dispatch(bpm);
 	}
 
 	public static function getTimeForStep(step:Float) {
@@ -339,6 +333,7 @@ class Conductor
 		for(change in bpmChangeMap)
 			if (change.stepTime < step && change.stepTime >= bpmChange.stepTime)
 				bpmChange = change;
+		// possible break here
 
 		return bpmChange.songTime + ((step - bpmChange.stepTime) * ((60 / bpmChange.bpm) * (1000 / bpmChange.stepsPerBeat)));
 	}
@@ -351,14 +346,15 @@ class Conductor
 			beatsPerMeasure: beatsPerMeasure,
 			stepsPerBeat: stepsPerBeat
 		};
-		
+
 		for(change in bpmChangeMap)
 			if (change.songTime < time && change.songTime >= bpmChange.songTime)
 				bpmChange = change;
-		
+		// possible break here
+
 		return bpmChange.stepTime + ((time - bpmChange.songTime) / ((60 / bpmChange.bpm) * (1000 / bpmChange.stepsPerBeat)));
 	}
-	 
+
 
 	public static inline function getMeasureLength()
 		return stepsPerBeat * beatsPerMeasure;
