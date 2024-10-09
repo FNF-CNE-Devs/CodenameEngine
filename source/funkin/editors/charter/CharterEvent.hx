@@ -109,7 +109,7 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 
 		draggable = true;
 		for (event in events)
-			if (event.name == "BPM Change") {
+			if (event.name == "BPM Change" || event.name == "Time Signature Change") {
 				draggable = false;
 				break;
 			}

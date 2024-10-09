@@ -109,6 +109,16 @@ class FNFLegacyParser {
 				});
 			}
 
+			if (section.sectionBeats != beatsPerMeasure) {
+				beatsPerMeasure = section.sectionBeats != null ? section.sectionBeats : data.beatsPerMeasure.getDefault(4);
+
+				result.events.push({
+					time: curTime,
+					name: "Time Signature Change",
+					params: [section.sectionBeats, 4]
+				});
+			}
+
 			curTime += curCrochet * beatsPerMeasure;
 		}
 	}
@@ -179,7 +189,8 @@ class FNFLegacyParser {
 				mustHitSection: notes[section-1] != null ? notes[section-1].mustHitSection : false,
 				bpm: notes[section-1] != null ? notes[section-1].bpm : chart.meta.bpm,
 				changeBPM: false,
-				altAnim: notes[section-1] != null ? notes[section-1].altAnim : false
+				altAnim: notes[section-1] != null ? notes[section-1].altAnim : false,
+				sectionBeats: notes[section-1] != null ? notes[section-1].sectionBeats : chart.meta.beatsPerMeasure.getDefault(4)
 			};
 
 			var sectionEndTime:Float = Conductor.getTimeForStep(Conductor.getMeasureLength() * (section+1));
@@ -193,6 +204,8 @@ class FNFLegacyParser {
 					case "BPM Change":
 						baseSection.changeBPM = true;
 						baseSection.bpm = event.params[0];
+					case "Time Signature Change":
+						baseSection.sectionBeats = event.params[0];
 				}
 			}
 			notes[section] = baseSection;
