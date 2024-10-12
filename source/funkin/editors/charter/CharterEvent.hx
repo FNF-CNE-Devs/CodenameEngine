@@ -61,7 +61,7 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 	public static function generateEventIcon(event:ChartEvent):FlxSprite {
 		switch(event.name) {
 			case "Time Signature Change":
-				if(event.params[0] >= 0 || event.params[1] >= 0) {
+				if(event.params != null && (event.params[0] >= 0 || event.params[1] >= 0)) {
 					var group = new FlxSpriteGroup();
 					group.add(generateDefaultIcon(event.name));
 					group.add({ // top
@@ -181,8 +181,7 @@ class EventNumber extends FlxSprite {
 		return Math.abs(scale.y) * frameHeight;
 	}
 
-	public override function updateHitbox():Void
-	{
+	public override function updateHitbox():Void {
 		var numWidth = this.numWidth;
 		var numHeight = this.numHeight;
 		width = numWidth;
