@@ -1,5 +1,6 @@
 package funkin.editors.charter;
 
+import flixel.group.FlxSpriteGroup;
 import funkin.editors.charter.Charter.ICharterSelectable;
 import flixel.math.FlxPoint;
 import funkin.game.Character;
@@ -57,10 +58,26 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 		return spr;
 	}
 
-	public static function generateEventIcon(event:ChartEvent) {
-		return switch(event.name) {
-			default:
-				generateDefaultIcon(event.name);
+	public static function generateEventIcon(event:ChartEvent):FlxSprite {
+		switch(event.name) {
+			case "Time Signature Change":
+				if(event.params[0] >= 0 || event.params[1] >= 0) {
+					var group = new FlxSpriteGroup();
+					group.add(generateDefaultIcon(event.name));
+					group.add({ // top
+						var num = new EventNumber(9, -1, event.params[0], EventNumber.ALIGN_CENTER);
+						num.scrollFactor.set(1, 1);
+						num.active = false;
+						num;
+					});
+					group.add({ // bottom
+						var num = new EventNumber(9, 10, event.params[1], EventNumber.ALIGN_CENTER);
+						num.scrollFactor.set(1, 1);
+						num.active = false;
+						num;
+					});
+					return group;
+				}
 			case "Camera Movement":
 				// custom icon for camera movement
 				var state = cast(FlxG.state, Charter);
@@ -71,10 +88,10 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 					healthIcon.setUnstretchedGraphicSize(32, 32, false);
 					healthIcon.scrollFactor.set(1, 1);
 					healthIcon.active = false;
-					healthIcon;
-				} else
-					generateDefaultIcon(event.name);
+					return healthIcon;
+				}
 		}
+		return generateDefaultIcon(event.name);
 	}
 
 	public override function onHovered() {
@@ -115,5 +132,62 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 			}
 
 		x = (snappedToGrid && eventsBackdrop != null ? eventsBackdrop.x : 0) - (bWidth = 37 + (icons.length * 22));
+	}
+}
+
+class EventNumber extends FlxSprite {
+	public static inline final ALIGN_NORMAL:Int = 0;
+	public static inline final ALIGN_CENTER:Int = 1;
+
+	public var digits:Array<Int> = [];
+
+	public var align:Int = ALIGN_NORMAL;
+
+	public function new(x:Float, y:Float, number:Int, ?align:Int = ALIGN_NORMAL) {
+		super(x, y);
+		this.digits = [];
+		this.align = align;
+		while (number > 0) {
+			this.digits.insert(0, number % 10);
+			number = Std.int(number / 10);
+		}
+		loadGraphic(Paths.image('editors/charter/event-icons/components/eventNums'), true, 6, 7);
+	}
+
+	override function update(elapsed:Float) {
+		super.update(elapsed);
+	}
+
+	override function draw() {
+		var baseX = x;
+		var offsetX = 0.0;
+		if(align == ALIGN_CENTER) offsetX = -(digits.length - 1) * frameWidth * Math.abs(scale.x) / 2;
+
+		x = baseX + offsetX;
+		for (i in 0...digits.length) {
+			frame = frames.frames[digits[i]];
+			super.draw();
+			x += frameWidth * Math.abs(scale.x);
+		}
+		x = baseX;
+	}
+
+	public var numWidth(get, never):Float;
+	private function get_numWidth():Float {
+		return Math.abs(scale.x) * frameWidth * digits.length;
+	}
+	public var numHeight(get, never):Float;
+	private function get_numHeight():Float {
+		return Math.abs(scale.y) * frameHeight;
+	}
+
+	public override function updateHitbox():Void
+	{
+		var numWidth = this.numWidth;
+		var numHeight = this.numHeight;
+		width = numWidth;
+		height = numHeight;
+		offset.set(-0.5 * (numWidth - frameWidth * digits.length), -0.5 * (numHeight - frameHeight));
+		centerOrigin();
 	}
 }
