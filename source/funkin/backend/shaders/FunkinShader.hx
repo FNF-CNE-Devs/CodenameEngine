@@ -25,7 +25,7 @@ import openfl.display.ShaderInput;
 class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 	private static var __instanceFields = Type.getInstanceFields(FunkinShader);
 
-	public var glslVer:String = #if mobile "300 es" #else "120" #end;
+	public var glslVer:String = #if lime_opengles "300 es" #else "120" #end;
 
 	/**
 	 * Creates a new shader from the specified fragment and vertex source.
