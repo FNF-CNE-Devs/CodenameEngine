@@ -109,7 +109,7 @@ class FNFLegacyParser {
 				});
 			}
 
-			if (section.sectionBeats != beatsPerMeasure) {
+			if (section.sectionBeats != null && section.sectionBeats != beatsPerMeasure) {
 				beatsPerMeasure = section.sectionBeats != null ? section.sectionBeats : data.beatsPerMeasure.getDefault(4);
 
 				result.events.push({

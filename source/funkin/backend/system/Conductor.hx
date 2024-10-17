@@ -11,7 +11,7 @@ class BPMChangeEvent {
 	public var songTime:Float;
 	public var bpm:Float;
 	public var beatsPerMeasure:Float;
-	public var stepsPerBeat:Float;
+	public var stepsPerBeat:Int;
 }
 
 final class Conductor
@@ -48,7 +48,7 @@ final class Conductor
 	/**
 	 * Number of steps per beat (bottom number in time signature). Defaults to 4.
 	 */
-	public static var stepsPerBeat:Float = 4;
+	public static var stepsPerBeat:Int = 4;
 
 
 	/**
@@ -137,7 +137,7 @@ final class Conductor
 
 		var curBPM:Float = song.meta.bpm;
 		var curBeatsPerMeasure:Float = song.meta.beatsPerMeasure.getDefault(4);
-		var curStepsPerBeat:Float = song.meta.stepsPerBeat.getDefault(4);
+		var curStepsPerBeat:Int = song.meta.stepsPerBeat.getDefault(4);
 		var songTime:Float = 0;
 		var stepTime:Float = 0;
 
@@ -305,7 +305,7 @@ final class Conductor
 		}
 	}
 
-	public static function changeBPM(newBpm:Float, newBeatsPerMeasure:Float = 4, newStepsPerBeat:Float = 4)
+	public static function changeBPM(newBpm:Float, newBeatsPerMeasure:Float = 4, newStepsPerBeat:Int = 4)
 	{
 		var timesignChange = (beatsPerMeasure != newBeatsPerMeasure || stepsPerBeat != newStepsPerBeat);
 		var bpmChange = (bpm != newBpm);
