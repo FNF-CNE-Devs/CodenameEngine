@@ -55,15 +55,6 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 	public function prepareInfos(node:Access)
 		return XMLImportedScriptInfo.prepareInfos(node, scripts, (infos) -> xmlImportedScripts.push(infos));
 
-	// backward compat  - Nex
-	private function set_script(script:Script):Script {
-		if (scripts == null) (scripts = new ScriptPack("Character")).setParent(this);
-		else scripts.remove(scripts.scripts[0]);
-		if(script != null) scripts.insert(0, script);
-		this.script = script;
-		return script;
-	}
-
 	public var idleSuffix:String = "";
 	public var stunned(default, set):Bool = false;
 
@@ -443,12 +434,29 @@ class Character extends FunkinSprite implements IBeatReceiver implements IOffset
 		return stunned = b;
 	}
 
+	// ---- Backwards compat ----
 	// Interval at which the character will dance (higher number = slower dance)
 	@:noCompletion public var danceInterval(get, set):Int;
 	@:noCompletion private function set_danceInterval(v:Int)
 		return beatInterval = v;
 	@:noCompletion private function get_danceInterval()
 		return beatInterval;
+
+	private function set_script(script:Script):Script {
+		if (scripts == null) (scripts = new ScriptPack("Character")).setParent(this);
+
+		var lastIndex = scripts.scripts.indexOf(this.script);
+		if(lastIndex >= 0) {
+			if(script == null) // last != null && new == null
+				scripts.scripts.splice(lastIndex, 1);
+			else // last != null && new != null
+				scripts.scripts[lastIndex] = script;
+		} else if(script != null) // last == null
+			scripts.insert(0, script);
+
+		return this.script = script;
+	}
+	// ---- end of Backwards compat ----
 
 
 	public static var FALLBACK_CHARACTER:String = "bf";
