@@ -376,7 +376,7 @@ class Charter extends UIState {
 						onSelect: _playback_back_step
 					},
 					{
-						label: "Go forward a steo",
+						label: "Go forward a step",
 						keybind: [S],
 						onSelect: _playback_forward_step
 					},
