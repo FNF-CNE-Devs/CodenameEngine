@@ -5,6 +5,7 @@ import funkin.backend.scripting.events.StageNodeEvent;
 import flixel.math.FlxPoint;
 import flixel.FlxState;
 import haxe.xml.Access;
+import funkin.backend.utils.XMLUtil.XMLImportedScriptInfo;
 import funkin.backend.system.interfaces.IBeatReceiver;
 import funkin.backend.scripting.DummyScript;
 import funkin.backend.scripting.Script;
@@ -29,6 +30,9 @@ class Stage extends FlxBasic implements IBeatReceiver {
 
 	public function setStagesSprites(script:Script)
 		for (k=>e in stageSprites) script.set(k, e);
+
+	public function prepareInfos(node:Access)
+		return XMLImportedScriptInfo.prepareInfos(node, PlayState.instance.scripts, (infos) -> xmlImportedScripts.push(infos));
 
 	public function new(stage:String, ?state:FlxState) {
 		super();
@@ -136,7 +140,7 @@ class Stage extends FlxBasic implements IBeatReceiver {
 						PlayState.instance.add(PlayState.instance.comboGroup);
 						PlayState.instance.comboGroup;
 					case "use-extension" | "extension" | "ext":
-						if (__shouldLoadBefore(node) || XMLImportedScriptInfo.prepareInfos(node, this) == null) continue;
+						if (XMLImportedScriptInfo.shouldLoadBefore(node) || prepareInfos(node) == null) continue;
 						null;
 					default: null;
 				}
@@ -201,12 +205,9 @@ class Stage extends FlxBasic implements IBeatReceiver {
 
 	@:dox(hide) private function __pushNcheckNode(array:Array<Access>, node:Access) {
 		array.push(node);
-		if ((node.name == "use-extension" || node.name == "extension" || node.name == "ext") && __shouldLoadBefore(node))
-			XMLImportedScriptInfo.prepareInfos(node, this);
+		if ((node.name == "use-extension" || node.name == "extension" || node.name == "ext") && XMLImportedScriptInfo.shouldLoadBefore(node))
+			prepareInfos(node);
 	}
-
-	@:dox(hide) private static inline function __shouldLoadBefore(node:Access):Bool
-		return node.getAtt("loadBefore") != "false";
 
 	public function addCharPos(name:String, node:Access, ?nonXMLInfo:StageCharPosInfo):StageCharPos {
 		var charPos = new StageCharPos();
@@ -317,45 +318,4 @@ typedef StageCharPosInfo = {
 	var y:Float;
 	var flip:Bool;
 	var scroll:Float;
-}
-
-class XMLImportedScriptInfo {
-	public var path:String;
-	public var shortLived:Bool = false;
-	public var loadBefore:Bool = true;
-	public var importStageSprites:Bool = false;
-
-	public function new(path:String)
-		this.path = path;
-
-	public function getScript():Script
-		return PlayState.instance == null ? null : PlayState.instance.scripts.getByPath(path);
-
-	public static function prepareInfos(node:Access, ?stage:Stage):XMLImportedScriptInfo {
-		if (!node.has.script || PlayState.instance == null) return null;
-
-		var folder = node.getAtt("folder").getDefault("data/scripts/");
-		if (!folder.endsWith("/")) folder += "/";
-
-		var path = Paths.script(folder + node.getAtt("script"));
-		var daScript = Script.create(path);
-		if (daScript is DummyScript) {
-			var msg = 'Script Extension at ${path} does not exist';
-			if (stage != null) msg += ' through stage "${stage.stageName}"';
-			Logs.trace(msg + ".", ERROR);
-			return null;
-		}
-
-		var infos = new XMLImportedScriptInfo(daScript.path);
-		infos.shortLived = node.getAtt("isShortLived") == "true";
-		infos.importStageSprites = node.getAtt("importStageSprites") == "true";
-		@:privateAccess infos.loadBefore = Stage.__shouldLoadBefore(node);
-
-		if (stage != null) stage.xmlImportedScripts.push(infos);
-		PlayState.instance.scripts.add(daScript);
-		daScript.set("scriptInfo", infos);
-		daScript.load();
-
-		return infos;
-	}
 }
