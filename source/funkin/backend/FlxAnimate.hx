@@ -18,7 +18,7 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 		for (camera in cameras)
 		{
 			rMatrix.identity();
-			rMatrix.translate(-limb.offset.x, -limb.offset.y);
+			limb.prepareMatrix(rMatrix, FlxFrameAngle.ANGLE_0, _checkFlipX() != camera.flipX, _checkFlipY() != camera.flipY);
 			rMatrix.concat(_rMatrix);
 			if (!camera.visible || !camera.exists || !limbOnScreen(limb, _rMatrix, camera))
 				return;
@@ -28,10 +28,13 @@ class FlxAnimate extends flxanimate.FlxAnimate {
 			if (limb != _pivot) {
 				if (frameOffsetAngle != null && frameOffsetAngle != angle)
 				{
-					var angleOff = (-angle + frameOffsetAngle) * FlxAngle.TO_RAD;
-					rMatrix.rotate(-angleOff);
+					var angleOff = (frameOffsetAngle - angle) * FlxAngle.TO_RAD;
+					var cos = Math.cos(angleOff);
+					var sin = Math.sin(angleOff);
+					// cos doesnt need to be negated
+					rMatrix.rotateWithTrig(cos, -sin);
 					rMatrix.translate(-frameOffset.x, -frameOffset.y);
-					rMatrix.rotate(angleOff);
+					rMatrix.rotateWithTrig(cos, sin);
 				}
 				else
 				{

@@ -1,3 +1,4 @@
+//
 import funkin.game.HudCamera;
 import funkin.backend.scripting.events.NoteHitEvent;
 

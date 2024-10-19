@@ -243,7 +243,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Current stage name
 	 */
-	public var curStage:String = "";
+	public var curStage(get, set):String;
 
 	/**
 	 * Interval at which Girlfriend dances.
@@ -524,6 +524,14 @@ class PlayState extends MusicBeatState
 			healthBar.setRange(healthBar.min, v);
 		}
 		return this.maxHealth = v;
+	}
+
+	private inline function get_curStage()
+		return stage == null ? "" : stage.stageName;
+
+	private inline function set_curStage(name:String) {
+		if (stage != null) stage.stageName = name;
+		return name;
 	}
 
 	@:dox(hide) override public function create()
@@ -857,12 +865,12 @@ class PlayState extends MusicBeatState
 		Conductor.songPosition = 0;
 		Conductor.songPosition -= Conductor.crochet * introLength - Conductor.songOffset;
 
-		var swagCounter:Int = 0;
-
-		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
-		{
-			countdown(swagCounter++);
-		}, introLength);
+		if(introLength > 0) {
+			var swagCounter:Int = 0;
+			startTimer = new FlxTimer().start(Conductor.crochet / 1000, (tmr:FlxTimer) -> {
+				countdown(swagCounter++);
+			}, introLength);
+		}
 		scripts.call("onPostStartCountdown");
 	}
 
@@ -1039,7 +1047,7 @@ class PlayState extends MusicBeatState
 				vocals.pause();
 			}
 
-			if (!startTimer.finished)
+			if (startTimer != null && !startTimer.finished)
 				startTimer.active = false;
 		}
 
@@ -1059,7 +1067,7 @@ class PlayState extends MusicBeatState
 				resyncVocals();
 			}
 
-			if (!startTimer.finished)
+			if (startTimer != null && !startTimer.finished)
 				startTimer.active = true;
 			paused = false;
 

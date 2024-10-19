@@ -582,7 +582,7 @@ class CoolUtil
 			var fmt = new FlxTextFormat();
 
 			fmt.format.color = Reflect.hasField(fmtt, "color") ? FlxColor.fromString(fmtt.color) : text.color;
-			fmt.format.font = Reflect.hasField(fmtt, "font") ? Paths.font(fmtt.font) : text.font;
+			fmt.format.font = Reflect.hasField(fmtt, "font") ? Paths.getFontName(Paths.font(fmtt.font)) : text.font;
 			fmt.format.size = Reflect.hasField(fmtt, "size") ? Std.parseInt(fmtt.size) : text.size;
 			fmt.format.italic = Reflect.hasField(fmtt, "italic") ? fmtt.italic == "true" : text.italic;
 			fmt.format.bold = Reflect.hasField(fmtt, "bold") ? fmtt.bold == "true" : text.bold;
