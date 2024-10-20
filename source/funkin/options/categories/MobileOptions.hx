@@ -45,8 +45,8 @@ class MobileOptions extends OptionsScreen {
 		add(new ArrayOption(
 			"Hitbox Design",
 			"Choose how your hitbox should look like!",
-			['gradient', 'noGradient', 'hidden'],
-			['Gradient', 'No Gradient', 'Hidden'],
+			['noGradient', 'noGradientOld', 'gradient', 'hidden'],
+			["No Gradient", "No Gradient (Old)", "Gradient", "Hidden"],
 			'hitboxType'));
 		#end
 		#if mobile
