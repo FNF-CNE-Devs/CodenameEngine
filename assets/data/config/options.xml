@@ -1,6 +1,7 @@
 <!DOCTYPE codename-mod-options>
 <!-- TEMPLATE FOR CUSTOM OPTIONS!!! -->
 <menu name="Mod Options" desc="Modify mod options here">
+	<virtualPad name="virtualPad" menuName="Mod Options" dpadMode="LEFT_FULL" actionMode="A_B" />
 	<checkbox id="checkboxExample" name="Checkbox example" />
 	<number id="numberExample" name="Number example" min="0" max="10" change="1"/>
 	<choice id="choiceExample" name="Choice Example">
@@ -11,5 +12,6 @@
 
 	<menu name="Submenu Example" desc="Submenu test">
 		<checkbox id="levelOfIdk2" name="Level of idk" />
+		<virtualPad name="virtualPad" menuName="Submenu Example" dpadMode="NONE" actionMode="A_B" />
 	</menu>
 </menu>
