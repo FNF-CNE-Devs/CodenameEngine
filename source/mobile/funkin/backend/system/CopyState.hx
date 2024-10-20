@@ -164,7 +164,7 @@ class CopyState extends funkin.backend.MusicBeatState
 
 	public function getFileBytes(file:String):ByteArray
 	{
-		switch (Path.extension(file))
+		switch (Path.extension(file).toLowerCase())
 		{
 			case 'otf' | 'ttf':
 				return ByteArray.fromFile(file);
