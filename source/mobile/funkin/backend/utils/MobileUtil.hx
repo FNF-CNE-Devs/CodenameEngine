@@ -43,42 +43,6 @@ class MobileUtil
 		return daPath;
 	}
 
-	public static function mkDirs(directory:String):Void
-	{
-		try {
-			if (FileSystem.exists(directory) && FileSystem.isDirectory(directory))
-				return;
-		} catch (e:haxe.Exception) {
-			trace('Something went wrong while looking at folder. (${e.message})');
-		}
-		var total:String = '';
-		if (directory.substr(0, 1) == '/')
-			total = '/';
-
-		var parts:Array<String> = directory.split('/');
-		if (parts.length > 0 && parts[0].indexOf(':') > -1)
-			parts.shift();
-
-		for (part in parts)
-		{
-			if (part != '.' && part != '')
-			{
-				if (total != '' && total != '/')
-					total += '/';
-
-				total += part;
-
-				try
-				{
-					if (!FileSystem.exists(total))
-						FileSystem.createDirectory(total);
-				}
-				catch (e:haxe.Exception)
-					trace('Error while creating folder. (${e.message}');
-			}
-		}
-	}
-
 	#if android
 	public static function requestPermissionsFromUser():Void
 	{
@@ -100,7 +64,7 @@ class MobileUtil
 		try
 		{
 			if (!FileSystem.exists(MobileUtil.getStorageDirectory()))
-				mkDirs(MobileUtil.getStorageDirectory());
+				FileSystem.createDirectory(MobileUtil.getStorageDirectory());
 		}
 		catch (e:Dynamic)
 		{
