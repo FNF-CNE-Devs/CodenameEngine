@@ -153,6 +153,7 @@ class PauseSubState extends MusicBeatSubstate
 				persistentDraw = false;
 				openSubState(new KeybindsOptions());
 			case "Change Options":
+				TreeMenu.lastState = PlayState;
 				FlxG.switchState(new OptionsMenu());
 			case "Exit to charter":
 				FlxG.switchState(new funkin.editors.charter.Charter(PlayState.SONG.meta.name, PlayState.difficulty, false));
