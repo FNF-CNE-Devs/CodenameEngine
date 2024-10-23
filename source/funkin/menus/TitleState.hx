@@ -40,11 +40,11 @@ class TitleState extends MusicBeatState
 		DiscordUtil.call("onMenuLoaded", ["Title Screen"]);
 	}
 
-	var logoBl:FlxSprite;
-	var gfDance:FlxSprite;
+	public var logoBl:FlxSprite;
+	public var gfDance:FlxSprite;
 	var danceLeft:Bool = false;
-	var titleText:FlxSprite;
-	var titleScreenSprites:MusicBeatGroup;
+	public var titleText:FlxSprite;
+	public var titleScreenSprites:MusicBeatGroup;
 
 	function startIntro()
 	{
