@@ -85,12 +85,11 @@ class HealthIcon extends FlxSprite
 		if (animation.curAnim != null) {
 			var i:Int = -1;
 			var oldKey:Int = -1;
-			for(k=>icon in healthSteps) {
-				if (k > oldKey && k < health * 100) {
-					oldKey = k;
-					i = icon;
-				}
+			for (k=>icon in healthSteps) if (k > oldKey && k <= health * 100) {
+				oldKey = k;
+				i = icon;
 			}
+
 			if (i >= 0) animation.curAnim.curFrame = i;
 		}
 	}
