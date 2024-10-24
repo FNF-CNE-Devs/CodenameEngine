@@ -1388,6 +1388,7 @@ class PlayState extends MusicBeatState
 				if (strumLines.members[event.params[0]] != null && strumLines.members[event.params[0]].characters != null)
 					for (char in strumLines.members[event.params[0]].characters)
 						if (char != null) char.playAnim(event.params[1], event.params[2], null);
+			case "Time Signature Change": // automatically handled by conductor
 			case "Unknown": // nothing
 		}
 	}
