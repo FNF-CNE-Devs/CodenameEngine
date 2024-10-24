@@ -5,6 +5,8 @@ import flixel.math.FlxPoint;
 
 class HudCamera extends FlxCamera {
 	public var downscroll:Bool = false;
+	public var alterExclusions:Array<FlxObject> = [];
+	
 	//public override function update(elapsed:Float) {
 	//	super.update(elapsed);
 	//	// flipY = downscroll;
@@ -23,7 +25,7 @@ class HudCamera extends FlxCamera {
 
 
 	public override function alterScreenPosition(spr:FlxObject, pos:FlxPoint) {
-		if (downscroll) {
+		if (downscroll && !alterExclusions.contains(spr)) {
 			pos.set(pos.x, height - pos.y - spr.height);
 		}
 		return pos;
