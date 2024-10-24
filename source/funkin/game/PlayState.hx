@@ -22,6 +22,7 @@ import flixel.sound.FlxSound;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
+import flixel.math.FlxRect;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
@@ -277,6 +278,23 @@ class PlayState extends MusicBeatState
 	 */
 	public var healthBar:FlxBar;
 
+	/**	
+	 * Timer bar background.
+	 */
+	public var timerBarBG:FlxSprite;
+	/**
+	 * Timer bar.
+	 */
+	public var timerBar:FlxSprite;
+	/**
+	 * Clock for decor.
+	 */
+	public var decorClock:FlxSprite;
+	/**
+	 * Hand for the decor clock.
+	 */
+	public var decorHand:FlxSprite;
+	
 	/**
 	 * Whenever the music has been generated.
 	 */
@@ -740,6 +758,25 @@ class PlayState extends MusicBeatState
 			add(icon);
 		}
 
+		timerBarBG = new FlxSprite(0, 0).loadAnimatedGraphic(Paths.image('game/timer/base'));
+		timerBarBG.x = healthBarBG.x + healthBarBG.width + ((FlxG.width - (healthBarBG.x + healthBarBG.width) - timerBarBG.width) / 2);
+		timerBarBG.y = FlxG.height - timerBarBG.height - 10;
+		timerBarBG.scrollFactor.set();
+		add(timerBarBG);
+
+		timerBar = new FlxSprite(timerBarBG.x + 12, timerBarBG.y + 18).loadAnimatedGraphic(Paths.image('game/timer/actualcodedthing'));
+		timerBar.scrollFactor.set();
+		timerBar.clipRect = new FlxRect(0, 0, 1, timerBar.height);
+		add(timerBar);
+
+		decorClock = new FlxSprite(timerBarBG.x - 31, timerBarBG.y + 1).loadAnimatedGraphic(Paths.image('game/timer/decor_clock'));
+		decorClock.scrollFactor.set();
+		add(decorClock);
+
+		decorHand = new FlxSprite(decorClock.x + 10, decorClock.y + 10).loadAnimatedGraphic(Paths.image('game/timer/decor_hand'));
+		decorHand.scrollFactor.set();
+		add(decorHand);
+
 		scoreTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Score:0", 16);
 		missesTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Misses:0", 16);
 		accuracyTxt = new FunkinText(healthBarBG.x + 50, healthBarBG.y + 30, Std.int(healthBarBG.width - 100), "Accuracy:-% (N/A)", 16);
@@ -754,7 +791,7 @@ class PlayState extends MusicBeatState
 		accuracyTxt.alignment = LEFT;
 		updateRatingStuff();
 
-		for(e in [healthBar, healthBarBG, iconP1, iconP2, scoreTxt, missesTxt, accuracyTxt])
+		for(e in [healthBar, healthBarBG, iconP1, iconP2, timerBarBG, timerBar, scoreTxt, missesTxt, accuracyTxt])
 			e.cameras = [camHUD];
 		#end
 
@@ -1259,6 +1296,9 @@ class PlayState extends MusicBeatState
 			iconP2.updateHitbox();
 		}
 		updateIconPositions();
+
+		timerBar.clipRect = new FlxRect(0, 0, (inst.time / inst.length) * timerBar.width, timerBar.height);
+		decorHand.angle = (inst.time / inst.length) * 360;
 
 		if (startingSong)
 		{
