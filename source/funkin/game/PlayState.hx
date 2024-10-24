@@ -791,7 +791,7 @@ class PlayState extends MusicBeatState
 		accuracyTxt.alignment = LEFT;
 		updateRatingStuff();
 
-		for(e in [healthBar, healthBarBG, iconP1, iconP2, timerBarBG, timerBar, scoreTxt, missesTxt, accuracyTxt])
+		for(e in [healthBar, healthBarBG, iconP1, iconP2, timerBarBG, timerBar, decorClock, decorHand scoreTxt, missesTxt, accuracyTxt])
 			e.cameras = [camHUD];
 		#end
 
