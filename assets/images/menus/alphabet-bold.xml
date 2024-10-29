@@ -150,8 +150,4 @@
 	<SubTexture name="Z bold0001" x="667" y="217" width="52" height="65"/>
 	<SubTexture name="Z bold0002" x="719" y="217" width="52" height="65"/>
 	<SubTexture name="Z bold0003" x="719" y="217" width="52" height="65"/>
-	<SubTexture name="' bold0000" x="771" y="214" width="23" height="26"/>
-	<SubTexture name="' bold0001" x="771" y="214" width="23" height="26"/>
-	<SubTexture name="' bold0002" x="794" y="214" width="23" height="26"/>
-	<SubTexture name="' bold0003" x="794" y="214" width="23" height="26"/>
 </TextureAtlas>
