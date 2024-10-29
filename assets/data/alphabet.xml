@@ -41,6 +41,7 @@
 		<letter char="8"        anim="8 bold" />
 		<letter char="9"        anim="9 bold" />
 		<letter char=">"        anim="> Bold" />
+		<letter char="'"        anim="' bold" />
 	</bold>
 	<normal spritesheet="menus/alphabet">
 		<!-- Symbols !-->
