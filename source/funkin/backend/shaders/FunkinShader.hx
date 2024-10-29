@@ -25,7 +25,7 @@ import openfl.display.ShaderInput;
 class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 	private static var __instanceFields = Type.getInstanceFields(FunkinShader);
 
-	public var glslVer:String = #if lime_opengles "300 es" #else "120" #end;
+	public var glslVer:String = #if lime_opengles "100" #else "120" #end;
 
 	/**
 	 * Creates a new shader from the specified fragment and vertex source.
@@ -34,7 +34,7 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 	 * @param vert Vertex source (pass `null` to use default)
 	 * @param glslVer Version of GLSL to use (defaults to 120 at OpenGL, 300 es at OpenGL ES)
 	 */
-	public override function new(frag:String, vert:String, glslVer:String = #if lime_opengles "300 es" #else "120" #end) {
+	public override function new(frag:String, vert:String, glslVer:String = #if lime_opengles "100" #else "120" #end) {
 		if (frag == null) frag = ShaderTemplates.defaultFragmentSource;
 		if (vert == null) vert = ShaderTemplates.defaultVertexSource;
 		this.glFragmentSource = frag;
