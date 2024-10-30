@@ -89,7 +89,7 @@ class DialogueCutscene extends Cutscene {
 					musicVolume: node.has.musicVolume ? (volume = Std.parseFloat(node.att.speed).getDefault(0.8)) : null,
 					changeMusic: node.has.changeMusic ? FlxG.sound.load(Paths.music(node.att.changeMusic), volume, true) : null,
 					playSound: node.has.playSound ? FlxG.sound.load(Paths.sound(node.att.playSound)) : null,
-					nextSound: node.has.nextSound ? FlxG.sound.load(Paths.music(node.att.nextSound)) : null,
+					nextSound: node.has.nextSound ? FlxG.sound.load(Paths.sound(node.att.nextSound)) : null,
 					textSound: null
 				};
 
