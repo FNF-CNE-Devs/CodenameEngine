@@ -162,7 +162,7 @@ class MainMenuState extends MusicBeatState
 
 			var event = event("onSelectItem", EventManager.get(NameEvent).recycle(daChoice));
 			if (event.cancelled) return;
-			switch (daChoice)
+			switch (event.name)
 			{
 				case 'story mode': FlxG.switchState(new StoryMenuState());
 				case 'freeplay': FlxG.switchState(new FreeplayState());
