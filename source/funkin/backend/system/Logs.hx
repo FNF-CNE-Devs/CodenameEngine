@@ -9,7 +9,7 @@ import funkin.backend.utils.NativeAPI.ConsoleColor;
 class Logs {
 	private static var __showing:Bool = false;
 
-	public static var nativeTrace = #if sys Sys.println #else Log.trace #end;
+	public static var nativeTrace = #if sys Sys.print #else Log.trace #end;
 	public static function init() {
 		Log.trace = function(v:Dynamic, ?infos:Null<haxe.PosInfos>) {
 			var data = [
