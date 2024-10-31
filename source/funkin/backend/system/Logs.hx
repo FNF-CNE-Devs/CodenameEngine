@@ -9,7 +9,7 @@ import funkin.backend.utils.NativeAPI.ConsoleColor;
 class Logs {
 	private static var __showing:Bool = false;
 
-	public static var nativeTrace = #if sys Sys.print #else Log.trace #end;
+	public static var nativeTrace = Log.trace;
 	public static function init() {
 		Log.trace = function(v:Dynamic, ?infos:Null<haxe.PosInfos>) {
 			var data = [
@@ -115,10 +115,19 @@ class Logs {
 		__showing = true;
 		for(t in text) {
 			NativeAPI.setConsoleColors(t.color);
-			nativeTrace(t.text);
+			Sys.print(t.text);
 		}
 		NativeAPI.setConsoleColors();
 		Sys.print("\r\n");
+		__showing = false;
+		#elseif mobile
+		while(__showing) {
+			Sys.sleep(0.05);
+		}
+		__showing = true;
+		@:privateAccess
+		Sys.print([for(t in text) t.text].join(""));
+		NativeAPI.setConsoleColors();
 		__showing = false;
 		#else
 		@:privateAccess
