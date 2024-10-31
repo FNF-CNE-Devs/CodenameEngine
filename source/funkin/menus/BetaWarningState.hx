@@ -6,6 +6,8 @@ import funkin.backend.FunkinText;
 
 class BetaWarningState extends MusicBeatState {
 	var titleAlphabet:Alphabet;
+	var aOrAn:String;
+	var vowelList:String = "aeiouh";
 	var disclaimer:FunkinText;
 
 	var transitioning:Bool = false;
@@ -17,9 +19,11 @@ class BetaWarningState extends MusicBeatState {
 		titleAlphabet.screenCenter(X);
 		add(titleAlphabet);
 
+		aOrAn = (vowelList.indexOf((Main.releaseCycle).charAt(0).toLowerCase()) != -1) ? "an" : "a";
+
 		disclaimer = new FunkinText(16, titleAlphabet.y + titleAlphabet.height + 10, FlxG.width - 32, "", 32);
 		disclaimer.alignment = CENTER;
-		disclaimer.applyMarkup('This engine is still in a *${Main.releaseCycle}* state. That means *majority of the features* are either *buggy* or *non finished*. If you find any bugs, please report them to the Codename Engine GitHub.\n\nPress ENTER to continue',
+		disclaimer.applyMarkup('This engine is still in $aOrAn *${Main.releaseCycle}* state. That means *majority of the features* are either *buggy* or *non finished*. If you find any bugs, please report them to the Codename Engine GitHub.\n\nPress ENTER to continue',
 			[
 				new FlxTextFormatMarkerPair(new FlxTextFormat(0xFFFF4444), "*")
 			]
