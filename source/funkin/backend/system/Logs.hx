@@ -31,28 +31,35 @@ class Logs {
 			var prefix = "[FLIXEL]";
 			var color:ConsoleColor = LIGHTGRAY;
 			var level:Level = INFO;
-			switch (style)
+			if (style == LogStyle.CONSOLE)  // cant place a switch here as these arent inline values  - Nex
 			{
-				case LogStyle.CONSOLE:
-					prefix = "> ";
-					color = WHITE;
-					level = INFO;
-				case LogStyle.ERROR:
-					prefix = "[FLIXEL]";
-					color = RED;
-					level = ERROR;
-				case LogStyle.NORMAL:
-					prefix = "[FLIXEL]";
-					color = WHITE;
-					level = INFO;
-				case LogStyle.NOTICE:
-					prefix = "[FLIXEL]";
-					color = GREEN;
-					level = VERBOSE;
-				case LogStyle.WARNING:
-					prefix = "[FLIXEL]";
-					color = YELLOW;
-					level = WARNING;
+				prefix = "> ";
+				color = WHITE;
+				level = INFO;
+			}
+			else if (style == LogStyle.ERROR)
+			{
+				prefix = "[FLIXEL]";
+				color = RED;
+				level = ERROR;
+			}
+			else if (style == LogStyle.NORMAL)
+			{
+				prefix = "[FLIXEL]";
+				color = WHITE;
+				level = INFO;
+			}
+			else if (style == LogStyle.NOTICE)
+			{
+				prefix = "[FLIXEL]";
+				color = GREEN;
+				level = VERBOSE;
+			}
+			else if (style == LogStyle.WARNING)
+			{
+				prefix = "[FLIXEL]";
+				color = YELLOW;
+				level = WARNING;
 			}
 
 			var d:Dynamic = data;
