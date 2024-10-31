@@ -31,31 +31,31 @@ class Logs {
 			var prefix = "[FLIXEL]";
 			var color:ConsoleColor = LIGHTGRAY;
 			var level:Level = INFO;
-			if (Style == LogStyle.CONSOLE)
+			if (style == LogStyle.CONSOLE)
 			{
 				prefix = "> ";
 				color = WHITE;
 				level = INFO;
 			}
-			else if (Style == LogStyle.ERROR)
+			else if (style == LogStyle.ERROR)
 			{
 				prefix = "[FLIXEL]";
 				color = RED;
 				level = ERROR;
 			}
-			else if (Style == LogStyle.NORMAL)
+			else if (style == LogStyle.NORMAL)
 			{
 				prefix = "[FLIXEL]";
 				color = WHITE;
 				level = INFO;
 			}
-			else if (Style == LogStyle.NOTICE)
+			else if (style == LogStyle.NOTICE)
 			{
 				prefix = "[FLIXEL]";
 				color = GREEN;
 				level = VERBOSE;
 			}
-			else if (Style == LogStyle.WARNING)
+			else if (style == LogStyle.WARNING)
 			{
 				prefix = "[FLIXEL]";
 				color = YELLOW;
