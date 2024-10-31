@@ -127,7 +127,6 @@ class Logs {
 		__showing = true;
 		@:privateAccess
 		Sys.print([for(t in text) t.text].join(""));
-		NativeAPI.setConsoleColors();
 		__showing = false;
 		#else
 		@:privateAccess
