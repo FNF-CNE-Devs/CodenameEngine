@@ -13,7 +13,7 @@ import funkin.backend.system.Conductor;
 
 class GameOverSubstate extends MusicBeatSubstate
 {
-	var character:Character;
+	public var character:Character;
 
 	public var characterName:String;
 	public var gameOverSong:String;
