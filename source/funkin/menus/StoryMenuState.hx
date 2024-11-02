@@ -333,13 +333,13 @@ class StoryMenuState extends MusicBeatState {
 			if (char.animation.exists("confirm"))
 				char.animation.play("confirm");
 
-		PlayState.loadWeek(weeks[curWeek], weeks[curWeek].difficulties[curDifficulty]);
+		PlayState.loadWeek(event.week, event.difficulty);
 
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
 			FlxG.switchState(new PlayState());
 		});
-		weekSprites.members[curWeek].startFlashing();
+		weekSprites.members[event.weekID].startFlashing();
 	}
 }
 
