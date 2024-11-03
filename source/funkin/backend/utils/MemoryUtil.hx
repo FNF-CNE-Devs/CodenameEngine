@@ -138,7 +138,7 @@ class MemoryUtil {
 				return line.substring("Type:".length).trim();
 			}
 		}*/
-		 // TODO: ^ reimplement this in a safer way
+		// TODO: ^ reimplement this in a safer way
 		#end
 		return "Unknown";
 	}
