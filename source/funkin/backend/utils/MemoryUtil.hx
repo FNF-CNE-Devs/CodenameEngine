@@ -143,7 +143,7 @@ class MemoryUtil {
 			if (line.indexOf("Type:") == 0) {
 				return line.substring("Type:".length).trim();
 			}
-		}
+		}*/
 		// TODO: sort of unsafe? also requires users to use `sudo`
 		// when launching the engine through the CLI, REIMPLEMENT LATER. 
 		#end
