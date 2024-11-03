@@ -133,8 +133,10 @@ class MemoryUtil {
 		var reg = ~/Type: (.+)/;
 		reg.match(process.stdout.readAll().toString());
 		if (process.exitCode() == 0) return reg.matched(1);
+		#elseif android
+		// MTODO: Do get mem type for android smh?
 		#elseif linux
-		var process = new HiddenProcess("sudo", ["dmidecode", "--type", "17"]);
+		/*var process = new HiddenProcess("sudo", ["dmidecode", "--type", "17"]);
 		if (process.exitCode() != 0) return "Unknown";
 		var lines = process.stdout.readAll().toString().split("\n");
 		for (line in lines) {
@@ -142,8 +144,8 @@ class MemoryUtil {
 				return line.substring("Type:".length).trim();
 			}
 		}
-		#elseif android
-		// MTODO: Do get mem type for android smh?
+		// TODO: sort of unsafe? also requires users to use `sudo`
+		// when launching the engine through the CLI, REIMPLEMENT LATER. 
 		#end
 		return "Unknown";
 	}
