@@ -64,6 +64,9 @@ class AssetsLibraryList extends AssetLibrary {
 				for(e in lib.getFiles(folder))
 					content.push(e);
 			}
+			#end
+			#if !USE_ADAPTED_ASSETS // TODO: Create a macro that will copy asset files from source to export
+			#if MOD_SUPPORT
 			else
 			#end
 			{
@@ -73,6 +76,7 @@ class AssetsLibraryList extends AssetLibrary {
 				for(i in CoolUtil.filterFileListByPath(l.list(null), folder, false))
 					content.push(i);
 			}
+			#end
 		}
 		return content;
 	}
@@ -95,6 +99,9 @@ class AssetsLibraryList extends AssetLibrary {
 				for(e in lib.getFolders(folder))
 					content.push(e);
 			}
+			#end
+			#if !USE_ADAPTED_ASSETS // TODO: Create a macro that will copy asset files from source to export
+			#if MOD_SUPPORT
 			else
 			#end
 			{
@@ -104,6 +111,7 @@ class AssetsLibraryList extends AssetLibrary {
 				for(i in CoolUtil.filterFileListByPath(l.list(null), folder, true))
 					content.push(i);
 			}
+			#end
 		}
 		return content;
 	}
