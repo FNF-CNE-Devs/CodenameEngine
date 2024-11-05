@@ -1543,9 +1543,44 @@ class Charter extends UIState {
 		playtestChart(0, true);
 	inline function _chart_playtest_opponent_here(_)
 		playtestChart(Conductor.songPosition, true, true);
-	inline function _chart_live(_)
+	inline function _chart_live(_) {
 		trace("make this");
-	inline function _chart_live_here(_)
+
+		if (Conductor.songPosition >= FlxG.sound.music.getDefault(vocals).length - Conductor.songOffset) return;
+
+		if (FlxG.sound.music.playing) {
+			FlxG.sound.music.pause();
+			vocals.pause();
+			for (strumLine in strumLines.members) strumLine.vocals.pause();
+		} else {
+			FlxG.sound.music.play();
+			vocals.play();
+			vocals.time = FlxG.sound.music.time = Conductor.songPosition + Conductor.songOffset * 2;
+			for (strumLine in strumLines.members) {
+				strumLine.vocals.play();
+				strumLine.vocals.time = vocals.time;
+			}
+		}
+	}
+	inline function _chart_live_here(_) {
+		trace("and this too");
+		
+		if (Conductor.songPosition >= FlxG.sound.music.getDefault(vocals).length - Conductor.songOffset) return;
+
+		if (FlxG.sound.music.playing) {
+			FlxG.sound.music.pause();
+			vocals.pause();
+			for (strumLine in strumLines.members) strumLine.vocals.pause();
+		} else {
+			FlxG.sound.music.play();
+			vocals.play();
+			vocals.time = FlxG.sound.music.time = Conductor.songPosition + Conductor.songOffset * 2;
+			for (strumLine in strumLines.members) {
+				strumLine.vocals.play();
+				strumLine.vocals.time = vocals.time;
+			}
+		}
+	}
 		trace("and this too");
 	function _chart_enablescripts(t) {
 		t.icon = (Options.charterEnablePlaytestScripts = !Options.charterEnablePlaytestScripts) ? 1 : 0;
