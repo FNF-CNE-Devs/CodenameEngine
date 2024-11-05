@@ -51,21 +51,28 @@ class AssetsLibraryList extends AssetLibrary {
 		for(k=>e in libraries) {
 			if (shouldSkipLib(k, source)) continue;
 
-			var l = e;
+			var l:AssetLibrary = e;
 
 			if (l is openfl.utils.AssetLibrary) {
 				@:privateAccess
 				l = cast(l, openfl.utils.AssetLibrary).__proxy;
 			}
 
-			// TODO: do base folder scanning
 			#if MOD_SUPPORT
 			if (l is IModsAssetLibrary) {
 				var lib = cast(l, IModsAssetLibrary);
 				for(e in lib.getFiles(folder))
 					content.push(e);
 			}
+			else
 			#end
+			{
+				// Allow to look besides 'assets/' also 'flixel/' or something similar? At the discretion of CNE-Devs. - Redar13
+				// if (!folder.startsWith("assets/"))
+				// 	folder = "assets/" + folder;
+				for(i in CoolUtil.filterFileListByPath(l.list(null), folder, false))
+					content.push(i);
+			}
 		}
 		return content;
 	}
@@ -75,21 +82,28 @@ class AssetsLibraryList extends AssetLibrary {
 		for(k=>e in libraries) {
 			if (shouldSkipLib(k, source)) continue;
 
-			var l = e;
+			var l:AssetLibrary = e;
 
 			if (l is openfl.utils.AssetLibrary) {
 				@:privateAccess
 				l = cast(l, openfl.utils.AssetLibrary).__proxy;
 			}
 
-			// TODO: do base folder scanning
 			#if MOD_SUPPORT
 			if (l is IModsAssetLibrary) {
 				var lib = cast(l, IModsAssetLibrary);
 				for(e in lib.getFolders(folder))
 					content.push(e);
 			}
+			else
 			#end
+			{
+				// Allow to look besides 'assets/' also 'flixel/' or something similar? At the discretion of CNE-Devs. - Redar13
+				// if (!folder.startsWith("assets/"))
+				// 	folder = "assets/" + folder;
+				for(i in CoolUtil.filterFileListByPath(l.list(null), folder, true))
+					content.push(i);
+			}
 		}
 		return content;
 	}

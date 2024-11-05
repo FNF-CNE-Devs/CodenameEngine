@@ -865,6 +865,51 @@ class CoolUtil
 
 		return result.join(seperator);
 	}
+
+	/**
+	 * Designed to filter the list of files and folders based on the specified path to the target folder.
+	 * @param list Iterable<String> list of strings representing paths to files and folders.
+	 * @param targetFolder String representing the path to the target folder, by which filtering will be performed.
+	 * @param getFolders Optional boolean parameter specifying whether only folders (true) or only files (false) should be retrieved.
+	 * @return Array<String> of file or folder names
+	 */
+	@:noUsing public static function filterFileListByPath(iterList:Iterable<String>, targetFolder:String, ?getFolders:Bool):Array<String> {
+		if (!targetFolder.endsWith("/"))
+			targetFolder = targetFolder + "/";
+
+		var arrList = targetFolder.length == 1 ? [
+			for (i in iterList) i
+		] : [
+			for (i in iterList)
+				if (i.startsWith(targetFolder)) i.substr(targetFolder.length)
+		];
+		if (arrList.length == 0) return arrList;
+
+		var i:Int = 0;
+		if (getFolders) {
+			while (i < arrList.length) {
+				if (arrList[i].indexOf("/") == -1) {
+					arrList.splice(i, 1);
+				 } else {
+					arrList[i] = arrList[i].substr(0, arrList[i].indexOf("/"));
+					if (arrList[i - 1] == arrList[i]){ // remove duplicates
+						arrList.splice(i, 1);
+					} else {
+						i++;
+					}
+				}
+			}
+		} else {
+			while (i < arrList.length) {
+				if (arrList[i].indexOf("/") != -1) {
+					arrList.splice(i, 1);
+				} else {
+					i++;
+				}
+			}
+		}
+		return arrList;
+	}
 }
 
 /**
