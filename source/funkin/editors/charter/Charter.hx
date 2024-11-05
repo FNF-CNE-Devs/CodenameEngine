@@ -242,6 +242,21 @@ class Charter extends UIState {
 					},
 					null,
 					{
+						label: "Record live charting",
+						color: 0xFFA91734,
+						icon: 7,
+						keybind: [CONTROL, R],
+						onSelect: _chart_live
+					},
+					{
+						label: "Record live charting here",
+						color: 0xFFA91734,
+						icon: 7,
+						keybind: [CONTROL, SHIFT, R],
+						onSelect: _chart_live_here
+					},
+					null,
+					{
 						label: 'Enable scripts during playtesting',
 						onSelect: _chart_enablescripts,
 						icon: Options.charterEnablePlaytestScripts ? 1 : 0
@@ -1528,6 +1543,10 @@ class Charter extends UIState {
 		playtestChart(0, true);
 	inline function _chart_playtest_opponent_here(_)
 		playtestChart(Conductor.songPosition, true, true);
+	inline function _chart_live(_)
+		trace("make this");
+	inline function _chart_live_here(_)
+		trace("and this too");
 	function _chart_enablescripts(t) {
 		t.icon = (Options.charterEnablePlaytestScripts = !Options.charterEnablePlaytestScripts) ? 1 : 0;
 	}
