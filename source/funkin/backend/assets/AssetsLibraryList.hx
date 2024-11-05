@@ -65,7 +65,7 @@ class AssetsLibraryList extends AssetLibrary {
 					content.push(e);
 			}
 			#end
-			#if !USE_ADAPTED_ASSETS // TODO: Create a macro that will copy asset files from source to export
+			#if !USE_ADAPTED_ASSETS // TODO: Create a macro that will copy the asset files from source to export to leave only the embedded assets in manifest.json.
 			#if MOD_SUPPORT
 			else
 			#end
@@ -100,7 +100,7 @@ class AssetsLibraryList extends AssetLibrary {
 					content.push(e);
 			}
 			#end
-			#if !USE_ADAPTED_ASSETS // TODO: Create a macro that will copy asset files from source to export
+			#if !USE_ADAPTED_ASSETS // TODO: Create a macro that will copy the asset files from source to export to leave only the embedded assets in manifest.json.
 			#if MOD_SUPPORT
 			else
 			#end
