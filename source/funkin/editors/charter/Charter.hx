@@ -67,6 +67,7 @@ class Charter extends UIState
 	public var noteDeleteAnims:CharterDeleteAnim;
 
 	public var strumlineInfoBG:FlxSprite;
+	public var liveChartRecording:FlxSprite;
 	public var strumlineAddButton:CharterStrumlineButton;
 	public var strumlineLockButton:CharterStrumlineButton;
 
@@ -496,6 +497,14 @@ class Charter extends UIState
 		autoSaveNotif = new CharterAutoSaveUI(20, strumlineInfoBG.y + strumlineInfoBG.height + 20);
 		uiGroup.add(autoSaveNotif);
 
+		liveChartRecording = new UISprite();
+		liveChartRecording.loadGraphic(Paths.image('editors/charter/recording'), true, 78, 78);
+		liveChartRecording.animation.add("off", [0]);
+		liveChartRecording.animation.add("on", [1]);
+		liveChartRecording.x = (FlxG.width - liveChartRecording.frameWidth - scrollBar.width) - 20;
+		liveChartRecording.y = (strumlineInfoBG.y + strumlineInfoBG.height) + 20;
+		liveChartRecording.scrollFactor.set();
+
 		strumlineAddButton = new CharterStrumlineButton("editors/new", "Create New");
 		strumlineAddButton.onClick = createStrumWithUI;
 		strumlineAddButton.animationOnClick = false;
@@ -513,6 +522,7 @@ class Charter extends UIState
 
 		strumlineAddButton.cameras = strumlineLockButton.cameras = [charterCamera];
 		strumlineInfoBG.cameras = [charterCamera];
+		liveChartRecording.cameras = [charterCamera];
 		strumLines.cameras = [charterCamera];
 
 		addEventSpr = new CharterEventAdd();
@@ -530,6 +540,7 @@ class Charter extends UIState
 		add(notesGroup);
 		add(selectionBox);
 		add(strumlineInfoBG);
+		add(liveChartRecording);
 		add(strumlineLockButton);
 		add(strumlineAddButton);
 		add(strumLines);
@@ -538,6 +549,8 @@ class Charter extends UIState
 		add(noteTypeText);
 		// add the ui group
 		add(uiGroup);
+
+		liveChartRecording.animation.play("off");
 
 		loadSong();
 
@@ -571,6 +584,19 @@ class Charter extends UIState
 			Framerate.codenameBuildField.alpha = 1;
 		}
 		super.destroy();
+	}
+
+	public function recordingDisplay(isIt:Bool = true)
+	{
+		switch isIt {
+			case true:
+				charterBG.color = 0xFF0B0B0B;
+				liveChartRecording.animation.play("on");
+
+			case false:
+				charterBG.color = 0xFF181818;
+				liveChartRecording.animation.play("off");
+		}
 	}
 
 	public function loadSong()
@@ -1398,6 +1424,7 @@ class Charter extends UIState
 					strumLine.vocals.pause();
 
 				isLiveCharting = false;
+				recordingDisplay(false);
 			}
 		}
 
@@ -1868,6 +1895,8 @@ class Charter extends UIState
 			// start countdown
 			// only after all that can it...
 
+			recordingDisplay(true);
+			
 			FlxG.sound.music.play();
 			vocals.play();
 
@@ -1893,6 +1922,8 @@ class Charter extends UIState
 			// start countdown
 			// only after all that can it...
 
+			recordingDisplay(true);
+
 			FlxG.sound.music.play();
 			vocals.play();
 			vocals.time = FlxG.sound.music.time = Conductor.songPosition + Conductor.songOffset * 2;
@@ -1900,16 +1931,6 @@ class Charter extends UIState
 			{
 				strumLine.vocals.play();
 				strumLine.vocals.time = vocals.time;
-			}
-
-			if (controls.ACCEPT)
-			{
-				FlxG.sound.music.pause();
-				vocals.pause();
-				for (strumLine in strumLines.members)
-					strumLine.vocals.pause();
-
-				isLiveCharting = false;
 			}
 		}
 	}
