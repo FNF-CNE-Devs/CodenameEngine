@@ -87,6 +87,9 @@ class Charter extends UIState {
 	public var uiCamera:FlxCamera;
 	public var selectionBox:UISliceSprite;
 	public var autoSaveNotif:CharterAutoSaveUI;
+
+	public var isLiveCharting:Bool = false;
+	
 	public static var autoSaveTimer:Float = 0;
 
 	public static var selection:Selection;
@@ -1584,6 +1587,7 @@ class Charter extends UIState {
 	{
 		trace("make this");
 
+		isLiveCharting = true;
 		Conductor.songPosition = 0; // fuck you
 
 		// pause until a SL was selected
@@ -1605,6 +1609,7 @@ class Charter extends UIState {
 	{
 		trace("and this too");
 
+		isLiveCharting = true;
 		// pause until a SL was selected
 		// start countdown
 		// only after all that can it...
