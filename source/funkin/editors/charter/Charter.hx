@@ -1170,38 +1170,41 @@ class Charter extends UIState {
 		updateAutoSaving(elapsed);
 
 		// TEST CODE -----------------------------
-
-		if (controls.LEFT)
+		
+		if (isChartingLive)
 		{
-			var debugcodeteehee = new CharterNote();
-			debugcodeteehee.updatePos(1.0, 0, 0, 0);
-			// add(debugcodeteehee);
-			notesGroup.add(debugcodeteehee);
-			trace(debugcodeteehee);
-		}
-		else if (controls.DOWN)
-		{
-			var debugcodeteehee = new CharterNote();
-			debugcodeteehee.updatePos(1.0, 1, 0, 0);
-			// add(debugcodeteehee);
-			notesGroup.add(debugcodeteehee);
-			trace(debugcodeteehee);
-		}
-		else if (controls.UP)
-		{
-			var debugcodeteehee = new CharterNote();
-			debugcodeteehee.updatePos(1.0, 2, 0, 0);
-			// add(debugcodeteehee);
-			notesGroup.add(debugcodeteehee);
-			trace(debugcodeteehee);
-		}
-		else if (controls.RIGHT)
-		{
-			var debugcodeteehee = new CharterNote();
-			debugcodeteehee.updatePos(1.0, 3, 0, 0);
-			// add(debugcodeteehee);
-			notesGroup.add(debugcodeteehee);
-			trace(debugcodeteehee);
+			if (controls.LEFT)
+			{
+				var debugcodeteehee = new CharterNote();
+				debugcodeteehee.updatePos(1.0, 0, 0, 0);
+				// add(debugcodeteehee);
+				notesGroup.add(debugcodeteehee);
+				trace(debugcodeteehee);
+			}
+			else if (controls.DOWN)
+			{
+				var debugcodeteehee = new CharterNote();
+				debugcodeteehee.updatePos(1.0, 1, 0, 0);
+				// add(debugcodeteehee);
+				notesGroup.add(debugcodeteehee);
+				trace(debugcodeteehee);
+			}
+			else if (controls.UP)
+			{
+				var debugcodeteehee = new CharterNote();
+				debugcodeteehee.updatePos(1.0, 2, 0, 0);
+				// add(debugcodeteehee);
+				notesGroup.add(debugcodeteehee);
+				trace(debugcodeteehee);
+			}
+			else if (controls.RIGHT)
+			{
+				var debugcodeteehee = new CharterNote();
+				debugcodeteehee.updatePos(1.0, 3, 0, 0);
+				// add(debugcodeteehee);
+				notesGroup.add(debugcodeteehee);
+				trace(debugcodeteehee);
+			}
 		}
 
 		// TEST CODE -----------------------------
@@ -1476,12 +1479,18 @@ class Charter extends UIState {
 		deleteSelection(selection, false);
 	}
 
-	function _edit_delete(_) {
-		if (selection == null || selection.length == 0) return;
-		selection.loop((n:CharterNote) -> {
-			noteDeleteAnims.deleteNotes.push({note: n, time: noteDeleteAnims.deleteTime});
-		});
-		selection = deleteSelection(selection, true);
+	function _edit_delete(_)
+	{
+		if (!isChartingLive)
+		{
+			if (selection == null || selection.length == 0)
+				return;
+			selection.loop((n:CharterNote) ->
+			{
+				noteDeleteAnims.deleteNotes.push({note: n, time: noteDeleteAnims.deleteTime});
+			});
+			selection = deleteSelection(selection, true);
+		}
 	}
 
 	function _edit_undo(_) {
@@ -1576,13 +1585,17 @@ class Charter extends UIState {
 	}
 
 	inline function _chart_playtest(_)
-		playtestChart(0, false);
+		if (!isChartingLive)
+			playtestChart(0, false);
 	inline function _chart_playtest_here(_)
-		playtestChart(Conductor.songPosition, false, true);
+		if (!isChartingLive)
+			playtestChart(Conductor.songPosition, false, true);
 	inline function _chart_playtest_opponent(_)
-		playtestChart(0, true);
+		if (!isChartingLive)
+			playtestChart(0, true);
 	inline function _chart_playtest_opponent_here(_)
-		playtestChart(Conductor.songPosition, true, true);
+		if (!isChartingLive)
+			playtestChart(Conductor.songPosition, true, true);
 	inline function _chart_live(_)
 	{
 		trace("make this");
@@ -1708,12 +1721,22 @@ class Charter extends UIState {
 		for (shader in waveformHandler.waveShaders) shader.data.lowDetail.value = [Options.charterLowDetailWaveforms];
 	}
 	
-	inline function _snap_increasesnap(_) changequant(1);
-	inline function _snap_decreasesnap(_) changequant(-1);
-	inline function _snap_resetsnap(_) setquant(16);
+	inline function _snap_increasesnap(_) if (!isChartingLive) changequant(1);
+	inline function _snap_decreasesnap(_) if (!isChartingLive) changequant(-1);
+	inline function _snap_resetsnap(_) if (!isChartingLive) setquant(16);
 
-	inline function changequant(change:Int) {quant = quants[FlxMath.wrap(quants.indexOf(quant) + change, 0, quants.length-1)]; buildSnapsUI();};
-	inline function setquant(newquant:Int) {quant = newquant; buildSnapsUI();}
+	inline function changequant(change:Int) {
+		if (!isChartingLive) {
+			quant = quants[FlxMath.wrap(quants.indexOf(quant) + change, 0, quants.length-1)];
+			buildSnapsUI();
+		}
+	};
+	inline function setquant(newquant:Int) {
+		if (!isChartingLive) {
+			quant = newquant;
+			buildSnapsUI();
+		}
+	}
 
 	function buildSnapsUI():Array<UIContextMenuOption> {
 		var snapsTopButton:UITopMenuButton = topMenuSpr == null ? null : cast topMenuSpr.members[snapIndex];
@@ -1747,10 +1770,12 @@ class Charter extends UIState {
 	}
 
 	inline function _note_addsustain(t)
-		changeNoteSustain(1);
+		if (!isChartingLive)
+			changeNoteSustain(1);
 
 	inline function _note_subtractsustain(t)
-		changeNoteSustain(-1);
+		if (!isChartingLive)
+			changeNoteSustain(-1);
 
 	function _note_selectall(_) {
 		selection = [for (note in notesGroup.members) note];
@@ -1910,7 +1935,16 @@ class Charter extends UIState {
 	}
 
 	public inline function hitsoundsEnabled(id:Int)
-		return strumLines.members[id] != null && strumLines.members[id].hitsounds;
+	{
+		if (!isChartingLive)
+		{
+			return strumLines.members[id] != null && strumLines.members[id].hitsounds;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 	public inline function __fixSelection(selection:Selection):Selection {
 		var newSelection:Selection = new Selection();
