@@ -1166,6 +1166,43 @@ class Charter extends UIState {
 		updateNoteLogic(elapsed);
 		updateAutoSaving(elapsed);
 
+		// TEST CODE -----------------------------
+
+		if (controls.LEFT)
+		{
+			var debugcodeteehee = new CharterNote();
+			debugcodeteehee.updatePos(1.0, 0, 0, 0);
+			// add(debugcodeteehee);
+			notesGroup.add(debugcodeteehee);
+			trace(debugcodeteehee);
+		}
+		else if (controls.DOWN)
+		{
+			var debugcodeteehee = new CharterNote();
+			debugcodeteehee.updatePos(1.0, 1, 0, 0);
+			// add(debugcodeteehee);
+			notesGroup.add(debugcodeteehee);
+			trace(debugcodeteehee);
+		}
+		else if (controls.UP)
+		{
+			var debugcodeteehee = new CharterNote();
+			debugcodeteehee.updatePos(1.0, 2, 0, 0);
+			// add(debugcodeteehee);
+			notesGroup.add(debugcodeteehee);
+			trace(debugcodeteehee);
+		}
+		else if (controls.RIGHT)
+		{
+			var debugcodeteehee = new CharterNote();
+			debugcodeteehee.updatePos(1.0, 3, 0, 0);
+			// add(debugcodeteehee);
+			notesGroup.add(debugcodeteehee);
+			trace(debugcodeteehee);
+		}
+
+		// TEST CODE -----------------------------
+
 		if (FlxG.sound.music.playing || __firstFrame) {
 			gridBackdrops.conductorSprY = curStepFloat * 40;
 		} else {
