@@ -1171,7 +1171,7 @@ class Charter extends UIState {
 
 		// TEST CODE -----------------------------
 		
-		if (isChartingLive)
+		if (isLiveCharting)
 		{
 			if (controls.LEFT)
 			{
@@ -1481,7 +1481,7 @@ class Charter extends UIState {
 
 	function _edit_delete(_)
 	{
-		if (!isChartingLive)
+		if (!isLiveCharting)
 		{
 			if (selection == null || selection.length == 0)
 				return;
@@ -1585,16 +1585,16 @@ class Charter extends UIState {
 	}
 
 	inline function _chart_playtest(_)
-		if (!isChartingLive)
+		if (!isLiveCharting)
 			playtestChart(0, false);
 	inline function _chart_playtest_here(_)
-		if (!isChartingLive)
+		if (!isLiveCharting)
 			playtestChart(Conductor.songPosition, false, true);
 	inline function _chart_playtest_opponent(_)
-		if (!isChartingLive)
+		if (!isLiveCharting)
 			playtestChart(0, true);
 	inline function _chart_playtest_opponent_here(_)
-		if (!isChartingLive)
+		if (!isLiveCharting)
 			playtestChart(Conductor.songPosition, true, true);
 	inline function _chart_live(_)
 	{
@@ -1721,18 +1721,18 @@ class Charter extends UIState {
 		for (shader in waveformHandler.waveShaders) shader.data.lowDetail.value = [Options.charterLowDetailWaveforms];
 	}
 	
-	inline function _snap_increasesnap(_) if (!isChartingLive) changequant(1);
-	inline function _snap_decreasesnap(_) if (!isChartingLive) changequant(-1);
-	inline function _snap_resetsnap(_) if (!isChartingLive) setquant(16);
+	inline function _snap_increasesnap(_) if (!isLiveCharting) changequant(1);
+	inline function _snap_decreasesnap(_) if (!isLiveCharting) changequant(-1);
+	inline function _snap_resetsnap(_) if (!isLiveCharting) setquant(16);
 
 	inline function changequant(change:Int) {
-		if (!isChartingLive) {
+		if (!isLiveCharting) {
 			quant = quants[FlxMath.wrap(quants.indexOf(quant) + change, 0, quants.length-1)];
 			buildSnapsUI();
 		}
 	};
 	inline function setquant(newquant:Int) {
-		if (!isChartingLive) {
+		if (!isLiveCharting) {
 			quant = newquant;
 			buildSnapsUI();
 		}
@@ -1770,11 +1770,11 @@ class Charter extends UIState {
 	}
 
 	inline function _note_addsustain(t)
-		if (!isChartingLive)
+		if (!isLiveCharting)
 			changeNoteSustain(1);
 
 	inline function _note_subtractsustain(t)
-		if (!isChartingLive)
+		if (!isLiveCharting)
 			changeNoteSustain(-1);
 
 	function _note_selectall(_) {
@@ -1936,7 +1936,7 @@ class Charter extends UIState {
 
 	public inline function hitsoundsEnabled(id:Int)
 	{
-		if (!isChartingLive)
+		if (!isLiveCharting)
 		{
 			return strumLines.members[id] != null && strumLines.members[id].hitsounds;
 		}
