@@ -421,7 +421,7 @@ class Charter extends UIState
 		for (camera in FlxG.cameras.list)
 			camera.antialiasing = false;
 
-		charterBG = new FunkinSprite(0, 0, Paths.image('menus/menuDesat'));
+		charterBG = new FunkinSprite(0, 0, Paths.image('menus/portermenus/menuDesat'));
 		charterBG.color = 0xFF181818;
 		charterBG.cameras = [charterCamera];
 		charterBG.screenCenter();
@@ -1856,55 +1856,61 @@ class Charter extends UIState
 
 	inline function _chart_live(_)
 	{
-		trace("make this");
-
-		isLiveCharting = true;
-		Conductor.songPosition = 0; // fuck you
-
-		// make SL selection functionality
-		// pause until a SL was selected
-		// start countdown
-		// only after all that can it...
-
-		FlxG.sound.music.play();
-		vocals.play();
-
-		vocals.time = FlxG.sound.music.time = Conductor.songPosition + Conductor.songOffset * 2;
-		for (strumLine in strumLines.members)
+		if (!isLiveCharting)
 		{
-			strumLine.vocals.play();
-			strumLine.vocals.time = vocals.time;
+			trace("make this");
+
+			isLiveCharting = true;
+			Conductor.songPosition = 0; // fuck you
+
+			// make SL selection functionality
+			// pause until a SL was selected
+			// start countdown
+			// only after all that can it...
+
+			FlxG.sound.music.play();
+			vocals.play();
+
+			vocals.time = FlxG.sound.music.time = Conductor.songPosition + Conductor.songOffset * 2;
+			for (strumLine in strumLines.members)
+			{
+				strumLine.vocals.play();
+				strumLine.vocals.time = vocals.time;
+			}
 		}
 	}
 
 	inline function _chart_live_here(_)
 	{
-		trace("and this too");
-
-		isLiveCharting = true;
-
-		// make SL selection functionality
-		// pause until a SL was selected
-		// start countdown
-		// only after all that can it...
-
-		FlxG.sound.music.play();
-		vocals.play();
-		vocals.time = FlxG.sound.music.time = Conductor.songPosition + Conductor.songOffset * 2;
-		for (strumLine in strumLines.members)
+		if (!isLiveCharting)
 		{
-			strumLine.vocals.play();
-			strumLine.vocals.time = vocals.time;
-		}
+			trace("and this too");
 
-		if (controls.ACCEPT)
-		{
-			FlxG.sound.music.pause();
-			vocals.pause();
+			isLiveCharting = true;
+
+			// make SL selection functionality
+			// pause until a SL was selected
+			// start countdown
+			// only after all that can it...
+
+			FlxG.sound.music.play();
+			vocals.play();
+			vocals.time = FlxG.sound.music.time = Conductor.songPosition + Conductor.songOffset * 2;
 			for (strumLine in strumLines.members)
-				strumLine.vocals.pause();
+			{
+				strumLine.vocals.play();
+				strumLine.vocals.time = vocals.time;
+			}
 
-			isLiveCharting = false;
+			if (controls.ACCEPT)
+			{
+				FlxG.sound.music.pause();
+				vocals.pause();
+				for (strumLine in strumLines.members)
+					strumLine.vocals.pause();
+
+				isLiveCharting = false;
+			}
 		}
 	}
 
