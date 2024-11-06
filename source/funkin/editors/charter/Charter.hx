@@ -1616,6 +1616,15 @@ class Charter extends UIState {
 			strumLine.vocals.play();
 			strumLine.vocals.time = vocals.time;
 		}
+
+		if (controls.ACCEPT) {
+			FlxG.sound.music.pause();
+			vocals.pause();
+			for (strumLine in strumLines.members)
+				strumLine.vocals.pause();
+
+			isLiveCharting = false;
+		}
 	}
 
 	inline function _chart_live_here(_)
@@ -1634,6 +1643,15 @@ class Charter extends UIState {
 		{
 			strumLine.vocals.play();
 			strumLine.vocals.time = vocals.time;
+		}
+
+		if (controls.ACCEPT) {
+			FlxG.sound.music.pause();
+			vocals.pause();
+			for (strumLine in strumLines.members)
+				strumLine.vocals.pause();
+
+			isLiveCharting = false;
 		}
 	}
 		trace("and this too");
