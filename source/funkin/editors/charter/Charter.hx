@@ -1389,6 +1389,16 @@ class Charter extends UIState
 				notesGroup.add(debugcodeteehee);
 				trace(debugcodeteehee);
 			}
+			else if (controls.ACCEPT)
+			{
+				trace("hey dummy I'm pressing accept");
+				FlxG.sound.music.pause();
+				vocals.pause();
+				for (strumLine in strumLines.members)
+					strumLine.vocals.pause();
+
+				isLiveCharting = false;
+			}
 		}
 
 		// TEST CODE -----------------------------
@@ -1864,16 +1874,6 @@ class Charter extends UIState
 		{
 			strumLine.vocals.play();
 			strumLine.vocals.time = vocals.time;
-		}
-
-		if (controls.ACCEPT)
-		{
-			FlxG.sound.music.pause();
-			vocals.pause();
-			for (strumLine in strumLines.members)
-				strumLine.vocals.pause();
-
-			isLiveCharting = false;
 		}
 	}
 
