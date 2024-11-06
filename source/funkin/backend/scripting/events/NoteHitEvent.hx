@@ -124,6 +124,13 @@ final class NoteHitEvent extends CancellableEvent {
 	public function cancelDeletion() {preventDeletion();}
 
 	/**
+	 * Forces the note to be deleted.
+	**/
+	public function forceDeletion() {
+		deleteNote = true;
+	}
+
+	/**
 	 * Prevents the vocals volume from being set to 1 after pressing the note.
 	 */
 	public function preventVocalsUnmute() {
