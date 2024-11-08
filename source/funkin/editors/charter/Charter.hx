@@ -1657,7 +1657,7 @@ class Charter extends UIState {
 		changeNoteSustain(-1);
 
 	function _note_selectall(_) {
-		selection = [for (note in notesGroup.members) note];
+		selection = cast notesGroup.members.copy();
 	}
 
 	function _note_selectmeasure(_) {

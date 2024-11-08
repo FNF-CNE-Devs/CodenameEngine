@@ -74,7 +74,7 @@ class Strum extends FlxSprite {
 	}
 
 	public override function draw() {
-		lastDrawCameras = [for(c in cameras) c];
+		lastDrawCameras = cameras.copy();
 		super.draw();
 	}
 
