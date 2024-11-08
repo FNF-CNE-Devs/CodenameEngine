@@ -1,8 +1,8 @@
 #pragma header
 
-uniform vec2 redOff;
-uniform vec2 greenOff;
-uniform vec2 blueOff;
+uniform float redOff;
+uniform float greenOff;
+uniform float blueOff;
 
 void main()
 {
