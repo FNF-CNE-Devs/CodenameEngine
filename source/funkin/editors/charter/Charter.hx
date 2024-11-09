@@ -422,7 +422,7 @@ class Charter extends UIState
 		for (camera in FlxG.cameras.list)
 			camera.antialiasing = false;
 
-		charterBG = new FunkinSprite(0, 0, Paths.image('menus/menuDesat'));
+		charterBG = new FunkinSprite(0, 0, Paths.image('menus/portermenus/menuDesat'));
 		charterBG.color = 0xFF181818;
 		charterBG.cameras = [charterCamera];
 		charterBG.screenCenter();
@@ -1385,35 +1385,31 @@ class Charter extends UIState
 		{
 			if (controls.LEFT)
 			{
-				var debugcodeteehee = new CharterNote();
-				debugcodeteehee.updatePos(1.0, 0, 0, 0);
-				// add(debugcodeteehee);
-				notesGroup.add(debugcodeteehee);
-				trace(debugcodeteehee);
+				var leftrec = new CharterNote();
+				leftrec.updatePos(1.0, 0, 0, 0);
+				add(leftrec);
+				notesGroup.add(leftrec);
 			}
 			else if (controls.DOWN)
 			{
-				var debugcodeteehee = new CharterNote();
-				debugcodeteehee.updatePos(1.0, 1, 0, 0);
-				// add(debugcodeteehee);
-				notesGroup.add(debugcodeteehee);
-				trace(debugcodeteehee);
+				var downrec = new CharterNote();
+				downrec.updatePos(1.0, 1, 0, 0);
+				add(downrec);
+				notesGroup.add(downrec);
 			}
 			else if (controls.UP)
 			{
-				var debugcodeteehee = new CharterNote();
-				debugcodeteehee.updatePos(1.0, 2, 0, 0);
-				// add(debugcodeteehee);
-				notesGroup.add(debugcodeteehee);
-				trace(debugcodeteehee);
+				var uprec = new CharterNote();
+				uprec.updatePos(1.0, 2, 0, 0);
+				add(uprec);
+				notesGroup.add(uprec);
 			}
 			else if (controls.RIGHT)
 			{
-				var debugcodeteehee = new CharterNote();
-				debugcodeteehee.updatePos(1.0, 3, 0, 0);
-				// add(debugcodeteehee);
-				notesGroup.add(debugcodeteehee);
-				trace(debugcodeteehee);
+				var rightrec = new CharterNote();
+				rightrec.updatePos(1.0, 3, 0, 0);
+				add(rightrec);
+				notesGroup.add(rightrec);
 			}
 			else if (controls.ACCEPT)
 			{
