@@ -422,7 +422,7 @@ class Charter extends UIState
 		for (camera in FlxG.cameras.list)
 			camera.antialiasing = false;
 
-		charterBG = new FunkinSprite(0, 0, Paths.image('menus/portermenus/menuDesat'));
+		charterBG = new FunkinSprite(0, 0, Paths.image('menus/menuDesat'));
 		charterBG.color = 0xFF181818;
 		charterBG.cameras = [charterCamera];
 		charterBG.screenCenter();
