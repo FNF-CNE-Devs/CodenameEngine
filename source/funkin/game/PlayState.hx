@@ -1737,7 +1737,7 @@ class PlayState extends MusicBeatState
 		var separatedScore:String = Std.string(combo).addZeros(3);
 
 		if (combo == 0 || combo >= minDigitDisplay) {
-			if (comboSpriteOnPopups == true)
+			if (comboSpriteOnPopups)
 				displayComboSprite(evt);
 			for (i in 0...separatedScore.length)
 			{
@@ -1773,8 +1773,6 @@ class PlayState extends MusicBeatState
 		comboSpr.acceleration.y = 600;
 		comboSpr.velocity.y -= 150;
 		comboSpr.velocity.x += FlxG.random.int(1, 10);
-		if (Options.hudJudgements) // i tried setting comboGroup camera but it didn't work lol
-			comboSpr.cameras = [camHUD];
 
 		if (evt != null) {
 			comboSpr.scale.set(evt.ratingScale, evt.ratingScale);
