@@ -456,6 +456,15 @@ class PlayState extends MusicBeatState
 	 */
 	public var comboGroup:RotatingSpriteGroup;
 	/**
+	 * Minimum Combo Count to display the combo digits.
+	 */
+	public var minDigitDisplay: Int = 10;
+	/**
+	 * If the image with "COMBO" written on it should be displayed (like old Week 7 patches)
+	 * PS: this shit's useless keep it off if you don't wanna clutter the UI
+	 */
+	public var comboSpriteOnPopups: Bool = false;
+	/**
 	 * Array containing all of the note types names.
 	 */
 	public var noteTypesArray:Array<String> = [null];
@@ -1727,29 +1736,9 @@ class PlayState extends MusicBeatState
 
 		var separatedScore:String = Std.string(combo).addZeros(3);
 
-		if (combo == 0 || combo >= 10) {
-			if (combo >= 10) {
-				var comboSpr:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${pre}combo${suf}'));
-				comboSpr.resetSprite(comboGroup.x, comboGroup.y);
-				comboSpr.acceleration.y = 600;
-				comboSpr.velocity.y -= 150;
-				comboSpr.velocity.x += FlxG.random.int(1, 10);
-
-				if (evt != null) {
-					comboSpr.scale.set(evt.ratingScale, evt.ratingScale);
-					comboSpr.antialiasing = evt.ratingAntialiasing;
-				}
-				comboSpr.updateHitbox();
-
-				FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
-					onComplete: function(tween:FlxTween)
-					{
-						comboSpr.kill();
-					},
-					startDelay: Conductor.crochet * 0.001
-				});
-			}
-
+		if (combo == 0 || combo >= minDigitDisplay) {
+			if (comboSpriteOnPopups == true)
+				displayComboSprite(evt);
 			for (i in 0...separatedScore.length)
 			{
 				var numScore:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${pre}num${separatedScore.charAt(i)}${suf}'));
@@ -1773,6 +1762,33 @@ class PlayState extends MusicBeatState
 				});
 			}
 		}
+	}
+
+	private function displayComboSprite(evt: NoteHitEvent = null):Void {
+		var pre:String = evt != null ? evt.ratingPrefix : "";
+		var suf:String = evt != null ? evt.ratingSuffix : "";
+
+		var comboSpr:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${pre}combo${suf}'));
+		comboSpr.resetSprite(comboGroup.x, comboGroup.y);
+		comboSpr.acceleration.y = 600;
+		comboSpr.velocity.y -= 150;
+		comboSpr.velocity.x += FlxG.random.int(1, 10);
+		if (Options.hudJudgements) // i tried setting comboGroup camera but it didn't work lol
+			comboSpr.cameras = [camHUD];
+
+		if (evt != null) {
+			comboSpr.scale.set(evt.ratingScale, evt.ratingScale);
+			comboSpr.antialiasing = evt.ratingAntialiasing;
+		}
+		comboSpr.updateHitbox();
+
+		FlxTween.tween(comboSpr, {alpha: 0}, 0.2, {
+			onComplete: function(tween:FlxTween)
+			{
+				comboSpr.kill();
+			},
+			startDelay: Conductor.crochet * 0.001
+		});
 	}
 
 	public inline function deleteNote(note:Note)
