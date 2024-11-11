@@ -1744,8 +1744,6 @@ class PlayState extends MusicBeatState
 		var pre:String = evt != null ? evt.ratingPrefix : "";
 		var suf:String = evt != null ? evt.ratingSuffix : "";
 
-		var separatedScore:String = Std.string(combo).addZeros(3);
-
 		if (minDigitDisplay >= 0 && (combo == 0 || combo >= minDigitDisplay)) {
 			if (evt.displayCombo) {
 				var comboSpr:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${pre}combo${suf}'));
@@ -1769,6 +1767,7 @@ class PlayState extends MusicBeatState
 				});
 			}
 
+			var separatedScore:String = Std.string(combo).addZeros(3);
 			for (i in 0...separatedScore.length)
 			{
 				var numScore:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${pre}num${separatedScore.charAt(i)}${suf}'));
