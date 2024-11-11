@@ -456,19 +456,21 @@ class PlayState extends MusicBeatState
 	 */
 	public var comboGroup:RotatingSpriteGroup;
 	/**
-	 * If the rating should be displayed when hitting notes.
+	 * Whenever the Rating sprites should be shown or not.
+	 *
+	 * NOTE: This is just a default value for the final value, the final value can be changed through notes hit events.
 	 */
-	public var ratingOnPopups:Bool = true;
+	public var defDisplayRating:Bool = true;
 	/**
-	 * Minimum Combo Count to display the combo digits.
-	 * anything less than 0 means it won't be shown
+	 * Whenever the Combo sprite should be shown or not (like old Week 7 patches).
+	 *
+	 * NOTE: This is just a default value for the final value, the final value can be changed through notes hit events.
+	 */
+	public var defDisplayCombo:Bool = false;
+	/**
+	 * Minimum Combo Count to display the combo digits. Anything less than 0 means it won't be shown.
 	 */
 	public var minDigitDisplay:Int = 10;
-	/**
-	 * If the image with "COMBO" written on it should be displayed (like old Week 7 patches)
-	 * PS: this shit's useless keep it off if you don't wanna clutter the UI
-	 */
-	public var comboSpriteOnPopups:Bool = false;
 	/**
 	 * Array containing all of the note types names.
 	 */
@@ -1680,8 +1682,10 @@ class PlayState extends MusicBeatState
 				if (event.showRating || (event.showRating == null && event.player))
 				{
 					displayCombo(event);
-					if (ratingOnPopups)
+
+					if (event.displayRating || (event.displayRating == null && defDisplayRating))
 						displayRating(event.rating, event);
+
 					ratingNum += 1;
 				}
 			}
@@ -1745,7 +1749,7 @@ class PlayState extends MusicBeatState
 		var separatedScore:String = Std.string(combo).addZeros(3);
 
 		if (minDigitDisplay >= 0 && (combo == 0 || combo >= minDigitDisplay)) {
-			if (comboSpriteOnPopups) {
+			if (evt.displayCombo || (evt.displayCombo == null && defDisplayCombo)) {
 				var comboSpr:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${pre}combo${suf}'));
 				comboSpr.resetSprite(comboGroup.x, comboGroup.y);
 				comboSpr.acceleration.y = 600;
