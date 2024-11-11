@@ -32,11 +32,11 @@ final class NoteHitEvent extends CancellableEvent {
 	/**
 	 * Whenever the Rating sprites should be shown or not.
 	 */
-	 public var displayRating:Null<Bool> = null;
+	public var displayRating:Null<Bool> = null;
 	/**
 	 * Whenever the Combo sprite should be shown or not (like old Week 7 patches).
 	 */
-	 public var displayCombo:Null<Bool> = null;
+	public var displayCombo:Null<Bool> = null;
 	/**
 	 * Note that has been pressed
 	 */
