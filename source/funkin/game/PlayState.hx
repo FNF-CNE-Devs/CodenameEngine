@@ -1741,10 +1741,10 @@ class PlayState extends MusicBeatState
 	}
 
 	public function displayCombo(?evt:NoteHitEvent = null):Void {
-		var pre:String = evt != null ? evt.ratingPrefix : "";
-		var suf:String = evt != null ? evt.ratingSuffix : "";
-
 		if (minDigitDisplay >= 0 && (combo == 0 || combo >= minDigitDisplay)) {
+			var pre:String = evt != null ? evt.ratingPrefix : "";
+			var suf:String = evt != null ? evt.ratingSuffix : "";
+
 			if (evt.displayCombo) {
 				var comboSpr:FlxSprite = comboGroup.recycleLoop(FlxSprite).loadAnimatedGraphic(Paths.image('${pre}combo${suf}'));
 				comboSpr.resetSprite(comboGroup.x, comboGroup.y);
