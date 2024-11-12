@@ -1,9 +1,9 @@
 <!DOCTYPE codename-engine-character>
 <character x="150" y="360" sprite="senpai" scale="6" antialiasing="false" camx="100" camy="87" icon="senpai" color="#FFAA6F" interval="2">
-	<anim name="danceLeft" anim="Senpai Idle instance 1" x="0" y="0" fps="24" loop="false" indices="0..13"/>
-	<anim name="danceRight" anim="Senpai Idle instance 1" x="0" y="0" fps="24" loop="false" indices="14..27"/>
-	<anim name="singLEFT" anim="SENPAI LEFT NOTE" x="5" y="0" fps="24" loop="false"/>
-	<anim name="singDOWN" anim="SENPAI DOWN NOTE" x="2" y="0" fps="24" loop="false"/>
-	<anim name="singUP" anim="SENPAI UP NOTE" x="2" y="6" fps="24" loop="false"/>
-	<anim name="singRIGHT" anim="SENPAI RIGHT NOTE" x="1" y="0" fps="24" loop="false"/>
+	<anim name="danceLeft" anim="Senpai Idle instance" x="0" y="0" fps="24" loop="false" indices="0..15"/>
+	<anim name="danceRight" anim="Senpai Idle instance" x="0" y="0" fps="24" loop="false" indices="16..31"/>
+	<anim name="singLEFT" anim="SENPAI LEFT NOTE" x="4" y="0" fps="24" loop="false"/>
+	<anim name="singDOWN" anim="SENPAI DOWN NOTE" x="0" y="0" fps="24" loop="false"/>
+	<anim name="singUP" anim="SENPAI UP NOTE" x="0" y="6" fps="24" loop="false"/>
+	<anim name="singRIGHT" anim="SENPAI RIGHT NOTE" x="0" y="0" fps="24" loop="false"/>
 </character>
