@@ -138,8 +138,8 @@ class DialogueCutscene extends Cutscene {
 	public var canProceed:Bool = true;
 
 	public function next(playFirst:Bool = false) {
-		var event = EventManager.get(DynamicEvent).recycle(playFirst);
-		dialogueScript.call("next", [playFirst]);
+		var event = EventManager.get(DialogueNextLineEvent).recycle(playFirst, curLine);
+		dialogueScript.call("next", [event]);
 		if(event.cancelled || !canProceed) return;
 
 		if ((curLine = dialogueLines.shift()) == null) {
@@ -178,7 +178,9 @@ class DialogueCutscene extends Cutscene {
 			curMusic.fadeIn(1, 0, curMusic.volume);
 		} else if(curLine.musicVolume != null && curMusic != null) curMusic.volume = curLine.musicVolume;
 
-		dialogueScript.call("postNext", [playFirst]);
+		event = EventManager.get(DialogueNextLineEvent).recycle(playFirst, curLine);
+
+		dialogueScript.call("postNext", [event]);
 	}
 
 	public override function close() {
