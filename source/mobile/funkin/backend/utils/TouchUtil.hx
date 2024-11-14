@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mobile.funkin.backend;
+package mobile.funkin.backend.utils;
 
 import flixel.FlxObject;
 import flixel.input.touch.FlxTouch;
