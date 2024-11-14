@@ -43,6 +43,25 @@ class MobileUtil
 		return daPath;
 	}
 
+	public static function saveContent(fileName:String, fileData:String, ?alert:Bool = true):Void
+	{
+		try
+		{
+			if (!FileSystem.exists('saves'))
+				FileSystem.createDirectory('saves');
+
+			File.saveContent('saves/$fileName', fileData);
+			if (alert)
+				NativeAPI.showMessageBox("Success!", '$fileName has been saved.', MSG_INFORMATION);
+		}
+		catch (e:haxe.Exception)
+			if (alert)
+				NativeAPI.showMessageBox("Error!", '$fileName couldn\'t be saved.\n(${e.message})', MSG_ERROR);
+			else
+				trace('$fileName couldn\'t be saved. (${e.message})');
+	}
+
+
 	#if android
 	public static function requestPermissionsFromUser():Void
 	{
