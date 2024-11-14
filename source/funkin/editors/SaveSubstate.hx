@@ -27,7 +27,7 @@ class SaveSubstate extends MusicBeatSubstate {
 		super.create();
 
 		#if mobile
-		MobileUtil.saveContent(options.defaultSaveFile + options.saveExt.getDefault(Path.extension(options.defaultSaveFile)), data);
+		MobileUtil.saveContent(options.defaultSaveFile, data);
 		close();
 		#else
 		var fileDialog = new FileDialog();
