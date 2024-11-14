@@ -3,7 +3,7 @@ package funkin.game.cutscenes;
 import funkin.backend.utils.FunkinParentDisabler;
 import funkin.backend.scripting.events.dialogue.*;
 import funkin.backend.scripting.events.CancellableEvent;
-import funkin.backend.scripting.events.DynamicEvent;
+import funkin.backend.scripting.events.dialogue.DialogueNextLineEvent;
 import funkin.backend.scripting.Script;
 import flixel.sound.FlxSound;
 import funkin.game.cutscenes.dialogue.*;
@@ -138,7 +138,7 @@ class DialogueCutscene extends Cutscene {
 	public var canProceed:Bool = true;
 
 	public function next(playFirst:Bool = false) {
-		var event = EventManager.get(DialogueNextLineEvent).recycle(playFirst, curLine);
+		var event = EventManager.get(DialogueNextLineEvent).recycle(playFirst);
 		dialogueScript.call("next", [event]);
 		if(event.cancelled || !canProceed) return;
 
@@ -154,7 +154,7 @@ class DialogueCutscene extends Cutscene {
 		}
 
 		if (curLine.callback != null)
-			dialogueScript.call(curLine.callback, [playFirst]);
+			dialogueScript.call(curLine.callback, [event.playFirst]);
 
 		for (k=>c in charMap)
 			if (k != curLine.char)
@@ -167,8 +167,8 @@ class DialogueCutscene extends Cutscene {
 			dialogueBox.popupChar(char, force);
 		}
 
-		var finalSuffix:String = playFirst && dialogueBox.hasAnimation(curLine.bubble + "-firstOpen") ? "-firstOpen" : dialogueBox.hasAnimation(curLine.bubble + "-open") ? "-open" : "";
-		dialogueBox.playBubbleAnim(curLine.bubble, finalSuffix, curLine.text, curLine.format, curLine.speed, curLine.nextSound, curLine.textSound != null ? [curLine.textSound] : null, finalSuffix == "-firstOpen" || finalSuffix == "-open", !playFirst);
+		var finalSuffix:String = event.playFirst && dialogueBox.hasAnimation(curLine.bubble + "-firstOpen") ? "-firstOpen" : dialogueBox.hasAnimation(curLine.bubble + "-open") ? "-open" : "";
+		dialogueBox.playBubbleAnim(curLine.bubble, finalSuffix, curLine.text, curLine.format, curLine.speed, curLine.nextSound, curLine.textSound != null ? [curLine.textSound] : null, finalSuffix == "-firstOpen" || finalSuffix == "-open", !event.playFirst);
 
 		if(curLine.playSound != null) curLine.playSound.play();
 		if(curLine.changeMusic != null) {
@@ -177,8 +177,6 @@ class DialogueCutscene extends Cutscene {
 			curMusic.play();
 			curMusic.fadeIn(1, 0, curMusic.volume);
 		} else if(curLine.musicVolume != null && curMusic != null) curMusic.volume = curLine.musicVolume;
-
-		event = EventManager.get(DialogueNextLineEvent).recycle(playFirst, curLine);
 
 		dialogueScript.call("postNext", [event]);
 	}
