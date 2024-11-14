@@ -33,7 +33,7 @@ class CharterSelection extends EditorTreeMenu {
 					for(d in s.difficulties) if (d != "")
 						new TextOption(d, "Press " + button + " to edit the chart for the selected difficulty", function() {
 							#if TOUCH_CONTROLS
-							if (FlxG.gamepads.numActiveGamepads == 0)
+							if (funkin.backend.system.Controls.instance.touchC)
 							{
 								openSubState(new UIWarningSubstate("Charter: Touch Not Supported!", "Please connect a keyboard and mouse to access this editor.", [
 									{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
@@ -45,7 +45,7 @@ class CharterSelection extends EditorTreeMenu {
 				];
 				list.push(new NewOption("New Difficulty", "New Difficulty", function() {
 					#if TOUCH_CONTROLS
-					if (FlxG.gamepads.numActiveGamepads == 0)
+					if (funkin.backend.system.Controls.instance.touchC)
 					{
 						openSubState(new UIWarningSubstate("New Difficulty: Touch Not Supported!", "Please connect a keyboard and mouse to access this editor.", [
 							{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
@@ -60,7 +60,7 @@ class CharterSelection extends EditorTreeMenu {
 
 		list.insert(0, new NewOption("New Song", "New Song", function() {
 			#if TOUCH_CONTROLS
-			if (FlxG.gamepads.numActiveGamepads == 0)
+			if (funkin.backend.system.Controls.instance.touchC)
 			{
 				openSubState(new UIWarningSubstate("New Song: Touch Not Supported!", "Please connect a keyboard and mouse to access this editor.", [
 					{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
@@ -145,7 +145,7 @@ class CharterSelection extends EditorTreeMenu {
 				for(d in creation.meta.difficulties)
 					if (d != "") new TextOption(d, "Press " + button + " to edit the chart for the selected difficulty", function() {
 						#if TOUCH_CONTROLS
-						if (FlxG.gamepads.numActiveGamepads == 0)
+						if (funkin.backend.system.Controls.instance.touchC)
 						{
 							openSubState(new UIWarningSubstate("Charter: Touch Not Supported!", "Please connect a keyboard and mouse to access this editor.", [
 								{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
@@ -157,7 +157,7 @@ class CharterSelection extends EditorTreeMenu {
 			];
 			list.push(new NewOption("New Difficulty", "New Difficulty", function() {
 				#if TOUCH_CONTROLS
-				if (FlxG.gamepads.numActiveGamepads == 0)
+				if (funkin.backend.system.Controls.instance.touchC)
 				{
 					openSubState(new UIWarningSubstate("New Difficulty: Touch Not Supported!", "Please connect a keyboard and mouse to access this editor.", [
 						{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
@@ -194,7 +194,7 @@ class CharterSelection extends EditorTreeMenu {
 		curSong.difficulties.push(name);
 		var option = new TextOption(name, "Press " + button + " to edit the chart for the selected difficulty", function() {
 			#if TOUCH_CONTROLS
-			if (FlxG.gamepads.numActiveGamepads == 0)
+			if (funkin.backend.system.Controls.instance.touchC)
 			{
 				openSubState(new UIWarningSubstate("Charter: Touch Not Supported!", "Please connect a keyboard and mouse to access this editor.", [
 					{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}

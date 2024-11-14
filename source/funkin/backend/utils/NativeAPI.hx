@@ -96,8 +96,6 @@ class NativeAPI {
 	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING) {
 		#if windows
 		Windows.showMessageBox(caption, message, icon);
-		#elseif (ios || iphonesim || web)
-		trace('$caption - $message');
 		#elseif android
 		android.Tools.showAlertDialog(caption, message, {name: "OK", func: null}, null);
 		#else

@@ -24,13 +24,15 @@ class CharacterSelection extends EditorTreeMenu
 			for (char in (modsList.length == 0 ? Character.getList(false) : modsList))
 				new IconOption(char, "Press " + button + " to edit this character.", Character.getIconFromCharName(char),
 			 	function() {
-					#if mobile
-					openSubState(new UIWarningSubstate("CharacterEditor: Not Supported!", "This feature isn't supported on current platform. We are sorry but you need a PC to do that.\n\n\n- Codename Devs", [
-						{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
-					]));
-					#else
-					FlxG.switchState(new CharacterEditor(char));
+					#if TOUCH_CONTROLS
+					if (funkin.backend.system.Controls.instance.touchC)
+					{
+						openSubState(new UIWarningSubstate("CharacterEditor: Touch Not Supported!", "Please connect a keyboard and mouse to access this editor.", [
+							{label: "Ok", color: 0xFFFF0000, onClick: function(t) {}}
+						]));
+					} else
 					#end
+					FlxG.switchState(new CharacterEditor(char));
 				})
 		];
 
