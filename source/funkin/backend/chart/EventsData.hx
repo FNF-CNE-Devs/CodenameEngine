@@ -76,11 +76,12 @@ class EventsData {
 		hscriptParser.allowJSON = hscriptParser.allowMetadata = false;
 
 		for (file in Paths.getFolderContent('data/events/', true, BOTH)) {
-			if (Path.extension(file) != "json" && Path.extension(file) != "pack") continue;
-			var eventName:String = Path.withoutExtension(Path.withoutDirectory(file));
+			var ext = Path.extension(file);
+			if (ext != "json" && ext != "pack") continue;
+			var eventName:String = CoolUtil.getFilename(file);
 			var fileTxt:String = Assets.getText(file);
 
-			if (Path.extension(file) == "pack") {
+			if (ext == "pack") {
 				var arr = fileTxt.split("________PACKSEP________");
 				eventName = Path.withoutExtension(arr[0]);
 				fileTxt = arr[2];
