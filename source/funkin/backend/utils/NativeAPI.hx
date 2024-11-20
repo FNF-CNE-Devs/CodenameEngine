@@ -100,9 +100,9 @@ class NativeAPI {
 	/**
 	 * Switch the window's color to any color. This is exclusive to windows 11 users, unfortunately.
 	 */
-	public static function setWindowBorderColor(color:Array<Int>, setHeader:Bool = true, setBorder:Bool = false) {
+	public static function setWindowBorderColor(title:String, color:Array<Int>, setHeader:Bool = true, setBorder:Bool = false) {
 		#if windows
-		Windows.setWindowBorderColor(((color != null) ? color : [255, 255, 255]), setHeader, setBorder);
+		Windows.setWindowBorderColor(title, ((color != null) ? color : [255, 255, 255]), setHeader, setBorder);
 		#end
 	}
 
