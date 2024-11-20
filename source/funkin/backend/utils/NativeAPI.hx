@@ -84,11 +84,43 @@ class NativeAPI {
 		#end
 	}
 
+	/**
+	 * WINDOW COLOR MODE FUNCTIONS.
+	 */
+
+	/**
+	 * Switch the window's color mode to dark or light mode.
+	 */
 	public static function setDarkMode(title:String, enable:Bool) {
 		#if windows
 		Windows.setDarkMode(title, enable);
 		#end
 	}
+
+	/**
+	 * Switch the window's color to any color. This is exclusive to windows 11 users, unfortunately.
+	 */
+	public static function setWindowBorderColor(color:Array<Int>, setHeader:Bool = true, setBorder:Bool = false) {
+		#if windows
+		Windows.setWindowBorderColor(((color != null) ? color : [255, 255, 255]), setHeader, setBorder);
+		#end
+	}
+
+	/**
+	 * Forces the window header to redraw, fixing an issue for Windows 10 users.
+	 */
+	public static function redrawWindowHeader() {
+		#if windows
+		flixel.FlxG.stage.window.borderless = true;
+		flixel.FlxG.stage.window.borderless = false;
+		#end
+	}
+
+	/**
+	 * Can be used to check if your using a specific version of an OS (or if your using a certain OS).
+	 */
+	public static function hasVersion(vers:String = "10")
+		return lime.system.System.platformLabel.contains(vers);
 
 	/**
 	 * Shows a message box
