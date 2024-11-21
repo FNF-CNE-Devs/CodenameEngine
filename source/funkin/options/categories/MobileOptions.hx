@@ -54,10 +54,6 @@ class MobileOptions extends OptionsScreen {
 			"Allow Screen Timeout",
 			"If checked, The phone will enter sleep mode if the player is inactive.",
 			"screenTimeOut"));
-		add(new Checkbox(
-			"Wide Screen",
-			"If checked, It'll change aspect ratio of the game.",
-			"wideScreen"));
 		#end
 		#if android
 		add(new ArrayOption(
@@ -72,9 +68,7 @@ class MobileOptions extends OptionsScreen {
 	override function update(elapsed) {
 		#if mobile
 		final lastScreenTimeOut:Bool = Options.screenTimeOut;
-		final lastWideScreen:Bool = Options.wideScreen;
 		if (lastScreenTimeOut != Options.screenTimeOut) LimeSystem.allowScreenTimeout = Options.screenTimeOut;
-		if (lastWideScreen != Options.wideScreen) FlxG.scaleMode = new mobile.funkin.backend.system.MobileRatioScaleMode();
 		#end
 		super.update(elapsed);
 	}

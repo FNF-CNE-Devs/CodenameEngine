@@ -41,7 +41,6 @@ class Options
 	// mobile options
 	#if mobile
 	public static var screenTimeOut:Bool = false;
-	public static var wideScreen:Bool = false;
 	#end
 	public static var hideHitbox:Bool = false;
 	public static var hitboxType:String = 'gradient';

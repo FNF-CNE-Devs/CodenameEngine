@@ -16,9 +16,6 @@ import flixel.addons.transition.TransitionData;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import funkin.backend.system.modules.*;
-#if mobile
-import mobile.funkin.backend.system.MobileRatioScaleMode as FunkinRatioScaleMode;
-#end
 
 #if ALLOW_MULTITHREADING
 import sys.thread.Thread;
