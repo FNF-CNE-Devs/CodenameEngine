@@ -6,14 +6,14 @@ jobs:
   build:
     name: Android Build
     permissions: write-all
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Pulling the new commit
         uses: actions/checkout@v2
       - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+        uses: krdlab/setup-haxe@v1
         with:
-          haxe-version: 4.3.5
+          haxe-version: 4.2.5
       - name: Install Android NDK
         uses: nttld/setup-ndk@v1
         id: setup-ndk
@@ -45,7 +45,7 @@ jobs:
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
           haxelib run lime config ANDROID_NDK_ROOT ${{ steps.setup-ndk.outputs.ndk-path }}
-          haxelib run lime config JAVA_HOME $JAVA_HOME_17_arm64
+          haxelib run lime config JAVA_HOME $JAVA_HOME_17_X64
           haxelib run lime config ANDROID_SETUP true
       - name: Rebuilding lime (android)
         run: haxelib run lime rebuild android -release -clean
