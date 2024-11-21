@@ -142,19 +142,6 @@ class Windows {
 	public static function setDarkMode(title:String, enable:Bool) {}
 
 	@:functionCode('
-		int darkMode = enable ? 1 : 0;
-
-		HWND window = FindWindowA(NULL, title.c_str());
-		// Look for child windows if top level aint found
-		if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
-
-		if (window != NULL && S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
-			DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
-		}
-	')
-	public static function setDarkMode(title:String, color:Array<Int>) {}
-
-	@:functionCode('
 	HWND window = FindWindowA(NULL, title.c_str());
 	if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
 
@@ -166,6 +153,16 @@ class Windows {
 	UpdateWindow(window);
 	')
 	public static function setWindowBorderColor(title:String, color:Array<Int>, setHeader:Bool = true, setBorder:Bool = false) {}
+
+	@:functionCode('
+	HWND window = FindWindowA(NULL, title.c_str());
+	if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
+
+	auto finalColor = RGB(color[0], color[1], color[2]);	
+	DwmSetWindowAttribute(window, 36, &finalColor, sizeof(COLORREF));
+	UpdateWindow(window);
+	')
+	public static function setWindowTitleColor(title:String, color:Array<Int>) {}
 
 	@:functionCode('
 	// https://stackoverflow.com/questions/15543571/allocconsole-not-displaying-cout
