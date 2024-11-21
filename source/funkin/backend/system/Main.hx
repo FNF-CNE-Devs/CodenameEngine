@@ -157,7 +157,7 @@ class Main extends Sprite
 
 		FlxG.mouse.useSystemCursor = true;
 		#if DARK_MODE_WINDOW
-		if(funkin.backend.utils.NativeAPI.hasVersion("windows 10")) funkin.backend.utils.NativeAPI.redrawWindowHeader();
+		if(funkin.backend.utils.NativeAPI.hasVersion("Windows 10")) funkin.backend.utils.NativeAPI.redrawWindowHeader();
 		#end
 
 		ModsFolder.init();

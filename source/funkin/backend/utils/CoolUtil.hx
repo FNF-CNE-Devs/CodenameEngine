@@ -163,10 +163,6 @@ class CoolUtil
 		return result;
 	}
 
-	public static inline function FlxColorToArray(color:FlxColor):Array<Int> {
-		return [FlxColor.fromInt(color.alpha), FlxColor.fromInt(color.red), FlxColor.fromInt(color.green), FlxColor.fromInt(color.blue)];
-	}
-
 	/**
 	 * Creates eventual missing folders to the specified `path`
 	 *

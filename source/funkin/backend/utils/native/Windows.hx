@@ -134,9 +134,14 @@ class Windows {
 		HWND window = FindWindowA(NULL, title.c_str());
 		// Look for child windows if top level aint found
 		if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
+		// If still not found, try to get the active window
+		if (window == NULL) window = GetActiveWindow();
 
-		if (window != NULL && S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
-			DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
+		if (window != NULL) {
+			if (S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
+				DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
+			}
+			UpdateWindow(window);
 		}
 	')
 	public static function setDarkMode(title:String, enable:Bool) {}
@@ -144,31 +149,42 @@ class Windows {
 	@:functionCode('
 	HWND window = FindWindowA(NULL, title.c_str());
 	if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
+	if (window == NULL) window = GetActiveWindow();
 
-	auto finalColor = NULL; //Make it null so we do not get an error for not initializing an auto.
-	if(color[0] == 255 && color[1] == 255 && color[2] == 255 && color[3] == 254) { //bad fix, I know :sob:
-		finalColor = 0xFFFFFFFF; //Default border
-	} else if(color[0] == 0) {
-		finalColor = 0xFFFFFFFE; //No border (must have setBorder as true)
+	COLORREF finalColor;
+	if(color[0] == -1 && color[1] == -1 && color[2] == -1 && color[3] == -1) { // bad fix, I know :sob:
+		finalColor = 0xFFFFFFFF; // Default border
+	} else if(color[3] == 0) {
+		finalColor = 0xFFFFFFFE; // No border (must have setBorder as true)
 	} else {
-		finalColor = RGB(color[1], color[2], color[3]); //Use your custom color	
+		finalColor = RGB(color[0], color[1], color[2]); // Use your custom color
 	}
 
-	if(setHeader) DwmSetWindowAttribute(window, 35, &finalColor, sizeof(COLORREF));
-	if(setBorder) DwmSetWindowAttribute(window, 34, &finalColor, sizeof(COLORREF));
+	if (window != NULL) {
+		if(setHeader) DwmSetWindowAttribute(window, 35, &finalColor, sizeof(COLORREF));
+		if(setBorder) DwmSetWindowAttribute(window, 34, &finalColor, sizeof(COLORREF));
 
-	UpdateWindow(window);
+		UpdateWindow(window);
+	}
 	')
-	public static function setWindowBorderColor(title:String, color:Array<Int>, setHeader:Bool = true, setBorder:Bool = false) {}
+	public static function setWindowBorderColor(title:String, color:Array<Int>, setHeader:Bool = true, setBorder:Bool = true) {}
 
 	@:functionCode('
 	HWND window = FindWindowA(NULL, title.c_str());
 	if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
+	if (window == NULL) window = GetActiveWindow();
 
-	auto finalColor = RGB(color[1], color[2], color[3]);	
+	COLORREF finalColor;
+	if(color[0] == -1 && color[1] == -1 && color[2] == -1 && color[3] == -1) { // bad fix, I know :sob:
+		finalColor = 0xFFFFFFFF; // Default border
+	} else {
+		finalColor = RGB(color[0], color[1], color[2]); // Use your custom color
+	}
 
-	DwmSetWindowAttribute(window, 36, &finalColor, sizeof(COLORREF));
-	UpdateWindow(window);
+	if (window != NULL) {
+		DwmSetWindowAttribute(window, 36, &finalColor, sizeof(COLORREF));
+		UpdateWindow(window);
+	}
 	')
 	public static function setWindowTitleColor(title:String, color:Array<Int>) {}
 

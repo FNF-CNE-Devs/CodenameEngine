@@ -9,7 +9,6 @@ import flixel.util.FlxColor;
  * Class for functions that talk to a lower level than haxe, such as message boxes, and more.
  * Some functions might not have effect on some platforms.
  */
-using StringTools;
 class NativeAPI {
 	@:dox(hide) public static function registerAudio() {
 		#if windows
@@ -95,34 +94,63 @@ class NativeAPI {
 	 */
 	public static function setDarkMode(title:String, enable:Bool) {
 		#if windows
+		if(title == null) title = lime.app.Application.current.window.title;
 		Windows.setDarkMode(title, enable);
 		#end
 	}
 
 	/**
-	 * Switch the window's color to any color. This is exclusive to windows 11 users, unfortunately.
-	 * NOTE: Setting the color to 0xFFFFFFFE will set the border back to it's original color (or white).
+	 * Switch the window's color to any color.
+	 *
+	 * WARNING: This is exclusive to windows 11 users, unfortunately.
+	 *
 	 * NOTE: Setting the color to 0x00000000 (FlxColor.TRANSPARENT) will set the border (must have setBorder on) invisible.
 	 */
-	public static function setWindowBorderColor(title:String, color:FlxColor, setHeader:Bool = true, setBorder:Bool = false) {
+	public static function setWindowBorderColor(title:String, color:FlxColor, setHeader:Bool = true, setBorder:Bool = true) {
 		#if windows
-		var finalColor:Array<Int> = funkin.backend.utils.CoolUtil.FlxColorToArray(color);
-		Windows.setWindowBorderColor(title, ((finalColor != null) ? finalColor : [0, 0, 0, 0]), setHeader, setBorder);
+		if(title == null) title = lime.app.Application.current.window.title;
+		Windows.setWindowBorderColor(title, [color.red, color.green, color.blue, color.alpha], setHeader, setBorder);
 		#end
 	}
 
 	/**
-	 * Switch the window's title text to any color. This is exclusive to windows 11 users too.
+	 * Resets the window's border color to the default one.
+	 *
+	 * WARNING: This is exclusive to windows 11 users, unfortunately.
+	**/
+	public static function resetWindowBorderColor(title:String, setHeader:Bool = true, setBorder:Bool = true) {
+		#if windows
+		if(title == null) title = lime.app.Application.current.window.title;
+		Windows.setWindowBorderColor(title, [-1, -1, -1, -1], setHeader, setBorder);
+		#end
+	}
+
+	/**
+	 * Switch the window's title text to any color.
+	 *
+	 * WARNING: This is exclusive to windows 11 users, unfortunately.
 	 */
 	public static function setWindowTitleColor(title:String, color:FlxColor) {
 		#if windows
-		var finalColor:Array<Int> = funkin.backend.utils.CoolUtil.FlxColorToArray(color);
-		Windows.setWindowTitleColor(title, ((finalColor != null) ? finalColor : [0, 0, 0, 0]));
+		if(title == null) title = lime.app.Application.current.window.title;
+		Windows.setWindowTitleColor(title, [color.red, color.green, color.blue, color.alpha]);
 		#end
 	}
 
 	/**
-	 * Forces the window header to redraw, fixing an issue for Windows 10 users.
+	 * Resets the window's title color to the default one.
+	 *
+	 * WARNING: This is exclusive to windows 11 users, unfortunately.
+	**/
+	public static function resetWindowTitleColor(title:String) {
+		#if windows
+		if(title == null) title = lime.app.Application.current.window.title;
+		Windows.setWindowTitleColor(title, [-1, -1, -1, -1]);
+		#end
+	}
+
+	/**
+	 * Forces the window header to redraw, causes a small visual jitter so use it sparingly.
 	 */
 	public static function redrawWindowHeader() {
 		#if windows
@@ -134,8 +162,8 @@ class NativeAPI {
 	/**
 	 * Can be used to check if your using a specific version of an OS (or if your using a certain OS).
 	 */
-	public static function hasVersion(vers:String = "10")
-		return lime.system.System.platformLabel.toLowerCase().contains(vers);
+	public static function hasVersion(vers:String)
+		return lime.system.System.platformLabel.toLowerCase().indexOf(vers.toLowerCase()) != -1;
 
 	/**
 	 * Shows a message box
