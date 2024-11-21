@@ -146,7 +146,7 @@ class Windows {
 	if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
 
 	auto finalColor = NULL; //Make it null so we do not get an error for not initializing an auto.
-	if(color == NULL) finalColor = 0xFFFFFFFF; //Default border
+	if(color == [255, 255, 255, 254]) finalColor = 0xFFFFFFFF; //Default border
 	else if(color[0] == 0) finalColor = 0xFFFFFFFE; //No border
 	else finalColor = RGB(color[1], color[2], color[3]); //Use your custom color	
 			
