@@ -3,11 +3,13 @@ package funkin.backend.utils;
 import funkin.backend.utils.native.*;
 import flixel.util.typeLimit.OneOfTwo;
 import flixel.util.typeLimit.OneOfThree;
+import flixel.util.FlxColor;
 
 /**
  * Class for functions that talk to a lower level than haxe, such as message boxes, and more.
  * Some functions might not have effect on some platforms.
  */
+using StringTools;
 class NativeAPI {
 	@:dox(hide) public static function registerAudio() {
 		#if windows
@@ -100,9 +102,20 @@ class NativeAPI {
 	/**
 	 * Switch the window's color to any color. This is exclusive to windows 11 users, unfortunately.
 	 */
-	public static function setWindowBorderColor(title:String, color:Array<Int>, setHeader:Bool = true, setBorder:Bool = false) {
+	public static function setWindowBorderColor(title:String, color:FlxColor, setHeader:Bool = true, setBorder:Bool = false) {
 		#if windows
-		Windows.setWindowBorderColor(title, ((color != null) ? color : [255, 255, 255]), setHeader, setBorder);
+		var finalColor:Array<Int> = funkin.backend.utils.CoolUtil.FlxColorToArray(color);
+		Windows.setWindowBorderColor(title, ((finalColor != null) ? finalColor : [255, 255, 255]), setHeader, setBorder);
+		#end
+	}
+
+	/**
+	 * Switch the window's title text to any color. This is exclusive to windows 11 users too.
+	 */
+	public static function setWindowTitleColor(title:String, color:FlxColor) {
+		#if windows
+		var finalColor:Array<Int> = funkin.backend.utils.CoolUtil.FlxColorToArray(color);
+		Windows.setWindowTitleColor(title, ((finalColor != null) ? finalColor : [255, 255, 255]));
 		#end
 	}
 
@@ -120,7 +133,7 @@ class NativeAPI {
 	 * Can be used to check if your using a specific version of an OS (or if your using a certain OS).
 	 */
 	public static function hasVersion(vers:String = "10")
-		return lime.system.System.platformLabel.contains(vers);
+		return lime.system.System.platformLabel.toLowerCase().contains(vers);
 
 	/**
 	 * Shows a message box
