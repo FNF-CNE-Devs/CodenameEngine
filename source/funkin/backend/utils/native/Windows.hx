@@ -145,7 +145,10 @@ class Windows {
 	HWND window = FindWindowA(NULL, title.c_str());
 	if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
 
-	auto finalColor = RGB(color[0], color[1], color[2]);
+	auto finalColor = NULL; //Make it null so we don't get an error for not initializing an auto.
+	if(color == NULL) finalColor = 0xFFFFFFFF; //Default border
+	else if(color[0] == 0) finalColor = 0xFFFFFFFE; //No border
+	else finalColor = RGB(color[1], color[2], color[3]); //Use your custom color	
 			
 	if(setHeader) DwmSetWindowAttribute(window, 35, &finalColor, sizeof(COLORREF));
 	if(setBorder) DwmSetWindowAttribute(window, 34, &finalColor, sizeof(COLORREF));
@@ -158,7 +161,8 @@ class Windows {
 	HWND window = FindWindowA(NULL, title.c_str());
 	if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
 
-	auto finalColor = RGB(color[0], color[1], color[2]);	
+	auto finalColor = RGB(color[1], color[2], color[3]);	
+
 	DwmSetWindowAttribute(window, 36, &finalColor, sizeof(COLORREF));
 	UpdateWindow(window);
 	')
