@@ -101,6 +101,8 @@ class NativeAPI {
 
 	/**
 	 * Switch the window's color to any color. This is exclusive to windows 11 users, unfortunately.
+	 * NOTE: Setting the color to 0xFFFFFFFE will set the border back to it's original color (or white).
+	 * NOTE: Setting the color to 0x00000000 (FlxColor.TRANSPARENT) will set the border (must have setBorder on) invisible.
 	 */
 	public static function setWindowBorderColor(title:String, color:FlxColor, setHeader:Bool = true, setBorder:Bool = false) {
 		#if windows
