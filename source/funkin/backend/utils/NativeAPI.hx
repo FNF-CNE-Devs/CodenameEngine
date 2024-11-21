@@ -105,7 +105,7 @@ class NativeAPI {
 	public static function setWindowBorderColor(title:String, color:FlxColor, setHeader:Bool = true, setBorder:Bool = false) {
 		#if windows
 		var finalColor:Array<Int> = funkin.backend.utils.CoolUtil.FlxColorToArray(color);
-		Windows.setWindowBorderColor(title, ((finalColor != null) ? finalColor : [255, 255, 255]), setHeader, setBorder);
+		Windows.setWindowBorderColor(title, ((finalColor != null) ? finalColor : [0, 0, 0, 0]), setHeader, setBorder);
 		#end
 	}
 
@@ -115,7 +115,7 @@ class NativeAPI {
 	public static function setWindowTitleColor(title:String, color:FlxColor) {
 		#if windows
 		var finalColor:Array<Int> = funkin.backend.utils.CoolUtil.FlxColorToArray(color);
-		Windows.setWindowTitleColor(title, ((finalColor != null) ? finalColor : [255, 255, 255]));
+		Windows.setWindowTitleColor(title, ((finalColor != null) ? finalColor : [0, 0, 0, 0]));
 		#end
 	}
 
