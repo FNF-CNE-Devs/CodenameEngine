@@ -146,13 +146,17 @@ class Windows {
 	if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
 
 	auto finalColor = NULL; //Make it null so we do not get an error for not initializing an auto.
-	if(color == [255, 255, 255, 254]) finalColor = 0xFFFFFFFF; //Default border
-	else if(color[0] == 0) finalColor = 0xFFFFFFFE; //No border
-	else finalColor = RGB(color[1], color[2], color[3]); //Use your custom color	
-			
+	if(color[0] == 255 && color[1] == 255 && color[2] == 255 && color[3] == 254) { //bad fix, I know :sob:
+		finalColor = 0xFFFFFFFF; //Default border
+	} else if(color[0] == 0) {
+		finalColor = 0xFFFFFFFE; //No border (must have setBorder as true)
+	} else {
+		finalColor = RGB(color[1], color[2], color[3]); //Use your custom color	
+	}
+
 	if(setHeader) DwmSetWindowAttribute(window, 35, &finalColor, sizeof(COLORREF));
 	if(setBorder) DwmSetWindowAttribute(window, 34, &finalColor, sizeof(COLORREF));
-			
+
 	UpdateWindow(window);
 	')
 	public static function setWindowBorderColor(title:String, color:Array<Int>, setHeader:Bool = true, setBorder:Bool = false) {}
