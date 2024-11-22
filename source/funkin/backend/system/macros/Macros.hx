@@ -20,6 +20,8 @@ class Macros {
 			"flixel.addons.util",
 			// MOBILE
 			"mobile",
+			// OPENFL SYSTEM
+			"openfl.system",
 			// OTHER LIBRARIES & STUFF
 			#if THREE_D_SUPPORT "away3d", "flx3d", #end
 			#if VIDEO_CUTSCENES "hxvlc.flixel", "hxvlc.openfl", #end
