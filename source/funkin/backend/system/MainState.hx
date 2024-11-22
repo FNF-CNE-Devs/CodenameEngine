@@ -20,7 +20,9 @@ class MainState extends FlxState {
 	public static var betaWarningShown:Bool = false;
 	public override function create() {
 		super.create();
+		#if mobile
 		funkin.backend.system.Main.framerateSprite.setScale();
+		#end
 		if (!initiated)
 		{
 			Main.loadGameSettings();

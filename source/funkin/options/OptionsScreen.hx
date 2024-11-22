@@ -39,8 +39,8 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		super.update(elapsed);
 
 		var controls = PlayerSettings.solo.controls;
-		var wheel = FlxG.mouse.wheel;
-		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0) - wheel);
+
+		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0) - FlxG.mouse.wheel);
 		x = id * FlxG.width;
 		for(k=>option in members) {
 			if(option == null) continue;

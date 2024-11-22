@@ -157,7 +157,7 @@ class PauseSubState extends MusicBeatSubstate
 				game.registerSmoothTransition();
 				FlxG.resetState();
 			case "Change Controls":
-				persistentUpdate = false;
+				persistentDraw = false;
 				removeVirtualPad();
 				openSubState(new KeybindsOptions());
 			case "Change Options":

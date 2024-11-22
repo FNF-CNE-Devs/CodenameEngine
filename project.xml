@@ -92,7 +92,7 @@
 	<icon path="art/iconOG.png" size='512' />
 	<icon path="art/iconOG.png" size='768' />
 	<icon path="art/iconOG.png" size='1024' />
-	<icon path="art/iconOG.png" />
+	<icon path="art/iconOG.png" if="mobile" />
 
 	<!-- _________________________________ Engine Settings _______________________________ -->
 
@@ -184,8 +184,6 @@
 
 	<haxelib name="extension-androidtools" if="android" />
 
-	<haxedef name="no-deprecation-warnings"/>
-
 	<!-- _________________________________ Additional stuff _______________________________ -->
 
 	<section if="COMPILE_ALL_CLASSES">
@@ -194,9 +192,6 @@
 	</section>
 
 	<haxeflag name="--macro" value="funkin.backend.system.macros.Macros.initMacros()" />
-
-	<!-- Fix flash package issues -->
-	<haxeflag name="--macro" value="allowPackage('flash')" />
 
 	<!-- Fix compiling issues -->
 	<setenv name="HAXEPATH" value="./"/>

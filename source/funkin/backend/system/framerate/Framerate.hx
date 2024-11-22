@@ -121,7 +121,11 @@ class Framerate extends Sprite {
 		#elseif ios
 		for(camera in FlxG.cameras.list) {
 			var pos = FlxG.mouse.getScreenPosition(camera);
-			if(pos.x >= 0 && pos.x <= 80 && pos.y >= 0 && pos.y <= 60) {
+			if (pos.x >= FlxG.game.x + 10 + offset.x &&
+				pos.x <= FlxG.game.x + offset.x + 80 &&
+				pos.y >= FlxG.game.y + 2 + offset.y &&
+				pos.y <= FlxG.game.y + 2 + offset.y + 60)
+			{
 				if(FlxG.mouse.justPressed)
 					sillyTimer.start(0.4, (tmr:FlxTimer) -> debugMode = (debugMode + 1) % 3);
 
@@ -163,9 +167,11 @@ class Framerate extends Sprite {
 		}
 	}
 
+	#if mobile
 	public inline function setScale(?scale:Float){
 		if(scale == null)
 			scale = Math.min(FlxG.stage.window.width / FlxG.width, FlxG.stage.window.height / FlxG.height);
 		scaleX = scaleY = #if android (scale > 1 ? scale : 1) #else (scale < 1 ? scale : 1) #end;
 	}
+	#end
 }

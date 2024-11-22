@@ -1,11 +1,7 @@
 package funkin.backend.assets;
 
-import sys.FileSystem;
 import funkin.backend.assets.IModsAssetLibrary;
 import lime.utils.AssetLibrary;
-import lime.utils.AssetType;
-
-using StringTools;
 
 class AssetsLibraryList extends AssetLibrary {
 	public var libraries:Array<AssetLibrary> = [];
@@ -62,29 +58,13 @@ class AssetsLibraryList extends AssetLibrary {
 				l = cast(l, openfl.utils.AssetLibrary).__proxy;
 			}
 
+			// TODO: do base folder scanning
 			#if MOD_SUPPORT
-			if (source == MODS || source == BOTH) {
-				if (l is IModsAssetLibrary) {
-					var lib = cast(l, IModsAssetLibrary);
-					for (e in lib.getFiles(folder))
-						content.push(e);
-				}
+			if (l is IModsAssetLibrary) {
+				var lib = cast(l, IModsAssetLibrary);
+				for(e in lib.getFiles(folder))
+					content.push(e);
 			}
-			#else
-			#if sys
-			if (source == SOURCE || source == BOTH) {
-				var fileStuffs = FileSystem.readDirectory(folder);
-				if (fileStuffs != null && fileStuffs.length > 0) {
-					for (e in fileStuffs) {
-						if (!FileSystem.isDirectory(folder + e.toString())) {
-							content.push(e);
-						}
-					}
-				} else {
-					Logs.trace('No files/folders found in the requested directory \'${folder}\'', WARNING, YELLOW);
-				}
-			}
-			#end
 			#end
 		}
 		return content;
@@ -102,29 +82,13 @@ class AssetsLibraryList extends AssetLibrary {
 				l = cast(l, openfl.utils.AssetLibrary).__proxy;
 			}
 
+			// TODO: do base folder scanning
 			#if MOD_SUPPORT
-			if (source == MODS || source == BOTH) {
-				if (l is IModsAssetLibrary) {
-					var lib = cast(l, IModsAssetLibrary);
-					for (e in lib.getFolders(folder))
-						content.push(e);
-				}
+			if (l is IModsAssetLibrary) {
+				var lib = cast(l, IModsAssetLibrary);
+				for(e in lib.getFolders(folder))
+					content.push(e);
 			}
-			#else
-			#if sys
-			if (source == SOURCE || source == BOTH) {
-				var fileStuffs = FileSystem.readDirectory(folder);
-				if (fileStuffs != null && fileStuffs.length > 0) {
-					for (e in fileStuffs) {
-						if (FileSystem.isDirectory(folder + e.toString())) {
-							content.push(e);
-						}
-					}
-				} else {
-					Logs.trace('No files/folders found in the requested directory \'${folder}\'', WARNING, YELLOW);
-				}
-			}
-			#end
 			#end
 		}
 		return content;
@@ -197,20 +161,6 @@ class AssetsLibraryList extends AssetLibrary {
 	public function addLibrary(lib:AssetLibrary) {
 		libraries.insert(0, lib);
 		return lib;
-	}
-
-	override public function list(type:String):Array<String> {
-		var items = [];
-
-		for(library in libraries) {
-			var libraryItems = library.list(type);
-
-			if (libraryItems != null) {
-				items = items.concat(libraryItems);
-			}
-		}
-
-		return items;
 	}
 }
 

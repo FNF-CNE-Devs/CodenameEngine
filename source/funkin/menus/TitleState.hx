@@ -119,13 +119,12 @@ class TitleState extends MusicBeatState
 	{
 		if (FlxG.keys.justPressed.F)  FlxG.fullscreen = !FlxG.fullscreen;
 
-		var pressedEnter:Bool = controls.ACCEPT;
+		var pressedEnter:Bool = FlxG.keys.justPressed.ENTER;
 
-		if (controls.touchC) {
+		if (controls.touchC)
 			for (touch in FlxG.touches.list)
 				if (touch.justPressed)
 					pressedEnter = true;
-		}
 
 		var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 

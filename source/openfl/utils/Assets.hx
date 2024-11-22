@@ -614,7 +614,6 @@ class Assets
 				}
 				else
 				{
-					@:privateAccess LimeAssets.libraries.remove(name);
 					_library = new AssetLibrary();
 					_library.__proxy = library;
 					LimeAssets.registerLibrary(name, _library);

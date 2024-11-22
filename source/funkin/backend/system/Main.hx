@@ -71,15 +71,17 @@ class Main extends Sprite
 
 		CrashHandler.init();
 
-		#if !html5 framerateSprite = new funkin.backend.system.framerate.Framerate(); #end
+		#if !web framerateSprite = new funkin.backend.system.framerate.Framerate(); #end
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
 		#if android FlxG.android.preventDefaultKeys = [BACK]; #end
 
-		#if !html5
+		#if !web
 		addChild(framerateSprite);
+		#if mobile
 		FlxG.stage.window.onResize.add((w:Int, h:Int) -> framerateSprite.setScale());
+		#end
 		SystemInfo.init();
 		#end
 	}
@@ -163,7 +165,6 @@ class Main extends Sprite
 		Conductor.init();
 		AudioSwitchFix.init();
 		EventManager.init();
-
 		FlxG.signals.preStateSwitch.add(onStateSwitch);
 		FlxG.signals.postStateSwitch.add(onStateSwitchPost);
 

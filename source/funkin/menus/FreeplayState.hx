@@ -291,8 +291,7 @@ class FreeplayState extends MusicBeatState
 	public function select() {
 		updateCoopModes();
 
-		if (songs[curSelected].difficulties.length <= 0)
-			return;
+		if (songs[curSelected].difficulties.length <= 0) return;
 
 		var event = event("onSelect", EventManager.get(FreeplaySongSelectEvent).recycle(songs[curSelected].name, songs[curSelected].difficulties[curDifficulty], __opponentMode, __coopMode));
 
@@ -352,12 +351,12 @@ class FreeplayState extends MusicBeatState
 	/**
 	 * Array containing all labels for Co-Op / Opponent modes.
 	 */
-	public var coopLabels:Array<String> = controls.touchC ? ['[X] Solo', '[X] Opponent Mode'] : 
+	public var coopLabels:Array<String> = controls.touchC ? ["[X] Solo", "[X] Opponent Mode"] : 
 	[
-		'[TAB] Solo',
-		'[TAB] Opponent Mode',
-		'[TAB] Co-Op Mode',
-		'[TAB] Co-Op Mode (Switched)'
+		"[TAB] Solo",
+		"[TAB] Opponent Mode",
+		"[TAB] Co-Op Mode",
+		"[TAB] Co-Op Mode (Switched)"
 	];
 
 	/**

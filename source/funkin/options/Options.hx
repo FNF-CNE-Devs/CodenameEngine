@@ -38,7 +38,9 @@ class Options
 
 	public static var lastLoadedMod:String = null;
 
-	// mobile options
+	/**
+	 * MOBILE SETTINGS
+	 */
 	#if mobile
 	public static var screenTimeOut:Bool = false;
 	#end
