@@ -49,7 +49,6 @@ class TouchUtil
 		return false;
 	}
 
-
 	public static function overlapsComplex(object:FlxObject, ?camera:FlxCamera):Bool
 	{
 		if (camera == null)
