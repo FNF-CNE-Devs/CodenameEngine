@@ -130,14 +130,16 @@ class MemoryUtil {
 		reg.match(process.stdout.readAll().toString());
 		if (process.exitCode() == 0) return reg.matched(1);
 		#elseif linux
-		var process = new HiddenProcess("sudo", ["dmidecode", "--type", "17"]);
+		/*var process = new HiddenProcess("sudo", ["dmidecode", "--type", "17"]);
 		if (process.exitCode() != 0) return "Unknown";
 		var lines = process.stdout.readAll().toString().split("\n");
 		for (line in lines) {
 			if (line.indexOf("Type:") == 0) {
 				return line.substring("Type:".length).trim();
 			}
-		}
+		}*/
+		// TODO: sort of unsafe? also requires users to use `sudo`
+		// when launching the engine through the CLI, REIMPLEMENT LATER. 
 		#end
 		return "Unknown";
 	}

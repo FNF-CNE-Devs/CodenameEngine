@@ -114,6 +114,12 @@ class StoryMenuState extends MusicBeatState {
 			}
 		}
 
+		// default difficulty should be the middle difficulty in the array
+		// to be consistent with base game and whatnot, you know the drill
+		curDifficulty = Math.floor(weeks[0].difficulties.length * 0.5);
+		// debug stuff lol
+		Logs.trace('Middle Difficulty for Week 1 is ${weeks[0].difficulties[curDifficulty]} (ID: $curDifficulty)');
+
 		changeWeek(0, true);
 
 		DiscordUtil.call("onMenuLoaded", ["Story Menu"]);
@@ -163,6 +169,7 @@ class StoryMenuState extends MusicBeatState {
 		if (!force) CoolUtil.playMenuSFX();
 		for(k=>e in weekSprites.members) {
 			e.targetY = k - curWeek;
+			e.alpha = k == curWeek ? 1.0 : 0.6;
 		}
 		tracklist.text = 'TRACKS\n\n${[for(e in weeks[curWeek].songs) if (!e.hide) e.name.toUpperCase()].join('\n')}';
 		weekTitle.text = weeks[curWeek].name.getDefault("");
@@ -333,13 +340,13 @@ class StoryMenuState extends MusicBeatState {
 			if (char.animation.exists("confirm"))
 				char.animation.play("confirm");
 
-		PlayState.loadWeek(weeks[curWeek], weeks[curWeek].difficulties[curDifficulty]);
+		PlayState.loadWeek(event.week, event.difficulty);
 
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
 			FlxG.switchState(new PlayState());
 		});
-		weekSprites.members[curWeek].startFlashing();
+		weekSprites.members[event.weekID].startFlashing();
 	}
 }
 

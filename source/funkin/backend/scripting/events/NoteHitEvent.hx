@@ -24,9 +24,19 @@ final class NoteHitEvent extends CancellableEvent {
 	 */
 	public var countScore:Bool = true;
 	/**
-	 * Whenever ratings should be shown or not.
+	 * Whenever ratings (Rating sprite, Digits sprites and Combo sprite) should be shown or not.
+	 *
+	 * NOTE: Whether it's `true` use `displayRating` and `displayCombo` (plus `minDigitDisplay` in the PlayState class) to change what's going to pop up!
 	 */
 	public var showRating:Null<Bool> = null;
+	/**
+	 * Whenever the Rating sprites should be shown or not.
+	 */
+	public var displayRating:Bool;
+	/**
+	 * Whenever the Combo sprite should be shown or not (like old Week 7 patches).
+	 */
+	public var displayCombo:Bool;
 	/**
 	 * Note that has been pressed
 	 */
@@ -122,6 +132,13 @@ final class NoteHitEvent extends CancellableEvent {
 	}
 	@:dox(hide)
 	public function cancelDeletion() {preventDeletion();}
+
+	/**
+	 * Forces the note to be deleted.
+	**/
+	public function forceDeletion() {
+		deleteNote = true;
+	}
 
 	/**
 	 * Prevents the vocals volume from being set to 1 after pressing the note.

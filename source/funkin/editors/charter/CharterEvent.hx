@@ -2,6 +2,7 @@ package funkin.editors.charter;
 
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 import funkin.backend.chart.ChartData.ChartEvent;
 import funkin.backend.scripting.DummyScript;
 import funkin.backend.scripting.Script;
@@ -106,18 +107,35 @@ class CharterEvent extends UISliceSprite implements ICharterSelectable {
 	private static function generateDefaultIcon(name:String) {
 		var isBase64:Bool = false;
 		var path:String = Paths.image('editors/charter/event-icons/$name');
+		var defaultPath = Paths.image('editors/charter/event-icons/Unknown');
 		if(!Assets.exists(path)) {
-			path = Paths.image('editors/charter/event-icons/Unknown');
+			path = defaultPath;
 
 			var packData = getPackData(name);
-			if(packData != null && packData[3] != null) {
-				isBase64 = true;
-				path = packData[3];
+			if(packData != null) {
+				var packImg = packData[3];
+				if(packImg != null && packImg.length > 0) {
+					isBase64 = !packImg.startsWith("assets/");
+					path = packImg;
+				}
 			}
 		}
+		path = path.trim();
 
-		var spr = new FlxSprite().loadGraphic(isBase64 ? BitmapData.fromBase64(path.trim(), 'UTF8') : path);
-		return spr;
+		var graphic:FlxGraphicAsset = try {
+			isBase64 ? openfl.display.BitmapData.fromBase64(path, 'UTF8') : path;
+		} catch(e:Dynamic) {
+			Logs.trace('Failed to load event icon: ${e.toString()}', ERROR);
+			isBase64 = false;
+			defaultPath;
+		}
+
+		if(!isBase64) {
+			if (!Assets.exists(graphic))
+				graphic = defaultPath;
+		}
+
+		return new FlxSprite().loadGraphic(graphic);
 	}
 
 	/**
