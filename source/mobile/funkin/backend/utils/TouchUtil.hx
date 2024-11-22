@@ -22,6 +22,8 @@
 
 package mobile.funkin.backend.utils;
 
+import flixel.FlxG;
+import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.input.touch.FlxTouch;
 
