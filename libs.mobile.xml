@@ -2,7 +2,7 @@
 <libraries>
 	<!-- OpenFL & Lime (Required for Flixel) -->
 	<lib name="openfl" version="9.2.2" />
-	<git name="lime" url="https://github.com/FNF-CNE-Devs/lime" />
+	<git name="lime" url="https://github.com/mcagabe19-stuff/lime" />
 
 	<!-- Lime Building Dependencies -->
 	<lib name="hxp" version="1.3.0" />
@@ -15,7 +15,6 @@
 	<!-- Other Libraries -->
 	<git name="hscript-improved" url="https://github.com/FNF-CNE-Devs/hscript-improved" ref="custom-classes" />
 	<git name="flxanimate" url="https://github.com/FNF-CNE-Devs/flxanimate" />
-	<git name="hxdiscord_rpc" url="https://github.com/FNF-CNE-Devs/hxdiscord_rpc" />
 	<lib name="hxvlc" skipDeps="true" />
 
 	<!-- Documentation and other features -->
@@ -27,5 +26,5 @@
 	<!-- Android Specific -->
 	<git name="extension-androidtools" url="https://github.com/MAJigsaw77/extension-androidtools" ref="main" skipDeps="true" />
 
-	<git name="hxcpp" url="https://github.com/NeeEoo/hxcpp" ref="codename" />
+	<git name="hxcpp" url="https://github.com/mcagabe19-stuff/hxcpp" />
 </libraries>
