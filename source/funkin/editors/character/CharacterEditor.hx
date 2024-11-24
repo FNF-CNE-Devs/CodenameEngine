@@ -319,7 +319,7 @@ class CharacterEditor extends UIState {
 				if (!Options.characterDragOffsets)
 					nextScroll.set(nextScroll.x - FlxG.mouse.deltaScreenX, nextScroll.y - FlxG.mouse.deltaScreenY);
 				else
-					changeOffset(character.getAnimName(), FlxPoint.get(FlxG.mouse.deltaScreenX * (character.playerOffsets ? 1 : -1), -FlxG.mouse.deltaScreenY), false);
+					changeOffset(character.getAnimName(), FlxPoint.get(Math.floor(FlxG.mouse.deltaScreenX / character.scale.x * (character.playerOffsets ? 1 : -1)), -Math.floor(FlxG.mouse.deltaScreenY / character.scale.y)), false);
 				currentCursor = HAND;
 			} else
 				currentCursor = ARROW;
