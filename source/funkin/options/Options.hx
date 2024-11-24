@@ -69,6 +69,11 @@ class Options
 	public static var charterAutoSavesSeperateFolder:Bool = false;
 
 	/**
+	 * CHARACTER EDITOR
+	 */
+	public static var characterDragOffsets:Bool = false;
+
+	/**
 	 * PLAYER 1 CONTROLS
 	 */
 	public static var P1_NOTE_LEFT:Array<FlxKey> = [A];

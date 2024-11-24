@@ -178,6 +178,12 @@ class CharacterEditor extends UIState {
 					},
 					null,
 					{
+						label: "Drag Offsets",
+						onSelect: _offsets_drag_toggle,
+						icon: Options.characterDragOffsets ? 1 : 0
+					},
+					null,
+					{
 						label: "Clear Offsets",
 						keybind: [CONTROL, R],
 						onSelect: _offsets_clear,
@@ -274,6 +280,7 @@ class CharacterEditor extends UIState {
 	//private var camDragSpeed:Float = 1.2;
 
 	private var nextScroll:FlxPoint = FlxPoint.get(0,0);
+	private var prevDragOffsets:FlxPoint = FlxPoint.get(0,0);
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
@@ -296,8 +303,24 @@ class CharacterEditor extends UIState {
 				closeCurrentContextMenu();
 				openContextMenu(topMenu[2].childs);
 			}
+			if (Options.characterDragOffsets)
+			{
+				if (FlxG.mouse.justPressed)
+					prevDragOffsets = character.animOffsets.get(character.getAnimName()).clone();
+
+				if (FlxG.mouse.justReleased)
+				{
+					var curOffsets = character.animOffsets.get(character.getAnimName()).clone();
+					var difference = curOffsets - prevDragOffsets;
+					changeOffset(character.getAnimName(), difference.clone().negate(), false);
+					changeOffset(character.getAnimName(), difference);
+				}
+			}
 			if (FlxG.mouse.pressed) {
-				nextScroll.set(nextScroll.x - FlxG.mouse.deltaScreenX, nextScroll.y - FlxG.mouse.deltaScreenY);
+				if (!Options.characterDragOffsets)
+					nextScroll.set(nextScroll.x - FlxG.mouse.deltaScreenX, nextScroll.y - FlxG.mouse.deltaScreenY);
+				else
+					changeOffset(character.getAnimName(), FlxPoint.get(FlxG.mouse.deltaScreenX * (character.playerOffsets ? 1 : -1), -FlxG.mouse.deltaScreenY), false);
 				currentCursor = HAND;
 			} else
 				currentCursor = ARROW;
@@ -575,6 +598,10 @@ class CharacterEditor extends UIState {
 
 	function _offsets_extra_right(_) {
 		changeOffset(character.getAnimName(), FlxPoint.get(!character.isFlippedOffsets() ? -5 : 5, 0));
+	}
+
+	function _offsets_drag_toggle(t) {
+		t.icon = (Options.characterDragOffsets = !Options.characterDragOffsets) ? 1 : 0;
 	}
 
 	function _offsets_clear(_) {
