@@ -124,13 +124,12 @@ class PauseSubState extends MusicBeatSubstate
 
 		var upP = controls.UP_P;
 		var downP = controls.DOWN_P;
-		var accepted = controls.ACCEPT;
+		var scroll = FlxG.mouse.wheel;
 
-		if (upP)
-			changeSelection(-1);
-		if (downP)
-			changeSelection(1);
-		if (accepted)
+		if (upP || downP || scroll != 0)  // like this we wont break mods that expect a 0 change event when calling sometimes  - Nex
+			changeSelection((upP ? -1 : 0) + (downP ? 1 : 0) - scroll);
+
+		if (controls.ACCEPT)
 			selectOption();
 	}
 
