@@ -150,6 +150,7 @@ class Windows {
 	HWND window = FindWindowA(NULL, title.c_str());
 	if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
 	if (window == NULL) window = GetActiveWindow();
+	if (window == NULL) return;
 
 	COLORREF finalColor;
 	if(color[0] == -1 && color[1] == -1 && color[2] == -1 && color[3] == -1) { // bad fix, I know :sob:
@@ -160,12 +161,10 @@ class Windows {
 		finalColor = RGB(color[0], color[1], color[2]); // Use your custom color
 	}
 
-	if (window != NULL) {
-		if(setHeader) DwmSetWindowAttribute(window, 35, &finalColor, sizeof(COLORREF));
-		if(setBorder) DwmSetWindowAttribute(window, 34, &finalColor, sizeof(COLORREF));
+	if(setHeader) DwmSetWindowAttribute(window, 35, &finalColor, sizeof(COLORREF));
+	if(setBorder) DwmSetWindowAttribute(window, 34, &finalColor, sizeof(COLORREF));
 
-		UpdateWindow(window);
-	}
+	UpdateWindow(window);
 	')
 	public static function setWindowBorderColor(title:String, color:Array<Int>, setHeader:Bool = true, setBorder:Bool = true) {}
 
@@ -173,6 +172,7 @@ class Windows {
 	HWND window = FindWindowA(NULL, title.c_str());
 	if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
 	if (window == NULL) window = GetActiveWindow();
+	if (window == NULL) return;
 
 	COLORREF finalColor;
 	if(color[0] == -1 && color[1] == -1 && color[2] == -1 && color[3] == -1) { // bad fix, I know :sob:
@@ -181,10 +181,8 @@ class Windows {
 		finalColor = RGB(color[0], color[1], color[2]); // Use your custom color
 	}
 
-	if (window != NULL) {
-		DwmSetWindowAttribute(window, 36, &finalColor, sizeof(COLORREF));
-		UpdateWindow(window);
-	}
+	DwmSetWindowAttribute(window, 36, &finalColor, sizeof(COLORREF));
+	UpdateWindow(window);
 	')
 	public static function setWindowTitleColor(title:String, color:Array<Int>) {}
 
