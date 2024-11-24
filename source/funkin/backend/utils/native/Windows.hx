@@ -136,13 +136,12 @@ class Windows {
 		if (window == NULL) window = FindWindowExA(GetActiveWindow(), NULL, NULL, title.c_str());
 		// If still not found, try to get the active window
 		if (window == NULL) window = GetActiveWindow();
+		if (window == NULL) return;
 
-		if (window != NULL) {
-			if (S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
-				DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
-			}
-			UpdateWindow(window);
+		if (S_OK != DwmSetWindowAttribute(window, 19, &darkMode, sizeof(darkMode))) {
+			DwmSetWindowAttribute(window, 20, &darkMode, sizeof(darkMode));
 		}
+		UpdateWindow(window);
 	')
 	public static function setDarkMode(title:String, enable:Bool) {}
 
