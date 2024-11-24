@@ -312,8 +312,7 @@ class CharacterEditor extends UIState {
 				{
 					var curOffsets = character.animOffsets.get(character.getAnimName()).clone();
 					var difference = curOffsets - prevDragOffsets;
-					changeOffset(character.getAnimName(), difference.clone().negate(), false);
-					changeOffset(character.getAnimName(), difference);
+					undos.addToUndo(CChangeOffset(character.getAnimName(), difference));
 				}
 			}
 			if (FlxG.mouse.pressed) {
