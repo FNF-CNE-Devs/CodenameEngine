@@ -686,7 +686,7 @@ class PlayState extends MusicBeatState
 				startingPos,
 				strumLine.strumScale == null ? 1 : strumLine.strumScale,
 				strumLine.type == 2 || (!coopMode && !((strumLine.type == 1 && !opponentMode) || (strumLine.type == 0 && opponentMode))),
-				strumLine.type != 1, coopMode ? (strumLine.type == 1 ? controlsP1 : controlsP2) : controls,
+				strumLine.type != 1, coopMode ? ((strumLine.type == 1) != opponentMode ? controlsP1 : controlsP2) : controls,
 				strumLine.vocalsSuffix
 			);
 			strLine.cameras = [camHUD];
