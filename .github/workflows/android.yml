@@ -14,11 +14,6 @@ jobs:
         uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
-      - name: Install Android NDK
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r15c
       - name: Restore existing build cache for faster compilation
         uses: actions/cache@v3
         with:
@@ -33,24 +28,14 @@ jobs:
       - name: Installing/Updating libraries
         run: |
           haxe -cp commandline -D analyzer-optimize --run Main setup -s --lib=./libs.mobile.xml
-      - name: Rebuilding lime (linux) and hxcpp
-        run: |
-          sudo apt-get install -qq libgl1-mesa-dev libglu1-mesa-dev libpulse-dev g++ g++-multilib gcc-multilib libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev
-          cd $(haxelib libpath hxcpp)tools/hxcpp
-          haxe compile.hxml
-          cd ${{ github.workspace }}
-          haxelib run lime rebuild linux -release -clean
-          haxelib run lime rebuild tools
       - name: Configuring Android
         run: |
           haxelib run lime config ANDROID_SDK $ANDROID_HOME
           haxelib run lime config ANDROID_NDK_ROOT ${{ steps.setup-ndk.outputs.ndk-path }}
           haxelib run lime config JAVA_HOME $JAVA_HOME_17_X64
           haxelib run lime config ANDROID_SETUP true
-      - name: Rebuilding lime (android)
-        run: haxelib run lime rebuild android -release -clean
       - name: Building the game
-        run: haxelib run lime config ANDROID_NDK_ROOT $ANDROID_NDK_LATEST_HOME && haxelib run lime build android
+        run: haxelib run lime build android
       - name: Uploading artifact
         uses: actions/upload-artifact@v4
         with:
