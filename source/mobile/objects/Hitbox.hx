@@ -95,7 +95,7 @@ class Hitbox extends FlxButtonGroup
 
 				hintLaneTween = FlxTween.tween(hint.label, {alpha: 0.00001}, Options.controlsAlpha / 10, {
 					ease: FlxEase.circInOut,
-					onComplete: (twn:FlxTween) -> hintTween = null
+					onComplete: (twn:FlxTween) -> hintLaneTween = null
 				});
 			}
 
@@ -114,7 +114,7 @@ class Hitbox extends FlxButtonGroup
 
 				hintLaneTween = FlxTween.tween(hint.label, {alpha: Options.controlsAlpha}, Options.controlsAlpha / 100, {
 					ease: FlxEase.circInOut,
-					onComplete: (twn:FlxTween) -> hintTween = null
+					onComplete: (twn:FlxTween) -> hintLaneTween = null
 				});
 			}
 		}
@@ -143,13 +143,7 @@ class Hitbox extends FlxButtonGroup
 			shape.graphics.drawRect(0, 0, Width, Height);
 			shape.graphics.endFill();
 		}
-		else if (Options.hitboxType == "noGradientOld")
-		{
-			shape.graphics.lineStyle(10, 0xFFFFFF, 1);
-			shape.graphics.drawRect(0, 0, Width, Height);
-			shape.graphics.endFill();
-		}
-		else // if (Options.hitboxType == 'gradient')
+		else if (Options.hitboxType == 'gradient')
 		{
 			shape.graphics.lineStyle(3, 0xFFFFFF, 1);
 			shape.graphics.drawRect(0, 0, Width, Height);
@@ -161,6 +155,12 @@ class Hitbox extends FlxButtonGroup
 			else
 				shape.graphics.beginGradientFill(RADIAL, [0xFFFFFF, FlxColor.TRANSPARENT], [1, 0], [0, 255], null, null, null, 0.5);
 			shape.graphics.drawRect(3, 3, Width - 6, Height - 6);
+			shape.graphics.endFill();
+		}
+		else //if (Options.hitboxType == "noGradientOld")
+		{
+			shape.graphics.lineStyle(10, 0xFFFFFF, 1);
+			shape.graphics.drawRect(0, 0, Width, Height);
 			shape.graphics.endFill();
 		}
 		var bitmap:BitmapData = new BitmapData(Width, Height, true, 0);
