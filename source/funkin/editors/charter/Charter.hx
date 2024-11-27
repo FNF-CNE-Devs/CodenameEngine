@@ -341,6 +341,7 @@ class Charter extends UIState {
 					null,
 					{
 						label: "↑ Speed 25%",
+						keybind: [PERIOD],
 						onSelect: _playback_speed_raise
 					},
 					{
@@ -349,6 +350,7 @@ class Charter extends UIState {
 					},
 					{
 						label: "↓ Speed 25%",
+						keybind: [COMMA],
 						onSelect: _playback_speed_lower
 					},
 					null,
@@ -361,6 +363,22 @@ class Charter extends UIState {
 						label: "Go forward a section",
 						keybind: [D],
 						onSelect: _playback_forward
+					},
+					{
+						label: "Go to start of section",
+						keybind: [SHIFT, S],
+						onSelect: _playback_section_start
+					},
+					null,
+					{
+						label: "Go back a step",
+						keybind: [W],
+						onSelect: _playback_back_step
+					},
+					{
+						label: "Go forward a step",
+						keybind: [S],
+						onSelect: _playback_forward_step
 					},
 					null,
 					{
@@ -1578,6 +1596,18 @@ class Charter extends UIState {
 	function _playback_forward(_) {
 		if (FlxG.sound.music.playing) return;
 		Conductor.songPosition += (Conductor.beatsPerMeasure * __crochet);
+	}
+	function _playback_section_start(_) {
+		if(FlxG.sound.music.playing) return;
+		Conductor.songPosition = (Conductor.beatsPerMeasure * (60000 / Conductor.bpm)) * curMeasure;
+	}
+	function _playback_back_step(_) {
+		if (FlxG.sound.music.playing) return;
+		Conductor.songPosition -= Conductor.stepCrochet;
+	}
+	function _playback_forward_step(_) {
+		if (FlxG.sound.music.playing) return;
+		Conductor.songPosition += Conductor.stepCrochet;
 	}
 	function _song_start(_) {
 		if (FlxG.sound.music.playing) return;
