@@ -216,7 +216,7 @@ class FreeplayState extends MusicBeatState
 			lerpScore = intendedScore;
 
 		if (canSelect) {
-			changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0));
+			changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0) - FlxG.mouse.wheel);
 			changeDiff((controls.LEFT_P ? -1 : 0) + (controls.RIGHT_P ? 1 : 0));
 			changeCoopMode((FlxG.keys.justPressed.TAB ? 1 : 0));
 			// putting it before so that its actually smooth

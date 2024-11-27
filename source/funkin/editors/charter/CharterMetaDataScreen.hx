@@ -40,6 +40,7 @@ class CharterMetaDataScreen extends UISubstateWindow {
 
 		FlxG.sound.music.pause();
 		Charter.instance.vocals.pause();
+		for (strumLine in Charter.instance.strumLines.members) strumLine.vocals.pause();
 
 		function addLabelOn(ui:UISprite, text:String)
 			add(new UIText(ui.x, ui.y - 24, 0, text));
