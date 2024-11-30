@@ -113,10 +113,10 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
 
 		if(lastStateName != (lastStateName = Type.getClassName(Type.getClass(this)))) {
-            lastScriptName = null;
-        }
-        this.scriptName = scriptName != null ? scriptName : lastScriptName;
-        lastScriptName = this.scriptName;
+			lastScriptName = null;
+		}
+		this.scriptName = scriptName != null ? scriptName : lastScriptName;
+		lastScriptName = this.scriptName;
 	}
 
 	function loadScript() {
