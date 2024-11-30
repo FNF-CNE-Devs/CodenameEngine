@@ -29,7 +29,6 @@ class Config {
 	];
 
 	public static final DISALLOW_ABSTRACT_AND_ENUM = [
-		"funkin.backend.FunkinSprite", // Error: String has no field trim, Due to Func
 		"funkin.backend.scripting.events.PlayAnimEvent", // Error: expected member name or ';' after declaration specifiers, Due to Func
 	];
 }
