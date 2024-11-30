@@ -149,8 +149,6 @@ class Main extends Sprite
 
 		FlxG.scaleMode = scaleMode = new FunkinRatioScaleMode();
 
-		MusicBeatState.init();
-
 		Conductor.init();
 		AudioSwitchFix.init();
 		EventManager.init();

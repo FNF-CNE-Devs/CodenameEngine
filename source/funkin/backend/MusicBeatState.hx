@@ -94,7 +94,8 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	public var scriptsAllowed:Bool = true;
 
 	public static var lastScriptName:String = null;
-	static var changeLastScriptName:Bool = false;
+	public static var lastStateName:String = null;
+
 	public var scriptName:String = null;
 
 	public static var skipTransOut:Bool = false;
@@ -110,8 +111,12 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
 		super();
 		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
-		this.scriptName = scriptName != null ? scriptName : lastScriptName;
-		lastScriptName = changeLastScriptName ? this.scriptName : null;
+
+		if(lastStateName != (lastStateName = Type.getClassName(Type.getClass(this)))) {
+            lastScriptName = null;
+        }
+        this.scriptName = scriptName != null ? scriptName : lastScriptName;
+        lastScriptName = this.scriptName;
 	}
 
 	function loadScript() {
@@ -158,15 +163,6 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 		Framerate.offset.y = 0;
 		super.create();
 		call("create");
-	}
-
-	public static function init()
-	{
-		FlxG.signals.preStateSwitch.add(function()
-		{
-			@:privateAccess
-			changeLastScriptName = Type.getClassName(Type.getClass(FlxG.state)) != Type.getClassName(Type.getClass(FlxG.game._requestedState));
-		});
 	}
 
 	public override function createPost() {
