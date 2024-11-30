@@ -312,6 +312,10 @@ class PlayState extends MusicBeatState
 	 */
 	public var misses:Int = 0;
 	/**
+	 * The player's amount of breaks. (should be counted with the misses, so "breaks + misses")
+	 */
+	public var breaks:Int = 0;
+	/**
 	 * The player's accuracy (shortcut to `accuracyPressedNotes / totalAccuracyAmount`).
 	 */
 	public var accuracy(get, set):Float;
@@ -1226,7 +1230,7 @@ class PlayState extends MusicBeatState
 
 	function updateRatingStuff() {
 		scoreTxt.text = 'Score:$songScore';
-		missesTxt.text = '${comboBreaks ? "Combo Breaks" : "Misses"}:$misses';
+		missesTxt.text = '${comboBreaks ? "Combo Breaks" : "Misses"}:${comboBreaks ? (breaks + misses) : misses}'; // yes, this is combo breaks work, if you don't believe me, heres proof, https://www.google.com/search?client=opera-gx&q=How+do+combo+breaks+work+in+rhythm+games%3F&sourceid=opera&ie=UTF-8&oe=UTF-8
 
 		if (curRating == null)
 			curRating = new ComboRating(0, "[N/A]", 0xFF888888);
@@ -1684,6 +1688,8 @@ class PlayState extends MusicBeatState
 					displayCombo(event);
 					if (event.displayRating)
 						displayRating(event.rating, event);
+					if (event.rating == 'bad' || event.rating == 'shit')
+						breaks += 1;
 					ratingNum += 1;
 				}
 			}
