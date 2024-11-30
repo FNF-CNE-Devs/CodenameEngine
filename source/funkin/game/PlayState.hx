@@ -1230,7 +1230,7 @@ class PlayState extends MusicBeatState
 
 	function updateRatingStuff() {
 		scoreTxt.text = 'Score:$songScore';
-		missesTxt.text = '${comboBreaks ? "Combo Breaks" : "Misses"}:${comboBreaks ? (breaks + misses) : misses}'; // yes, this is combo how breaks work, if you don't believe me, heres proof, https://www.google.com/search?client=opera-gx&q=How+do+combo+breaks+work+in+rhythm+games%3F&sourceid=opera&ie=UTF-8&oe=UTF-8
+		missesTxt.text = '${comboBreaks ? "Combo Breaks" : "Misses"}:${comboBreaks ? (breaks + misses) : misses}'; // yes, this is how combo breaks work, if you don't believe me, heres proof, https://www.google.com/search?client=opera-gx&q=How+do+combo+breaks+work+in+rhythm+games%3F&sourceid=opera&ie=UTF-8&oe=UTF-8
 
 		if (curRating == null)
 			curRating = new ComboRating(0, "[N/A]", 0xFF888888);
