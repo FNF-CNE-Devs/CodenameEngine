@@ -1665,8 +1665,7 @@ class Charter extends UIState
 		}));
 	}
 
-	function _file_saveas_psych(_)
-	{
+	function _file_saveas_psych(_) {
 		openSubState(new SaveSubstate(Json.stringify(PsychParser.encode(PlayState.SONG), null, Options.editorPrettyPrint ? "\t" : null), {
 			defaultSaveFile: '${__song.toLowerCase().replace(" ", "-")}${__diff.toLowerCase() == "normal" ? "" : '-${__diff.toLowerCase()}'}.json',
 		}));
