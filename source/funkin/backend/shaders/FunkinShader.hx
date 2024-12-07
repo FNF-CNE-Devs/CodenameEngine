@@ -629,6 +629,7 @@ if(hasColorTransform) {
 
 gl_Position = openfl_Matrix * openfl_Position;";
 
+// TODO: make this ignore comments
 public static final vertBackCompatVarList:Array<EReg> = [
 	~/attribute float alpha/,
 	~/attribute vec4 colorMultiplier/,
