@@ -11,3 +11,4 @@ docs/doc.xml
 mods/*
 !mods/readme.txt
 *.flp
+/wips
