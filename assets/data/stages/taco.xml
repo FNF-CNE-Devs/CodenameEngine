@@ -1,7 +1,10 @@
 <!DOCTYPE codename-engine-stage>
-<stage zoom="0.67" name="taco" folder="stages/taco/" startCamPosY="600" startCamPosX="1000">
-	<sprite name="wall"               x="-790" y="-450"   sprite="wall"       scroll="0.9" />
-	<sprite name="foreground"       x="-790" y="-450"    sprite="foreground"      scroll="0.9" />
-	<dad />
-	<boyfriend />
+<stage zoom="0.8" name="taco" folder="stages/taco/" startCamPosY="400" startCamPosX="1000">
+	<sprite name="wall" x="-790" y="-450" sprite="wall" scroll="0.9"/>
+	<sprite name="sayori" sprite="sayobounce" type="onbeat" x="520" y="138" beatInterval="1" scroll="0.9">
+    	<anim name="sayobounce" anim="stages/taco/sayobounce" loop="false"/>
+	</sprite>
+	<sprite name="foreground" x="-790" y="-450" sprite="foreground" scroll="0.9"/>
+	<dad/>
+	<boyfriend/>
 </stage>

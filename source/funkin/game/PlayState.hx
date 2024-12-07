@@ -508,7 +508,7 @@ class PlayState extends MusicBeatState
 		new ComboRating(0.85, "B", 0xFFAAFF44),
 		new ComboRating(0.9, "A", 0xFF88FF44),
 		new ComboRating(0.95, "S", 0xFF44FFFF),
-		new ComboRating(1, "S++", 0xFF44FFFF),
+		new ComboRating(1, "P", 0xFF9038A0),
 	];
 
 	public var detailsText:String = "";

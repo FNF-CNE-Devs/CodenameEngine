@@ -1,0 +1,17 @@
+{
+	"beatsPerMeasure": 4,
+	"opponentModeAllowed": true,
+	"coopAllowed": true,
+	"stepsPerBeat": 4,
+	"bpm": 110,
+	"difficulties": [
+		"Standard",
+		"Mayhem"
+	],
+	"needsVoices": true,
+	"parsedColor": 4997631,
+	"displayName": "Leffrey",
+	"icon": "Leffrey",
+	"name": "Leffrey",
+	"color": "#4C41FF"
+}
