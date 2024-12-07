@@ -1,0 +1,17 @@
+{
+	"beatsPerMeasure": 4,
+	"opponentModeAllowed": true,
+	"coopAllowed": true,
+	"stepsPerBeat": 4,
+	"bpm": 170,
+	"difficulties": [
+		"Standard",
+		"Mayhem"
+	],
+	"needsVoices": true,
+	"parsedColor": -11779585,
+	"displayName": "Leffrey's Baja Rap",
+	"icon": "Leffrey",
+	"name": "Leffrey's Baja Rap",
+	"color": "#4C41FF"
+}
