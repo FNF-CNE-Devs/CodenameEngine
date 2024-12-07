@@ -9,7 +9,7 @@ def json_to_xml(json_data):
 		'y': str(json_data['position'][1]),
 		'sprite': json_data['healthicon'],
 		'flipx': str(json_data['flip_x']).lower(),
-		'isPlayer': 'true',
+		'isPlayer': 'false', #set this to true if its actually the player lol
 		'icon': json_data['healthicon'],
 		'color': f"#{''.join(f'{c:02X}' for c in json_data['healthbar_colors'])}"
 	})
