@@ -28,7 +28,7 @@ class Framerate extends Sprite {
 	 * 1: FPS VISIBLE
 	 * 2: FPS & DEBUG INFO VISIBLE
 	 */
-	public static var debugMode:Int = 1;
+	public static var debugMode:Int = 0;
 	public static var offset:FlxPoint = new FlxPoint();
 
 	public var bgSprite:Bitmap;

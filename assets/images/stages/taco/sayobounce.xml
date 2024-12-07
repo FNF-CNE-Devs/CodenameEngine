@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="sayobounce.png">
+	<!-- Created with Adobe Animate version 18.0.0.107 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="sayobounce0000" x="208" y="212" width="196" height="186" frameX="0" frameY="-21" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0001" x="208" y="212" width="196" height="186" frameX="0" frameY="-21" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0002" x="208" y="0" width="193" height="192" frameX="-1" frameY="-15" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0003" x="208" y="0" width="193" height="192" frameX="-1" frameY="-15" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0004" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0005" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0006" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0007" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0008" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0009" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0010" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0011" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0012" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0013" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0014" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0015" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0016" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0017" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0018" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0019" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0020" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0021" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0022" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+	<SubTexture name="sayobounce0023" x="0" y="0" width="188" height="206" frameX="-4" frameY="0" frameWidth="196" frameHeight="207"/>
+</TextureAtlas>

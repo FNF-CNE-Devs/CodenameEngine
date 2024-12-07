@@ -1,8 +1,0 @@
-{
-	"displayName": "Monster",
-	"bpm": 95.0,
-	"icon": "monster",
-	"color": "#223344",
-	"coopAllowed": true,
-	"opponentModeAllowed": true
-}
