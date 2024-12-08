@@ -24,41 +24,7 @@ In the future (when the engine won't be a WIP anymore) we're gonna also publish 
 <details>
   <summary><h2>How to build</h2></summary>
 
-> **Open the instructions for your platform**
-<details>
-    <summary>Windows</summary>
-
-##### Tested on Windows 10 21H2
-1. Install [version 4.2.5 of Haxe](https://haxe.org/download/version/4.2.5/).
-2. Download and install [`git-scm`](https://git-scm.com/download/win).
-    - Leave all installation options as default.
-3. Run `update.bat` using cmd or double-clicking it, and wait for the libraries to install.
-4. Once the libraries are installed, run `haxelib run lime test windows` to compile and launch the game (may take a long time)
-    - ℹ You can run `haxelib run lime setup` to make the lime command global, allowing you to execute `lime test windows` directly.
-</details>
-<details>
-    <summary>Linux</summary>
-
-##### Requires testing
-1. Install [version 4.2.5 of Haxe](https://haxe.org/download/version/4.2.5/).
-2. Install `g++`, if not present already.
-3. Download and install [`git-scm`](https://git-scm.com/download/linux).
-4. Open a terminal in the Codename Engine source folder, and run `update.sh`.
-5. Once the libraries are installed, run `haxelib run lime test linux` to compile and launch the game (may take a long time)
-    - ℹ You can run `haxelib run lime setup` to make the lime command global, allowing you to execute `lime test linux` directly.
-</details>
-<details>
-    <summary>MacOS</summary>
-
-##### Requires testing
-1. Install [version 4.2.5 of Haxe](https://haxe.org/download/version/4.2.5/).
-2. Install `Xcode` to allow C++ app building.
-3. Download and install [`git-scm`](https://git-scm.com/download/mac).
-4. Open a terminal in the Codename Engine source folder, and run `update.sh`.
-5. Once the libraries are installed, run `haxelib run lime test mac` to compile and launch the game (may take a long time)
-    - ℹ You can run `haxelib run lime setup` to make the lime command global, allowing you to execute `lime test mac` directly.
-</details>
-</details>
+run the foolproof compile script or if you use linux/mac you can compile it manually by downloading git and haxe 4.2.5 and then using the update.sh and then run the lime build command for your platform
 
 <details>
   <summary><h2>What can you do or not do</h2></summary>
