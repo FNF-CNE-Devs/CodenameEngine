@@ -1,0 +1,17 @@
+{
+	"beatsPerMeasure": 4,
+	"opponentModeAllowed": true,
+	"coopAllowed": true,
+	"stepsPerBeat": 4,
+	"bpm": 163,
+	"difficulties": [
+		"Standard",
+		"Mayhem"
+	],
+	"needsVoices": true,
+	"parsedColor": -35645,
+	"displayName": "Pickle Jar",
+	"icon": "Dannybot",
+	"name": "Pickle Jar",
+	"color": "#FF74C3"
+}

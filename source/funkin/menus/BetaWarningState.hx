@@ -13,15 +13,15 @@ class BetaWarningState extends MusicBeatState {
 	public override function create() {
 		super.create();
 
-		titleAlphabet = new Alphabet(0, 0, "MORBING", true);
+		titleAlphabet = new Alphabet(0, 0, "viath be like", true);
 		titleAlphabet.screenCenter(X);
 		add(titleAlphabet);
 
 		disclaimer = new FunkinText(16, titleAlphabet.y + titleAlphabet.height + 10, FlxG.width - 32, "", 32);
 		disclaimer.alignment = CENTER;
-		disclaimer.applyMarkup("you *will* have an epileptic seizure",
+		disclaimer.applyMarkup("*DiGear* if you're becoming a race car can I ride you",
 			[
-				new FlxTextFormatMarkerPair(new FlxTextFormat(0x43A44E), "*")
+				new FlxTextFormatMarkerPair(new FlxTextFormat(0x87A4F0), "*")
 			]
 		);
 		add(disclaimer);
