@@ -235,7 +235,7 @@ class StoryMenuState extends MusicBeatState {
 				sprite: week.getAtt('sprite').getDefault(weekName),
 				chars: [null, null, null],
 				songs: [],
-				difficulties: ['easy', 'normal', 'hard']
+				difficulties: ['standard', 'mayhem']
 			};
 
 			var diffNodes = week.nodes.difficulty;
