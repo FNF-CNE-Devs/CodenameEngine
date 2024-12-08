@@ -67,11 +67,11 @@ class HealthIcon extends FlxSprite
 
 			healthSteps = [
 				0  => 1, // losing icon
-				20 => 0, // normal icon
+				30 => 0, // normal icon
 			];
 
 			if (frames.frames.length >= 3)
-				healthSteps[80] = 2; // winning icon
+				healthSteps[60] = 2; // winning icon
 		}
 	}
 

@@ -9,7 +9,11 @@ class GameplayOptions extends OptionsScreen {
 	var offsetSetting:NumOption;
 
 	public override function new() {
-		super("Gameplay", 'Change Gameplay options such as Downscroll, Scroll Speed, Naughtyness...');
+		super("Gameplay", 'Change Gameplay options such as Downscroll, Scroll Speed');
+		add(new Checkbox(
+			"Opponent Health Drain",
+			"If unchecked, the opponent will not deal damage to your when singing",
+			"globalHealthDrain"));
 		add(new Checkbox(
 			"Downscroll",
 			"If checked, notes will go from up to down instead of down to up, as if they're falling.",
@@ -26,10 +30,6 @@ class GameplayOptions extends OptionsScreen {
 			1, // change
 			"songOffset", // save name or smth
 			__changeOffset)); // callback
-		add(new Checkbox(
-			"Naughtyness",
-			"If unchecked, will censor the Week 7 cutscenes.",
-			"naughtyness"));
 		add(new Checkbox(
 			"Camera Zoom on Beat",
 			"If unchecked, will stop the camera from zooming in every 4 beats",
