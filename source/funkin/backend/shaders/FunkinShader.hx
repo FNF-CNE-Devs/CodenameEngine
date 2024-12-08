@@ -192,7 +192,11 @@ class FunkinShader extends FlxShader implements IHScriptCustomBehaviour {
 		if(value == null)
 			value = ShaderTemplates.defaultVertexSource;
 		glRawVertexSource = value;
-		value = value.replace("#pragma header", ShaderTemplates.vertHeader).replace("#pragma body", ShaderTemplates.vertBody);
+
+		var useBackCompat:Bool = true;
+		for (regex in ShaderTemplates.vertBackCompatVarList) if (!regex.match(value)) useBackCompat = false;
+		
+		value = value.replace("#pragma header", useBackCompat ? ShaderTemplates.vertHeaderBackCompat : ShaderTemplates.vertHeader).replace("#pragma body", useBackCompat ? ShaderTemplates.vertBodyBackCompat : ShaderTemplates.vertBody);
 		if (value != __glVertexSource)
 		{
 			__glSourceDirty = true;
@@ -625,6 +629,38 @@ if(hasColorTransform) {
 
 gl_Position = openfl_Matrix * openfl_Position;";
 
+// TODO: make this ignore comments
+public static final vertBackCompatVarList:Array<EReg> = [
+	~/attribute float alpha/,
+	~/attribute vec4 colorMultiplier/,
+	~/attribute vec4 colorOffset/,
+	~/uniform bool hasColorTransform/
+];
+
+public static final vertHeaderBackCompat:String = "attribute float openfl_Alpha;
+attribute vec4 openfl_ColorMultiplier;
+attribute vec4 openfl_ColorOffset;
+attribute vec4 openfl_Position;
+attribute vec2 openfl_TextureCoord;
+
+varying float openfl_Alphav;
+varying vec4 openfl_ColorMultiplierv;
+varying vec4 openfl_ColorOffsetv;
+varying vec2 openfl_TextureCoordv;
+
+uniform mat4 openfl_Matrix;
+uniform bool openfl_HasColorTransform;
+uniform vec2 openfl_TextureSize;";
+
+public static final vertBodyBackCompat:String = "openfl_Alphav = openfl_Alpha;
+openfl_TextureCoordv = openfl_TextureCoord;
+
+if(openfl_HasColorTransform) {
+	openfl_ColorMultiplierv = openfl_ColorMultiplier;
+	openfl_ColorOffsetv = openfl_ColorOffset / 255.0;
+}
+
+gl_Position = openfl_Matrix * openfl_Position;";
 
 	public static final defaultVertexSource:String = "#pragma header
 
