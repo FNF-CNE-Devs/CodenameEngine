@@ -12,3 +12,4 @@ mods/*
 !mods/readme.txt
 *.flp
 /wips
+Git-Installer.exe
