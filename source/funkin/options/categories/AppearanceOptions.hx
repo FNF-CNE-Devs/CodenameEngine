@@ -5,7 +5,7 @@ class AppearanceOptions extends OptionsScreen {
 		super("Appearance", "Change Appearance options such as Flashing menus...");
 		add(new NumOption(
 			"Framerate",
-			"Pretty self explanatory, isn't it?",
+			"who needs food and water when you can have THIS",
 			15, // minimum
 			1000, // maximum
 			1, // change

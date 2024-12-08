@@ -1327,8 +1327,13 @@ class PlayState extends MusicBeatState
 		}
 
 		// RESET = Quick Game Over Screen
-		if (startedCountdown && controls.RESET)
-			gameOver();
+		try {
+			if (startedCountdown && controls.RESET) {
+				gameOver();
+			}
+		} catch (e:Dynamic) {
+    		// lalalalala
+		}
 
 		if (health <= 0 && canDie)
 			gameOver(boyfriend);
