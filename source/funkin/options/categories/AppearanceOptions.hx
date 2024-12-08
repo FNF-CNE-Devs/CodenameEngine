@@ -6,9 +6,9 @@ class AppearanceOptions extends OptionsScreen {
 		add(new NumOption(
 			"Framerate",
 			"Pretty self explanatory, isn't it?",
-			30, // minimum
-			240, // maximum
-			10, // change
+			15, // minimum
+			1000, // maximum
+			1, // change
 			"framerate", // save name or smth
 			__changeFPS)); // callback
 		add(new Checkbox(
