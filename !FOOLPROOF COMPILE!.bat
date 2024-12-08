@@ -26,4 +26,5 @@ if errorlevel 1 (
 
 haxe -cp commandline -D analyzer-optimize --run Main setup
 
+echo ok now wait a really long time because lime compile takes forever to start but i promise its going just trust me
 haxelib run lime test windows -debug
