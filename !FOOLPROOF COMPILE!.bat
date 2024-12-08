@@ -1,5 +1,17 @@
 @echo off
 
+goto check_Permissions
+
+:check_Permissions
+    net session >nul 2>&1
+    if %errorLevel% == 0 (
+        echo sprunki is good
+    ) else (
+        echo RUN THIS AS ADMINISTRATOR OR I WILL CASTRATE YOU!!
+    )
+    
+    pause >nul
+
 haxe --version | findstr "4.2.5" >nul
 if errorlevel 1 (
 	echo Downloading Haxe 4.2.5...
