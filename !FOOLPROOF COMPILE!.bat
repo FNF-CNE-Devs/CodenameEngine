@@ -14,11 +14,4 @@ if errorlevel 1 (
 
 haxe -cp commandline -D analyzer-optimize --run Main setup
 
-set /p BUILD_TYPE = "Build for Release or Debug? (release/debug): "
-if /i "%BUILD_TYPE%" == "debug" (
-	set FLAG=-debug
-) else (
-	set FLAG=
-)
-
-haxelib run lime test windows %FLAG%
+haxelib run lime test windows -debug
