@@ -1,4 +1,3 @@
-
 name: Linux Build
 on:
   push:
@@ -15,17 +14,6 @@ jobs:
         uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.2.5
-      - name: Restore existing build cache for faster compilation
-        uses: actions/cache@v3
-        with:
-          # not caching the bin folder to prevent asset duplication and stuff like that
-          key: cache-build-linux
-          path: |
-            .haxelib/
-            export/release/linux/haxe/
-            export/release/linux/obj/
-          restore-keys: |
-            cache-build-linux
       - name: Installing LibVLC
         run: |
           sudo apt-get install libvlc-dev libvlccore-dev
@@ -34,46 +22,11 @@ jobs:
           haxe -cp commandline -D analyzer-optimize --run Main setup -s
       - name: Building the game
         run: |
-          haxelib run lime build linux
+          haxelib run lime build linux -clean
       - name: Tar files
         run: tar -zcvf CodenameEngine.tar.gz -C export/release/linux/bin .
       - name: Uploading artifact (entire build)
         uses: actions/upload-artifact@v4
         with:
-          name: Codename Engine
+          name: re mayhem
           path: CodenameEngine.tar.gz
-      # - name: Uploading artifact (executable)
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: Update-Linux
-      #     path: export/release/linux/bin/CodenameEngine
-      - name: Clearing already existing cache
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const caches = await github.rest.actions.getActionsCacheList({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-            })
-            for (const cache of caches.data.actions_caches) {
-              if (cache.key == "cache-build-linux") {
-                console.log('Clearing ' + cache.key + '...')
-                await github.rest.actions.deleteActionsCacheById({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  cache_id: cache.id,
-                })
-                console.log("Cache cleared.")
-              }
-            }
-      - name: Uploading new cache
-        uses: actions/cache@v3
-        with:
-          # caching again since for some reason it doesnt work with the first post cache shit
-          key: cache-build-linux
-          path: |
-            .haxelib/
-            export/release/linux/haxe/
-            export/release/linux/obj/
-          restore-keys: |
-            cache-build-linux
