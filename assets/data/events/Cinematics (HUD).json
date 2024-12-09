@@ -1,0 +1,24 @@
+{
+    "params": [
+        {
+            "name": "Visible HUD",
+            "type": "Bool",
+            "defaultValue": true
+        },
+        {
+            "name": "Ease Tween",
+            "type": "DropDown('Back', 'Bounce', 'Circ', 'Cube', 'Elastic', 'Expo', 'Linear', 'Quad', 'Quart', 'Quint', 'Sine')",
+            "defaultValue": "Linear"
+        },
+        {
+            "name": "In / Out",
+            "type": "DropDown('InOut', 'In', 'Out')",
+            "defaultValue": "InOut"
+        },
+        {
+            "name": "Duration Tween",
+            "type": "String",
+            "defaultValue": "1"
+        }
+    ]
+}
