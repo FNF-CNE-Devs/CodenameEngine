@@ -1211,12 +1211,13 @@ class PlayState extends MusicBeatState
 	}
 
 	function updateIconPositions() {
-		var iconOffset:Int = 26;
+		var iconOffset:Int = 40;
+		health = FlxMath.bound(health, 0, maxHealth);
 
 		var center:Float = healthBar.x + healthBar.width * FlxMath.remapToRange(healthBar.percent, 0, 100, 1, 0);
 
-		iconP1.x = center - iconOffset;
-		iconP2.x = center - (iconP2.width - iconOffset);
+		iconP1.x = healthBar.x + healthBar.width - iconP1.width + iconOffset;
+		iconP2.x = healthBar.x - iconOffset;
 
 		health = FlxMath.bound(health, 0, maxHealth);
 
@@ -1268,6 +1269,12 @@ class PlayState extends MusicBeatState
 		}
 
         if (doIconBop) {
+			iconP1.origin.set(0.5, 0.5);
+			iconP2.origin.set(0.5, 0.5);
+
+			iconP1.x -= 40;
+			iconP2.x += 40;
+
 			iconP1.scale.set(lerp(iconP1.scale.x, 1, 0.33), lerp(iconP1.scale.y, 1, 0.33));
 			iconP2.scale.set(lerp(iconP2.scale.x, 1, 0.33), lerp(iconP2.scale.y, 1, 0.33));
 
