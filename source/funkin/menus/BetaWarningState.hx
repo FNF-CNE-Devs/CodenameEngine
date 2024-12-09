@@ -25,7 +25,7 @@ class BetaWarningState extends MusicBeatState {
 	var warnings: Array<Warning> = [
 		new Warning("", "Null Object Reference"),
 		new Warning("WARNING", "never use *haxe* for anything ever",
-					[["*"] => 0xFFB700]),
+					[["*" => 0xFFB700]]),
 		new Warning("viath be like", "*DiGear* if you're becoming a race car can I ride you",
 					[["*" => 0x87A4F0]]),
 		new Warning("MORBING", "This build only has *jeffrey* in it. suck my ^weewee^!",
