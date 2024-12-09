@@ -164,19 +164,17 @@ class XMLUtil {
 		if(node.hasNode.anim) {
 			for(anim in node.nodes.anim)
 				addXMLAnimation(spr, anim);
-		} else {
-			if (spr.frames != null && spr.frames.frames != null) {
-				addAnimToSprite(spr, {
-					name: "idle",
-					anim: null,
-					fps: 24,
-					loop: spr.spriteAnimType == LOOP,
-					animType: spr.spriteAnimType,
-					x: 0,
-					y: 0,
-					indices: [for(i in 0...spr.frames.frames.length) i]
-				});
-			}
+		} else if (spr.frames != null && spr.frames.frames != null) {
+			addAnimToSprite(spr, {
+				name: "idle",
+				anim: null,
+				fps: 24,
+				loop: spr.spriteAnimType == LOOP,
+				animType: spr.spriteAnimType,
+				x: 0,
+				y: 0,
+				indices: [for(i in 0...spr.frames.frames.length) i]
+			});
 		}
 
 		return spr;
@@ -238,16 +236,17 @@ class XMLUtil {
 				if(animData.anim == null)
 					return MISSING_PROPERTY;
 
-				if (animData.indices.length > 0)
+				if (animData.indices != null && animData.indices.length > 0)
 					animateAnim.addBySymbolIndices(animData.name, animData.anim, animData.indices, animData.fps, animData.loop);
 				else
 					animateAnim.addBySymbol(animData.name, animData.anim, animData.fps, animData.loop);
 			} else {
-				if (animData.anim == null && animData.indices.length > 0)
-					sprite.animation.add(animData.name, animData.indices, animData.fps, animData.loop);
-				else if (animData.indices.length > 0)
-					sprite.animation.addByIndices(animData.name, animData.anim, animData.indices, "", animData.fps, animData.loop);
-				else
+				if (animData.indices != null && animData.indices.length > 0) {
+					if (animData.anim == null)
+						sprite.animation.add(animData.name, animData.indices, animData.fps, animData.loop);
+					else
+						sprite.animation.addByIndices(animData.name, animData.anim, animData.indices, "", animData.fps, animData.loop);
+				} else
 					sprite.animation.addByPrefix(animData.name, animData.anim, animData.fps, animData.loop);
 			}
 
