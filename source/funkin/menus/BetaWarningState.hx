@@ -7,12 +7,14 @@ import funkin.backend.FunkinText;
 class Warning {
 	public var title: String;
 	public var text: String;
-	public var markerPairs: Array<Map<String, Int>>;
+	public var markerPairs: Map<String, Int> = [];
 
-	public function new(Title: String, Text: String, ?MarkerPairs: Array<Map<String, Int>>) {
+	public function new(Title: String, Text: String, ?MarkerPairs: Map<String, Int>) {
 		title = Title;
 		text = Text;
-		markerPairs = MarkerPairs;
+		if (MarkerPairs != null) {
+			markerPairs = MarkerPairs;
+		}
 	}
 }
 
@@ -23,17 +25,27 @@ class BetaWarningState extends MusicBeatState {
 	var transitioning:Bool = false;
 
 	var warnings: Array<Warning> = [
-		new Warning("", "Null Object Reference"),
+		new Warning("Error", "Null Object Reference"),
 		new Warning("WARNING", "never use *haxe* for anything ever",
-					[["*" => 0xFFB700]]),
+					["*" => 0xFFB700]),
 		new Warning("viath be like", "*DiGear* if you're becoming a race car can I ride you",
-					[["*" => 0x87A4F0]]),
+					["*" => 0x87A4F0]),
 		new Warning("MORBING", "This build only has *jeffrey* in it. suck my ^weewee^!",
-					[["*" => 0xFFFF9241], ["^" => 0xFFFFF783]]),
+					["*" => 0xFFFF9241, "^" => 0xFFFFF783]),
 		new Warning("WARNING", "you *will* have an epileptic seizure",
-					[["*" => 0x43A44E]]),
+					["*" => 0x43A44E]),
 		new Warning("WARNING", "*Sam*",
-					[["*" => 0x680000]]),
+					["*" => 0x680000]),
+		new Warning("-POINT OF ADVICE-", "You can hold an extra item in the box at the top of the screen. To use it, press the SELECT button."),
+		new Warning("WARNING",
+					"my brother has a ver*y special atta*ck. if you see ^a blue atta^ck,
+					don't move and it won't hurt you. here's an easy way to keep it
+					in mind. imagine a stop sign. when you see a sign, yo&u st&op,
+					right? stop signs ar&e r&ed, so imagine ^a bl^&u&^e stop sign instead.
+					simple, right? when fighting, think abou&%t blue stop sig%&ns.
+					remember... blue stop signs
+					i cant fix the colors btw shut the fuc^k u p :)",
+					["*" => 0x0000FF, "^" => 0x14A7FC, "&" => 0xFF0000, "%" => 0xFFFF00])
 	];
 
 	public override function create() {
@@ -47,13 +59,11 @@ class BetaWarningState extends MusicBeatState {
 
 		disclaimer = new FunkinText(16, titleAlphabet.y + titleAlphabet.height + 10, FlxG.width - 32, warning.text, 32);
 		disclaimer.alignment = CENTER;
-		if (warning.markerPairs.length > 0) {
+		if (Lambda.count(warning.markerPairs) > 0) {
 			var markers = [];
-			for (markerPair in warning.markerPairs) {
-				for (marker => color in markerPair) {
+				for (marker => color in warning.markerPairs) {
 					markers.push(new FlxTextFormatMarkerPair(new FlxTextFormat(color), marker));
 				}
-			}
 			disclaimer.applyMarkup(warning.text, markers);
 		}
 		add(disclaimer);
