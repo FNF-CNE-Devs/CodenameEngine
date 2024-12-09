@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="ezo.png">
+	<!-- Created with Adobe Animate version 19.1.0.349 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="ezo0000" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0001" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0002" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0003" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0004" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0005" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0006" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0007" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0008" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0009" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0010" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0011" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0012" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo0013" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo down0000" x="0" y="0" width="416" height="654" frameX="-6" frameY="-1" frameWidth="422" frameHeight="656"/>
+	<SubTexture name="ezo down0001" x="0" y="0" width="416" height="654" frameX="-6" frameY="-1" frameWidth="422" frameHeight="656"/>
+	<SubTexture name="ezo down0002" x="0" y="654" width="405" height="656" frameX="0" frameY="0" frameWidth="422" frameHeight="656"/>
+	<SubTexture name="ezo down0003" x="0" y="654" width="405" height="656" frameX="0" frameY="0" frameWidth="422" frameHeight="656"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0000" x="584" y="1643" width="280" height="815" frameX="0" frameY="-2" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0001" x="1304" y="0" width="280" height="801" frameX="-1" frameY="-16" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0002" x="1304" y="0" width="280" height="801" frameX="-1" frameY="-16" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0003" x="1296" y="817" width="281" height="809" frameX="0" frameY="-8" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0004" x="1296" y="817" width="281" height="809" frameX="0" frameY="-8" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0005" x="1016" y="1634" width="280" height="816" frameX="0" frameY="-1" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0006" x="1016" y="1634" width="280" height="816" frameX="0" frameY="-1" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0007" x="744" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0008" x="744" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0009" x="1016" y="817" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0010" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0011" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0012" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo idle dance copy 2 FINAL0013" x="1024" y="0" width="280" height="817" frameX="0" frameY="0" frameWidth="281" frameHeight="817"/>
+	<SubTexture name="ezo left0000" x="405" y="826" width="321" height="815" frameX="0" frameY="-2" frameWidth="321" frameHeight="817"/>
+	<SubTexture name="ezo left0001" x="405" y="826" width="321" height="815" frameX="0" frameY="-2" frameWidth="321" frameHeight="817"/>
+	<SubTexture name="ezo left0002" x="726" y="826" width="290" height="817" frameX="-19" frameY="0" frameWidth="321" frameHeight="817"/>
+	<SubTexture name="ezo left0003" x="726" y="826" width="290" height="817" frameX="-19" frameY="0" frameWidth="321" frameHeight="817"/>
+	<SubTexture name="ezo right0000" x="0" y="1310" width="309" height="826" frameX="-26" frameY="0" frameWidth="335" frameHeight="826"/>
+	<SubTexture name="ezo right0001" x="0" y="1310" width="309" height="826" frameX="-26" frameY="0" frameWidth="335" frameHeight="826"/>
+	<SubTexture name="ezo right0002" x="416" y="0" width="328" height="826" frameX="0" frameY="0" frameWidth="335" frameHeight="826"/>
+	<SubTexture name="ezo right0003" x="416" y="0" width="328" height="826" frameX="0" frameY="0" frameWidth="335" frameHeight="826"/>
+	<SubTexture name="ezo up0000" x="309" y="1641" width="275" height="838"/>
+	<SubTexture name="ezo up0001" x="309" y="1641" width="275" height="838"/>
+	<SubTexture name="ezo up0002" x="1296" y="1626" width="262" height="835" frameX="-5" frameY="-3" frameWidth="275" frameHeight="838"/>
+	<SubTexture name="ezo up0003" x="1296" y="1626" width="262" height="835" frameX="-5" frameY="-3" frameWidth="275" frameHeight="838"/>
+</TextureAtlas>

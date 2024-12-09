@@ -1,0 +1,8 @@
+<!DOCTYPE codename-engine-character>
+<character y="-32" sprite="ezo" icon="bf">
+	<anim name="idle" anim="ezo idle dance copy 2 FINAL" x="0" y="0" fps="24" loop="false"/>
+	<anim name="singDOWN" anim="ezo down" x="50" y="-161" fps="24" loop="false"/>
+	<anim name="singUP" anim="ezo up" x="-12" y="21" fps="24" loop="false"/>
+	<anim name="singLEFT" anim="ezo left" x="27" y="0" fps="24" loop="false"/>
+	<anim name="singRIGHT" anim="ezo right" x="23" y="10" fps="24" loop="false"/>
+</character>

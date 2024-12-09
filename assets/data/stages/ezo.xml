@@ -1,0 +1,11 @@
+<!DOCTYPE codename-engine-stage>
+<stage zoom="0.5" name="ezo" folder="stages/ezo/" startCamPosY="0" startCamPosX="0">
+	<sprite name="stage" x="-1250" y="-550" sprite="stage_render_stage" scroll="1"/>
+	<sprite name="speakers_sheet" sprite="speakers_sheet" type="onbeat" x="-411" y="-108" beatInterval="2" scroll="1">
+		<!-- speakrs: base it off X 839 Y 442 -->
+    	<anim name="speakers_sheet" anim="stages/ezo/speakers_sheet" loop="false"/>
+	</sprite>
+	<dad camxoffset="270" camyoffset="100"/>
+	<boyfriend camxoffset="270" camyoffset="100"/>
+	<sprite name="lights" x="-1250" y="-550" sprite="stage_render_lights" scroll="1.2"/>
+</stage>

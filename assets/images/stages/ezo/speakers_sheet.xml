@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="speakers_sheet.png">
+	<!-- Created with me version myself -->
+	<SubTexture name="speakers_sheet0000" x="0" y="800" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0001" x="0" y="800" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0002" x="0" y="1600" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0003" x="0" y="1600" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0004" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0005" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0006" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0007" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0008" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0009" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0010" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0011" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0012" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0013" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0014" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0015" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0016" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0017" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0018" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0019" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0020" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0021" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0022" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+	<SubTexture name="speakers_sheet0023" x="0" y="0" width="2160" height="800" frameX="0" frameY="0" frameWidth="2160" frameHeight="800"/>
+</TextureAtlas>
