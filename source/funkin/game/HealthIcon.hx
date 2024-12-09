@@ -1,18 +1,28 @@
 package funkin.game;
 
-import flixel.FlxSprite;
-import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.frames.FlxFramesCollection;
 
 class HealthIcon extends FlxSprite
 {
-    public var sprTracker:FlxSprite;
-    public var curCharacter:String = null;
-    public var isPlayer:Bool;
-    public var healthSteps:Map<Int, Int> = null;
-    public var previousFrame:Int = 0;
-    public var targetFrame:Int = 0;
-    public var crossfadeAlpha:Float = 0.9;
+	/**
+	 * Used for FreeplayState! If you use it elsewhere, prob gonna annoying
+	 */
+	public var sprTracker:FlxSprite;
+
+	/**
+	 * The currently showing icon
+	 */
+	public var curCharacter:String = null;
+
+	/**
+	 * If the character is for the player
+	 */
+	public var isPlayer:Bool;
+
+	/**
+	 * Health steps in this format:
+	 * Min Percentage => Frame Index
+	 */
+	public var healthSteps:Map<Int, Int> = null;
 
 	/**
 	 * Helper for HScript who can't make maps
@@ -62,66 +72,25 @@ class HealthIcon extends FlxSprite
 
 			if (frames.frames.length >= 3)
 				healthSteps[60] = 2; // winning icon
+		}
+	}
 
-            crossfadeAlpha = 0.9;
-            previousFrame = 0;
-            targetFrame = 0;
-        }
-    }
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
 
-    override function update(elapsed:Float) {
-        super.update(elapsed);
+		if (sprTracker != null)
+			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
 
-        if (sprTracker != null)
-            setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
-
-        if (animation.curAnim != null) {
-            var i:Int = -1;
-            var oldKey:Int = -1;
-            var keys = healthSteps.keys();
-            for (key in keys) {
-                var icon = healthSteps[key];
-                if (key > oldKey && key <= health * 100) {
-                    oldKey = key;
-                    i = icon;
-                }
-            }
-
-            if (i >= 0 && i != targetFrame) {
-                previousFrame = animation.curAnim.curFrame;
-                targetFrame = i;
-                crossfadeAlpha = 0.9;
-            }
-
-            if (crossfadeAlpha < 1) {
-                crossfadeAlpha += elapsed / 0.25; // fade time in seconds
-                if (crossfadeAlpha >= 1) {
-                    crossfadeAlpha = 1;
-                    animation.curAnim.curFrame = targetFrame;
-                }
-            }
-        }
-    }
-
-	override function draw() {
-		var framesCollection = animation.curAnim.frames;
-	
-		if (framesCollection != null && crossfadeAlpha < 1) {
-			if (previousFrame >= 0 && previousFrame < framesCollection.length) {
-				animation.curAnim.curFrame = previousFrame;
-				alpha = 1 - crossfadeAlpha;
-				super.draw();
+		if (animation.curAnim != null) {
+			var i:Int = -1;
+			var oldKey:Int = -1;
+			for (k=>icon in healthSteps) if (k > oldKey && k <= health * 100) {
+				oldKey = k;
+				i = icon;
 			}
-	
-			if (targetFrame >= 0 && targetFrame < framesCollection.length) {
-				animation.curAnim.curFrame = targetFrame;
-				alpha = crossfadeAlpha;
-				super.draw();
-			}
-	
-			alpha = 1;
-		} else {
-			super.draw();
+
+			if (i >= 0) animation.curAnim.curFrame = i;
 		}
 	}
 }
