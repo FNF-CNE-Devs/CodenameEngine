@@ -286,14 +286,16 @@ class HealthIcon extends FunkinSprite
 	var normalizedNames = ["neutral", "losing", "winning"];
 	private function normalizeAnim(anim:OneOfTwo<String, Int>):OneOfTwo<String, Int> {
 		if(this.animated) {
-			if(anim is Int && {var anim:Int = cast anim; anim >= 0 && anim < normalizedNames.length;})
-				anim = normalizedNames[anim];
+			if(anim is Int) {
+				var _:Int = cast anim;
+				if(_ >= 0 && _ < normalizedNames.length)
+					anim = normalizedNames[anim];
+			}
 		} else {
 			if(anim is String) {
-				var ii = normalizedNames.indexOf(cast anim);
-				trace(ii, anim, normalizedNames);
-				if(ii >= 0)
-					anim = ii;
+				var _ = normalizedNames.indexOf(cast anim);
+				if(_ >= 0)
+					anim = _;
 			}
 		}
 		return anim;
