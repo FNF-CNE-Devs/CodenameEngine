@@ -8,9 +8,21 @@ import flixel.util.typeLimit.OneOfTwo;
 class HealthIcon extends FunkinSprite
 {
 	/**
-	 * Used for FreeplayState! If you use it elsewhere, prob gonna annoying
+	 * Attaches the icon to a sprite, following it's position
 	 */
 	public var sprTracker:FlxSprite;
+	/**
+	 * Where to place the icon in relation to the sprite
+	 * LEFT: Left of the sprite
+	 * CENTER: Center of the sprite
+	 * RIGHT: Right of the sprite
+	 */
+	public var sprTrackerAlignment:TrackerAlignment = RIGHT;
+	/**
+	 * Offset of the icon in relation to the sprite
+	 * By default it is set to (10, -30) and is intended to be used with Alphabet
+	 */
+	public var sprTrackerOffset:FlxPoint = new FlxPoint(10, -30);
 
 	/**
 	 * The currently showing icon
@@ -24,29 +36,31 @@ class HealthIcon extends FunkinSprite
 
 	/**
 	 * Health steps in this format:
-	 * Min Percentage => Frame Index
+	 * Min Percentage => Frame Index / Animation Name
 	 */
 	public var healthSteps:Map<Int, OneOfTwo<String, Int>> = null;
 
 	/**
-	 * current animation state
+	 * Current animation state
 	 */
 	public var curAnimState:OneOfTwo<String, Int> = -1;
 
 	/**
 	 * The Default Scale For The Icon
+	 * This is what scale the icon should return to when its bump animation is finished
 	 */
 	public var defaultScale:Float = 1;
 
 	/**
-	 * Whenever or not the icon is animated
+	 * Whenever or not the icon is animated or not
 	 */
 	public var animated:Bool = false;
 
 	/**
 	 * XML Animated Icon data
+	 * Null if the icon is not animated or its invalid
 	 */
-	public var xmlData:Access;
+	public var xmlData:Xml;
 
 	/**
 	 * Extra offsets to add when updating the hitbox
@@ -55,9 +69,13 @@ class HealthIcon extends FunkinSprite
 
 	/**
 	 * Helper for HScript who can't make maps
+	 * THIS IS DEPRECATED AND WILL BE REMOVED IN THE FUTURE
+	 * Please set the healthSteps directly in the script instead, hscript does support maps
+	 *
 	 * @param steps Something like this: `[[0, 1], [20, 0]]` or `[[0, "losing"], [20, "neutral"]]` for animated icons
 	 */
-	public function setHealthSteps(steps:Array<Array<OneOfTwo<String, Int>>>) { // helper for hscript that can't do maps
+	@:dox(hide) @:noCompletion
+	public function setHealthSteps(steps:Array<Array<OneOfTwo<String, Int>>>):Void { // helper for hscript that can't do maps
 		if (steps == null) return;
 		healthSteps = [];
 		for(s in steps)
@@ -67,8 +85,8 @@ class HealthIcon extends FunkinSprite
 		for(k=>e in healthSteps) am++;
 
 		if (am <= 0) healthSteps = [
-			0 => animated ? "losing" : 1, // losing icon
-			20 => animated ? "neutral" : 0, // normal icon
+			0 => this.animated ? "losing" : 1, // losing icon
+			20 => this.animated ? "neutral" : 0, // normal icon
 		];
 	}
 
@@ -84,156 +102,299 @@ class HealthIcon extends FunkinSprite
 		scrollFactor.set();
 	}
 
-	public dynamic function bump()
-	{
+	/**
+	 * Called every beat, and causes the icon to become bigger
+	**/
+	public dynamic function bump():Void {
 		var iconScale = 1.2;
 		scale.set(defaultScale * iconScale, defaultScale * iconScale);
 		updateHitbox();
 	}
 
-	public dynamic function updateBump()
-	{
+	/**
+	 * Called every frame and causes the icon to become smaller
+	**/
+	public dynamic function updateBump():Void {
 		var iconLerp = 0.33;
 		scale.set(CoolUtil.fpsLerp(scale.x, defaultScale, iconLerp), CoolUtil.fpsLerp(scale.y, defaultScale, iconLerp));
 		updateHitbox();
 	}
 
-	public function setIcon(char:String, animated:Bool = true) {
-		if(curCharacter != char) {
-			curCharacter = char;
-			var iconPath = char;
-			var path = Paths.image('icons/$char');
-			var iconXmlPath = Paths.getPath('images/icons/$char/data.xml');
-			var iconFoundAnimated = Assets.exists(iconXmlPath);
-			if (!Assets.exists(path) && !iconFoundAnimated)
-			{
-				iconPath = "face";
-				path = Paths.image('icons/$iconPath');
-			}
+	/**
+	 * Sets the icon to the specified character
+	 * @param char Character to set the icon to
+	 * @param allowAnimated Whenever the icon can be animated
+	**/
+	public function setIcon(char:String, allowAnimated:Bool = true):Void {
+		if(curCharacter == char) return;
 
-			this.animated = animated && iconFoundAnimated;
+		var oldIconPath = 'icons/$char';
+		var newIconPath = 'icons/$char/icon';
 
-			if (this.animated)
-			{
-				frames = Paths.getSparrowAtlas('icons/$iconPath/icon');
-				
-				var plainXML:String = Assets.getText(iconXmlPath);
-
-				var iconDataXML:Xml = Xml.parse(plainXML).firstElement();
-				if (iconDataXML == null)  {
-					//go to normal icon instead
-					setIcon(char, false);
-					return;
-				}
-				xmlData = new Access(iconDataXML);
-
-				for(node in xmlData.elements)
-					switch(node.name) {
-						case "transition":
-							if (node.has.offsetx || node.has.offsety)
-								addOffset('from-${node.x.get("from")}-to-${node.x.get("to")}', Std.parseFloat(node.x.get("offsetx")).getDefault(0), Std.parseFloat(node.x.get("offsety")).getDefault(0));
-							animation.addByPrefix('from-${node.x.get("from")}-to-${node.x.get("to")}', node.x.get("anim"), Std.parseInt(node.x.get("fps")).getDefault(24), node.x.get("looped").getDefault("false").toLowerCase() == "true", isPlayer);
-						case "anim":
-							if (node.has.offsetx || node.has.offsety)
-								addOffset(node.x.get("name"), Std.parseFloat(node.x.get("offsetx")).getDefault(0), Std.parseFloat(node.x.get("offsety")).getDefault(0));
-							animation.addByPrefix(node.x.get("name"), node.x.get("anim"), Std.parseInt(node.x.get("fps")).getDefault(24), node.x.get("looped").getDefault("false").toLowerCase() == "true", isPlayer);
-						case "steps":
-							var parsedSteps:Map<Int, String> = [];
-							for(subnode in node.elements)
-								parsedSteps.set(Std.parseInt(subnode.x.get("percent")).getDefault(0), subnode.x.get("type"));
-							
-							healthSteps = parsedSteps;
-					}
-
-				//normaized anim name for the engine to check if a certain exists
-				var animationsPrefixes:Array<String> = ["neutral", "losing", "winning"];
-				var animsFound:Map<String, Bool> = [];
-
-				for (name in animationsPrefixes)
-					animsFound.set(name, animation.getByName(name) != null);
-
-				playAnim("neutral");
-
-				healthSteps = [
-					0  => "losing", // losing icon
-					20 => "neutral", // normal icon
-				];
-
-				if (animsFound["winning"])
-					healthSteps[80] = "winning"; // winning icon
-			} else {
-				var iconAsset:FlxGraphic = FlxG.bitmap.add(path);
-				var assetW:Float = iconAsset.width; var assetH:Float = iconAsset.height;
-
-				var iconAmt:Int = Math.floor(assetW / assetH);
-				var iconSize:Int = Math.floor(assetW / iconAmt);
-
-				loadGraphic(iconAsset, true, iconSize, iconSize);
-
-				setGraphicSize(150);
-				updateHitbox();
-
-				animation.add(char, [for(i in 0...iconAmt) i], 0, false, isPlayer);
-				playAnim(char);
-
-				healthSteps = [
-					0  => 1, // losing icon
-					20 => 0, // normal icon
-				];
-
-				if (iconAmt >= 3)
-					healthSteps[80] = 2; // winning icon
-			}
-			antialiasing = true;
-			defaultScale = scale.x;
+		if (!Assets.exists(Paths.image(oldIconPath)) && !Assets.exists(Paths.image(newIconPath))) {
+			char = 'face';
+			oldIconPath = 'icons/$char';
+			newIconPath = 'icons/$char/icon';
 		}
+		curCharacter = char;
+
+		var iconPath = Assets.exists(Paths.image(oldIconPath)) ? oldIconPath : newIconPath;
+		var iconXmlPath = Paths.getPath('images/icons/$char/data.xml');
+		var iconFoundData = Assets.exists(iconXmlPath);
+
+		try {
+			xmlData = iconFoundData ? Xml.parse(Assets.getText(iconXmlPath)) : null;
+		} catch(e) {
+			Logs.trace('Error while parsing icon data for $char: ${e.message}', ERROR);
+			xmlData = null;
+		}
+		var xmlValid = xmlData != null && (xmlData = xmlData.firstElement()) != null;
+
+		this.animated = allowAnimated && iconFoundData && xmlValid && Paths.framesExists(Paths.image(newIconPath), true, true);
+
+		var iconAmt:Int = 0;
+		var iconSize:Int = 0;
+		var iconIsPlayer = xmlValid ? xmlData.get("facing").getDefault("right").toLowerCase() == "left" : false;
+
+		if (this.animated)
+			loadSprite(Paths.image(iconPath));
+		else {
+			var iconAsset:FlxGraphic = FlxG.bitmap.add(Paths.image(iconPath));
+			var assetW:Float = iconAsset.width;
+			var assetH:Float = iconAsset.height;
+
+			iconAmt = Math.floor(assetW / assetH);
+			iconSize = Math.floor(assetW / iconAmt);
+
+			loadGraphic(iconAsset, true, Std.int(Math.min(iconSize, assetW)), Std.int(Math.min(iconSize, assetH)));
+
+			setGraphicSize(150);
+			updateHitbox();
+
+			animation.add(char, [for(i in 0...iconAmt) i], 0, false, isPlayer != iconIsPlayer);
+			animation.play(char);
+		}
+
+		var parsedSteps:Map<Int, String> = [];
+
+		antialiasing = true;
+		if(xmlValid) {
+			antialiasing = xmlData.get("antialiasing").getDefault("true").toLowerCase() == "true";
+			if (xmlData.exists("offsetX"))
+				extraOffsets.x = Std.parseFloat(xmlData.get("offsetX")).getDefault(0);
+			if (xmlData.exists("offsetY"))
+				extraOffsets.y = Std.parseFloat(xmlData.get("offsetY")).getDefault(0);
+
+			for(node in xmlData.elements())
+				switch(node.nodeName) {
+					case "transition":
+						if(this.animated == false) {
+							Logs.trace('Icon ${char} data <transition> is not allowed when not animated', WARNING);
+							continue;
+						}
+						if(!node.exists("anim")) {
+							Logs.trace('Icon ${char} data <transition> is missing anim', WARNING);
+							continue;
+						}
+						if(!node.exists("to")) {
+							Logs.trace('Icon ${char} data <transition> is missing to', WARNING);
+							continue;
+						}
+						if(!node.exists("from")) {
+							Logs.trace('Icon ${char} data <transition> is missing from', WARNING);
+							continue;
+						}
+
+						var animName = 'from-${node.get("from")}-to-${node.get("to")}';
+						if (node.exists("offsetX") || node.exists("offsetY"))
+							addOffset(animName, Std.parseFloat(node.get("offsetX")).getDefault(0), Std.parseFloat(node.get("offsetY")).getDefault(0));
+						addAnim(animName, node.get("anim"), Std.parseInt(node.get("fps")).getDefault(24), false); // don't allow looping for transitions
+						if(animateAtlas == null && animation.exists(animName))
+							animation.getByName(animName).flipX = isPlayer != iconIsPlayer;
+					case "anim":
+						if(this.animated == false) {
+							Logs.trace('Icon ${char} data <anim> is not allowed when not animated', WARNING);
+							continue;
+						}
+						if(!node.exists("name")) {
+							Logs.trace('Icon ${char} data <anim> is missing name', WARNING);
+							continue;
+						}
+						if(!node.exists("anim")) {
+							Logs.trace('Icon ${char} data <anim> is missing anim', WARNING);
+							continue;
+						}
+
+						var animName = node.get("name");
+
+						if (node.exists("offsetX") || node.exists("offsetY"))
+							addOffset(animName, Std.parseFloat(node.get("offsetX")).getDefault(0), Std.parseFloat(node.get("offsetY")).getDefault(0));
+						addAnim(animName, node.get("anim"), Std.parseInt(node.get("fps")).getDefault(24), node.get("looped").getDefault("true").toLowerCase() == "true");
+						if(animateAtlas == null && animation.exists(animName))
+							animation.getByName(animName).flipX = isPlayer != iconIsPlayer;
+					case "step":
+						if(!node.exists("percent")) {
+							Logs.trace('Icon ${char} data <step> is missing percent', WARNING);
+							continue;
+						}
+						if(!node.exists("type")) {
+							Logs.trace('Icon ${char} data <step> is missing type', WARNING);
+							continue;
+						}
+
+						parsedSteps.set(Std.parseInt(node.get("percent")).getDefault(0), node.get("type"));
+				}
+		}
+
+		if(Lambda.count(parsedSteps) > 0) {
+			healthSteps = parsedSteps;
+		} else {
+			var hasLosing = this.animated ? hasAnim("losing") : iconAmt >= 2;
+			var hasWinning = this.animated ? hasAnim("winning") : iconAmt >= 3;
+
+			if(hasLosing) {
+				healthSteps = [
+					0  => this.animated ? "losing" : 1, // losing icon
+					20 => this.animated ? "neutral" : 0, // normal icon
+				];
+			} else {
+				healthSteps = [
+					0 => this.animated ? "neutral" : 0, // normal icon
+				];
+			}
+			if (hasWinning)
+				healthSteps.set(80, this.animated ? "winning" : 2); // winning icon
+		}
+		var data = getIconAnim(health);
+		if (data.isValid) {
+			if(this.animated)
+				playAnim(data.animState);
+			else
+				animation.curAnim.curFrame = data.animState;
+			curAnimState = data.animState;
+		}
+
+		setGraphicSize(150);
+		updateHitbox();
+
+		if(!xmlValid || !xmlData.exists("scale"))
+			defaultScale = scale.x;
+		else
+			defaultScale = Std.parseFloat(xmlData.get("scale")).getDefault(scale.x);
 	}
 
-	override function update(elapsed:Float)
-	{
+	var normalizedNames = ["neutral", "losing", "winning"];
+	private function normalizeAnim(anim:OneOfTwo<String, Int>):OneOfTwo<String, Int> {
+		if(this.animated) {
+			if(anim is Int && {var anim:Int = cast anim; anim >= 0 && anim < normalizedNames.length;})
+				anim = normalizedNames[anim];
+		} else {
+			if(anim is String) {
+				var ii = normalizedNames.indexOf(cast anim);
+				trace(ii, anim, normalizedNames);
+				if(ii >= 0)
+					anim = ii;
+			}
+		}
+		return anim;
+	}
+
+	/**
+	 * Gets the animation data for a specific health percentage
+	 * @param health Health percentage
+	 * @return Animation data (-1 if invalid)
+	 */
+	public function getIconAnim(health:Float):IconAnimData {
+		var i:OneOfTwo<String, Int> = -1;
+		var oldKey:Int = -1;
+		var isValid = false;
+		for (k=>icon in healthSteps) if (k > oldKey && k <= health * 100) {
+			oldKey = k;
+			i = icon;
+			isValid = true;
+		}
+
+		i = normalizeAnim(i);
+
+		return new IconAnimData(i, isValid);
+	}
+
+	override function update(elapsed:Float):Void {
 		super.update(elapsed);
 
-		if (sprTracker != null)
-			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
+		if (sprTracker != null) {
+			setPosition(sprTracker.x + (switch sprTrackerAlignment {
+				case LEFT: -width;
+				case CENTER: (sprTracker.width - width) / 2;
+				case RIGHT: sprTracker.width;
+			}) + sprTrackerOffset.x, sprTracker.y + sprTrackerOffset.y);
+		}
 
 		if (animation.curAnim != null) {
-			var i:OneOfTwo<String, Int> = -1;
-			var oldKey:Int = -1;
-			for (k=>icon in healthSteps) if (k > oldKey && k <= health * 100) {
-				oldKey = k;
-				i = icon;
-			}
-			var isInt = Std.isOfType(i, Int);
-			var iInt:Int = cast i;
+			var data = getIconAnim(health);
+			var localAnimState = data.animState;
 
-			var localAnimState = animated ? (isInt ? "neutral" : Std.string(i)) : (isInt ? i : 0);
-			if ((isInt ? (iInt >= 0) : true) && curAnimState != localAnimState) {
-				if (animated) {
-					var animName = 'from-${animation.curAnim.name.substr(animation.curAnim.name.lastIndexOf('-') + 1)}-to-$i';
-					var toAnimExists = hasAnimation(animName);
-					if (!toAnimExists)
-						animName = i;
-
-					if (hasAnimation(animName))
-						playAnim(animName);
+			if (data.isValid && curAnimState != localAnimState) {
+				if (this.animated) {
+					var curAnimName = animation.curAnim.name;
+					var transAnim = 'from-${curAnimName.substr(curAnimName.lastIndexOf('-') + 1)}-to-$localAnimState';
+					playAnim(hasAnim(transAnim) ? transAnim : localAnimState);
 				} else
-					animation.curAnim.curFrame = i;
+					animation.curAnim.curFrame = localAnimState;
 
-				curAnimState = i;
+				curAnimState = localAnimState;
 			}
 		}
 	}
 
-	function animFinishCallback(anim:String)
-	{
-		if (animated)
+	function animFinishCallback(anim:String):Void {
+		if (this.animated)
 			if (anim.startsWith("from-"))
 				playAnim(anim.substr(anim.lastIndexOf('-') + 1));
 	}
 
-	override function updateHitbox()
-	{
+	override function updateHitbox():Void {
 		super.updateHitbox();
 		offset += extraOffsets;
 	}
+}
+
+@:dox(hide)
+class IconAnimData {
+	public var animState:OneOfTwo<String, Int>;
+	public var isValid:Bool;
+
+	public function new(animState:OneOfTwo<String, Int>, isValid:Bool) {
+		this.animState = animState;
+		this.isValid = isValid;
+	}
+
+	public function toString():String {
+		return '$animState (Valid: $isValid)';
+	}
+}
+
+/**
+ * Used for `funkin.game.HealthIcon.sprTrackerAlignment`.
+ * This determines the position of the icon in relation to the sprite tracker.
+**/
+enum abstract TrackerAlignment(Int) {
+	/**
+	 * Left of the sprite tracker
+	 *
+	 * Mathematically: `tracker.x - icon.width`
+	 */
+	var LEFT = 0;
+	/**
+	 * Center of the sprite tracker
+	 *
+	 * Mathematically: `tracker.x + (tracker.width - icon.width) / 2`
+	 */
+	var CENTER = 1;
+	/**
+	 * Right of the sprite tracker
+	 *
+	 * Mathematically: `tracker.x + tracker.width`
+	 */
+	var RIGHT = 2;
 }
