@@ -213,7 +213,11 @@ class PlayState extends MusicBeatState
 	/**
 	 * Whether or not to show the secret gitaroo pause.
 	 */
+	#if debug
+	public var allowGitaroo:Bool = false;
+	#else
 	public var allowGitaroo:Bool = true;
+	#end
 	/**
 	 * Whether or not to bop the icons on beat.
 	 */
