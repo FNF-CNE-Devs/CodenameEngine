@@ -39,7 +39,7 @@ class HealthIcon extends FlxSprite
 
 		if (am <= 0) healthSteps = [
 			0  => 1, // losing icon
-			20 => 0, // normal icon
+			34 => 0, // normal icon
 		];
 	}
 
@@ -65,13 +65,21 @@ class HealthIcon extends FlxSprite
 			antialiasing = true;
 			animation.play(char);
 
-			healthSteps = [
-				0  => 1, // losing icon
-				30 => 0, // normal icon
-			];
-
-			if (frames.frames.length >= 3)
-				healthSteps[60] = 2; // winning icon
+			if(frames.frames.length == 3) {
+				healthSteps = [
+					0 => 1, // Losing icon
+					34 => 0, // Normal icon
+					66 => 2  // Winning icon
+				];
+			} else {
+				healthSteps = [
+					0 => 1, // Losing icon
+					34 => 0, // Normal icon
+				];
+	
+				if (frames.frames.length >= 3)
+					healthSteps[66] = 2; // Winning icon
+			}
 		}
 	}
 
