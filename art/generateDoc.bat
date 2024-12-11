@@ -5,4 +5,4 @@ lime build windows --haxeflag="--macro include('scripting')" --haxeflag="-xml do
 echo art
 
 echo Generated the api xml file at docs/doc.xml
-echo Please put this in FNF-CNE-Devs.github.io/api-generator/api/doc.xml
+echo Please put this in codename-website/api-generator/api/doc.xml
