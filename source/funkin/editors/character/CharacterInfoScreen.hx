@@ -147,9 +147,6 @@ class CharacterInfoScreen extends UISubstateWindow {
 	function updateIcon(icon:String) {
 		if (iconSprite == null) add(iconSprite = new HealthIcon());
 
-		if (iconSprite.animation.exists(icon)) return;
-		@:privateAccess iconSprite.animation.clearAnimations();
-
 		iconSprite.setIcon(icon);
 		iconSprite.scale.set(iconSprite.defaultScale * 0.5, iconSprite.defaultScale * 0.5);
 		iconSprite.updateHitbox();
