@@ -9,12 +9,12 @@
 	<lib name="format" version="3.6.0" />
 
 	<!-- Flixel -->
-	<git name="flixel" url="https://github.com/CodenameCrew/flixel" />
-	<git name="flixel-addons" url="https://github.com/CodenameCrew/flixel-addons" />
+	<git name="flixel" url="https://github.com/CodenameCrew/cne-flixel" />
+	<git name="flixel-addons" url="https://github.com/CodenameCrew/cne-flixel-addons" />
 
 	<!-- Other Libraries -->
 	<git name="hscript-improved" url="https://github.com/CodenameCrew/hscript-improved" ref="custom-classes" />
-	<git name="flxanimate" url="https://github.com/CodenameCrew/flxanimate" />
+	<git name="flxanimate" url="https://github.com/CodenameCrew/cne-flxanimate" />
 	<lib name="hxvlc" version="1.9.3" skipDeps="true" />
 
 	<!-- Documentation and other features -->
