@@ -68,6 +68,19 @@ class XMLUtil {
 	}
 
 	/**
+	 * Custom parsing tool for booleans because STD doesn't have one for some reason
+	 */
+	public static function parseBool(str: String): Null<Bool> {
+		if (str.toLowerCase() == "true") {
+			return true;
+		} else if (str.toLowerCase() == "false") {
+			return false;
+		} else {
+			return null;
+		}
+	}
+	
+	/**
 	 * Overrides a sprite based on a XML node.
 	 */
 	public static function loadSpriteFromXML(spr:FunkinSprite, node:Access, parentFolder:String = "", defaultAnimType:XMLAnimType = BEAT):FunkinSprite {
@@ -101,6 +114,14 @@ class XMLUtil {
 		if (node.has.scrolly) {
 			var scroll:Null<Float> = Std.parseFloat(node.att.scrolly);
 			if (scroll.isNotNull()) spr.scrollFactor.y = scroll;
+		}
+		if (node.has.flipx) {
+			var flipX:Null<Bool> = parseBool(node.att.flipx);
+			if (flipX.isNotNull()) spr.flipX = flipX;
+		}
+		if (node.has.flipy) {
+			var flipY:Null<Bool> = parseBool(node.att.flipy);
+			if (flipY.isNotNull()) spr.flipY = flipY;
 		}
 		if (node.has.skewx) {
 			var skew:Null<Float> = Std.parseFloat(node.att.skewx);
@@ -164,17 +185,19 @@ class XMLUtil {
 		if(node.hasNode.anim) {
 			for(anim in node.nodes.anim)
 				addXMLAnimation(spr, anim);
-		} else if (spr.frames != null && spr.frames.frames != null) {
-			addAnimToSprite(spr, {
-				name: "idle",
-				anim: null,
-				fps: 24,
-				loop: spr.spriteAnimType == LOOP,
-				animType: spr.spriteAnimType,
-				x: 0,
-				y: 0,
-				indices: [for(i in 0...spr.frames.frames.length) i]
-			});
+		} else {
+			if (spr.frames != null && spr.frames.frames != null) {
+				addAnimToSprite(spr, {
+					name: "idle",
+					anim: null,
+					fps: 24,
+					loop: spr.spriteAnimType == LOOP,
+					animType: spr.spriteAnimType,
+					x: 0,
+					y: 0,
+					indices: [for(i in 0...spr.frames.frames.length) i]
+				});
+			}
 		}
 
 		return spr;
@@ -236,17 +259,16 @@ class XMLUtil {
 				if(animData.anim == null)
 					return MISSING_PROPERTY;
 
-				if (animData.indices != null && animData.indices.length > 0)
+				if (animData.indices.length > 0)
 					animateAnim.addBySymbolIndices(animData.name, animData.anim, animData.indices, animData.fps, animData.loop);
 				else
 					animateAnim.addBySymbol(animData.name, animData.anim, animData.fps, animData.loop);
 			} else {
-				if (animData.indices != null && animData.indices.length > 0) {
-					if (animData.anim == null)
-						sprite.animation.add(animData.name, animData.indices, animData.fps, animData.loop);
-					else
-						sprite.animation.addByIndices(animData.name, animData.anim, animData.indices, "", animData.fps, animData.loop);
-				} else
+				if (animData.anim == null && animData.indices.length > 0)
+					sprite.animation.add(animData.name, animData.indices, animData.fps, animData.loop);
+				else if (animData.indices.length > 0)
+					sprite.animation.addByIndices(animData.name, animData.anim, animData.indices, "", animData.fps, animData.loop);
+				else
 					sprite.animation.addByPrefix(animData.name, animData.anim, animData.fps, animData.loop);
 			}
 
