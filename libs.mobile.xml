@@ -9,16 +9,16 @@
 	<lib name="format" version="3.6.0" />
 
 	<!-- Flixel -->
-	<git name="flixel" url="https://github.com/FNF-CNE-Devs/flixel" />
-	<git name="flixel-addons" url="https://github.com/FNF-CNE-Devs/flixel-addons" />
+	<git name="flixel" url="https://github.com/CodenameCrew/flixel" />
+	<git name="flixel-addons" url="https://github.com/CodenameCrew/flixel-addons" />
 
 	<!-- Other Libraries -->
-	<git name="hscript-improved" url="https://github.com/FNF-CNE-Devs/hscript-improved" ref="custom-classes" />
-	<git name="flxanimate" url="https://github.com/FNF-CNE-Devs/flxanimate" />
+	<git name="hscript-improved" url="https://github.com/CodenameCrew/hscript-improved" ref="custom-classes" />
+	<git name="flxanimate" url="https://github.com/CodenameCrew/flxanimate" />
 	<lib name="hxvlc" version="1.9.3" skipDeps="true" />
 
 	<!-- Documentation and other features -->
-	<git name="away3d" url="https://github.com/FNF-CNE-Devs/away3d" />
+	<git name="away3d" url="https://github.com/CodenameCrew/away3d" />
 	<!-- <lib name="dox" /> -->
 	<lib name="format" />
 	<lib name="markdown" />
