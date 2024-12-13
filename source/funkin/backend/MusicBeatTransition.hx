@@ -75,8 +75,8 @@ class MusicBeatTransition extends MusicBeatSubstate {
 			}
 		});
 
-		transitionScript.call('postCreate', [event]);
 		super.create();
+		transitionScript.call('postCreate', [event]);
 	}
 
 	public override function update(elapsed:Float) {
