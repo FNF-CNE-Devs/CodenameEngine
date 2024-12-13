@@ -79,7 +79,8 @@ class MusicBeatTransition extends MusicBeatSubstate {
 	public function finish() {
 		if (newState != null)
 			FlxG.switchState(newState);
-		close();
+		else
+			close();
 	}
 
 	public override function destroy() {
