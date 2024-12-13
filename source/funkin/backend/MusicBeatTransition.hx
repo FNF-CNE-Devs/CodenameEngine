@@ -5,7 +5,7 @@ import flixel.FlxState;
 import funkin.backend.utils.FunkinParentDisabler;
 
 class MusicBeatTransition extends MusicBeatSubstate {
-	public static var transitionScript:String = "";
+	public static var script:String = "";
 	var nextFrameSkip:Bool = false;
 
 	public var transitionTween:FlxTween = null;
@@ -17,7 +17,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 	public function new(?newState:FlxState) {
 		super();
 		this.newState = newState;
-		if (transitionScript != "") scriptName = transitionScript;
+		if (script != "") scriptName = script;
 	}
 
 	public override function create() {
