@@ -5,6 +5,7 @@ import flixel.FlxState;
 import funkin.backend.utils.FunkinParentDisabler;
 
 class MusicBeatTransition extends MusicBeatSubstate {
+	public static var transitionScript:String = "";
 	var nextFrameSkip:Bool = false;
 
 	public var transitionTween:FlxTween = null;
@@ -16,11 +17,12 @@ class MusicBeatTransition extends MusicBeatSubstate {
 	public function new(?newState:FlxState) {
 		super();
 		this.newState = newState;
+		if (transitionScript != "") scriptName = transitionScript;
 	}
 
 	public override function create() {
 		if (newState != null)
-			add(new FunkinParentDisabler(true));
+			add(new FunkinParentDisabler(true, false));
 
 		transitionCamera = new FlxCamera();
 		transitionCamera.bgColor = 0;
@@ -79,8 +81,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 	public function finish() {
 		if (newState != null)
 			FlxG.switchState(newState);
-		else
-			close();
+		close();
 	}
 
 	public override function destroy() {
