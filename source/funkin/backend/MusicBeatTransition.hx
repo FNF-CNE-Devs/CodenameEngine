@@ -1,11 +1,15 @@
 package funkin.backend;
 
+import funkin.backend.scripting.events.TransitionCreationEvent;
+import funkin.backend.scripting.Script;
 import flixel.tweens.FlxTween;
 import flixel.FlxState;
 import funkin.backend.utils.FunkinParentDisabler;
 
 class MusicBeatTransition extends MusicBeatSubstate {
 	public static var script:String = "";
+	public var transitionScript:Script;
+
 	var nextFrameSkip:Bool = false;
 
 	public var transitionTween:FlxTween = null;
@@ -17,7 +21,6 @@ class MusicBeatTransition extends MusicBeatSubstate {
 	public function new(?newState:FlxState) {
 		super();
 		this.newState = newState;
-		if (script != "") scriptName = script;
 	}
 
 	public override function create() {
@@ -29,7 +32,21 @@ class MusicBeatTransition extends MusicBeatSubstate {
 		FlxG.cameras.add(transitionCamera, false);
 
 		cameras = [transitionCamera];
-		var out = newState != null;
+
+		transitionScript = Script.create(Paths.script(script));
+		transitionScript.setParent(this);
+		transitionScript.load();
+
+		var event = EventManager.get(TransitionCreationEvent).recycle(newState != null, newState);
+		transitionScript.call('create', [event]);
+
+		var out = event.transOut;
+		if (newState != event.newState) newState = event.newState;
+
+		if (event.cancelled) {
+			super.create();
+			return;
+		}
 
 		blackSpr = new FlxSprite(0, out ? -transitionCamera.height : transitionCamera.height).makeGraphic(1, 1, -1);
 		blackSpr.scale.set(transitionCamera.width, transitionCamera.height);
