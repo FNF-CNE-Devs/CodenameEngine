@@ -68,19 +68,6 @@ class XMLUtil {
 	}
 
 	/**
-	 * Custom parsing tool for booleans because STD doesn't have one for some reason
-	 */
-	public static function parseBool(str: String): Null<Bool> {
-		if (str.toLowerCase() == "true") {
-			return true;
-		} else if (str.toLowerCase() == "false") {
-			return false;
-		} else {
-			return null;
-		}
-	}
-
-	/**
 	 * Overrides a sprite based on a XML node.
 	 */
 	public static function loadSpriteFromXML(spr:FunkinSprite, node:Access, parentFolder:String = "", defaultAnimType:XMLAnimType = BEAT):FunkinSprite {
@@ -128,14 +115,6 @@ class XMLUtil {
 			var width:Null<Float> = Std.parseFloat(node.att.width);
 			if (width.isNotNull()) spr.width = width;
 		}
-		if (node.has.flipx) {
-			var flipX:Null<Bool> = parseBool(node.att.flipx);
-			if (flipX.isNotNull()) spr.flipX = flipX;
-		}
-		if (node.has.flipy) {
-			var flipY:Null<Bool> = parseBool(node.att.flipy);
-			if (flipY.isNotNull()) spr.flipY = flipY;
-		}
 		if (node.has.height) {
 			var height:Null<Float> = Std.parseFloat(node.att.height);
 			if (height.isNotNull()) spr.height = height;
@@ -165,7 +144,9 @@ class XMLUtil {
 			if (graphicSizey.isNotNull()) spr.setGraphicSize(0, graphicSizey);
 		}
 		if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
-
+		if (node.has.flipX && node.att.flipX == "true") spr.flipX = true;
+		if (node.has.flipY && node.att.flipY == "true") spr.flipY = true;
+		
 		if (node.has.zoomfactor)
 			spr.zoomFactor = Std.parseFloat(node.getAtt("zoomfactor")).getDefault(spr.zoomFactor);
 
