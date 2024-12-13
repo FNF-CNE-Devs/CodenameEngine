@@ -1,5 +1,6 @@
 package funkin.backend;
 
+import funkin.backend.scripting.events.CancellableEvent;
 import funkin.backend.scripting.events.TransitionCreationEvent;
 import funkin.backend.scripting.Script;
 import flixel.tweens.FlxTween;
@@ -15,6 +16,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 	public var transitionTween:FlxTween = null;
 	public var transitionCamera:FlxCamera;
 	public var newState:FlxState;
+	public var transOut:Bool = false;
 
 	public var blackSpr:FlxSprite;
 	public var transitionSprite:FunkinSprite;
@@ -40,7 +42,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 		var event = EventManager.get(TransitionCreationEvent).recycle(newState != null, newState);
 		transitionScript.call('create', [event]);
 
-		var out = event.transOut;
+		transOut = event.transOut;
 		if (newState != event.newState) newState = event.newState;
 
 		if (event.cancelled) {
@@ -48,7 +50,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 			return;
 		}
 
-		blackSpr = new FlxSprite(0, out ? -transitionCamera.height : transitionCamera.height).makeGraphic(1, 1, -1);
+		blackSpr = new FlxSprite(0, transOut ? -transitionCamera.height : transitionCamera.height).makeGraphic(1, 1, -1);
 		blackSpr.scale.set(transitionCamera.width, transitionCamera.height);
 		blackSpr.color = 0xFF000000;
 		blackSpr.updateHitbox();
@@ -62,7 +64,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 		} else {
 			transitionSprite.screenCenter();
 		}
-		transitionCamera.flipY = !out;
+		transitionCamera.flipY = !transOut;
 		add(transitionSprite);
 
 		transitionCamera.scroll.y = transitionCamera.height;
@@ -73,15 +75,21 @@ class MusicBeatTransition extends MusicBeatSubstate {
 			}
 		});
 
+		transitionScript.call('postCreate', [event]);
 		super.create();
 	}
 
 	public override function update(elapsed:Float) {
+		transitionScript.call('update', [elapsed]);
 		super.update(elapsed);
 
 		if (nextFrameSkip) {
-			finish();
-			return;
+			var event = new CancellableEvent();
+			transitionScript.call('onSkip', [event]);
+			if (!event.cancelled) {
+				finish();
+				return;
+			}
 		}
 
 		if (!parent.persistentUpdate && FlxG.keys.pressed.SHIFT) {
@@ -90,15 +98,26 @@ class MusicBeatTransition extends MusicBeatSubstate {
 				nextFrameSkip = true;
 				parent.persistentDraw = false;
 			} else {
-				finish();
+				var event = new CancellableEvent();
+				transitionScript.call('onSkip', [event]);
+				if (!event.cancelled) {
+					finish();
+				}
 			}
 		}
+		transitionScript.call('postUpdate', [elapsed]);
 	}
 
 	public function finish() {
+		var event = new CancellableEvent();
+		transitionScript.call('onFinish', [event]);
+		if (event.cancelled) return;
+		
 		if (newState != null)
 			FlxG.switchState(newState);
 		close();
+
+		transitionScript.call('onPostFinish', []);
 	}
 
 	public override function destroy() {
@@ -109,6 +128,8 @@ class MusicBeatTransition extends MusicBeatSubstate {
 			FlxG.cameras.remove(transitionCamera);
 		else
 			transitionCamera.bgColor = 0xFF000000;
+
+		transitionScript.call('destroy', []);
 		super.destroy();
 	}
 }
