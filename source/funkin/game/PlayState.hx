@@ -1688,8 +1688,10 @@ class PlayState extends MusicBeatState
 					displayCombo(event);
 					if (event.displayRating)
 						displayRating(event.rating, event);
-					if (event.rating == 'bad' || event.rating == 'shit')
+					if (comboBreaks && (event.rating == 'bad' || event.rating == 'shit')) {
 						breaks += 1;
+						combo = 0;
+					}
 					ratingNum += 1;
 				}
 			}
