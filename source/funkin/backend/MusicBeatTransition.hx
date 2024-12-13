@@ -43,7 +43,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 		transitionScript.call('create', [event]);
 
 		transOut = event.transOut;
-		if (newState != event.newState) newState = event.newState;
+		newState = event.newState;
 
 		if (event.cancelled) {
 			super.create();
