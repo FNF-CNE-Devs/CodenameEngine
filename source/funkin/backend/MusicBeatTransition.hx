@@ -18,6 +18,8 @@ class MusicBeatTransition extends MusicBeatSubstate {
 	public var newState:FlxState;
 	public var transOut:Bool = false;
 
+	public var allowSkip:Bool = true;
+
 	public var blackSpr:FlxSprite;
 	public var transitionSprite:FunkinSprite;
 	public function new(?newState:FlxState) {
@@ -92,7 +94,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 			}
 		}
 
-		if (!parent.persistentUpdate && FlxG.keys.pressed.SHIFT) {
+		if (allowSkip && !parent.persistentUpdate && FlxG.keys.pressed.SHIFT) {
 			// skip
 			if (newState != null) {
 				nextFrameSkip = true;
