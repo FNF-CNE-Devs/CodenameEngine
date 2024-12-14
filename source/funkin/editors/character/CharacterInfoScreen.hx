@@ -179,7 +179,7 @@ class CharacterInfoScreen extends UISubstateWindow {
 		xml.set("scale", Std.string(scaleStepper.value));
 		xml.set("antialiasing", antialiasingCheckbox.checked ? "true" : "false");
 		xml.set("sprite", spriteTextBox.label.text);
-		if (iconColorWheel.colorChanged)
+		if (iconColorWheel.colorChanged || iconColorWheel.curColor.toWebString() != '#000000')
 			xml.set("color", iconColorWheel.curColor.toWebString());
 		for (val in customPropertiesButtonList.buttons.members)
 			xml.set(val.propertyText.label.text, val.valueText.label.text);
