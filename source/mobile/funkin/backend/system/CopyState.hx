@@ -251,8 +251,6 @@ class CopyState extends funkin.backend.MusicBeatState
 
 		maxLoopTimes = locatedFiles.length;
 
-		trace(maxLoopTimes);
-
 		return (maxLoopTimes <= 0);
 	}
 }
