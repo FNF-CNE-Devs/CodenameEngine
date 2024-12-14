@@ -97,7 +97,7 @@ class HealthIcon extends FunkinSprite
 		this.isPlayer = isPlayer;
 		setIcon(char);
 
-		animation.finishCallback = animFinishCallback;
+		animation.onFinishEnd.add(animFinishCallback);
 
 		scrollFactor.set();
 	}
