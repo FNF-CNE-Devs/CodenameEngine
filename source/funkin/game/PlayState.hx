@@ -265,7 +265,7 @@ class PlayState extends MusicBeatState
 	public var combo:Int = 0;
 
 	/**
-	 * Whenever the misses should add-on your "Combo Breaks" instead of just "Misses".
+	 * Whenever the misses counter should count your "Combo Breaks" with it.
 	 */
 	public var comboBreaks:Bool = Options.comboBreaks;
 	/**
