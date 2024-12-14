@@ -267,7 +267,7 @@ class PlayState extends MusicBeatState
 	/**
 	 * Whenever the misses should show "Combo Breaks" instead of "Misses"
 	 */
-	public var comboBreaks:Bool = !Options.ghostTapping;
+	public var comboBreaks:Bool = Options.comboBreaks;
 	/**
 	 * Health bar background.
 	 */
