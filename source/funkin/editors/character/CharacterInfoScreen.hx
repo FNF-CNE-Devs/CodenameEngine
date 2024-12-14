@@ -76,6 +76,9 @@ class CharacterInfoScreen extends UISubstateWindow {
 		add(iconColorWheel);
 		addLabelOn(iconColorWheel, "Icon Color");
 
+		if (character.iconColor != null)
+			iconColorWheel.colorChanged = true;
+
 		add(title = new UIText(spriteTextBox.x, spriteTextBox.y + 10 + 46 + 84, 0, "Character Data", 28));
 
 		positionXStepper = new UINumericStepper(title.x, title.y + title.height + 36, character.globalOffset.x, 0.001, 2, null, null, 84);
@@ -179,7 +182,7 @@ class CharacterInfoScreen extends UISubstateWindow {
 		xml.set("scale", Std.string(scaleStepper.value));
 		xml.set("antialiasing", antialiasingCheckbox.checked ? "true" : "false");
 		xml.set("sprite", spriteTextBox.label.text);
-		if (iconColorWheel.colorChanged || iconColorWheel.curColor.toWebString() != '#000000')
+		if (iconColorWheel.colorChanged)
 			xml.set("color", iconColorWheel.curColor.toWebString());
 		for (val in customPropertiesButtonList.buttons.members)
 			xml.set(val.propertyText.label.text, val.valueText.label.text);
