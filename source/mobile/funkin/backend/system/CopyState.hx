@@ -35,7 +35,6 @@ import haxe.io.Path;
 import mobile.funkin.backend.utils.MobileUtil;
 import funkin.backend.assets.Paths;
 import funkin.backend.utils.NativeAPI;
-import funkin.backend.system.MainState;
 import flixel.ui.FlxBar;
 import flixel.ui.FlxBar.FlxBarFillDirection;
 
@@ -53,7 +52,7 @@ using StringTools;
 class CopyState extends funkin.backend.MusicBeatState
 {
 	private static final textFilesExtensions:Array<String> = ['ini', 'txt', 'xml', 'hxs', 'hx', 'lua', 'json', 'frag', 'vert'];
-	public static final IGNORE_FOLDER_FILE_NAME:String = "ignore.txt";
+	public static final IGNORE_FOLDER_FILE_NAME:String = "CopyState-Ignore.txt";
 	private static var directoriesToIgnore:Array<String> = [];
 	public static var locatedFiles:Array<String> = [];
 	public static var maxLoopTimes:Int = 0;
@@ -76,12 +75,12 @@ class CopyState extends funkin.backend.MusicBeatState
 		checkExistingFiles();
 		if (maxLoopTimes <= 0)
 		{
-			FlxG.switchState(new MainState());
+			FlxG.resetGame();
 			return;
 		}
 
 		NativeAPI.showMessageBox("Notice", "Seems like you have some missing files that are necessary to run the game\nPress OK to begin the copy process");
-		
+
 		shouldCopy = true;
 
 		add(new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xffcaff4d));
@@ -126,8 +125,9 @@ class CopyState extends funkin.backend.MusicBeatState
 					File.saveContent('logs/' + Date.now().toString().replace(' ', '-').replace(':', "'") + '-CopyState' + '.txt', failedFilesStack.join('\n'));
 				}
 				canUpdate = false;
-				FlxG.sound.play(Paths.sound('menu/confirm')).onComplete = () -> {
-					FlxG.switchState(new MainState());
+				FlxG.sound.play(Paths.sound('menu/confirm')).onComplete = () ->
+				{
+					FlxG.resetGame();
 				};
 			}
 
@@ -219,7 +219,7 @@ class CopyState extends funkin.backend.MusicBeatState
 
 	public static function checkExistingFiles():Bool
 	{
-		locatedFiles = OpenFLAssets.list();
+		locatedFiles = Paths.assetsTree.list(null);
 
 		// removes unwanted assets
 		var assets = locatedFiles.filter(folder -> folder.startsWith('assets/'));
@@ -234,7 +234,7 @@ class CopyState extends funkin.backend.MusicBeatState
 			if (filesToRemove.contains(file))
 				continue;
 
-			if(file.endsWith(IGNORE_FOLDER_FILE_NAME) && !directoriesToIgnore.contains(Path.directory(file)))
+			if (file.endsWith(IGNORE_FOLDER_FILE_NAME) && !directoriesToIgnore.contains(Path.directory(file)))
 				directoriesToIgnore.push(Path.directory(file));
 
 			if (directoriesToIgnore.length > 0)
@@ -250,6 +250,8 @@ class CopyState extends funkin.backend.MusicBeatState
 		locatedFiles = locatedFiles.filter(file -> !filesToRemove.contains(file));
 
 		maxLoopTimes = locatedFiles.length;
+
+		trace(maxLoopTimes);
 
 		return (maxLoopTimes <= 0);
 	}
