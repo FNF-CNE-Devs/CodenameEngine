@@ -143,10 +143,10 @@ class XMLUtil {
 			var graphicSizey:Null<Int> = Std.parseInt(node.att.graphicSizey);
 			if (graphicSizey.isNotNull()) spr.setGraphicSize(0, graphicSizey);
 		}
-		if ((node.has.flipX && node.att.flipX == "true") || (node.has.flipx && node.att.flipx == "true")) spr.flipX = true;
-		if ((node.has.flipY && node.att.flipY == "true") || (node.has.flipy && node.att.flipy == "true")) spr.flipY = true;
+		if (node.has.flipX) spr.flipX = node.att.flipX == "true";
+		if (node.has.flipY) spr.flipY = node.att.flipY == "true";
 		if (node.has.updateHitbox && node.att.updateHitbox == "true") spr.updateHitbox();
-		
+
 		if (node.has.zoomfactor)
 			spr.zoomFactor = Std.parseFloat(node.getAtt("zoomfactor")).getDefault(spr.zoomFactor);
 
