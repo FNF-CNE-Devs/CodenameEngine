@@ -20,7 +20,7 @@ class GameplayOptions extends OptionsScreen {
 			"ghostTapping"));
 		add(new Checkbox(
 			"Combo Breaks",
-			"If checked, hitting bads and shits break your combo.",
+			"If checked, hitting bads and shits break your combo, and adds to the miss **counter**, not your actual misses.",
 			"comboBreaks"));
 		add(offsetSetting = new NumOption(
 			"Song Offset",
