@@ -121,6 +121,8 @@ class MusicBeatTransition extends MusicBeatSubstate {
 	}
 
 	public override function destroy() {
+		transitionScript.call('destroy', []);
+
 		if (transitionTween != null)
 			transitionTween.cancel();
 		transitionTween = FlxDestroyUtil.destroy(transitionTween);
@@ -128,8 +130,7 @@ class MusicBeatTransition extends MusicBeatSubstate {
 			FlxG.cameras.remove(transitionCamera);
 		else
 			transitionCamera.bgColor = 0xFF000000;
-
-		transitionScript.call('destroy', []);
+		transitionScript = FlxDestroyUtil.destroy(transitionScript);
 		super.destroy();
 	}
 }
