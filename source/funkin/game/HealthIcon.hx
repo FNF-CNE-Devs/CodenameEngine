@@ -97,8 +97,6 @@ class HealthIcon extends FunkinSprite
 		this.isPlayer = isPlayer;
 		setIcon(char);
 
-		animation.onFinishEnd.add(animFinishCallback);
-
 		scrollFactor.set();
 	}
 
@@ -156,6 +154,7 @@ class HealthIcon extends FunkinSprite
 		var iconSize:Int = 0;
 		var iconIsPlayer = xmlValid ? xmlData.get("facing").getDefault("right").toLowerCase() == "left" : false;
 
+		animateAtlas = null; // reset
 		if (this.animated)
 			loadSprite(Paths.image(iconPath));
 		else {
@@ -175,11 +174,17 @@ class HealthIcon extends FunkinSprite
 			animation.play(char);
 		}
 
+		if(!animation.onFinishEnd.has(animFinishCallback))
+			animation.onFinishEnd.add(animFinishCallback);
+		if(animateAtlas != null && !animateAtlas.anim.onFinishEnd.has(animFinishCallback))
+			animateAtlas.anim.onFinishEnd.add(animFinishCallback);
+
 		var parsedSteps:Map<Int, String> = [];
 
 		antialiasing = true;
 		if(xmlValid) {
-			antialiasing = xmlData.get("antialiasing").getDefault("true").toLowerCase() == "true";
+			if(xmlData.exists("antialiasing"))
+				antialiasing = xmlData.get("antialiasing").toLowerCase() == "true";
 			if (xmlData.exists("offsetX"))
 				extraOffsets.x = Std.parseFloat(xmlData.get("offsetX")).getDefault(0);
 			if (xmlData.exists("offsetY"))
@@ -237,12 +242,12 @@ class HealthIcon extends FunkinSprite
 							Logs.trace('Icon ${char} data <step> is missing percent', WARNING);
 							continue;
 						}
-						if(!node.exists("type")) {
-							Logs.trace('Icon ${char} data <step> is missing type', WARNING);
+						if(!node.exists("name")) {
+							Logs.trace('Icon ${char} data <step> is missing name', WARNING);
 							continue;
 						}
 
-						parsedSteps.set(Std.parseInt(node.get("percent")).getDefault(0), node.get("type"));
+						parsedSteps.set(Std.parseInt(node.get("percent")).getDefault(0), node.get("name"));
 				}
 		}
 
@@ -274,8 +279,18 @@ class HealthIcon extends FunkinSprite
 			curAnimState = data.animState;
 		}
 
-		setGraphicSize(150);
-		updateHitbox();
+		if(animateAtlas != null) {
+			@:bypassAccessor
+			frameWidth = 150;
+			@:bypassAccessor
+			frameHeight = 150;
+			extraOffsets.x -= frameWidth / 2;
+			extraOffsets.y -= frameHeight / 2;
+			updateHitbox();
+		} else {
+			setGraphicSize(150);
+			updateHitbox();
+		}
 
 		if(!xmlValid || !xmlData.exists("scale"))
 			defaultScale = scale.x;
@@ -306,7 +321,7 @@ class HealthIcon extends FunkinSprite
 	 * @param health Health percentage
 	 * @return Animation data (-1 if invalid)
 	 */
-	public function getIconAnim(health:Float):IconAnimData {
+	public dynamic function getIconAnim(health:Float):IconAnimData {
 		var i:OneOfTwo<String, Int> = -1;
 		var oldKey:Int = -1;
 		var isValid = false;
@@ -332,17 +347,19 @@ class HealthIcon extends FunkinSprite
 			}) + sprTrackerOffset.x, sprTracker.y + sprTrackerOffset.y);
 		}
 
-		if (animation.curAnim != null) {
+		if (animation.curAnim != null || (this.animated && animateAtlas != null)) {
 			var data = getIconAnim(health);
 			var localAnimState = data.animState;
 
 			if (data.isValid && curAnimState != localAnimState) {
 				if (this.animated) {
-					var curAnimName = animation.curAnim.name;
+					var curAnimName = getAnimName();
 					var transAnim = 'from-${curAnimName.substr(curAnimName.lastIndexOf('-') + 1)}-to-$localAnimState';
 					playAnim(hasAnim(transAnim) ? transAnim : localAnimState);
-				} else
-					animation.curAnim.curFrame = localAnimState;
+				} else {
+					if(animation.curAnim != null)
+						animation.curAnim.curFrame = localAnimState;
+				}
 
 				curAnimState = localAnimState;
 			}
