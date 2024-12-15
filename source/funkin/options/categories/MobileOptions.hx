@@ -107,7 +107,8 @@ class MobileOptions extends OptionsScreen {
 	
 		try
 		{
-			Sys.command('rm', ['-rf', lastStoragePath]);
+			if (Options.storageType != "EXTERNAL")
+				Sys.command('rm', ['-rf', lastStoragePath]);
 		}
 		catch (e:haxe.Exception)
 			trace('Failed to remove last directory. (${e.message})');
