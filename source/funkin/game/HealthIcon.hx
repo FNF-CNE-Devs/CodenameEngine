@@ -353,8 +353,7 @@ class HealthIcon extends FunkinSprite
 
 			if (data.isValid && curAnimState != localAnimState) {
 				if (this.animated) {
-					var curAnimName = getAnimName();
-					var transAnim = 'from-${curAnimName.substr(curAnimName.lastIndexOf('-') + 1)}-to-$localAnimState';
+					var transAnim = 'from-$curAnimState-to-$localAnimState';
 					playAnim(hasAnim(transAnim) ? transAnim : localAnimState);
 				} else {
 					if(animation.curAnim != null)
