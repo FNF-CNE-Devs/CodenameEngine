@@ -1991,7 +1991,7 @@ class Charter extends UIState {
 	}
 
 	public inline function hitsoundsEnabled(id:Int)
-		return isChartingLive ? false : (strumLines.members[id] != null && strumLines.members[id].hitsounds);
+		return isLiveCharting ? false : (strumLines.members[id] != null && strumLines.members[id].hitsounds);
 
 	public inline function __fixSelection(selection:Selection):Selection {
 		var newSelection:Selection = new Selection();
