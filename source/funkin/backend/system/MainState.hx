@@ -68,5 +68,10 @@ class MainState extends FlxState {
 		}
 
 		CoolUtil.safeAddAttributes('./.temp/', NativeAPI.FileAttribute.HIDDEN);
+
+		
+		// We should save the data in a bind specifically for the mod and not in the hot poge of fucking everything. ( from, LJ )
+		FlxG.save.bind("save-default", 'CodenameEngine/${ModsFolder.currentModFolder.trim()}');
+		FlxG.save.flush();
 	}
 }
